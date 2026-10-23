@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-455-WAJIHA455",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "AR-EXT-455-WAJIHA455"
+  ],
+  "after": []
+}

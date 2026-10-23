@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:f928ce44ea99b348",
+  "lessonIds": [
+    "AR-C439-manzar",
+    "AR-C439-burj",
+    "AR-C439-nusb",
+    "AR-C439-istakshafa",
+    "AR-C439-istahaba"
+  ],
+  "tex": "arabic/book/chapters/ch439-landmarks.tex"
+}

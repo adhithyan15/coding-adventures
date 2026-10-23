@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C400-sawa",
+    "language": "arabic",
+    "chapter": 400,
+    "sequence": 22580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74210f79a901aab4"
+  },
+  "findings": []
+}

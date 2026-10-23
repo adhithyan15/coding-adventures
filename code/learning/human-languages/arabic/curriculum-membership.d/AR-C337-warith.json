@@ -1,0 +1,11 @@
+{
+  "id": "AR-C337-warith",
+  "pathSegment": "AR-PATH-337-IRTH337",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-337-IRTH337",
+      "order": 3
+    }
+  ]
+}

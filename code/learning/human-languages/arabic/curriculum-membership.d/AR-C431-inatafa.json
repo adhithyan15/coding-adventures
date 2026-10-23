@@ -1,0 +1,11 @@
+{
+  "id": "AR-C431-inatafa",
+  "pathSegment": "AR-PATH-431-MURUR431",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-431-MURUR431",
+      "order": 4
+    }
+  ]
+}

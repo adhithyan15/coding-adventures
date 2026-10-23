@@ -1,0 +1,11 @@
+{
+  "id": "AR-C357-inaqada",
+  "pathSegment": "AR-PATH-357-KHITAB357",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-357-KHITAB357",
+      "order": 2
+    }
+  ]
+}

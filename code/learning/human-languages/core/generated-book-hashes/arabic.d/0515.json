@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:4c4636b5f5d0accf",
+  "lessonIds": [
+    "AR-C515-shakhara",
+    "AR-C515-istarkha",
+    "AR-C515-istalqa",
+    "AR-C515-nahada",
+    "AR-C515-ighma"
+  ],
+  "tex": "arabic/book/chapters/ch515-lying-down-and-getting-up.tex"
+}

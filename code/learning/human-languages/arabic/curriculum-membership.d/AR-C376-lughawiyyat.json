@@ -1,0 +1,11 @@
+{
+  "id": "AR-C376-lughawiyyat",
+  "pathSegment": "AR-PATH-376-ILM376",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-376-ILM376",
+      "order": 1
+    }
+  ]
+}

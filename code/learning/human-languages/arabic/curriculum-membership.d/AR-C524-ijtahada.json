@@ -1,0 +1,11 @@
+{
+  "id": "AR-C524-ijtahada",
+  "pathSegment": "AR-PATH-524-TAAWUN524",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-524-TAAWUN524",
+      "order": 1
+    }
+  ]
+}

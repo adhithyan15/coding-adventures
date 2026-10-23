@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "The face up close",
+  "label": "ch:ar-the-face-up-close",
+  "canDo": "I can name an eyelid, an eyelash, the gums, the chin and a nerve.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C506-asab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can name an eyelid, an eyelash, the gums, the chin and a nerve.",
+    "assesses": [
+      "AR-LEX-C506-WAJH506-03",
+      "AR-LEX-C506-WAJH506-04",
+      "AR-LEX-C506-WAJH506-05"
+    ]
+  }
+}

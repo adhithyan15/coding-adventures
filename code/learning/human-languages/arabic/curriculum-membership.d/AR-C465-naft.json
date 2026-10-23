@@ -1,0 +1,11 @@
+{
+  "id": "AR-C465-naft",
+  "pathSegment": "AR-PATH-465-TAQA465",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-465-TAQA465",
+      "order": 2
+    }
+  ]
+}

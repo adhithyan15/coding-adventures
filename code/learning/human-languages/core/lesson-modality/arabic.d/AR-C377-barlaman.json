@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C377-barlaman",
+    "language": "arabic",
+    "chapter": 377,
+    "sequence": 21400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02e52195f65147f9"
+  },
+  "findings": []
+}

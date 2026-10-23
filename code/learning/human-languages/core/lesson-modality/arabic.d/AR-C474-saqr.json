@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C474-saqr",
+    "language": "arabic",
+    "chapter": 474,
+    "sequence": 26410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec1c0913eba3416e"
+  },
+  "findings": []
+}

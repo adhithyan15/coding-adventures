@@ -1,0 +1,19 @@
+{
+  "chapter": 491,
+  "title": "Pride and thanks",
+  "label": "ch:ar-pride-and-thanks",
+  "canDo": "I can say that someone is proud or grateful, talk about gratitude, and say that something impressed me.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C491-ajaba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can say that someone is proud or grateful, talk about gratitude, and say that something impressed me.",
+    "assesses": [
+      "AR-LEX-C491-FAKHR491-03",
+      "AR-LEX-C491-FAKHR491-04",
+      "AR-LEX-C491-FAKHR491-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:e0aaa1adbbf6e87c",
+  "lessonIds": [
+    "AR-C474-saqr",
+    "AR-C474-naama",
+    "AR-C474-nawras",
+    "AR-C474-risha",
+    "AR-C474-tafa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch474.txt",
+  "json": "arabic/narration/ch474.json",
+  "textHash": "fnv1a64:348ad4375086f3ae",
+  "jsonHash": "fnv1a64:77ba9a4b46e1ed3c",
+  "findings": []
+}

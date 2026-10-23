@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:aa4adb4dab083c6e",
+  "lessonIds": [
+    "AR-C401-ihtimal",
+    "AR-C401-muhtamal",
+    "AR-C401-ihtamala",
+    "AR-C401-rajjaha",
+    "AR-C401-istabada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch401.txt",
+  "json": "arabic/narration/ch401.json",
+  "textHash": "fnv1a64:99308080d3b8a110",
+  "jsonHash": "fnv1a64:a12b704e0080afff",
+  "findings": []
+}

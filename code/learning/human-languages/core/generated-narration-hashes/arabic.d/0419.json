@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:13c018bfb555e047",
+  "lessonIds": [
+    "AR-C419-ijabi",
+    "AR-C419-salbi",
+    "AR-C419-asasi",
+    "AR-C419-thanawi",
+    "AR-C419-shamil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch419.txt",
+  "json": "arabic/narration/ch419.json",
+  "textHash": "fnv1a64:7c237978c8b2ab84",
+  "jsonHash": "fnv1a64:c19477a9b964afed",
+  "findings": []
+}

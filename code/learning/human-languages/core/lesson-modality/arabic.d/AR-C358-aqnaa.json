@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C358-aqnaa",
+    "language": "arabic",
+    "chapter": 358,
+    "sequence": 20440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25e86bfd5aec371a"
+  },
+  "findings": []
+}

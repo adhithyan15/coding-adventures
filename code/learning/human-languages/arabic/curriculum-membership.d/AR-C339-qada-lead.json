@@ -1,0 +1,11 @@
+{
+  "id": "AR-C339-qada-lead",
+  "pathSegment": "AR-PATH-339-GHAZW339",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-339-GHAZW339",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "arabic",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:21f9532b7721ccba",
+  "lessonIds": [
+    "AR-C511-jura",
+    "AR-C511-kabsula",
+    "AR-C511-qatra",
+    "AR-C511-jabira",
+    "AR-C511-dammada",
+    "AR-R511-review-504-511"
+  ],
+  "tex": "arabic/book/chapters/ch511-doses-and-drops.tex"
+}

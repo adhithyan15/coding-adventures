@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C538-hiyaka",
+    "language": "arabic",
+    "chapter": 538,
+    "sequence": 29780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cbd65c2507bfb5ed"
+  },
+  "findings": []
+}

@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 457,
+  "title": "The sales",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:68e3bdddf57c85d4",
+  "lessons": [
+    {
+      "id": "AR-C457-takhfid",
+      "sequence": 25540,
+      "title": "تخفيض (takhfīḍ) — a price cut; a reduction",
+      "headword": "تخفيض",
+      "romanization": "takhfīḍ",
+      "gloss": "a price cut; a reduction",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c820cd08a82e2d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to fit, then the Arabic for to be too tight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تخفيض",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تخفيض — takhfīḍ — \"a price cut; a reduction\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اشتريت المعطف بتخفيض كبير. ishtaraytu al-miʿṭaf bi-takhfīḍ kabīr. I bought the coat with a big price cut."
+            },
+            {
+              "kind": "speech",
+              "text": "The plural takhfīḍāt is the sales."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تخفيض (takhfīḍ) is built on the native Arabic root kh-f-ḍ, \"to be low; to lower\" (Lane). It is the verbal noun of Form II."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takhfīḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takhfīḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takhfīḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takhfīḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishtaraytu al-miʿṭaf bi-takhfīḍ kabīr. — I bought the coat with a big price cut.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishtaraytu al-miʿṭaf bi-takhfīḍ kabīr.* — I bought the coat with a big price cut.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to fit, then the Arabic for to be too tight, then say takhfīḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to fit, then the Arabic for to be too tight, then say *takhfīḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تخفيض (takhfīḍ) mean? (\"A price cut; a reduction\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C457-qasima",
+      "sequence": 25550,
+      "title": "قسيمة (qasīma) — a voucher; a coupon",
+      "headword": "قسيمة",
+      "romanization": "qasīma",
+      "gloss": "a voucher; a coupon",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:196cfe4a4f74c573",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to be too tight, then the Arabic for a price cut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قسيمة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قسيمة — qasīma — \"a voucher; a coupon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "استعملت أمي قسيمة في المتجر. istaʿmalat ummī qasīma fī al-matjar. My mother used a voucher in the shop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قسيمة (qasīma) is built on the native Arabic root q-s-m, \"to divide\" (Lane). It shares its root with qism, \"a portion, a share\" (Lane); the sense of a voucher or a coupon is modern."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qasīma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qasīma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qasīma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qasīma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaʿmalat ummī qasīma fī al-matjar. — My mother used a voucher in the shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaʿmalat ummī qasīma fī al-matjar.* — My mother used a voucher in the shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to be too tight, then the Arabic for a price cut, then say qasīma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to be too tight, then the Arabic for a price cut, then say *qasīma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قسيمة (qasīma) mean? (\"A voucher; a coupon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C457-khaffada",
+      "sequence": 25560,
+      "title": "خفض (khaffaḍa) — to lower; to reduce",
+      "headword": "خفض",
+      "romanization": "khaffaḍa",
+      "gloss": "to lower; to reduce",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b9bb33f8e27f7b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a price cut, then the Arabic for a voucher."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خفض",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خفض — khaffaḍa — \"to lower; to reduce\"."
+            },
+            {
+              "kind": "speech",
+              "text": "خفض المتجر ثمن الأحذية. khaffaḍa al-matjar thaman al-aḥdhiya. The shop lowered the price of shoes."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يخفض, yukhaffiḍ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خفض (khaffaḍa) is built on the native Arabic root kh-f-ḍ, \"to be low; to lower\" (Lane). It is Form II; munkhafiḍ, \"low\", shares the root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaffaḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaffaḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaffaḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaffaḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaffaḍa al-matjar thaman al-aḥdhiya. — The shop lowered the price of shoes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaffaḍa al-matjar thaman al-aḥdhiya.* — The shop lowered the price of shoes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a price cut, then the Arabic for a voucher, then say khaffaḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a price cut, then the Arabic for a voucher, then say *khaffaḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خفض (khaffaḍa) mean? (\"To lower; to reduce\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C457-rakhusa",
+      "sequence": 25570,
+      "title": "رخص (rakhuṣa) — to get cheaper",
+      "headword": "رخص",
+      "romanization": "rakhuṣa",
+      "gloss": "to get cheaper",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6fdc0c1d9523ff6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a voucher, then the Arabic for to lower."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رخص",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رخص — rakhuṣa — \"to get cheaper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "رخصت الفاكهة في الصيف. rakhuṣat al-fākiha fī aṣ-ṣayf. Fruit got cheaper in the summer."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يرخص, yarkhuṣ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رخص (rakhuṣa) is built on the native Arabic root r-kh-ṣ, \"to be soft, easy, cheap\" (Lane). It is the plain verb beside rakhīṣ, \"cheap\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakhuṣa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakhuṣa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakhuṣa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakhuṣa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakhuṣat al-fākiha fī aṣ-ṣayf. — Fruit got cheaper in the summer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakhuṣat al-fākiha fī aṣ-ṣayf.* — Fruit got cheaper in the summer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a voucher, then the Arabic for to lower, then say rakhuṣa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a voucher, then the Arabic for to lower, then say *rakhuṣa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رخص (rakhuṣa) mean? (\"To get cheaper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C457-anfaqa",
+      "sequence": 25580,
+      "title": "أنفق (anfaqa) — to spend money",
+      "headword": "أنفق",
+      "romanization": "anfaqa",
+      "gloss": "to spend money",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:007c0706c2791d35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to lower, then the Arabic for to get cheaper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أنفق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أنفق — anfaqa — \"to spend money\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أنفقنا كل مالنا في السوق. anfaqnā kulla mālinā fī as-sūq. We spent all our money at the market."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينفق, yunfiq."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أنفق (anfaqa) is built on the native Arabic root n-f-q, \"to pass away, to run out\" (Lane). It is Form IV, \"to make money run out\"; Lane gives nafaq, \"a tunnel\", on the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anfaqa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anfaqa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anfaqa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anfaqa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anfaqnā kulla mālinā fī as-sūq. — We spent all our money at the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anfaqnā kulla mālinā fī as-sūq.* — We spent all our money at the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to lower, then the Arabic for to get cheaper, then say anfaqa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to lower, then the Arabic for to get cheaper, then say *anfaqa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أنفق (anfaqa) mean? (\"To spend money\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 308,
+  "title": "An investigation",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:fa7e08dee20d9d71",
+  "lessons": [
+    {
+      "id": "AR-C308-tahqiq",
+      "sequence": 17760,
+      "title": "تحقيق (taḥqīq) — an investigation, an inquiry",
+      "headword": "تحقيق",
+      "romanization": "taḥqīq",
+      "gloss": "an investigation, an inquiry",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61fba149bf20c16c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a battle, then the Arabic for to wage war."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تحقيق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تحقيق — taḥqīq — \"an investigation, an inquiry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بدأت الشرطة تحقيقا في الحادث. badaʾat ash-shurṭa taḥqīqan fī al-ḥādith. The police opened an investigation into the accident."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural تحقيقات. In the press, a تحقيق (taḥqīq) is an investigative report."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تحقيق (taḥqīq) is built on the native Arabic root ḥ-q-q (Lane), the root of ḥaqq, truth and right. Taḥqīq is the verbal noun of Form II: \"making sure of the truth\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḥqīq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḥqīq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḥqīq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḥqīq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badaʾat ash-shurṭa taḥqīqan fī al-ḥādith. — The police opened an investigation into the accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badaʾat ash-shurṭa taḥqīqan fī al-ḥādith.* — The police opened an investigation into the accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a battle, then the Arabic for to wage war, then say taḥqīq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a battle, then the Arabic for to wage war, then say *taḥqīq* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تحقيق (taḥqīq) mean? (\"An investigation, an inquiry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C308-haqqaqa",
+      "sequence": 17770,
+      "title": "حقق (ḥaqqaqa) — to investigate; to achieve",
+      "headword": "حقق",
+      "romanization": "ḥaqqaqa",
+      "gloss": "to investigate; to achieve",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cac2fbbab9e11e88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to wage war, then the Arabic for an investigation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حقق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حقق — ḥaqqaqa — \"to investigate; to achieve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حققت الشرطة مع الحارس. ḥaqqaqat ash-shurṭa maʿa al-ḥāris. The police questioned the guard."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يحقق, yuḥaqqiq."
+            },
+            {
+              "kind": "speech",
+              "text": "حقق (ḥaqqaqa) مع someone: to question them. حقق (ḥaqqaqa) هدفه: he reached his goal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حقق (ḥaqqaqa) is built on the native Arabic root ḥ-q-q (Lane), the root of ḥaqq, truth. It is Form II, \"to make sure of; to make come true\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaqqaqa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaqqaqa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaqqaqa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaqqaqa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaqqaqat ash-shurṭa maʿa al-ḥāris. — The police questioned the guard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaqqaqat ash-shurṭa maʿa al-ḥāris.* — The police questioned the guard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to wage war, then the Arabic for an investigation, then say ḥaqqaqa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to wage war, then the Arabic for an investigation, then say *ḥaqqaqa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حقق (ḥaqqaqa) mean? (\"To investigate; to achieve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C308-muhaqqiq",
+      "sequence": 17780,
+      "title": "محقق (muḥaqqiq) — an investigator, a detective",
+      "headword": "محقق",
+      "romanization": "muḥaqqiq",
+      "gloss": "an investigator, a detective",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c2aa4a734fece8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an investigation, then the Arabic for to investigate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: محقق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "محقق — muḥaqqiq — \"an investigator, a detective\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سأل المحقق الجيران عن الحريق. saʾala al-muḥaqqiq al-jīrān ʿan al-ḥarīq. The investigator asked the neighbours about the fire."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "محقق (muḥaqqiq) is built on the native Arabic root ḥ-q-q (Lane), the root of ḥaqq, truth. Muḥaqqiq is the Form II participle, \"one who makes sure of the truth\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muḥaqqiq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muḥaqqiq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muḥaqqiq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muḥaqqiq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saʾala al-muḥaqqiq al-jīrān ʿan al-ḥarīq. — The investigator asked the neighbours about the fire.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saʾala al-muḥaqqiq al-jīrān ʿan al-ḥarīq.* — The investigator asked the neighbours about the fire.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an investigation, then the Arabic for to investigate, then say muḥaqqiq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an investigation, then the Arabic for to investigate, then say *muḥaqqiq* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does محقق (muḥaqqiq) mean? (\"An investigator, a detective\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C308-dalil",
+      "sequence": 17790,
+      "title": "دليل (dalīl) — evidence, proof; a guide",
+      "headword": "دليل",
+      "romanization": "dalīl",
+      "gloss": "evidence, proof; a guide",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa17b08fccfd4e19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to investigate, then the Arabic for an investigator."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دليل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دليل — dalīl — \"evidence, proof; a guide\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وجد المحقق دليلا في الغرفة. wajada al-muḥaqqiq dalīlan fī al-ghurfa. The investigator found a piece of evidence in the room."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: أدلة, adilla."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a guidebook or a guide: دليل (dalīl) سياحي."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دليل (dalīl) is built on the native Arabic root d-l-l (Lane), \"to direct, to show the way\". A dalīl is what points the way to a place, or to the truth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dalīl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dalīl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dalīl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dalīl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wajada al-muḥaqqiq dalīlan fī al-ghurfa. — The investigator found a piece of evidence in the room.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wajada al-muḥaqqiq dalīlan fī al-ghurfa.* — The investigator found a piece of evidence in the room.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to investigate, then the Arabic for an investigator, then say dalīl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to investigate, then the Arabic for an investigator, then say *dalīl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دليل (dalīl) mean? (\"Evidence, proof; a guide\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C308-basma",
+      "sequence": 17800,
+      "title": "بصمة (baṣma) — a fingerprint",
+      "headword": "بصمة",
+      "romanization": "baṣma",
+      "gloss": "a fingerprint",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c172d7e1a2f6c240",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an investigator, then the Arabic for evidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بصمة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بصمة — baṣma — \"a fingerprint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وجدت الشرطة بصمة على الباب. wajadat ash-shurṭa baṣma ʿalā al-bāb. The police found a fingerprint on the door."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural بصمات. بصمة (baṣma) الإصبع in full."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بصمة (baṣma) is built on the native Arabic root b-ṣ-m (Lane), where buṣm is the span between the little finger and the third finger spread apart. Baṣma, a fingerprint, is a modern sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṣma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṣma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṣma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṣma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wajadat ash-shurṭa baṣma ʿalā al-bāb. — The police found a fingerprint on the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wajadat ash-shurṭa baṣma ʿalā al-bāb.* — The police found a fingerprint on the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an investigator, then the Arabic for evidence, then say baṣma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an investigator, then the Arabic for evidence, then say *baṣma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بصمة (baṣma) mean? (\"A fingerprint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R308-review-301-308",
+      "sequence": 17810,
+      "title": "Words from chapters 301–308 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 301-308",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad607edb3212d486",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Arabic for to collide and to overturn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to collide, to overturn, a victim, a wounded person, to give first aid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to collide, to overturn, a victim, a wounded person, to give first aid]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a dialogue, to hold a dialogue, to conduct, to host, a spokesperson",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a dialogue, to hold a dialogue, to conduct, to host, a spokesperson]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a legend, a myth, a hero, a villain, to imagine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a legend, a myth, a hero, a villain, to imagine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an age, long ago, an era, at that time, a reign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an age, long ago, an era, at that time, a reign]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a court of law, an eyewitness, to accuse, a defendant, to pass judgment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a court of law, an eyewitness, to accuse, a defendant, to pass judgment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wedding feast, to propose marriage, an engagement to marry, to escort a bride, to ululate for joy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wedding feast, to propose marriage, an engagement to marry, to escort a bride, to ululate for joy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an army, a soldier, a war, a battle, to wage war",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an army, a soldier, a war, a battle, to wage war]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an investigation, to investigate, an investigator, evidence, a fingerprint",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an investigation, to investigate, an investigator, evidence, a fingerprint]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To collide? (اصطدم, iṣṭadama.) To overturn? (انقلب, inqalaba.) A victim? (ضحية, ḍaḥiyya.) A wounded person? (جريح, jarīḥ.) To give first aid? (أسعف, asʿafa.) A dialogue? (حوار, ḥiwār.) To hold a dialogue? (حاور, ḥāwara.) To conduct? (أجرى, ajrā.) To host? (استضاف, istaḍāfa.) A spokesperson? (متحدث, mutaḥaddith.) A legend? (أسطورة, usṭūra.) A myth? (خرافة, khurāfa.) A hero? (بطل, baṭal.) A villain? (شرير, shirrīr.) To imagine? (تخيل, takhayyala.) An age? (زمن, zaman.) Long ago? (منذ زمن طويل, mundhu zaman ṭawīl.) An era? (حقبة, ḥiqba.) At that time? (آنذاك, ānadhāk.) A reign? (عهد, ʿahd.) A court of law? (محكمة, maḥkama.) An eyewitness? (شاهد عيان, shāhid ʿiyān.) To accuse? (اتهم, ittahama.) A defendant? (متهم, muttaham.) To pass judgment? (حكم, ḥakama.) A wedding feast? (عرس, ʿurs.) To propose marriage? (خطب, khaṭaba.) An engagement to marry? (خطوبة, khuṭūba.) To escort a bride? (زف, zaffa.) To ululate for joy? (زغرد, zaghrada.) An army? (جيش, jaysh.) A soldier? (جندي, jundī.) A war? (حرب, ḥarb.) A battle? (معركة, maʿraka.) To wage war? (حارب, ḥāraba.) An investigation? (تحقيق, taḥqīq.) To investigate? (حقق, ḥaqqaqa.) An investigator? (محقق, muḥaqqiq.) Evidence? (دليل, dalīl.) A fingerprint? (بصمة, baṣma.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "Lecturers and supervisors",
+  "label": "ch:ar-lecturers-and-supervisors",
+  "canDo": "I can talk about a lecturer, a professor and a supervisor, and say that someone supervised or studied.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C392-dhakara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can talk about a lecturer, a professor and a supervisor, and say that someone supervised or studied.",
+    "assesses": [
+      "AR-LEX-C392-MUHADIR392-03",
+      "AR-LEX-C392-MUHADIR392-04",
+      "AR-LEX-C392-MUHADIR392-05"
+    ]
+  }
+}

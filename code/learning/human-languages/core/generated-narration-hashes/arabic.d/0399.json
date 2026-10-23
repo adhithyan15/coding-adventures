@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:8b3af90836afa88a",
+  "lessonIds": [
+    "AR-C399-illa-idha",
+    "AR-C399-fi-hal",
+    "AR-C399-bi-sharti-an",
+    "AR-C399-talama",
+    "AR-C399-wa-illa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch399.txt",
+  "json": "arabic/narration/ch399.json",
+  "textHash": "fnv1a64:5ca69d68813e88a3",
+  "jsonHash": "fnv1a64:8b1c2ceccf6a5ad6",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C331-imtadda",
+    "language": "arabic",
+    "chapter": 331,
+    "sequence": 18960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eab7b19d9dfa06c2"
+  },
+  "findings": []
+}

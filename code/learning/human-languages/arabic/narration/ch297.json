@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 297,
+  "title": "On the radio",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e6c3df1b7ce27f3d",
+  "lessons": [
+    {
+      "id": "AR-C297-idhaa",
+      "sequence": 17200,
+      "title": "إذاعة (idhāʿa) — a radio station; broadcasting",
+      "headword": "إذاعة",
+      "romanization": "idhāʿa",
+      "gloss": "a radio station; broadcasting",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c259976e7fc24318",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to edit, then the Arabic for a bulletin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: إذاعة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إذاعة — idhāʿa — \"a radio station; broadcasting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تعمل خالتي في إذاعة صغيرة. taʿmalu khālatī fī idhāʿa ṣaghīra. My aunt works at a small radio station."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إذاعة (idhāʿa) is usually traced to the native Arabic root dh-y-ʿ, said of news that spreads. Idhāʿa is the verbal noun of Form IV adhāʿa, \"to make known\", and now names radio."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "idhāʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *idhāʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "idhāʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *idhāʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿmalu khālatī fī idhāʿa ṣaghīra. — My aunt works at a small radio station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿmalu khālatī fī idhāʿa ṣaghīra.* — My aunt works at a small radio station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to edit, then the Arabic for a bulletin, then say idhāʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to edit, then the Arabic for a bulletin, then say *idhāʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does إذاعة (idhāʿa) mean? (\"A radio station; broadcasting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C297-qanah",
+      "sequence": 17210,
+      "title": "قناة (qanāh) — a channel; a canal",
+      "headword": "قناة",
+      "romanization": "qanāh",
+      "gloss": "a channel; a canal",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77730624cc0cd44c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a bulletin, then the Arabic for a radio station."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قناة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قناة — qanāh — \"a channel; a canal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تبث هذه القناة الأخبار صباحا ومساء. tabuththu hādhihi al-qanāh al-akhbār ṣabāḥan wa-masāʾan. This channel broadcasts the news morning and evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural قنوات. A television channel and a water canal are one word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قناة (qanāh) is built on the native Arabic root q-n-w (Lane), where qanāh is a straight reed or spear shaft, and then a channel dug for water. The television sense is modern."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qanāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qanāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qanāh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qanāh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tabuththu hādhihi al-qanāh al-akhbār ṣabāḥan wa-masāʾan. — This channel broadcasts the news morning and evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tabuththu hādhihi al-qanāh al-akhbār ṣabāḥan wa-masāʾan.* — This channel broadcasts the news morning and evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a bulletin, then the Arabic for a radio station, then say qanāh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a bulletin, then the Arabic for a radio station, then say *qanāh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قناة (qanāh) mean? (\"A channel; a canal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C297-midhya",
+      "sequence": 17220,
+      "title": "مذياع (midhyāʿ) — a radio set",
+      "headword": "مذياع",
+      "romanization": "midhyāʿ",
+      "gloss": "a radio set",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4e9f168e7247258",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a radio station, then the Arabic for a channel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مذياع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مذياع — midhyāʿ — \"a radio set\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان جدي يسمع المذياع كل صباح. kāna jaddī yasmaʿu al-midhyāʿ kulla ṣabāḥ. My grandfather used to listen to the radio every morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Many speakers say راديو; مذياع (midhyāʿ) is the standard word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مذياع (midhyāʿ) is usually traced to the native Arabic root dh-y-ʿ, \"to spread, to become known\". The mifʿāl pattern names a tool, so midhyāʿ is \"the spreader\": a modern coinage for the radio set."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "midhyāʿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *midhyāʿ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "midhyāʿ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *midhyāʿ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna jaddī yasmaʿu al-midhyāʿ kulla ṣabāḥ. — My grandfather used to listen to the radio every morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna jaddī yasmaʿu al-midhyāʿ kulla ṣabāḥ.* — My grandfather used to listen to the radio every morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a radio station, then the Arabic for a channel, then say midhyāʿ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a radio station, then the Arabic for a channel, then say *midhyāʿ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مذياع (midhyāʿ) mean? (\"A radio set\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C297-adhaa",
+      "sequence": 17230,
+      "title": "أذاع (adhāʿa) — to put on air; to make known",
+      "headword": "أذاع",
+      "romanization": "adhāʿa",
+      "gloss": "to put on air; to make known",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ef8ed9786bbc2d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a channel, then the Arabic for a radio set."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أذاع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أذاع — adhāʿa — \"to put on air; to make known\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أذاعت الإذاعة أغنية قديمة. adhāʿat al-idhāʿa ughniya qadīma. The station broadcast an old song."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يذيع, yudhīʿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أذاع (adhāʿa) is usually traced to the native Arabic root dh-y-ʿ, said of news that spreads. It is Form IV, \"to make known\", and the verb of إذاعة (idhāʿa)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhāʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhāʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhāʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhāʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhāʿat al-idhāʿa ughniya qadīma. — The station broadcast an old song.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhāʿat al-idhāʿa ughniya qadīma.* — The station broadcast an old song.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a channel, then the Arabic for a radio set, then say adhāʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a channel, then the Arabic for a radio set, then say *adhāʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أذاع (adhāʿa) mean? (\"To put on air; to make known\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C297-ala-al-hawa",
+      "sequence": 17240,
+      "title": "على الهواء (ʿalā al-hawāʾ) — on air, live",
+      "headword": "على الهواء",
+      "romanization": "ʿalā al-hawāʾ",
+      "gloss": "on air, live",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e355ec48278cb549",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a radio set, then the Arabic for to put on air."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: على الهواء",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "على الهواء — ʿalā al-hawāʾ — \"on air, live\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تكلم الوزير على الهواء مساء أمس. takallama al-wazīr ʿalā al-hawāʾ masāʾa ams. The minister spoke on air yesterday evening."
+            },
+            {
+              "kind": "speech",
+              "text": "على الهواء (ʿalā al-hawāʾ) مباشرة: live on air."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "على الهواء (ʿalā al-hawāʾ) is ʿalā, \"on\", with hawāʾ, \"air\", which is built on the native Arabic root h-w-y (Lane). The phrase is usually traced to the English broadcasting phrase on the air."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿalā al-hawāʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿalā al-hawāʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿalā al-hawāʾ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿalā al-hawāʾ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takallama al-wazīr ʿalā al-hawāʾ masāʾa ams. — The minister spoke on air yesterday evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takallama al-wazīr ʿalā al-hawāʾ masāʾa ams.* — The minister spoke on air yesterday evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a radio set, then the Arabic for to put on air, then say ʿalā al-hawāʾ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a radio set, then the Arabic for to put on air, then say *ʿalā al-hawāʾ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does على الهواء (ʿalā al-hawāʾ) mean? (\"On air, live\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

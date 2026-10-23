@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Trades and crafts",
+  "label": "ch:ar-trades-and-crafts",
+  "canDo": "I can name a mechanic, a contractor, a house painter, a builder and a cobbler.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C526-iskafi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can name a mechanic, a contractor, a house painter, a builder and a cobbler.",
+    "assesses": [
+      "AR-LEX-C526-HIRAF526-03",
+      "AR-LEX-C526-HIRAF526-04",
+      "AR-LEX-C526-HIRAF526-05"
+    ]
+  }
+}

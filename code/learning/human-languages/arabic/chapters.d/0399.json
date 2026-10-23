@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "If and unless",
+  "label": "ch:ar-if-and-unless",
+  "canDo": "I can say unless, in case, provided that, as long as and otherwise.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C399-wa-illa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can say unless, in case, provided that, as long as and otherwise.",
+    "assesses": [
+      "AR-LEX-C399-SHART399-03",
+      "AR-LEX-C399-SHART399-04",
+      "AR-LEX-C399-SHART399-05"
+    ]
+  }
+}

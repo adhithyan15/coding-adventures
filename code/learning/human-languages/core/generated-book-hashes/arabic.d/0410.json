@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:c6f5f6032be9c3ea",
+  "lessonIds": [
+    "AR-C410-abaha",
+    "AR-C410-awjaba",
+    "AR-C410-khalafa",
+    "AR-C410-iltazama",
+    "AR-C410-afa-exempt"
+  ],
+  "tex": "arabic/book/chapters/ch410-allowed-or-required.tex"
+}

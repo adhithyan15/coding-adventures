@@ -6485,6 +6485,42 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // ALGOL 60 - a variable-free integer reduction may be folded before it is
+    // multiplied by a sign-rooted transform; the false branch computes
+    // (11 mod 4)*(2*sign(3.5)+2).
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(if choose() then (6 div 4 * sign(left)) else (11 mod 4 * ((2 * sign(right)) + 2))); output(result) end",
+        expect: Expect::Stdout("12"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - grouped variable-free integer reductions remain exact as
+    // static factors around a sign-rooted transform; the false branch computes
+    // ((10 div 3)+(7 mod 4))*(2*sign(3.5)+2).
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(if choose() then ((6 div 4) * sign(left)) else (((10 div 3) + (7 mod 4)) * ((2 * sign(right)) + 2))); output(result) end",
+        expect: Expect::Stdout("24"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - checked powers of grouped variable-free integer reductions
+    // remain exact as static factors around a sign-rooted transform; the false
+    // branch computes ((10 div 3)+(7 mod 4))^(6 div 3)*(2*sign(3.5)+2).
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(if choose() then (((6 div 4) ^ 3) * sign(left)) else ((((10 div 3) + (7 mod 4)) ^ (6 div 3)) * ((2 * sign(right)) + 2))); output(result) end",
+        expect: Expect::Stdout("144"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -13653,6 +13689,32 @@ fn ruby_rows_are_rb_int_puts_corpus_cases() {
     }
 }
 
+/// Runs a host interpreter on `src`, fed on stdin (`ruby -`, `perl -`,
+/// `python3 -I -` all read their program there). The oracles below never
+/// pass program text as an argument. Windows has no argv, only one command
+/// line string. Rust quotes an argument only when it holds a space or tab,
+/// and the mingw-built `ruby` and `perl` split their command line on any
+/// whitespace. So a source with no space but a line break reaches them cut
+/// at the break: Ruby's `empty_program` ("\n") arrives as `-e` with no code,
+/// and Perl's `crlf_layout` ("print(1);\r\nprint(2);\r\n") runs only
+/// `print(1);`. Stdin carries the bytes untouched on every host.
+fn run_host_oracle(command: &mut Command, src: &str) -> std::process::Output {
+    use std::io::Write as _;
+    let mut child = command
+        .stdin(std::process::Stdio::piped())
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped())
+        .spawn()
+        .expect("the interpreter ran once already (its version probe)");
+    // The sources are a few bytes, far below any pipe buffer, so writing
+    // before reading cannot deadlock; dropping the handle sends EOF. An
+    // interpreter that exits without reading closes the pipe early; that
+    // is not this helper's failure to report, so a write error is dropped
+    // and the caller's status and stdout assertions say what went wrong.
+    let _ = child.stdin.take().expect("piped stdin").write_all(src.as_bytes());
+    child.wait_with_output().expect("the interpreter exited")
+}
+
 /// The oracle: a host Ruby on the 3.3 line must print each row's stdout and,
 /// for a trap row, stop with `ZeroDivisionError`. The compiled programs never
 /// run on it. Skips (loudly) without a matching `ruby`.
@@ -13670,8 +13732,7 @@ fn ruby_rows_agree_with_the_host_ruby_oracle() {
         return;
     }
     for program in ruby_rows() {
-        // `-e` with the source as its own argument: no shell, no temp file.
-        let out = Command::new("ruby").args(["-e", program.src]).output().expect("ruby ran once already");
+        let out = run_host_oracle(Command::new("ruby").arg("-"), program.src);
         // Windows interpreters write text-mode stdout ("\r\n"); the rows
         // record the language's output, so fold the line ending back.
         let stdout = String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n");
@@ -25691,6 +25752,84 @@ fn algol_pathwise_exact_quotient_sign_integer_runtime_real_output_runs_on_every_
 }
 
 #[test]
+fn algol_static_prefix_integer_reduction_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(if choose() then (6 div 4 * sign(left)) else (11 mod 4 * ((2 * sign(right)) + 2)))",
+                )
+        })
+        .expect("the static-prefix integer-reduction ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the static-prefix integer-reduction program did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_grouped_static_integer_reduction_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(if choose() then ((6 div 4) * sign(left)) else (((10 div 3) + (7 mod 4)) * ((2 * sign(right)) + 2)))",
+                )
+        })
+        .expect("the grouped static integer-reduction ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the grouped static integer-reduction program did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_powered_static_integer_reduction_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(if choose() then (((6 div 4) ^ 3) * sign(left)) else ((((10 div 3) + (7 mod 4)) ^ (6 div 3)) * ((2 * sign(right)) + 2)))",
+                )
+        })
+        .expect("the powered static integer-reduction ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the powered static integer-reduction program did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_static_conditional_while_effect_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -27751,11 +27890,7 @@ fn perl_rows_agree_with_the_host_perl_oracle() {
         let Expect::Stdout(expected) = program.expect else {
             panic!("a Perl row is checked by its stdout: {:?}", program.src);
         };
-        // `-e` with the source as its own argument: no shell, no temp file.
-        let out = Command::new("perl")
-            .args(["-e", program.src])
-            .output()
-            .expect("perl ran once already");
+        let out = run_host_oracle(Command::new("perl").arg("-"), program.src);
         assert!(out.status.success(), "perl {version} rejected {:?}", program.src);
         // Perl on Windows prints through a `:crlf` layer; fold "\r\n" back.
         assert_eq!(
@@ -27972,8 +28107,7 @@ fn python_rows_agree_with_the_host_python_oracle() {
         return;
     }
     for program in python_rows() {
-        // `-c` with the source as its own argument: no shell, no temp file.
-        let out = Command::new("python3").args(["-I", "-c", program.src]).output().expect("python3 ran once already");
+        let out = run_host_oracle(Command::new("python3").args(["-I", "-"]), program.src);
         // Windows interpreters write text-mode stdout ("\r\n"); the rows
         // record the language's output, so fold the line ending back.
         let stdout = String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n");

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:12654451011f6b90",
+  "lessonIds": [
+    "AR-C465-taqa",
+    "AR-C465-ghaz",
+    "AR-C465-naft",
+    "AR-C465-fahm",
+    "AR-C465-istahlaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch465.txt",
+  "json": "arabic/narration/ch465.json",
+  "textHash": "fnv1a64:ac98bd5b373c79a3",
+  "jsonHash": "fnv1a64:5dbc656006f2bf42",
+  "findings": []
+}

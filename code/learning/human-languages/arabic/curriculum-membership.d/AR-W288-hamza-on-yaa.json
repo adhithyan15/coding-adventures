@@ -1,0 +1,11 @@
+{
+  "id": "AR-W288-hamza-on-yaa",
+  "pathSegment": "AR-PATH-288-STATION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-288-STATION",
+      "order": 2
+    }
+  ]
+}

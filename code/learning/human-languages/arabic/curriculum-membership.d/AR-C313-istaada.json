@@ -1,0 +1,11 @@
+{
+  "id": "AR-C313-istaada",
+  "pathSegment": "AR-PATH-313-FAWR313",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-313-FAWR313",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:a3ab39d36098bae5",
+  "lessonIds": [
+    "AR-C432-waqud",
+    "AR-C432-banzin",
+    "AR-C432-muharrik",
+    "AR-C432-faramil",
+    "AR-C432-zawwada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch432.txt",
+  "json": "arabic/narration/ch432.json",
+  "textHash": "fnv1a64:3ff7e7b52e91457b",
+  "jsonHash": "fnv1a64:a94c4cd576d95069",
+  "findings": []
+}

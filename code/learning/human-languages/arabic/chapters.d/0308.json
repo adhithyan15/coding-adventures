@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "An investigation",
+  "label": "ch:ar-an-investigation",
+  "canDo": "I can say an investigation, to investigate, an investigator, evidence and a fingerprint.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-R308-review-301-308",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can say an investigation, to investigate, an investigator, evidence and a fingerprint.",
+    "assesses": [
+      "AR-LEX-C308-TAHQIQ308-03",
+      "AR-LEX-C308-TAHQIQ308-04",
+      "AR-LEX-C308-TAHQIQ308-05"
+    ]
+  }
+}

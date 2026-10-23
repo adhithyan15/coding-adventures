@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-526-HIRAF526",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a mechanic, a contractor, a house painter, a builder and a cobbler.",
+  "prerequisites": []
+}

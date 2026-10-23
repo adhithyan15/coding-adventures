@@ -158,7 +158,36 @@ pub struct napi_property_descriptor {
 // ---------------------------------------------------------------------------
 // N-API extern "C" declarations
 // ---------------------------------------------------------------------------
+//
+// Where do these symbols come from at link time?
+//
+// | Platform | Who provides napi_* at link time        | How                     |
+// |----------|-----------------------------------------|-------------------------|
+// | Linux    | nobody — ELF allows undefined symbols   | resolved by dlopen()    |
+// | macOS    | nobody — `-undefined dynamic_lookup`    | set in build.rs         |
+// | Windows  | node.exe, via a raw-dylib import table  | the `#[link]` below     |
+//
+// Windows is the odd one out.  A PE/COFF DLL may not leave a symbol
+// undefined: every import must name the module that exports it.  The
+// N-API functions are exported by the Node.js executable itself, so the
+// import module is `node.exe` — exactly what node-gyp's `node.lib` says.
+//
+// Rather than downloading `node.lib` (network access in a build, plus a
+// file whose version must match), `kind = "raw-dylib"` asks rustc to
+// synthesise the import table from the declarations right here.  The
+// `+verbatim` modifier stops rustc appending `.dll`, so the import really
+// reads `node.exe`.  Analogy: instead of buying a printed phone book
+// (`node.lib`), we write down the few numbers we actually call.
+//
+// One limit worth knowing: the import is bound to a host executable
+// named `node.exe`.  node-gyp adds a delay-load hook so an addon also
+// loads inside a renamed host such as `electron.exe`; we do not, because
+// every consumer in this repo runs under plain Node.js.
 
+#[cfg_attr(
+    windows,
+    link(name = "node.exe", kind = "raw-dylib", modifiers = "+verbatim")
+)]
 extern "C" {
     // -- String operations -------------------------------------------------
     pub fn napi_create_string_utf8(

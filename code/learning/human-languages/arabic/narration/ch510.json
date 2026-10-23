@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 510,
+  "title": "Tests and treatment",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:77c7ae749036a10f",
+  "lessons": [
+    {
+      "id": "AR-C510-tashkhis",
+      "sequence": 28320,
+      "title": "تشخيص (tashkhīṣ) — a diagnosis",
+      "headword": "تشخيص",
+      "romanization": "tashkhīṣ",
+      "gloss": "a diagnosis",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a963b6d5c06acccc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a vaccination, then the Arabic for a swelling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تشخيص",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تشخيص — tashkhīṣ — \"a diagnosis\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان تشخيص الطبيب صحيحا. kāna tashkhīṣ aṭ-ṭabīb ṣaḥīḥan. The doctor's diagnosis was correct."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تشخيص (tashkhīṣ) is built on the native Arabic root sh-kh-ṣ, \"a person, a figure seen from afar\" (Lane). Shakhṣ, a person, which you know, is from the same root; Form II is to make a thing stand out clearly."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tashkhīṣ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tashkhīṣ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tashkhīṣ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tashkhīṣ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna tashkhīṣ aṭ-ṭabīb ṣaḥīḥan. — The doctor's diagnosis was correct.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna tashkhīṣ aṭ-ṭabīb ṣaḥīḥan.* — The doctor's diagnosis was correct.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a vaccination, then the Arabic for a swelling, then say tashkhīṣ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a vaccination, then the Arabic for a swelling, then say *tashkhīṣ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تشخيص (tashkhīṣ) mean? (\"A diagnosis\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C510-tahlil",
+      "sequence": 28330,
+      "title": "تحليل (taḥlīl) — a lab test; an analysis",
+      "headword": "تحليل",
+      "romanization": "taḥlīl",
+      "gloss": "a lab test; an analysis",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c6e25a2e0201d01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a swelling, then the Arabic for a diagnosis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تحليل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تحليل — taḥlīl — \"a lab test; an analysis\"."
+            },
+            {
+              "kind": "speech",
+              "text": "طلب الطبيب تحليل دم. ṭalaba aṭ-ṭabīb taḥlīl dam. The doctor asked for a blood test."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تحليل (taḥlīl) is built on the native Arabic root ḥ-l-l, \"to untie, to loosen\" (Lane). Ḥall, a solution, which you know, is from the same root: taḥlīl takes a thing apart."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḥlīl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḥlīl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḥlīl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḥlīl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭalaba aṭ-ṭabīb taḥlīl dam. — The doctor asked for a blood test.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭalaba aṭ-ṭabīb taḥlīl dam.* — The doctor asked for a blood test.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a swelling, then the Arabic for a diagnosis, then say taḥlīl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a swelling, then the Arabic for a diagnosis, then say *taḥlīl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تحليل (taḥlīl) mean? (\"A lab test; an analysis\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C510-ashia",
+      "sequence": 28340,
+      "title": "أشعة (ashiʿʿa) — X-rays; rays",
+      "headword": "أشعة",
+      "romanization": "ashiʿʿa",
+      "gloss": "X-rays; rays",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4b515854d5a5b76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a diagnosis, then the Arabic for a lab test."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أشعة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أشعة — ashiʿʿa — \"X-rays; rays\"."
+            },
+            {
+              "kind": "speech",
+              "text": "صور الطبيب ساقه بالأشعة. ṣawwara aṭ-ṭabīb sāqahu bi-l-ashiʿʿa. The doctor X-rayed his leg."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the plural of شعاع, a ray."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أشعة (ashiʿʿa) is built on the native Arabic root sh-ʿ-ʿ, \"to spread, to scatter (of light)\" (Lane). A shuʿāʿ is a ray spreading out from the sun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ashiʿʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ashiʿʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ashiʿʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ashiʿʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣawwara aṭ-ṭabīb sāqahu bi-l-ashiʿʿa. — The doctor X-rayed his leg.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣawwara aṭ-ṭabīb sāqahu bi-l-ashiʿʿa.* — The doctor X-rayed his leg.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a diagnosis, then the Arabic for a lab test, then say ashiʿʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a diagnosis, then the Arabic for a lab test, then say *ashiʿʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أشعة (ashiʿʿa) mean? (\"X-rays; rays\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C510-alaja",
+      "sequence": 28350,
+      "title": "عالج (ʿālaja) — to treat (a patient)",
+      "headword": "عالج",
+      "romanization": "ʿālaja",
+      "gloss": "to treat (a patient)",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed02cf206cad6752",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a lab test, then the Arabic for X-rays."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عالج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عالج — ʿālaja — \"to treat (a patient)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عالجت الطبيبة الجرح بسرعة. ʿālajat aṭ-ṭabība al-jurḥ bi-surʿa. The doctor treated the wound quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يعالج, yuʿālij."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun علاج, treatment, goes with it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عالج (ʿālaja) is built on the native Arabic root ʿ-l-j, \"to work at, to struggle with\" (Lane). Form III ʿālaja is to work at a thing until it gives way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿālaja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿālaja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿālaja, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿālaja*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿālajat aṭ-ṭabība al-jurḥ bi-surʿa. — The doctor treated the wound quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿālajat aṭ-ṭabība al-jurḥ bi-surʿa.* — The doctor treated the wound quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a lab test, then the Arabic for X-rays, then say ʿālaja again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a lab test, then the Arabic for X-rays, then say *ʿālaja* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عالج (ʿālaja) mean? (\"To treat (a patient)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C510-dawa",
+      "sequence": 28360,
+      "title": "داوى (dāwā) — to cure",
+      "headword": "داوى",
+      "romanization": "dāwā",
+      "gloss": "to cure",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc13d96be44db77a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for X-rays, then the Arabic for to treat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: داوى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "داوى — dāwā — \"to cure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كانت جدتي تداوي الناس بالأعشاب. kānat jaddatī tudāwī an-nās bi-l-aʿshāb. My grandmother used to cure people with herbs."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يداوي, yudāwī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "داوى (dāwā) is built on the native Arabic root d-w-y, \"sickness; a cure\" (Lane). Dawāʾ, medicine, which you know, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāwā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāwā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāwā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāwā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kānat jaddatī tudāwī an-nās bi-l-aʿshāb. — My grandmother used to cure people with herbs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kānat jaddatī tudāwī an-nās bi-l-aʿshāb.* — My grandmother used to cure people with herbs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for X-rays, then the Arabic for to treat, then say dāwā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for X-rays, then the Arabic for to treat, then say *dāwā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does داوى (dāwā) mean? (\"To cure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

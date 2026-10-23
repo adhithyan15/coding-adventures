@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:779be1776427da42",
+  "lessonIds": [
+    "AR-C430-marfa",
+    "AR-C430-marsa",
+    "AR-C430-manara",
+    "AR-C430-zawraq",
+    "AR-C430-jaddafa",
+    "AR-R430-review-423-430"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch430.txt",
+  "json": "arabic/narration/ch430.json",
+  "textHash": "fnv1a64:7e415dcb628591cb",
+  "jsonHash": "fnv1a64:19a0e0a006318ce7",
+  "findings": []
+}

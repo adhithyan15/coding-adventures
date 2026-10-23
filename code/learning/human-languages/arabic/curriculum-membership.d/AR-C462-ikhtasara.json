@@ -1,0 +1,11 @@
+{
+  "id": "AR-C462-ikhtasara",
+  "pathSegment": "AR-PATH-462-ISTIDAD462",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-462-ISTIDAD462",
+      "order": 1
+    }
+  ]
+}

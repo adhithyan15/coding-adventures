@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "Logic and the mind",
+  "label": "ch:ar-logic-and-the-mind",
+  "canDo": "I can talk about logic, a fallacy, the mind and a contradiction, and say what someone concluded.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C362-tanaqud",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can talk about logic, a fallacy, the mind and a contradiction, and say what someone concluded.",
+    "assesses": [
+      "AR-LEX-C362-MANTIQ362-03",
+      "AR-LEX-C362-MANTIQ362-04",
+      "AR-LEX-C362-MANTIQ362-05"
+    ]
+  }
+}

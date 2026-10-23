@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:b5b8506c817535a9",
+  "lessonIds": [
+    "AR-C414-nataja",
+    "AR-C414-tarattaba",
+    "AR-C414-inakasa",
+    "AR-C414-aqiba",
+    "AR-C414-tathir"
+  ],
+  "tex": "arabic/book/chapters/ch414-outcomes.tex"
+}

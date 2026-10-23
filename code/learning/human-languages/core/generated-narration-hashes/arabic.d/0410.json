@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:db6cf2fcd1e8248b",
+  "lessonIds": [
+    "AR-C410-abaha",
+    "AR-C410-awjaba",
+    "AR-C410-khalafa",
+    "AR-C410-iltazama",
+    "AR-C410-afa-exempt"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch410.txt",
+  "json": "arabic/narration/ch410.json",
+  "textHash": "fnv1a64:735909f6a00b165a",
+  "jsonHash": "fnv1a64:dc65605a48d71c87",
+  "findings": []
+}

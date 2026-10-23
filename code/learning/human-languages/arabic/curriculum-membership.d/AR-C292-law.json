@@ -1,0 +1,11 @@
+{
+  "id": "AR-C292-law",
+  "pathSegment": "AR-PATH-292-WOULD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-292-WOULD",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Viewers and listeners",
+  "label": "ch:ar-viewers-and-listeners",
+  "canDo": "I can say a follower, a viewer, a listener, a photographer and to cover.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-R356-review-349-356",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can say a follower, a viewer, a listener, a photographer and to cover.",
+    "assesses": [
+      "AR-LEX-C356-JUMHUR356-03",
+      "AR-LEX-C356-JUMHUR356-04",
+      "AR-LEX-C356-JUMHUR356-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C295-sarada",
+  "pathSegment": "AR-PATH-295-RIWAYA295",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-295-RIWAYA295",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C453-naqdan",
+  "pathSegment": "AR-PATH-453-QIST453",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-453-QIST453",
+      "order": 1
+    }
+  ]
+}

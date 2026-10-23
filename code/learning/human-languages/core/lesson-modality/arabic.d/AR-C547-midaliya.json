@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C547-midaliya",
+    "language": "arabic",
+    "chapter": 547,
+    "sequence": 30250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:287f4d8f8b45aea4"
+  },
+  "findings": []
+}

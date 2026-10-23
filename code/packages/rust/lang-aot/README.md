@@ -29,13 +29,21 @@ their checked total stays within `2^53 - 1` units, so every path value remains
 an exact binary64 integer; the budget is tracked through parentheses and
 supported wrappers and applied per conditional path. Exact whole-number
 factors may also scale the sign-rooted integer transform through magnitude
-`2^53`, including exact additive composition; fractional factors, non-unit
-prefix integer division, denominator roots, repeated roots, and oversized products
-stay conservative. A non-unit static divisor is accepted only when it divides
+`2^53`, including exact additive composition; fractional factors, denominator
+roots, repeated roots, and oversized products stay conservative. A non-unit
+static divisor is accepted only when it divides
 every possible exact integer value of the sign-rooted transform. Static
 whole-number factors may precede the sign-rooted numerator, including exact
 divisions among those factors, when multiplication connects the resulting
-prefix to that root; division by the root stays conservative. Positive
+prefix to that root. Variable-free integer `div` and `mod` reductions may also
+be folded left-to-right in that prefix when multiplication connects the folded
+integer to the root; zero or dynamic divisors, oversized prefixes, and division
+by the root stay conservative. Parenthesized variable-free integer reductions
+may also supply static offsets or factors around the root when checked
+arithmetic keeps the grouped result exact and within `2^53`; zero or dynamic
+divisors and inexact real divisions stay conservative. These grouped reductions
+may include right-associative checked powers within the existing exponent cap;
+negative or dynamic exponents and overflowing powers stay conservative. Positive
 variable-free whole-number powers may raise the exact sign-rooted integer
 transform within the existing exponent-unroll cap while checked exponentiation
 remains within `2^53`; zero, negative, dynamic, deeper, and oversized powers

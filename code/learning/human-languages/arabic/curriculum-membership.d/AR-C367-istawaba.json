@@ -1,0 +1,11 @@
+{
+  "id": "AR-C367-istawaba",
+  "pathSegment": "AR-PATH-367-IDRAK367",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-367-IDRAK367",
+      "order": 2
+    }
+  ]
+}

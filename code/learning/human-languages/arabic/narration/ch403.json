@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 403,
+  "title": "Sure and unsure",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ec3b22802990cce5",
+  "lessons": [
+    {
+      "id": "AR-C403-tayaqqana",
+      "sequence": 22700,
+      "title": "تيقن (tayaqqana) — to make certain",
+      "headword": "تيقن",
+      "romanization": "tayaqqana",
+      "gloss": "to make certain",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa1e81a193b9e5eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for not at all, then the Arabic for certainty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تيقن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تيقن — tayaqqana — \"to make certain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تيقن الطبيب من سلامة الطفل. tayaqqana aṭ-ṭabīb min salāmat aṭ-ṭifl. The doctor made certain that the child was safe."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتيقن, yatayaqqan."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes من: تيقن (tayaqqana) من …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تيقن (tayaqqana) is built on the native Arabic root y-q-n, usually traced to the sense \"to be sure\". It is Form V, to make oneself sure: to make certain."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tayaqqana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tayaqqana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tayaqqana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tayaqqana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tayaqqana aṭ-ṭabīb min salāmat aṭ-ṭifl. — The doctor made certain that the child was safe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tayaqqana aṭ-ṭabīb min salāmat aṭ-ṭifl.* — The doctor made certain that the child was safe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for not at all, then the Arabic for certainty, then say tayaqqana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for not at all, then the Arabic for certainty, then say *tayaqqana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تيقن (tayaqqana) mean? (\"To make certain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C403-irtaba",
+      "sequence": 22710,
+      "title": "ارتاب (irtāba) — to be suspicious",
+      "headword": "ارتاب",
+      "romanization": "irtāba",
+      "gloss": "to be suspicious",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10793e36e950de62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for certainty, then the Arabic for to make certain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ارتاب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ارتاب — irtāba — \"to be suspicious\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ارتاب الحارس في الرجل. irtāba al-ḥāris fī ar-rajul. The guard grew suspicious of the man."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يرتاب, yartāb."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes في: ارتاب (irtāba) في …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ارتاب (irtāba) is built on the native Arabic root r-y-b, \"to disquiet, to raise doubt\" (Lane). It is Form VIII, to be filled with disquiet: to doubt, to be suspicious."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irtāba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irtāba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irtāba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irtāba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irtāba al-ḥāris fī ar-rajul. — The guard grew suspicious of the man.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irtāba al-ḥāris fī ar-rajul.* — The guard grew suspicious of the man.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for certainty, then the Arabic for to make certain, then say irtāba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for certainty, then the Arabic for to make certain, then say *irtāba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ارتاب (irtāba) mean? (\"To be suspicious\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C403-mustahil",
+      "sequence": 22720,
+      "title": "مستحيل (mustaḥīl) — impossible",
+      "headword": "مستحيل",
+      "romanization": "mustaḥīl",
+      "gloss": "impossible",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c39851f60d303a53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to make certain, then the Arabic for to be suspicious."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مستحيل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مستحيل — mustaḥīl — \"impossible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "من المستحيل أن ننهي العمل اليوم. min al-mustaḥīl an nunhiya al-ʿamal al-yawm. It is impossible for us to finish the work today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مستحيل (mustaḥīl) is built on the native Arabic root ḥ-w-l, \"to change, to turn\" (Lane). Mustaḥīl is the Form X active participle, what has turned away from being: impossible."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mustaḥīl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mustaḥīl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mustaḥīl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mustaḥīl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "min al-mustaḥīl an nunhiya al-ʿamal al-yawm. — It is impossible for us to finish the work today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *min al-mustaḥīl an nunhiya al-ʿamal al-yawm.* — It is impossible for us to finish the work today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to make certain, then the Arabic for to be suspicious, then say mustaḥīl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to make certain, then the Arabic for to be suspicious, then say *mustaḥīl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مستحيل (mustaḥīl) mean? (\"Impossible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C403-ala-al-arjah",
+      "sequence": 22730,
+      "title": "على الأرجح (ʿalā al-arjaḥ) — most probably",
+      "headword": "على الأرجح",
+      "romanization": "ʿalā al-arjaḥ",
+      "gloss": "most probably",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f136b24984b096b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to be suspicious, then the Arabic for impossible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: على الأرجح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "على الأرجح — ʿalā al-arjaḥ — \"most probably\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سيصل على الأرجح بعد الظهر. sa-yaṣilu ʿalā al-arjaḥ baʿda aẓ-ẓuhr. He will most probably arrive in the afternoon."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "على الأرجح (ʿalā al-arjaḥ) joins ʿalā, \"on\", with al-arjaḥ, \"the weightier\", built on the native Arabic root r-j-ḥ, \"to outweigh\" (Lane): on the heavier side of the scale, most probably."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿalā al-arjaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿalā al-arjaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿalā al-arjaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿalā al-arjaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sa-yaṣilu ʿalā al-arjaḥ baʿda aẓ-ẓuhr. — He will most probably arrive in the afternoon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sa-yaṣilu ʿalā al-arjaḥ baʿda aẓ-ẓuhr.* — He will most probably arrive in the afternoon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to be suspicious, then the Arabic for impossible, then say ʿalā al-arjaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to be suspicious, then the Arabic for impossible, then say *ʿalā al-arjaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does على الأرجح (ʿalā al-arjaḥ) mean? (\"Most probably\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C403-umuman",
+      "sequence": 22740,
+      "title": "عموما (ʿumūman) — in general",
+      "headword": "عموما",
+      "romanization": "ʿumūman",
+      "gloss": "in general",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:944c7661a1ac68f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for impossible, then the Arabic for most probably."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عموما",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عموما — ʿumūman — \"in general\"."
+            },
+            {
+              "kind": "speech",
+              "text": "الطقس عموما جميل هنا. aṭ-ṭaqs ʿumūman jamīl hunā. The weather here is generally pleasant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عموما (ʿumūman) is built on the native Arabic root ʿ-m-m, \"to be general, to include all\" (Lane). ʿUmūman is the verbal noun ʿumūm, generality, with the adverb ending -an: in general."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿumūman",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿumūman*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿumūman, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿumūman*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭ-ṭaqs ʿumūman jamīl hunā. — The weather here is generally pleasant.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭ-ṭaqs ʿumūman jamīl hunā.* — The weather here is generally pleasant.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for impossible, then the Arabic for most probably, then say ʿumūman again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for impossible, then the Arabic for most probably, then say *ʿumūman* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عموما (ʿumūman) mean? (\"In general\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

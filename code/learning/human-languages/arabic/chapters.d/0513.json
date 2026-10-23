@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "Long illnesses",
+  "label": "ch:ar-long-illnesses",
+  "canDo": "I can talk about diabetes, asthma and a disability, and say that someone grew weak or bled.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C513-nazafa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can talk about diabetes, asthma and a disability, and say that someone grew weak or bled.",
+    "assesses": [
+      "AR-LEX-C513-MUZMIN513-03",
+      "AR-LEX-C513-MUZMIN513-04",
+      "AR-LEX-C513-MUZMIN513-05"
+    ]
+  }
+}

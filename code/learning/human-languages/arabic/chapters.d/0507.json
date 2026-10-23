@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "Falling ill",
+  "label": "ch:ar-falling-ill",
+  "canDo": "I can say that someone fell ill or vomited, and talk about a chill, nausea and diarrhoea.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C507-ishal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can say that someone fell ill or vomited, and talk about a chill, nausea and diarrhoea.",
+    "assesses": [
+      "AR-LEX-C507-MARAD507-03",
+      "AR-LEX-C507-MARAD507-04",
+      "AR-LEX-C507-MARAD507-05"
+    ]
+  }
+}

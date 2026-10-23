@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:98a6e8111c53e80c",
+  "lessonIds": [
+    "AR-C345-tahadda",
+    "AR-C345-wajaha",
+    "AR-C345-taghallaba",
+    "AR-C345-iqtaraba",
+    "AR-C345-ibtaada"
+  ],
+  "tex": "arabic/book/chapters/ch345-facing-danger.tex"
+}

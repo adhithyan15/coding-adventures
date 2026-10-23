@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:279a4539f85b54d0",
+  "lessonIds": [
+    "AR-C396-mustalah",
+    "AR-C396-tarif",
+    "AR-C396-fihris",
+    "AR-C396-utruha",
+    "AR-C396-manhaj"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch396.txt",
+  "json": "arabic/narration/ch396.json",
+  "textHash": "fnv1a64:1d26c4aa1ae0aaa5",
+  "jsonHash": "fnv1a64:f75db9e36988a8f2",
+  "findings": []
+}

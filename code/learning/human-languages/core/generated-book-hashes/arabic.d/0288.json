@@ -1,0 +1,14 @@
+{
+  "language": "arabic",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:6a1b991f930d98d4",
+  "lessonIds": [
+    "AR-C288-dhahab-wa-iyab",
+    "AR-C288-taira",
+    "AR-W288-hamza-on-yaa",
+    "AR-C288-masul",
+    "AR-C288-fatani",
+    "AR-R288-at-the-station"
+  ],
+  "tex": "arabic/book/chapters/ch288-at-the-station.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:4a0c5f8b2d6ae055",
+  "lessonIds": [
+    "AR-C478-qati",
+    "AR-C478-mara",
+    "AR-C478-qafas",
+    "AR-C478-farw",
+    "AR-C478-raa",
+    "AR-R478-review-471-478"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch478.txt",
+  "json": "arabic/narration/ch478.json",
+  "textHash": "fnv1a64:58fa4611cad5f570",
+  "jsonHash": "fnv1a64:48b5097452bc3601",
+  "findings": []
+}

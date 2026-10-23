@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R397-review-390-397",
+    "language": "arabic",
+    "chapter": 397,
+    "sequence": 22440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab2a28f2fd85bfd1"
+  },
+  "findings": []
+}

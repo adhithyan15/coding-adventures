@@ -1,0 +1,11 @@
+{
+  "id": "AR-C515-istalqa",
+  "pathSegment": "AR-PATH-515-NAWM515",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-515-NAWM515",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C505-mafsil",
+  "pathSegment": "AR-PATH-505-ADHM505",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-505-ADHM505",
+      "order": 4
+    }
+  ]
+}

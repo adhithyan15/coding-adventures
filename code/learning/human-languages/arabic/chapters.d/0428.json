@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "On the railway",
+  "label": "ch:ar-on-the-railway",
+  "canDo": "I can say a railway, a carriage, a compartment, the metro and to unload.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C428-anzala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can say a railway, a carriage, a compartment, the metro and to unload.",
+    "assesses": [
+      "AR-LEX-C428-SIKKA428-03",
+      "AR-LEX-C428-SIKKA428-04",
+      "AR-LEX-C428-SIKKA428-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C403-irtaba",
+    "language": "arabic",
+    "chapter": 403,
+    "sequence": 22710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10793e36e950de62"
+  },
+  "findings": []
+}

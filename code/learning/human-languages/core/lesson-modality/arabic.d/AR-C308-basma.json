@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C308-basma",
+    "language": "arabic",
+    "chapter": 308,
+    "sequence": 17800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c172d7e1a2f6c240"
+  },
+  "findings": []
+}

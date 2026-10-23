@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Conditions",
+  "label": "ch:ar-conditions",
+  "canDo": "I can talk about a condition, say that someone stipulated or ensured something, and say even if and as if.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C404-damina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can talk about a condition, say that someone stipulated or ensured something, and say even if and as if.",
+    "assesses": [
+      "AR-LEX-C404-SHART404-03",
+      "AR-LEX-C404-SHART404-04",
+      "AR-LEX-C404-SHART404-05"
+    ]
+  }
+}
