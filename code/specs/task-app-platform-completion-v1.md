@@ -365,6 +365,10 @@ Both themes must retain a 260-pixel minimum board-column width when the
 available row is narrower than its columns. Add an explicit `min-width: 260`
 alongside the existing width and non-shrink intent. Verify the package-emitted
 Qt column has both `Layout.preferredWidth: 260` and `Layout.minimumWidth: 260`.
+The single-container `For` delegate must also carry that minimum: attached
+layout constraints on its inner Rectangle do not constrain the outer Item.
+Forward only finite nonnegative scalar width floors with no state override;
+multi-child and other geometry remain outside this slice.
 Keep unsupported `flex-shrink` reporting and the style-drop budget unchanged:
 this is an authored geometry floor, not general native flexbox support.
 
