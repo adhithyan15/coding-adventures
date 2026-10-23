@@ -4690,13 +4690,27 @@ impl Compiler {
             .map(|proof| proof.operand)
     }
 
-    /// Evaluate one built-in integer-valued standard function whose operand is
-    /// already a variable-free checked integer reduction. User declarations
-    /// shadow these names and therefore remain runtime calls.
-    fn exact_static_integer_reduction_standard_value(
+    /// Evaluate one path-independent conditional or built-in integer-valued
+    /// standard function inside a checked static integer reduction. A
+    /// conditional selector may read state but may not call a procedure, and
+    /// both branches must independently have the same exact value. User
+    /// declarations shadow standard-function names and remain runtime calls.
+    fn exact_static_integer_reduction_leaf_value(
         &self,
         node: &GrammarASTNode,
     ) -> Option<i64> {
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            if self.contains_procedure_call(condition) {
+                return None;
+            }
+            let then_value = exact_static_integer_reduction_value_with(then_node, &|candidate| {
+                self.exact_static_integer_reduction_leaf_value(candidate)
+            })?;
+            let else_value = exact_static_integer_reduction_value_with(else_node, &|candidate| {
+                self.exact_static_integer_reduction_leaf_value(candidate)
+            })?;
+            return (then_value == else_value).then_some(then_value);
+        }
         if node.rule_name != "proc_call" {
             return None;
         }
@@ -4716,7 +4730,7 @@ impl Compiler {
             return None;
         }
         let value = exact_static_integer_reduction_value_with(actuals[0], &|candidate| {
-            self.exact_static_integer_reduction_standard_value(candidate)
+            self.exact_static_integer_reduction_leaf_value(candidate)
         })?;
         match target_name.as_str() {
             "abs" => value.checked_abs(),
@@ -4809,7 +4823,7 @@ impl Compiler {
                                     exact_static_integer_reduction_value_with(
                                         operand,
                                         &|candidate| {
-                                            self.exact_static_integer_reduction_standard_value(
+                                            self.exact_static_integer_reduction_leaf_value(
                                                 candidate,
                                             )
                                         },
@@ -4860,7 +4874,7 @@ impl Compiler {
                                     exact_static_integer_reduction_value_with(
                                         operand,
                                         &|candidate| {
-                                            self.exact_static_integer_reduction_standard_value(
+                                            self.exact_static_integer_reduction_leaf_value(
                                                 candidate,
                                             )
                                         },
@@ -15786,6 +15800,41 @@ mod tests {
                     && instr.srcs.first().and_then(Operand::as_var)
                         == Some("__basic_print_real")
             }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_conditional_static_integer_reductions() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier((if flag then (10 div 3) else (7 mod 4)) * ((2 * sign(pick())) + 2)); output(result) end",
+            "begin real procedure pick; pick := -2.25; boolean flag; real result; flag := pick() > 0; result := entier(abs(if flag then ((11 mod 4) ^ 2) else ((10 div 3) ^ 2)) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier((if flag then entier(abs((6 div 4) - 7)) else ((10 div 3) + (7 mod 4))) * ((2 * sign(pick())) + 2)); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a pure conditional with equal checked integer branches remains exact around a sign-rooted transform for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_static_integer_reductions_reject_unproven_forms() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier((if flag then (10 div 3) else (8 mod 3)) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean procedure choose; choose := true; real result; result := entier((if choose() then (10 div 3) else (7 mod 4)) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier((if flag then (6 div 0) else (7 mod 4)) * sign(pick())); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "unequal branches, a calling selector, or an invalid branch must remain outside the conditional static reduction proof",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
         }
     }
 
