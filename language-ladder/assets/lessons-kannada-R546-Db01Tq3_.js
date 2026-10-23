@@ -1,0 +1,105 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-R546-review-540-546
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 27920
+chapter: 546
+type: review
+headword: (dialogue)
+gloss: a review of the words from Kicks and Punches to Home Comforts
+concept_tag: REVIEW
+prerequisites: [KA-C540-kabaddi, KA-C540-kusti, KA-C540-golu, KA-C540-ode-kick, KA-C540-guddu, KA-C541-kasarattu, KA-C541-sahisnute, KA-C541-parvatarohana, KA-C541-billugarike, KA-C541-huridumbisu, KA-C542-malige, KA-C542-hostilu, KA-C542-hajara, KA-C542-nelamalige, KA-C542-kapatu, KA-C543-varanda, KA-C543-landra, KA-C543-mette, KA-C543-pithopakarana, KA-C543-oragu, KA-C544-svic, KA-C544-plag, KA-C544-silindar, KA-C544-kolave, KA-C544-tanti, KA-C545-jamakhana, KA-C545-raggu, KA-C545-jhadisu, KA-C545-oge, KA-C545-ganji, KA-C546-kaitota, KA-C546-nerehore, KA-C546-sunna, KA-C546-tarasi, KA-C546-udu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C540-KUSTI540-01, KA-LEX-C540-KUSTI540-02, KA-LEX-C540-KUSTI540-03, KA-LEX-C540-KUSTI540-04, KA-LEX-C540-KUSTI540-05, KA-LEX-C541-VYAYAMA541-01, KA-LEX-C541-VYAYAMA541-02, KA-LEX-C541-VYAYAMA541-03, KA-LEX-C541-VYAYAMA541-04, KA-LEX-C541-VYAYAMA541-05, KA-LEX-C542-MANE542-01, KA-LEX-C542-MANE542-02, KA-LEX-C542-MANE542-03, KA-LEX-C542-MANE542-04, KA-LEX-C542-MANE542-05, KA-LEX-C543-GRHA543-01, KA-LEX-C543-GRHA543-02, KA-LEX-C543-GRHA543-03, KA-LEX-C543-GRHA543-04, KA-LEX-C543-GRHA543-05, KA-LEX-C544-VIDYUT544-01, KA-LEX-C544-VIDYUT544-02, KA-LEX-C544-VIDYUT544-03, KA-LEX-C544-VIDYUT544-04, KA-LEX-C544-VIDYUT544-05, KA-LEX-C545-BATTE545-01, KA-LEX-C545-BATTE545-02, KA-LEX-C545-BATTE545-03, KA-LEX-C545-BATTE545-04, KA-LEX-C545-BATTE545-05, KA-LEX-C546-NEMMADI546-01, KA-LEX-C546-NEMMADI546-02, KA-LEX-C546-NEMMADI546-03, KA-LEX-C546-NEMMADI546-04, KA-LEX-C546-NEMMADI546-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [KA-LEX-C540-KUSTI540-01, KA-LEX-C540-KUSTI540-02, KA-LEX-C540-KUSTI540-03, KA-LEX-C540-KUSTI540-04, KA-LEX-C540-KUSTI540-05, KA-LEX-C541-VYAYAMA541-01, KA-LEX-C541-VYAYAMA541-02, KA-LEX-C541-VYAYAMA541-03, KA-LEX-C541-VYAYAMA541-04, KA-LEX-C541-VYAYAMA541-05, KA-LEX-C542-MANE542-01, KA-LEX-C542-MANE542-02, KA-LEX-C542-MANE542-03, KA-LEX-C542-MANE542-04, KA-LEX-C542-MANE542-05, KA-LEX-C543-GRHA543-01, KA-LEX-C543-GRHA543-02, KA-LEX-C543-GRHA543-03, KA-LEX-C543-GRHA543-04, KA-LEX-C543-GRHA543-05, KA-LEX-C544-VIDYUT544-01, KA-LEX-C544-VIDYUT544-02, KA-LEX-C544-VIDYUT544-03, KA-LEX-C544-VIDYUT544-04, KA-LEX-C544-VIDYUT544-05, KA-LEX-C545-BATTE545-01, KA-LEX-C545-BATTE545-02, KA-LEX-C545-BATTE545-03, KA-LEX-C545-BATTE545-04, KA-LEX-C545-BATTE545-05, KA-LEX-C546-NEMMADI546-01, KA-LEX-C546-NEMMADI546-02, KA-LEX-C546-NEMMADI546-03, KA-LEX-C546-NEMMADI546-04, KA-LEX-C546-NEMMADI546-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C540-kabaddi, KA-C540-kusti, KA-C540-golu, KA-C540-ode-kick, KA-C540-guddu, KA-C541-kasarattu, KA-C541-sahisnute, KA-C541-parvatarohana, KA-C541-billugarike, KA-C541-huridumbisu, KA-C542-malige, KA-C542-hostilu, KA-C542-hajara, KA-C542-nelamalige, KA-C542-kapatu, KA-C543-varanda, KA-C543-landra, KA-C543-mette, KA-C543-pithopakarana, KA-C543-oragu, KA-C544-svic, KA-C544-plag, KA-C544-silindar, KA-C544-kolave, KA-C544-tanti, KA-C545-jamakhana, KA-C545-raggu, KA-C545-jhadisu, KA-C545-oge, KA-C545-ganji, KA-C546-kaitota, KA-C546-nerehore, KA-C546-sunna, KA-C546-tarasi, KA-C546-udu]
+---
+
+# Looking back: sport, fitness and the home
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C540-KUSTI540-01, KA-LEX-C540-KUSTI540-02] -->
+
+[PAUSE 3s] Say the Kannada for kabaddi and wrestling.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C540-KUSTI540-01, KA-LEX-C540-KUSTI540-02, KA-LEX-C540-KUSTI540-03, KA-LEX-C540-KUSTI540-04, KA-LEX-C540-KUSTI540-05, KA-LEX-C541-VYAYAMA541-01, KA-LEX-C541-VYAYAMA541-02, KA-LEX-C541-VYAYAMA541-03, KA-LEX-C541-VYAYAMA541-04, KA-LEX-C541-VYAYAMA541-05, KA-LEX-C542-MANE542-01, KA-LEX-C542-MANE542-02, KA-LEX-C542-MANE542-03, KA-LEX-C542-MANE542-04, KA-LEX-C542-MANE542-05, KA-LEX-C543-GRHA543-01, KA-LEX-C543-GRHA543-02, KA-LEX-C543-GRHA543-03, KA-LEX-C543-GRHA543-04, KA-LEX-C543-GRHA543-05, KA-LEX-C544-VIDYUT544-01, KA-LEX-C544-VIDYUT544-02, KA-LEX-C544-VIDYUT544-03, KA-LEX-C544-VIDYUT544-04, KA-LEX-C544-VIDYUT544-05, KA-LEX-C545-BATTE545-01, KA-LEX-C545-BATTE545-02, KA-LEX-C545-BATTE545-03, KA-LEX-C545-BATTE545-04, KA-LEX-C545-BATTE545-05, KA-LEX-C546-NEMMADI546-01, KA-LEX-C546-NEMMADI546-02, KA-LEX-C546-NEMMADI546-03, KA-LEX-C546-NEMMADI546-04, KA-LEX-C546-NEMMADI546-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: kabaddi, wrestling, a goal in sport, to kick, to punch]
+- [YOU SAY: a workout, endurance, mountaineering, archery, to cheer on]
+- [YOU SAY: an upper storey, a threshold, a hall, a basement, a cabinet]
+- [YOU SAY: a veranda, a lantern, a cushion, furniture, to lean back]
+- [YOU SAY: a switch, a plug, a gas cylinder, a tube, a wire]
+- [YOU SAY: a rug, a quilt, to shake out, to wash clothes, starch]
+- [YOU SAY: a kitchen garden, a neighbourhood, lime, a terrace, to puff]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C540-KUSTI540-01, KA-LEX-C540-KUSTI540-02, KA-LEX-C540-KUSTI540-03, KA-LEX-C540-KUSTI540-04, KA-LEX-C540-KUSTI540-05, KA-LEX-C541-VYAYAMA541-01, KA-LEX-C541-VYAYAMA541-02, KA-LEX-C541-VYAYAMA541-03, KA-LEX-C541-VYAYAMA541-04, KA-LEX-C541-VYAYAMA541-05, KA-LEX-C542-MANE542-01, KA-LEX-C542-MANE542-02, KA-LEX-C542-MANE542-03, KA-LEX-C542-MANE542-04, KA-LEX-C542-MANE542-05, KA-LEX-C543-GRHA543-01, KA-LEX-C543-GRHA543-02, KA-LEX-C543-GRHA543-03, KA-LEX-C543-GRHA543-04, KA-LEX-C543-GRHA543-05, KA-LEX-C544-VIDYUT544-01, KA-LEX-C544-VIDYUT544-02, KA-LEX-C544-VIDYUT544-03, KA-LEX-C544-VIDYUT544-04, KA-LEX-C544-VIDYUT544-05, KA-LEX-C545-BATTE545-01, KA-LEX-C545-BATTE545-02, KA-LEX-C545-BATTE545-03, KA-LEX-C545-BATTE545-04, KA-LEX-C545-BATTE545-05, KA-LEX-C546-NEMMADI546-01, KA-LEX-C546-NEMMADI546-02, KA-LEX-C546-NEMMADI546-03, KA-LEX-C546-NEMMADI546-04, KA-LEX-C546-NEMMADI546-05] -->
+
+[PAUSE 3s] Kabaddi? (**ಕಬಡ್ಡಿ**, *kabaḍḍi*.) Wrestling? (**ಕುಸ್ತಿ**, *kusti*.) A goal in sport? (**ಗೋಲು**, *gōlu*.) To kick? (**ಒದೆ**, *ode*.) To punch? (**ಗುದ್ದು**, *guddu*.) A workout? (**ಕಸರತ್ತು**, *kasarattu*.) Endurance? (**ಸಹಿಷ್ಣುತೆ**, *sahiṣṇute*.) Mountaineering? (**ಪರ್ವತಾರೋಹಣ**, *parvatārōhaṇa*.) Archery? (**ಬಿಲ್ಲುಗಾರಿಕೆ**, *billugārike*.) To cheer on? (**ಹುರಿದುಂಬಿಸು**, *huridumbisu*.) An upper storey? (**ಮಾಳಿಗೆ**, *māḷige*.) A threshold? (**ಹೊಸ್ತಿಲು**, *hostilu*.) A hall? (**ಹಜಾರ**, *hajāra*.) A basement? (**ನೆಲಮಾಳಿಗೆ**, *nelamāḷige*.) A cabinet? (**ಕಪಾಟು**, *kapāṭu*.) A veranda? (**ವರಾಂಡ**, *varāṇḍa*.) A lantern? (**ಲಾಂದ್ರ**, *lāndra*.) A cushion? (**ಮೆತ್ತೆ**, *mette*.) Furniture? (**ಪೀಠೋಪಕರಣ**, *pīṭhōpakaraṇa*.) To lean back? (**ಒರಗು**, *oragu*.) A switch? (**ಸ್ವಿಚ್**, *svic*.) A plug? (**ಪ್ಲಗ್**, *plag*.) A gas cylinder? (**ಸಿಲಿಂಡರ್**, *siliṇḍar*.) A tube? (**ಕೊಳವೆ**, *koḷave*.) A wire? (**ತಂತಿ**, *tanti*.) A rug? (**ಜಮಖಾನ**, *jamakhāna*.) A quilt? (**ರಗ್ಗು**, *raggu*.) To shake out? (**ಝಾಡಿಸು**, *jhāḍisu*.) To wash clothes? (**ಒಗೆ**, *oge*.) Starch? (**ಗಂಜಿ**, *gañji*.) A kitchen garden? (**ಕೈತೋಟ**, *kaitōṭa*.) A neighbourhood? (**ನೆರೆಹೊರೆ**, *nerehore*.) Lime? (**ಸುಣ್ಣ**, *suṇṇa*.) A terrace? (**ತಾರಸಿ**, *tārasi*.) To puff? (**ಊದು**, *ūdu*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-R546-review-final-546
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 27930
+chapter: 546
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [KA-C546-kaitota, KA-C546-nerehore, KA-C546-sunna, KA-C546-tarasi, KA-C546-udu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C546-NEMMADI546-01, KA-LEX-C546-NEMMADI546-02, KA-LEX-C546-NEMMADI546-03, KA-LEX-C546-NEMMADI546-04, KA-LEX-C546-NEMMADI546-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [KA-LEX-C546-NEMMADI546-01, KA-LEX-C546-NEMMADI546-02, KA-LEX-C546-NEMMADI546-03, KA-LEX-C546-NEMMADI546-04, KA-LEX-C546-NEMMADI546-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C546-kaitota, KA-C546-nerehore, KA-C546-sunna, KA-C546-tarasi, KA-C546-udu]
+---
+
+# Home Comforts — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C546-NEMMADI546-01, KA-LEX-C546-NEMMADI546-02] -->
+
+[PAUSE 3s] Say the Kannada for a kitchen garden and a neighbourhood.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C546-NEMMADI546-01, KA-LEX-C546-NEMMADI546-02, KA-LEX-C546-NEMMADI546-03, KA-LEX-C546-NEMMADI546-04, KA-LEX-C546-NEMMADI546-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a kitchen garden, a neighbourhood, lime, a terrace, to puff]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C546-NEMMADI546-01, KA-LEX-C546-NEMMADI546-02, KA-LEX-C546-NEMMADI546-03, KA-LEX-C546-NEMMADI546-04, KA-LEX-C546-NEMMADI546-05] -->
+
+[PAUSE 3s] A kitchen garden? (**ಕೈತೋಟ**, *kaitōṭa*.) A neighbourhood? (**ನೆರೆಹೊರೆ**, *nerehore*.) Lime? (**ಸುಣ್ಣ**, *suṇṇa*.) A terrace? (**ತಾರಸಿ**, *tārasi*.) To puff? (**ಊದು**, *ūdu*.)
+`;export{t as n,r as t};

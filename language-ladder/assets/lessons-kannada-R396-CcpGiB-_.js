@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-R397-review-391-397
+spine_node: SPINE-GIVE-REASONS
+sequence: 20120
+chapter: 397
+type: review
+headword: (dialogue)
+gloss: a review of the words from Fairness for All to Citizens Together
+concept_tag: REVIEW
+prerequisites: [KA-C391-samanate, KA-C391-taratamya-madu, KA-C391-sosisu, KA-C391-sabalikarana, KA-C391-baddhate, KA-C392-cunavane, KA-C392-mata, KA-C392-bahumata, KA-C392-pracara-madu, KA-C392-sambodhisu, KA-C393-samsattu, KA-C393-mantri, KA-C393-samvidhana, KA-C393-prajaprabhutva, KA-C393-pratinidhisu, KA-C394-rajakiya, KA-C394-rajakarani, KA-C394-paksa, KA-C394-bahiskarisu, KA-C394-nayakatva, KA-C395-adalita, KA-C395-sacivalaya, KA-C395-pancayiti, KA-C395-jarigolisu, KA-C395-samiti, KA-C396-masude, KA-C396-angikarisu, KA-C396-tiddupadi, KA-C396-sasaka, KA-C396-anumodisu, KA-C397-nagarika, KA-C397-pauratva, KA-C397-sarvajanika, KA-C397-samudaya, KA-C397-oggudu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C391-SAMANATE391-01, KA-LEX-C391-SAMANATE391-02, KA-LEX-C391-SAMANATE391-03, KA-LEX-C391-SAMANATE391-04, KA-LEX-C391-SAMANATE391-05, KA-LEX-C392-CHUNAVANE392-01, KA-LEX-C392-CHUNAVANE392-02, KA-LEX-C392-CHUNAVANE392-03, KA-LEX-C392-CHUNAVANE392-04, KA-LEX-C392-CHUNAVANE392-05, KA-LEX-C393-SAMSATTU393-01, KA-LEX-C393-SAMSATTU393-02, KA-LEX-C393-SAMSATTU393-03, KA-LEX-C393-SAMSATTU393-04, KA-LEX-C393-SAMSATTU393-05, KA-LEX-C394-RAJAKIYA394-01, KA-LEX-C394-RAJAKIYA394-02, KA-LEX-C394-RAJAKIYA394-03, KA-LEX-C394-RAJAKIYA394-04, KA-LEX-C394-RAJAKIYA394-05, KA-LEX-C395-ADALITA395-01, KA-LEX-C395-ADALITA395-02, KA-LEX-C395-ADALITA395-03, KA-LEX-C395-ADALITA395-04, KA-LEX-C395-ADALITA395-05, KA-LEX-C396-MASUDE396-01, KA-LEX-C396-MASUDE396-02, KA-LEX-C396-MASUDE396-03, KA-LEX-C396-MASUDE396-04, KA-LEX-C396-MASUDE396-05, KA-LEX-C397-NAGARIKA397-01, KA-LEX-C397-NAGARIKA397-02, KA-LEX-C397-NAGARIKA397-03, KA-LEX-C397-NAGARIKA397-04, KA-LEX-C397-NAGARIKA397-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [KA-LEX-C391-SAMANATE391-01, KA-LEX-C391-SAMANATE391-02, KA-LEX-C391-SAMANATE391-03, KA-LEX-C391-SAMANATE391-04, KA-LEX-C391-SAMANATE391-05, KA-LEX-C392-CHUNAVANE392-01, KA-LEX-C392-CHUNAVANE392-02, KA-LEX-C392-CHUNAVANE392-03, KA-LEX-C392-CHUNAVANE392-04, KA-LEX-C392-CHUNAVANE392-05, KA-LEX-C393-SAMSATTU393-01, KA-LEX-C393-SAMSATTU393-02, KA-LEX-C393-SAMSATTU393-03, KA-LEX-C393-SAMSATTU393-04, KA-LEX-C393-SAMSATTU393-05, KA-LEX-C394-RAJAKIYA394-01, KA-LEX-C394-RAJAKIYA394-02, KA-LEX-C394-RAJAKIYA394-03, KA-LEX-C394-RAJAKIYA394-04, KA-LEX-C394-RAJAKIYA394-05, KA-LEX-C395-ADALITA395-01, KA-LEX-C395-ADALITA395-02, KA-LEX-C395-ADALITA395-03, KA-LEX-C395-ADALITA395-04, KA-LEX-C395-ADALITA395-05, KA-LEX-C396-MASUDE396-01, KA-LEX-C396-MASUDE396-02, KA-LEX-C396-MASUDE396-03, KA-LEX-C396-MASUDE396-04, KA-LEX-C396-MASUDE396-05, KA-LEX-C397-NAGARIKA397-01, KA-LEX-C397-NAGARIKA397-02, KA-LEX-C397-NAGARIKA397-03, KA-LEX-C397-NAGARIKA397-04, KA-LEX-C397-NAGARIKA397-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C391-samanate, KA-C391-taratamya-madu, KA-C391-sosisu, KA-C391-sabalikarana, KA-C391-baddhate, KA-C392-cunavane, KA-C392-mata, KA-C392-bahumata, KA-C392-pracara-madu, KA-C392-sambodhisu, KA-C393-samsattu, KA-C393-mantri, KA-C393-samvidhana, KA-C393-prajaprabhutva, KA-C393-pratinidhisu, KA-C394-rajakiya, KA-C394-rajakarani, KA-C394-paksa, KA-C394-bahiskarisu, KA-C394-nayakatva, KA-C395-adalita, KA-C395-sacivalaya, KA-C395-pancayiti, KA-C395-jarigolisu, KA-C395-samiti, KA-C396-masude, KA-C396-angikarisu, KA-C396-tiddupadi, KA-C396-sasaka, KA-C396-anumodisu, KA-C397-nagarika, KA-C397-pauratva, KA-C397-sarvajanika, KA-C397-samudaya, KA-C397-oggudu]
+---
+
+# Looking back: from Fairness for All to Citizens Together
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C391-SAMANATE391-01, KA-LEX-C391-SAMANATE391-02] -->
+
+[PAUSE 3s] Say the Kannada for equality and to discriminate.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C391-SAMANATE391-01, KA-LEX-C391-SAMANATE391-02, KA-LEX-C391-SAMANATE391-03, KA-LEX-C391-SAMANATE391-04, KA-LEX-C391-SAMANATE391-05, KA-LEX-C392-CHUNAVANE392-01, KA-LEX-C392-CHUNAVANE392-02, KA-LEX-C392-CHUNAVANE392-03, KA-LEX-C392-CHUNAVANE392-04, KA-LEX-C392-CHUNAVANE392-05, KA-LEX-C393-SAMSATTU393-01, KA-LEX-C393-SAMSATTU393-02, KA-LEX-C393-SAMSATTU393-03, KA-LEX-C393-SAMSATTU393-04, KA-LEX-C393-SAMSATTU393-05, KA-LEX-C394-RAJAKIYA394-01, KA-LEX-C394-RAJAKIYA394-02, KA-LEX-C394-RAJAKIYA394-03, KA-LEX-C394-RAJAKIYA394-04, KA-LEX-C394-RAJAKIYA394-05, KA-LEX-C395-ADALITA395-01, KA-LEX-C395-ADALITA395-02, KA-LEX-C395-ADALITA395-03, KA-LEX-C395-ADALITA395-04, KA-LEX-C395-ADALITA395-05, KA-LEX-C396-MASUDE396-01, KA-LEX-C396-MASUDE396-02, KA-LEX-C396-MASUDE396-03, KA-LEX-C396-MASUDE396-04, KA-LEX-C396-MASUDE396-05, KA-LEX-C397-NAGARIKA397-01, KA-LEX-C397-NAGARIKA397-02, KA-LEX-C397-NAGARIKA397-03, KA-LEX-C397-NAGARIKA397-04, KA-LEX-C397-NAGARIKA397-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: equality, to discriminate, to exploit, empowerment, commitment]
+- [YOU SAY: an election, a vote, a majority, to campaign, to address a crowd]
+- [YOU SAY: a parliament, a minister, a constitution, democracy, to represent]
+- [YOU SAY: politics, a politician, a political party, to boycott, leadership]
+- [YOU SAY: administration, a ministry, a village council, to implement, a committee]
+- [YOU SAY: a draft law, to approve, an amendment, a legislator, to endorse]
+- [YOU SAY: a citizen, citizenship, public, a community, to unite]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C391-SAMANATE391-01, KA-LEX-C391-SAMANATE391-02, KA-LEX-C391-SAMANATE391-03, KA-LEX-C391-SAMANATE391-04, KA-LEX-C391-SAMANATE391-05, KA-LEX-C392-CHUNAVANE392-01, KA-LEX-C392-CHUNAVANE392-02, KA-LEX-C392-CHUNAVANE392-03, KA-LEX-C392-CHUNAVANE392-04, KA-LEX-C392-CHUNAVANE392-05, KA-LEX-C393-SAMSATTU393-01, KA-LEX-C393-SAMSATTU393-02, KA-LEX-C393-SAMSATTU393-03, KA-LEX-C393-SAMSATTU393-04, KA-LEX-C393-SAMSATTU393-05, KA-LEX-C394-RAJAKIYA394-01, KA-LEX-C394-RAJAKIYA394-02, KA-LEX-C394-RAJAKIYA394-03, KA-LEX-C394-RAJAKIYA394-04, KA-LEX-C394-RAJAKIYA394-05, KA-LEX-C395-ADALITA395-01, KA-LEX-C395-ADALITA395-02, KA-LEX-C395-ADALITA395-03, KA-LEX-C395-ADALITA395-04, KA-LEX-C395-ADALITA395-05, KA-LEX-C396-MASUDE396-01, KA-LEX-C396-MASUDE396-02, KA-LEX-C396-MASUDE396-03, KA-LEX-C396-MASUDE396-04, KA-LEX-C396-MASUDE396-05, KA-LEX-C397-NAGARIKA397-01, KA-LEX-C397-NAGARIKA397-02, KA-LEX-C397-NAGARIKA397-03, KA-LEX-C397-NAGARIKA397-04, KA-LEX-C397-NAGARIKA397-05] -->
+
+[PAUSE 3s] Equality? (**ಸಮಾನತೆ**, *samānate*.) To discriminate? (**ತಾರತಮ್ಯ ಮಾಡು**, *tāratamya māḍu*.) To exploit? (**ಶೋಷಿಸು**, *śōṣisu*.) Empowerment? (**ಸಬಲೀಕರಣ**, *sabalīkaraṇa*.) Commitment? (**ಬದ್ಧತೆ**, *baddhate*.) An election? (**ಚುನಾವಣೆ**, *cunāvaṇe*.) A vote? (**ಮತ**, *mata*.) A majority? (**ಬಹುಮತ**, *bahumata*.) To campaign? (**ಪ್ರಚಾರ ಮಾಡು**, *pracāra māḍu*.) To address a crowd? (**ಸಂಬೋಧಿಸು**, *sambōdhisu*.) A parliament? (**ಸಂಸತ್ತು**, *saṃsattu*.) A minister? (**ಮಂತ್ರಿ**, *mantri*.) A constitution? (**ಸಂವಿಧಾನ**, *saṃvidhāna*.) Democracy? (**ಪ್ರಜಾಪ್ರಭುತ್ವ**, *prajāprabhutva*.) To represent? (**ಪ್ರತಿನಿಧಿಸು**, *pratinidhisu*.) Politics? (**ರಾಜಕೀಯ**, *rājakīya*.) A politician? (**ರಾಜಕಾರಣಿ**, *rājakāraṇi*.) A political party? (**ಪಕ್ಷ**, *pakṣa*.) To boycott? (**ಬಹಿಷ್ಕರಿಸು**, *bahiṣkarisu*.) Leadership? (**ನಾಯಕತ್ವ**, *nāyakatva*.) Administration? (**ಆಡಳಿತ**, *āḍaḷita*.) A ministry? (**ಸಚಿವಾಲಯ**, *sacivālaya*.) A village council? (**ಪಂಚಾಯಿತಿ**, *pañcāyiti*.) To implement? (**ಜಾರಿಗೊಳಿಸು**, *jārigoḷisu*.) A committee? (**ಸಮಿತಿ**, *samiti*.) A draft law? (**ಮಸೂದೆ**, *masūde*.) To approve? (**ಅಂಗೀಕರಿಸು**, *aṅgīkarisu*.) An amendment? (**ತಿದ್ದುಪಡಿ**, *tiddupaḍi*.) A legislator? (**ಶಾಸಕ**, *śāsaka*.) To endorse? (**ಅನುಮೋದಿಸು**, *anumōdisu*.) A citizen? (**ನಾಗರಿಕ**, *nāgarika*.) Citizenship? (**ಪೌರತ್ವ**, *pauratva*.) Public? (**ಸಾರ್ವಜನಿಕ**, *sārvajanika*.) A community? (**ಸಮುದಾಯ**, *samudāya*.) To unite? (**ಒಗ್ಗೂಡು**, *oggūḍu*.)
+`;export{t};

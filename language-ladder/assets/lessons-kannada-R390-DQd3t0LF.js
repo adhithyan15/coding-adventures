@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-R390-review-384-390
+spine_node: SPINE-GIVE-REASONS
+sequence: 19760
+chapter: 390
+type: review
+headword: (dialogue)
+gloss: a review of the words from Grasping an Idea to The Law
+concept_tag: REVIEW
+prerequisites: [KA-C384-grahisu, KA-C384-vyakhyana, KA-C384-kalpane, KA-C384-amsa, KA-C384-laksana, KA-C385-prabhava, KA-C385-badhisu, KA-C385-untagu, KA-C385-pravrtti, KA-C385-mula, KA-C386-samajayisi, KA-C386-sabubu, KA-C386-akasmika, KA-C386-bimbisu, KA-C386-hone, KA-C387-savalu, KA-C387-misalidu, KA-C387-samatolana, KA-C387-adyate, KA-C387-maulya, KA-C388-naitika, KA-C388-tyaga, KA-C388-manassaksi, KA-C388-hita, KA-C388-khandisu, KA-C389-slaghisu, KA-C389-puraskarisu, KA-C389-pratisthe, KA-C389-utpreksisu, KA-C389-sthanamana, KA-C390-kanunu, KA-C390-kayde, KA-C390-pariskarisu, KA-C390-adhikrta, KA-C390-hastaksepa]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C384-GRAHISU384-01, KA-LEX-C384-GRAHISU384-02, KA-LEX-C384-GRAHISU384-03, KA-LEX-C384-GRAHISU384-04, KA-LEX-C384-GRAHISU384-05, KA-LEX-C385-PRABHAVA385-01, KA-LEX-C385-PRABHAVA385-02, KA-LEX-C385-PRABHAVA385-03, KA-LEX-C385-PRABHAVA385-04, KA-LEX-C385-PRABHAVA385-05, KA-LEX-C386-SAMAJAYISHI386-01, KA-LEX-C386-SAMAJAYISHI386-02, KA-LEX-C386-SAMAJAYISHI386-03, KA-LEX-C386-SAMAJAYISHI386-04, KA-LEX-C386-SAMAJAYISHI386-05, KA-LEX-C387-SAVALU387-01, KA-LEX-C387-SAVALU387-02, KA-LEX-C387-SAVALU387-03, KA-LEX-C387-SAVALU387-04, KA-LEX-C387-SAVALU387-05, KA-LEX-C388-NAITIKA388-01, KA-LEX-C388-NAITIKA388-02, KA-LEX-C388-NAITIKA388-03, KA-LEX-C388-NAITIKA388-04, KA-LEX-C388-NAITIKA388-05, KA-LEX-C389-SHLAGHISU389-01, KA-LEX-C389-SHLAGHISU389-02, KA-LEX-C389-SHLAGHISU389-03, KA-LEX-C389-SHLAGHISU389-04, KA-LEX-C389-SHLAGHISU389-05, KA-LEX-C390-KANUNU390-01, KA-LEX-C390-KANUNU390-02, KA-LEX-C390-KANUNU390-03, KA-LEX-C390-KANUNU390-04, KA-LEX-C390-KANUNU390-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [KA-LEX-C384-GRAHISU384-01, KA-LEX-C384-GRAHISU384-02, KA-LEX-C384-GRAHISU384-03, KA-LEX-C384-GRAHISU384-04, KA-LEX-C384-GRAHISU384-05, KA-LEX-C385-PRABHAVA385-01, KA-LEX-C385-PRABHAVA385-02, KA-LEX-C385-PRABHAVA385-03, KA-LEX-C385-PRABHAVA385-04, KA-LEX-C385-PRABHAVA385-05, KA-LEX-C386-SAMAJAYISHI386-01, KA-LEX-C386-SAMAJAYISHI386-02, KA-LEX-C386-SAMAJAYISHI386-03, KA-LEX-C386-SAMAJAYISHI386-04, KA-LEX-C386-SAMAJAYISHI386-05, KA-LEX-C387-SAVALU387-01, KA-LEX-C387-SAVALU387-02, KA-LEX-C387-SAVALU387-03, KA-LEX-C387-SAVALU387-04, KA-LEX-C387-SAVALU387-05, KA-LEX-C388-NAITIKA388-01, KA-LEX-C388-NAITIKA388-02, KA-LEX-C388-NAITIKA388-03, KA-LEX-C388-NAITIKA388-04, KA-LEX-C388-NAITIKA388-05, KA-LEX-C389-SHLAGHISU389-01, KA-LEX-C389-SHLAGHISU389-02, KA-LEX-C389-SHLAGHISU389-03, KA-LEX-C389-SHLAGHISU389-04, KA-LEX-C389-SHLAGHISU389-05, KA-LEX-C390-KANUNU390-01, KA-LEX-C390-KANUNU390-02, KA-LEX-C390-KANUNU390-03, KA-LEX-C390-KANUNU390-04, KA-LEX-C390-KANUNU390-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C384-grahisu, KA-C384-vyakhyana, KA-C384-kalpane, KA-C384-amsa, KA-C384-laksana, KA-C385-prabhava, KA-C385-badhisu, KA-C385-untagu, KA-C385-pravrtti, KA-C385-mula, KA-C386-samajayisi, KA-C386-sabubu, KA-C386-akasmika, KA-C386-bimbisu, KA-C386-hone, KA-C387-savalu, KA-C387-misalidu, KA-C387-samatolana, KA-C387-adyate, KA-C387-maulya, KA-C388-naitika, KA-C388-tyaga, KA-C388-manassaksi, KA-C388-hita, KA-C388-khandisu, KA-C389-slaghisu, KA-C389-puraskarisu, KA-C389-pratisthe, KA-C389-utpreksisu, KA-C389-sthanamana, KA-C390-kanunu, KA-C390-kayde, KA-C390-pariskarisu, KA-C390-adhikrta, KA-C390-hastaksepa]
+---
+
+# Looking back: from Grasping an Idea to The Law
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C384-GRAHISU384-01, KA-LEX-C384-GRAHISU384-02] -->
+
+[PAUSE 3s] Say the Kannada for to grasp and an interpretation.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C384-GRAHISU384-01, KA-LEX-C384-GRAHISU384-02, KA-LEX-C384-GRAHISU384-03, KA-LEX-C384-GRAHISU384-04, KA-LEX-C384-GRAHISU384-05, KA-LEX-C385-PRABHAVA385-01, KA-LEX-C385-PRABHAVA385-02, KA-LEX-C385-PRABHAVA385-03, KA-LEX-C385-PRABHAVA385-04, KA-LEX-C385-PRABHAVA385-05, KA-LEX-C386-SAMAJAYISHI386-01, KA-LEX-C386-SAMAJAYISHI386-02, KA-LEX-C386-SAMAJAYISHI386-03, KA-LEX-C386-SAMAJAYISHI386-04, KA-LEX-C386-SAMAJAYISHI386-05, KA-LEX-C387-SAVALU387-01, KA-LEX-C387-SAVALU387-02, KA-LEX-C387-SAVALU387-03, KA-LEX-C387-SAVALU387-04, KA-LEX-C387-SAVALU387-05, KA-LEX-C388-NAITIKA388-01, KA-LEX-C388-NAITIKA388-02, KA-LEX-C388-NAITIKA388-03, KA-LEX-C388-NAITIKA388-04, KA-LEX-C388-NAITIKA388-05, KA-LEX-C389-SHLAGHISU389-01, KA-LEX-C389-SHLAGHISU389-02, KA-LEX-C389-SHLAGHISU389-03, KA-LEX-C389-SHLAGHISU389-04, KA-LEX-C389-SHLAGHISU389-05, KA-LEX-C390-KANUNU390-01, KA-LEX-C390-KANUNU390-02, KA-LEX-C390-KANUNU390-03, KA-LEX-C390-KANUNU390-04, KA-LEX-C390-KANUNU390-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to grasp, an interpretation, a notion, an aspect, a feature]
+- [YOU SAY: influence, to affect badly, to come about, a tendency, a source]
+- [YOU SAY: an explanation, a lame excuse, accidental, to portray, blame]
+- [YOU SAY: a challenge, to set aside, balance, a priority, a value]
+- [YOU SAY: ethical, a sacrifice, a conscience, well-being, to condemn]
+- [YOU SAY: to commend, to felicitate, prestige, to exaggerate, status]
+- [YOU SAY: a law, an act of law, to revise, official, interference]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C384-GRAHISU384-01, KA-LEX-C384-GRAHISU384-02, KA-LEX-C384-GRAHISU384-03, KA-LEX-C384-GRAHISU384-04, KA-LEX-C384-GRAHISU384-05, KA-LEX-C385-PRABHAVA385-01, KA-LEX-C385-PRABHAVA385-02, KA-LEX-C385-PRABHAVA385-03, KA-LEX-C385-PRABHAVA385-04, KA-LEX-C385-PRABHAVA385-05, KA-LEX-C386-SAMAJAYISHI386-01, KA-LEX-C386-SAMAJAYISHI386-02, KA-LEX-C386-SAMAJAYISHI386-03, KA-LEX-C386-SAMAJAYISHI386-04, KA-LEX-C386-SAMAJAYISHI386-05, KA-LEX-C387-SAVALU387-01, KA-LEX-C387-SAVALU387-02, KA-LEX-C387-SAVALU387-03, KA-LEX-C387-SAVALU387-04, KA-LEX-C387-SAVALU387-05, KA-LEX-C388-NAITIKA388-01, KA-LEX-C388-NAITIKA388-02, KA-LEX-C388-NAITIKA388-03, KA-LEX-C388-NAITIKA388-04, KA-LEX-C388-NAITIKA388-05, KA-LEX-C389-SHLAGHISU389-01, KA-LEX-C389-SHLAGHISU389-02, KA-LEX-C389-SHLAGHISU389-03, KA-LEX-C389-SHLAGHISU389-04, KA-LEX-C389-SHLAGHISU389-05, KA-LEX-C390-KANUNU390-01, KA-LEX-C390-KANUNU390-02, KA-LEX-C390-KANUNU390-03, KA-LEX-C390-KANUNU390-04, KA-LEX-C390-KANUNU390-05] -->
+
+[PAUSE 3s] To grasp? (**ಗ್ರಹಿಸು**, *grahisu*.) An interpretation? (**ವ್ಯಾಖ್ಯಾನ**, *vyākhyāna*.) A notion? (**ಕಲ್ಪನೆ**, *kalpane*.) An aspect? (**ಅಂಶ**, *aṃśa*.) A feature? (**ಲಕ್ಷಣ**, *lakṣaṇa*.) Influence? (**ಪ್ರಭಾವ**, *prabhāva*.) To affect badly? (**ಬಾಧಿಸು**, *bādhisu*.) To come about? (**ಉಂಟಾಗು**, *uṇṭāgu*.) A tendency? (**ಪ್ರವೃತ್ತಿ**, *pravṛtti*.) A source? (**ಮೂಲ**, *mūla*.) An explanation? (**ಸಮಜಾಯಿಷಿ**, *samajāyiṣi*.) A lame excuse? (**ಸಬೂಬು**, *sabūbu*.) Accidental? (**ಆಕಸ್ಮಿಕ**, *ākasmika*.) To portray? (**ಬಿಂಬಿಸು**, *bimbisu*.) Blame? (**ಹೊಣೆ**, *hoṇe*.) A challenge? (**ಸವಾಲು**, *savālu*.) To set aside? (**ಮೀಸಲಿಡು**, *mīsaliḍu*.) Balance? (**ಸಮತೋಲನ**, *samatōlana*.) A priority? (**ಆದ್ಯತೆ**, *ādyate*.) A value? (**ಮೌಲ್ಯ**, *maulya*.) Ethical? (**ನೈತಿಕ**, *naitika*.) A sacrifice? (**ತ್ಯಾಗ**, *tyāga*.) A conscience? (**ಮನಸ್ಸಾಕ್ಷಿ**, *manassākṣi*.) Well-being? (**ಹಿತ**, *hita*.) To condemn? (**ಖಂಡಿಸು**, *khaṇḍisu*.) To commend? (**ಶ್ಲಾಘಿಸು**, *ślāghisu*.) To felicitate? (**ಪುರಸ್ಕರಿಸು**, *puraskarisu*.) Prestige? (**ಪ್ರತಿಷ್ಠೆ**, *pratiṣṭhe*.) To exaggerate? (**ಉತ್ಪ್ರೇಕ್ಷಿಸು**, *utprēkṣisu*.) Status? (**ಸ್ಥಾನಮಾನ**, *sthānamāna*.) A law? (**ಕಾನೂನು**, *kānūnu*.) An act of law? (**ಕಾಯ್ದೆ**, *kāyde*.) To revise? (**ಪರಿಷ್ಕರಿಸು**, *pariṣkarisu*.) Official? (**ಅಧಿಕೃತ**, *adhikṛta*.) Interference? (**ಹಸ್ತಕ್ಷೇಪ**, *hastakṣēpa*.)
+`;export{t};

@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-R383-review-376-383
+spine_node: SPINE-GIVE-REASONS
+sequence: 19400
+chapter: 383
+type: review
+headword: (dialogue)
+gloss: a review of the words from Proof and Possibility to Doubts and Judgements
+concept_tag: REVIEW
+prerequisites: [KA-C376-purave, KA-C376-sabitupadisu, KA-C376-sadhyate, KA-C376-mahatva, KA-C376-adharisu, KA-C377-tarka, KA-C377-samarthisu, KA-C377-vivada, KA-C377-aksepisu, KA-C377-samanjasa, KA-C378-drstikona, KA-C378-niluvu, KA-C378-tatastha, KA-C378-paksapata, KA-C378-pratipadisu, KA-C379-sammatisu, KA-C379-bhinnabhipraya, KA-C379-ommata, KA-C379-virodhisu, KA-C379-paraspara, KA-C380-manavolisu, KA-C380-prerepisu, KA-C380-manadattu-madu, KA-C380-amisa, KA-C380-akarsisu, KA-C381-pariganisu, KA-C381-bhavisu, KA-C381-viveka, KA-C381-manana-madu, KA-C381-buddhi, KA-C382-sangati, KA-C382-vastava, KA-C382-bhrame, KA-C382-astitva, KA-C382-managanu, KA-C383-sandeha, KA-C383-tirucu, KA-C383-nirnayisu, KA-C383-asadhya, KA-C383-allagale]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C376-PURAVE376-01, KA-LEX-C376-PURAVE376-02, KA-LEX-C376-PURAVE376-03, KA-LEX-C376-PURAVE376-04, KA-LEX-C376-PURAVE376-05, KA-LEX-C377-TARKA377-01, KA-LEX-C377-TARKA377-02, KA-LEX-C377-TARKA377-03, KA-LEX-C377-TARKA377-04, KA-LEX-C377-TARKA377-05, KA-LEX-C378-NILUVU378-01, KA-LEX-C378-NILUVU378-02, KA-LEX-C378-NILUVU378-03, KA-LEX-C378-NILUVU378-04, KA-LEX-C378-NILUVU378-05, KA-LEX-C379-OMMATA379-01, KA-LEX-C379-OMMATA379-02, KA-LEX-C379-OMMATA379-03, KA-LEX-C379-OMMATA379-04, KA-LEX-C379-OMMATA379-05, KA-LEX-C380-MANAVOLISU380-01, KA-LEX-C380-MANAVOLISU380-02, KA-LEX-C380-MANAVOLISU380-03, KA-LEX-C380-MANAVOLISU380-04, KA-LEX-C380-MANAVOLISU380-05, KA-LEX-C381-PARIGANISU381-01, KA-LEX-C381-PARIGANISU381-02, KA-LEX-C381-PARIGANISU381-03, KA-LEX-C381-PARIGANISU381-04, KA-LEX-C381-PARIGANISU381-05, KA-LEX-C382-VASTAVA382-01, KA-LEX-C382-VASTAVA382-02, KA-LEX-C382-VASTAVA382-03, KA-LEX-C382-VASTAVA382-04, KA-LEX-C382-VASTAVA382-05, KA-LEX-C383-SANDEHA383-01, KA-LEX-C383-SANDEHA383-02, KA-LEX-C383-SANDEHA383-03, KA-LEX-C383-SANDEHA383-04, KA-LEX-C383-SANDEHA383-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [KA-LEX-C376-PURAVE376-01, KA-LEX-C376-PURAVE376-02, KA-LEX-C376-PURAVE376-03, KA-LEX-C376-PURAVE376-04, KA-LEX-C376-PURAVE376-05, KA-LEX-C377-TARKA377-01, KA-LEX-C377-TARKA377-02, KA-LEX-C377-TARKA377-03, KA-LEX-C377-TARKA377-04, KA-LEX-C377-TARKA377-05, KA-LEX-C378-NILUVU378-01, KA-LEX-C378-NILUVU378-02, KA-LEX-C378-NILUVU378-03, KA-LEX-C378-NILUVU378-04, KA-LEX-C378-NILUVU378-05, KA-LEX-C379-OMMATA379-01, KA-LEX-C379-OMMATA379-02, KA-LEX-C379-OMMATA379-03, KA-LEX-C379-OMMATA379-04, KA-LEX-C379-OMMATA379-05, KA-LEX-C380-MANAVOLISU380-01, KA-LEX-C380-MANAVOLISU380-02, KA-LEX-C380-MANAVOLISU380-03, KA-LEX-C380-MANAVOLISU380-04, KA-LEX-C380-MANAVOLISU380-05, KA-LEX-C381-PARIGANISU381-01, KA-LEX-C381-PARIGANISU381-02, KA-LEX-C381-PARIGANISU381-03, KA-LEX-C381-PARIGANISU381-04, KA-LEX-C381-PARIGANISU381-05, KA-LEX-C382-VASTAVA382-01, KA-LEX-C382-VASTAVA382-02, KA-LEX-C382-VASTAVA382-03, KA-LEX-C382-VASTAVA382-04, KA-LEX-C382-VASTAVA382-05, KA-LEX-C383-SANDEHA383-01, KA-LEX-C383-SANDEHA383-02, KA-LEX-C383-SANDEHA383-03, KA-LEX-C383-SANDEHA383-04, KA-LEX-C383-SANDEHA383-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C376-purave, KA-C376-sabitupadisu, KA-C376-sadhyate, KA-C376-mahatva, KA-C376-adharisu, KA-C377-tarka, KA-C377-samarthisu, KA-C377-vivada, KA-C377-aksepisu, KA-C377-samanjasa, KA-C378-drstikona, KA-C378-niluvu, KA-C378-tatastha, KA-C378-paksapata, KA-C378-pratipadisu, KA-C379-sammatisu, KA-C379-bhinnabhipraya, KA-C379-ommata, KA-C379-virodhisu, KA-C379-paraspara, KA-C380-manavolisu, KA-C380-prerepisu, KA-C380-manadattu-madu, KA-C380-amisa, KA-C380-akarsisu, KA-C381-pariganisu, KA-C381-bhavisu, KA-C381-viveka, KA-C381-manana-madu, KA-C381-buddhi, KA-C382-sangati, KA-C382-vastava, KA-C382-bhrame, KA-C382-astitva, KA-C382-managanu, KA-C383-sandeha, KA-C383-tirucu, KA-C383-nirnayisu, KA-C383-asadhya, KA-C383-allagale]
+---
+
+# Reasons, proof and points of view
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C376-PURAVE376-01, KA-LEX-C376-PURAVE376-02] -->
+
+[PAUSE 3s] Say the Kannada for proof and to prove.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C376-PURAVE376-01, KA-LEX-C376-PURAVE376-02, KA-LEX-C376-PURAVE376-03, KA-LEX-C376-PURAVE376-04, KA-LEX-C376-PURAVE376-05, KA-LEX-C377-TARKA377-01, KA-LEX-C377-TARKA377-02, KA-LEX-C377-TARKA377-03, KA-LEX-C377-TARKA377-04, KA-LEX-C377-TARKA377-05, KA-LEX-C378-NILUVU378-01, KA-LEX-C378-NILUVU378-02, KA-LEX-C378-NILUVU378-03, KA-LEX-C378-NILUVU378-04, KA-LEX-C378-NILUVU378-05, KA-LEX-C379-OMMATA379-01, KA-LEX-C379-OMMATA379-02, KA-LEX-C379-OMMATA379-03, KA-LEX-C379-OMMATA379-04, KA-LEX-C379-OMMATA379-05, KA-LEX-C380-MANAVOLISU380-01, KA-LEX-C380-MANAVOLISU380-02, KA-LEX-C380-MANAVOLISU380-03, KA-LEX-C380-MANAVOLISU380-04, KA-LEX-C380-MANAVOLISU380-05, KA-LEX-C381-PARIGANISU381-01, KA-LEX-C381-PARIGANISU381-02, KA-LEX-C381-PARIGANISU381-03, KA-LEX-C381-PARIGANISU381-04, KA-LEX-C381-PARIGANISU381-05, KA-LEX-C382-VASTAVA382-01, KA-LEX-C382-VASTAVA382-02, KA-LEX-C382-VASTAVA382-03, KA-LEX-C382-VASTAVA382-04, KA-LEX-C382-VASTAVA382-05, KA-LEX-C383-SANDEHA383-01, KA-LEX-C383-SANDEHA383-02, KA-LEX-C383-SANDEHA383-03, KA-LEX-C383-SANDEHA383-04, KA-LEX-C383-SANDEHA383-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: proof, to prove, a possibility, importance, to base on]
+- [YOU SAY: logic, to justify, a controversy, to object, reasonable]
+- [YOU SAY: a point of view, a stance, neutral, bias, to advocate]
+- [YOU SAY: to consent, a difference of opinion, a consensus, to oppose, mutual]
+- [YOU SAY: to persuade, to motivate, to drive home, an inducement, to attract]
+- [YOU SAY: to consider, to suppose, good sense, to reflect on, intellect]
+- [YOU SAY: a fact, reality, an illusion, existence, to realise]
+- [YOU SAY: a misgiving, to twist, to determine, impossible, to deny]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C376-PURAVE376-01, KA-LEX-C376-PURAVE376-02, KA-LEX-C376-PURAVE376-03, KA-LEX-C376-PURAVE376-04, KA-LEX-C376-PURAVE376-05, KA-LEX-C377-TARKA377-01, KA-LEX-C377-TARKA377-02, KA-LEX-C377-TARKA377-03, KA-LEX-C377-TARKA377-04, KA-LEX-C377-TARKA377-05, KA-LEX-C378-NILUVU378-01, KA-LEX-C378-NILUVU378-02, KA-LEX-C378-NILUVU378-03, KA-LEX-C378-NILUVU378-04, KA-LEX-C378-NILUVU378-05, KA-LEX-C379-OMMATA379-01, KA-LEX-C379-OMMATA379-02, KA-LEX-C379-OMMATA379-03, KA-LEX-C379-OMMATA379-04, KA-LEX-C379-OMMATA379-05, KA-LEX-C380-MANAVOLISU380-01, KA-LEX-C380-MANAVOLISU380-02, KA-LEX-C380-MANAVOLISU380-03, KA-LEX-C380-MANAVOLISU380-04, KA-LEX-C380-MANAVOLISU380-05, KA-LEX-C381-PARIGANISU381-01, KA-LEX-C381-PARIGANISU381-02, KA-LEX-C381-PARIGANISU381-03, KA-LEX-C381-PARIGANISU381-04, KA-LEX-C381-PARIGANISU381-05, KA-LEX-C382-VASTAVA382-01, KA-LEX-C382-VASTAVA382-02, KA-LEX-C382-VASTAVA382-03, KA-LEX-C382-VASTAVA382-04, KA-LEX-C382-VASTAVA382-05, KA-LEX-C383-SANDEHA383-01, KA-LEX-C383-SANDEHA383-02, KA-LEX-C383-SANDEHA383-03, KA-LEX-C383-SANDEHA383-04, KA-LEX-C383-SANDEHA383-05] -->
+
+[PAUSE 3s] Proof? (**ಪುರಾವೆ**, *purāve*.) To prove? (**ಸಾಬೀತುಪಡಿಸು**, *sābītupaḍisu*.) A possibility? (**ಸಾಧ್ಯತೆ**, *sādhyate*.) Importance? (**ಮಹತ್ವ**, *mahatva*.) To base on? (**ಆಧರಿಸು**, *ādharisu*.) Logic? (**ತರ್ಕ**, *tarka*.) To justify? (**ಸಮರ್ಥಿಸು**, *samarthisu*.) A controversy? (**ವಿವಾದ**, *vivāda*.) To object? (**ಆಕ್ಷೇಪಿಸು**, *ākṣēpisu*.) Reasonable? (**ಸಮಂಜಸ**, *samañjasa*.) A point of view? (**ದೃಷ್ಟಿಕೋನ**, *dṛṣṭikōna*.) A stance? (**ನಿಲುವು**, *niluvu*.) Neutral? (**ತಟಸ್ಥ**, *taṭastha*.) Bias? (**ಪಕ್ಷಪಾತ**, *pakṣapāta*.) To advocate? (**ಪ್ರತಿಪಾದಿಸು**, *pratipādisu*.) To consent? (**ಸಮ್ಮತಿಸು**, *sammatisu*.) A difference of opinion? (**ಭಿನ್ನಾಭಿಪ್ರಾಯ**, *bhinnābhiprāya*.) A consensus? (**ಒಮ್ಮತ**, *ommata*.) To oppose? (**ವಿರೋಧಿಸು**, *virōdhisu*.) Mutual? (**ಪರಸ್ಪರ**, *paraspara*.) To persuade? (**ಮನವೊಲಿಸು**, *manavolisu*.) To motivate? (**ಪ್ರೇರೇಪಿಸು**, *prērēpisu*.) To drive home? (**ಮನದಟ್ಟು ಮಾಡು**, *manadaṭṭu māḍu*.) An inducement? (**ಆಮಿಷ**, *āmiṣa*.) To attract? (**ಆಕರ್ಷಿಸು**, *ākarṣisu*.) To consider? (**ಪರಿಗಣಿಸು**, *parigaṇisu*.) To suppose? (**ಭಾವಿಸು**, *bhāvisu*.) Good sense? (**ವಿವೇಕ**, *vivēka*.) To reflect on? (**ಮನನ ಮಾಡು**, *manana māḍu*.) Intellect? (**ಬುದ್ಧಿ**, *buddhi*.) A fact? (**ಸಂಗತಿ**, *saṅgati*.) Reality? (**ವಾಸ್ತವ**, *vāstava*.) An illusion? (**ಭ್ರಮೆ**, *bhrame*.) Existence? (**ಅಸ್ತಿತ್ವ**, *astitva*.) To realise? (**ಮನಗಾಣು**, *managāṇu*.) A misgiving? (**ಸಂದೇಹ**, *sandēha*.) To twist? (**ತಿರುಚು**, *tirucu*.) To determine? (**ನಿರ್ಣಯಿಸು**, *nirṇayisu*.) Impossible? (**ಅಸಾಧ್ಯ**, *asādhya*.) To deny? (**ಅಲ್ಲಗಳೆ**, *allagaḷe*.)
+`;export{t};

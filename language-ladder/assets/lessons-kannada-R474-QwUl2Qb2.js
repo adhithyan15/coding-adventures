@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-R475-review-469-475
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 24200
+chapter: 475
+type: review
+headword: (dialogue)
+gloss: a review of the words from Bags, Bakeries and Deliveries to Into the Woods
+concept_tag: REVIEW
+prerequisites: [KA-C469-kaicila, KA-C469-adalubadalu-madu, KA-C469-varanti, KA-C469-bekari, KA-C469-delivari, KA-C470-vistarisu, KA-C470-pravesadvara, KA-C470-kadita, KA-C470-sarabaraju, KA-C470-duravani, KA-C471-gaddala, KA-C471-jamayisu, KA-C471-dittisu, KA-C471-jaggu, KA-C471-tuluku, KA-C472-halagu, KA-C472-emaru, KA-C472-paragu, KA-C472-asraya, KA-C472-sahayavani, KA-C473-parisara, KA-C473-malinya, KA-C473-kalusitagolisu, KA-C473-masi, KA-C473-ingala, KA-C474-tyajya, KA-C474-marubalake, KA-C474-vingadisu, KA-C474-tyajisu, KA-C474-saurasakti, KA-C475-aranya, KA-C475-malekadu, KA-C475-kadgiccu, KA-C475-kadi-fell, KA-C475-samraksisu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C469-VARANTI469-01, KA-LEX-C469-VARANTI469-02, KA-LEX-C469-VARANTI469-03, KA-LEX-C469-VARANTI469-04, KA-LEX-C469-VARANTI469-05, KA-LEX-C470-KAMAGARI470-01, KA-LEX-C470-KAMAGARI470-02, KA-LEX-C470-KAMAGARI470-03, KA-LEX-C470-KAMAGARI470-04, KA-LEX-C470-KAMAGARI470-05, KA-LEX-C471-GADDALA471-01, KA-LEX-C471-GADDALA471-02, KA-LEX-C471-GADDALA471-03, KA-LEX-C471-GADDALA471-04, KA-LEX-C471-GADDALA471-05, KA-LEX-C472-HALU472-01, KA-LEX-C472-HALU472-02, KA-LEX-C472-HALU472-03, KA-LEX-C472-HALU472-04, KA-LEX-C472-HALU472-05, KA-LEX-C473-PARISARA473-01, KA-LEX-C473-PARISARA473-02, KA-LEX-C473-PARISARA473-03, KA-LEX-C473-PARISARA473-04, KA-LEX-C473-PARISARA473-05, KA-LEX-C474-TYAJYA474-01, KA-LEX-C474-TYAJYA474-02, KA-LEX-C474-TYAJYA474-03, KA-LEX-C474-TYAJYA474-04, KA-LEX-C474-TYAJYA474-05, KA-LEX-C475-ARANYA475-01, KA-LEX-C475-ARANYA475-02, KA-LEX-C475-ARANYA475-03, KA-LEX-C475-ARANYA475-04, KA-LEX-C475-ARANYA475-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [KA-LEX-C469-VARANTI469-01, KA-LEX-C469-VARANTI469-02, KA-LEX-C469-VARANTI469-03, KA-LEX-C469-VARANTI469-04, KA-LEX-C469-VARANTI469-05, KA-LEX-C470-KAMAGARI470-01, KA-LEX-C470-KAMAGARI470-02, KA-LEX-C470-KAMAGARI470-03, KA-LEX-C470-KAMAGARI470-04, KA-LEX-C470-KAMAGARI470-05, KA-LEX-C471-GADDALA471-01, KA-LEX-C471-GADDALA471-02, KA-LEX-C471-GADDALA471-03, KA-LEX-C471-GADDALA471-04, KA-LEX-C471-GADDALA471-05, KA-LEX-C472-HALU472-01, KA-LEX-C472-HALU472-02, KA-LEX-C472-HALU472-03, KA-LEX-C472-HALU472-04, KA-LEX-C472-HALU472-05, KA-LEX-C473-PARISARA473-01, KA-LEX-C473-PARISARA473-02, KA-LEX-C473-PARISARA473-03, KA-LEX-C473-PARISARA473-04, KA-LEX-C473-PARISARA473-05, KA-LEX-C474-TYAJYA474-01, KA-LEX-C474-TYAJYA474-02, KA-LEX-C474-TYAJYA474-03, KA-LEX-C474-TYAJYA474-04, KA-LEX-C474-TYAJYA474-05, KA-LEX-C475-ARANYA475-01, KA-LEX-C475-ARANYA475-02, KA-LEX-C475-ARANYA475-03, KA-LEX-C475-ARANYA475-04, KA-LEX-C475-ARANYA475-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C469-kaicila, KA-C469-adalubadalu-madu, KA-C469-varanti, KA-C469-bekari, KA-C469-delivari, KA-C470-vistarisu, KA-C470-pravesadvara, KA-C470-kadita, KA-C470-sarabaraju, KA-C470-duravani, KA-C471-gaddala, KA-C471-jamayisu, KA-C471-dittisu, KA-C471-jaggu, KA-C471-tuluku, KA-C472-halagu, KA-C472-emaru, KA-C472-paragu, KA-C472-asraya, KA-C472-sahayavani, KA-C473-parisara, KA-C473-malinya, KA-C473-kalusitagolisu, KA-C473-masi, KA-C473-ingala, KA-C474-tyajya, KA-C474-marubalake, KA-C474-vingadisu, KA-C474-tyajisu, KA-C474-saurasakti, KA-C475-aranya, KA-C475-malekadu, KA-C475-kadgiccu, KA-C475-kadi-fell, KA-C475-samraksisu]
+---
+
+# Looking back: from Bags, Bakeries and Deliveries to Into the Woods
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C469-VARANTI469-01, KA-LEX-C469-VARANTI469-02] -->
+
+[PAUSE 3s] Say the Kannada for a handbag and to swap.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C469-VARANTI469-01, KA-LEX-C469-VARANTI469-02, KA-LEX-C469-VARANTI469-03, KA-LEX-C469-VARANTI469-04, KA-LEX-C469-VARANTI469-05, KA-LEX-C470-KAMAGARI470-01, KA-LEX-C470-KAMAGARI470-02, KA-LEX-C470-KAMAGARI470-03, KA-LEX-C470-KAMAGARI470-04, KA-LEX-C470-KAMAGARI470-05, KA-LEX-C471-GADDALA471-01, KA-LEX-C471-GADDALA471-02, KA-LEX-C471-GADDALA471-03, KA-LEX-C471-GADDALA471-04, KA-LEX-C471-GADDALA471-05, KA-LEX-C472-HALU472-01, KA-LEX-C472-HALU472-02, KA-LEX-C472-HALU472-03, KA-LEX-C472-HALU472-04, KA-LEX-C472-HALU472-05, KA-LEX-C473-PARISARA473-01, KA-LEX-C473-PARISARA473-02, KA-LEX-C473-PARISARA473-03, KA-LEX-C473-PARISARA473-04, KA-LEX-C473-PARISARA473-05, KA-LEX-C474-TYAJYA474-01, KA-LEX-C474-TYAJYA474-02, KA-LEX-C474-TYAJYA474-03, KA-LEX-C474-TYAJYA474-04, KA-LEX-C474-TYAJYA474-05, KA-LEX-C475-ARANYA475-01, KA-LEX-C475-ARANYA475-02, KA-LEX-C475-ARANYA475-03, KA-LEX-C475-ARANYA475-04, KA-LEX-C475-ARANYA475-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a handbag, to swap, a warranty, a bakery, a home delivery]
+- [YOU SAY: to widen, an entrance gate, a power cut, supplies, a telephone]
+- [YOU SAY: a din, to gather, to stare, to tug, to spill over]
+- [YOU SAY: to get damaged, to be off guard, to escape unharmed, shelter, a helpline]
+- [YOU SAY: the environment, pollution, to pollute, soot, carbon]
+- [YOU SAY: waste matter, recycling, to sort, to forsake, solar power]
+- [YOU SAY: woodland, a rainforest, a forest fire, to fell, to conserve]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C469-VARANTI469-01, KA-LEX-C469-VARANTI469-02, KA-LEX-C469-VARANTI469-03, KA-LEX-C469-VARANTI469-04, KA-LEX-C469-VARANTI469-05, KA-LEX-C470-KAMAGARI470-01, KA-LEX-C470-KAMAGARI470-02, KA-LEX-C470-KAMAGARI470-03, KA-LEX-C470-KAMAGARI470-04, KA-LEX-C470-KAMAGARI470-05, KA-LEX-C471-GADDALA471-01, KA-LEX-C471-GADDALA471-02, KA-LEX-C471-GADDALA471-03, KA-LEX-C471-GADDALA471-04, KA-LEX-C471-GADDALA471-05, KA-LEX-C472-HALU472-01, KA-LEX-C472-HALU472-02, KA-LEX-C472-HALU472-03, KA-LEX-C472-HALU472-04, KA-LEX-C472-HALU472-05, KA-LEX-C473-PARISARA473-01, KA-LEX-C473-PARISARA473-02, KA-LEX-C473-PARISARA473-03, KA-LEX-C473-PARISARA473-04, KA-LEX-C473-PARISARA473-05, KA-LEX-C474-TYAJYA474-01, KA-LEX-C474-TYAJYA474-02, KA-LEX-C474-TYAJYA474-03, KA-LEX-C474-TYAJYA474-04, KA-LEX-C474-TYAJYA474-05, KA-LEX-C475-ARANYA475-01, KA-LEX-C475-ARANYA475-02, KA-LEX-C475-ARANYA475-03, KA-LEX-C475-ARANYA475-04, KA-LEX-C475-ARANYA475-05] -->
+
+[PAUSE 3s] A handbag? (**ಕೈಚೀಲ**, *kaicīla*.) To swap? (**ಅದಲುಬದಲು ಮಾಡು**, *adalubadalu māḍu*.) A warranty? (**ವಾರಂಟಿ**, *vāraṇṭi*.) A bakery? (**ಬೇಕರಿ**, *bēkari*.) A home delivery? (**ಡೆಲಿವರಿ**, *ḍelivari*.) To widen? (**ವಿಸ್ತರಿಸು**, *vistarisu*.) An entrance gate? (**ಪ್ರವೇಶದ್ವಾರ**, *pravēśadvāra*.) A power cut? (**ಕಡಿತ**, *kaḍita*.) Supplies? (**ಸರಬರಾಜು**, *sarabarāju*.) A telephone? (**ದೂರವಾಣಿ**, *dūravāṇi*.) A din? (**ಗದ್ದಲ**, *gaddala*.) To gather? (**ಜಮಾಯಿಸು**, *jamāyisu*.) To stare? (**ದಿಟ್ಟಿಸು**, *diṭṭisu*.) To tug? (**ಜಗ್ಗು**, *jaggu*.) To spill over? (**ತುಳುಕು**, *tuḷuku*.) To get damaged? (**ಹಾಳಾಗು**, *hāḷāgu*.) To be off guard? (**ಏಮಾರು**, *ēmāru*.) To escape unharmed? (**ಪಾರಾಗು**, *pārāgu*.) Shelter? (**ಆಶ್ರಯ**, *āśraya*.) A helpline? (**ಸಹಾಯವಾಣಿ**, *sahāyavāṇi*.) The environment? (**ಪರಿಸರ**, *parisara*.) Pollution? (**ಮಾಲಿನ್ಯ**, *mālinya*.) To pollute? (**ಕಲುಷಿತಗೊಳಿಸು**, *kaluṣitagoḷisu*.) Soot? (**ಮಸಿ**, *masi*.) Carbon? (**ಇಂಗಾಲ**, *iṅgāla*.) Waste matter? (**ತ್ಯಾಜ್ಯ**, *tyājya*.) Recycling? (**ಮರುಬಳಕೆ**, *marubaḷake*.) To sort? (**ವಿಂಗಡಿಸು**, *viṅgaḍisu*.) To forsake? (**ತ್ಯಜಿಸು**, *tyajisu*.) Solar power? (**ಸೌರಶಕ್ತಿ**, *sauraśakti*.) Woodland? (**ಅರಣ್ಯ**, *araṇya*.) A rainforest? (**ಮಳೆಕಾಡು**, *maḷekāḍu*.) A forest fire? (**ಕಾಡ್ಗಿಚ್ಚು**, *kāḍgiccu*.) To fell? (**ಕಡಿ**, *kaḍi*.) To conserve? (**ಸಂರಕ್ಷಿಸು**, *saṃrakṣisu*.)
+`;export{t};

@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-R326-review-319-326
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 16400
+chapter: 326
+type: review
+headword: (dialogue)
+gloss: a review of the words from A Thief and a War to A Child Goes Missing
+concept_tag: REVIEW
+prerequisites: [KA-C319-yuddha, KA-C319-sainika, KA-C319-akramisu, KA-C319-kalla, KA-C319-odihogu, KA-C320-varadigara, KA-C320-sambhavisu, KA-C320-prasara, KA-C320-bittarisu, KA-C320-sirsike, KA-C321-nyayalaya, KA-C321-nyayadhisa, KA-C321-aropisu, KA-C321-tirpu, KA-C321-sikse, KA-C322-raja, KA-C322-rani, KA-C322-alu-rule, KA-C322-simhasana, KA-C322-kirita, KA-C323-aparadha, KA-C323-bandhisu, KA-C323-thane, KA-C323-tanikhe, KA-C323-sankisu, KA-C324-agnisamaka, KA-C324-hottiko, KA-C324-samayaprajne, KA-C324-nandisu, KA-C324-raksisu, KA-C325-vivaha, KA-C325-arataksate, KA-C325-varadaksine, KA-C325-harasu, KA-C325-dibbana, KA-C326-kaneyagu, KA-C326-patte-haccu, KA-C326-kuruhu, KA-C326-apaharisu, KA-C326-otteyalu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C319-YUDDHA319-01, KA-LEX-C319-YUDDHA319-02, KA-LEX-C319-YUDDHA319-03, KA-LEX-C319-YUDDHA319-04, KA-LEX-C319-YUDDHA319-05, KA-LEX-C320-VARADI320-01, KA-LEX-C320-VARADI320-02, KA-LEX-C320-VARADI320-03, KA-LEX-C320-VARADI320-04, KA-LEX-C320-VARADI320-05, KA-LEX-C321-NYAYA321-01, KA-LEX-C321-NYAYA321-02, KA-LEX-C321-NYAYA321-03, KA-LEX-C321-NYAYA321-04, KA-LEX-C321-NYAYA321-05, KA-LEX-C322-RAJA322-01, KA-LEX-C322-RAJA322-02, KA-LEX-C322-RAJA322-03, KA-LEX-C322-RAJA322-04, KA-LEX-C322-RAJA322-05, KA-LEX-C323-APARADHA323-01, KA-LEX-C323-APARADHA323-02, KA-LEX-C323-APARADHA323-03, KA-LEX-C323-APARADHA323-04, KA-LEX-C323-APARADHA323-05, KA-LEX-C324-BENKI324-01, KA-LEX-C324-BENKI324-02, KA-LEX-C324-BENKI324-03, KA-LEX-C324-BENKI324-04, KA-LEX-C324-BENKI324-05, KA-LEX-C325-VIVAHA325-01, KA-LEX-C325-VIVAHA325-02, KA-LEX-C325-VIVAHA325-03, KA-LEX-C325-VIVAHA325-04, KA-LEX-C325-VIVAHA325-05, KA-LEX-C326-KANE326-01, KA-LEX-C326-KANE326-02, KA-LEX-C326-KANE326-03, KA-LEX-C326-KANE326-04, KA-LEX-C326-KANE326-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [KA-LEX-C319-YUDDHA319-01, KA-LEX-C319-YUDDHA319-02, KA-LEX-C319-YUDDHA319-03, KA-LEX-C319-YUDDHA319-04, KA-LEX-C319-YUDDHA319-05, KA-LEX-C320-VARADI320-01, KA-LEX-C320-VARADI320-02, KA-LEX-C320-VARADI320-03, KA-LEX-C320-VARADI320-04, KA-LEX-C320-VARADI320-05, KA-LEX-C321-NYAYA321-01, KA-LEX-C321-NYAYA321-02, KA-LEX-C321-NYAYA321-03, KA-LEX-C321-NYAYA321-04, KA-LEX-C321-NYAYA321-05, KA-LEX-C322-RAJA322-01, KA-LEX-C322-RAJA322-02, KA-LEX-C322-RAJA322-03, KA-LEX-C322-RAJA322-04, KA-LEX-C322-RAJA322-05, KA-LEX-C323-APARADHA323-01, KA-LEX-C323-APARADHA323-02, KA-LEX-C323-APARADHA323-03, KA-LEX-C323-APARADHA323-04, KA-LEX-C323-APARADHA323-05, KA-LEX-C324-BENKI324-01, KA-LEX-C324-BENKI324-02, KA-LEX-C324-BENKI324-03, KA-LEX-C324-BENKI324-04, KA-LEX-C324-BENKI324-05, KA-LEX-C325-VIVAHA325-01, KA-LEX-C325-VIVAHA325-02, KA-LEX-C325-VIVAHA325-03, KA-LEX-C325-VIVAHA325-04, KA-LEX-C325-VIVAHA325-05, KA-LEX-C326-KANE326-01, KA-LEX-C326-KANE326-02, KA-LEX-C326-KANE326-03, KA-LEX-C326-KANE326-04, KA-LEX-C326-KANE326-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C319-yuddha, KA-C319-sainika, KA-C319-akramisu, KA-C319-kalla, KA-C319-odihogu, KA-C320-varadigara, KA-C320-sambhavisu, KA-C320-prasara, KA-C320-bittarisu, KA-C320-sirsike, KA-C321-nyayalaya, KA-C321-nyayadhisa, KA-C321-aropisu, KA-C321-tirpu, KA-C321-sikse, KA-C322-raja, KA-C322-rani, KA-C322-alu-rule, KA-C322-simhasana, KA-C322-kirita, KA-C323-aparadha, KA-C323-bandhisu, KA-C323-thane, KA-C323-tanikhe, KA-C323-sankisu, KA-C324-agnisamaka, KA-C324-hottiko, KA-C324-samayaprajne, KA-C324-nandisu, KA-C324-raksisu, KA-C325-vivaha, KA-C325-arataksate, KA-C325-varadaksine, KA-C325-harasu, KA-C325-dibbana, KA-C326-kaneyagu, KA-C326-patte-haccu, KA-C326-kuruhu, KA-C326-apaharisu, KA-C326-otteyalu]
+---
+
+# Telling what happened
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C319-YUDDHA319-01, KA-LEX-C319-YUDDHA319-02] -->
+
+[PAUSE 3s] Say the Kannada for a war and a soldier.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C319-YUDDHA319-01, KA-LEX-C319-YUDDHA319-02, KA-LEX-C319-YUDDHA319-03, KA-LEX-C319-YUDDHA319-04, KA-LEX-C319-YUDDHA319-05, KA-LEX-C320-VARADI320-01, KA-LEX-C320-VARADI320-02, KA-LEX-C320-VARADI320-03, KA-LEX-C320-VARADI320-04, KA-LEX-C320-VARADI320-05, KA-LEX-C321-NYAYA321-01, KA-LEX-C321-NYAYA321-02, KA-LEX-C321-NYAYA321-03, KA-LEX-C321-NYAYA321-04, KA-LEX-C321-NYAYA321-05, KA-LEX-C322-RAJA322-01, KA-LEX-C322-RAJA322-02, KA-LEX-C322-RAJA322-03, KA-LEX-C322-RAJA322-04, KA-LEX-C322-RAJA322-05, KA-LEX-C323-APARADHA323-01, KA-LEX-C323-APARADHA323-02, KA-LEX-C323-APARADHA323-03, KA-LEX-C323-APARADHA323-04, KA-LEX-C323-APARADHA323-05, KA-LEX-C324-BENKI324-01, KA-LEX-C324-BENKI324-02, KA-LEX-C324-BENKI324-03, KA-LEX-C324-BENKI324-04, KA-LEX-C324-BENKI324-05, KA-LEX-C325-VIVAHA325-01, KA-LEX-C325-VIVAHA325-02, KA-LEX-C325-VIVAHA325-03, KA-LEX-C325-VIVAHA325-04, KA-LEX-C325-VIVAHA325-05, KA-LEX-C326-KANE326-01, KA-LEX-C326-KANE326-02, KA-LEX-C326-KANE326-03, KA-LEX-C326-KANE326-04, KA-LEX-C326-KANE326-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a war, a soldier, to invade, a thief, to run away]
+- [YOU SAY: a reporter, to occur, a broadcast, to broadcast, a headline]
+- [YOU SAY: a court of law, a judge, to accuse, a verdict, a punishment]
+- [YOU SAY: a king, a queen, to reign, a throne, a crown]
+- [YOU SAY: a crime, to arrest, a police station, an investigation, to suspect]
+- [YOU SAY: a firefighter, to catch fire, presence of mind, to extinguish, to rescue]
+- [YOU SAY: a marriage, a wedding reception, a dowry, to bless, a wedding party]
+- [YOU SAY: to go missing, to track down, a trace, to kidnap, a hostage]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C319-YUDDHA319-01, KA-LEX-C319-YUDDHA319-02, KA-LEX-C319-YUDDHA319-03, KA-LEX-C319-YUDDHA319-04, KA-LEX-C319-YUDDHA319-05, KA-LEX-C320-VARADI320-01, KA-LEX-C320-VARADI320-02, KA-LEX-C320-VARADI320-03, KA-LEX-C320-VARADI320-04, KA-LEX-C320-VARADI320-05, KA-LEX-C321-NYAYA321-01, KA-LEX-C321-NYAYA321-02, KA-LEX-C321-NYAYA321-03, KA-LEX-C321-NYAYA321-04, KA-LEX-C321-NYAYA321-05, KA-LEX-C322-RAJA322-01, KA-LEX-C322-RAJA322-02, KA-LEX-C322-RAJA322-03, KA-LEX-C322-RAJA322-04, KA-LEX-C322-RAJA322-05, KA-LEX-C323-APARADHA323-01, KA-LEX-C323-APARADHA323-02, KA-LEX-C323-APARADHA323-03, KA-LEX-C323-APARADHA323-04, KA-LEX-C323-APARADHA323-05, KA-LEX-C324-BENKI324-01, KA-LEX-C324-BENKI324-02, KA-LEX-C324-BENKI324-03, KA-LEX-C324-BENKI324-04, KA-LEX-C324-BENKI324-05, KA-LEX-C325-VIVAHA325-01, KA-LEX-C325-VIVAHA325-02, KA-LEX-C325-VIVAHA325-03, KA-LEX-C325-VIVAHA325-04, KA-LEX-C325-VIVAHA325-05, KA-LEX-C326-KANE326-01, KA-LEX-C326-KANE326-02, KA-LEX-C326-KANE326-03, KA-LEX-C326-KANE326-04, KA-LEX-C326-KANE326-05] -->
+
+[PAUSE 3s] A war? (**ಯುದ್ಧ**, *yuddha*.) A soldier? (**ಸೈನಿಕ**, *sainika*.) To invade? (**ಆಕ್ರಮಿಸು**, *ākramisu*.) A thief? (**ಕಳ್ಳ**, *kaḷḷa*.) To run away? (**ಓಡಿಹೋಗು**, *ōḍihōgu*.) A reporter? (**ವರದಿಗಾರ**, *varadigāra*.) To occur? (**ಸಂಭವಿಸು**, *sambhavisu*.) A broadcast? (**ಪ್ರಸಾರ**, *prasāra*.) To broadcast? (**ಬಿತ್ತರಿಸು**, *bittarisu*.) A headline? (**ಶೀರ್ಷಿಕೆ**, *śīrṣike*.) A court of law? (**ನ್ಯಾಯಾಲಯ**, *nyāyālaya*.) A judge? (**ನ್ಯಾಯಾಧೀಶ**, *nyāyādhīśa*.) To accuse? (**ಆರೋಪಿಸು**, *ārōpisu*.) A verdict? (**ತೀರ್ಪು**, *tīrpu*.) A punishment? (**ಶಿಕ್ಷೆ**, *śikṣe*.) A king? (**ರಾಜ**, *rāja*.) A queen? (**ರಾಣಿ**, *rāṇi*.) To reign? (**ಆಳು**, *āḷu*.) A throne? (**ಸಿಂಹಾಸನ**, *siṃhāsana*.) A crown? (**ಕಿರೀಟ**, *kirīṭa*.) A crime? (**ಅಪರಾಧ**, *aparādha*.) To arrest? (**ಬಂಧಿಸು**, *bandhisu*.) A police station? (**ಠಾಣೆ**, *ṭhāṇe*.) An investigation? (**ತನಿಖೆ**, *tanikhe*.) To suspect? (**ಶಂಕಿಸು**, *śaṅkisu*.) A firefighter? (**ಅಗ್ನಿಶಾಮಕ**, *agniśāmaka*.) To catch fire? (**ಹೊತ್ತಿಕೊ**, *hottiko*.) Presence of mind? (**ಸಮಯಪ್ರಜ್ಞೆ**, *samayaprajñe*.) To extinguish? (**ನಂದಿಸು**, *nandisu*.) To rescue? (**ರಕ್ಷಿಸು**, *rakṣisu*.) A marriage? (**ವಿವಾಹ**, *vivāha*.) A wedding reception? (**ಆರತಕ್ಷತೆ**, *āratakṣate*.) A dowry? (**ವರದಕ್ಷಿಣೆ**, *varadakṣiṇe*.) To bless? (**ಹರಸು**, *harasu*.) A wedding party? (**ದಿಬ್ಬಣ**, *dibbaṇa*.) To go missing? (**ಕಾಣೆಯಾಗು**, *kāṇeyāgu*.) To track down? (**ಪತ್ತೆ ಹಚ್ಚು**, *patte haccu*.) A trace? (**ಕುರುಹು**, *kuruhu*.) To kidnap? (**ಅಪಹರಿಸು**, *apaharisu*.) A hostage? (**ಒತ್ತೆಯಾಳು**, *otteyāḷu*.)
+`;export{t};

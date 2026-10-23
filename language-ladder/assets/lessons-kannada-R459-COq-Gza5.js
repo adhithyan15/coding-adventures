@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-R461-review-455-461
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 23480
+chapter: 461
+type: review
+headword: (dialogue)
+gloss: a review of the words from Planning a Trip to Guest Houses and Deposits
+concept_tag: REVIEW
+prerequisites: [KA-C455-pravasodyama, KA-C455-gamyasthana, KA-C455-buk-madu, KA-C455-margadarsi, KA-C455-preksaniya, KA-C456-purabhavana, KA-C456-gopura, KA-C456-karanji, KA-C456-heggurutu, KA-C456-viksisu, KA-C457-oni, KA-C457-haduhogu, KA-C457-anvesisu, KA-C457-tana, KA-C457-kangolisu, KA-C458-yatre, KA-C458-giridhama, KA-C458-karedoyyu, KA-C458-vapasagu, KA-C458-tangu, KA-C459-parvata, KA-C459-sikhara, KA-C459-muggarisu, KA-C459-dere, KA-C459-bidara, KA-C460-vasati, KA-C460-ladj, KA-C460-kothadi, KA-C460-svagatakara, KA-C460-kauntar, KA-C461-atithigrha, KA-C461-hastel, KA-C461-thevani, KA-C461-lakar, KA-C461-marupavati]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C455-PRAVASA455-01, KA-LEX-C455-PRAVASA455-02, KA-LEX-C455-PRAVASA455-03, KA-LEX-C455-PRAVASA455-04, KA-LEX-C455-PRAVASA455-05, KA-LEX-C456-SMARAKA456-01, KA-LEX-C456-SMARAKA456-02, KA-LEX-C456-SMARAKA456-03, KA-LEX-C456-SMARAKA456-04, KA-LEX-C456-SMARAKA456-05, KA-LEX-C457-VIHARA457-01, KA-LEX-C457-VIHARA457-02, KA-LEX-C457-VIHARA457-03, KA-LEX-C457-VIHARA457-04, KA-LEX-C457-VIHARA457-05, KA-LEX-C458-YATRE458-01, KA-LEX-C458-YATRE458-02, KA-LEX-C458-YATRE458-03, KA-LEX-C458-YATRE458-04, KA-LEX-C458-YATRE458-05, KA-LEX-C459-CARANA459-01, KA-LEX-C459-CARANA459-02, KA-LEX-C459-CARANA459-03, KA-LEX-C459-CARANA459-04, KA-LEX-C459-CARANA459-05, KA-LEX-C460-VASATI460-01, KA-LEX-C460-VASATI460-02, KA-LEX-C460-VASATI460-03, KA-LEX-C460-VASATI460-04, KA-LEX-C460-VASATI460-05, KA-LEX-C461-ATITHI461-01, KA-LEX-C461-ATITHI461-02, KA-LEX-C461-ATITHI461-03, KA-LEX-C461-ATITHI461-04, KA-LEX-C461-ATITHI461-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [KA-LEX-C455-PRAVASA455-01, KA-LEX-C455-PRAVASA455-02, KA-LEX-C455-PRAVASA455-03, KA-LEX-C455-PRAVASA455-04, KA-LEX-C455-PRAVASA455-05, KA-LEX-C456-SMARAKA456-01, KA-LEX-C456-SMARAKA456-02, KA-LEX-C456-SMARAKA456-03, KA-LEX-C456-SMARAKA456-04, KA-LEX-C456-SMARAKA456-05, KA-LEX-C457-VIHARA457-01, KA-LEX-C457-VIHARA457-02, KA-LEX-C457-VIHARA457-03, KA-LEX-C457-VIHARA457-04, KA-LEX-C457-VIHARA457-05, KA-LEX-C458-YATRE458-01, KA-LEX-C458-YATRE458-02, KA-LEX-C458-YATRE458-03, KA-LEX-C458-YATRE458-04, KA-LEX-C458-YATRE458-05, KA-LEX-C459-CARANA459-01, KA-LEX-C459-CARANA459-02, KA-LEX-C459-CARANA459-03, KA-LEX-C459-CARANA459-04, KA-LEX-C459-CARANA459-05, KA-LEX-C460-VASATI460-01, KA-LEX-C460-VASATI460-02, KA-LEX-C460-VASATI460-03, KA-LEX-C460-VASATI460-04, KA-LEX-C460-VASATI460-05, KA-LEX-C461-ATITHI461-01, KA-LEX-C461-ATITHI461-02, KA-LEX-C461-ATITHI461-03, KA-LEX-C461-ATITHI461-04, KA-LEX-C461-ATITHI461-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C455-pravasodyama, KA-C455-gamyasthana, KA-C455-buk-madu, KA-C455-margadarsi, KA-C455-preksaniya, KA-C456-purabhavana, KA-C456-gopura, KA-C456-karanji, KA-C456-heggurutu, KA-C456-viksisu, KA-C457-oni, KA-C457-haduhogu, KA-C457-anvesisu, KA-C457-tana, KA-C457-kangolisu, KA-C458-yatre, KA-C458-giridhama, KA-C458-karedoyyu, KA-C458-vapasagu, KA-C458-tangu, KA-C459-parvata, KA-C459-sikhara, KA-C459-muggarisu, KA-C459-dere, KA-C459-bidara, KA-C460-vasati, KA-C460-ladj, KA-C460-kothadi, KA-C460-svagatakara, KA-C460-kauntar, KA-C461-atithigrha, KA-C461-hastel, KA-C461-thevani, KA-C461-lakar, KA-C461-marupavati]
+---
+
+# Looking back: from Planning a Trip to Guest Houses and Deposits
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C455-PRAVASA455-01, KA-LEX-C455-PRAVASA455-02] -->
+
+[PAUSE 3s] Say the Kannada for tourism and a destination.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C455-PRAVASA455-01, KA-LEX-C455-PRAVASA455-02, KA-LEX-C455-PRAVASA455-03, KA-LEX-C455-PRAVASA455-04, KA-LEX-C455-PRAVASA455-05, KA-LEX-C456-SMARAKA456-01, KA-LEX-C456-SMARAKA456-02, KA-LEX-C456-SMARAKA456-03, KA-LEX-C456-SMARAKA456-04, KA-LEX-C456-SMARAKA456-05, KA-LEX-C457-VIHARA457-01, KA-LEX-C457-VIHARA457-02, KA-LEX-C457-VIHARA457-03, KA-LEX-C457-VIHARA457-04, KA-LEX-C457-VIHARA457-05, KA-LEX-C458-YATRE458-01, KA-LEX-C458-YATRE458-02, KA-LEX-C458-YATRE458-03, KA-LEX-C458-YATRE458-04, KA-LEX-C458-YATRE458-05, KA-LEX-C459-CARANA459-01, KA-LEX-C459-CARANA459-02, KA-LEX-C459-CARANA459-03, KA-LEX-C459-CARANA459-04, KA-LEX-C459-CARANA459-05, KA-LEX-C460-VASATI460-01, KA-LEX-C460-VASATI460-02, KA-LEX-C460-VASATI460-03, KA-LEX-C460-VASATI460-04, KA-LEX-C460-VASATI460-05, KA-LEX-C461-ATITHI461-01, KA-LEX-C461-ATITHI461-02, KA-LEX-C461-ATITHI461-03, KA-LEX-C461-ATITHI461-04, KA-LEX-C461-ATITHI461-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: tourism, a destination, to make a booking, a guide, worth seeing]
+- [YOU SAY: a town hall, a tower, a fountain, a landmark, to view]
+- [YOU SAY: a lane, to pass through, to explore, a spot, to look splendid]
+- [YOU SAY: a pilgrimage, a hill station, to take along, to get back, to stay overnight]
+- [YOU SAY: a mountain, a peak, to stumble, a tent, an encampment]
+- [YOU SAY: lodging, a lodge, a chamber, a receptionist, a counter]
+- [YOU SAY: a guest house, a hostel, a security deposit, a locker, a refund]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C455-PRAVASA455-01, KA-LEX-C455-PRAVASA455-02, KA-LEX-C455-PRAVASA455-03, KA-LEX-C455-PRAVASA455-04, KA-LEX-C455-PRAVASA455-05, KA-LEX-C456-SMARAKA456-01, KA-LEX-C456-SMARAKA456-02, KA-LEX-C456-SMARAKA456-03, KA-LEX-C456-SMARAKA456-04, KA-LEX-C456-SMARAKA456-05, KA-LEX-C457-VIHARA457-01, KA-LEX-C457-VIHARA457-02, KA-LEX-C457-VIHARA457-03, KA-LEX-C457-VIHARA457-04, KA-LEX-C457-VIHARA457-05, KA-LEX-C458-YATRE458-01, KA-LEX-C458-YATRE458-02, KA-LEX-C458-YATRE458-03, KA-LEX-C458-YATRE458-04, KA-LEX-C458-YATRE458-05, KA-LEX-C459-CARANA459-01, KA-LEX-C459-CARANA459-02, KA-LEX-C459-CARANA459-03, KA-LEX-C459-CARANA459-04, KA-LEX-C459-CARANA459-05, KA-LEX-C460-VASATI460-01, KA-LEX-C460-VASATI460-02, KA-LEX-C460-VASATI460-03, KA-LEX-C460-VASATI460-04, KA-LEX-C460-VASATI460-05, KA-LEX-C461-ATITHI461-01, KA-LEX-C461-ATITHI461-02, KA-LEX-C461-ATITHI461-03, KA-LEX-C461-ATITHI461-04, KA-LEX-C461-ATITHI461-05] -->
+
+[PAUSE 3s] Tourism? (**ಪ್ರವಾಸೋದ್ಯಮ**, *pravāsōdyama*.) A destination? (**ಗಮ್ಯಸ್ಥಾನ**, *gamyasthāna*.) To make a booking? (**ಬುಕ್ ಮಾಡು**, *buk māḍu*.) A guide? (**ಮಾರ್ಗದರ್ಶಿ**, *mārgadarśi*.) Worth seeing? (**ಪ್ರೇಕ್ಷಣೀಯ**, *prēkṣaṇīya*.) A town hall? (**ಪುರಭವನ**, *purabhavana*.) A tower? (**ಗೋಪುರ**, *gōpura*.) A fountain? (**ಕಾರಂಜಿ**, *kārañji*.) A landmark? (**ಹೆಗ್ಗುರುತು**, *heggurutu*.) To view? (**ವೀಕ್ಷಿಸು**, *vīkṣisu*.) A lane? (**ಓಣಿ**, *ōṇi*.) To pass through? (**ಹಾದುಹೋಗು**, *hāduhōgu*.) To explore? (**ಅನ್ವೇಷಿಸು**, *anvēṣisu*.) A spot? (**ತಾಣ**, *tāṇa*.) To look splendid? (**ಕಂಗೊಳಿಸು**, *kaṅgoḷisu*.) A pilgrimage? (**ಯಾತ್ರೆ**, *yātre*.) A hill station? (**ಗಿರಿಧಾಮ**, *giridhāma*.) To take along? (**ಕರೆದೊಯ್ಯು**, *karedoyyu*.) To get back? (**ವಾಪಸಾಗು**, *vāpasāgu*.) To stay overnight? (**ತಂಗು**, *taṅgu*.) A mountain? (**ಪರ್ವತ**, *parvata*.) A peak? (**ಶಿಖರ**, *śikhara*.) To stumble? (**ಮುಗ್ಗರಿಸು**, *muggarisu*.) A tent? (**ಡೇರೆ**, *ḍēre*.) An encampment? (**ಬಿಡಾರ**, *biḍāra*.) Lodging? (**ವಸತಿ**, *vasati*.) A lodge? (**ಲಾಡ್ಜ್**, *lāḍj*.) A chamber? (**ಕೊಠಡಿ**, *koṭhaḍi*.) A receptionist? (**ಸ್ವಾಗತಕಾರ**, *svāgatakāra*.) A counter? (**ಕೌಂಟರ್**, *kauṇṭar*.) A guest house? (**ಅತಿಥಿಗೃಹ**, *atithigṛha*.) A hostel? (**ಹಾಸ್ಟೆಲ್**, *hāsṭel*.) A security deposit? (**ಠೇವಣಿ**, *ṭhēvaṇi*.) A locker? (**ಲಾಕರ್**, *lākar*.) A refund? (**ಮರುಪಾವತಿ**, *marupāvati*.)
+`;export{t};

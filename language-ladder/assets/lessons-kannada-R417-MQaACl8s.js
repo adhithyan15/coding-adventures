@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-R418-review-412-418
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 21200
+chapter: 418
+type: review
+headword: (dialogue)
+gloss: a review of the words from When Danger Comes to Other Options
+concept_tag: REVIEW
+prerequisites: [KA-C412-apaya, KA-C412-munneccarike, KA-C412-sambhavaniya, KA-C412-sankasta, KA-C412-nivarisu, KA-C413-latari, KA-C413-juju, KA-C413-pana, KA-C413-andajisu, KA-C413-sarasari, KA-C414-kattunittu, KA-C414-garistha, KA-C414-kanistha, KA-C414-nigadipadisu, KA-C414-nirbandhisu, KA-C415-amanatu, KA-C415-horagidu, KA-C415-vinayiti, KA-C415-manjuru-madu, KA-C415-adesa, KA-C416-muccalike, KA-C416-pratijne, KA-C416-pratiphala, KA-C416-koru, KA-C416-pramanavacana, KA-C417-kantu, KA-C417-baki, KA-C417-ulitaya, KA-C417-vasuli-madu, KA-C417-sallisu, KA-C418-paryaya, KA-C418-ayke, KA-C418-tatkalika, KA-C418-sasvata, KA-C418-marpadisu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C412-APAYA412-01, KA-LEX-C412-APAYA412-02, KA-LEX-C412-APAYA412-03, KA-LEX-C412-APAYA412-04, KA-LEX-C412-APAYA412-05, KA-LEX-C413-PANA413-01, KA-LEX-C413-PANA413-02, KA-LEX-C413-PANA413-03, KA-LEX-C413-PANA413-04, KA-LEX-C413-PANA413-05, KA-LEX-C414-GARISHTHA414-01, KA-LEX-C414-GARISHTHA414-02, KA-LEX-C414-GARISHTHA414-03, KA-LEX-C414-GARISHTHA414-04, KA-LEX-C414-GARISHTHA414-05, KA-LEX-C415-AMANATU415-01, KA-LEX-C415-AMANATU415-02, KA-LEX-C415-AMANATU415-03, KA-LEX-C415-AMANATU415-04, KA-LEX-C415-AMANATU415-05, KA-LEX-C416-PRATIJNE416-01, KA-LEX-C416-PRATIJNE416-02, KA-LEX-C416-PRATIJNE416-03, KA-LEX-C416-PRATIJNE416-04, KA-LEX-C416-PRATIJNE416-05, KA-LEX-C417-KANTU417-01, KA-LEX-C417-KANTU417-02, KA-LEX-C417-KANTU417-03, KA-LEX-C417-KANTU417-04, KA-LEX-C417-KANTU417-05, KA-LEX-C418-PARYAYA418-01, KA-LEX-C418-PARYAYA418-02, KA-LEX-C418-PARYAYA418-03, KA-LEX-C418-PARYAYA418-04, KA-LEX-C418-PARYAYA418-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [KA-LEX-C412-APAYA412-01, KA-LEX-C412-APAYA412-02, KA-LEX-C412-APAYA412-03, KA-LEX-C412-APAYA412-04, KA-LEX-C412-APAYA412-05, KA-LEX-C413-PANA413-01, KA-LEX-C413-PANA413-02, KA-LEX-C413-PANA413-03, KA-LEX-C413-PANA413-04, KA-LEX-C413-PANA413-05, KA-LEX-C414-GARISHTHA414-01, KA-LEX-C414-GARISHTHA414-02, KA-LEX-C414-GARISHTHA414-03, KA-LEX-C414-GARISHTHA414-04, KA-LEX-C414-GARISHTHA414-05, KA-LEX-C415-AMANATU415-01, KA-LEX-C415-AMANATU415-02, KA-LEX-C415-AMANATU415-03, KA-LEX-C415-AMANATU415-04, KA-LEX-C415-AMANATU415-05, KA-LEX-C416-PRATIJNE416-01, KA-LEX-C416-PRATIJNE416-02, KA-LEX-C416-PRATIJNE416-03, KA-LEX-C416-PRATIJNE416-04, KA-LEX-C416-PRATIJNE416-05, KA-LEX-C417-KANTU417-01, KA-LEX-C417-KANTU417-02, KA-LEX-C417-KANTU417-03, KA-LEX-C417-KANTU417-04, KA-LEX-C417-KANTU417-05, KA-LEX-C418-PARYAYA418-01, KA-LEX-C418-PARYAYA418-02, KA-LEX-C418-PARYAYA418-03, KA-LEX-C418-PARYAYA418-04, KA-LEX-C418-PARYAYA418-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C412-apaya, KA-C412-munneccarike, KA-C412-sambhavaniya, KA-C412-sankasta, KA-C412-nivarisu, KA-C413-latari, KA-C413-juju, KA-C413-pana, KA-C413-andajisu, KA-C413-sarasari, KA-C414-kattunittu, KA-C414-garistha, KA-C414-kanistha, KA-C414-nigadipadisu, KA-C414-nirbandhisu, KA-C415-amanatu, KA-C415-horagidu, KA-C415-vinayiti, KA-C415-manjuru-madu, KA-C415-adesa, KA-C416-muccalike, KA-C416-pratijne, KA-C416-pratiphala, KA-C416-koru, KA-C416-pramanavacana, KA-C417-kantu, KA-C417-baki, KA-C417-ulitaya, KA-C417-vasuli-madu, KA-C417-sallisu, KA-C418-paryaya, KA-C418-ayke, KA-C418-tatkalika, KA-C418-sasvata, KA-C418-marpadisu]
+---
+
+# Looking back: from When Danger Comes to Other Options
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C412-APAYA412-01, KA-LEX-C412-APAYA412-02] -->
+
+[PAUSE 3s] Say the Kannada for a danger and a precaution.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C412-APAYA412-01, KA-LEX-C412-APAYA412-02, KA-LEX-C412-APAYA412-03, KA-LEX-C412-APAYA412-04, KA-LEX-C412-APAYA412-05, KA-LEX-C413-PANA413-01, KA-LEX-C413-PANA413-02, KA-LEX-C413-PANA413-03, KA-LEX-C413-PANA413-04, KA-LEX-C413-PANA413-05, KA-LEX-C414-GARISHTHA414-01, KA-LEX-C414-GARISHTHA414-02, KA-LEX-C414-GARISHTHA414-03, KA-LEX-C414-GARISHTHA414-04, KA-LEX-C414-GARISHTHA414-05, KA-LEX-C415-AMANATU415-01, KA-LEX-C415-AMANATU415-02, KA-LEX-C415-AMANATU415-03, KA-LEX-C415-AMANATU415-04, KA-LEX-C415-AMANATU415-05, KA-LEX-C416-PRATIJNE416-01, KA-LEX-C416-PRATIJNE416-02, KA-LEX-C416-PRATIJNE416-03, KA-LEX-C416-PRATIJNE416-04, KA-LEX-C416-PRATIJNE416-05, KA-LEX-C417-KANTU417-01, KA-LEX-C417-KANTU417-02, KA-LEX-C417-KANTU417-03, KA-LEX-C417-KANTU417-04, KA-LEX-C417-KANTU417-05, KA-LEX-C418-PARYAYA418-01, KA-LEX-C418-PARYAYA418-02, KA-LEX-C418-PARYAYA418-03, KA-LEX-C418-PARYAYA418-04, KA-LEX-C418-PARYAYA418-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a danger, a precaution, probable, hardship, to ward off]
+- [YOU SAY: a lottery, gambling, a bet, to estimate, an average]
+- [YOU SAY: strictness, maximum, minimum, to fix, to restrict]
+- [YOU SAY: suspension, to exclude, an exemption, to sanction, an official order]
+- [YOU SAY: a written undertaking, a vow, a reward, to ask formally, an oath of office]
+- [YOU SAY: an instalment, arrears, savings, to recover dues, to submit]
+- [YOU SAY: an alternative, a choice, temporary, permanent, to modify]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C412-APAYA412-01, KA-LEX-C412-APAYA412-02, KA-LEX-C412-APAYA412-03, KA-LEX-C412-APAYA412-04, KA-LEX-C412-APAYA412-05, KA-LEX-C413-PANA413-01, KA-LEX-C413-PANA413-02, KA-LEX-C413-PANA413-03, KA-LEX-C413-PANA413-04, KA-LEX-C413-PANA413-05, KA-LEX-C414-GARISHTHA414-01, KA-LEX-C414-GARISHTHA414-02, KA-LEX-C414-GARISHTHA414-03, KA-LEX-C414-GARISHTHA414-04, KA-LEX-C414-GARISHTHA414-05, KA-LEX-C415-AMANATU415-01, KA-LEX-C415-AMANATU415-02, KA-LEX-C415-AMANATU415-03, KA-LEX-C415-AMANATU415-04, KA-LEX-C415-AMANATU415-05, KA-LEX-C416-PRATIJNE416-01, KA-LEX-C416-PRATIJNE416-02, KA-LEX-C416-PRATIJNE416-03, KA-LEX-C416-PRATIJNE416-04, KA-LEX-C416-PRATIJNE416-05, KA-LEX-C417-KANTU417-01, KA-LEX-C417-KANTU417-02, KA-LEX-C417-KANTU417-03, KA-LEX-C417-KANTU417-04, KA-LEX-C417-KANTU417-05, KA-LEX-C418-PARYAYA418-01, KA-LEX-C418-PARYAYA418-02, KA-LEX-C418-PARYAYA418-03, KA-LEX-C418-PARYAYA418-04, KA-LEX-C418-PARYAYA418-05] -->
+
+[PAUSE 3s] A danger? (**ಅಪಾಯ**, *apāya*.) A precaution? (**ಮುನ್ನೆಚ್ಚರಿಕೆ**, *munneccarike*.) Probable? (**ಸಂಭವನೀಯ**, *sambhavanīya*.) Hardship? (**ಸಂಕಷ್ಟ**, *saṅkaṣṭa*.) To ward off? (**ನಿವಾರಿಸು**, *nivārisu*.) A lottery? (**ಲಾಟರಿ**, *lāṭari*.) Gambling? (**ಜೂಜು**, *jūju*.) A bet? (**ಪಣ**, *paṇa*.) To estimate? (**ಅಂದಾಜಿಸು**, *andājisu*.) An average? (**ಸರಾಸರಿ**, *sarāsari*.) Strictness? (**ಕಟ್ಟುನಿಟ್ಟು**, *kaṭṭuniṭṭu*.) Maximum? (**ಗರಿಷ್ಠ**, *gariṣṭha*.) Minimum? (**ಕನಿಷ್ಠ**, *kaniṣṭha*.) To fix? (**ನಿಗದಿಪಡಿಸು**, *nigadipaḍisu*.) To restrict? (**ನಿರ್ಬಂಧಿಸು**, *nirbandhisu*.) Suspension? (**ಅಮಾನತು**, *amānatu*.) To exclude? (**ಹೊರಗಿಡು**, *horagiḍu*.) An exemption? (**ವಿನಾಯಿತಿ**, *vināyiti*.) To sanction? (**ಮಂಜೂರು ಮಾಡು**, *mañjūru māḍu*.) An official order? (**ಆದೇಶ**, *ādēśa*.) A written undertaking? (**ಮುಚ್ಚಳಿಕೆ**, *muccaḷike*.) A vow? (**ಪ್ರತಿಜ್ಞೆ**, *pratijñe*.) A reward? (**ಪ್ರತಿಫಲ**, *pratiphala*.) To ask formally? (**ಕೋರು**, *kōru*.) An oath of office? (**ಪ್ರಮಾಣವಚನ**, *pramāṇavacana*.) An instalment? (**ಕಂತು**, *kantu*.) Arrears? (**ಬಾಕಿ**, *bāki*.) Savings? (**ಉಳಿತಾಯ**, *uḷitāya*.) To recover dues? (**ವಸೂಲಿ ಮಾಡು**, *vasūli māḍu*.) To submit? (**ಸಲ್ಲಿಸು**, *sallisu*.) An alternative? (**ಪರ್ಯಾಯ**, *paryāya*.) A choice? (**ಆಯ್ಕೆ**, *āyke*.) Temporary? (**ತಾತ್ಕಾಲಿಕ**, *tātkālika*.) Permanent? (**ಶಾಶ್ವತ**, *śāśvata*.) To modify? (**ಮಾರ್ಪಡಿಸು**, *mārpaḍisu*.)
+`;export{t};

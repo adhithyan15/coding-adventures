@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-R454-review-448-454
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 23120
+chapter: 454
+type: review
+headword: (dialogue)
+gloss: a review of the words from Filling the Tank to Crossing the River
+concept_tag: REVIEW
+prerequisites: [KA-C448-indhana, KA-C448-disel, KA-C448-bank, KA-C448-byatari, KA-C448-savari-madu, KA-C449-cakra, KA-C449-tayar, KA-C449-stepni, KA-C449-pankcar-agu, KA-C449-brek, KA-C450-mekyanik, KA-C450-gyarej, KA-C450-bidibhaga, KA-C450-kettuhogu, KA-C450-riperi, KA-C451-lari, KA-C451-jipu, KA-C451-tyaksi, KA-C451-baik, KA-C451-ettinagadi, KA-C452-sarige, KA-C452-dipo, KA-C452-saraku, KA-C452-sagisu, KA-C452-koriyar, KA-C453-hadagu, KA-C453-navika, KA-C453-langaru, KA-C453-diksuci, KA-C453-sagara, KA-C454-teppa, KA-C454-ambiga, KA-C454-tira, KA-C454-ubbara, KA-C454-suli]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C448-INDHANA448-01, KA-LEX-C448-INDHANA448-02, KA-LEX-C448-INDHANA448-03, KA-LEX-C448-INDHANA448-04, KA-LEX-C448-INDHANA448-05, KA-LEX-C449-CAKRA449-01, KA-LEX-C449-CAKRA449-02, KA-LEX-C449-CAKRA449-03, KA-LEX-C449-CAKRA449-04, KA-LEX-C449-CAKRA449-05, KA-LEX-C450-GARAGE450-01, KA-LEX-C450-GARAGE450-02, KA-LEX-C450-GARAGE450-03, KA-LEX-C450-GARAGE450-04, KA-LEX-C450-GARAGE450-05, KA-LEX-C451-VAHANA451-01, KA-LEX-C451-VAHANA451-02, KA-LEX-C451-VAHANA451-03, KA-LEX-C451-VAHANA451-04, KA-LEX-C451-VAHANA451-05, KA-LEX-C452-SARIGE452-01, KA-LEX-C452-SARIGE452-02, KA-LEX-C452-SARIGE452-03, KA-LEX-C452-SARIGE452-04, KA-LEX-C452-SARIGE452-05, KA-LEX-C453-HADAGU453-01, KA-LEX-C453-HADAGU453-02, KA-LEX-C453-HADAGU453-03, KA-LEX-C453-HADAGU453-04, KA-LEX-C453-HADAGU453-05, KA-LEX-C454-TEPPA454-01, KA-LEX-C454-TEPPA454-02, KA-LEX-C454-TEPPA454-03, KA-LEX-C454-TEPPA454-04, KA-LEX-C454-TEPPA454-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [KA-LEX-C448-INDHANA448-01, KA-LEX-C448-INDHANA448-02, KA-LEX-C448-INDHANA448-03, KA-LEX-C448-INDHANA448-04, KA-LEX-C448-INDHANA448-05, KA-LEX-C449-CAKRA449-01, KA-LEX-C449-CAKRA449-02, KA-LEX-C449-CAKRA449-03, KA-LEX-C449-CAKRA449-04, KA-LEX-C449-CAKRA449-05, KA-LEX-C450-GARAGE450-01, KA-LEX-C450-GARAGE450-02, KA-LEX-C450-GARAGE450-03, KA-LEX-C450-GARAGE450-04, KA-LEX-C450-GARAGE450-05, KA-LEX-C451-VAHANA451-01, KA-LEX-C451-VAHANA451-02, KA-LEX-C451-VAHANA451-03, KA-LEX-C451-VAHANA451-04, KA-LEX-C451-VAHANA451-05, KA-LEX-C452-SARIGE452-01, KA-LEX-C452-SARIGE452-02, KA-LEX-C452-SARIGE452-03, KA-LEX-C452-SARIGE452-04, KA-LEX-C452-SARIGE452-05, KA-LEX-C453-HADAGU453-01, KA-LEX-C453-HADAGU453-02, KA-LEX-C453-HADAGU453-03, KA-LEX-C453-HADAGU453-04, KA-LEX-C453-HADAGU453-05, KA-LEX-C454-TEPPA454-01, KA-LEX-C454-TEPPA454-02, KA-LEX-C454-TEPPA454-03, KA-LEX-C454-TEPPA454-04, KA-LEX-C454-TEPPA454-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C448-indhana, KA-C448-disel, KA-C448-bank, KA-C448-byatari, KA-C448-savari-madu, KA-C449-cakra, KA-C449-tayar, KA-C449-stepni, KA-C449-pankcar-agu, KA-C449-brek, KA-C450-mekyanik, KA-C450-gyarej, KA-C450-bidibhaga, KA-C450-kettuhogu, KA-C450-riperi, KA-C451-lari, KA-C451-jipu, KA-C451-tyaksi, KA-C451-baik, KA-C451-ettinagadi, KA-C452-sarige, KA-C452-dipo, KA-C452-saraku, KA-C452-sagisu, KA-C452-koriyar, KA-C453-hadagu, KA-C453-navika, KA-C453-langaru, KA-C453-diksuci, KA-C453-sagara, KA-C454-teppa, KA-C454-ambiga, KA-C454-tira, KA-C454-ubbara, KA-C454-suli]
+---
+
+# Looking back: from Filling the Tank to Crossing the River
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C448-INDHANA448-01, KA-LEX-C448-INDHANA448-02] -->
+
+[PAUSE 3s] Say the Kannada for fuel and diesel.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C448-INDHANA448-01, KA-LEX-C448-INDHANA448-02, KA-LEX-C448-INDHANA448-03, KA-LEX-C448-INDHANA448-04, KA-LEX-C448-INDHANA448-05, KA-LEX-C449-CAKRA449-01, KA-LEX-C449-CAKRA449-02, KA-LEX-C449-CAKRA449-03, KA-LEX-C449-CAKRA449-04, KA-LEX-C449-CAKRA449-05, KA-LEX-C450-GARAGE450-01, KA-LEX-C450-GARAGE450-02, KA-LEX-C450-GARAGE450-03, KA-LEX-C450-GARAGE450-04, KA-LEX-C450-GARAGE450-05, KA-LEX-C451-VAHANA451-01, KA-LEX-C451-VAHANA451-02, KA-LEX-C451-VAHANA451-03, KA-LEX-C451-VAHANA451-04, KA-LEX-C451-VAHANA451-05, KA-LEX-C452-SARIGE452-01, KA-LEX-C452-SARIGE452-02, KA-LEX-C452-SARIGE452-03, KA-LEX-C452-SARIGE452-04, KA-LEX-C452-SARIGE452-05, KA-LEX-C453-HADAGU453-01, KA-LEX-C453-HADAGU453-02, KA-LEX-C453-HADAGU453-03, KA-LEX-C453-HADAGU453-04, KA-LEX-C453-HADAGU453-05, KA-LEX-C454-TEPPA454-01, KA-LEX-C454-TEPPA454-02, KA-LEX-C454-TEPPA454-03, KA-LEX-C454-TEPPA454-04, KA-LEX-C454-TEPPA454-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: fuel, diesel, a fuel station, a battery, to ride]
+- [YOU SAY: a wheel, a tyre, a spare tyre, to get a puncture, a brake]
+- [YOU SAY: a mechanic, a garage, a spare part, to break down, repair work]
+- [YOU SAY: a lorry, a jeep, a taxi, a motorbike, a bullock cart]
+- [YOU SAY: transport, a depot, goods, to transport, a courier]
+- [YOU SAY: a ship, a sailor, an anchor, a compass, an ocean]
+- [YOU SAY: a coracle, a ferryman, a shore, high tide, a whirlpool]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C448-INDHANA448-01, KA-LEX-C448-INDHANA448-02, KA-LEX-C448-INDHANA448-03, KA-LEX-C448-INDHANA448-04, KA-LEX-C448-INDHANA448-05, KA-LEX-C449-CAKRA449-01, KA-LEX-C449-CAKRA449-02, KA-LEX-C449-CAKRA449-03, KA-LEX-C449-CAKRA449-04, KA-LEX-C449-CAKRA449-05, KA-LEX-C450-GARAGE450-01, KA-LEX-C450-GARAGE450-02, KA-LEX-C450-GARAGE450-03, KA-LEX-C450-GARAGE450-04, KA-LEX-C450-GARAGE450-05, KA-LEX-C451-VAHANA451-01, KA-LEX-C451-VAHANA451-02, KA-LEX-C451-VAHANA451-03, KA-LEX-C451-VAHANA451-04, KA-LEX-C451-VAHANA451-05, KA-LEX-C452-SARIGE452-01, KA-LEX-C452-SARIGE452-02, KA-LEX-C452-SARIGE452-03, KA-LEX-C452-SARIGE452-04, KA-LEX-C452-SARIGE452-05, KA-LEX-C453-HADAGU453-01, KA-LEX-C453-HADAGU453-02, KA-LEX-C453-HADAGU453-03, KA-LEX-C453-HADAGU453-04, KA-LEX-C453-HADAGU453-05, KA-LEX-C454-TEPPA454-01, KA-LEX-C454-TEPPA454-02, KA-LEX-C454-TEPPA454-03, KA-LEX-C454-TEPPA454-04, KA-LEX-C454-TEPPA454-05] -->
+
+[PAUSE 3s] Fuel? (**ಇಂಧನ**, *indhana*.) Diesel? (**ಡೀಸೆಲ್**, *ḍīsel*.) A fuel station? (**ಬಂಕ್**, *baṅk*.) A battery? (**ಬ್ಯಾಟರಿ**, *byāṭari*.) To ride? (**ಸವಾರಿ ಮಾಡು**, *savāri māḍu*.) A wheel? (**ಚಕ್ರ**, *cakra*.) A tyre? (**ಟಯರ್**, *ṭayar*.) A spare tyre? (**ಸ್ಟೆಪ್ನಿ**, *sṭepni*.) To get a puncture? (**ಪಂಕ್ಚರ್ ಆಗು**, *paṅkcar āgu*.) A brake? (**ಬ್ರೇಕ್**, *brēk*.) A mechanic? (**ಮೆಕ್ಯಾನಿಕ್**, *mekyānik*.) A garage? (**ಗ್ಯಾರೇಜ್**, *gyārēj*.) A spare part? (**ಬಿಡಿಭಾಗ**, *biḍibhāga*.) To break down? (**ಕೆಟ್ಟುಹೋಗು**, *keṭṭuhōgu*.) Repair work? (**ರಿಪೇರಿ**, *ripēri*.) A lorry? (**ಲಾರಿ**, *lāri*.) A jeep? (**ಜೀಪು**, *jīpu*.) A taxi? (**ಟ್ಯಾಕ್ಸಿ**, *ṭyāksi*.) A motorbike? (**ಬೈಕ್**, *baik*.) A bullock cart? (**ಎತ್ತಿನಗಾಡಿ**, *ettinagāḍi*.) Transport? (**ಸಾರಿಗೆ**, *sārige*.) A depot? (**ಡಿಪೋ**, *ḍipō*.) Goods? (**ಸರಕು**, *saraku*.) To transport? (**ಸಾಗಿಸು**, *sāgisu*.) A courier? (**ಕೊರಿಯರ್**, *koriyar*.) A ship? (**ಹಡಗು**, *haḍagu*.) A sailor? (**ನಾವಿಕ**, *nāvika*.) An anchor? (**ಲಂಗರು**, *laṅgaru*.) A compass? (**ದಿಕ್ಸೂಚಿ**, *diksūci*.) An ocean? (**ಸಾಗರ**, *sāgara*.) A coracle? (**ತೆಪ್ಪ**, *teppa*.) A ferryman? (**ಅಂಬಿಗ**, *ambiga*.) A shore? (**ತೀರ**, *tīra*.) High tide? (**ಉಬ್ಬರ**, *ubbara*.) A whirlpool? (**ಸುಳಿ**, *suḷi*.)
+`;export{t};
