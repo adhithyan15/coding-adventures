@@ -23,3 +23,9 @@ with `set -o pipefail`, or don't pipe the gating commands at all. Check
 `git status` for "You are currently cherry-picking" (or rebasing/merging)
 before pushing after any history operation. CI steps already use
 `set -euo pipefail`; local command chains need it just as much.
+
+The simpler newline form has the same hazard without pipes: a package-local
+validation block omitted `set -e`, so a missing validator path and a
+permission-denied `./BUILD` were followed by a green release test. Start every
+multi-command validation block with fail-fast behavior and still inspect the
+status of the specific contract command being claimed.

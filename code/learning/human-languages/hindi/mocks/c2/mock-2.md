@@ -506,6 +506,13 @@ Each recording is played once at a natural 165–200 words per minute after the
 unscored orienting preview. Candidates may take paper notes but do not receive
 the transcript.
 
+Recording plan: cast one documented regional Hindi voice in the rapid
+multiparty interaction and a different documented regional Hindi voice in the
+culturally dense media part. The examiner production record must identify each
+speaker, regional variety, consent, and part. This script alone does not
+establish a recorded or reviewed form; no scored answer may depend on accent
+alone.
+
 ### Rapid multiparty interaction — items 1–8
 
 Orienting preview: *A city incident-review group must agree what to tell the

@@ -1488,6 +1488,14 @@ backend immediately) come before the enabler-dependent items.
   left-to-right before that multiplying connection, including composition
   through later exact operations. Zero and dynamic divisors, oversized folded
   prefixes, and non-multiplying connections to the root remain conservative.
+  Parenthesized variable-free integer reductions may likewise become checked
+  static offsets or factors around the sign-rooted transform. Grouped zero or
+  dynamic divisors, inexact real divisions, and results beyond `2^53` remain
+  conservative.
+  Those grouped reductions may use right-associative checked powers when every
+  exponent is nonnegative, the exponent chain stays within the existing unroll
+  cap, and the powered result remains within `2^53`. Dynamic or negative
+  exponents, deeper chains, and overflowing powers remain conservative.
   Positive variable-free whole-number powers may raise that exact sign-rooted
   integer transform within the existing exponent-unroll cap when checked
   exponentiation keeps its worst-case magnitude within `2^53`; zero, negative,

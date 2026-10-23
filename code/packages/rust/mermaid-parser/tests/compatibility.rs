@@ -1,9 +1,10 @@
 use std::collections::BTreeSet;
 
+use diagram_ir::DiagramDirection;
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_architecture, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_kanban, parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
-    parse_cynefin, parse_event_modeling, parse_info, parse_ishikawa, parse_radar, parse_railroad, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart, parse_zenuml,
+    parse_cynefin, parse_er_diagram, parse_event_modeling, parse_info, parse_ishikawa, parse_radar, parse_railroad, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart, parse_zenuml,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -19,6 +20,22 @@ const SWIMLANE_CORPUS: &str = include_str!(concat!(
 const SWIMLANE_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/swimlane-11.16.1-visual-corpus.json"
+));
+const ER_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-11.16.1-corpus.json"
+));
+const ER_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-11.16.1-visual-corpus.json"
+));
+const ER_STYLES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-styles-11.16.1-corpus.json"
+));
+const ER_STYLES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-styles-11.16.1-visual-corpus.json"
 ));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -1872,6 +1889,55 @@ fn pinned_swimlane_visual_corpus_references_syntax_fixtures() {
     ]);
     assert_eq!(syntax_names.difference(&visual_names).copied().collect::<BTreeSet<_>>(),
         expected_nonvisual);
+}
+
+#[test]
+fn pinned_er_direction_corpus_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_CORPUS).expect("ER corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_VISUAL_CORPUS).expect("ER visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = [
+        DiagramDirection::Tb,
+        DiagramDirection::Bt,
+        DiagramDirection::Lr,
+        DiagramDirection::Rl,
+    ];
+    let fixtures = syntax["fixtures"].as_array().expect("ER fixtures must be an array");
+    assert_eq!(fixtures.len(), expected.len());
+    for (fixture, direction) in fixtures.iter().zip(expected) {
+        let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER fixture source"))
+            .unwrap_or_else(|error| panic!("failed to parse {:?}: {error}", fixture["name"]));
+        assert_eq!(diagram.direction, Some(direction));
+    }
+}
+
+#[test]
+fn pinned_er_style_corpus_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_STYLES_CORPUS).expect("ER style corpus must be JSON");
+    let visual: Value =
+        serde_json::from_str(ER_STYLES_VISUAL_CORPUS).expect("ER style visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().expect("ER style fixtures must be an array");
+
+    let inline = parse_er_diagram(fixtures[0]["source"].as_str().expect("inline class source"))
+        .expect("inline ER class must parse");
+    let customer = inline.nodes.iter().find(|node| node.id == "CUSTOMER").expect("CUSTOMER");
+    let style = customer.style.as_ref().expect("inline class style");
+    assert_eq!(style.fill.as_deref(), Some("#dbeafe"));
+    assert_eq!(style.stroke.as_deref(), Some("#1d4ed8"));
+    assert_eq!(style.text_color.as_deref(), Some("#172554"));
+    assert_eq!(style.stroke_width, Some(3.0));
+    assert_eq!(style.font_size, Some(16.0));
+    assert_eq!(style.font_weight, Some(700));
+
+    let assigned = parse_er_diagram(fixtures[1]["source"].as_str().expect("assigned class source"))
+        .expect("assigned ER classes and direct style must parse");
+    let customer = assigned.nodes.iter().find(|node| node.id == "CUSTOMER").expect("CUSTOMER");
+    let order = assigned.nodes.iter().find(|node| node.id == "ORDER").expect("ORDER");
+    assert_eq!(customer.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#dcfce7"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fef3c7"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#b45309"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.stroke_width), Some(4.0));
 }
 
 #[test]
