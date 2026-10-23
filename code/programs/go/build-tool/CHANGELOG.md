@@ -60,6 +60,17 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- On Linux every `swift build`, `swift test` and `swift run` a BUILD command
+  runs now gets `--build-system native`, SwiftPM's legacy planner. Swift 6.4,
+  which the ubuntu-24.04 image ships, plans with its new swift-build backend,
+  and that planner segfaults in libdispatch (`_dispatch_event_loop_drain`)
+  before compiling anything. It failed `swift/ITF` (#17824 shard 5) and
+  `swift/zip` (#17914 shard 3, after its tests had passed) on PRs that touch
+  no Swift. The rewrite is applied at run time
+  (`swiftNativeBuildSystemCommands`), so BUILD files and their hashes are
+  unchanged. A command that already names `--build-system`, and macOS and
+  Windows, keep the toolchain default.
+
 - `-validate-build-files` on a CI shard (`-plan-file … -shard-index N`) now
   resolves names and paths against every package on the platform, not just
   the shard's. A package's test-only dependencies (a cpanfile `on 'test'`
