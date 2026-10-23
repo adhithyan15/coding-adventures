@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "Finding the Way",
+  "label": "ch:te-finding-the-way",
+  "canDo": "I can say a direction, a signpost, to lose my way, to take a turn and a shortcut.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C448-addadari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can say a direction, a signpost, to lose my way, to take a turn and a shortcut.",
+    "assesses": [
+      "TE-LEX-C448-DISA448-03",
+      "TE-LEX-C448-DISA448-04",
+      "TE-LEX-C448-DISA448-05"
+    ]
+  }
+}

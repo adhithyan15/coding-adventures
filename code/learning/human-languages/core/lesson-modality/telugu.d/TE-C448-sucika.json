@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C448-sucika",
+    "language": "telugu",
+    "chapter": 448,
+    "sequence": 22520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e0b3cd86dc1f8e6"
+  },
+  "findings": []
+}

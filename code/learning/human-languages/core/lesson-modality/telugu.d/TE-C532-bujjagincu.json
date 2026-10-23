@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C532-bujjagincu",
+    "language": "telugu",
+    "chapter": 532,
+    "sequence": 26970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a969f32996f4849"
+  },
+  "findings": []
+}

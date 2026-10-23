@@ -1,0 +1,11 @@
+{
+  "id": "TE-C386-abhyantaram",
+  "pathSegment": "TE-PATH-386-ABHYANTARAM386",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-386-ABHYANTARAM386",
+      "order": 1
+    }
+  ]
+}

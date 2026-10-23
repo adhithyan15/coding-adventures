@@ -1,0 +1,11 @@
+{
+  "id": "TE-C538-vayincu",
+  "pathSegment": "TE-PATH-538-SANGITAM538",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-538-SANGITAM538",
+      "order": 2
+    }
+  ]
+}

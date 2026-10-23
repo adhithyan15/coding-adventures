@@ -1,0 +1,11 @@
+{
+  "id": "TE-C370-kirti",
+  "pathSegment": "TE-PATH-370-GATHA370",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-370-GATHA370",
+      "order": 2
+    }
+  ]
+}

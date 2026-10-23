@@ -1,0 +1,11 @@
+{
+  "id": "TE-C495-ulikkipadu",
+  "pathSegment": "TE-PATH-495-BHAYAM495",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-495-BHAYAM495",
+      "order": 2
+    }
+  ]
+}

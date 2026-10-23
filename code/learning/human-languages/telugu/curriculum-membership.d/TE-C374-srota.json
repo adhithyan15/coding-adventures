@@ -1,0 +1,11 @@
+{
+  "id": "TE-C374-srota",
+  "pathSegment": "TE-PATH-374-PRASARAM374",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-374-PRASARAM374",
+      "order": 2
+    }
+  ]
+}

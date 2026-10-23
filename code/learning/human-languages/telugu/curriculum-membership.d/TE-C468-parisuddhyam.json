@@ -1,0 +1,11 @@
+{
+  "id": "TE-C468-parisuddhyam",
+  "pathSegment": "TE-PATH-468-MURUGU468",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-468-MURUGU468",
+      "order": 1
+    }
+  ]
+}

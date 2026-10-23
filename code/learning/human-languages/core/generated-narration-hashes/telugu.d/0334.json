@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:9de149b69ffac1ae",
+  "lessonIds": [
+    "TE-C334-jananam",
+    "TE-C334-pasikandu",
+    "TE-C334-namakaranam",
+    "TE-C334-janmincu",
+    "TE-C334-divincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch334.txt",
+  "json": "telugu/narration/ch334.json",
+  "textHash": "fnv1a64:574b3c2e88c2a80d",
+  "jsonHash": "fnv1a64:7e6b36fe8edc8007",
+  "findings": []
+}

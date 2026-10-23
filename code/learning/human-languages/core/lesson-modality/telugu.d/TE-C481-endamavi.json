@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C481-endamavi",
+    "language": "telugu",
+    "chapter": 481,
+    "sequence": 24210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf82a3a9c6731985"
+  },
+  "findings": []
+}

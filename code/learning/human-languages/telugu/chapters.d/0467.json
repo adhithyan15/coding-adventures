@@ -1,0 +1,19 @@
+{
+  "chapter": 467,
+  "title": "Buildings and Spaces",
+  "label": "ch:te-buildings-and-spaces",
+  "canDo": "I can say a storey, a basement, a compound wall, spacious and deserted.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C467-nirmanusyamaina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can say a storey, a basement, a compound wall, spacious and deserted.",
+    "assesses": [
+      "TE-LEX-C467-ANTASTU467-03",
+      "TE-LEX-C467-ANTASTU467-04",
+      "TE-LEX-C467-ANTASTU467-05"
+    ]
+  }
+}

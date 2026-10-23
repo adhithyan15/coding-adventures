@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C500-anandincu",
+    "language": "telugu",
+    "chapter": 500,
+    "sequence": 25300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e41cda4d581376cf"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-468-MURUGU468",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TE-EXT-468-MURUGU468"
+  ],
+  "after": []
+}

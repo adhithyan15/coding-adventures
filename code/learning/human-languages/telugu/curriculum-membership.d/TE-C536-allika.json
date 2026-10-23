@@ -1,0 +1,11 @@
+{
+  "id": "TE-C536-allika",
+  "pathSegment": "TE-PATH-536-VIRAMAM536",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-536-VIRAMAM536",
+      "order": 3
+    }
+  ]
+}

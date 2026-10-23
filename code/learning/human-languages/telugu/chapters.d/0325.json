@@ -1,0 +1,20 @@
+{
+  "chapter": 325,
+  "title": "It Depends, and What Would Have Been",
+  "label": "ch:te-it-depends-and-what-would-have-been",
+  "canDo": "I can say what something depends on, say what would have happened with -i uṇṭē … -ēvāḍini, and write six connected lines about a trip.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-R325-depends-and-would",
+    "kind": "production",
+    "summary": "Complete TE-R325-depends-and-would: say what something depends on and what would have been, after writing six connected lines about a trip.",
+    "assesses": [
+      "TE-LEX-C325-ADHARAPADU-01",
+      "TE-GRAMMAR-C325-DEPENDS-01",
+      "TE-GRAMMAR-C325-UNREAL-IF-01",
+      "TE-GRAMMAR-C325-WOULD-01"
+    ]
+  }
+}

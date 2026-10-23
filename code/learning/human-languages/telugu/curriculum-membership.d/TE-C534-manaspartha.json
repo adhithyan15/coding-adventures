@@ -1,0 +1,11 @@
+{
+  "id": "TE-C534-manaspartha",
+  "pathSegment": "TE-PATH-534-GODAVA534",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-534-GODAVA534",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:1370579991fbaf1f",
+  "lessonIds": [
+    "TE-C491-arigipovu",
+    "TE-C491-bujupattu",
+    "TE-C491-velisipovu",
+    "TE-C491-pagilipovu",
+    "TE-C491-ksinincu"
+  ],
+  "tex": "telugu/book/chapters/ch491-wear-and-tear.tex"
+}

@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 414,
+  "title": "At University",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:96414b9a940b3eb2",
+  "lessons": [
+    {
+      "id": "TE-C414-prophesaru",
+      "sequence": 20640,
+      "title": "ప్రొఫెసరు (prophesaru) — a professor",
+      "headword": "ప్రొఫెసరు",
+      "romanization": "prophesaru",
+      "gloss": "a professor",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:973cd47384b9ac63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a laboratory, then the Telugu for to invent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రొఫెసరు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రొఫెసరు — prophesaru — \"a professor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా ప్రొఫెసరు చరిత్ర చెప్తారు. mā prophesaru caritra ceptāru. Our professor teaches history."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ప్రొఫెసర్లు, prophesarlu."
+            },
+            {
+              "kind": "speech",
+              "text": "Like బస్సు, the English loan ends in -ఉ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రొఫెసరు (prophesaru) is a loan from English professor, with a final -ఉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prophesaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prophesaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prophesaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prophesaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā prophesaru caritra ceptāru. — Our professor teaches history.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā prophesaru caritra ceptāru.* — Our professor teaches history.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a laboratory, then the Telugu for to invent, then say prophesaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a laboratory, then the Telugu for to invent, then say *prophesaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రొఫెసరు (prophesaru) mean? (\"A professor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C414-upanyasam",
+      "sequence": 20650,
+      "title": "ఉపన్యాసం (upanyāsaṁ) — a lecture; a speech",
+      "headword": "ఉపన్యాసం",
+      "romanization": "upanyāsaṁ",
+      "gloss": "a lecture; a speech",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d96bf5c111c532e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to invent, then the Telugu for a professor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఉపన్యాసం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉపన్యాసం — upanyāsaṁ — \"a lecture; a speech\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రొఫెసరు ఉపన్యాసం రెండు గంటలు సాగింది. prophesaru upanyāsaṁ reṇḍu gaṇṭalu sāgindi. The professor’s lecture went on for two hours."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ఉపన్యాసాలు, upanyāsālu."
+            },
+            {
+              "kind": "speech",
+              "text": "ఉపన్యాసం (upanyāsaṁ) ఇచ్చు, to give a lecture or a speech."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉపన్యాసం (upanyāsaṁ) is borrowed from Sanskrit upanyāsa, \"placing near; bringing forward, speaking of, mention\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upanyāsaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upanyāsaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upanyāsaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upanyāsaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prophesaru upanyāsaṁ reṇḍu gaṇṭalu sāgindi. — The professor’s lecture went on for two hours.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prophesaru upanyāsaṁ reṇḍu gaṇṭalu sāgindi.* — The professor’s lecture went on for two hours.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to invent, then the Telugu for a professor, then say upanyāsaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to invent, then the Telugu for a professor, then say *upanyāsaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఉపన్యాసం (upanyāsaṁ) mean? (\"A lecture; a speech\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C414-pattabhadrudu",
+      "sequence": 20660,
+      "title": "పట్టభద్రుడు (paṭṭabhadruḍu) — a graduate",
+      "headword": "పట్టభద్రుడు",
+      "romanization": "paṭṭabhadruḍu",
+      "gloss": "a graduate",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c478d0d67570545e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a professor, then the Telugu for a lecture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పట్టభద్రుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పట్టభద్రుడు — paṭṭabhadruḍu — \"a graduate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా అన్న గత సంవత్సరం పట్టభద్రుడయ్యాడు. mā anna gata saṁvatsaraṁ paṭṭabhadruḍayyāḍu. My elder brother graduated last year."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: పట్టభద్రులు, paṭṭabhadrulu."
+            },
+            {
+              "kind": "speech",
+              "text": "పట్టభద్రుడు (paṭṭabhadruḍu) అవు, to graduate; a woman graduate is పట్టభద్రురాలు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పట్టభద్రుడు (paṭṭabhadruḍu) is built from Sanskrit paṭṭa, \"a slab, a tablet\" (CDIAL 7699), and bhadra, \"blessed, fortunate\" (CDIAL 9377), with the Telugu masculine ending -డు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭabhadruḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭabhadruḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭabhadruḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭabhadruḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā anna gata saṁvatsaraṁ paṭṭabhadruḍayyāḍu. — My elder brother graduated last year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā anna gata saṁvatsaraṁ paṭṭabhadruḍayyāḍu.* — My elder brother graduated last year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a professor, then the Telugu for a lecture, then say paṭṭabhadruḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a professor, then the Telugu for a lecture, then say *paṭṭabhadruḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పట్టభద్రుడు (paṭṭabhadruḍu) mean? (\"A graduate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C414-upakaravetanam",
+      "sequence": 20670,
+      "title": "ఉపకారవేతనం (upakāravētanaṁ) — a scholarship",
+      "headword": "ఉపకారవేతనం",
+      "romanization": "upakāravētanaṁ",
+      "gloss": "a scholarship",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7de4205f8964de0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a lecture, then the Telugu for a graduate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఉపకారవేతనం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉపకారవేతనం — upakāravētanaṁ — \"a scholarship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమెకు చదువు కోసం ఉపకారవేతనం వచ్చింది. āmeku caduvu kōsaṁ upakāravētanaṁ vaccindi. She got a scholarship for her studies."
+            },
+            {
+              "kind": "speech",
+              "text": "With వచ్చు: ఉపకారవేతనం (upakāravētanaṁ) వచ్చింది, a scholarship came (to her)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉపకారవేతనం (upakāravētanaṁ) is built from Sanskrit upakāra, \"help, use\" (CDIAL 2141), and vetana, \"wages, hire\" (Monier-Williams): pay given as help."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upakāravētanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upakāravētanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upakāravētanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upakāravētanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmeku caduvu kōsaṁ upakāravētanaṁ vaccindi. — She got a scholarship for her studies.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmeku caduvu kōsaṁ upakāravētanaṁ vaccindi.* — She got a scholarship for her studies.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a lecture, then the Telugu for a graduate, then say upakāravētanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a lecture, then the Telugu for a graduate, then say *upakāravētanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఉపకారవేతనం (upakāravētanaṁ) mean? (\"A scholarship\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C414-prasnincu",
+      "sequence": 20680,
+      "title": "ప్రశ్నించు (praśniñcu) — to question; to challenge",
+      "headword": "ప్రశ్నించు",
+      "romanization": "praśniñcu",
+      "gloss": "to question; to challenge",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a61cc5998092475b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a graduate, then the Telugu for a scholarship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రశ్నించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రశ్నించు — praśniñcu — \"to question; to challenge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "విద్యార్థులు ఆ నియమాన్ని ప్రశ్నించారు. vidyārthulu ā niyamānni praśniñcāru. The students questioned that rule."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ప్రశ్నించాను, praśniñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb of ప్రశ్న, a question."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రశ్నించు (praśniñcu) is built on Sanskrit praśna, \"a question\" (CDIAL 8818), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praśniñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praśniñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praśniñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praśniñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidyārthulu ā niyamānni praśniñcāru. — The students questioned that rule.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidyārthulu ā niyamānni praśniñcāru.* — The students questioned that rule.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a graduate, then the Telugu for a scholarship, then say praśniñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a graduate, then the Telugu for a scholarship, then say *praśniñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రశ్నించు (praśniñcu) mean? (\"To question; to challenge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

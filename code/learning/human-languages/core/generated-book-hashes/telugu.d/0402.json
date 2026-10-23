@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:505543b9ed8c9b22",
+  "lessonIds": [
+    "TE-C402-sasanasabha",
+    "TE-C402-mantri",
+    "TE-C402-adhikaram",
+    "TE-C402-palincu",
+    "TE-C402-amodincu"
+  ],
+  "tex": "telugu/book/chapters/ch402-governing.tex"
+}

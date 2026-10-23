@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:d05ed6e6ec84718f",
+  "lessonIds": [
+    "TE-C345-smasanam",
+    "TE-C345-samadhi",
+    "TE-C345-nivali",
+    "TE-C345-vardhanti",
+    "TE-C345-vilunama"
+  ],
+  "tex": "telugu/book/chapters/ch345-remembering.tex"
+}

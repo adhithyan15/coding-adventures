@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:1490c8830b54a494",
+  "lessonIds": [
+    "TE-C379-egabadu",
+    "TE-C379-padipovu",
+    "TE-C379-badhitudu",
+    "TE-C379-morapettuko",
+    "TE-C379-veduko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch379.txt",
+  "json": "telugu/narration/ch379.json",
+  "textHash": "fnv1a64:c7d8d8aa87381be3",
+  "jsonHash": "fnv1a64:adb8a530b0a47e14",
+  "findings": []
+}

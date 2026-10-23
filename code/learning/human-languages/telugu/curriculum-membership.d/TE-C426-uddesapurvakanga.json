@@ -1,0 +1,11 @@
+{
+  "id": "TE-C426-uddesapurvakanga",
+  "pathSegment": "TE-PATH-426-ARAMBHAM426",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-426-ARAMBHAM426",
+      "order": 3
+    }
+  ]
+}

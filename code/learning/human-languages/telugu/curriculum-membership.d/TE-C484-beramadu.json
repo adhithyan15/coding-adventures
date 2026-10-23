@@ -1,0 +1,11 @@
+{
+  "id": "TE-C484-beramadu",
+  "pathSegment": "TE-PATH-484-AMMAKAM484",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-484-AMMAKAM484",
+      "order": 4
+    }
+  ]
+}

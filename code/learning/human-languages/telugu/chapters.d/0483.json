@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Water, Fire and Light",
+  "label": "ch:te-water-fire-and-light",
+  "canDo": "I can say to evaporate, to soak in, to blaze, to go out and to put forth leaves.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C483-cigurincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can say to evaporate, to soak in, to blaze, to go out and to put forth leaves.",
+    "assesses": [
+      "TE-LEX-C483-AVIRI483-03",
+      "TE-LEX-C483-AVIRI483-04",
+      "TE-LEX-C483-AVIRI483-05"
+    ]
+  }
+}

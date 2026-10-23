@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C352-dakko",
+    "language": "telugu",
+    "chapter": 352,
+    "sequence": 17340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3d55eeac2ce5d3f"
+  },
+  "findings": []
+}

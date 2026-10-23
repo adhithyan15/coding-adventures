@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:4653d1dc2c21f471",
+  "lessonIds": [
+    "TE-C451-riksa",
+    "TE-C451-edlabandi",
+    "TE-C451-topudubandi",
+    "TE-C451-kalinadaka",
+    "TE-C451-batasari"
+  ],
+  "tex": "telugu/book/chapters/ch451-old-ways-of-getting-about.tex"
+}

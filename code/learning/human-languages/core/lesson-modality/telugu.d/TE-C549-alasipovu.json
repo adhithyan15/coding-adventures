@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C549-alasipovu",
+    "language": "telugu",
+    "chapter": 549,
+    "sequence": 27850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01414e12614bc0cf"
+  },
+  "findings": []
+}

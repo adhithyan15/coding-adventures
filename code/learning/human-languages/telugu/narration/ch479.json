@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 479,
+  "title": "Thunder and Downpours",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:344bc13173097500",
+  "lessons": [
+    {
+      "id": "TE-C479-pidugu",
+      "sequence": 24100,
+      "title": "పిడుగు (piḍugu) — a thunderbolt; a lightning strike",
+      "headword": "పిడుగు",
+      "romanization": "piḍugu",
+      "gloss": "a thunderbolt; a lightning strike",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:927504316812a5d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a rainstorm, then the Telugu for to lose strength."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పిడుగు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పిడుగు — piḍugu — \"a thunderbolt; a lightning strike\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పొలంలో తాటిచెట్టు మీద పిడుగు పడింది. polaṁlō tāṭiceṭṭu mīda piḍugu paḍindi. Lightning struck a palm tree in the field."
+            },
+            {
+              "kind": "speech",
+              "text": "పిడుగు (piḍugu) పడు, lightning strikes. Bad news that comes out of nowhere is also a పిడుగు (piḍugu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పిడుగు (piḍugu) is native Dravidian: DEDR 4150 lists Telugu piḍugu, \"a thunderbolt, lightning\", with Kannada piḍugu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piḍugu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piḍugu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piḍugu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piḍugu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polaṁlō tāṭiceṭṭu mīda piḍugu paḍindi. — Lightning struck a palm tree in the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polaṁlō tāṭiceṭṭu mīda piḍugu paḍindi.* — Lightning struck a palm tree in the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a rainstorm, then the Telugu for to lose strength, then say piḍugu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a rainstorm, then the Telugu for to lose strength, then say *piḍugu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పిడుగు (piḍugu) mean? (\"A thunderbolt; a lightning strike\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C479-kundapota",
+      "sequence": 24110,
+      "title": "కుండపోత (kuṇḍapōta) — a torrential rain",
+      "headword": "కుండపోత",
+      "romanization": "kuṇḍapōta",
+      "gloss": "a torrential rain",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f14eec40a28c6e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to lose strength, then the Telugu for a thunderbolt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కుండపోత",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కుండపోత — kuṇḍapōta — \"a torrential rain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సాయంత్రం కుండపోత వర్షం కురిసింది. sāyantraṁ kuṇḍapōta varṣaṁ kurisindi. In the evening it poured with rain."
+            },
+            {
+              "kind": "speech",
+              "text": "కుండ, a pot, + పోత, pouring: rain as if poured from a pot. Mostly కుండపోత (kuṇḍapōta) వర్షం."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కుండపోత (kuṇḍapōta) is a Telugu compound built from కుండ, \"a pot\", and పోత, \"pouring\", the noun of పోయు, \"to pour\" (DEDR 4407)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṇḍapōta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṇḍapōta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṇḍapōta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṇḍapōta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāyantraṁ kuṇḍapōta varṣaṁ kurisindi. — In the evening it poured with rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāyantraṁ kuṇḍapōta varṣaṁ kurisindi.* — In the evening it poured with rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to lose strength, then the Telugu for a thunderbolt, then say kuṇḍapōta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to lose strength, then the Telugu for a thunderbolt, then say *kuṇḍapōta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కుండపోత (kuṇḍapōta) mean? (\"A torrential rain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C479-kammu",
+      "sequence": 24120,
+      "title": "కమ్ము (kammu) — to close in; to envelop",
+      "headword": "కమ్ము",
+      "romanization": "kammu",
+      "gloss": "to close in; to envelop",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2029175ab23c99e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a thunderbolt, then the Telugu for a torrential rain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కమ్ము",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కమ్ము — kammu — \"to close in; to envelop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆకాశంలో నల్లని మబ్బులు కమ్మాయి. ākāśaṁlō nallani mabbulu kammāyi. Dark clouds closed in across the sky."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): కమ్మింది, kammindi."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of clouds, smoke or darkness that cover everything. Its subject is a thing, so the past shown is the third person: కమ్మింది, it closed in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కమ్ము (kammu) is native Dravidian: DEDR 1221 lists Telugu kammu, \"to cover, to surround, to overspread\", beside kappu, \"to spread over in a thick covering, as clouds\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kammu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kammu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kammu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kammu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākāśaṁlō nallani mabbulu kammāyi. — Dark clouds closed in across the sky.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākāśaṁlō nallani mabbulu kammāyi.* — Dark clouds closed in across the sky.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a thunderbolt, then the Telugu for a torrential rain, then say kammu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a thunderbolt, then the Telugu for a torrential rain, then say *kammu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కమ్ము (kammu) mean? (\"To close in; to envelop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C479-masakabaru",
+      "sequence": 24130,
+      "title": "మసకబారు (masakabāru) — to grow dim; to blur",
+      "headword": "మసకబారు",
+      "romanization": "masakabāru",
+      "gloss": "to grow dim; to blur",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4aa4648ad5353743",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a torrential rain, then the Telugu for to close in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మసకబారు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మసకబారు — masakabāru — \"to grow dim; to blur\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వర్షంలో దూరం అంతా మసకబారింది. varṣaṁlō dūraṁ antā masakabārindi. In the rain everything in the distance grew dim."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): మసకబారింది, masakabārindi."
+            },
+            {
+              "kind": "speech",
+              "text": "మసక, hazy, + బారు, to become. Old glasses and old eyes also మసకబారు (masakabāru). Its subject is a thing, so the past shown is the third person: మసకబారింది, it grew dim."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మసకబారు (masakabāru) is a Telugu compound: మసక, \"dim, hazy\", native Dravidian (DEDR 4627), and -బారు, \"to become\", whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masakabāru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masakabāru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masakabāru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masakabāru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varṣaṁlō dūraṁ antā masakabārindi. — In the rain everything in the distance grew dim.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varṣaṁlō dūraṁ antā masakabārindi.* — In the rain everything in the distance grew dim.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a torrential rain, then the Telugu for to close in, then say masakabāru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a torrential rain, then the Telugu for to close in, then say *masakabāru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మసకబారు (masakabāru) mean? (\"To grow dim; to blur\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C479-tumpara",
+      "sequence": 24140,
+      "title": "తుంపర (tumpara) — spray; fine drizzle",
+      "headword": "తుంపర",
+      "romanization": "tumpara",
+      "gloss": "spray; fine drizzle",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72bd02734fffa2b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to close in, then the Telugu for to grow dim."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తుంపర",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తుంపర — tumpara — \"spray; fine drizzle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "జలపాతం దగ్గర తుంపర మా మీద పడింది. jalapātaṁ daggara tumpara mā mīda paḍindi. Near the waterfall the spray fell on us."
+            },
+            {
+              "kind": "speech",
+              "text": "Fine drops of water: from a waterfall, a wave or a light rain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తుంపర (tumpara) is native Dravidian: DEDR 3398 lists Telugu tuppara, \"a drop of water, a thin drizzle\", with the variant tumpara."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tumpara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tumpara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tumpara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tumpara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jalapātaṁ daggara tumpara mā mīda paḍindi. — Near the waterfall the spray fell on us.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jalapātaṁ daggara tumpara mā mīda paḍindi.* — Near the waterfall the spray fell on us.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to close in, then the Telugu for to grow dim, then say tumpara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to close in, then the Telugu for to grow dim, then say *tumpara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తుంపర (tumpara) mean? (\"Spray; fine drizzle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

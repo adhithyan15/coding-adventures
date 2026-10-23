@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C468-durvasana",
+    "language": "telugu",
+    "chapter": 468,
+    "sequence": 23550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:feba7ae8d58cc26a"
+  },
+  "findings": []
+}

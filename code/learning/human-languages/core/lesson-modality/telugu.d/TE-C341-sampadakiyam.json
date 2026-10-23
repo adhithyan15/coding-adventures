@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C341-sampadakiyam",
+    "language": "telugu",
+    "chapter": 341,
+    "sequence": 16780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69a7b8793ed4059c"
+  },
+  "findings": []
+}

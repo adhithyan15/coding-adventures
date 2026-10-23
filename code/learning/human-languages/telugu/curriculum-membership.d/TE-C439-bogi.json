@@ -1,0 +1,11 @@
+{
+  "id": "TE-C439-bogi",
+  "pathSegment": "TE-PATH-439-BOGI439",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-439-BOGI439",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:b2c122db726b71ec",
+  "lessonIds": [
+    "TE-C391-pramukhyata",
+    "TE-C391-pradhanyam",
+    "TE-C391-prathamika",
+    "TE-C391-nokkiceppu",
+    "TE-C391-prastavincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch391.txt",
+  "json": "telugu/narration/ch391.json",
+  "textHash": "fnv1a64:8d5294c4d28a72cb",
+  "jsonHash": "fnv1a64:4c7730c871875932",
+  "findings": []
+}

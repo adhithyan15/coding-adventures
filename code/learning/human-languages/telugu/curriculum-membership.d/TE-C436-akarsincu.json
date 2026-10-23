@@ -1,0 +1,11 @@
+{
+  "id": "TE-C436-akarsincu",
+  "pathSegment": "TE-PATH-436-PALGONU436",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-436-PALGONU436",
+      "order": 3
+    }
+  ]
+}

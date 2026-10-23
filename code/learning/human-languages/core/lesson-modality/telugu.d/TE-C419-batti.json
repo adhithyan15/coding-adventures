@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C419-batti",
+    "language": "telugu",
+    "chapter": 419,
+    "sequence": 20900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82697c7ea34763bc"
+  },
+  "findings": []
+}

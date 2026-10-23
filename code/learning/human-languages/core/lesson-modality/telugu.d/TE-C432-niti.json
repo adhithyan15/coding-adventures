@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C432-niti",
+    "language": "telugu",
+    "chapter": 432,
+    "sequence": 21560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65954c2310e15404"
+  },
+  "findings": []
+}

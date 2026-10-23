@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "The Price of Freedom",
+  "label": "ch:te-the-price-of-freedom",
+  "canDo": "I can say a slave, liberation, a struggle, a sacrifice and a brave man.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C364-virudu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can say a slave, liberation, a struggle, a sacrifice and a brave man.",
+    "assesses": [
+      "TE-LEX-C364-VIMUKTI364-03",
+      "TE-LEX-C364-VIMUKTI364-04",
+      "TE-LEX-C364-VIMUKTI364-05"
+    ]
+  }
+}

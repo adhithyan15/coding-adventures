@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:cadc736e84afb99a",
+  "lessonIds": [
+    "TE-C320-uru",
+    "TE-S176-letter-uu",
+    "TE-C320-sutiga",
+    "TE-C320-ela-vellali",
+    "TE-R320-asking-the-way"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch320.txt",
+  "json": "telugu/narration/ch320.json",
+  "textHash": "fnv1a64:d956a7c004988bf7",
+  "jsonHash": "fnv1a64:392d8e44952d8244",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-318-OPINION-SO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TE-EXT-318-OPINION-SO"
+  ],
+  "after": []
+}

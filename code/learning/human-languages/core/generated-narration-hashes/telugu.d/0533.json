@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:f3e991ceff3ddf0f",
+  "lessonIds": [
+    "TE-C533-kapuram",
+    "TE-C533-samsaram",
+    "TE-C533-grhini",
+    "TE-C533-atithyam",
+    "TE-C533-muccatincu",
+    "TE-R533-review-526-533"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch533.txt",
+  "json": "telugu/narration/ch533.json",
+  "textHash": "fnv1a64:2f2af18d3a78f1c6",
+  "jsonHash": "fnv1a64:966040ed55a1d80e",
+  "findings": []
+}

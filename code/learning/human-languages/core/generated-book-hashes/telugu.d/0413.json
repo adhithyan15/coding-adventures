@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:d1b13ce697ea2c99",
+  "lessonIds": [
+    "TE-C413-sastram",
+    "TE-C413-sastravetta",
+    "TE-C413-prayogam",
+    "TE-C413-prayogasala",
+    "TE-C413-aviskarincu",
+    "TE-R413-review-406-413"
+  ],
+  "tex": "telugu/book/chapters/ch413-science.tex"
+}

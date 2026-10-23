@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:1303d117e5924b6d",
+  "lessonIds": [
+    "TE-C508-pogaru",
+    "TE-C508-monditanam",
+    "TE-C508-pattudala",
+    "TE-C508-sahasam",
+    "TE-C508-piriki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch508.txt",
+  "json": "telugu/narration/ch508.json",
+  "textHash": "fnv1a64:9203032ad1febc7b",
+  "jsonHash": "fnv1a64:9c59922feb30dcc0",
+  "findings": []
+}

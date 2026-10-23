@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C361-muttadincu",
+    "language": "telugu",
+    "chapter": 361,
+    "sequence": 17810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:829ac2c378cf0236"
+  },
+  "findings": []
+}

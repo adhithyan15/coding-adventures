@@ -1,0 +1,11 @@
+{
+  "id": "TE-C446-tappincu",
+  "pathSegment": "TE-PATH-446-KUDUPU446",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-446-KUDUPU446",
+      "order": 2
+    }
+  ]
+}

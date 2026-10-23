@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C400-abhyarthi",
+    "language": "telugu",
+    "chapter": 400,
+    "sequence": 19930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:395d7d40e07707ad"
+  },
+  "findings": []
+}

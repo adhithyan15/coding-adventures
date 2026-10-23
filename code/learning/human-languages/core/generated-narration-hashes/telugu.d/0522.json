@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:83ca979d604c3cdd",
+  "lessonIds": [
+    "TE-C522-vrtti",
+    "TE-C522-hoda",
+    "TE-C522-padavi",
+    "TE-C522-padonnati",
+    "TE-C522-asayam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch522.txt",
+  "json": "telugu/narration/ch522.json",
+  "textHash": "fnv1a64:2fca485b274ab7dc",
+  "jsonHash": "fnv1a64:ae3d5d21d18ef4c6",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C420-pratyamnayam",
+  "pathSegment": "TE-PATH-420-ENPIKA420",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-420-ENPIKA420",
+      "order": 1
+    }
+  ]
+}

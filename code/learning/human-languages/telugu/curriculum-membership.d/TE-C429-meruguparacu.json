@@ -1,0 +1,11 @@
+{
+  "id": "TE-C429-meruguparacu",
+  "pathSegment": "TE-PATH-429-PUROGATI429",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-429-PUROGATI429",
+      "order": 3
+    }
+  ]
+}

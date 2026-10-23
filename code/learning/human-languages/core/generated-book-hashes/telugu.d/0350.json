@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:0dfee8ea05b20ed9",
+  "lessonIds": [
+    "TE-C350-neram",
+    "TE-C350-nerasthudu",
+    "TE-C350-dosi",
+    "TE-C350-nirdosi",
+    "TE-C350-siksincu"
+  ],
+  "tex": "telugu/book/chapters/ch350-crime-and-punishment.tex"
+}

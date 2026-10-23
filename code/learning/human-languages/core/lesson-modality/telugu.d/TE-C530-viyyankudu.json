@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C530-viyyankudu",
+    "language": "telugu",
+    "chapter": 530,
+    "sequence": 26840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:398a7a87b8da0f8e"
+  },
+  "findings": []
+}

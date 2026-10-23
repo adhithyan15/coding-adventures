@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:f733dd2526a83657",
+  "lessonIds": [
+    "TE-C541-natana",
+    "TE-C541-sannivesam",
+    "TE-C541-kathanayakudu",
+    "TE-C541-hasyanatudu",
+    "TE-C541-preksakulu",
+    "TE-R541-review-534-541"
+  ],
+  "tex": "telugu/book/chapters/ch541-stage-and-screen.tex"
+}

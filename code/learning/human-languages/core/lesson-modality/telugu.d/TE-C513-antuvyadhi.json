@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C513-antuvyadhi",
+    "language": "telugu",
+    "chapter": 513,
+    "sequence": 25980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:412e8377ee0e2dec"
+  },
+  "findings": []
+}

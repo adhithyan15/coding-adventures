@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:5555c1c372d54430",
+  "lessonIds": [
+    "TE-C452-revu",
+    "TE-C452-nauka",
+    "TE-C452-navikudu",
+    "TE-C452-langaru",
+    "TE-C452-dipastambham"
+  ],
+  "tex": "telugu/book/chapters/ch452-ships-and-harbours.tex"
+}

@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 336,
+  "title": "A Rumour Spreads",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d775f1ba5ed27687",
+  "lessons": [
+    {
+      "id": "TE-C336-pukaru",
+      "sequence": 16510,
+      "title": "పుకారు (pukāru) — a rumour",
+      "headword": "పుకారు",
+      "romanization": "pukāru",
+      "gloss": "a rumour",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:04af6f1d0100dc3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to enthrone, then the Telugu for a reign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పుకారు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పుకారు — pukāru — \"a rumour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బజారులో ఒక పుకారు వినిపించింది. bajārulō oka pukāru vinipiñcindi. A rumour was going round the market."
+            },
+            {
+              "kind": "speech",
+              "text": "పుకారు (pukāru) పుట్టించు, to start a rumour."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పుకారు (pukāru) is the everyday Telugu word for a rumour; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pukāru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pukāru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pukāru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pukāru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bajārulō oka pukāru vinipiñcindi. — A rumour was going round the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bajārulō oka pukāru vinipiñcindi.* — A rumour was going round the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to enthrone, then the Telugu for a reign, then say pukāru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to enthrone, then the Telugu for a reign, then say *pukāru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పుకారు (pukāru) mean? (\"A rumour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C336-vadanti",
+      "sequence": 16520,
+      "title": "వదంతి (vadanti) — hearsay; a rumour",
+      "headword": "వదంతి",
+      "romanization": "vadanti",
+      "gloss": "hearsay; a rumour",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:626dd7f7873ad973",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a reign, then the Telugu for a rumour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వదంతి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వదంతి — vadanti — \"hearsay; a rumour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అది నిజం కాదు, వదంతి మాత్రమే. adi nijaṁ kādu, vadanti mātramē. It is not true, only hearsay."
+            },
+            {
+              "kind": "speech",
+              "text": "Close to పుకారు (pukāru); news writers prefer వదంతి (vadanti)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వదంతి (vadanti) goes back to Sanskrit kiṃvadantī, \"a common saying, a rumour\", literally \"what do they say\" (Monier-Williams), which Monier-Williams also lists in the short form vadantī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vadanti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vadanti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vadanti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vadanti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adi nijaṁ kādu, vadanti mātramē. — It is not true, only hearsay.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adi nijaṁ kādu, vadanti mātramē.* — It is not true, only hearsay.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a reign, then the Telugu for a rumour, then say vadanti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a reign, then the Telugu for a rumour, then say *vadanti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వదంతి (vadanti) mean? (\"Hearsay; a rumour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C336-atisayokti",
+      "sequence": 16530,
+      "title": "అతిశయోక్తి (atiśayōkti) — an exaggeration",
+      "headword": "అతిశయోక్తి",
+      "romanization": "atiśayōkti",
+      "gloss": "an exaggeration",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b08699f97a6cc73f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a rumour, then the Telugu for hearsay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అతిశయోక్తి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అతిశయోక్తి — atiśayōkti — \"an exaggeration\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతని మాటల్లో చాలా అతిశయోక్తి ఉంది. atani māṭallō cālā atiśayōkti undi. There is a lot of exaggeration in his words."
+            },
+            {
+              "kind": "speech",
+              "text": "అతిశయ, excess, and ఉక్తి, a saying."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అతిశయోక్తి (atiśayōkti) is borrowed from Sanskrit atiśayokti, \"hyperbolical language\" (Monier-Williams), from atiśaya, \"excess\", and ukti, \"a saying\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atiśayōkti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atiśayōkti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atiśayōkti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atiśayōkti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atani māṭallō cālā atiśayōkti undi. — There is a lot of exaggeration in his words.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atani māṭallō cālā atiśayōkti undi.* — There is a lot of exaggeration in his words.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a rumour, then the Telugu for hearsay, then say atiśayōkti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a rumour, then the Telugu for hearsay, then say *atiśayōkti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అతిశయోక్తి (atiśayōkti) mean? (\"An exaggeration\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C336-kalakalam",
+      "sequence": 16540,
+      "title": "కలకలం (kalakalaṁ) — an uproar; a stir",
+      "headword": "కలకలం",
+      "romanization": "kalakalaṁ",
+      "gloss": "an uproar; a stir",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aed55f96529fb5e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for hearsay, then the Telugu for an exaggeration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కలకలం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కలకలం — kalakalaṁ — \"an uproar; a stir\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ వార్త పట్టణంలో కలకలం రేపింది. ā vārta paṭṭaṇaṁlō kalakalaṁ rēpindi. The news caused an uproar in the town."
+            },
+            {
+              "kind": "speech",
+              "text": "కలకలం (kalakalaṁ) రేపు, to cause a stir, is the headline phrase."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కలకలం (kalakalaṁ) is borrowed from Sanskrit kalakala, \"any confused noise, the murmur of a crowd\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalakalaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalakalaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalakalaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalakalaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā vārta paṭṭaṇaṁlō kalakalaṁ rēpindi. — The news caused an uproar in the town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā vārta paṭṭaṇaṁlō kalakalaṁ rēpindi.* — The news caused an uproar in the town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for hearsay, then the Telugu for an exaggeration, then say kalakalaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for hearsay, then the Telugu for an exaggeration, then say *kalakalaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కలకలం (kalakalaṁ) mean? (\"An uproar; a stir\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C336-velladincu",
+      "sequence": 16550,
+      "title": "వెల్లడించు (vellaḍiñcu) — to disclose; to reveal",
+      "headword": "వెల్లడించు",
+      "romanization": "vellaḍiñcu",
+      "gloss": "to disclose; to reveal",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d87cdbd334dd0cce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an exaggeration, then the Telugu for an uproar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వెల్లడించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెల్లడించు — vellaḍiñcu — \"to disclose; to reveal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పోలీసులు దొంగ పేరు వెల్లడించారు. pōlīsulu doṅga pēru vellaḍiñcāru. The police disclosed the thief's name."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): వెల్లడించాను, vellaḍiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "What is disclosed takes no ending; to whom takes -కి."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెల్లడించు (vellaḍiñcu) is native Dravidian: DEDR 5498 lists Telugu vellaḍi, \"open place, publicity, openness\", under the word for \"outside\", with Tamil veḷi; to disclose is to bring into the open."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vellaḍiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vellaḍiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vellaḍiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vellaḍiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsulu doṅga pēru vellaḍiñcāru. — The police disclosed the thief's name.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsulu doṅga pēru vellaḍiñcāru.* — The police disclosed the thief's name.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an exaggeration, then the Telugu for an uproar, then say vellaḍiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an exaggeration, then the Telugu for an uproar, then say *vellaḍiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వెల్లడించు (vellaḍiñcu) mean? (\"To disclose; to reveal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

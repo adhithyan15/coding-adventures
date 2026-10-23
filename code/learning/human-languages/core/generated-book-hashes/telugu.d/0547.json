@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:48485d01b8f3b58a",
+  "lessonIds": [
+    "TE-C547-subhraparacu",
+    "TE-C547-utuku",
+    "TE-C547-araveyu",
+    "TE-C547-dulupu",
+    "TE-C547-tagilincu"
+  ],
+  "tex": "telugu/book/chapters/ch547-housework.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C395-pratipadika",
+  "pathSegment": "TE-PATH-395-KANUKA395",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-395-KANUKA395",
+      "order": 4
+    }
+  ]
+}

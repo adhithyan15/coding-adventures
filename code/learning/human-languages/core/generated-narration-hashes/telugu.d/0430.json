@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:2ffdde8535ca3603",
+  "lessonIds": [
+    "TE-C430-balaparacu",
+    "TE-C430-balahinaparacu",
+    "TE-C430-samatulyam",
+    "TE-C430-niyantrincu",
+    "TE-C430-parimiti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch430.txt",
+  "json": "telugu/narration/ch430.json",
+  "textHash": "fnv1a64:7d4568d1f95d2623",
+  "jsonHash": "fnv1a64:ce121c1899f2ba62",
+  "findings": []
+}

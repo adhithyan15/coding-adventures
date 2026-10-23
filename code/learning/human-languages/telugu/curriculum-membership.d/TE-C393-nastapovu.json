@@ -1,0 +1,11 @@
+{
+  "id": "TE-C393-nastapovu",
+  "pathSegment": "TE-PATH-393-PRAYOJANAM393",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-393-PRAYOJANAM393",
+      "order": 2
+    }
+  ]
+}

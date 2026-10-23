@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:51d6eff744703ad2",
+  "lessonIds": [
+    "TE-C497-koppadu",
+    "TE-C497-mandipadu",
+    "TE-C497-kasuruko",
+    "TE-C497-avesam",
+    "TE-C497-ciraku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch497.txt",
+  "json": "telugu/narration/ch497.json",
+  "textHash": "fnv1a64:9a3b7893daf5ba3f",
+  "jsonHash": "fnv1a64:5dd8a4cfe0edf977",
+  "findings": []
+}

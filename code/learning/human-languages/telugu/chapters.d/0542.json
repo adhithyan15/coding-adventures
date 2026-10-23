@@ -1,0 +1,19 @@
+{
+  "chapter": 542,
+  "title": "Painting and Sculpture",
+  "label": "ch:te-painting-and-sculpture",
+  "canDo": "I can talk about painting, sculpture and masterpieces.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C542-kalakhandam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 542: I can talk about painting, sculpture and masterpieces.",
+    "assesses": [
+      "TE-LEX-C542-SILPAM542-03",
+      "TE-LEX-C542-SILPAM542-04",
+      "TE-LEX-C542-SILPAM542-05"
+    ]
+  }
+}

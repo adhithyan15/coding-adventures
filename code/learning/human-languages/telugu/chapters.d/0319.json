@@ -1,0 +1,23 @@
+{
+  "chapter": 319,
+  "title": "Must, Must Not, and Because",
+  "label": "ch:te-must-must-not-and-because",
+  "canDo": "I can say what someone must, must not or had better do with -āli, -akūḍadu and -tē mañcidi, and explain why with -aḍaṁ valla, endukaṇṭē and kābaṭṭi.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-R319-advice-and-reasons",
+    "kind": "production",
+    "summary": "Complete TE-R319-advice-and-reasons: give advice and duties, put a reason before or after its result, and read the new letter ఓ.",
+    "assesses": [
+      "TE-LEX-C319-OTU-01",
+      "TE-SCRIPT-RECOG-175",
+      "TE-GRAMMAR-C319-OBLIGATIVE-01",
+      "TE-GRAMMAR-C319-PROHIBITIVE-01",
+      "TE-GRAMMAR-C319-BETTER-TO-01",
+      "TE-GRAMMAR-C319-ADAM-VALLA-01",
+      "TE-GRAMMAR-C319-REASON-ORDER-01"
+    ]
+  }
+}

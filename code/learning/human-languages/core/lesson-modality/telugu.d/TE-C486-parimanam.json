@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C486-parimanam",
+    "language": "telugu",
+    "chapter": 486,
+    "sequence": 24470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49839739d6f33576"
+  },
+  "findings": []
+}

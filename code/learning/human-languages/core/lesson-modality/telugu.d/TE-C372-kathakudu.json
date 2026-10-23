@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C372-kathakudu",
+    "language": "telugu",
+    "chapter": 372,
+    "sequence": 18350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0dac0f5de6976269"
+  },
+  "findings": []
+}

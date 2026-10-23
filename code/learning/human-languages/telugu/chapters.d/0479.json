@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "Thunder and Downpours",
+  "label": "ch:te-thunder-and-downpours",
+  "canDo": "I can say a thunderbolt, a torrential rain, to close in, to grow dim and spray.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C479-tumpara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can say a thunderbolt, a torrential rain, to close in, to grow dim and spray.",
+    "assesses": [
+      "TE-LEX-C479-PIDUGU479-03",
+      "TE-LEX-C479-PIDUGU479-04",
+      "TE-LEX-C479-PIDUGU479-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:8089ff88dd0df811",
+  "lessonIds": [
+    "TE-C368-sasanam",
+    "TE-C368-talapatram",
+    "TE-C368-caritrakarudu",
+    "TE-C368-nagarikata",
+    "TE-C368-yugam"
+  ],
+  "tex": "telugu/book/chapters/ch368-written-in-stone.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:832b60e9a18cd853",
+  "lessonIds": [
+    "TE-C401-paurudu",
+    "TE-C401-prajasvamyam",
+    "TE-C401-rajyangam",
+    "TE-C401-jatiya",
+    "TE-C401-rajakiyalu"
+  ],
+  "tex": "telugu/book/chapters/ch401-citizens-and-the-state.tex"
+}

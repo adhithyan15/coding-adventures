@@ -1,0 +1,11 @@
+{
+  "id": "TE-C464-samakurcu",
+  "pathSegment": "TE-PATH-464-SEVA464",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-464-SEVA464",
+      "order": 1
+    }
+  ]
+}

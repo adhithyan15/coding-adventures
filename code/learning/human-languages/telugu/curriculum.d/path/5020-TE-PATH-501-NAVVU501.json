@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-501-NAVVU501",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TE-EXT-501-NAVVU501"
+  ],
+  "after": []
+}

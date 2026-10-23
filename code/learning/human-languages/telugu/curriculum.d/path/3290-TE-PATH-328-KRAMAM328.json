@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-328-KRAMAM328",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-328-KRAMAM328"
+  ],
+  "after": []
+}

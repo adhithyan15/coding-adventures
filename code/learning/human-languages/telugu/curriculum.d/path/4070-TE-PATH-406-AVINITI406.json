@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-406-AVINITI406",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TE-EXT-406-AVINITI406"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C326-dongilincu",
+    "language": "telugu",
+    "chapter": 326,
+    "sequence": 16030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d106b45e9fa94d1b"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:6c4fe74f5a7605dd",
+  "lessonIds": [
+    "TE-C415-vidya",
+    "TE-C415-jnanam",
+    "TE-C415-adhyayanam",
+    "TE-C415-tarkincu",
+    "TE-C415-bodhincu"
+  ],
+  "tex": "telugu/book/chapters/ch415-learning-and-teaching.tex"
+}

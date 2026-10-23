@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:a6aa7429a6e4fb56",
+  "lessonIds": [
+    "TE-C509-pirikitanam",
+    "TE-C509-amayakudu",
+    "TE-C509-murkhudu",
+    "TE-C509-baddhakam",
+    "TE-C509-husaru",
+    "TE-R509-review-502-509"
+  ],
+  "tex": "telugu/book/chapters/ch509-what-kind-of-person.tex"
+}

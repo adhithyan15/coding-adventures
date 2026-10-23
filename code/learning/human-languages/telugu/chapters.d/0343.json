@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "A Narrow Escape",
+  "label": "ch:te-a-narrow-escape",
+  "canDo": "I can say the injured, a tragic accident, a stampede, narrowly and to get out.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C343-bayatapadu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can say the injured, a tragic accident, a stampede, narrowly and to get out.",
+    "assesses": [
+      "TE-LEX-C343-TRUTILO343-03",
+      "TE-LEX-C343-TRUTILO343-04",
+      "TE-LEX-C343-TRUTILO343-05"
+    ]
+  }
+}

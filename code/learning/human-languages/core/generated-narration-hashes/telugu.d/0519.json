@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:aa71f2acbcd0256f",
+  "lessonIds": [
+    "TE-C519-cikitsa",
+    "TE-C519-sastracikitsa",
+    "TE-C519-mattumandu",
+    "TE-C519-patti",
+    "TE-C519-paramarsincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch519.txt",
+  "json": "telugu/narration/ch519.json",
+  "textHash": "fnv1a64:662a3e0e754c32d6",
+  "jsonHash": "fnv1a64:b8130ad7af2ef67e",
+  "findings": []
+}

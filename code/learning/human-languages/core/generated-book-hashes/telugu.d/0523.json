@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:3d067b42622745a8",
+  "lessonIds": [
+    "TE-C523-karmikudu",
+    "TE-C523-nipunudu",
+    "TE-C523-salahadaru",
+    "TE-C523-sahayakudu",
+    "TE-C523-guttedaru"
+  ],
+  "tex": "telugu/book/chapters/ch523-people-at-work.tex"
+}

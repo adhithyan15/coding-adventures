@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:c281906cde6ead1a",
+  "lessonIds": [
+    "TE-C513-vyadhi",
+    "TE-C513-antuvyadhi",
+    "TE-C513-gundepotu",
+    "TE-C513-paksavatam",
+    "TE-C513-ubbasam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch513.txt",
+  "json": "telugu/narration/ch513.json",
+  "textHash": "fnv1a64:c68ac11cde087a31",
+  "jsonHash": "fnv1a64:78396842246d5c15",
+  "findings": []
+}

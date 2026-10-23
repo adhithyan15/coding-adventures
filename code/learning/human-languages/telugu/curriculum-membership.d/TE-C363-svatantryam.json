@@ -1,0 +1,11 @@
+{
+  "id": "TE-C363-svatantryam",
+  "pathSegment": "TE-PATH-363-TIRUGUBATU363",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-363-TIRUGUBATU363",
+      "order": 4
+    }
+  ]
+}

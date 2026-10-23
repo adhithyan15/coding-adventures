@@ -1,0 +1,11 @@
+{
+  "id": "TE-C349-nyayamurti",
+  "pathSegment": "TE-PATH-349-NYAYAM349",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-349-NYAYAM349",
+      "order": 1
+    }
+  ]
+}

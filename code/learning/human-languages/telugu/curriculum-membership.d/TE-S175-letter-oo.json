@@ -1,0 +1,11 @@
+{
+  "id": "TE-S175-letter-oo",
+  "pathSegment": "TE-PATH-319-MUST-BECAUSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-319-MUST-BECAUSE",
+      "order": 2
+    }
+  ]
+}

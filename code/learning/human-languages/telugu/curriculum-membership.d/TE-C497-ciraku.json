@@ -1,0 +1,11 @@
+{
+  "id": "TE-C497-ciraku",
+  "pathSegment": "TE-PATH-497-KOPAM497",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-497-KOPAM497",
+      "order": 4
+    }
+  ]
+}

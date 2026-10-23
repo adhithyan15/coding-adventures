@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "The Chase",
+  "label": "ch:te-the-chase",
+  "canDo": "I can say to pursue, to hide oneself, to surrender, to turn in and to step aside.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C352-tappuko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can say to pursue, to hide oneself, to surrender, to turn in and to step aside.",
+    "assesses": [
+      "TE-LEX-C352-VEMBADI352-03",
+      "TE-LEX-C352-VEMBADI352-04",
+      "TE-LEX-C352-VEMBADI352-05"
+    ]
+  }
+}

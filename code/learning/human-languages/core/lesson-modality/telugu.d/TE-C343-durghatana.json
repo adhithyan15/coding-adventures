@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C343-durghatana",
+    "language": "telugu",
+    "chapter": 343,
+    "sequence": 16880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e52c7c6b37e26b6"
+  },
+  "findings": []
+}

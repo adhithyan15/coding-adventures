@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:dc20f35c65bb3f01",
+  "lessonIds": [
+    "TE-C352-vembadincu",
+    "TE-C352-dakko",
+    "TE-C352-longipovu",
+    "TE-C352-pattincu",
+    "TE-C352-tappuko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch352.txt",
+  "json": "telugu/narration/ch352.json",
+  "textHash": "fnv1a64:c284ac85ca893e33",
+  "jsonHash": "fnv1a64:1008c741ffe7c97a",
+  "findings": []
+}

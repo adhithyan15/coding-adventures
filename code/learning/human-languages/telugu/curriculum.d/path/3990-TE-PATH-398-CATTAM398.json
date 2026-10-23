@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-398-CATTAM398",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TE-EXT-398-CATTAM398"
+  ],
+  "after": []
+}

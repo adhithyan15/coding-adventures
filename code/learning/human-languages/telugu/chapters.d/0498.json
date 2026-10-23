@@ -1,0 +1,19 @@
+{
+  "chapter": 498,
+  "title": "Shame and Shyness",
+  "label": "ch:te-shame-and-shyness",
+  "canDo": "I can talk about self-respect, humiliation and pride, holding back and hanging my head.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C498-taladincuko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can talk about self-respect, humiliation and pride, holding back and hanging my head.",
+    "assesses": [
+      "TE-LEX-C498-SIGGU498-03",
+      "TE-LEX-C498-SIGGU498-04",
+      "TE-LEX-C498-SIGGU498-05"
+    ]
+  }
+}

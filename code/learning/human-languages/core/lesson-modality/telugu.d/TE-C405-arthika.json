@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C405-arthika",
+    "language": "telugu",
+    "chapter": 405,
+    "sequence": 20170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8fa0cddb8b99e338"
+  },
+  "findings": []
+}

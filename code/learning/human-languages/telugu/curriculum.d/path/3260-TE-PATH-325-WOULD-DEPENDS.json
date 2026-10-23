@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-325-WOULD-DEPENDS",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TE-EXT-325-WOULD-DEPENDS"
+  ],
+  "after": []
+}

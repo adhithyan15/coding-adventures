@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:c4ba599e2d2d3bc6",
+  "lessonIds": [
+    "TE-C334-jananam",
+    "TE-C334-pasikandu",
+    "TE-C334-namakaranam",
+    "TE-C334-janmincu",
+    "TE-C334-divincu"
+  ],
+  "tex": "telugu/book/chapters/ch334-a-baby-is-born.tex"
+}

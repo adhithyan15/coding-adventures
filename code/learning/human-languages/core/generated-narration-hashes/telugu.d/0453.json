@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:cba783d48f1c5c93",
+  "lessonIds": [
+    "TE-C453-oddu",
+    "TE-C453-vagu",
+    "TE-C453-teppa",
+    "TE-C453-telipovu",
+    "TE-C453-kottukupovu",
+    "TE-R453-review-446-453"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch453.txt",
+  "json": "telugu/narration/ch453.json",
+  "textHash": "fnv1a64:f2dcabce80a0787e",
+  "jsonHash": "fnv1a64:77ea27275306a5cd",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C449-addanki",
+    "language": "telugu",
+    "chapter": 449,
+    "sequence": 22560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d0698e7b41eba26"
+  },
+  "findings": []
+}

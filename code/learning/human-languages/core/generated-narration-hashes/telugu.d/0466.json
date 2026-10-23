@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:86c3d201be70b883",
+  "lessonIds": [
+    "TE-C466-caurasta",
+    "TE-C466-udyanavanam",
+    "TE-C466-paccika",
+    "TE-C466-vidhidipam",
+    "TE-C466-parisaralu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch466.txt",
+  "json": "telugu/narration/ch466.json",
+  "textHash": "fnv1a64:45fc37a634586f7f",
+  "jsonHash": "fnv1a64:305de224b504e8e1",
+  "findings": []
+}

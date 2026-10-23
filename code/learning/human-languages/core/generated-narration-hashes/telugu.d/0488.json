@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:256de29ef76b25db",
+  "lessonIds": [
+    "TE-C488-toku",
+    "TE-C488-nilva",
+    "TE-C488-giddangi",
+    "TE-C488-korata",
+    "TE-C488-velam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch488.txt",
+  "json": "telugu/narration/ch488.json",
+  "textHash": "fnv1a64:4881f329e120477d",
+  "jsonHash": "fnv1a64:6c5011d5c68dd466",
+  "findings": []
+}

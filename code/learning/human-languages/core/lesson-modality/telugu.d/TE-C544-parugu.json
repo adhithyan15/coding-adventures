@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C544-parugu",
+    "language": "telugu",
+    "chapter": 544,
+    "sequence": 27600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0a4b541f2c5be26"
+  },
+  "findings": []
+}

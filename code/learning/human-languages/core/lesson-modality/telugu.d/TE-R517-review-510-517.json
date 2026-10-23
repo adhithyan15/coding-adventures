@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R517-review-510-517",
+    "language": "telugu",
+    "chapter": 517,
+    "sequence": 26220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:372ae53cd1afb7fb"
+  },
+  "findings": []
+}

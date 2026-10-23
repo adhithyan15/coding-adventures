@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "Written in Stone",
+  "label": "ch:te-written-in-stone",
+  "canDo": "I can say an inscription, a palm-leaf manuscript, a historian, a civilisation and an era.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C368-yugam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can say an inscription, a palm-leaf manuscript, a historian, a civilisation and an era.",
+    "assesses": [
+      "TE-LEX-C368-SASANAM368-03",
+      "TE-LEX-C368-SASANAM368-04",
+      "TE-LEX-C368-SASANAM368-05"
+    ]
+  }
+}

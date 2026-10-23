@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:8c761747ed16684f",
+  "lessonIds": [
+    "TE-C419-kakapote",
+    "TE-C419-batti",
+    "TE-C419-minahayimpu",
+    "TE-C419-emainappatiki",
+    "TE-C419-sambhavincu"
+  ],
+  "tex": "telugu/book/chapters/ch419-if-not-then-what.tex"
+}

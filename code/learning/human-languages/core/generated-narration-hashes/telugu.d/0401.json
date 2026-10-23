@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:20128d8d37b2032b",
+  "lessonIds": [
+    "TE-C401-paurudu",
+    "TE-C401-prajasvamyam",
+    "TE-C401-rajyangam",
+    "TE-C401-jatiya",
+    "TE-C401-rajakiyalu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch401.txt",
+  "json": "telugu/narration/ch401.json",
+  "textHash": "fnv1a64:493db19544c8f526",
+  "jsonHash": "fnv1a64:815ca0ac25fb0907",
+  "findings": []
+}

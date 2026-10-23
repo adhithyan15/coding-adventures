@@ -1,0 +1,11 @@
+{
+  "id": "TE-C479-kundapota",
+  "pathSegment": "TE-PATH-479-PIDUGU479",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-479-PIDUGU479",
+      "order": 1
+    }
+  ]
+}

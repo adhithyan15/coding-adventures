@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C413-prayogasala",
+    "language": "telugu",
+    "chapter": 413,
+    "sequence": 20610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d16579bd31f6a7b"
+  },
+  "findings": []
+}

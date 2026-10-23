@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:3751ab71a63d8f51",
+  "lessonIds": [
+    "TE-C474-sikharam",
+    "TE-C474-pithabhumi",
+    "TE-C474-khandam",
+    "TE-C474-agniparvatam",
+    "TE-C474-prasantamaina"
+  ],
+  "tex": "telugu/book/chapters/ch474-mountains-and-plateaus.tex"
+}

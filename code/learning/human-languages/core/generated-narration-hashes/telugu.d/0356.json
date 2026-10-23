@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:10a6e6cfc44f2770",
+  "lessonIds": [
+    "TE-C356-utsavam",
+    "TE-C356-sanmanincu",
+    "TE-C356-grhapravesam",
+    "TE-C356-vidkolu",
+    "TE-C356-dattata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch356.txt",
+  "json": "telugu/narration/ch356.json",
+  "textHash": "fnv1a64:805ec09a9e31f129",
+  "jsonHash": "fnv1a64:8892d22cddb1ebcd",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:e76e9db65374046a",
+  "lessonIds": [
+    "TE-C381-tegincu",
+    "TE-C381-apaharincu",
+    "TE-C381-vicarincu",
+    "TE-C381-japtu-ceyu",
+    "TE-C381-dandayatra",
+    "TE-R381-review-374-381",
+    "TE-R381-review-final-381"
+  ],
+  "tex": "telugu/book/chapters/ch381-daring-deeds.tex"
+}

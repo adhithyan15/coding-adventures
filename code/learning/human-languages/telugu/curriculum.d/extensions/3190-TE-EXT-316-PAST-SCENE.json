@@ -1,0 +1,10 @@
+{
+  "id": "TE-EXT-316-PAST-SCENE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what happened in the plain past (veḷḷānu), set the scene with cēstunnappuḍu, and say what used to happen with cadivēvāḍini and uṇḍēdi.",
+  "prerequisites": [
+    "TE-EXT-315-A2WRITING"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C450-digabettu",
+  "pathSegment": "TE-PATH-450-PARKINGU450",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-450-PARKINGU450",
+      "order": 4
+    }
+  ]
+}

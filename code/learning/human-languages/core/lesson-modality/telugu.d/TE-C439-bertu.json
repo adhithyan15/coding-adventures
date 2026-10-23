@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C439-bertu",
+    "language": "telugu",
+    "chapter": 439,
+    "sequence": 22070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e84212a1d0510bbb"
+  },
+  "findings": []
+}

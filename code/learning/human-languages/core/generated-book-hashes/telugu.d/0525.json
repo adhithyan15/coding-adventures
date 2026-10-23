@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:bd7a88489c00989f",
+  "lessonIds": [
+    "TE-C525-upadhi",
+    "TE-C525-sampadana",
+    "TE-C525-adayam",
+    "TE-C525-vetanam",
+    "TE-C525-sramincu",
+    "TE-R525-review-518-525"
+  ],
+  "tex": "telugu/book/chapters/ch525-making-a-living.tex"
+}

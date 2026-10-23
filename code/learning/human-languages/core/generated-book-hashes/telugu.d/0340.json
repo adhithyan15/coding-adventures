@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:2a35205b425b5437",
+  "lessonIds": [
+    "TE-C340-taksanam",
+    "TE-C340-anukokunda",
+    "TE-C340-unnattundi",
+    "TE-C340-tira",
+    "TE-C340-melkonu"
+  ],
+  "tex": "telugu/book/chapters/ch340-out-of-the-blue.tex"
+}

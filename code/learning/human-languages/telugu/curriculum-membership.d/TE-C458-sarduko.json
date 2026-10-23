@@ -1,0 +1,11 @@
+{
+  "id": "TE-C458-sarduko",
+  "pathSegment": "TE-PATH-458-GADI458",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-458-GADI458",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 417,
+  "title": "Rules and Requirements",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0cfe5610a6703beb",
+  "lessons": [
+    {
+      "id": "TE-C417-nibandhana",
+      "sequence": 20790,
+      "title": "నిబంధన (nibandhana) — a stipulation; a clause",
+      "headword": "నిబంధన",
+      "romanization": "nibandhana",
+      "gloss": "a stipulation; a clause",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0001da6ca5e475e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a syllabus topic, then the Telugu for to review."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిబంధన",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిబంధన — nibandhana — \"a stipulation; a clause\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఒప్పందంలో ఒక కొత్త నిబంధన చేర్చారు. oppandaṁlō oka kotta nibandhana cērcāru. They added a new clause to the agreement."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: నిబంధనలు, nibandhanalu."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural నిబంధనలు, terms and conditions."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిబంధన (nibandhana) is borrowed from Sanskrit nibandhana, \"binding, fastening; a band, a support\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nibandhana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nibandhana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nibandhana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nibandhana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oppandaṁlō oka kotta nibandhana cērcāru. — They added a new clause to the agreement.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oppandaṁlō oka kotta nibandhana cērcāru.* — They added a new clause to the agreement.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a syllabus topic, then the Telugu for to review, then say nibandhana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a syllabus topic, then the Telugu for to review, then say *nibandhana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిబంధన (nibandhana) mean? (\"A stipulation; a clause\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C417-arhata",
+      "sequence": 20800,
+      "title": "అర్హత (arhata) — eligibility; a qualification",
+      "headword": "అర్హత",
+      "romanization": "arhata",
+      "gloss": "eligibility; a qualification",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a86d184ad90de496",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to review, then the Telugu for a stipulation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అర్హత",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అర్హత — arhata — \"eligibility; a qualification\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ ఉద్యోగానికి నాకు అర్హత ఉంది. ā udyōgāniki nāku arhata undi. I am qualified for that job."
+            },
+            {
+              "kind": "speech",
+              "text": "With the -తే of a condition: అర్హత (arhata) ఉంటే, if you qualify."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అర్హత (arhata) is built on Sanskrit arha, \"meriting, deserving, worthy of\" (Monier-Williams), with the abstract ending -త."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arhata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arhata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arhata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arhata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā udyōgāniki nāku arhata undi. — I am qualified for that job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā udyōgāniki nāku arhata undi.* — I am qualified for that job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to review, then the Telugu for a stipulation, then say arhata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to review, then the Telugu for a stipulation, then say *arhata* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అర్హత (arhata) mean? (\"Eligibility; a qualification\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C417-anumatincu",
+      "sequence": 20810,
+      "title": "అనుమతించు (anumatiñcu) — to permit; to allow",
+      "headword": "అనుమతించు",
+      "romanization": "anumatiñcu",
+      "gloss": "to permit; to allow",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05fcae65f9e0ec3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a stipulation, then the Telugu for eligibility."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అనుమతించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అనుమతించు — anumatiñcu — \"to permit; to allow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా నాన్న నన్ను రాత్రి బయటకు వెళ్ళడానికి అనుమతించాడు. mā nānna nannu rātri bayaṭaku veḷḷaḍāniki anumatiñcāḍu. My father allowed me to go out at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): అనుమతించాను, anumatiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The person takes -ని and the act -డానికి. The noun అనుమతి, permission, you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అనుమతించు (anumatiñcu) is built on Sanskrit anumati, \"assent, permission, approbation\" (Monier-Williams), with the Telugu verb ending -ఇంచు; అనుమతి is the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anumatiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anumatiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anumatiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anumatiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā nānna nannu rātri bayaṭaku veḷḷaḍāniki anumatiñcāḍu. — My father allowed me to go out at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā nānna nannu rātri bayaṭaku veḷḷaḍāniki anumatiñcāḍu.* — My father allowed me to go out at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a stipulation, then the Telugu for eligibility, then say anumatiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a stipulation, then the Telugu for eligibility, then say *anumatiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అనుమతించు (anumatiñcu) mean? (\"To permit; to allow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C417-minaha",
+      "sequence": 20820,
+      "title": "మినహా (minahā) — except for; apart from",
+      "headword": "మినహా",
+      "romanization": "minahā",
+      "gloss": "except for; apart from",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a12150bda75d1f82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for eligibility, then the Telugu for to permit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మినహా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మినహా — minahā — \"except for; apart from\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆదివారం మినహా ప్రతి రోజు దుకాణం తెరిచి ఉంటుంది. ādivāraṁ minahā prati rōju dukāṇaṁ terici uṇṭundi. The shop is open every day except Sunday."
+            },
+            {
+              "kind": "speech",
+              "text": "It follows the noun it leaves out: ఆదివారం మినహా (minahā), except Sunday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మినహా (minahā) is usually traced to Hindustani minhā, \"deducted, left out\", a word of Arabic origin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "minahā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *minahā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "minahā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *minahā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādivāraṁ minahā prati rōju dukāṇaṁ terici uṇṭundi. — The shop is open every day except Sunday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādivāraṁ minahā prati rōju dukāṇaṁ terici uṇṭundi.* — The shop is open every day except Sunday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for eligibility, then the Telugu for to permit, then say minahā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for eligibility, then the Telugu for to permit, then say *minahā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మినహా (minahā) mean? (\"Except for; apart from\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C417-vartincu",
+      "sequence": 20830,
+      "title": "వర్తించు (vartiñcu) — to apply (to); to be relevant",
+      "headword": "వర్తించు",
+      "romanization": "vartiñcu",
+      "gloss": "to apply (to); to be relevant",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85700ff3d67fc64f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to permit, then the Telugu for except for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వర్తించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వర్తించు — vartiñcu — \"to apply (to); to be relevant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ నియమం పిల్లలకు వర్తించదు. ā niyamaṁ pillalaku vartiñcadu. That rule does not apply to children."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): వర్తించింది, vartiñcindi."
+            },
+            {
+              "kind": "speech",
+              "text": "What it applies to takes -కి. Rules apply, not people, so its past is shown as వర్తించింది, it applied."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వర్తించు (vartiñcu) is built on Sanskrit vartana, \"turning, rolling\" (CDIAL 11354), and also \"abiding, staying\" (Monier-Williams), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vartiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vartiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vartiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vartiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā niyamaṁ pillalaku vartiñcadu. — That rule does not apply to children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā niyamaṁ pillalaku vartiñcadu.* — That rule does not apply to children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to permit, then the Telugu for except for, then say vartiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to permit, then the Telugu for except for, then say *vartiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వర్తించు (vartiñcu) mean? (\"To apply (to); to be relevant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

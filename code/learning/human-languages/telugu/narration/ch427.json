@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 427,
+  "title": "Coming to Terms",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:62eb5df73858211a",
+  "lessons": [
+    {
+      "id": "TE-C427-pattubattu",
+      "sequence": 21300,
+      "title": "పట్టుబట్టు (paṭṭubaṭṭu) — to insist",
+      "headword": "పట్టుబట్టు",
+      "romanization": "paṭṭubaṭṭu",
+      "gloss": "to insist",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b28dd0a7069d8bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for deliberately, then the Telugu for a beginning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పట్టుబట్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పట్టుబట్టు — paṭṭubaṭṭu — \"to insist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె ఆ రోజే వెళ్ళాలని పట్టుబట్టింది. āme ā rōjē veḷḷālani paṭṭubaṭṭindi. She insisted on going that very day."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): పట్టుబట్టాను, paṭṭubaṭṭānu."
+            },
+            {
+              "kind": "speech",
+              "text": "పట్టు, a grip, + పట్టు, to hold: to keep a firm grip on one’s point."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పట్టుబట్టు (paṭṭubaṭṭu) is native Dravidian, a compound of paṭṭu, \"a hold, a grasp; perseverance\", and paṭṭu, \"to hold, to seize\" (DEDR 4034)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭubaṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭubaṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭubaṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭubaṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme ā rōjē veḷḷālani paṭṭubaṭṭindi. — She insisted on going that very day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme ā rōjē veḷḷālani paṭṭubaṭṭindi.* — She insisted on going that very day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for deliberately, then the Telugu for a beginning, then say paṭṭubaṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for deliberately, then the Telugu for a beginning, then say *paṭṭubaṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పట్టుబట్టు (paṭṭubaṭṭu) mean? (\"To insist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C427-kudurcu",
+      "sequence": 21310,
+      "title": "కుదుర్చు (kudurcu) — to fix up; to arrange (a deal)",
+      "headword": "కుదుర్చు",
+      "romanization": "kudurcu",
+      "gloss": "to fix up; to arrange (a deal)",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f454641745fcac54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a beginning, then the Telugu for to insist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కుదుర్చు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కుదుర్చు — kudurcu — \"to fix up; to arrange (a deal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా మామయ్య ఆ పెళ్ళి సంబంధం కుదిర్చాడు. mā māmayya ā peḷḷi sambandhaṁ kudircāḍu. My uncle arranged that match."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): కుదిర్చాను, kudircānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also for deals: ఒప్పందం కుదుర్చు (kudurcu), to broker an agreement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కుదుర్చు (kudurcu) is native Dravidian: DEDR 1709 lists Telugu kudurcu beside kuduru, \"to become settled, to be adjusted or arranged\", with Tamil kutir, \"to be settled\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kudurcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kudurcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kudurcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kudurcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā māmayya ā peḷḷi sambandhaṁ kudircāḍu. — My uncle arranged that match.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā māmayya ā peḷḷi sambandhaṁ kudircāḍu.* — My uncle arranged that match.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a beginning, then the Telugu for to insist, then say kudurcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a beginning, then the Telugu for to insist, then say *kudurcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కుదుర్చు (kudurcu) mean? (\"To fix up; to arrange (a deal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C427-samadhanaparacu",
+      "sequence": 21320,
+      "title": "సమాధానపరచు (samādhānaparacu) — to reassure; to calm down",
+      "headword": "సమాధానపరచు",
+      "romanization": "samādhānaparacu",
+      "gloss": "to reassure; to calm down",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b118e9396132281",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to insist, then the Telugu for to fix up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సమాధానపరచు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సమాధానపరచు — samādhānaparacu — \"to reassure; to calm down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఏడుస్తున్న పిల్లవాడిని అమ్మ సమాధానపరిచింది. ēḍustunna pillavāḍini amma samādhānaparicindi. Mother calmed the crying child."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): సమాధానపరిచాను, samādhānaparicānu."
+            },
+            {
+              "kind": "speech",
+              "text": "సమాధానం, an answer, and also calm, + -పరచు, an ending that makes a verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సమాధానపరచు (samādhānaparacu) is built from Sanskrit samādhāna, \"putting together; reconciliation\" (CDIAL 13210), and -పరచు, a native ending that makes a verb (DEDR 3853 lists paṟacu, \"to cause to feel\", beside paḍu)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samādhānaparacu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samādhānaparacu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samādhānaparacu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samādhānaparacu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēḍustunna pillavāḍini amma samādhānaparicindi. — Mother calmed the crying child.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēḍustunna pillavāḍini amma samādhānaparicindi.* — Mother calmed the crying child.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to insist, then the Telugu for to fix up, then say samādhānaparacu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to insist, then the Telugu for to fix up, then say *samādhānaparacu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సమాధానపరచు (samādhānaparacu) mean? (\"To reassure; to calm down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C427-santrptiparacu",
+      "sequence": 21330,
+      "title": "సంతృప్తిపరచు (santṛptiparacu) — to satisfy; to please",
+      "headword": "సంతృప్తిపరచు",
+      "romanization": "santṛptiparacu",
+      "gloss": "to satisfy; to please",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85e0ce8c782ca49e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to fix up, then the Telugu for to reassure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సంతృప్తిపరచు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంతృప్తిపరచు — santṛptiparacu — \"to satisfy; to please\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అందరినీ సంతృప్తిపరచడం కష్టం. andarinī santṛptiparacaḍaṁ kaṣṭaṁ. It is hard to satisfy everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): సంతృప్తిపరిచాను, santṛptiparicānu."
+            },
+            {
+              "kind": "speech",
+              "text": "సంతృప్తి, satisfaction, + -పరచు. నాకు సంతృప్తిగా ఉంది, I am satisfied."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంతృప్తిపరచు (santṛptiparacu) is built from Sanskrit saṁ-, \"wholly\", and tṛpti, \"satisfaction, contentment\" (Monier-Williams), with -పరచు, a native ending that makes a verb (DEDR 3853 lists paṟacu, \"to cause to feel\", beside paḍu)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "santṛptiparacu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *santṛptiparacu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "santṛptiparacu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *santṛptiparacu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "andarinī santṛptiparacaḍaṁ kaṣṭaṁ. — It is hard to satisfy everyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *andarinī santṛptiparacaḍaṁ kaṣṭaṁ.* — It is hard to satisfy everyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to fix up, then the Telugu for to reassure, then say santṛptiparacu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to fix up, then the Telugu for to reassure, then say *santṛptiparacu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సంతృప్తిపరచు (santṛptiparacu) mean? (\"To satisfy; to please\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C427-madhyavarti",
+      "sequence": 21340,
+      "title": "మధ్యవర్తి (madhyavarti) — a mediator; a go-between",
+      "headword": "మధ్యవర్తి",
+      "romanization": "madhyavarti",
+      "gloss": "a mediator; a go-between",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ced97d49e411619d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to reassure, then the Telugu for to satisfy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మధ్యవర్తి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మధ్యవర్తి — madhyavarti — \"a mediator; a go-between\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రెండు కుటుంబాల మధ్య ఒక మధ్యవర్తి మాట్లాడాడు. reṇḍu kuṭumbāla madhya oka madhyavarti māṭlāḍāḍu. A mediator spoke for both families."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: మధ్యవర్తులు, madhyavartulu."
+            },
+            {
+              "kind": "speech",
+              "text": "మధ్య, between, + వర్తి, one who stays."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మధ్యవర్తి (madhyavarti) is built from Sanskrit madhya, \"middle\" (CDIAL 9804), and vartin, \"abiding, situated in\" (Monier-Williams): one who stands in the middle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhyavarti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhyavarti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhyavarti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhyavarti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reṇḍu kuṭumbāla madhya oka madhyavarti māṭlāḍāḍu. — A mediator spoke for both families.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reṇḍu kuṭumbāla madhya oka madhyavarti māṭlāḍāḍu.* — A mediator spoke for both families.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to reassure, then the Telugu for to satisfy, then say madhyavarti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to reassure, then the Telugu for to satisfy, then say *madhyavarti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మధ్యవర్తి (madhyavarti) mean? (\"A mediator; a go-between\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

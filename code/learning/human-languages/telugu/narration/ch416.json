@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 416,
+  "title": "Books and Essays",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:680c1844a8613e1b",
+  "lessons": [
+    {
+      "id": "TE-C416-pathyapustakam",
+      "sequence": 20740,
+      "title": "పాఠ్యపుస్తకం (pāṭhyapustakaṁ) — a textbook",
+      "headword": "పాఠ్యపుస్తకం",
+      "romanization": "pāṭhyapustakaṁ",
+      "gloss": "a textbook",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1046aac49d2a2a83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to debate, then the Telugu for to instruct."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పాఠ్యపుస్తకం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పాఠ్యపుస్తకం — pāṭhyapustakaṁ — \"a textbook\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కొత్త పాఠ్యపుస్తకాలు ఇంకా రాలేదు. kotta pāṭhyapustakālu iṅkā rālēdu. The new textbooks have not come yet."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: పాఠ్యపుస్తకాలు, pāṭhyapustakālu."
+            },
+            {
+              "kind": "speech",
+              "text": "పాఠ్య, to be read and taught, + పుస్తకం, a book."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పాఠ్యపుస్తకం (pāṭhyapustakaṁ) is built from Sanskrit pāṭhya, \"to be recited, to be taught\", and pustaka, \"a book\" (Monier-Williams), the word in పుస్తకం."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhyapustakaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhyapustakaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhyapustakaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhyapustakaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kotta pāṭhyapustakālu iṅkā rālēdu. — The new textbooks have not come yet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kotta pāṭhyapustakālu iṅkā rālēdu.* — The new textbooks have not come yet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to debate, then the Telugu for to instruct, then say pāṭhyapustakaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to debate, then the Telugu for to instruct, then say *pāṭhyapustakaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పాఠ్యపుస్తకం (pāṭhyapustakaṁ) mean? (\"A textbook\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C416-vyasam",
+      "sequence": 20750,
+      "title": "వ్యాసం (vyāsaṁ) — an essay; an article",
+      "headword": "వ్యాసం",
+      "romanization": "vyāsaṁ",
+      "gloss": "an essay; an article",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:911c1ecfad28ae19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to instruct, then the Telugu for a textbook."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వ్యాసం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వ్యాసం — vyāsaṁ — \"an essay; an article\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె పత్రికలో ఒక వ్యాసం రాసింది. āme patrikalō oka vyāsaṁ rāsindi. She wrote an article in the magazine."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: వ్యాసాలు, vyāsālu."
+            },
+            {
+              "kind": "speech",
+              "text": "వ్యాసరచన, essay writing, a school exercise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వ్యాసం (vyāsaṁ) is borrowed from Sanskrit vyāsa, \"a detailed account\" (CDIAL 12214), and also \"extension, diffusion\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyāsaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyāsaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyāsaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyāsaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme patrikalō oka vyāsaṁ rāsindi. — She wrote an article in the magazine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme patrikalō oka vyāsaṁ rāsindi.* — She wrote an article in the magazine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to instruct, then the Telugu for a textbook, then say vyāsaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to instruct, then the Telugu for a textbook, then say *vyāsaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వ్యాసం (vyāsaṁ) mean? (\"An essay; an article\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C416-grantham",
+      "sequence": 20760,
+      "title": "గ్రంథం (granthaṁ) — a scholarly book; a treatise",
+      "headword": "గ్రంథం",
+      "romanization": "granthaṁ",
+      "gloss": "a scholarly book; a treatise",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a71a707c60571604",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a textbook, then the Telugu for an essay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గ్రంథం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గ్రంథం — granthaṁ — \"a scholarly book; a treatise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ గ్రంథం వంద సంవత్సరాల కిందట రాశారు. ā granthaṁ vanda saṁvatsarāla kindaṭa rāśāru. That treatise was written a hundred years ago."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: గ్రంథాలు, granthālu."
+            },
+            {
+              "kind": "speech",
+              "text": "గ్రంథాలయం, a library, which you know, is built on it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గ్రంథం (granthaṁ) is borrowed from Sanskrit grantha, \"a knot\", and later \"a book\" (CDIAL 4350), from granth, \"to tie, to string together\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "granthaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *granthaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "granthaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *granthaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā granthaṁ vanda saṁvatsarāla kindaṭa rāśāru. — That treatise was written a hundred years ago.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā granthaṁ vanda saṁvatsarāla kindaṭa rāśāru.* — That treatise was written a hundred years ago.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a textbook, then the Telugu for an essay, then say granthaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a textbook, then the Telugu for an essay, then say *granthaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గ్రంథం (granthaṁ) mean? (\"A scholarly book; a treatise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C416-pathyamsam",
+      "sequence": 20770,
+      "title": "పాఠ్యాంశం (pāṭhyāṁśaṁ) — a syllabus topic",
+      "headword": "పాఠ్యాంశం",
+      "romanization": "pāṭhyāṁśaṁ",
+      "gloss": "a syllabus topic",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e41c2f2a50f155d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an essay, then the Telugu for a scholarly book."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పాఠ్యాంశం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పాఠ్యాంశం — pāṭhyāṁśaṁ — \"a syllabus topic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పరీక్షలో అన్ని పాఠ్యాంశాల మీద ప్రశ్నలు వస్తాయి. parīkṣalō anni pāṭhyāṁśāla mīda praśnalu vastāyi. In the exam there are questions on every topic of the syllabus."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: పాఠ్యాంశాలు, pāṭhyāṁśālu."
+            },
+            {
+              "kind": "speech",
+              "text": "పాఠ్య, to be taught, + అంశం, a point."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పాఠ్యాంశం (pāṭhyāṁśaṁ) is built from Sanskrit pāṭhya, \"to be taught\" (Monier-Williams), and aṁśa, \"a part\" (CDIAL 2), the word in అంశం."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhyāṁśaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhyāṁśaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhyāṁśaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhyāṁśaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parīkṣalō anni pāṭhyāṁśāla mīda praśnalu vastāyi. — In the exam there are questions on every topic of the syllabus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parīkṣalō anni pāṭhyāṁśāla mīda praśnalu vastāyi.* — In the exam there are questions on every topic of the syllabus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an essay, then the Telugu for a scholarly book, then say pāṭhyāṁśaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an essay, then the Telugu for a scholarly book, then say *pāṭhyāṁśaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పాఠ్యాంశం (pāṭhyāṁśaṁ) mean? (\"A syllabus topic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C416-samiksincu",
+      "sequence": 20780,
+      "title": "సమీక్షించు (samīkṣiñcu) — to review; to assess",
+      "headword": "సమీక్షించు",
+      "romanization": "samīkṣiñcu",
+      "gloss": "to review; to assess",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d87072c0d561b24",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a scholarly book, then the Telugu for a syllabus topic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సమీక్షించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సమీక్షించు — samīkṣiñcu — \"to review; to assess\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మంత్రి పథకాల పనిని సమీక్షించారు. mantri pathakāla panini samīkṣiñcāru. The minister reviewed the work on the schemes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): సమీక్షించాను, samīkṣiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is సమీక్ష, a review."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సమీక్షించు (samīkṣiñcu) is built on Sanskrit samīkṣā, \"thorough or close inspection\" (Monier-Williams), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samīkṣiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samīkṣiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samīkṣiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samīkṣiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mantri pathakāla panini samīkṣiñcāru. — The minister reviewed the work on the schemes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mantri pathakāla panini samīkṣiñcāru.* — The minister reviewed the work on the schemes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a scholarly book, then the Telugu for a syllabus topic, then say samīkṣiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a scholarly book, then the Telugu for a syllabus topic, then say *samīkṣiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సమీక్షించు (samīkṣiñcu) mean? (\"To review; to assess\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

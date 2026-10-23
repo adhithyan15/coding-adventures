@@ -1,0 +1,11 @@
+{
+  "id": "TE-C445-lari",
+  "pathSegment": "TE-PATH-445-RAHADARI445",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-445-RAHADARI445",
+      "order": 1
+    }
+  ]
+}

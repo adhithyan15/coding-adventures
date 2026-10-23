@@ -1,0 +1,11 @@
+{
+  "id": "TE-C448-disa",
+  "pathSegment": "TE-PATH-448-DISA448",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-448-DISA448",
+      "order": 0
+    }
+  ]
+}

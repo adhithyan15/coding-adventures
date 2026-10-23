@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Torn and Crushed",
+  "label": "ch:te-torn-and-crushed",
+  "canDo": "I can say to spoil, to get torn, to get grubby, to split and to break off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C490-virigipovu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can say to spoil, to get torn, to get grubby, to split and to break off.",
+    "assesses": [
+      "TE-LEX-C490-CIRUGU490-03",
+      "TE-LEX-C490-CIRUGU490-04",
+      "TE-LEX-C490-CIRUGU490-05"
+    ]
+  }
+}

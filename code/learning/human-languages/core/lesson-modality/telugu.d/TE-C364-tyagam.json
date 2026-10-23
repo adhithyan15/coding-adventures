@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C364-tyagam",
+    "language": "telugu",
+    "chapter": 364,
+    "sequence": 17970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7235e3d3ddb9c43"
+  },
+  "findings": []
+}

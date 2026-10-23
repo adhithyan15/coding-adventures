@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Buying and Selling",
+  "label": "ch:te-buying-and-selling",
+  "canDo": "I can say a sale, a consumer, quality, a concession and to haggle.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C484-beramadu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can say a sale, a consumer, quality, a concession and to haggle.",
+    "assesses": [
+      "TE-LEX-C484-AMMAKAM484-03",
+      "TE-LEX-C484-AMMAKAM484-04",
+      "TE-LEX-C484-AMMAKAM484-05"
+    ]
+  }
+}
