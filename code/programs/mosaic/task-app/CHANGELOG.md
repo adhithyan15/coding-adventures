@@ -4,6 +4,12 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed
+
+- Preserve the 260-pixel board-column minimum in both themes and across Qt's
+  repeated-column delegate wrapper (#18030). Unsupported flex-shrink remains
+  reported; the style-drop budget and release artifact coverage are unchanged.
+
 ### Documentation
 
 - Record the completed immutable v0.5.9 publication and independent asset audit

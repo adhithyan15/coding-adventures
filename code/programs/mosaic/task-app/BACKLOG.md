@@ -82,8 +82,10 @@ Artifact coverage is unchanged; signing remains blocked in #13977.
 Published and audited from `fa203bccd486279cbd651ccd492987c1b2b1004e`
 in run 39904677952: all six payload jobs and publisher passed; the immutable
 tag, manifest source, thirteen assets and twelve checksum entries were verified.
-Current bounded follow-up #17999 reconciles these release receipts. Afterward,
-reassess a focused #12022 fidelity slice; feature composition remains paused
+Receipt reconciliation #17999 is complete in #18001. The current bounded
+#12022 fidelity slice is #18030: preserve the 260-pixel board-column minimum
+in both themes and Qt's For delegate, without claiming general flex lowering
+or reducing the style-drop budget. Feature composition remains paused
 behind #14011 and signing remains credential-blocked in #13977.
 
 **Published checkpoint: [#17682](https://github.com/adhithyan15/coding-adventures/issues/17682)

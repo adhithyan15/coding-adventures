@@ -8859,6 +8859,17 @@ fn emit_table_section_rows(
 // UI29 meta-primitive emitters — For / If / Else
 // =====================================================================
 
+/// Validate a static floor before recording it as supported geometry.
+fn static_delegate_min_width(props: &[StyleProp], layers: &[StateLayer<'_>]) -> Option<String> {
+    if layers.iter().any(|layer| layer.props.iter().any(|p| p.name == "min-width")) {
+        return None;
+    }
+    lowered_style_prop(props, "min-width", |raw| {
+        qml_px_or_none(raw)
+            .filter(|value| value.parse::<f64>().is_ok_and(|n| n.is_finite() && n >= 0.0))
+    })
+}
+
 /// Lower a `For` node to a QML `Repeater { model: ...; delegate: Item
 /// { ... } }`.
 ///
@@ -8951,6 +8962,23 @@ fn emit_for_qml(
     // `implicitWidth/Height`, not by anchoring back to this parent.
     writeln!(out, "{prop_pad}implicitWidth: childrenRect.width").unwrap();
     writeln!(out, "{prop_pad}implicitHeight: childrenRect.height").unwrap();
+
+    // An attached Layout minimum belongs to the RowLayout's direct child.
+    // A lone styled container is wrapped by this delegate, so its floor must
+    // cross that wrapper. Restrict this bridge to static scalar geometry:
+    // multiple children or state-owned floors need a separate sizing contract.
+    if let [child] = node.children.as_slice() {
+        if matches!(child.tag.as_str(), "Row" | "Column" | "Box") {
+            if let Some(props) = part_style_props(child, ctx) {
+                let layers = child.part_name.as_deref()
+                    .map(|part| collect_state_layers(child, part, ctx.part_styles))
+                    .unwrap_or_default();
+                if let Some(width) = static_delegate_min_width(props, &layers) {
+                    writeln!(out, "{prop_pad}Layout.minimumWidth: {width}").unwrap();
+                }
+            }
+        }
+    }
 
     // Children of the `For` go inside the delegate Item. We use the
     // shared children walker so nested `If`/`Else` and `For` inside the
@@ -18198,6 +18226,40 @@ mod tests {
     /// The `For` delegate `Item` sizes to its children so the styled cell
     /// `Rectangle` actually drives the row layout (the fix for the
     /// collapsed-grid bug).
+    #[test]
+    fn delegate_width_floor_accepts_only_static_nonnegative_scalars() {
+        for value in ["-1", "NaN", "inf", "100%", "auto", "1; evil()"] {
+            assert_eq!(static_delegate_min_width(&[sp("min-width", value)], &[]), None);
+        }
+        for (value, expected) in [("0", "0"), ("260", "260"), ("12.5px", "12.5")] {
+            assert_eq!(static_delegate_min_width(&[sp("min-width", value)], &[]), Some(expected.into()));
+        }
+        assert_eq!(static_delegate_min_width(&[], &[]), None);
+        let state = [sp("min-width", "300")];
+        let layers = [StateLayer { cond_expr: "active".into(), props: &state }];
+        assert_eq!(static_delegate_min_width(&[sp("min-width", "260")], &layers), None);
+    }
+
+    #[test]
+    fn delegate_width_floor_routes_only_a_single_container() {
+        for (tag, count, expected) in [("Column", 1, true), ("Row", 1, true),
+            ("Box", 1, true), ("Column", 2, false), ("Text", 1, false)] {
+            let child = LayoutNode { tag: tag.into(), part_name: Some("floor".into()),
+                props: vec![], children: vec![] };
+            let layout = LayoutDef { component_name: "Grid".into(), root: LayoutNode {
+                tag: "For".into(), part_name: None, props: vec![], children: vec![child; count],
+            }};
+            let style = StyleDef { component_name: "Grid".into(), parts: vec![PartStyle {
+                name: "floor".into(), base: vec![sp("min-width", "260")],
+                transitions: vec![], states: vec![],
+            }] };
+            let out = from_pipeline(&styled_cell_component("Grid"), &layout, &style).unwrap().output;
+            let delegate = out.split_once("implicitHeight: childrenRect.height").unwrap().1;
+            let first = delegate.lines().find(|line| !line.trim().is_empty()).unwrap().trim();
+            assert_eq!(first == "Layout.minimumWidth: 260", expected, "{tag}/{count}: {out}");
+        }
+    }
+
     #[test]
     fn for_delegate_sizes_to_children() {
         let m = styled_cell_component("Grid");

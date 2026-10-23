@@ -138,6 +138,30 @@ fn builds_on_every_backend() {
     }
 }
 
+/// A floor on the inner column alone does not constrain its For delegate.
+/// Pin both ownership levels so narrow board rows cannot shrink the wrapper.
+#[test]
+fn qt_board_columns_keep_their_width_floor_in_both_themes() {
+    use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
+    for theme in ["light", "dark"] {
+        let out = tempfile::TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: PathBuf::from(env!("CARGO_MANIFEST_DIR")),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Qt,
+            emit_project: false,
+            theme: Some(theme.to_string()),
+        }).unwrap();
+        let qml = fs::read_to_string(out.path().join("qt/TaskApp.qml")).unwrap();
+        let board = qml.split_once("model: boardColumns").expect("board repeater").1;
+        let (delegate, column) = board.split_once("Rectangle {").expect("board column");
+        assert!(delegate.contains("Layout.minimumWidth: 260"), "{theme}: {delegate}");
+        let column = column.split_once("ColumnLayout {").unwrap().0;
+        assert!(column.contains("Layout.preferredWidth: 260"), "{theme}: {column}");
+        assert!(column.contains("Layout.minimumWidth: 260"), "{theme}: {column}");
+    }
+}
+
 /// #16151: the package-expanded TaskApp has a reviewed, deterministic Paint
 /// image for both product themes. This is an explicit CPU Skia CI fixture; it
 /// does not claim that TaskApp ships a native Paint host or Paint artifacts.

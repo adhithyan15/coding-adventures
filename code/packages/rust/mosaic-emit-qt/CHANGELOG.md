@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-23 (Repeated container width floors)
+
+- Forward a single Row/Column/Box child's static finite nonnegative minimum
+  width to its For delegate Item. State-owned floors and multi-child bodies
+  are outside this bridge; general flex-shrink remains unsupported.
+
 ## 2026-10-21 (Text layout widths)
 
 - Bare styled Text emits finite nonnegative scalar widths and exact fill-width

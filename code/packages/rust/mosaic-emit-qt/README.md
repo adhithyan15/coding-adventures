@@ -16,6 +16,11 @@ string describing the component as a tree of Qt Quick elements.
 
 ## Pipeline position
 
+A single Row/Column/Box inside a `For` retains its static nonnegative scalar
+`min-width` on the delegate Item as well as on the inner container. This keeps
+the enclosing layout from shrinking the wrapper below the authored floor.
+State overrides and multi-child delegate floors are not forwarded.
+
 Painted rectangles preserve a single finite `rotate(Ndeg)` through centered
 Qt Item rotation, including ordered state overrides. Layout dimensions remain
 unchanged; other transform functions and units remain explicit style debt.
