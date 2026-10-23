@@ -12,7 +12,7 @@ concept_tag: PA-A2-GHATT-DIRECT-OWNER
 prerequisites: [PA-C191-amount-return]
 sounds: []
 roots: []
-etymology_hook: "ghaṭṭ belongs to the inherited family Turner records under Middle Indo-Aryan *ghaṭṭati 'becomes less' (CDIAL s.v. *ghaṭṭati)"
+etymology_hook: "Turner lists Punjabi ghaṭṭ 'diminished' under reconstructed *ghaṭṭati 'decreases, is wanting' (CDIAL 4415)"
 duration:
   max_seconds: 220
 requires:
@@ -50,9 +50,9 @@ next lesson retrieves this one form before it enters a complete sentence.
 ## Across the family
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-GHATT-191] -->
 
-The word belongs to an inherited family that Turner traces through Middle
-Indo-Aryan *ghaṭṭati*, “becomes less.” The old idea and the modern quantity
-meaning stay close. Source: [Turner, CDIAL](https://dsal.uchicago.edu/dictionaries/soas/).
+Turner lists Punjabi *ghaṭṭ*, “diminished,” under reconstructed *ghaṭṭati*,
+“decreases, is wanting.” The old idea and the modern quantity meaning stay
+close. Source: [Turner, CDIAL 4415](https://dsal.uchicago.edu/cgi-bin/app/soas_query.py?qs=%2Agha%E1%B9%AD%E1%B9%ADati&searchhws=yes).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-GHATT-191] -->
