@@ -25,9 +25,9 @@ it("adds a slow Punjabi A2 ghatt quantity prerequisite without mock credit", () 
     "PA-C191-amount-return",
     "PA-C191-ghatt",
     "PA-C191-ghatt-review",
+    "PA-C191-paani-ghatt",
     "PA-C191-samaa-ghatt",
-    "PA-C191-thaa-ghatt",
-    "PA-C191-frame-review",
+    "PA-C191-thaan-ghatt",
     "PA-C191-payoff",
   ];
   const chapterLessons = ids.map((id) =>
@@ -84,6 +84,7 @@ it("adds a slow Punjabi A2 ghatt quantity prerequisite without mock credit", () 
   const learnerCopy = chapterLessons
     .flatMap((lesson) => lesson?.blocks.map((block) => block.markdown) ?? [])
     .join("\n").replace(/\s+/gu, " ");
+  expect(learnerCopy).toContain("ਪਾਣੀ ਘੱਟ ਹੈ");
   expect(learnerCopy).toContain("ਸਮਾਂ ਘੱਟ ਹੈ");
   expect(learnerCopy).toContain("ਥਾਂ ਘੱਟ ਹੈ");
   expect(learnerCopy).toMatch(/little.*less.*not much|little.*not much/is);
@@ -106,7 +107,7 @@ it("adds a slow Punjabi A2 ghatt quantity prerequisite without mock credit", () 
 
   const generatedBook = readFileSync(new URL(
     "../../../../../../learning/human-languages/punjabi/book/chapters/" +
-      "ch191-less-time-and-space.tex",
+      "ch191-less-water-time-and-space.tex",
     import.meta.url,
   ), "utf8");
   const ownerLabel = generatedBook.indexOf(`label{lesson:${ids[ownerIndex]}}`);
