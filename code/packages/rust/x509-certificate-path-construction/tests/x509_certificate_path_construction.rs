@@ -110,9 +110,18 @@ fn constructs_one_unique_target_to_terminal_chain_in_order() {
     assert_eq!(path.candidate_index(1), Some(1));
     assert_eq!(path.candidate_index(2), None);
     assert!(std::ptr::eq(path.target_certificate(), &target));
-    assert!(std::ptr::eq(path.candidate_certificates(), candidates.as_slice()));
-    assert!(std::ptr::eq(path.issuer_certificate(0).unwrap(), &candidates[2]));
-    assert!(std::ptr::eq(path.issuer_certificate(1).unwrap(), &candidates[1]));
+    assert!(std::ptr::eq(
+        path.candidate_certificates(),
+        candidates.as_slice()
+    ));
+    assert!(std::ptr::eq(
+        path.issuer_certificate(0).unwrap(),
+        &candidates[2]
+    ));
+    assert!(std::ptr::eq(
+        path.issuer_certificate(1).unwrap(),
+        &candidates[1]
+    ));
     assert!(!path.target_is_terminal());
     assert_eq!(format!("{path:?}"), "ConstructedX509CertificatePath");
 }
@@ -171,10 +180,14 @@ fn rejects_all_invalid_bounds_before_either_policy_callback() {
         assert_eq!(error.kind(), expected);
     }
 
+    let oversized_candidates = vec![
+        decoded_certificate(3, &name(b"root-a"), &name(b"issuer")),
+        decoded_certificate(4, &name(b"root-b"), &name(b"issuer")),
+    ];
     let oversized_pool = construct_unique_x509_certificate_path_by(
         &target,
-        &candidates,
-        candidates.len() - 1,
+        &oversized_candidates,
+        1,
         2,
         |_| panic!("an oversized pool must reject before terminal policy"),
         |_, _| panic!("an oversized pool must reject before name policy"),
@@ -238,10 +251,7 @@ fn rejects_an_exact_certificate_cycle_before_rechecking_terminal_policy() {
     let name_a = name(b"a");
     let name_b = name(b"b");
     let target = decoded_certificate(1, &name_b, &name_a);
-    let candidates = vec![
-        decoded_certificate(2, &name_a, &name_b),
-        target.clone(),
-    ];
+    let candidates = vec![decoded_certificate(2, &name_a, &name_b), target.clone()];
     let terminal_calls = RefCell::new(Vec::new());
 
     let error = construct_unique_x509_certificate_path_by(
