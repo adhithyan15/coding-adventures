@@ -1,0 +1,11 @@
+{
+  "id": "MR-C277-janar-ahe",
+  "pathSegment": "MR-PATH-277-FUTURE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-277-FUTURE",
+      "order": 1
+    }
+  ]
+}

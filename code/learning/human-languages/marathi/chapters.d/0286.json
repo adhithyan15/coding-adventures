@@ -1,0 +1,20 @@
+{
+  "chapter": 286,
+  "title": "If, and Otherwise",
+  "label": "ch:mr-if-and-otherwise",
+  "canDo": "I can say what will happen if something does (jar … tar …), read the formal -lyās, and warn with nāhītar.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-R286-if-and-otherwise",
+    "kind": "production",
+    "summary": "Complete MR-R286-if-and-otherwise: set a condition and its result, and say what happens otherwise.",
+    "assesses": [
+      "MR-GRAMMAR-C286-JAR-TAR-01",
+      "MR-GRAMMAR-C286-IF-ASEL-01",
+      "MR-GRAMMAR-C286-LYAS-01",
+      "MR-GRAMMAR-C286-NAHITAR-01"
+    ]
+  }
+}

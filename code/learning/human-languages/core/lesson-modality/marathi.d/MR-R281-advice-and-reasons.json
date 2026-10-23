@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R281-advice-and-reasons",
+    "language": "marathi",
+    "chapter": 281,
+    "sequence": 16240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18316e52e3754747"
+  },
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:2e8fc558349230a6",
+  "lessonIds": [
+    "MR-C278-vacat-hoto",
+    "MR-C278-astana",
+    "MR-C278-jayco",
+    "MR-R278-the-past-three-ways"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch278.txt",
+  "json": "marathi/narration/ch278.json",
+  "textHash": "fnv1a64:74a0a475518a6d65",
+  "jsonHash": "fnv1a64:3a7f091527b93094",
+  "findings": []
+}

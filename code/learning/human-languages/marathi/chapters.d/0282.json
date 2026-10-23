@@ -1,0 +1,20 @@
+{
+  "chapter": 282,
+  "title": "Asking the Way",
+  "label": "ch:mr-asking-the-way",
+  "canDo": "I can ask the way (sṭeśanlā kasaṁ jāycaṁ?) and how far it is, and give the way with saraḷ jā and ujvīkaḍe vaḷā.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-R282-asking-the-way",
+    "kind": "production",
+    "summary": "Complete MR-R282-asking-the-way: ask the way to a place and give the way back.",
+    "assesses": [
+      "MR-GRAMMAR-C282-ASK-WAY-01",
+      "MR-GRAMMAR-C282-HOW-FAR-01",
+      "MR-GRAMMAR-C282-GIVE-WAY-01",
+      "MR-GRAMMAR-C282-LANDMARK-01"
+    ]
+  }
+}

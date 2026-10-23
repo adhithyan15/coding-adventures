@@ -1,0 +1,11 @@
+{
+  "id": "MR-R282-asking-the-way",
+  "pathSegment": "MR-PATH-282-ASK-WAY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-282-ASK-WAY",
+      "order": 2
+    }
+  ]
+}

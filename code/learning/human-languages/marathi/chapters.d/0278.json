@@ -1,0 +1,21 @@
+{
+  "chapter": 278,
+  "title": "Was Doing, While, Used To",
+  "label": "ch:mr-was-doing-while-used-to",
+  "canDo": "I can set the scene with vācat hoto and astānā, and say what used to happen with jāyco.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-R278-the-past-three-ways",
+    "kind": "production",
+    "summary": "Complete MR-R278-the-past-three-ways: tell what happened, what was going on and what used to happen.",
+    "assesses": [
+      "MR-GRAMMAR-C278-ONGOING-PAST-01",
+      "MR-GRAMMAR-C278-SCENE-EVENT-01",
+      "MR-GRAMMAR-C278-ASTANA-01",
+      "MR-GRAMMAR-C278-WHEN-PAST-01",
+      "MR-GRAMMAR-C278-HABITUAL-PAST-01"
+    ]
+  }
+}

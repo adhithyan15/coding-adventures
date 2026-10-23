@@ -1,0 +1,11 @@
+{
+  "id": "MR-R287-depends-and-would",
+  "pathSegment": "MR-PATH-287-DEPENDS-WOULD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-287-DEPENDS-WOULD",
+      "order": 3
+    }
+  ]
+}

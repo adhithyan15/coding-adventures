@@ -439,5 +439,20 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["273", 5],
     ["274", 5],
     ["275", 7],
+    // Chapters 276-287: the B1 core. Each chapter is its grammar lessons (plus
+    // the core's six new words, the letter lessons for ऋ and ञ, a reading and
+    // the six-line writing task) and closes on one review.
+    ["276", 4],
+    ["277", 3],
+    ["278", 4],
+    ["279", 6],
+    ["280", 3],
+    ["281", 5],
+    ["282", 3],
+    ["283", 4],
+    ["284", 6],
+    ["285", 3],
+    ["286", 3],
+    ["287", 4],
   ]);
 });

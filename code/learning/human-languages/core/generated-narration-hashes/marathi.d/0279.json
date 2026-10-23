@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:be57f110cab83bb0",
+  "lessonIds": [
+    "MR-C279-tyanantar",
+    "MR-C279-karun",
+    "MR-C279-rtu",
+    "MR-W279-letter-vocalic-r",
+    "MR-C279-pavsalyatla-divas",
+    "MR-R279-a-story-in-order"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "marathi/narration/ch279.txt",
+  "json": "marathi/narration/ch279.json",
+  "textHash": "fnv1a64:1137a55eefb40e4a",
+  "jsonHash": "fnv1a64:3b3aeb3fbda8f02c",
+  "findings": []
+}

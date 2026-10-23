@@ -265,7 +265,7 @@ describe("corpus level summary", () => {
       expect(readdirSync(join(root, "core", entry.name)), entry.name).toEqual([]);
     }
   });
-  it("shows twelve tracks have reached A2, and every track has now reached A1", () => {
+  it("shows eleven tracks have reached A2, and every track has now reached A1", () => {
     const { lessons, curricula: paths, spine } = REAL_EVERYTHING;
     const summary = summarizeLevels(lessons, paths, spine);
     // `reach` is the highest level a track has ANY lesson at, so this names the tracks
@@ -286,6 +286,8 @@ describe("corpus level summary", () => {
     // leaves it with chapters 290-299, the same five nodes, so the list is 15.
     // Arabic leaves it with chapters 283-292, Malayalam with chapters 339-348 and
     // Telugu with chapters 316-325, the same five nodes each, so the list is 12.
+    // Marathi leaves it with chapters 278-287, the same five nodes (276-277
+    // bridge the A2 past and future first), so the list is 11.
     expect(
       summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
     ).toEqual([
@@ -303,7 +305,6 @@ describe("corpus level summary", () => {
       // vocabulary and verb counts are met.
       "japanese",
       "kannada",
-      "marathi",
       "marwadi",
       "punjabi",
       "sanskrit",
@@ -317,12 +318,13 @@ describe("corpus level summary", () => {
     // German with its B1 core, chapters 252-261, Latin with its B1 core,
     // chapters 281-290, Russian with its B1 core, chapters 261-270,
     // Persian with its B1 core, chapters 290-299, Arabic with its B1 core,
-    // chapters 283-292, Malayalam with its B1 core, chapters 339-348, and Telugu
-    // with its B1 core, chapters 316-325.
+    // chapters 283-292, Malayalam with its B1 core, chapters 339-348, Telugu
+    // with its B1 core, chapters 316-325, and Marathi with its B1 core, chapters
+    // 276-287.
     expect(
       summary.tracks.filter((track) => track.reach !== null && levelRank(track.reach) > levelRank("A2"))
         .map((track) => track.language),
-    ).toEqual(["arabic", "french", "german", "italian", "latin", "malayalam", "persian", "portuguese", "russian", "spanish", "telugu"]);
+    ).toEqual(["arabic", "french", "german", "italian", "latin", "malayalam", "marathi", "persian", "portuguese", "russian", "spanish", "telugu"]);
     expect(
       summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
       // HL-C230: chinese leaves this list. Its numerals chapter realizes

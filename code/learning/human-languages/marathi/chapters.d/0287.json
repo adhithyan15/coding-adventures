@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "It Depends, and What Would Have Been",
+  "label": "ch:mr-it-depends-and-what-would-have-been",
+  "canDo": "I can say what something depends on (… -var avlambūn āhe), say what would have happened (gelo asto), and write six connected lines about a trip.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-R287-depends-and-would",
+    "kind": "production",
+    "summary": "Complete MR-R287-depends-and-would: say what something depends on and what would have been, after writing six connected lines about a trip.",
+    "assesses": [
+      "MR-GRAMMAR-C287-DEPENDS-01",
+      "MR-GRAMMAR-C287-WOULD-01",
+      "MR-GRAMMAR-C287-UNREAL-IF-01"
+    ]
+  }
+}

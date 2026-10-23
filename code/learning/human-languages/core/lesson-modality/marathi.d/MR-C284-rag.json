@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C284-rag",
+    "language": "marathi",
+    "chapter": 284,
+    "sequence": 16320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0da77241e89b2507"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C281-karan-mule",
+    "language": "marathi",
+    "chapter": 281,
+    "sequence": 16210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4dc6de83b4abd6bd"
+  },
+  "findings": []
+}

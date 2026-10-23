@@ -1,0 +1,11 @@
+{
+  "id": "MR-C279-rtu",
+  "pathSegment": "MR-PATH-279-STORY-ORDER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-279-STORY-ORDER",
+      "order": 2
+    }
+  ]
+}

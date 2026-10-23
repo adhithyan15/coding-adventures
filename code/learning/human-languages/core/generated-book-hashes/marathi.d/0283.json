@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:e5bdd7aaa7221229",
+  "lessonIds": [
+    "MR-C283-tikit",
+    "MR-C283-tikit-dya",
+    "MR-C283-haravli",
+    "MR-R283-at-the-station"
+  ],
+  "tex": "marathi/book/chapters/ch283-tickets-times-and-trouble.tex"
+}

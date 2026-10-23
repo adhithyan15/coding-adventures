@@ -1,0 +1,23 @@
+{
+  "chapter": 284,
+  "title": "Feelings and Hopes",
+  "label": "ch:mr-feelings-and-hopes",
+  "canDo": "I can say what I felt (malā rāg ālā, bhītī vāṭlī), name a goal (dhyey), and say what I want to do and become (vhāycaṁ āhe).",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-R284-feelings-and-hopes",
+    "kind": "production",
+    "summary": "Complete MR-R284-feelings-and-hopes: say what you felt and what you want to become.",
+    "assesses": [
+      "MR-LEX-C284-RAG-01",
+      "MR-LEX-C284-BHITI-01",
+      "MR-GRAMMAR-C284-FEELING-DATIVE-01",
+      "MR-GRAMMAR-C284-FEELING-VERBS-01",
+      "MR-LEX-C284-DHYEY-01",
+      "MR-GRAMMAR-C284-AYCHA-AHE-01",
+      "MR-GRAMMAR-C284-VHAYCHA-01"
+    ]
+  }
+}

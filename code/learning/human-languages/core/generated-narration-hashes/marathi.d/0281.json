@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:ea7c024ad73bc8e9",
+  "lessonIds": [
+    "MR-C281-jayla-pahije",
+    "MR-C281-karan-mule",
+    "MR-C281-jnan",
+    "MR-W281-letter-nya",
+    "MR-R281-advice-and-reasons"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "marathi/narration/ch281.txt",
+  "json": "marathi/narration/ch281.json",
+  "textHash": "fnv1a64:3410bdbd3840e8b5",
+  "jsonHash": "fnv1a64:2db96dc0a230767e",
+  "findings": []
+}

@@ -1,0 +1,405 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 286,
+  "title": "If, and Otherwise",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:8c7ba1023aabd5eb",
+  "lessons": [
+    {
+      "id": "MR-C286-jar-tar",
+      "sequence": 16410,
+      "title": "जर … तर … (jar … tar …) — if",
+      "headword": "जर … तर …",
+      "romanization": "jar … tar …",
+      "gloss": "if … then … — a condition, and the past form that looks ahead",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b757ebda53abf6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"it will rain\" and \"it rained\". (pāūs paḍel, pāūs paḍlā.) Then \"it rained all day\". (divasbhar pāūs paḍat hotā.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जर … तर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जर उद्या पाऊस पडला, तर मी घरी राहीन. jar udyā pāūs paḍlā, tar mī gharī rāhīn. — \"If it rains tomorrow, I will stay at home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "जर (jar) opens the condition, तर (tar) opens the result. The condition takes the past form, पडला, though it looks ahead; the result is in the future, राहीन. जर can go: पाऊस पडला तर मी घरी राहीन (pāūs paḍlā tar mī gharī rāhīn). तर stays."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: if it is",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जर तुम्हाला वेळ असेल, तर या. jar tumhālā veḷ asel, tar yā. — \"If you have time, come.\""
+            },
+            {
+              "kind": "speech",
+              "text": "For a state, the condition takes the future of \"to be\", असेल; the result can be a request. या, \"come\", is the polite form of येणे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If it rains tomorrow, I will stay at home\" — jar udyā pāūs paḍlā, tar mī gharī rāhīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If it rains tomorrow, I will stay at home\" — *jar udyā pāūs paḍlā, tar mī gharī rāhīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If Meera comes, we will go\" — mīrā ālī tar āmhī jāū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If Meera comes, we will go\" — *mīrā ālī tar āmhī jāū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If you have time, come\" — jar tumhālā veḷ asel, tar yā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If you have time, come\" — *jar tumhālā veḷ asel, tar yā*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C286-jar-tar-r1",
+              "prompt": "Say that if it rains tomorrow you will stay at home.",
+              "assesses": [
+                "MR-GRAMMAR-C286-JAR-TAR-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "jar udyā pāūs paḍlā, tar mī gharī rāhīn",
+                "जर उद्या पाऊस पडला, तर मी घरी राहीन.",
+                "pāūs paḍlā tar mī gharī rāhīn"
+              ],
+              "feedback": {
+                "correct": "The past form after jar, the future after tar.",
+                "incorrect": "paḍlā looks ahead here; rāhīn is the result."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"If\"? (जर.) \"Then\"? (तर.) Which form does the condition take? (The past: पडला.) \"If you have time\"? (जर तुम्हाला वेळ असेल.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C286-padlyas",
+      "sequence": 16420,
+      "title": "पाऊस पडल्यास (pāūs paḍalyās) — should it happen, and otherwise",
+      "headword": "पाऊस पडल्यास",
+      "romanization": "pāūs paḍalyās",
+      "gloss": "if it rains — the formal -ल्यास, and नाहीतर, 'otherwise'",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:065b0915713155c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if it rains tomorrow, I will stay at home\". (jar udyā pāūs paḍlā, tar mī gharī rāhīn.) Then \"after reading\". (vācalyāvar.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -ल्यास, 'should it'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाऊस पडल्यास आम्ही घरी राहू. pāūs paḍalyās āmhī gharī rāhū. — \"Should it rain, we will stay at home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The -ल्- of -ल्यावर, with -ल्यास: पडल्यास says जर … पडला तर in one word. It is the careful, written way, and you will read it on notices more than you will hear it: उशीर झाल्यास (uśīr jhālyās), \"in case of delay\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: नाहीतर, 'otherwise'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लवकर निघा, नाहीतर गाडी चुकेल. lavkar nighā, nāhītar gāḍī cukel. — \"Leave early, otherwise you'll miss the train.\""
+            },
+            {
+              "kind": "speech",
+              "text": "नाहीतर (nāhītar) is नाही and तर: \"if not, then\". निघा is the polite \"set out\"; चुकेल is the future of चुकणे, with the train as its subject, as in माझी गाडी चुकली."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Should it rain, we will stay at home\" — pāūs paḍalyās āmhī gharī rāhū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Should it rain, we will stay at home\" — *pāūs paḍalyās āmhī gharī rāhū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Leave early, otherwise you'll miss the train\" — lavkar nighā, nāhītar gāḍī cukel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Leave early, otherwise you'll miss the train\" — *lavkar nighā, nāhītar gāḍī cukel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Come tomorrow, otherwise I'll get angry\" — udyā yā, nāhītar malā rāg yeīl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Come tomorrow, otherwise I'll get angry\" — *udyā yā, nāhītar malā rāg yeīl*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C286-padlyas-r1",
+              "prompt": "Tell someone to leave early, otherwise they will miss the train.",
+              "assesses": [
+                "MR-GRAMMAR-C286-LYAS-01",
+                "MR-GRAMMAR-C286-NAHITAR-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "lavkar nighā, nāhītar gāḍī cukel",
+                "लवकर निघा, नाहीतर गाडी चुकेल."
+              ],
+              "feedback": {
+                "correct": "nāhītar: if not, then.",
+                "incorrect": "nāhī + tar, then the future cukel."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Should it rain\"? (पाऊस पडल्यास (pāūs paḍalyās).) Is it said or written more? (Written, on notices.) \"Otherwise\"? (नाहीतर.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R286-if-and-otherwise",
+      "sequence": 16430,
+      "title": "Review — if and otherwise",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "if, should it, and otherwise",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c90bd458b959868d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the train is faster than the bus\" and \"I have lived in Pune for three years\". (gāḍī baspekṣā jalad āhe, mī tīn varṣāmpāsūn puṇyāt rāhto.) Then \"the biggest\" and \"from morning until evening\". (sarvāt moṭhā, sakāḷpāsūn sandhyākāḷparyant.) Last, ऋतू and ज्ञान, and their letters ऋ and ञ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If it rains tomorrow, I will stay at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If it rains tomorrow, I will stay at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If you have time, come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If you have time, come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Leave early, otherwise you'll miss the train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Leave early, otherwise you'll miss the train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If it rains, you shouldn't go out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If it rains, you shouldn't go out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one plan of yours for next week, with जर … तर",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one plan of yours for next week, with **जर … तर**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"If … then\"? (जर … तर.) Which form does the condition take? (The past: पडला.) \"Should it rain\"? (पाऊस पडल्यास (pāūs paḍalyās).) \"Otherwise\"? (नाहीतर.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

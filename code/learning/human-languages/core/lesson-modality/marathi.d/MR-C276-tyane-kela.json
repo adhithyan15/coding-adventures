@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C276-tyane-kela",
+    "language": "marathi",
+    "chapter": 276,
+    "sequence": 16010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd9a35df9e9b4c60"
+  },
+  "findings": []
+}

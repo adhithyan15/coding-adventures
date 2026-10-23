@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R284-feelings-and-hopes",
+    "language": "marathi",
+    "chapter": 284,
+    "sequence": 16370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e96aa2f19d8d1128"
+  },
+  "findings": []
+}

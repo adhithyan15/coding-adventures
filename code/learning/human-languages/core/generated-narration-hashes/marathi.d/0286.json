@@ -1,0 +1,17 @@
+{
+  "language": "marathi",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:8c7ba1023aabd5eb",
+  "lessonIds": [
+    "MR-C286-jar-tar",
+    "MR-C286-padlyas",
+    "MR-R286-if-and-otherwise"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "marathi/narration/ch286.txt",
+  "json": "marathi/narration/ch286.json",
+  "textHash": "fnv1a64:d79019b31458ab63",
+  "jsonHash": "fnv1a64:ea031bbedcbf2fce",
+  "findings": []
+}

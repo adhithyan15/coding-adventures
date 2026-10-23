@@ -1,0 +1,670 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 276,
+  "title": "What Happened, Who Did It, What There Was",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:80ecc37f2d96ea7b",
+  "lessons": [
+    {
+      "id": "MR-C276-gelo",
+      "sequence": 16000,
+      "title": "मी गेलो (mī gelo) — the past, person by person",
+      "headword": "मी गेलो",
+      "romanization": "mī gelo",
+      "gloss": "I went — the past of a verb with no object, agreeing with the one who went",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0d34ff9b0c97023",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the last two things you named, dance and a stage. (nṛtya, raṅgmañc.) Then the line you have said since your first meeting: भेटून आनंद झाला (bheṭūn ānand jhālā)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Its last word, झाला, is a past: \"(gladness) came about\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the past, person by person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काल मी पुण्याला गेलो. kāl mī puṇyālā gelo. — \"Yesterday I went to Pune.\""
+            },
+            {
+              "kind": "speech",
+              "text": "काल (kāl, \"yesterday\"). गेलो is जाणे in the past: the stem गे-, then -ल-, then an ending for person and gender, as in बोलतो / बोलते:"
+            },
+            {
+              "kind": "speech",
+              "text": "मी गेलो (mī gelo) (gelo) — I went; a woman says मी गेले (gele)."
+            },
+            {
+              "kind": "speech",
+              "text": "तू गेलास (gelās) — you went, to a friend; to a woman, गेलीस (gelīs)."
+            },
+            {
+              "kind": "speech",
+              "text": "तो गेला (gelā) — he went; ती गेली (gelī) — she went."
+            },
+            {
+              "kind": "speech",
+              "text": "आम्ही (āmhī, \"we\") गेलो — we went."
+            },
+            {
+              "kind": "speech",
+              "text": "तुम्ही गेलात (gelāt) — you went, with respect or to several."
+            },
+            {
+              "kind": "speech",
+              "text": "ते गेले (gele) — they went; त्या (tyā, \"they, all women\") गेल्या (gelyā)."
+            },
+            {
+              "kind": "speech",
+              "text": "-ा, -ी, -ं are the endings of माझा, माझी, माझं. The Marathi past behaves like an adjective that agrees with whoever went."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the past stems",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Most verbs put -ल- straight onto the stem: बसणे becomes मी बसलो (mī baslo), झोपणे becomes मी झोपलो (mī jhoplo), पडणे becomes तो पडला (to paḍlā), \"he fell\". A few add a vowel first: राहणे becomes मी राहिलो (mī rāhilo), \"I stayed\"; निघणे becomes मी निघालो (mī nighālo), \"I set out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Two more change the stem itself:"
+            },
+            {
+              "kind": "speech",
+              "text": "येणे becomes मी आलो (mī ālo), ती आली (tī ālī) — came."
+            },
+            {
+              "kind": "speech",
+              "text": "होणे (hoṇe, \"to become, to happen\") becomes तो झाला (to jhālā), ते झालं (te jhālaṁ) — became, happened."
+            },
+            {
+              "kind": "speech",
+              "text": "\"Did not\" keeps the past form and puts नाही last, as you do with the present: मी गेलो नाही (mī gelo nāhī), \"I didn't go\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "घरी (gharī, \"home, at home\")."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Yesterday I went to Pune\" — kāl mī puṇyālā gelo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Yesterday I went to Pune\" — *kāl mī puṇyālā gelo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She came home in the evening\" — tī sandhyākāḷī gharī ālī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She came home in the evening\" — *tī sandhyākāḷī gharī ālī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We sat. Then we slept.\" — āmhī baslo. mag āmhī jhoplo.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We sat. Then we slept.\" — *āmhī baslo. mag āmhī jhoplo.*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C276-gelo-r1",
+              "prompt": "Say that you went to Pune yesterday, then that she came home.",
+              "assesses": [
+                "MR-GRAMMAR-C276-PAST-PERSON-01",
+                "MR-GRAMMAR-C276-PAST-STEMS-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "kāl mī puṇyālā gelo; tī gharī ālī",
+                "काल मी पुण्याला गेलो. ती घरी आली.",
+                "kāl mī puṇyālā gele; tī gharī ālī"
+              ],
+              "feedback": {
+                "correct": "gelo for the one who went; ālī because she came.",
+                "incorrect": "Stem, then -l-, then the ending: ge-l-o, ā-l-ī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I went\"? (गेलो, or गेले.) \"He came\"? (आला.) \"It happened\"? (झालं.) Which ending says \"she\"? (-ी: गेली.) \"I didn't go\"? (मी गेलो (mī gelo) नाही.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C276-tyane-kela",
+      "sequence": 16010,
+      "title": "त्याने काम केलं (tyāne kām kelaṁ) — the past that agrees with the thing",
+      "headword": "त्याने काम केलं",
+      "romanization": "tyāne kām kelaṁ",
+      "gloss": "he did the work — with an object, the doer takes -ने and the verb agrees with the thing",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd9a35df9e9b4c60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I went\" and \"she came\". (mī gelo, tī ālī.) Then \"I see with my eye\", with the -ने of a tool. (mī ḍoḷyāne pāhto.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That -ने was promised a second job. This is it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the doer takes -ने",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "त्याने काम केलं. tyāne kām kelaṁ. — \"He did the work.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A verb with an object, such as eating, reading or doing, changes the past. The doer is marked: तो becomes त्याने (tyāne), ती becomes तिने (tine), and ते, \"they\", becomes त्यांनी (tyānnī). A name takes -ने too: मीराने (mīrāne)."
+            },
+            {
+              "kind": "speech",
+              "text": "मी, तू, आम्ही and तुम्ही take nothing: मी काम केलं (mī kām kelaṁ), \"I did the work\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the verb follows the thing",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मी आंबा खाल्ला. mī āmbā khāllā. — \"I ate a mango.\""
+            },
+            {
+              "kind": "speech",
+              "text": "आंबा is masculine, so the verb ends in -ा, whoever ate it. Change the thing and the verb changes:"
+            },
+            {
+              "kind": "speech",
+              "text": "मी पोळी खाल्ली (khāllī) — I ate a chapati (feminine)."
+            },
+            {
+              "kind": "speech",
+              "text": "मी पुस्तक वाचलं (vāclaṁ) — I read a book (neuter)."
+            },
+            {
+              "kind": "speech",
+              "text": "तिने चित्रपट पाहिला (pāhilā) — she watched a film."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb has stopped listening to the eater. After तू it adds -स: तू पुस्तक वाचलंस (tū pustak vāclaṁs); after तुम्ही, -त: तुम्ही काय केलंत? (tumhī kāy kelant?), \"What did you do?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Pasts to learn: केलं, खाल्लं, घेतलं (ghetlaṁ), दिलं (dilaṁ), सांगितलं (sāṅgitlaṁ). With no object, -ं: त्याने सांगितलं (tyāne sāṅgitlaṁ), \"he said so\". Formal print writes this -ं as -े (केले). A few verbs with an object still follow the doer: मी मराठी शिकलो (mī marāṭhī śiklo)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"He did the work\" — tyāne kām kelaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"He did the work\" — *tyāne kām kelaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I ate a mango\" — mī āmbā khāllā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I ate a mango\" — *mī āmbā khāllā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Meera read the news\" — mīrāne bātmī vāclī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Meera read the news\" — *mīrāne bātmī vāclī*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C276-tyane-kela-r1",
+              "prompt": "Say that you ate a chapati, then that he watched a film.",
+              "assesses": [
+                "MR-GRAMMAR-C276-ERGATIVE-NE-01",
+                "MR-GRAMMAR-C276-OBJECT-AGREEMENT-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "mī poḷī khāllī; tyāne citrapaṭ pāhilā",
+                "मी पोळी खाल्ली. त्याने चित्रपट पाहिला."
+              ],
+              "feedback": {
+                "correct": "No -ne on mī, -ne on tyāne, and the verb follows the chapati and the film.",
+                "incorrect": "poḷī is feminine: khāllī. tyāne for he; citrapaṭ is masculine: pāhilā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Who takes -ने? (त्याने, तिने, त्यांनी, and a name.) Who takes nothing? (मी, तू, आम्ही, तुम्ही.) Why खाल्ली in मी पोळी खाल्ली? (पोळी is feminine, and the verb follows the thing.) \"I read a book\"? (मी पुस्तक वाचलं.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C276-hota",
+      "sequence": 16020,
+      "title": "होता (hotā) — was, and there was",
+      "headword": "होता",
+      "romanization": "hotā",
+      "gloss": "was — the past of आहे, for people, places and 'there was'",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:139fd969f3919956",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I am well\": mī barā āhe. Then \"I went\": mī gelo."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "आहे has a past of its own, and it takes the endings of गेलो."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: होता, 'was'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काल मी घरी होतो. kāl mī gharī hoto. — \"Yesterday I was at home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "मी होतो (hoto) — I was; a woman says होते (hote)."
+            },
+            {
+              "kind": "speech",
+              "text": "तू होतास (hotās) / होतीस (hotīs) — you were, to a friend."
+            },
+            {
+              "kind": "speech",
+              "text": "तो होता (hotā), ती होती (hotī), ते होतं (hotaṁ) — he, she, it was."
+            },
+            {
+              "kind": "speech",
+              "text": "आम्ही होतो, तुम्ही होतात (hotāt), ते होते (hote) — we, you, they were."
+            },
+            {
+              "kind": "speech",
+              "text": "It is also \"there was\":"
+            },
+            {
+              "kind": "speech",
+              "text": "गावात एक नदी होती. gāvāt ek nadī hotī. — \"There was a river in the village.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: नव्हता, 'was not'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "\"Was not\" is one word, with the same endings: नव्हतो (navhto), नव्हता (navhtā), नव्हती (navhtī), नव्हतं (navhtaṁ)."
+            },
+            {
+              "kind": "speech",
+              "text": "तो शाळेत नव्हता. to śāḷet navhtā. — \"He was not at school.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is to होता (hotā) what नाही is to आहे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Yesterday I was at home\" — kāl mī gharī hoto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Yesterday I was at home\" — *kāl mī gharī hoto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"There was a big shop in the village\" — gāvāt ek moṭhaṁ dukān hotaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"There was a big shop in the village\" — *gāvāt ek moṭhaṁ dukān hotaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"He was not at school\" — to śāḷet navhtā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"He was not at school\" — *to śāḷet navhtā*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C276-hota-r1",
+              "prompt": "Say that there was a river in the village, then that he was not at school.",
+              "assesses": [
+                "MR-GRAMMAR-C276-WAS-01",
+                "MR-GRAMMAR-C276-WAS-NOT-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "gāvāt ek nadī hotī; to śāḷet navhtā",
+                "गावात एक नदी होती. तो शाळेत नव्हता."
+              ],
+              "feedback": {
+                "correct": "hotī follows nadī; navhtā follows him.",
+                "incorrect": "The ending follows the noun: nadī hotī, to navhtā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I was\"? (होतो, or होते.) \"It was\"? (होतं.) \"There was a river\"? (एक नदी होती.) \"She was not\"? (ती नव्हती.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R276-what-happened",
+      "sequence": 16030,
+      "title": "Review — what happened",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what happened, who did it and what there was, in one breath",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89a02792413c8b97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"Yesterday I went to Pune\". (kāl mī puṇyālā gelo.) Then \"she came\" and \"we sat\". (tī ālī, āmhī baslo.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I came home in the evening, and then I slept.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I came home in the evening, and then I slept.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Meera ate a mango. Arun read a book.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Meera ate a mango. Arun read a book.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "What did you do yesterday? I was at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: What did you do yesterday? I was at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "There was a big shop in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: There was a big shop in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I didn't go to school. He was not at home either.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I didn't go to school. He was not at home either.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which past follows the one who went? (गेलो, आली: no object.) Which follows the thing? (The past with an object: मीराने आंबा खाल्ला.) \"There was\"? (होता (hotā), होती, होतं.) \"Was not\"? (नव्हता.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,800 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 284,
+  "title": "Feelings and Hopes",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:6fcce57030e339ef",
+  "lessons": [
+    {
+      "id": "MR-C284-rag",
+      "sequence": 16320,
+      "title": "राग (rāg) — anger",
+      "headword": "राग",
+      "romanization": "rāg",
+      "gloss": "anger",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0da77241e89b2507",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"my bag is lost\" and \"I missed my train\". (mājhī piśvī haravlī, mājhī gāḍī cuklī.) Then \"to get angry\". (rāgāvṇe.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: राग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "राग — rāg — \"anger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मला खूप राग आला. malā khūp rāg ālā. — \"I got very angry.\""
+            },
+            {
+              "kind": "speech",
+              "text": "रागावणे, \"to get angry\", is built on this noun. Anger is something that comes to you: \"to me anger came\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "राग (rāg) comes from Sanskrit rāga, which CDIAL lists as \"colour, redness\" (CDIAL 10673) and \"passion, love\" (CDIAL 10674). Marathi uses it for anger; how the sense moved there is not settled. The same Sanskrit word gives the rāga of Indian music."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I got very angry\" — malā khūp rāg ālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I got very angry\" — *malā khūp rāg ālā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāg, then rāgāvṇe, the verb built on it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāg*, then *rāgāvṇe*, the verb built on it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does राग (rāg) mean? (\"Anger\".) Which verb is built on it? (रागावणे.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C284-bhiti",
+      "sequence": 16330,
+      "title": "भीती (bhītī) — fear",
+      "headword": "भीती",
+      "romanization": "bhītī",
+      "gloss": "fear",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19489c04b66a68fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"anger\" and \"to be afraid\". (rāg, ghābarṇe.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भीती",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भीती — bhītī — \"fear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मला सापाची भीती वाटते. malā sāpācī bhītī vāṭte. — \"I am afraid of snakes.\""
+            },
+            {
+              "kind": "speech",
+              "text": "What you fear takes -ची: सापाची भीती (bhītī), \"fear of snakes\". The feeling वाटते, \"is felt\", and it is feminine, so the verb ends in -ते."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भीती (bhītī) is a tatsama: Sanskrit bhīti, \"fear\" (CDIAL 9512), from the root bhī, \"to be afraid\". Marathi writes it with a long final ī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhītī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhītī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I am afraid of snakes\" — malā sāpācī bhītī vāṭte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I am afraid of snakes\" — *malā sāpācī bhītī vāṭte*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhītī, once more, and ghābarṇe, \"to be afraid\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhītī*, once more, and *ghābarṇe*, \"to be afraid\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भीती (bhītī) mean? (\"Fear\".) \"I am afraid of snakes\"? (मला सापाची भीती (bhītī) वाटते.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C284-rag-ala",
+      "sequence": 16340,
+      "title": "मला राग आला (malā rāg ālā) — feelings that come to you",
+      "headword": "मला राग आला",
+      "romanization": "malā rāg ālā",
+      "gloss": "I got angry — a feeling that comes to you, and the verb each feeling takes",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40b77b312de128f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I got very angry\" and \"I am afraid of snakes\". (malā khūp rāg ālā, malā sāpācī bhītī vāṭte.) Then the first line you learned: bheṭūn ānand jhālā."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the feeling is the subject",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मला राग आला. malā rāg ālā. — \"I got angry.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The one who feels stands in the dative, as with आवडणे and वाटणे. The feeling is the subject, and the past agrees with it: राग आला (masculine), भीती (bhītī) वाटली (feminine), कंटाळा आला (kaṇṭāḷā ālā), \"I got bored\". Ask it the same way: तुम्हाला राग आला का? (tumhālā rāg ālā kā?)"
+            },
+            {
+              "kind": "speech",
+              "text": "Two feeling words you know are adjectives instead, and they agree with the person: ती आनंदी आहे (tī ānandī āhe), \"she is happy\"; तो दुःखी होता (to duḥkhī hotā), \"he was sad\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: which verb each feeling takes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three verbs carry feelings, and each feeling has its own:"
+            },
+            {
+              "kind": "speech",
+              "text": "आला, \"came\": राग (rāg) आला, कंटाळा आला."
+            },
+            {
+              "kind": "speech",
+              "text": "वाटलं, \"was felt\": भीती (bhītī) वाटली, लाज वाटली (lāj vāṭlī), \"I felt ashamed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "झालं, \"came about\": आनंद झाला, दुःख झालं (duḥkh jhālaṁ), \"I was sad\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Learn the feeling with its verb, as you learned भेटून आनंद झाला whole."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I got angry\" — malā rāg ālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I got angry\" — *malā rāg ālā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She felt afraid\" — tilā bhītī vāṭlī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She felt afraid\" — *tilā bhītī vāṭlī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We were glad\" — āmhālā ānand jhālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We were glad\" — *āmhālā ānand jhālā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"He got bored\" — tyālā kaṇṭāḷā ālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"He got bored\" — *tyālā kaṇṭāḷā ālā*]"
+            },
+            {
+              "kind": "speech",
+              "text": "आम्हाला (āmhālā, \"to us\")."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C284-rag-ala-r1",
+              "prompt": "Say that you got angry, then that she felt afraid.",
+              "assesses": [
+                "MR-GRAMMAR-C284-FEELING-DATIVE-01",
+                "MR-GRAMMAR-C284-FEELING-VERBS-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "malā rāg ālā; tilā bhītī vāṭlī",
+                "मला राग आला. तिला भीती वाटली."
+              ],
+              "feedback": {
+                "correct": "Dative for the person; the verb follows the feeling.",
+                "incorrect": "rāg takes ālā; bhītī takes vāṭlī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I got angry\"? (मला राग आला (malā rāg ālā).) \"I felt ashamed\"? (मला लाज वाटली.) \"We were glad\"? (आम्हाला आनंद झाला.) What does the verb agree with? (The feeling.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C284-dhyey",
+      "sequence": 16350,
+      "title": "ध्येय (dhyey) — a goal",
+      "headword": "ध्येय",
+      "romanization": "dhyey",
+      "gloss": "a goal, an aim",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5ded593b000aa29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"a wish\" and \"a dream\". (icchā, svapna.) Then \"we were glad\". (āmhālā ānand jhālā.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ध्येय",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ध्येय — dhyey — \"a goal, an aim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माझं ध्येय मोठं आहे. mājhaṁ dhyey moṭhaṁ āhe. — \"My goal is a big one.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ध्येय (dhyey) is neuter: माझं ध्येय (dhyey). A wish can stay a wish; a goal is what you work toward."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ध्येय (dhyey) is a tatsama: Sanskrit dhyeya, \"to be meditated on, to be pondered\" (Monier-Williams), from the root of dhyāna, \"meditation\". Marathi uses it for the aim one keeps the mind fixed on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhyey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhyey*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My goal is a big one\" — mājhaṁ dhyey moṭhaṁ āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My goal is a big one\" — *mājhaṁ dhyey moṭhaṁ āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wish, a dream and a goal: icchā, svapna, dhyey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wish, a dream and a goal: *icchā*, *svapna*, *dhyey*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ध्येय (dhyey) mean? (\"A goal, an aim\".) Is it masculine, feminine or neuter? (Neuter: माझं ध्येय (dhyey).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C284-vhaycha-ahe",
+      "sequence": 16360,
+      "title": "मला शिक्षक व्हायचं आहे (malā śikṣak vhāycaṁ āhe) — wanting to do, wanting to be",
+      "headword": "मला शिक्षक व्हायचं आहे",
+      "romanization": "malā śikṣak vhāycaṁ āhe",
+      "gloss": "I want to become a teacher — what you want to do, and to be",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebc01546333e6421",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"my goal is a big one\". (mājhaṁ dhyey moṭhaṁ āhe.) Then \"how do I get to the station?\", with its जायचं. (sṭeśanlā kasaṁ jāycaṁ?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मला … -ायचं आहे, 'I want to'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मला मराठीत गोष्ट लिहायची आहे. malā marāṭhīt goṣṭa lihāycī āhe. — \"I want to write a story in Marathi.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The -ायच- form, with आहे and the dative: मला जायचं आहे (malā jāycaṁ āhe), \"I want to go\". With an object it agrees with the thing, as the past does: गोष्ट लिहायची आहे, पुस्तक वाचायचं आहे (pustak vācāycaṁ āhe). And the \"not\": मला जायचं नाही (malā jāycaṁ nāhī), \"I don't want to go\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: व्हायचं, 'to become'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मला शिक्षक व्हायचं आहे. malā śikṣak vhāycaṁ āhe. — \"I want to become a teacher.\""
+            },
+            {
+              "kind": "speech",
+              "text": "व्हायचं is होणे, \"to become\", in the same form. The wish words you know can follow it: ते माझं स्वप्न आहे (te mājhaṁ svapna āhe), \"that is my dream\"; ते माझं ध्येय आहे (te mājhaṁ dhyey āhe), \"that is my goal\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want to become a teacher\" — malā śikṣak vhāycaṁ āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want to become a teacher\" — *malā śikṣak vhāycaṁ āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want to write a story in Marathi\" — malā marāṭhīt goṣṭa lihāycī āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want to write a story in Marathi\" — *malā marāṭhīt goṣṭa lihāycī āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I don't want to go\" — malā jāycaṁ nāhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I don't want to go\" — *malā jāycaṁ nāhī*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C284-vhaycha-ahe-r1",
+              "prompt": "Say that you want to become a teacher, then that you want to read a book.",
+              "assesses": [
+                "MR-GRAMMAR-C284-AYCHA-AHE-01",
+                "MR-GRAMMAR-C284-VHAYCHA-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "malā śikṣak vhāycaṁ āhe; malā pustak vācāycaṁ āhe",
+                "मला शिक्षक व्हायचं आहे. मला पुस्तक वाचायचं आहे."
+              ],
+              "feedback": {
+                "correct": "malā, the -āyc- form, then āhe.",
+                "incorrect": "The wanter is in the dative: malā … vhāycaṁ āhe."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I want to go\"? (मला जायचं आहे.) \"I want to become a teacher\"? (मला शिक्षक व्हायचं आहे (malā śikṣak vhāycaṁ āhe).) \"I don't want to go\"? (मला जायचं नाही.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R284-feelings-and-hopes",
+      "sequence": 16370,
+      "title": "Review — feelings and hopes",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what you felt and what you want to become",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e96aa2f19d8d1128",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for one ticket to Pune and when the train leaves. (puṇyācaṁ ek tikīṭ dyā. gāḍī kitī vājtā nighte?) Say \"I bought a ticket, but I missed my train\". (mī tikīṭ kāḍhlaṁ, paṇ mājhī gāḍī cuklī.) Then ऋतू and ज्ञान: two words, two letters, ऋ and ञ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I missed my train, so I got angry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I missed my train, so I got angry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "She is afraid of snakes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: She is afraid of snakes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "We were glad. He got bored.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: We were glad. He got bored.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I want to become a teacher. That is my goal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I want to become a teacher. That is my goal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one thing you want to do this year, with -ायचं आहे",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one thing you want to do this year, with **-ायचं आहे**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Anger? (राग.) Fear? (भीती (bhītī).) \"I got angry\"? (मला राग आला (malā rāg ālā).) A goal? (ध्येय (dhyey).) \"I want to become\"? (मला … व्हायचं आहे.) Which letter starts ऋतू? (ऋ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
