@@ -1427,6 +1427,21 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_split_attribute_blocks_with_title_field() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nBOOK {\n  string title\n}\nBOOK {\n  string author\n}\n",
+        );
+        let names: Vec<&str> = tokens
+            .iter()
+            .filter_map(|token| token.type_name.as_deref())
+            .collect();
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        assert_eq!(values.iter().filter(|value| **value == "{").count(), 2);
+        assert!(names.contains(&"TITLE_KW"));
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
