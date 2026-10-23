@@ -2044,7 +2044,18 @@ jobs:
         with:
           flutter-version: '3.44.0'
           channel: stable
+          # Cache the Flutter SDK, but NOT the pub cache. The action keys its
+          # pub cache on `hashFiles('**/pubspec.lock')` over the whole
+          # workspace, and re-evaluates that key in its post step to save the
+          # cache after a green job. By then the build has left hundreds of
+          # `node_modules` trees behind; on #17972 (~490 packages built)
+          # `build (macos-latest)` passed every package and then failed in
+          # "Post Set up Flutter" with "hashFiles('**/pubspec.lock') couldn't
+          # finish within 120 seconds". The SDK cache's key has no hashFiles,
+          # so it stays. Losing the pub cache only means `pub get` downloads
+          # again, which is fast next to the SDK.
           cache: true
+          pub-cache: false
 
       - name: Enable Flutter native assets
         if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
