@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C478-valikatti",
+    "language": "malayalam",
+    "chapter": 478,
+    "sequence": 23880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf181b8669ebfe5a"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:156ca76e18c8ea99",
+  "lessonIds": [
+    "ML-C467-carakku",
+    "ML-C467-lori",
+    "ML-C467-kayarruka",
+    "ML-C467-irakkuka",
+    "ML-C467-pakku-ceyyuka"
+  ],
+  "tex": "malayalam/book/chapters/ch467-loading-the-lorry.tex"
+}

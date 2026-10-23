@@ -17,3 +17,6 @@ vm-core = { path = "../vm-core" }
 # grammar elements of the compiled parser table.
 coding-adventures-python-lexer = { path = "../python-lexer" }
 grammar-tools = { path = "../grammar-tools" }
+# The release sweep (tests/release_sweep.rs) names each IIR-identity class
+# by a SHA-256 digest.
+coding_adventures_sha256 = { path = "../sha256" }

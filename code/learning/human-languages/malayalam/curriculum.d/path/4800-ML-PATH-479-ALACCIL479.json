@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-479-ALACCIL479",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ML-EXT-479-ALACCIL479"
+  ],
+  "after": []
+}

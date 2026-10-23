@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "Disaster and Warnings",
+  "label": "ch:ml-disaster-and-warnings",
+  "canDo": "I can say a warning, a disaster, a rescue operation, a state of emergency and to evacuate.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C374-olippikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can say a warning, a disaster, a rescue operation, a state of emergency and to evacuate.",
+    "assesses": [
+      "ML-LEX-C374-DURANTHAM374-03",
+      "ML-LEX-C374-DURANTHAM374-04",
+      "ML-LEX-C374-DURANTHAM374-05"
+    ]
+  }
+}

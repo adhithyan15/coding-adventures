@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C459-utpadippikkuka",
+    "language": "malayalam",
+    "chapter": 459,
+    "sequence": 22780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e7febb42fbce7d1"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:b99b85a000d40886",
+  "lessonIds": [
+    "ML-C470-petrol",
+    "ML-C470-indhanam",
+    "ML-C470-tayar",
+    "ML-C470-brekku",
+    "ML-C470-pancarakuka"
+  ],
+  "tex": "malayalam/book/chapters/ch470-fuel-and-tyres.tex"
+}

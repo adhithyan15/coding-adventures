@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:aa6efc37554916c5",
+  "lessonIds": [
+    "ML-C402-puranam",
+    "ML-C402-kettukatha",
+    "ML-C402-natotikkatha",
+    "ML-C402-nayakan",
+    "ML-C402-gunapatham"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch402.txt",
+  "json": "malayalam/narration/ch402.json",
+  "textHash": "fnv1a64:da7b822acbf310e9",
+  "jsonHash": "fnv1a64:216319c679703c68",
+  "findings": []
+}

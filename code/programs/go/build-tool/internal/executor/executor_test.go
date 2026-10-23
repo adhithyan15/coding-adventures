@@ -682,6 +682,54 @@ func TestBuildResourceKeysIncludesGlobalLuaRocksLockForLuaRemovesOnLinux(t *test
 	}
 }
 
+// `luarocks install` writes the shared rocks tree too, and LuaRocks refuses a
+// second writer outright ("requires exclusive write access"). lua/tcp_client's
+// real BUILD line failed a full-build shard that way while it ran unserialized
+// beside another package's `luarocks make`. Read-only subcommands, and words
+// that merely contain "luarocks", must not take the lock.
+func TestBuildResourceKeysLuaRocksLockCoversEveryTreeWrite(t *testing.T) {
+	cases := []struct {
+		command  string
+		wantLock bool
+	}{
+		{`luarocks install luasocket --local && cd tests && LUA_PATH="../src/?.lua;;" busted . --verbose`, true},
+		{"luarocks install --local --deps-only coding-adventures-pkg-0.1.0-1.rockspec", true},
+		{"cd .. && luarocks make --local coding-adventures-pkg-0.1.0-1.rockspec", true},
+		{"(luarocks remove --force coding-adventures-pkg || true)", true},
+		{"luarocks show dkjson >/dev/null 2>&1 || luarocks install --local dkjson", true},
+		// Shell forms the old substring check covered must stay covered.
+		{"luarocks make;", true},
+		{"luarocks make&&busted .", true},
+		{"x=$(luarocks make)", true},
+		{"x=`luarocks remove pkg`", true},
+		{`sh -c "luarocks make x"`, true},
+		{`sh -c 'luarocks remove x'`, true},
+		{"/usr/bin/luarocks make x", true},
+		{"luarocks\tinstall  --local dkjson", true},
+		{"luarocks --local make pkg.rockspec", true},
+		{"luarocks --tree=.rocks install dkjson", true},
+		{"luarocks.bat make --local pkg.rockspec", true},
+		{"luarocks show coding-adventures-pkg", false},
+		{"luarocks makefile-not-a-subcommand", false},
+		{`eval "$(luarocks path --bin)" && busted .`, false},
+		{"echo myluarocks install", false},
+		{"busted --helper=luarocks-install-check.lua .", false},
+	}
+	for _, tc := range cases {
+		pkg := discovery.Package{
+			Name:          "lua/pkg",
+			Path:          "/repo/pkg",
+			BuildCommands: []string{tc.command},
+			Language:      "lua",
+		}
+		keys := buildResourceKeysForOS(pkg, map[string]string{}, "linux")
+		got := strings.Contains(strings.Join(keys, ","), "global:luarocks-tree")
+		if got != tc.wantLock {
+			t.Errorf("%q: luarocks-tree lock = %v, want %v (keys %v)", tc.command, got, tc.wantLock, keys)
+		}
+	}
+}
+
 func TestBuildResourceKeysIncludesGlobalCabalStoreLockForHaskellBuilds(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"pkg/BUILD": "if command -v cabal >/dev/null 2>&1; then cabal test; else echo 'cabal not found -- skipping'; fi",

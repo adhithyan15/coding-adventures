@@ -1,0 +1,19 @@
+{
+  "chapter": 561,
+  "title": "Drums, Guitars and Flutes",
+  "label": "ch:ml-drums-guitars-and-flutes",
+  "canDo": "I can say a concert, a musical instrument, to beat a drum, a guitar and a flute.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C561-otakkulal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 561: I can say a concert, a musical instrument, to beat a drum, a guitar and a flute.",
+    "assesses": [
+      "ML-LEX-C561-VADYAM561-03",
+      "ML-LEX-C561-VADYAM561-04",
+      "ML-LEX-C561-VADYAM561-05"
+    ]
+  }
+}

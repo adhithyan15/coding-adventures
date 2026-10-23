@@ -1,0 +1,6 @@
+oracle: host perl v5.38.2 (x86_64-linux-gnu-thread-multi)
+command: perl unary_minus_in_product.pl
+result: exit 0; stdout is exactly <name>.expect without its final LF
+releases: 5.38.2 directly; 5.38.0, 5.44.0 and 5.45.3 (profile perl_iv) through IIR identity (release_classes.csv)
+historical: profile perl_nv (1.000 to 5.004_05) prints each non-zero value and each positive zero as its exact decimal integer; pinned sources in code/packages/rust/perl-iir-compiler/src/profiles.rs (perl-1.0 8d063cd8 str.c:70 sprintf "%.20g"; perl-5.000 a0d0e21e sv.c:1282 Gconvert DBL_DIG)
+note: Unary minus inside a product chain.

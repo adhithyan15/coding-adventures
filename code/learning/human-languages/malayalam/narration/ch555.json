@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 555,
+  "title": "Generations Under One Roof",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5fa9f64b79f75d99",
+  "lessons": [
+    {
+      "id": "ML-C555-tarattu",
+      "sequence": 27940,
+      "title": "താരാട്ട് (tārāṭṭŭ) — a lullaby",
+      "headword": "താരാട്ട്",
+      "romanization": "tārāṭṭŭ",
+      "gloss": "a lullaby",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b9346b4f8c60cdb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a sister-in-law, then the Malayalam for a family member."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: താരാട്ട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "താരാട്ട് — tārāṭṭŭ — \"a lullaby\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മുത്തശ്ശി പാടിയ താരാട്ട് കേട്ട് കുഞ്ഞ് ഉറങ്ങി. muttaśśi pāṭiya tārāṭṭŭ kēṭṭŭ kuññŭ uṟaṅṅi. The baby fell asleep to the lullaby grandmother sang."
+            },
+            {
+              "kind": "speech",
+              "text": "താരാട്ട് (tārāṭṭŭ) പാടുക, to sing a lullaby."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "താരാട്ട് (tārāṭṭŭ) looks native, but DEDR has no entry that clearly holds it, so its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tārāṭṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tārāṭṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tārāṭṭŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tārāṭṭŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muttaśśi pāṭiya tārāṭṭŭ kēṭṭŭ kuññŭ uṟaṅṅi. — The baby fell asleep to the lullaby grandmother sang.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muttaśśi pāṭiya tārāṭṭŭ kēṭṭŭ kuññŭ uṟaṅṅi.* — The baby fell asleep to the lullaby grandmother sang.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a sister-in-law, then the Malayalam for a family member, then say tārāṭṭŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a sister-in-law, then the Malayalam for a family member, then say *tārāṭṭŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does താരാട്ട് (tārāṭṭŭ) mean? (\"A lullaby\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C555-kuttukutumbam",
+      "sequence": 27950,
+      "title": "കൂട്ടുകുടുംബം (kūṭṭukuṭumbaṁ) — a joint family",
+      "headword": "കൂട്ടുകുടുംബം",
+      "romanization": "kūṭṭukuṭumbaṁ",
+      "gloss": "a joint family",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6786f9f1feb50ec7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a family member, then the Malayalam for a lullaby."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കൂട്ടുകുടുംബം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂട്ടുകുടുംബം — kūṭṭukuṭumbaṁ — \"a joint family\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പണ്ട് ഗ്രാമങ്ങളിൽ കൂട്ടുകുടുംബങ്ങൾ സാധാരണമായിരുന്നു. paṇṭŭ grāmaṅṅaḷil kūṭṭukuṭumbaṅṅaḷ sādhāraṇamāyirunnu. Long ago joint families were common in the villages."
+            },
+            {
+              "kind": "speech",
+              "text": "കൂട്ട് together + കുടുംബം: several families under one roof."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂട്ടുകുടുംബം (kūṭṭukuṭumbaṁ) is a Malayalam compound built from കൂട്ട്, \"joining, company\", which is native (DEDR 1882), and കുടുംബം, from Sanskrit kuṭumba, \"a household\" (CDIAL 3233)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭṭukuṭumbaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭṭukuṭumbaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭṭukuṭumbaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭṭukuṭumbaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇṭŭ grāmaṅṅaḷil kūṭṭukuṭumbaṅṅaḷ sādhāraṇamāyirunnu. — Long ago joint families were common in the villages.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇṭŭ grāmaṅṅaḷil kūṭṭukuṭumbaṅṅaḷ sādhāraṇamāyirunnu.* — Long ago joint families were common in the villages.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a family member, then the Malayalam for a lullaby, then say kūṭṭukuṭumbaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a family member, then the Malayalam for a lullaby, then say *kūṭṭukuṭumbaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കൂട്ടുകുടുംബം (kūṭṭukuṭumbaṁ) mean? (\"A joint family\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C555-anukutumbam",
+      "sequence": 27960,
+      "title": "അണുകുടുംബം (aṇukuṭumbaṁ) — a nuclear family",
+      "headword": "അണുകുടുംബം",
+      "romanization": "aṇukuṭumbaṁ",
+      "gloss": "a nuclear family",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94f45402812b0f8d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a lullaby, then the Malayalam for a joint family."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അണുകുടുംബം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അണുകുടുംബം — aṇukuṭumbaṁ — \"a nuclear family\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇക്കാലത്ത് മിക്ക ആളുകളും അണുകുടുംബമായി താമസിക്കുന്നു. ikkālattŭ mikka āḷukaḷuṁ aṇukuṭumbamāyi tāmasikkunnu. Nowadays most people live as nuclear families."
+            },
+            {
+              "kind": "speech",
+              "text": "അണു atom, something small + കുടുംബം: parents and children only."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അണുകുടുംബം (aṇukuṭumbaṁ) is a learned compound built from Sanskrit aṇu, \"fine, minute\" (CDIAL 193), and kuṭumba, \"a household\" (CDIAL 3233)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṇukuṭumbaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṇukuṭumbaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṇukuṭumbaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṇukuṭumbaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikkālattŭ mikka āḷukaḷuṁ aṇukuṭumbamāyi tāmasikkunnu. — Nowadays most people live as nuclear families.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikkālattŭ mikka āḷukaḷuṁ aṇukuṭumbamāyi tāmasikkunnu.* — Nowadays most people live as nuclear families.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a lullaby, then the Malayalam for a joint family, then say aṇukuṭumbaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a lullaby, then the Malayalam for a joint family, then say *aṇukuṭumbaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അണുകുടുംബം (aṇukuṭumbaṁ) mean? (\"A nuclear family\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C555-verpiriyuka",
+      "sequence": 27970,
+      "title": "വേർപിരിയുക (vērpiriyuka) — to split up; to separate",
+      "headword": "വേർപിരിയുക",
+      "romanization": "vērpiriyuka",
+      "gloss": "to split up; to separate",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45fd39855b7548d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a joint family, then the Malayalam for a nuclear family."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വേർപിരിയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേർപിരിയുക — vērpiriyuka — \"to split up; to separate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പത്ത് വർഷത്തിന് ശേഷം ആ ദമ്പതികൾ വേർപിരിഞ്ഞു. pattŭ varṣattinŭ śēṣaṁ ā dampatikaḷ vērpiriññu. That couple separated after ten years."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വേർപിരിഞ്ഞു, vērpiriññu."
+            },
+            {
+              "kind": "speech",
+              "text": "വേർ apart + പിരിയുക, to part, already familiar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേർപിരിയുക (vērpiriyuka) is native Dravidian, a compound of വേറ്, \"separation, different\" (DEDR 5548), and പിരിയുക, \"to part\" (DEDR 4176)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vērpiriyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vērpiriyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vērpiriyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vērpiriyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pattŭ varṣattinŭ śēṣaṁ ā dampatikaḷ vērpiriññu. — That couple separated after ten years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pattŭ varṣattinŭ śēṣaṁ ā dampatikaḷ vērpiriññu.* — That couple separated after ten years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a joint family, then the Malayalam for a nuclear family, then say vērpiriyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a joint family, then the Malayalam for a nuclear family, then say *vērpiriyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വേർപിരിയുക (vērpiriyuka) mean? (\"To split up; to separate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C555-inannuka",
+      "sequence": 27980,
+      "title": "ഇണങ്ങുക (iṇaṅṅuka) — to be reconciled; to make up",
+      "headword": "ഇണങ്ങുക",
+      "romanization": "iṇaṅṅuka",
+      "gloss": "to be reconciled; to make up",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad0f9654ef25856c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a nuclear family, then the Malayalam for to split up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഇണങ്ങുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇണങ്ങുക — iṇaṅṅuka — \"to be reconciled; to make up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വഴക്കിന് ശേഷം കുട്ടികൾ വേഗം ഇണങ്ങി. vaḻakkinŭ śēṣaṁ kuṭṭikaḷ vēgaṁ iṇaṅṅi. After the quarrel the children soon made up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഇണങ്ങി, iṇaṅṅi."
+            },
+            {
+              "kind": "speech",
+              "text": "The opposite of പിണങ്ങുക, to sulk. It also means to get used to a place or a person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇണങ്ങുക (iṇaṅṅuka) is native Dravidian: DEDR 457 lists it with ഇണ, \"a pair, a mate\", and verbs for suiting and uniting (DEDR 457)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṇaṅṅuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṇaṅṅuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṇaṅṅuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṇaṅṅuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḻakkinŭ śēṣaṁ kuṭṭikaḷ vēgaṁ iṇaṅṅi. — After the quarrel the children soon made up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḻakkinŭ śēṣaṁ kuṭṭikaḷ vēgaṁ iṇaṅṅi.* — After the quarrel the children soon made up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a nuclear family, then the Malayalam for to split up, then say iṇaṅṅuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a nuclear family, then the Malayalam for to split up, then say *iṇaṅṅuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഇണങ്ങുക (iṇaṅṅuka) mean? (\"To be reconciled; to make up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 351,
+  "title": "On the Air",
+  "label": "ch:ml-on-the-air",
+  "canDo": "I can say a broadcast, a listener, a reporter, to depict and to broadcast.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C351-sampresanam-ceyyuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can say a broadcast, a listener, a reporter, to depict and to broadcast.",
+    "assesses": [
+      "ML-LEX-C351-SAMPREKSHANAM351-03",
+      "ML-LEX-C351-SAMPREKSHANAM351-04",
+      "ML-LEX-C351-SAMPREKSHANAM351-05"
+    ]
+  }
+}

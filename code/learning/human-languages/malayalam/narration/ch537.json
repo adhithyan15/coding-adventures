@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 537,
+  "title": "Inside the Body",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a9ae6f18f670b407",
+  "lessons": [
+    {
+      "id": "ML-C537-talaccoru",
+      "sequence": 27020,
+      "title": "തലച്ചോറ് (talaccōṟŭ) — the brain",
+      "headword": "തലച്ചോറ്",
+      "romanization": "talaccōṟŭ",
+      "gloss": "the brain",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ddfc45d30962163",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for the lungs, then the Malayalam for to take a rest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തലച്ചോറ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തലച്ചോറ് — talaccōṟŭ — \"the brain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തലച്ചോറിന് നല്ല ഉറക്കം ആവശ്യമാണ്. talaccōṟinŭ nalla uṟakkaṁ āvaśyamāṇŭ. The brain needs good sleep."
+            },
+            {
+              "kind": "speech",
+              "text": "തല head + ചോറ് cooked rice: the soft matter inside the head."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തലച്ചോറ് (talaccōṟŭ) is native Dravidian, a compound of തല, \"head\" (DEDR 3103), and ചോറ്, which DEDR gives as boiled rice and also brain or marrow (DEDR 2897)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talaccōṟŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talaccōṟŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talaccōṟŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talaccōṟŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talaccōṟinŭ nalla uṟakkaṁ āvaśyamāṇŭ. — The brain needs good sleep.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talaccōṟinŭ nalla uṟakkaṁ āvaśyamāṇŭ.* — The brain needs good sleep.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for the lungs, then the Malayalam for to take a rest, then say talaccōṟŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for the lungs, then the Malayalam for to take a rest, then say *talaccōṟŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തലച്ചോറ് (talaccōṟŭ) mean? (\"The brain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C537-kutal",
+      "sequence": 27030,
+      "title": "കുടൽ (kuṭal) — the intestines; the gut",
+      "headword": "കുടൽ",
+      "romanization": "kuṭal",
+      "gloss": "the intestines; the gut",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0435a625f988745a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to take a rest, then the Malayalam for the brain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കുടൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുടൽ — kuṭal — \"the intestines; the gut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പഴകിയ ഭക്ഷണം കുടലിന് ദോഷം ചെയ്യും. paḻakiya bhakṣaṇaṁ kuṭalinŭ dōṣaṁ ceyyuṁ. Stale food harms the gut."
+            },
+            {
+              "kind": "speech",
+              "text": "വൻകുടൽ is the large intestine, ചെറുകുടൽ the small one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുടൽ (kuṭal) is native Dravidian: DEDR 1652 gives the Malayalam word as the bowels (DEDR 1652)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻakiya bhakṣaṇaṁ kuṭalinŭ dōṣaṁ ceyyuṁ. — Stale food harms the gut.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻakiya bhakṣaṇaṁ kuṭalinŭ dōṣaṁ ceyyuṁ.* — Stale food harms the gut.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to take a rest, then the Malayalam for the brain, then say kuṭal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to take a rest, then the Malayalam for the brain, then say *kuṭal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കുടൽ (kuṭal) mean? (\"The intestines; the gut\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C537-kannunir",
+      "sequence": 27040,
+      "title": "കണ്ണുനീർ (kaṇṇunīr) — tears",
+      "headword": "കണ്ണുനീർ",
+      "romanization": "kaṇṇunīr",
+      "gloss": "tears",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3bbad155b4274274",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for the brain, then the Malayalam for the intestines."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കണ്ണുനീർ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കണ്ണുനീർ — kaṇṇunīr — \"tears\"."
+            },
+            {
+              "kind": "speech",
+              "text": "സിനിമയുടെ അവസാനം അമ്മയുടെ കണ്ണുനീർ ഒഴുകി. sinimayuṭe avasānaṁ ammayuṭe kaṇṇunīr oḻuki. At the end of the film, Mother's tears flowed."
+            },
+            {
+              "kind": "speech",
+              "text": "കണ്ണ് eye + നീര് water. കണ്ണീർ is a shorter form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കണ്ണുനീർ (kaṇṇunīr) is native Dravidian, a compound of കണ്ണ്, \"eye\" (DEDR 1159), and നീര്, \"water\" (DEDR 3690)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṇunīr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṇunīr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṇunīr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṇunīr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sinimayuṭe avasānaṁ ammayuṭe kaṇṇunīr oḻuki. — At the end of the film, Mother's tears flowed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sinimayuṭe avasānaṁ ammayuṭe kaṇṇunīr oḻuki.* — At the end of the film, Mother's tears flowed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for the brain, then the Malayalam for the intestines, then say kaṇṇunīr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for the brain, then the Malayalam for the intestines, then say *kaṇṇunīr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കണ്ണുനീർ (kaṇṇunīr) mean? (\"Tears\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C537-kurkkamvalikkuka",
+      "sequence": 27050,
+      "title": "കൂർക്കംവലിക്കുക (kūrkkaṁvalikkuka) — to snore",
+      "headword": "കൂർക്കംവലിക്കുക",
+      "romanization": "kūrkkaṁvalikkuka",
+      "gloss": "to snore",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e869e709c8ba5f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for the intestines, then the Malayalam for tears."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കൂർക്കംവലിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂർക്കംവലിക്കുക — kūrkkaṁvalikkuka — \"to snore\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അച്ഛൻ രാത്രി ഉറക്കെ കൂർക്കംവലിച്ചു. acchan rātri uṟakke kūrkkaṁvaliccu. Father snored loudly in the night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കൂർക്കംവലിച്ചു, kūrkkaṁvaliccu."
+            },
+            {
+              "kind": "speech",
+              "text": "കൂർക്കം snoring + വലിക്കുക to pull, to draw in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂർക്കംവലിക്കുക (kūrkkaṁvalikkuka) is native Dravidian, a compound of കൂർക്കം, \"snoring\" (DEDR 1796), and വലിക്കുക, \"to pull\" (DEDR 5282)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūrkkaṁvalikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūrkkaṁvalikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūrkkaṁvalikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūrkkaṁvalikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "acchan rātri uṟakke kūrkkaṁvaliccu. — Father snored loudly in the night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *acchan rātri uṟakke kūrkkaṁvaliccu.* — Father snored loudly in the night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for the intestines, then the Malayalam for tears, then say kūrkkaṁvalikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for the intestines, then the Malayalam for tears, then say *kūrkkaṁvalikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കൂർക്കംവലിക്കുക (kūrkkaṁvalikkuka) mean? (\"To snore\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C537-viyarkkuka",
+      "sequence": 27060,
+      "title": "വിയർക്കുക (viyarkkuka) — to perspire; to sweat",
+      "headword": "വിയർക്കുക",
+      "romanization": "viyarkkuka",
+      "gloss": "to perspire; to sweat",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16c206f7b30f6c70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for tears, then the Malayalam for to snore."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിയർക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിയർക്കുക — viyarkkuka — \"to perspire; to sweat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ചൂടിൽ ജോലി ചെയ്ത് തൊഴിലാളികൾ വിയർത്തു. cūṭil jōli ceytŭ toḻilāḷikaḷ viyarttu. The workers sweated, working in the heat."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വിയർത്തു, viyarttu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun വിയർപ്പ്, sweat, is already familiar; the past is വിയർത്തു."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിയർക്കുക (viyarkkuka) is native Dravidian, the verb beside വിയർപ്പ്, \"sweat\" (DEDR 5486)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viyarkkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viyarkkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viyarkkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viyarkkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūṭil jōli ceytŭ toḻilāḷikaḷ viyarttu. — The workers sweated, working in the heat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūṭil jōli ceytŭ toḻilāḷikaḷ viyarttu.* — The workers sweated, working in the heat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for tears, then the Malayalam for to snore, then say viyarkkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for tears, then the Malayalam for to snore, then say *viyarkkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിയർക്കുക (viyarkkuka) mean? (\"To perspire; to sweat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

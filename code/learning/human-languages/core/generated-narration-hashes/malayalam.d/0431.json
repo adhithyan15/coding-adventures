@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:7a0d5f748c2a2e27",
+  "lessonIds": [
+    "ML-C431-vikasanam",
+    "ML-C431-vikasippikkuka",
+    "ML-C431-navikarikkuka",
+    "ML-C431-purogamikkuka",
+    "ML-C431-sampradayam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch431.txt",
+  "json": "malayalam/narration/ch431.json",
+  "textHash": "fnv1a64:5fbd399413c740b0",
+  "jsonHash": "fnv1a64:73911951e1f796d6",
+  "findings": []
+}

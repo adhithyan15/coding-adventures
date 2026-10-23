@@ -13504,6 +13504,8 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     cursor.skip_terminators();
 
     let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
     let mut nodes: Vec<StructuralNode> = Vec::new();
     let mut node_indices: HashMap<String, usize> = HashMap::new();
     let mut relationships = Vec::new();
@@ -13513,6 +13515,42 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     let mut direct_styles: Vec<(Vec<String>, DiagramStyle)> = Vec::new();
 
     while !cursor.at_eof() {
+        match token_name(cursor.current()) {
+            "ACC_TITLE" => {
+                accessibility_title = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+                cursor.skip_terminators();
+                continue;
+            }
+            "ACC_DESCR" => {
+                accessibility_description = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+                cursor.skip_terminators();
+                continue;
+            }
+            "ACC_DESCR_BLOCK" => {
+                let value = cursor.advance().value.clone();
+                let open = value.find('{').expect("ER accessibility block requires '{'");
+                let close = value.rfind('}').expect("ER accessibility block requires '}'");
+                accessibility_description = Some(
+                    value[open + 1..close]
+                        .lines()
+                        .map(str::trim)
+                        .filter(|line| !line.is_empty())
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
+                cursor.skip_terminators();
+                continue;
+            }
+            _ => {}
+        }
         if matches!(cursor.current().value.as_str(), "title" | "direction" | "classDef" | "class" | "style") {
             match cursor.current().value.as_str() {
                 "title" => {
@@ -13688,8 +13726,8 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         kind: StructuralKind::Er,
         architecture_config: None,
         title,
-        accessibility_title: None,
-        accessibility_description: None,
+        accessibility_title,
+        accessibility_description,
         direction,
         alignments: Vec::new(),
         nodes,
@@ -13702,11 +13740,21 @@ fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
     let token = cursor.current().clone();
     if !matches!(
         token_name(&token),
-        "IDENTIFIER" | "NUMBER" | "ATTRIBUTE_KEY" | "MD_PARENT" | "STRING"
+        "IDENTIFIER"
+            | "NUMBER"
+            | "ATTRIBUTE_KEY"
+            | "MD_PARENT"
+            | "STRING"
+            | "ESCAPED_ATTRIBUTE"
     ) {
         return Err(token_error(&token, "expected ER name"));
     }
-    Ok(cursor.advance().value.clone())
+    let value = cursor.advance().value.clone();
+    Ok(if token_name(&token) == "ESCAPED_ATTRIBUTE" {
+        value.trim_matches('`').to_string()
+    } else {
+        value
+    })
 }
 
 fn consume_er_class_suffix(cursor: &mut TokenCursor) -> Result<Vec<String>, ParseError> {

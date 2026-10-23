@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C404-puratana",
+    "language": "malayalam",
+    "chapter": 404,
+    "sequence": 19820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af69eeee7c027b41"
+  },
+  "findings": []
+}

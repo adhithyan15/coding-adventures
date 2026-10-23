@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C365-kurravali",
+    "language": "malayalam",
+    "chapter": 365,
+    "sequence": 17830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:452fe44d06823758"
+  },
+  "findings": []
+}

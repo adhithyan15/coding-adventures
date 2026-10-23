@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-389-GRIHAM389",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-389-GRIHAM389"
+  ],
+  "after": []
+}

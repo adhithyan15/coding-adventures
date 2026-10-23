@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "Traffic",
+  "label": "ch:ml-traffic",
+  "canDo": "I can say transport, a traffic jam, speed, to creep along and to jolt.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C472-kulunnuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can say transport, a traffic jam, speed, to creep along and to jolt.",
+    "assesses": [
+      "ML-LEX-C472-GATAGATAM472-03",
+      "ML-LEX-C472-GATAGATAM472-04",
+      "ML-LEX-C472-GATAGATAM472-05"
+    ]
+  }
+}

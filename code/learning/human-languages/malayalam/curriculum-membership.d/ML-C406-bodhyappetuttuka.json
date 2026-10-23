@@ -1,0 +1,11 @@
+{
+  "id": "ML-C406-bodhyappetuttuka",
+  "pathSegment": "ML-PATH-406-VADAM406",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-406-VADAM406",
+      "order": 3
+    }
+  ]
+}

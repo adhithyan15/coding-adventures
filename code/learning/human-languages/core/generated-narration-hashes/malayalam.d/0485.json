@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:99c4c43edffe236e",
+  "lessonIds": [
+    "ML-C485-liphrru",
+    "ML-C485-konippati",
+    "ML-C485-kavatam",
+    "ML-C485-visramamuri",
+    "ML-C485-tattukata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch485.txt",
+  "json": "malayalam/narration/ch485.json",
+  "textHash": "fnv1a64:cc6e8c323bf1aee2",
+  "jsonHash": "fnv1a64:ca90e1fcf07a1784",
+  "findings": []
+}

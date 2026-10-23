@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:aeb7e41c885c462f",
+  "lessonIds": [
+    "ML-C511-pravacanam",
+    "ML-C511-jagrata",
+    "ML-C511-usnataramgam",
+    "ML-C511-culalikkarru",
+    "ML-C511-pottiviluka"
+  ],
+  "tex": "malayalam/book/chapters/ch511-forecasts-and-storms.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C499-vanyajivi",
+    "language": "malayalam",
+    "chapter": 499,
+    "sequence": 24950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4a6debcd3233f5d"
+  },
+  "findings": []
+}

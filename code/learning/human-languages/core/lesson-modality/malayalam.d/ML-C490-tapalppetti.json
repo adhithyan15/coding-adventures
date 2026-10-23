@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C490-tapalppetti",
+    "language": "malayalam",
+    "chapter": 490,
+    "sequence": 24480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af08de6f84f16920"
+  },
+  "findings": []
+}

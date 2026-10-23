@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "Agreeing and Disagreeing",
+  "label": "ch:ml-agreeing-and-disagreeing",
+  "canDo": "I can say to disagree, a dispute, a debate, to convince and an outlook.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C406-viksanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can say to disagree, a dispute, a debate, to convince and an outlook.",
+    "assesses": [
+      "ML-LEX-C406-VADAM406-03",
+      "ML-LEX-C406-VADAM406-04",
+      "ML-LEX-C406-VADAM406-05"
+    ]
+  }
+}

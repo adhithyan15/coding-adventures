@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-489-PANAM489",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ML-EXT-489-PANAM489"
+  ],
+  "after": []
+}

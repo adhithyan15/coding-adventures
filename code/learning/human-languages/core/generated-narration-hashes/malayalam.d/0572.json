@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 572,
+  "sourceHash": "fnv1a64:ae7a4ef7a46cb949",
+  "lessonIds": [
+    "ML-C572-silikkuka",
+    "ML-C572-utayuka",
+    "ML-C572-vittujoli",
+    "ML-C572-atukkuka",
+    "ML-C572-marala",
+    "ML-R572-review-565-572",
+    "ML-R572-review-final-572"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch572.txt",
+  "json": "malayalam/narration/ch572.json",
+  "textHash": "fnv1a64:c3683d8733be8927",
+  "jsonHash": "fnv1a64:d0b46fb0ed1469b4",
+  "findings": []
+}

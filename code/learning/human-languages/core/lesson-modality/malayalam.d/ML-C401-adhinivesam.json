@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C401-adhinivesam",
+    "language": "malayalam",
+    "chapter": 401,
+    "sequence": 19680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af3e9b3fb4d531a1"
+  },
+  "findings": []
+}

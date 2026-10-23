@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C363-takaruka",
+    "language": "malayalam",
+    "chapter": 363,
+    "sequence": 17750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc4bceaba300cb40"
+  },
+  "findings": []
+}

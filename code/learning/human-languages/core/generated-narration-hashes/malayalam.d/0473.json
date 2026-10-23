@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:b6ad7db5927d7e11",
+  "lessonIds": [
+    "ML-C473-srroppu",
+    "ML-C473-kaikanikkuka",
+    "ML-C473-irakkivituka",
+    "ML-C473-untuka",
+    "ML-C473-otiyettuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch473.txt",
+  "json": "malayalam/narration/ch473.json",
+  "textHash": "fnv1a64:748411f99d7ec311",
+  "jsonHash": "fnv1a64:60bc990b949207af",
+  "findings": []
+}

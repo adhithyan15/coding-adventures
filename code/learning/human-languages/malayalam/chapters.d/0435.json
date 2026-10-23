@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Graduation",
+  "label": "ch:ml-graduation",
+  "canDo": "I can say a rank, a graduate, a graduation, higher education and an evaluation.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C435-mulyanirnnayam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can say a rank, a graduate, a graduation, higher education and an evaluation.",
+    "assesses": [
+      "ML-LEX-C435-BIRUDAM435-03",
+      "ML-LEX-C435-BIRUDAM435-04",
+      "ML-LEX-C435-BIRUDAM435-05"
+    ]
+  }
+}

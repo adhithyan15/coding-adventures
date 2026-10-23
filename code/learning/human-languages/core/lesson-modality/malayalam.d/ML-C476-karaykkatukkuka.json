@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C476-karaykkatukkuka",
+    "language": "malayalam",
+    "chapter": 476,
+    "sequence": 23800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9fd3bb8a0cebe9ea"
+  },
+  "findings": []
+}

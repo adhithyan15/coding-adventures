@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "Ages and Occasions",
+  "label": "ch:ml-ages-and-occasions",
+  "canDo": "I can say an era, the past, an occasion, a beginning and unexpectedly.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C361-apratiksitamayi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can say an era, the past, an occasion, a beginning and unexpectedly.",
+    "assesses": [
+      "ML-LEX-C361-YUGAM361-03",
+      "ML-LEX-C361-YUGAM361-04",
+      "ML-LEX-C361-YUGAM361-05"
+    ]
+  }
+}

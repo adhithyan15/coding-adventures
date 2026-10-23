@@ -1,0 +1,11 @@
+{
+  "id": "ML-C413-prerippikkuka",
+  "pathSegment": "ML-PATH-413-UPADESAM413",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-413-UPADESAM413",
+      "order": 3
+    }
+  ]
+}

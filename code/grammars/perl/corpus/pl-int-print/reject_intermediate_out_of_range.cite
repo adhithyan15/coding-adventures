@@ -1,0 +1,4 @@
+oracle: host perl v5.38.2 (x86_64-linux-gnu-thread-multi)
+command: perl reject_intermediate_out_of_range.pl
+perl: exit 0, stdout '2147483647'
+pl-int-print: rejected with Unsupported under every checked release: the intermediate 2147483648 leaves the signed 32-bit range even though the final value is back in it.

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:e7b1e0aaf727e3cb",
+  "lessonIds": [
+    "ML-C390-yatrayayappu",
+    "ML-C390-vitavannuka",
+    "ML-C390-yatrayakkuka",
+    "ML-C390-vitaparayuka",
+    "ML-C390-natuvituka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch390.txt",
+  "json": "malayalam/narration/ch390.json",
+  "textHash": "fnv1a64:2d2fd4527de83130",
+  "jsonHash": "fnv1a64:2e72d40e36eb6e78",
+  "findings": []
+}

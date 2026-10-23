@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-522-JIJNASA522",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ML-EXT-522-JIJNASA522"
+  ],
+  "after": []
+}

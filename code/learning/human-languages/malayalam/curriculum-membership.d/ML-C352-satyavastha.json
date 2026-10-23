@@ -1,0 +1,11 @@
+{
+  "id": "ML-C352-satyavastha",
+  "pathSegment": "ML-PATH-352-PRESS352",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-352-PRESS352",
+      "order": 2
+    }
+  ]
+}

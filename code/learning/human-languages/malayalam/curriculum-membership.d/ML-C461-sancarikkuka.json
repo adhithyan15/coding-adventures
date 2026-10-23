@@ -1,0 +1,11 @@
+{
+  "id": "ML-C461-sancarikkuka",
+  "pathSegment": "ML-PATH-461-YATRA461",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-461-YATRA461",
+      "order": 4
+    }
+  ]
+}

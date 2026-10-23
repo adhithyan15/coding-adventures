@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C517-visamikkuka",
+    "language": "malayalam",
+    "chapter": 517,
+    "sequence": 26040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:560c57e92527b084"
+  },
+  "findings": []
+}

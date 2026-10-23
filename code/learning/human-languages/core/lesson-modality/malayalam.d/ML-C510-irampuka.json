@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C510-irampuka",
+    "language": "malayalam",
+    "chapter": 510,
+    "sequence": 25550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10ce06dab9f4520b"
+  },
+  "findings": []
+}

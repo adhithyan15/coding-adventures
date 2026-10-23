@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Making a Point",
+  "label": "ch:ml-making-a-point",
+  "canDo": "I can say to indicate, to emphasise, to point out, relevant and irrelevant.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C410-aprasaktamaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can say to indicate, to emphasise, to point out, relevant and irrelevant.",
+    "assesses": [
+      "ML-LEX-C410-SUCANA410-03",
+      "ML-LEX-C410-SUCANA410-04",
+      "ML-LEX-C410-SUCANA410-05"
+    ]
+  }
+}

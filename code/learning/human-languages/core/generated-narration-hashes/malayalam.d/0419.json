@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:5db91a35912b08a6",
+  "lessonIds": [
+    "ML-C419-tirannetuppu",
+    "ML-C419-vottu",
+    "ML-C419-vottar",
+    "ML-C419-sthanartthi",
+    "ML-C419-balarru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch419.txt",
+  "json": "malayalam/narration/ch419.json",
+  "textHash": "fnv1a64:f998fb595b6bc425",
+  "jsonHash": "fnv1a64:c046e348a99f31cb",
+  "findings": []
+}

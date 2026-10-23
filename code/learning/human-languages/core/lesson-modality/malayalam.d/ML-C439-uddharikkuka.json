@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C439-uddharikkuka",
+    "language": "malayalam",
+    "chapter": 439,
+    "sequence": 21740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0ef4c12b73e64ca"
+  },
+  "findings": []
+}

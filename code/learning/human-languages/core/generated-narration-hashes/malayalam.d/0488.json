@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:4e4d94c7966671ef",
+  "lessonIds": [
+    "ML-C488-oppu",
+    "ML-C488-pakarppu",
+    "ML-C488-tiriccariyalrekha",
+    "ML-C488-kalavadhi",
+    "ML-C488-kalaharanappetuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch488.txt",
+  "json": "malayalam/narration/ch488.json",
+  "textHash": "fnv1a64:92fba433a8c96b38",
+  "jsonHash": "fnv1a64:4792161369a87855",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C552-kamukan",
+  "pathSegment": "ML-PATH-552-BANDHAM552",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-552-BANDHAM552",
+      "order": 3
+    }
+  ]
+}

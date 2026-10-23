@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C370-kallam",
+    "language": "malayalam",
+    "chapter": 370,
+    "sequence": 18090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ad77bd6e9b3962f"
+  },
+  "findings": []
+}

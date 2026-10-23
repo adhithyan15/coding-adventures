@@ -1,0 +1,11 @@
+{
+  "id": "ML-C404-lipi",
+  "pathSegment": "ML-PATH-404-CHARITHRAM404",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-404-CHARITHRAM404",
+      "order": 3
+    }
+  ]
+}

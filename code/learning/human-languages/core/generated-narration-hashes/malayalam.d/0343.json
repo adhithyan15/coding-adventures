@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:8825703431dbb24f",
+  "lessonIds": [
+    "ML-C343-rodu",
+    "ML-W343-da",
+    "ML-C343-evideyanu",
+    "ML-R343-asking-the-way"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "malayalam/narration/ch343.txt",
+  "json": "malayalam/narration/ch343.json",
+  "textHash": "fnv1a64:8d587757d8801394",
+  "jsonHash": "fnv1a64:1a6ba359033f7d6f",
+  "findings": []
+}

@@ -45,6 +45,30 @@ const ER_DEFAULT_CLASS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-default-class-11.16.1-visual-corpus.json"
 ));
+const ER_QUOTED_TEXT_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-quoted-text-11.16.1-corpus.json"
+));
+const ER_QUOTED_TEXT_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-quoted-text-11.16.1-visual-corpus.json"
+));
+const ER_ACCESSIBILITY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-accessibility-11.16.1-corpus.json"
+));
+const ER_ACCESSIBILITY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-accessibility-11.16.1-visual-corpus.json"
+));
+const ER_BACKTICK_ATTRIBUTES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-backtick-attributes-11.16.1-corpus.json"
+));
+const ER_BACKTICK_ATTRIBUTES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-backtick-attributes-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -1968,6 +1992,75 @@ fn pinned_er_default_class_respects_specific_style_precedence() {
     assert_eq!(house.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fef3c7"));
     assert_eq!(house.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#b45309"));
     assert_eq!(house.style.as_ref().and_then(|style| style.stroke_width), Some(4.0));
+}
+
+#[test]
+fn pinned_er_quoted_text_reaches_semantic_ir() {
+    let syntax: Value =
+        serde_json::from_str(ER_QUOTED_TEXT_CORPUS).expect("ER quoted text corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_QUOTED_TEXT_VISUAL_CORPUS)
+        .expect("ER quoted text visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let source = syntax["fixtures"][0]["source"].as_str().expect("ER quoted text source");
+    let diagram = parse_er_diagram(source).expect("ER quoted text fixture must parse");
+
+    let customer = diagram
+        .nodes
+        .iter()
+        .find(|node| node.id == "Customer ❤")
+        .expect("quoted Unicode entity");
+    let account = diagram.nodes.iter().find(|node| node.id == "account").expect("account");
+    assert_eq!(customer.label, "Customer ❤");
+    assert_eq!(account.label, "Customer Account");
+    assert_eq!(customer.compartments[0].entries, ["id: string [PK] - Primary identifier"]);
+    assert_eq!(account.compartments[0].entries, ["displayName: string? - Preferred name"]);
+    assert_eq!(diagram.relationships[0].from, "Customer ❤");
+    assert_eq!(diagram.relationships[0].to, "account");
+    assert_eq!(diagram.relationships[0].label.as_deref(), Some("places order"));
+}
+
+#[test]
+fn pinned_er_accessibility_metadata_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_ACCESSIBILITY_CORPUS)
+        .expect("ER accessibility corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_ACCESSIBILITY_VISUAL_CORPUS)
+        .expect("ER accessibility visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().expect("ER accessibility fixtures");
+
+    let single = parse_er_diagram(fixtures[0]["source"].as_str().expect("single-line source"))
+        .expect("single-line ER accessibility metadata must parse");
+    assert_eq!(single.accessibility_title.as_deref(), Some("Account model"));
+    assert_eq!(single.accessibility_description.as_deref(), Some("Customer accounts"));
+
+    let multiline = parse_er_diagram(fixtures[1]["source"].as_str().expect("multiline source"))
+        .expect("multiline ER accessibility metadata must parse");
+    assert_eq!(multiline.accessibility_title.as_deref(), Some("Order model"));
+    assert_eq!(
+        multiline.accessibility_description.as_deref(),
+        Some("Customers place orders.\nOrders contain items.")
+    );
+}
+
+#[test]
+fn pinned_er_backtick_attributes_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_BACKTICK_ATTRIBUTES_CORPUS)
+        .expect("ER backtick attribute corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_BACKTICK_ATTRIBUTES_VISUAL_CORPUS)
+        .expect("ER backtick attribute visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"].as_str().expect("ER backtick attribute source"),
+    )
+    .expect("ER backtick attribute fixture must parse");
+    let hotel = diagram.nodes.iter().find(|node| node.id == "HOTEL").expect("HOTEL");
+
+    assert_eq!(
+        hotel.compartments[0].entries,
+        ["address: my.type", "geo.accuracy: string [PK] - Precision source"]
+    );
 }
 
 #[test]

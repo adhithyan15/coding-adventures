@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R364-review-357-364",
+    "language": "malayalam",
+    "chapter": 364,
+    "sequence": 17810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb97188c06a25867"
+  },
+  "findings": []
+}

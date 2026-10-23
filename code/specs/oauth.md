@@ -782,6 +782,20 @@ does not authenticate the intermediate's own issuer link, advance path-length
 state, choose or order certificates, construct or validate a complete path,
 recognize trust, process name constraints or revocation, perform TLS or HTTP,
 authorize OAuth transport, or open a network connection.
+A bounded authenticated path-length follow-up now consumes that complete
+authenticated-intermediate proof together with one path-length state. It
+derives the transition's issuing-CA role, caller-policy self-issued bit, and
+decoded `pathLenConstraint` only from the exact intermediate policy retained
+by the authenticated link, then returns a distinct non-copyable result that
+retains both the authenticated intermediate and the advanced state. This
+prevents callers from presenting one authenticated intermediate while
+advancing path-length state with policy for another certificate, or from
+silently discarding the adjacent-link proof at this composition boundary. The
+result covers one caller-ordered transition only: it does not authenticate the
+intermediate's own issuer, prove adjacency to another step, choose or order
+certificates, construct or validate a complete path, recognize trust, process
+name constraints or revocation, perform TLS or HTTP, authorize OAuth
+transport, or open a network connection.
 A bounded `x509-certificate-issuer-candidate-selection` path-construction
 prerequisite now scans one caller-bounded pool of decoded candidate
 certificates in caller order. It invokes caller-owned Name policy exactly once
@@ -915,6 +929,30 @@ The direct reviewed-server anchor-policy composition is the sole consumer in
 this slice that binds that evaluator to certificate and anchor evidence. It
 does not make the standalone decoder or evaluator authoritative, and complete
 path validation, revocation, TLS, HTTP, and OAuth transport remain unavailable.
+A bounded two-link evidence-binding follow-up now consumes one authenticated
+child-to-intermediate path-length transition together with one authenticated
+intermediate-to-reviewed-root link. It fails closed unless the complete
+intermediate policy retained by the first proof and the child certificate
+retained by the second proof refer to the same exact decoded certificate
+object, then returns distinct non-copyable evidence retaining both inputs. This
+prevents traversal from joining independently authenticated links through
+byte-equal but separately decoded intermediates or silently discarding the
+advanced path-length state. The result covers exactly one caller-ordered
+child-to-intermediate-to-reviewed-root chain for the fixed RSA SHA-256 path;
+it does not search or generalize paths, apply anchor name constraints, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
+connection.
+A bounded target-policy follow-up now consumes complete validated server
+certificate policy together with that reviewed two-link path. It fails closed
+unless the server-policy certificate and the authenticated path's target child
+refer to the same exact decoded certificate object, then returns distinct
+non-copyable evidence retaining both complete inputs. This prevents callers
+from attaching hostname, validity, purpose, end-entity role, critical-extension,
+and algorithm policy for one certificate to a separately authenticated target,
+including a byte-equal re-decode. The result does not apply the selected
+anchor's name constraints or other anchor policy, search or generalize paths,
+check revocation, perform TLS or HTTP, authorize OAuth transport, or open a
+network connection.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

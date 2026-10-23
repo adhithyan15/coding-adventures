@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "Crossing the Water",
+  "label": "ch:ml-crossing-the-water",
+  "canDo": "I can say a ferry boat, a current, a whirlpool, to toss about and to come ashore.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-R476-review-469-476",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can say a ferry boat, a current, a whirlpool, to toss about and to come ashore.",
+    "assesses": [
+      "ML-LEX-C476-KATATTU476-03",
+      "ML-LEX-C476-KATATTU476-04",
+      "ML-LEX-C476-KATATTU476-05"
+    ]
+  }
+}

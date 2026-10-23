@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:8e9915f12ac88c09",
+  "lessonIds": [
+    "ML-C446-vyaktamaya",
+    "ML-C446-potuvaya",
+    "ML-C446-phalapradamaya",
+    "ML-C446-yuktisahamaya",
+    "ML-C446-visvasaniyamaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch446.txt",
+  "json": "malayalam/narration/ch446.json",
+  "textHash": "fnv1a64:0fa9426be6a72cc0",
+  "jsonHash": "fnv1a64:eb02f35cd15ab68e",
+  "findings": []
+}

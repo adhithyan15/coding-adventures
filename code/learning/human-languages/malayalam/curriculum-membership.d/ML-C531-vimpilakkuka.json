@@ -1,0 +1,11 @@
+{
+  "id": "ML-C531-vimpilakkuka",
+  "pathSegment": "ML-PATH-531-PERUMATTAM531",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-531-PERUMATTAM531",
+      "order": 1
+    }
+  ]
+}

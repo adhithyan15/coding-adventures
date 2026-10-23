@@ -13,6 +13,17 @@ All notable changes to the Go build tool will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- The `global:luarocks-tree` lock now covers `luarocks install`, not only
+  `make` and `remove`. LuaRocks takes an exclusive lock on the shared rocks
+  tree for all three, so an unserialized install fails outright
+  ("requires exclusive write access to ~/.luarocks"). `lua/tcp_client`'s
+  `luarocks install luasocket --local` did exactly that beside another
+  package's `luarocks make` and failed a full-build shard. 17 Lua packages
+  run `luarocks install`. The match is now a command-word regex, like the
+  opam and gem locks, and applies to any package's BUILD, not only Lua's.
+
 ### Added
 
 - `-shard-weights <file>` selects sharding v2: shards are balanced on each

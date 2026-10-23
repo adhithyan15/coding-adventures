@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.4.0 - 2026-10-23
+
+### Added
+
+- Bound complete target-server certificate policy to the exact authenticated
+  target child retained by a reviewed two-link RSA SHA-256 path.
+- Added a distinct non-copyable success type that retains the server policy,
+  both authenticated links, complete intermediate policy, advanced path-length
+  state, and reviewed-root selection.
+- Added public-API runtime coverage over a static public Let's Encrypt
+  target-to-R13-to-ISRG-Root-X1 chain, including retained target,
+  intermediate, root, and path-length evidence plus byte-equal distinct-target
+  rejection, without introducing a forging constructor for upstream evidence.
+
 ## 0.3.0 - 2026-10-22
 
 ### Added

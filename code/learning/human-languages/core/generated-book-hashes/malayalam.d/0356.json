@@ -1,0 +1,14 @@
+{
+  "language": "malayalam",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:aa0dadb37204349f",
+  "lessonIds": [
+    "ML-C356-sambhasanam",
+    "ML-C356-vivaranam",
+    "ML-C356-drsyam",
+    "ML-C356-kettariyuka",
+    "ML-C356-ketticcamaykkuka",
+    "ML-R356-review-349-356"
+  ],
+  "tex": "malayalam/book/chapters/ch356-telling-it-again.tex"
+}

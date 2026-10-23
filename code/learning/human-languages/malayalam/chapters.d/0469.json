@@ -1,0 +1,19 @@
+{
+  "chapter": 469,
+  "title": "Walking in Town",
+  "label": "ch:ml-walking-in-town",
+  "canDo": "I can say a footpath, the roadside, a signpost, to make way and to cross over.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C469-muriccukatakkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can say a footpath, the roadside, a signpost, to make way and to cross over.",
+    "assesses": [
+      "ML-LEX-C469-NATAPPU469-03",
+      "ML-LEX-C469-NATAPPU469-04",
+      "ML-LEX-C469-NATAPPU469-05"
+    ]
+  }
+}

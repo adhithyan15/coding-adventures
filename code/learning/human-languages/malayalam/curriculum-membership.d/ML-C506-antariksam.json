@@ -1,0 +1,11 @@
+{
+  "id": "ML-C506-antariksam",
+  "pathSegment": "ML-PATH-506-AKASAM506",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-506-AKASAM506",
+      "order": 3
+    }
+  ]
+}

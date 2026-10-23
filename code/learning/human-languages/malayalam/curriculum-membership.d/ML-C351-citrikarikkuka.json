@@ -1,0 +1,11 @@
+{
+  "id": "ML-C351-citrikarikkuka",
+  "pathSegment": "ML-PATH-351-SAMPREKSHANAM351",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-351-SAMPREKSHANAM351",
+      "order": 3
+    }
+  ]
+}
