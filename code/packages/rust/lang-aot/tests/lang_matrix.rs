@@ -13598,6 +13598,32 @@ fn ruby_rows_are_rb_int_puts_corpus_cases() {
     }
 }
 
+/// Runs a host interpreter on `src`, fed on stdin (`ruby -`, `perl -`,
+/// `python3 -I -` all read their program there). The oracles below never
+/// pass program text as an argument. Windows has no argv, only one command
+/// line string. Rust quotes an argument only when it holds a space or tab,
+/// and the mingw-built `ruby` and `perl` split their command line on any
+/// whitespace. So a source with no space but a line break reaches them cut
+/// at the break: Ruby's `empty_program` ("\n") arrives as `-e` with no code,
+/// and Perl's `crlf_layout` ("print(1);\r\nprint(2);\r\n") runs only
+/// `print(1);`. Stdin carries the bytes untouched on every host.
+fn run_host_oracle(command: &mut Command, src: &str) -> std::process::Output {
+    use std::io::Write as _;
+    let mut child = command
+        .stdin(std::process::Stdio::piped())
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped())
+        .spawn()
+        .expect("the interpreter ran once already (its version probe)");
+    // The sources are a few bytes, far below any pipe buffer, so writing
+    // before reading cannot deadlock; dropping the handle sends EOF. An
+    // interpreter that exits without reading closes the pipe early; that
+    // is not this helper's failure to report, so a write error is dropped
+    // and the caller's status and stdout assertions say what went wrong.
+    let _ = child.stdin.take().expect("piped stdin").write_all(src.as_bytes());
+    child.wait_with_output().expect("the interpreter exited")
+}
+
 /// The oracle: a host Ruby on the 3.3 line must print each row's stdout and,
 /// for a trap row, stop with `ZeroDivisionError`. The compiled programs never
 /// run on it. Skips (loudly) without a matching `ruby`.
@@ -13615,23 +13641,7 @@ fn ruby_rows_agree_with_the_host_ruby_oracle() {
         return;
     }
     for program in ruby_rows() {
-        // The source goes in on stdin (`ruby` with no script argument reads
-        // its program there): no shell, no temp file, and no argv quoting.
-        // `-e "\n"` is not enough: Rust quotes a Windows argument only when
-        // it holds a space or tab, and Ruby's Windows argv splitter drops a
-        // bare "\n" as whitespace, so `empty_program` would reach Ruby as
-        // `-e` with no code ("no code specified for -e").
-        use std::io::Write as _;
-        let mut child = Command::new("ruby")
-            .stdin(std::process::Stdio::piped())
-            .stdout(std::process::Stdio::piped())
-            .stderr(std::process::Stdio::piped())
-            .spawn()
-            .expect("ruby ran once already");
-        // The sources are a few bytes, far below any pipe buffer, so writing
-        // before reading cannot deadlock; dropping the handle sends EOF.
-        child.stdin.take().expect("piped stdin").write_all(program.src.as_bytes()).expect("ruby stdin");
-        let out = child.wait_with_output().expect("ruby exited");
+        let out = run_host_oracle(Command::new("ruby").arg("-"), program.src);
         // Windows interpreters write text-mode stdout ("\r\n"); the rows
         // record the language's output, so fold the line ending back.
         let stdout = String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n");
@@ -27693,11 +27703,7 @@ fn perl_rows_agree_with_the_host_perl_oracle() {
         let Expect::Stdout(expected) = program.expect else {
             panic!("a Perl row is checked by its stdout: {:?}", program.src);
         };
-        // `-e` with the source as its own argument: no shell, no temp file.
-        let out = Command::new("perl")
-            .args(["-e", program.src])
-            .output()
-            .expect("perl ran once already");
+        let out = run_host_oracle(Command::new("perl").arg("-"), program.src);
         assert!(out.status.success(), "perl {version} rejected {:?}", program.src);
         // Perl on Windows prints through a `:crlf` layer; fold "\r\n" back.
         assert_eq!(
@@ -27910,8 +27916,7 @@ fn python_rows_agree_with_the_host_python_oracle() {
         return;
     }
     for program in python_rows() {
-        // `-c` with the source as its own argument: no shell, no temp file.
-        let out = Command::new("python3").args(["-I", "-c", program.src]).output().expect("python3 ran once already");
+        let out = run_host_oracle(Command::new("python3").args(["-I", "-"]), program.src);
         // Windows interpreters write text-mode stdout ("\r\n"); the rows
         // record the language's output, so fold the line ending back.
         let stdout = String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n");

@@ -19,7 +19,16 @@ Every other row held a space, was quoted, and survived.
 script argument reads stdin) rather than as an argument. Nothing then
 passes through command-line quoting.
 
+**It happened twice.** The first fix moved only the Ruby oracle to stdin.
+The next Windows run then failed the host-Perl oracle the same way. Perl's
+`crlf_layout` row, `"print(1);\r\nprint(2);\r\n"`, has no space, so it
+went out unquoted, and Strawberry Perl's splitter cut it at the line break.
+Perl printed `1` where the row expected `12`. The same is true of any
+source with a line break but no space, not just whitespace-only ones.
+
 **Do differently:** an oracle that hands program text to a host
-interpreter should never put the text in argv: use stdin or a file. If
-argv is unavoidable, add a row whose source is only whitespace and
-confirm it on a Windows runner.
+interpreter should never put the text in argv: use stdin or a file.
+`lang_matrix.rs` now has one helper, `run_host_oracle`, that every oracle
+calls. When a bug like this is found in one call site, grep for the
+pattern (`-e`, `-c` with a variable argument) and fix every site in the
+same push. A Windows CI round trip costs hours.
