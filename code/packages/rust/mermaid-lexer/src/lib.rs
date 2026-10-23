@@ -1385,6 +1385,20 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_accessibility_metadata() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\naccTitle: Account model\naccDescr {\n  Customers and accounts\n}\n",
+        );
+        let names: Vec<&str> = tokens
+            .iter()
+            .filter_map(|token| token.type_name.as_deref())
+            .collect();
+
+        assert!(names.contains(&"ACC_TITLE"));
+        assert!(names.contains(&"ACC_DESCR_BLOCK"));
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
