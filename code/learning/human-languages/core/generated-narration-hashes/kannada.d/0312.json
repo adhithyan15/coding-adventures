@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 312,
-  "sourceHash": "fnv1a64:5f75c8be07d2fd72",
+  "sourceHash": "fnv1a64:2af1bd4de15eecd9",
   "lessonIds": [
     "KA-C312-hogabeku",
     "KA-C312-banda-karana",
@@ -11,7 +11,7 @@
   "drivablePrefix": 2,
   "text": "kannada/narration/ch312.txt",
   "json": "kannada/narration/ch312.json",
-  "textHash": "fnv1a64:a87db2865597c473",
-  "jsonHash": "fnv1a64:3de61d1f0f066521",
+  "textHash": "fnv1a64:02ec090088c52bcf",
+  "jsonHash": "fnv1a64:c4c24050abedfccc",
   "findings": []
 }

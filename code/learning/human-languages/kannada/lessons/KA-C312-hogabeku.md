@@ -63,7 +63,7 @@ The verb drops its **-ಉ** and takes **-ಅ**: **ಹೋಗು** → **ಹೋಗ
 >
 > *rātri tumbā kāphi kuḍiyabāradu.* — "You shouldn't drink a lot of coffee at night."
 
-**ಬಾರದು** sits where **ಬೇಕು** sat: **ಕುಡಿಯಬಾರದು**, "must not drink"; **ಹೋಗಬಾರದು**, "must not go". With no person named, it is a rule for anyone, and the right shape for a notice: **ಇಲ್ಲಿ ಕಸ ಹಾಕಬಾರದು** (*illi kasa hākabāradu*, "do not throw rubbish here").
+**ಬಾರದು** sits where **ಬೇಕು** sat: "must not drink" is **ಕುಡಿಯಬಾರದು**; "must not go" is **ಹೋಗಬಾರದು**. With no person named, it is a rule for anyone, and the right shape for a notice: **ಇಲ್ಲಿ ಕಸ ಹಾಕಬಾರದು** (*illi kasa hākabāradu*, "do not throw rubbish here").
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C312-OBLIGATIVE-01, KA-GRAMMAR-C312-PROHIBITIVE-01, KA-LEX-C100-FIND-02, KA-LEX-C158-KRIYE158-03, KA-LEX-C48-ROLE-03] -->

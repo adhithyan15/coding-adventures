@@ -46,7 +46,7 @@ You'll want to know: buying a ticket.
 ಎಷ್ಟು ಆಯಿತು? eṣṭu āyitu? — "How much is it?"
 Literally "how much has it come to?", with the ಆಯಿತು of "it happened, it became".
 ನಾನು ನಾಳೆಯ ರೈಲಿಗೆ ಒಂದು ಸೀಟು ಕಾಯ್ದಿರಿಸಿದೆ. nānu nāḷeya railige ondu sīṭu kāydiriside. — "I booked a seat on tomorrow's train."
-ನಾಳೆಯ (nāḷeya, "tomorrow's"); ರೈಲಿಗೆ (railige, "for the train"); ಕಾಯ್ದಿರಿಸಿದೆ is the past of ಕಾಯ್ದಿರಿಸು, "to book".
+ಕಾಯ್ದಿರಿಸಿದೆ is the past of ಕಾಯ್ದಿರಿಸು, "to book"; ನಾಳೆಯ (nāḷeya, "tomorrow's"); ರೈಲಿಗೆ (railige, "for the train").
 
 You'll want to know: when it leaves.
 ಬಸ್ ಎಷ್ಟು ಗಂಟೆಗೆ ಹೊರಡುತ್ತದೆ? bas eṣṭu gaṇṭege horaḍuttade? — "At what time does the bus leave?"

@@ -4,7 +4,7 @@
   "chapter": 314,
   "title": "Tickets, Seats and Trouble",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:cb168b0e61ba7749",
+  "sourceHash": "fnv1a64:9af5f047179d049c",
   "lessons": [
     {
       "id": "KA-C314-situ",
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec33b30f4bf62161",
+      "sourceHash": "fnv1a64:8b5640402f90e669",
       "notice": null,
       "blocks": [
         {
@@ -196,7 +196,7 @@
             },
             {
               "kind": "speech",
-              "text": "ನಾಳೆಯ (nāḷeya, \"tomorrow's\"); ರೈಲಿಗೆ (railige, \"for the train\"); ಕಾಯ್ದಿರಿಸಿದೆ is the past of ಕಾಯ್ದಿರಿಸು, \"to book\"."
+              "text": "ಕಾಯ್ದಿರಿಸಿದೆ is the past of ಕಾಯ್ದಿರಿಸು, \"to book\"; ನಾಳೆಯ (nāḷeya, \"tomorrow's\"); ರೈಲಿಗೆ (railige, \"for the train\")."
             }
           ]
         },

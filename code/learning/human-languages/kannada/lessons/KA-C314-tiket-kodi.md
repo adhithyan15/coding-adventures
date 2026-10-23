@@ -56,7 +56,7 @@ Literally "how much has it come to?", with the **ಆಯಿತು** of "it happen
 >
 > *nānu nāḷeya railige ondu sīṭu kāydiriside.* — "I booked a seat on tomorrow's train."
 
-**ನಾಳೆಯ** (*nāḷeya*, "tomorrow's"); **ರೈಲಿಗೆ** (*railige*, "for the train"); **ಕಾಯ್ದಿರಿಸಿದೆ** is the past of **ಕಾಯ್ದಿರಿಸು**, "to book".
+**ಕಾಯ್ದಿರಿಸಿದೆ** is the past of **ಕಾಯ್ದಿರಿಸು**, "to book"; **ನಾಳೆಯ** (*nāḷeya*, "tomorrow's"); **ರೈಲಿಗೆ** (*railige*, "for the train").
 
 ## You'll want to know: when it leaves
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C314-WHEN-LEAVES-01]; assesses=[KA-LEX-C100-FIND-03, KA-ETYMON-C18-GANTE-01, KA-LEX-C50-LEAVE-04, KA-LEX-C07-NUMBERS-6-10-01, KA-LEX-C32-BAA-01] -->
