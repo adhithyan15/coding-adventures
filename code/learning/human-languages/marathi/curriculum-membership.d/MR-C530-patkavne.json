@@ -1,0 +1,11 @@
+{
+  "id": "MR-C530-patkavne",
+  "pathSegment": "MR-PATH-530-PADAK530",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-530-PADAK530",
+      "order": 4
+    }
+  ]
+}

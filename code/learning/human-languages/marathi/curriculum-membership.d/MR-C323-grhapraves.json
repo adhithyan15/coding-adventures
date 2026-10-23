@@ -1,0 +1,11 @@
+{
+  "id": "MR-C323-grhapraves",
+  "pathSegment": "MR-PATH-323-NIROP323",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-323-NIROP323",
+      "order": 2
+    }
+  ]
+}

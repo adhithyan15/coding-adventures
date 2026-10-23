@@ -1,0 +1,11 @@
+{
+  "id": "MR-C316-varat",
+  "pathSegment": "MR-PATH-316-LAGNA316",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-316-LAGNA316",
+      "order": 3
+    }
+  ]
+}

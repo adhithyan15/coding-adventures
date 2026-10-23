@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C441-ugavne",
+    "language": "marathi",
+    "chapter": 441,
+    "sequence": 25320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c45d93dd80f2c559"
+  },
+  "findings": []
+}

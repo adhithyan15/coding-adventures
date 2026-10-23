@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "Values",
+  "label": "ch:mr-values",
+  "canDo": "I can talk about values, integrity and sacrifice.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C366-hit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can talk about values, integrity and sacrifice.",
+    "assesses": [
+      "MR-LEX-C366-MULYA366-03",
+      "MR-LEX-C366-MULYA366-04",
+      "MR-LEX-C366-MULYA366-05"
+    ]
+  }
+}

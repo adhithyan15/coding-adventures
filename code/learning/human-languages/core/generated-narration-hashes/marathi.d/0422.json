@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:92bc4b74e70c5b1a",
+  "lessonIds": [
+    "MR-C422-mandai",
+    "MR-C422-gongat",
+    "MR-C422-kolahal",
+    "MR-C422-gajbajlela",
+    "MR-C422-vardal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch422.txt",
+  "json": "marathi/narration/ch422.json",
+  "textHash": "fnv1a64:e5425d07a4e8458c",
+  "jsonHash": "fnv1a64:9b13c7729336582d",
+  "findings": []
+}

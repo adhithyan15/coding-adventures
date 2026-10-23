@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "At University",
+  "label": "ch:mr-at-university",
+  "canDo": "I can talk about professors, syllabuses, fees and hostels.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C369-vasatigrh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can talk about professors, syllabuses, fees and hostels.",
+    "assesses": [
+      "MR-LEX-C369-VIDYAPITH369-03",
+      "MR-LEX-C369-VIDYAPITH369-04",
+      "MR-LEX-C369-VIDYAPITH369-05"
+    ]
+  }
+}

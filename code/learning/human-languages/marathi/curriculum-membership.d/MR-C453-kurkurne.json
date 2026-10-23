@@ -1,0 +1,11 @@
+{
+  "id": "MR-C453-kurkurne",
+  "pathSegment": "MR-PATH-453-TAPAT453",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-453-TAPAT453",
+      "order": 4
+    }
+  ]
+}

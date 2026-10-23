@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:661050a7ba29e4ff",
+  "lessonIds": [
+    "MR-C547-anibani",
+    "MR-C547-agnisamak",
+    "MR-C547-gajar-alarm",
+    "MR-C547-suraksaraksak",
+    "MR-C547-atokyat-anne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch547.txt",
+  "json": "marathi/narration/ch547.json",
+  "textHash": "fnv1a64:6165873b96b7344a",
+  "jsonHash": "fnv1a64:471c0aa078306484",
+  "findings": []
+}

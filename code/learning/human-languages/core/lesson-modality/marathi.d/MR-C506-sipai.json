@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C506-sipai",
+    "language": "marathi",
+    "chapter": 506,
+    "sequence": 29110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f9fc4edb86c85f7"
+  },
+  "findings": []
+}

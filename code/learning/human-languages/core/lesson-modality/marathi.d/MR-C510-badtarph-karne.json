@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C510-badtarph-karne",
+    "language": "marathi",
+    "chapter": 510,
+    "sequence": 29340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1c7f4d9deb17ea3"
+  },
+  "findings": []
+}

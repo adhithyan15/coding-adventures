@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:77ccc191d0016daf",
+  "lessonIds": [
+    "MR-C422-mandai",
+    "MR-C422-gongat",
+    "MR-C422-kolahal",
+    "MR-C422-gajbajlela",
+    "MR-C422-vardal"
+  ],
+  "tex": "marathi/book/chapters/ch422-noise-in-the-market.tex"
+}

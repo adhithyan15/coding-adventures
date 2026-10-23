@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:050c6b6ce092573d",
+  "lessonIds": [
+    "MR-C377-prabhav",
+    "MR-C377-dabav",
+    "MR-C377-protsahan-dene",
+    "MR-C377-prerna",
+    "MR-C377-khatakne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch377.txt",
+  "json": "marathi/narration/ch377.json",
+  "textHash": "fnv1a64:a0ae918f8636dc3f",
+  "jsonHash": "fnv1a64:a9ba56c1d753100b",
+  "findings": []
+}

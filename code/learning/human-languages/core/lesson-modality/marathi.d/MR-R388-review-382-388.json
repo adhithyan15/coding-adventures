@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R388-review-382-388",
+    "language": "marathi",
+    "chapter": 388,
+    "sequence": 22400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99a15734de42bb1a"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C544-lambnivar-takne",
+    "language": "marathi",
+    "chapter": 544,
+    "sequence": 31080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac3fc5084e874e7d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:570ba85f316a1c91",
+  "lessonIds": [
+    "MR-C445-ankur",
+    "MR-C445-rujne",
+    "MR-C445-phulne",
+    "MR-C445-baharne",
+    "MR-C445-komejne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch445.txt",
+  "json": "marathi/narration/ch445.json",
+  "textHash": "fnv1a64:c0663223e55b90ca",
+  "jsonHash": "fnv1a64:4425439847ecda9c",
+  "findings": []
+}

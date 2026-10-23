@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 556,
+  "sourceHash": "fnv1a64:ee3d6d37c8d0ef33",
+  "lessonIds": [
+    "MR-C556-anukul",
+    "MR-C556-pratikul",
+    "MR-C556-ghol",
+    "MR-C556-bikat",
+    "MR-C556-sambhram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch556.txt",
+  "json": "marathi/narration/ch556.json",
+  "textHash": "fnv1a64:d60b637f08135c1c",
+  "jsonHash": "fnv1a64:c280326ee48e4456",
+  "findings": []
+}

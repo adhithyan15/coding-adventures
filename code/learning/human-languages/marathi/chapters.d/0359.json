@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "In Court",
+  "label": "ch:mr-in-court",
+  "canDo": "I can talk about lawyers, cases and verdicts.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C359-dava",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can talk about lawyers, cases and verdicts.",
+    "assesses": [
+      "MR-LEX-C359-KHATLA359-03",
+      "MR-LEX-C359-KHATLA359-04",
+      "MR-LEX-C359-KHATLA359-05"
+    ]
+  }
+}

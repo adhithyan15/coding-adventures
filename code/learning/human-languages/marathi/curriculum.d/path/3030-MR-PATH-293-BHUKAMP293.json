@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-293-BHUKAMP293",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "MR-EXT-293-BHUKAMP293"
+  ],
+  "after": []
+}

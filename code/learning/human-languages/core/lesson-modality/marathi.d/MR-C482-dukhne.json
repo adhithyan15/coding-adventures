@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C482-dukhne",
+    "language": "marathi",
+    "chapter": 482,
+    "sequence": 27650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a841539c70cbb05e"
+  },
+  "findings": []
+}

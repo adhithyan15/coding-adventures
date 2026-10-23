@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C306-kramasah",
+    "language": "marathi",
+    "chapter": 306,
+    "sequence": 17920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8acd77c5cc9ddfac"
+  },
+  "findings": []
+}

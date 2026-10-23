@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C416-simpadne",
+    "language": "marathi",
+    "chapter": 416,
+    "sequence": 24060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fb1b47c85118b0a"
+  },
+  "findings": []
+}

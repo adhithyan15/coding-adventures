@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:3d44844465028702",
+  "lessonIds": [
+    "MR-C376-tolne",
+    "MR-C376-parakhne",
+    "MR-C376-mulyamapan-karne",
+    "MR-C376-gunvatta",
+    "MR-C376-darja"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch376.txt",
+  "json": "marathi/narration/ch376.json",
+  "textHash": "fnv1a64:c188810dfc2f1015",
+  "jsonHash": "fnv1a64:e1b1b5d002323a3d",
+  "findings": []
+}

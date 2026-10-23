@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:03cad2e7bb233349",
+  "lessonIds": [
+    "MR-C330-senapati",
+    "MR-C330-paydal",
+    "MR-C330-chavni",
+    "MR-C330-pahara-dene",
+    "MR-C330-jhunjne"
+  ],
+  "tex": "marathi/book/chapters/ch330-the-army-in-camp.tex"
+}

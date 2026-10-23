@@ -1,0 +1,11 @@
+{
+  "id": "MR-C362-bahiskar-ghalne",
+  "pathSegment": "MR-PATH-362-ANDOLAN362",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-362-ANDOLAN362",
+      "order": 4
+    }
+  ]
+}

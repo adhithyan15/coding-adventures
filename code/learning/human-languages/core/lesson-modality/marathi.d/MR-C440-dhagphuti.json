@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C440-dhagphuti",
+    "language": "marathi",
+    "chapter": 440,
+    "sequence": 25260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0f57bb51cd6b3d4"
+  },
+  "findings": []
+}

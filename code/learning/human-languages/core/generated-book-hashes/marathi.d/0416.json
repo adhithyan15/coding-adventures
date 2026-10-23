@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:29b1ef0bf7ade706",
+  "lessonIds": [
+    "MR-C416-khunti",
+    "MR-C416-dhobi",
+    "MR-C416-pilne",
+    "MR-C416-hamal",
+    "MR-C416-simpadne"
+  ],
+  "tex": "marathi/book/chapters/ch416-washermen-and-porters.tex"
+}

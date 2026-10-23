@@ -1,0 +1,19 @@
+{
+  "chapter": 554,
+  "title": "Chance and Timing",
+  "label": "ch:mr-chance-and-timing",
+  "canDo": "I can say when and how something happens.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C554-sadharan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 554: I can say when and how something happens.",
+    "assesses": [
+      "MR-LEX-C554-VEL554-03",
+      "MR-LEX-C554-VEL554-04",
+      "MR-LEX-C554-VEL554-05"
+    ]
+  }
+}

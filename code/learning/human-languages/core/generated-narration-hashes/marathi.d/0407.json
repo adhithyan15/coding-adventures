@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:bfd1b9061cb450fc",
+  "lessonIds": [
+    "MR-C407-antar",
+    "MR-C407-veg",
+    "MR-C407-brek",
+    "MR-C407-disadarsak",
+    "MR-C407-paypit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch407.txt",
+  "json": "marathi/narration/ch407.json",
+  "textHash": "fnv1a64:f525f607a7f0d8e5",
+  "jsonHash": "fnv1a64:ec78a073db1d0abd",
+  "findings": []
+}

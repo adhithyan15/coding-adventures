@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C407-antar",
+    "language": "marathi",
+    "chapter": 407,
+    "sequence": 23560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbd0b9cba924f3a1"
+  },
+  "findings": []
+}

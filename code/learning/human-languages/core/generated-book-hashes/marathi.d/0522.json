@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:145cc13043abbd61",
+  "lessonIds": [
+    "MR-C522-divankhana",
+    "MR-C522-sayangrh",
+    "MR-C522-gacci",
+    "MR-C522-pharsi",
+    "MR-C522-tangne"
+  ],
+  "tex": "marathi/book/chapters/ch522-rooms-of-the-house.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 341,
+  "title": "Books to Remember",
+  "label": "ch:mr-books-to-remember",
+  "canDo": "I can talk about novels, biographies and unforgettable books.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-R341-review-final-341",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can talk about novels, biographies and unforgettable books.",
+    "assesses": [
+      "MR-LEX-C341-KADAMBARI341-01",
+      "MR-LEX-C341-KADAMBARI341-02",
+      "MR-LEX-C341-KADAMBARI341-03",
+      "MR-LEX-C341-KADAMBARI341-04",
+      "MR-LEX-C341-KADAMBARI341-05"
+    ]
+  }
+}

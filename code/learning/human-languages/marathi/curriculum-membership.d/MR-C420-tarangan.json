@@ -1,0 +1,11 @@
+{
+  "id": "MR-C420-tarangan",
+  "pathSegment": "MR-PATH-420-DUTAVAS420",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-420-DUTAVAS420",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C395-thet",
+  "pathSegment": "MR-PATH-395-UPAYUKTA395",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-395-UPAYUKTA395",
+      "order": 2
+    }
+  ]
+}

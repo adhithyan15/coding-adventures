@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C298-kujbujne",
+    "language": "marathi",
+    "chapter": 298,
+    "sequence": 17550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03a67a716f619aca"
+  },
+  "findings": []
+}

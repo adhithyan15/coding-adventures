@@ -1,0 +1,19 @@
+{
+  "chapter": 556,
+  "title": "Favourable or Not",
+  "label": "ch:mr-favourable-or-not",
+  "canDo": "I can say whether conditions are favourable and talk about muddles.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C556-sambhram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 556: I can say whether conditions are favourable and talk about muddles.",
+    "assesses": [
+      "MR-LEX-C556-ANUKUL556-03",
+      "MR-LEX-C556-ANUKUL556-04",
+      "MR-LEX-C556-ANUKUL556-05"
+    ]
+  }
+}

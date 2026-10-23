@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 335,
+  "title": "Digging Up the Past",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b8fe29b2580599a4",
+  "lessons": [
+    {
+      "id": "MR-C335-utkhanan",
+      "sequence": 19410,
+      "title": "उत्खनन (utkhanan) — an excavation",
+      "headword": "उत्खनन",
+      "romanization": "utkhanan",
+      "gloss": "an excavation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46adecbcd0bfc042",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a chronicle, then the Marathi for an inscription."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उत्खनन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उत्खनन — utkhanan — \"an excavation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उत्खननात जुनी भांडी सापडली. utkhananāt junī bhāṇḍī sāpaḍlī. Old pots were found in the excavation."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "उत्खनन (utkhanan) करणे, to excavate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उत्खनन (utkhanan) is a tatsama, taken from Sanskrit utkhanana, 'a digging up' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utkhanan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utkhanan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utkhanan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utkhanan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utkhananāt junī bhāṇḍī sāpaḍlī. — Old pots were found in the excavation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utkhananāt junī bhāṇḍī sāpaḍlī.* — Old pots were found in the excavation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a chronicle, then the Marathi for an inscription, then say utkhanan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a chronicle, then the Marathi for an inscription, then say *utkhanan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उत्खनन (utkhanan) mean? (\"An excavation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C335-avases",
+      "sequence": 19420,
+      "title": "अवशेष (avaśeṣ) — remains; ruins",
+      "headword": "अवशेष",
+      "romanization": "avaśeṣ",
+      "gloss": "remains; ruins",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3ea92eaf16f194c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an inscription, then the Marathi for an excavation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अवशेष",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवशेष — avaśeṣ — \"remains; ruins\"."
+            },
+            {
+              "kind": "speech",
+              "text": "टेकडीवर एका जुन्या शहराचे अवशेष आहेत. ṭekḍīvar ekā junyā śahrāce avaśeṣ āhet. There are the remains of an old city on the hill."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly in the plural: अवशेष (avaśeṣ) सापडणे, remains are found."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवशेष (avaśeṣ) is a tatsama, taken from Sanskrit avaśeṣa, 'a remainder, what is left' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaśeṣ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaśeṣ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaśeṣ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaśeṣ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭekḍīvar ekā junyā śahrāce avaśeṣ āhet. — There are the remains of an old city on the hill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭekḍīvar ekā junyā śahrāce avaśeṣ āhet.* — There are the remains of an old city on the hill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an inscription, then the Marathi for an excavation, then say avaśeṣ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an inscription, then the Marathi for an excavation, then say *avaśeṣ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अवशेष (avaśeṣ) mean? (\"Remains; ruins\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C335-puratan",
+      "sequence": 19430,
+      "title": "पुरातन (purātan) — age-old; ancient",
+      "headword": "पुरातन",
+      "romanization": "purātan",
+      "gloss": "age-old; ancient",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:433797bcc16e7801",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an excavation, then the Marathi for remains."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पुरातन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुरातन — purātan — \"age-old; ancient\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हे गावातलं सर्वात पुरातन मंदिर आहे. he gāvātlaṁ sarvāt purātan mandir āhe. This is the most ancient temple in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "पुरातन (purātan) keeps one form: पुरातन (purātan) मंदिर, पुरातन (purātan) वस्तू."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुरातन (purātan) is a tatsama, taken from Sanskrit purātana, 'belonging to the past, ancient' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purātan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purātan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purātan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purātan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "he gāvātlaṁ sarvāt purātan mandir āhe. — This is the most ancient temple in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *he gāvātlaṁ sarvāt purātan mandir āhe.* — This is the most ancient temple in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an excavation, then the Marathi for remains, then say purātan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an excavation, then the Marathi for remains, then say *purātan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पुरातन (purātan) mean? (\"Age-old; ancient\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C335-khodne",
+      "sequence": 19440,
+      "title": "खोदणे (khodṇe) — to dig",
+      "headword": "खोदणे",
+      "romanization": "khodṇe",
+      "gloss": "to dig",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70bfaeb9fdf9a7b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for remains, then the Marathi for age-old."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खोदणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खोदणे — khodṇe — \"to dig\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मजुरांनी तिथे नवी विहीर खोदली. majurānnī tithe navī vihīr khodlī. The workers dug a new well there."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने खोदलं, tyāne khodlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is dug agrees with the past: विहीर खोदली, रस्ता खोदला."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खोदणे (khodṇe) is inherited: CDIAL lists Marathi khodṇe, 'to dig, carve', under khōdd, 'dig' (CDIAL 3934)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khodṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khodṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khodṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khodṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "majurānnī tithe navī vihīr khodlī. — The workers dug a new well there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *majurānnī tithe navī vihīr khodlī.* — The workers dug a new well there.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for remains, then the Marathi for age-old, then say khodṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for remains, then the Marathi for age-old, then say *khodṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खोदणे (khodṇe) mean? (\"To dig\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C335-korne",
+      "sequence": 19450,
+      "title": "कोरणे (korṇe) — to carve; to engrave",
+      "headword": "कोरणे",
+      "romanization": "korṇe",
+      "gloss": "to carve; to engrave",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a081eb2d5f4e5238",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for age-old, then the Marathi for to dig."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कोरणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोरणे — korṇe — \"to carve; to engrave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कारागिरांनी दगडात सुंदर मूर्ती कोरल्या. kārāgirānnī dagḍāt sundar mūrtī koralyā. The craftsmen carved beautiful figures in the stone."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने कोरलं, tyāne korlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The material takes -त: दगडात कोरणे (korṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोरणे (korṇe) is inherited: CDIAL lists Marathi korṇe, 'to scoop, engrave', under kōrati, 'scrapes' (CDIAL 3530)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "korṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *korṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "korṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *korṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārāgirānnī dagḍāt sundar mūrtī koralyā. — The craftsmen carved beautiful figures in the stone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārāgirānnī dagḍāt sundar mūrtī koralyā.* — The craftsmen carved beautiful figures in the stone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for age-old, then the Marathi for to dig, then say korṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for age-old, then the Marathi for to dig, then say *korṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कोरणे (korṇe) mean? (\"To carve; to engrave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

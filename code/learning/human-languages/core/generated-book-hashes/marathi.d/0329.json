@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:da413ae9f8e2d40a",
+  "lessonIds": [
+    "MR-C329-talvar",
+    "MR-C329-dhal",
+    "MR-C329-sastra",
+    "MR-C329-toph",
+    "MR-C329-ghoddal"
+  ],
+  "tex": "marathi/book/chapters/ch329-swords-and-cannons.tex"
+}

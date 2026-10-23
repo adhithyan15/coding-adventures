@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C524-potere",
+    "language": "marathi",
+    "chapter": 524,
+    "sequence": 30040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc007fa5c854ca50"
+  },
+  "findings": []
+}

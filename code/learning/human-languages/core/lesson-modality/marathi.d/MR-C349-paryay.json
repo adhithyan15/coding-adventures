@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C349-paryay",
+    "language": "marathi",
+    "chapter": 349,
+    "sequence": 20380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9da90d0c780a7611"
+  },
+  "findings": []
+}

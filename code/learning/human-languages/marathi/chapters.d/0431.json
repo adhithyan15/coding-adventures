@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "When Things Break Down",
+  "label": "ch:mr-when-things-break-down",
+  "canDo": "I can talk about a fault, things out of action, and say something snapped, burst or tore.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C431-phatne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can talk about a fault, things out of action, and say something snapped, burst or tore.",
+    "assesses": [
+      "MR-LEX-C431-BIGHAD431-03",
+      "MR-LEX-C431-BIGHAD431-04",
+      "MR-LEX-C431-BIGHAD431-05"
+    ]
+  }
+}

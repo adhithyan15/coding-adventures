@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C482-dokedukhi",
+    "language": "marathi",
+    "chapter": 482,
+    "sequence": 27640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4db4fb7da7a373c7"
+  },
+  "findings": []
+}

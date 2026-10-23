@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:b45a5cd0e78514a3",
+  "lessonIds": [
+    "MR-C359-vakil",
+    "MR-C359-khatla",
+    "MR-C359-sunavni",
+    "MR-C359-nivada",
+    "MR-C359-dava"
+  ],
+  "tex": "marathi/book/chapters/ch359-in-court.tex"
+}

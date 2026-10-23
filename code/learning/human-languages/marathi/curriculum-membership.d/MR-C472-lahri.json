@@ -1,0 +1,11 @@
+{
+  "id": "MR-C472-lahri",
+  "pathSegment": "MR-PATH-472-HATTI472",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-472-HATTI472",
+      "order": 2
+    }
+  ]
+}

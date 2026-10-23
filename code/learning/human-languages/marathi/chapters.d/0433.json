@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "Rust and Dents",
+  "label": "ch:mr-rust-and-dents",
+  "canDo": "I can talk about scratches and cracks, and say a thing rusted, got dented or broke down.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C433-band-padne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can talk about scratches and cracks, and say a thing rusted, got dented or broke down.",
+    "assesses": [
+      "MR-LEX-C433-TADA433-03",
+      "MR-LEX-C433-TADA433-04",
+      "MR-LEX-C433-TADA433-05"
+    ]
+  }
+}

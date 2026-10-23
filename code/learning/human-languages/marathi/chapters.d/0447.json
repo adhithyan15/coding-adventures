@@ -1,0 +1,19 @@
+{
+  "chapter": 447,
+  "title": "Herons and Kites",
+  "label": "ch:mr-herons-and-kites",
+  "canDo": "I can talk about herons, kites, vultures and migration, and the chirping of birds.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C447-sthalantar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can talk about herons, kites, vultures and migration, and the chirping of birds.",
+    "assesses": [
+      "MR-LEX-C447-BAGLA447-03",
+      "MR-LEX-C447-BAGLA447-04",
+      "MR-LEX-C447-BAGLA447-05"
+    ]
+  }
+}

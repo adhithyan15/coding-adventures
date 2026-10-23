@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C390-ekandarit",
+    "language": "marathi",
+    "chapter": 390,
+    "sequence": 22470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e158d70771bb62c"
+  },
+  "findings": []
+}

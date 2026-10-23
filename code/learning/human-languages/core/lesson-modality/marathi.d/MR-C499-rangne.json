@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C499-rangne",
+    "language": "marathi",
+    "chapter": 499,
+    "sequence": 28540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bfb14173d3a0800c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C521-bheg",
+    "language": "marathi",
+    "chapter": 521,
+    "sequence": 29870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:95b89fff7362ed2d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:17187e5cb324a802",
+  "lessonIds": [
+    "MR-C542-niyamavali",
+    "MR-C542-niyantran",
+    "MR-C542-takid",
+    "MR-C542-jumanne",
+    "MR-C542-jhugarne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch542.txt",
+  "json": "marathi/narration/ch542.json",
+  "textHash": "fnv1a64:55300d5d2704a30e",
+  "jsonHash": "fnv1a64:9c2e6080287a7209",
+  "findings": []
+}

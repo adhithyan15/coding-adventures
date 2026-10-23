@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C520-tumbne",
+    "language": "marathi",
+    "chapter": 520,
+    "sequence": 29860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ada63d5e138335c6"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:a6e9488d42348539",
+  "lessonIds": [
+    "MR-C421-bandhkam",
+    "MR-C421-majla",
+    "MR-C421-jhopadpatti",
+    "MR-C421-ves",
+    "MR-C421-hadda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch421.txt",
+  "json": "marathi/narration/ch421.json",
+  "textHash": "fnv1a64:9e5e9cb34c1fecbe",
+  "jsonHash": "fnv1a64:53703902b1a21979",
+  "findings": []
+}

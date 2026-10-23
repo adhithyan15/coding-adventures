@@ -1,0 +1,11 @@
+{
+  "id": "MR-C395-avghad",
+  "pathSegment": "MR-PATH-395-UPAYUKTA395",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-395-UPAYUKTA395",
+      "order": 1
+    }
+  ]
+}

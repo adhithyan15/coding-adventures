@@ -1,0 +1,21 @@
+{
+  "chapter": 543,
+  "title": "Yes or No",
+  "label": "ch:mr-yes-or-no",
+  "canDo": "I can talk about approval, consent and valid papers.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-R543-review-536-543",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 543: I can talk about approval, consent and valid papers.",
+    "assesses": [
+      "MR-LEX-C543-HOKAR543-01",
+      "MR-LEX-C543-HOKAR543-02",
+      "MR-LEX-C543-HOKAR543-03",
+      "MR-LEX-C543-HOKAR543-04",
+      "MR-LEX-C543-HOKAR543-05"
+    ]
+  }
+}

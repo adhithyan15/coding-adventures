@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:1a590e39427047a6",
+  "lessonIds": [
+    "MR-C319-rosnai",
+    "MR-C319-rangoli",
+    "MR-C319-toran",
+    "MR-C319-phataka",
+    "MR-C319-atasbaji",
+    "MR-R319-review-312-319"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch319.txt",
+  "json": "marathi/narration/ch319.json",
+  "textHash": "fnv1a64:74357d782a8eef62",
+  "jsonHash": "fnv1a64:8e56c287ff150f7d",
+  "findings": []
+}

@@ -219,7 +219,10 @@ it("pins Marathi lesson-content budgets", () =>
     // six word lessons, the letter lessons for ऋ and ञ, one reading, one
     // six-line writing task and twelve reviews. No idiom, sense or culture
     // claim.
-    lessons: 1519,
+    // 1519 -> 2909: the B1 vocabulary, chapters 288-557: 1,350 word lessons
+    // (408 verbs) and forty reviews, eight in each of five tranches. No
+    // idiom, sense or culture claim. Marathi attains B1 here.
+    lessons: 2909,
     idioms: 5,
     senses: 4,
     // 7 -> 8: MR-CULTURE-SHUBH-FORMAL-WRITTEN-REGISTER-01. The shubh greetings

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:f17d80d472199afc",
+  "lessonIds": [
+    "MR-C397-vilamb",
+    "MR-C397-kholambne",
+    "MR-C397-tatkalne",
+    "MR-C397-rakhadne",
+    "MR-C397-ravana-hone"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch397.txt",
+  "json": "marathi/narration/ch397.json",
+  "textHash": "fnv1a64:48ca9fb0309152a3",
+  "jsonHash": "fnv1a64:c64eb1f595cd25c6",
+  "findings": []
+}

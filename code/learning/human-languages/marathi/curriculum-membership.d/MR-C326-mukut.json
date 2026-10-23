@@ -1,0 +1,11 @@
+{
+  "id": "MR-C326-mukut",
+  "pathSegment": "MR-PATH-326-SAMRAT326",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-326-SAMRAT326",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C315-nondavne",
+    "language": "marathi",
+    "chapter": 315,
+    "sequence": 18410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76fc3f69b4a57c0e"
+  },
+  "findings": []
+}

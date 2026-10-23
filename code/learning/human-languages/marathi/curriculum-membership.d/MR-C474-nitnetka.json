@@ -1,0 +1,11 @@
+{
+  "id": "MR-C474-nitnetka",
+  "pathSegment": "MR-PATH-474-SHISTA474",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-474-SHISTA474",
+      "order": 0
+    }
+  ]
+}

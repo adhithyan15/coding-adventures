@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "Likely or Certain",
+  "label": "ch:mr-likely-or-certain",
+  "canDo": "I can say how likely or certain something is.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C382-bhasne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can say how likely or certain something is.",
+    "assesses": [
+      "MR-LEX-C382-SHAKYA382-03",
+      "MR-LEX-C382-SHAKYA382-04",
+      "MR-LEX-C382-SHAKYA382-05"
+    ]
+  }
+}

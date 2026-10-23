@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C450-sukh",
+    "language": "marathi",
+    "chapter": 450,
+    "sequence": 26020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2dbd04d17bc4f5b"
+  },
+  "findings": []
+}

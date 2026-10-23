@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C327-vasavne",
+    "language": "marathi",
+    "chapter": 327,
+    "sequence": 19030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a64ed13e33a3b25e"
+  },
+  "findings": []
+}

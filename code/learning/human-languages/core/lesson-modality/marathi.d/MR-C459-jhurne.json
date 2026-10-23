@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C459-jhurne",
+    "language": "marathi",
+    "chapter": 459,
+    "sequence": 26500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a42f20a66451d0d5"
+  },
+  "findings": []
+}

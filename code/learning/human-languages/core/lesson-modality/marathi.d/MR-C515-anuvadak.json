@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C515-anuvadak",
+    "language": "marathi",
+    "chapter": 515,
+    "sequence": 29580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1679e68d4f1b7cb6"
+  },
+  "findings": []
+}

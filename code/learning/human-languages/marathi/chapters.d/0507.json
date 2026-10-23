@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "Finding Work",
+  "label": "ch:mr-finding-work",
+  "canDo": "I can talk about looking for work, training and starting a job.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C507-ruju-hone",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can talk about looking for work, training and starting a job.",
+    "assesses": [
+      "MR-LEX-C507-ROJGAR507-03",
+      "MR-LEX-C507-ROJGAR507-04",
+      "MR-LEX-C507-ROJGAR507-05"
+    ]
+  }
+}

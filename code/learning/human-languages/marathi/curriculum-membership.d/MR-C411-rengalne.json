@@ -1,0 +1,11 @@
+{
+  "id": "MR-C411-rengalne",
+  "pathSegment": "MR-PATH-411-SAFAR411",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-411-SAFAR411",
+      "order": 4
+    }
+  ]
+}

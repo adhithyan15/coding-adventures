@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:a3f6518357fa0e6a",
+  "lessonIds": [
+    "MR-C360-samanta",
+    "MR-C360-bhedbhav",
+    "MR-C360-visamta",
+    "MR-C360-daridrya",
+    "MR-C360-saksarta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch360.txt",
+  "json": "marathi/narration/ch360.json",
+  "textHash": "fnv1a64:62c0c1f187d78599",
+  "jsonHash": "fnv1a64:89799c5c5f1431c2",
+  "findings": []
+}

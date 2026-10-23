@@ -1,0 +1,11 @@
+{
+  "id": "MR-C364-pravakta",
+  "pathSegment": "MR-PATH-364-SANSTHA364",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-364-SANSTHA364",
+      "order": 3
+    }
+  ]
+}

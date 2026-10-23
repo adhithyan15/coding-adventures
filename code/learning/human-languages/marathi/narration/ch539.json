@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 539,
+  "title": "Books, Shows and Applause",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6eff24ca9767aec4",
+  "lessons": [
+    {
+      "id": "MR-C539-prakasak",
+      "sequence": 30790,
+      "title": "प्रकाशक (prakāśak) — a publisher",
+      "headword": "प्रकाशक",
+      "romanization": "prakāśak",
+      "gloss": "a publisher",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d751e1306f3042a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to keep the beat, then the Marathi for to sway."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रकाशक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रकाशक — prakāśak — \"a publisher\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रकाशकाने माझ्या मावशीचं पुस्तक छापलं. prakāśakāne mājhyā māvśīcaṁ pustak chāplaṁ. The publisher printed my aunt's book."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रकाशक (prakāśak) is a tatsama, taken from Sanskrit prakāśaka, \"bringing to light\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakāśak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakāśak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakāśak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakāśak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakāśakāne mājhyā māvśīcaṁ pustak chāplaṁ. — The publisher printed my aunt's book.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakāśakāne mājhyā māvśīcaṁ pustak chāplaṁ.* — The publisher printed my aunt's book.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to keep the beat, then the Marathi for to sway, then say prakāśak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to keep the beat, then the Marathi for to sway, then say *prakāśak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रकाशक (prakāśak) mean? (\"A publisher\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C539-atmacaritra",
+      "sequence": 30800,
+      "title": "आत्मचरित्र (ātmacaritra) — an autobiography",
+      "headword": "आत्मचरित्र",
+      "romanization": "ātmacaritra",
+      "gloss": "an autobiography",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:760a2b3351db9e16",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to sway, then the Marathi for a publisher."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आत्मचरित्र",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आत्मचरित्र — ātmacaritra — \"an autobiography\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आजोबांनी त्यांचं आत्मचरित्र लिहिलं. ājobānnī tyāñcaṁ ātmacaritra lihilaṁ. Grandfather wrote his autobiography."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आत्मचरित्र (ātmacaritra) is a tatsama compound of Sanskrit ātman, \"self\", and caritra, \"conduct, a life story\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmacaritra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmacaritra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmacaritra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmacaritra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ājobānnī tyāñcaṁ ātmacaritra lihilaṁ. — Grandfather wrote his autobiography.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ājobānnī tyāñcaṁ ātmacaritra lihilaṁ.* — Grandfather wrote his autobiography.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to sway, then the Marathi for a publisher, then say ātmacaritra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to sway, then the Marathi for a publisher, then say *ātmacaritra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आत्मचरित्र (ātmacaritra) mean? (\"An autobiography\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C539-pradarsan",
+      "sequence": 30810,
+      "title": "प्रदर्शन (pradarśan) — an exhibition; a show",
+      "headword": "प्रदर्शन",
+      "romanization": "pradarśan",
+      "gloss": "an exhibition; a show",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b758b2064e6a343",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a publisher, then the Marathi for an autobiography."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रदर्शन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रदर्शन — pradarśan — \"an exhibition; a show\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शहरात चित्रांचं मोठं प्रदर्शन भरलं होतं. śahrāt citrāñcaṁ moṭhaṁ pradarśan bharlaṁ hotaṁ. A big exhibition of paintings was on in the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रदर्शन (pradarśan) भरणे, an exhibition is held."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रदर्शन (pradarśan) is a tatsama, taken from Sanskrit pradarśana, \"appearance, display\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pradarśan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pradarśan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pradarśan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pradarśan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śahrāt citrāñcaṁ moṭhaṁ pradarśan bharlaṁ hotaṁ. — A big exhibition of paintings was on in the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śahrāt citrāñcaṁ moṭhaṁ pradarśan bharlaṁ hotaṁ.* — A big exhibition of paintings was on in the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a publisher, then the Marathi for an autobiography, then say pradarśan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a publisher, then the Marathi for an autobiography, then say *pradarśan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रदर्शन (pradarśan) mean? (\"An exhibition; a show\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C539-digdarsak",
+      "sequence": 30820,
+      "title": "दिग्दर्शक (digdarśak) — a film director; a stage director",
+      "headword": "दिग्दर्शक",
+      "romanization": "digdarśak",
+      "gloss": "a film director; a stage director",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86af9a59206c08d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an autobiography, then the Marathi for an exhibition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दिग्दर्शक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिग्दर्शक — digdarśak — \"a film director; a stage director\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दिग्दर्शकाने नवीन चित्रपटाची घोषणा केली. digdarśakāne navīn citrapṭācī ghoṣṇā kelī. The director announced a new film."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिग्दर्शक (digdarśak) is a tatsama coinage from Sanskrit diś, \"direction\", and darśaka, \"one who shows\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "digdarśak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *digdarśak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "digdarśak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *digdarśak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "digdarśakāne navīn citrapṭācī ghoṣṇā kelī. — The director announced a new film.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *digdarśakāne navīn citrapṭācī ghoṣṇā kelī.* — The director announced a new film.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an autobiography, then the Marathi for an exhibition, then say digdarśak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an autobiography, then the Marathi for an exhibition, then say *digdarśak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दिग्दर्शक (digdarśak) mean? (\"A film director; a stage director\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C539-dad-dene",
+      "sequence": 30830,
+      "title": "दाद देणे (dād deṇe) — to applaud; to show appreciation",
+      "headword": "दाद देणे",
+      "romanization": "dād deṇe",
+      "gloss": "to applaud; to show appreciation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28483782bc330ad8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an exhibition, then the Marathi for a film director."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दाद देणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दाद देणे — dād deṇe — \"to applaud; to show appreciation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गायिकेच्या गाण्याला लोकांनी मनापासून दाद दिली. gāyikecyā gāṇyālā lokānnī manāpāsūn dād dilī. People warmly applauded the singer's song."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने दाद दिली, tyāne dād dilī."
+            },
+            {
+              "kind": "speech",
+              "text": "What is praised takes -ला: गाण्याला दाद देणे (dād deṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दाद देणे (dād deṇe) is दाद, a loan from Persian dād, \"justice, redress\", with देणे: to give a performer their due."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dād deṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dād deṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dād deṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dād deṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāyikecyā gāṇyālā lokānnī manāpāsūn dād dilī. — People warmly applauded the singer's song.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāyikecyā gāṇyālā lokānnī manāpāsūn dād dilī.* — People warmly applauded the singer's song.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an exhibition, then the Marathi for a film director, then say dād deṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an exhibition, then the Marathi for a film director, then say *dād deṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दाद देणे (dād deṇe) mean? (\"To applaud; to show appreciation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

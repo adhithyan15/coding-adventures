@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C332-saran-jane",
+    "language": "marathi",
+    "chapter": 332,
+    "sequence": 19290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a754d7f3577d5ed"
+  },
+  "findings": []
+}

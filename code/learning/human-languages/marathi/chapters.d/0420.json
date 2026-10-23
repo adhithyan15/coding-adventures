@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Embassies and Zoos",
+  "label": "ch:mr-embassies-and-zoos",
+  "canDo": "I can talk about an embassy, a planetarium, a zoo, residents and the area around.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C420-parisar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can talk about an embassy, a planetarium, a zoo, residents and the area around.",
+    "assesses": [
+      "MR-LEX-C420-DUTAVAS420-03",
+      "MR-LEX-C420-DUTAVAS420-04",
+      "MR-LEX-C420-DUTAVAS420-05"
+    ]
+  }
+}

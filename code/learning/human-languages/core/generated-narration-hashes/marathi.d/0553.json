@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 553,
+  "sourceHash": "fnv1a64:2e6f882cf090421c",
+  "lessonIds": [
+    "MR-C553-sadhya-karne",
+    "MR-C553-hulkavni-dene",
+    "MR-C553-acuk",
+    "MR-C553-hamkhas",
+    "MR-C553-tatpar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch553.txt",
+  "json": "marathi/narration/ch553.json",
+  "textHash": "fnv1a64:386593539f9e7c9a",
+  "jsonHash": "fnv1a64:45d750e7a9340674",
+  "findings": []
+}

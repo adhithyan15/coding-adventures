@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 399,
+  "title": "Drivers and Conductors",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5779ac464c7e49df",
+  "lessons": [
+    {
+      "id": "MR-C399-calak",
+      "sequence": 23150,
+      "title": "चालक (cālak) — a driver",
+      "headword": "चालक",
+      "romanization": "cālak",
+      "gloss": "a driver",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd1841c69073228f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a destination, then the Marathi for to set aside."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चालक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चालक — cālak — \"a driver\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चालकाने बस हळूहळू थांबवली. cālakāne bas haḷūhaḷū thāmbavlī. The driver brought the bus slowly to a stop."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "The agent of a past transitive verb takes -ने: चालकाने बस थांबवली."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चालक (cālak) is a tatsama formation on cāl-, the causative stem of Sanskrit cal, \"to move\", with the agent ending -aka: the one who makes the vehicle move. The same stem gives cālana, \"causing to move\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālakāne bas haḷūhaḷū thāmbavlī. — The driver brought the bus slowly to a stop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālakāne bas haḷūhaḷū thāmbavlī.* — The driver brought the bus slowly to a stop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a destination, then the Marathi for to set aside, then say cālak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a destination, then the Marathi for to set aside, then say *cālak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चालक (cālak) mean? (\"A driver\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C399-vahak",
+      "sequence": 23160,
+      "title": "वाहक (vāhak) — a bus conductor",
+      "headword": "वाहक",
+      "romanization": "vāhak",
+      "gloss": "a bus conductor",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:724d8d95eb868739",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to set aside, then the Marathi for a driver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वाहक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाहक — vāhak — \"a bus conductor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वाहकाने माझं तिकीट तपासलं. vāhakāne mājhaṁ tikīṭ tapāslaṁ. The conductor checked my ticket."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "On a bus the चालक (cālak) drives and the वाहक (vāhak) sells and checks tickets."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाहक (vāhak) is a tatsama, taken from Sanskrit vāhaka, \"one who carries, a carrier\" (Monier-Williams); on a bus it names the conductor."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāhak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāhak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāhak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāhak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāhakāne mājhaṁ tikīṭ tapāslaṁ. — The conductor checked my ticket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāhakāne mājhaṁ tikīṭ tapāslaṁ.* — The conductor checked my ticket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to set aside, then the Marathi for a driver, then say vāhak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to set aside, then the Marathi for a driver, then say *vāhak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वाहक (vāhak) mean? (\"A bus conductor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C399-calavne",
+      "sequence": 23170,
+      "title": "चालवणे (cālavṇe) — to drive; to run",
+      "headword": "चालवणे",
+      "romanization": "cālavṇe",
+      "gloss": "to drive; to run",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9902e5d45470d9b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a driver, then the Marathi for a bus conductor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चालवणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चालवणे — cālavṇe — \"to drive; to run\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माझे काका बस चालवतात. mājhe kākā bas cālavtāt. My uncle drives a bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने चालवलं, tyāne cālavlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Not the same as चालणे, to walk: चालवणे (cālavṇe) is to make something go, so गाडी चालवणे (cālavṇe) is to drive and दुकान चालवणे (cālavṇe) is to run a shop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चालवणे (cālavṇe) is built on चालणे, \"to walk, to go\", which CDIAL lists as Marathi ċālṇẽ under calyati, \"goes\" (CDIAL 4721), as its causative: to make a vehicle or a business go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālavṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālavṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālavṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālavṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhe kākā bas cālavtāt. — My uncle drives a bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhe kākā bas cālavtāt.* — My uncle drives a bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a driver, then the Marathi for a bus conductor, then say cālavṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a driver, then the Marathi for a bus conductor, then say *cālavṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चालवणे (cālavṇe) mean? (\"To drive; to run\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C399-sahapravasi",
+      "sequence": 23180,
+      "title": "सहप्रवासी (sahapravāsī) — a fellow traveller",
+      "headword": "सहप्रवासी",
+      "romanization": "sahapravāsī",
+      "gloss": "a fellow traveller",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c801320e677c374",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a bus conductor, then the Marathi for to drive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सहप्रवासी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहप्रवासी — sahapravāsī — \"a fellow traveller\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माझ्या सहप्रवाशाने मला पाणी दिलं. mājhyā sahapravāśāne malā pāṇī dilaṁ. My fellow traveller gave me some water."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "सह- means together with; before -ने and -ला it becomes सहप्रवाशा-."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहप्रवासी (sahapravāsī) is a compound of Sanskrit saha, \"together with\" (Monier-Williams), and प्रवासी, \"a traveller\", built on Sanskrit pravāsa, \"a journey abroad\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahapravāsī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahapravāsī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahapravāsī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahapravāsī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhyā sahapravāśāne malā pāṇī dilaṁ. — My fellow traveller gave me some water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhyā sahapravāśāne malā pāṇī dilaṁ.* — My fellow traveller gave me some water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a bus conductor, then the Marathi for to drive, then say sahapravāsī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a bus conductor, then the Marathi for to drive, then say *sahapravāsī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सहप्रवासी (sahapravāsī) mean? (\"A fellow traveller\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C399-vatsaru",
+      "sequence": 23190,
+      "title": "वाटसरू (vāṭsarū) — a wayfarer; a passer-by",
+      "headword": "वाटसरू",
+      "romanization": "vāṭsarū",
+      "gloss": "a wayfarer; a passer-by",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0abdb9e2ae212f3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to drive, then the Marathi for a fellow traveller."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वाटसरू",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाटसरू — vāṭsarū — \"a wayfarer; a passer-by\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एका वाटसरूने आम्हाला रस्ता सांगितला. ekā vāṭsarūne āmhālā rastā sāṅgitlā. A passer-by told us the way."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "An old, warm word for someone on the road, often walking."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाटसरू (vāṭsarū) is built on वाट, \"a path\", inherited from Sanskrit vartman, \"track of a wheel, path\" (CDIAL 11366); the ending marks the person on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāṭsarū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāṭsarū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāṭsarū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāṭsarū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekā vāṭsarūne āmhālā rastā sāṅgitlā. — A passer-by told us the way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekā vāṭsarūne āmhālā rastā sāṅgitlā.* — A passer-by told us the way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to drive, then the Marathi for a fellow traveller, then say vāṭsarū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to drive, then the Marathi for a fellow traveller, then say *vāṭsarū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वाटसरू (vāṭsarū) mean? (\"A wayfarer; a passer-by\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

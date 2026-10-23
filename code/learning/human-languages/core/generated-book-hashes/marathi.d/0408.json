@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:292cd03b867a8f3d",
+  "lessonIds": [
+    "MR-C408-navadi",
+    "MR-C408-valhe",
+    "MR-C408-valhavne",
+    "MR-C408-helkavne",
+    "MR-C408-nangar"
+  ],
+  "tex": "marathi/book/chapters/ch408-boats-and-oars.tex"
+}

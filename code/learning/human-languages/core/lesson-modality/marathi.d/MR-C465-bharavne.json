@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C465-bharavne",
+    "language": "marathi",
+    "chapter": 465,
+    "sequence": 26780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f77deb62b3e8d3d"
+  },
+  "findings": []
+}

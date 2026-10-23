@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 491,
+  "title": "Sleep and Naps",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c35b7fc3ab0681fa",
+  "lessons": [
+    {
+      "id": "MR-C491-nidranas",
+      "sequence": 28100,
+      "title": "निद्रानाश (nidrānāś) — insomnia",
+      "headword": "निद्रानाश",
+      "romanization": "nidrānāś",
+      "gloss": "insomnia",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bea695915ed666fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to apply heat, then the Marathi for to rub."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निद्रानाश",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निद्रानाश — nidrānāś — \"insomnia\"."
+            },
+            {
+              "kind": "speech",
+              "text": "काळजीमुळे त्याला निद्रानाश झाला. kāḷjīmuḷe tyālā nidrānāś jhālā. Worry gave him insomnia."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "निद्रा, sleep, + नाश, ruin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निद्रानाश (nidrānāś) is a learned compound built from two Sanskrit words, nidrā, \"sleep\" (CDIAL 7200), and nāśa, \"loss, destruction\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nidrānāś",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nidrānāś*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nidrānāś, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nidrānāś*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāḷjīmuḷe tyālā nidrānāś jhālā. — Worry gave him insomnia.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāḷjīmuḷe tyālā nidrānāś jhālā.* — Worry gave him insomnia.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to apply heat, then the Marathi for to rub, then say nidrānāś again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to apply heat, then the Marathi for to rub, then say *nidrānāś* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निद्रानाश (nidrānāś) mean? (\"Insomnia\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C491-ghorne",
+      "sequence": 28110,
+      "title": "घोरणे (ghorṇe) — to snore",
+      "headword": "घोरणे",
+      "romanization": "ghorṇe",
+      "gloss": "to snore",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8efd9c87615a57f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to rub, then the Marathi for insomnia."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घोरणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घोरणे — ghorṇe — \"to snore\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आजोबा रात्री मोठ्याने घोरतात. ājobā rātrī moṭhyāne ghortāt. Grandfather snores loudly at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो घोरला, to ghorlā."
+            },
+            {
+              "kind": "speech",
+              "text": "घोरण्याचा आवाज, the sound of snoring."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घोरणे (ghorṇe) is a tadbhava: CDIAL lists Marathi ghorṇẽ, \"to snore\", under Sanskrit ghurati, \"cries out frighteningly\" (CDIAL 4487)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghorṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghorṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghorṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghorṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ājobā rātrī moṭhyāne ghortāt. — Grandfather snores loudly at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ājobā rātrī moṭhyāne ghortāt.* — Grandfather snores loudly at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to rub, then the Marathi for insomnia, then say ghorṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to rub, then the Marathi for insomnia, then say *ghorṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घोरणे (ghorṇe) mean? (\"To snore\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C491-jambhai-dene",
+      "sequence": 28120,
+      "title": "जांभई देणे (jāmbhaī deṇe) — to yawn",
+      "headword": "जांभई देणे",
+      "romanization": "jāmbhaī deṇe",
+      "gloss": "to yawn",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b026ec1e990d7ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for insomnia, then the Marathi for to snore."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जांभई देणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जांभई देणे — jāmbhaī deṇe — \"to yawn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कंटाळवाण्या भाषणात सगळे जांभई देत होते. kaṇṭāḷvāṇyā bhāṣṇāt sagḷe jāmbhaī det hote. Everyone was yawning through the boring speech."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने जांभई दिली, tyāne jāmbhaī dilī."
+            },
+            {
+              "kind": "speech",
+              "text": "जांभई, a yawn; जांभई येणे, to feel a yawn coming, with the dative."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जांभई देणे (jāmbhaī deṇe) is a Marathi phrase built on जांभई, \"a yawn\", which is inherited: CDIAL lists Old Marathi jāmbhaī, \"yawning\", under jṛmbhāyita (CDIAL 5266); देणे, \"to give\", is the light verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāmbhaī deṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāmbhaī deṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāmbhaī deṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāmbhaī deṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṭāḷvāṇyā bhāṣṇāt sagḷe jāmbhaī det hote. — Everyone was yawning through the boring speech.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṭāḷvāṇyā bhāṣṇāt sagḷe jāmbhaī det hote.* — Everyone was yawning through the boring speech.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for insomnia, then the Marathi for to snore, then say jāmbhaī deṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for insomnia, then the Marathi for to snore, then say *jāmbhaī deṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जांभई देणे (jāmbhaī deṇe) mean? (\"To yawn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C491-dulki-ghene",
+      "sequence": 28130,
+      "title": "डुलकी घेणे (ḍulkī gheṇe) — to take a nap",
+      "headword": "डुलकी घेणे",
+      "romanization": "ḍulkī gheṇe",
+      "gloss": "to take a nap",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9cfc1d2adb24d20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to snore, then the Marathi for to yawn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: डुलकी घेणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डुलकी घेणे — ḍulkī gheṇe — \"to take a nap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जेवणानंतर आजोबा थोडी डुलकी घेतात. jevṇānantar ājobā thoḍī ḍulkī ghetāt. After lunch Grandfather takes a short nap."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने डुलकी घेतली, tyāne ḍulkī ghetlī."
+            },
+            {
+              "kind": "speech",
+              "text": "डुलकी, a short doze; डुलकी लागणे, to nod off."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डुलकी घेणे (ḍulkī gheṇe) is a Marathi phrase built on डुलकी, \"a doze\", whose origin is not settled, with घेणे, \"to take\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍulkī gheṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍulkī gheṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍulkī gheṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍulkī gheṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jevṇānantar ājobā thoḍī ḍulkī ghetāt. — After lunch Grandfather takes a short nap.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jevṇānantar ājobā thoḍī ḍulkī ghetāt.* — After lunch Grandfather takes a short nap.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to snore, then the Marathi for to yawn, then say ḍulkī gheṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to snore, then the Marathi for to yawn, then say *ḍulkī gheṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does डुलकी घेणे (ḍulkī gheṇe) mean? (\"To take a nap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C491-nijne",
+      "sequence": 28140,
+      "title": "निजणे (nijṇe) — to lie down; to fall asleep",
+      "headword": "निजणे",
+      "romanization": "nijṇe",
+      "gloss": "to lie down; to fall asleep",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4346f92a0f1ab707",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to yawn, then the Marathi for to take a nap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निजणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निजणे — nijṇe — \"to lie down; to fall asleep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बाळ आईच्या कुशीत निजलं. bāḷ āīcyā kuśīt nijlaṁ. The baby fell asleep in its mother's arms."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो निजला, to nijlā."
+            },
+            {
+              "kind": "speech",
+              "text": "A softer, older word beside झोपणे."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निजणे (nijṇe) is a tadbhava, inherited from Sanskrit nidrāyati, \"falls asleep\"; CDIAL lists Marathi nijṇẽ (CDIAL 7201)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nijṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nijṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nijṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nijṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāḷ āīcyā kuśīt nijlaṁ. — The baby fell asleep in its mother's arms.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāḷ āīcyā kuśīt nijlaṁ.* — The baby fell asleep in its mother's arms.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to yawn, then the Marathi for to take a nap, then say nijṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to yawn, then the Marathi for to take a nap, then say *nijṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निजणे (nijṇe) mean? (\"To lie down; to fall asleep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

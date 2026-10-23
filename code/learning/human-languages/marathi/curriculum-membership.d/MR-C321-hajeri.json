@@ -1,0 +1,11 @@
+{
+  "id": "MR-C321-hajeri",
+  "pathSegment": "MR-PATH-321-PANGAT321",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-321-PANGAT321",
+      "order": 4
+    }
+  ]
+}

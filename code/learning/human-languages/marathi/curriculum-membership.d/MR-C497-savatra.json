@@ -1,0 +1,11 @@
+{
+  "id": "MR-C497-savatra",
+  "pathSegment": "MR-PATH-497-THORLA497",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-497-THORLA497",
+      "order": 4
+    }
+  ]
+}

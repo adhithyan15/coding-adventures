@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "Carpets and Quilts",
+  "label": "ch:mr-carpets-and-quilts",
+  "canDo": "I can talk about carpets, quilts, nets and mats.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C523-gundalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can talk about carpets, quilts, nets and mats.",
+    "assesses": [
+      "MR-LEX-C523-GALICHA523-03",
+      "MR-LEX-C523-GALICHA523-04",
+      "MR-LEX-C523-GALICHA523-05"
+    ]
+  }
+}

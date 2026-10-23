@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "Campaigns",
+  "label": "ch:mr-campaigns",
+  "canDo": "I can tell of a campaign, a retreat and a release.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C333-hakalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can tell of a campaign, a retreat and a release.",
+    "assesses": [
+      "MR-LEX-C333-MOHIM333-03",
+      "MR-LEX-C333-MOHIM333-04",
+      "MR-LEX-C333-MOHIM333-05"
+    ]
+  }
+}

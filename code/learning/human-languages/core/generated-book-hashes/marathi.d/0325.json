@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:b451d0cda8ee4195",
+  "lessonIds": [
+    "MR-C325-raja",
+    "MR-C325-rani",
+    "MR-C325-rajvada",
+    "MR-C325-darbar",
+    "MR-C325-rajya-karne"
+  ],
+  "tex": "marathi/book/chapters/ch325-a-king-and-his-court.tex"
+}

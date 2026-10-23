@@ -1,0 +1,11 @@
+{
+  "id": "MR-C378-apvad",
+  "pathSegment": "MR-PATH-378-ATI378",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-378-ATI378",
+      "order": 1
+    }
+  ]
+}

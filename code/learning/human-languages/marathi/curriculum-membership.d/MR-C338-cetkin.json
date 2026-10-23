@@ -1,0 +1,11 @@
+{
+  "id": "MR-C338-cetkin",
+  "pathSegment": "MR-PATH-338-RAKSHAS338",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-338-RAKSHAS338",
+      "order": 3
+    }
+  ]
+}

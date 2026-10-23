@@ -1,0 +1,11 @@
+{
+  "id": "MR-C370-parisamvad",
+  "pathSegment": "MR-PATH-370-VYAKHYAN370",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-370-VYAKHYAN370",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:639a74c3ee09e63e",
+  "lessonIds": [
+    "MR-C337-dantkatha",
+    "MR-C337-povada",
+    "MR-C337-amar",
+    "MR-C337-prakhyat",
+    "MR-C337-kavi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch337.txt",
+  "json": "marathi/narration/ch337.json",
+  "textHash": "fnv1a64:544f28c4b0c28257",
+  "jsonHash": "fnv1a64:5a79d7dcb11cd248",
+  "findings": []
+}

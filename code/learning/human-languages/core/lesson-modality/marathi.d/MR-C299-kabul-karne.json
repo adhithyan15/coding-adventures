@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C299-kabul-karne",
+    "language": "marathi",
+    "chapter": 299,
+    "sequence": 17590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:022f74a19f060dbd"
+  },
+  "findings": []
+}

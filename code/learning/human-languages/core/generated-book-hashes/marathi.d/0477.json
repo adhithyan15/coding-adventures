@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:a8d87230a577bbd7",
+  "lessonIds": [
+    "MR-C477-talhat",
+    "MR-C477-muth",
+    "MR-C477-mandi",
+    "MR-C477-potri",
+    "MR-C477-ghota"
+  ],
+  "tex": "marathi/book/chapters/ch477-hands-and-legs.tex"
+}

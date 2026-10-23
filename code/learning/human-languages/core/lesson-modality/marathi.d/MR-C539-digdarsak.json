@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C539-digdarsak",
+    "language": "marathi",
+    "chapter": 539,
+    "sequence": 30820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86af9a59206c08d1"
+  },
+  "findings": []
+}

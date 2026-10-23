@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 455,
+  "title": "Dread and Restless Nights",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7b6180d603af49f7",
+  "lessons": [
+    {
+      "id": "MR-C455-dhasti",
+      "sequence": 26250,
+      "title": "धास्ती (dhāstī) — dread",
+      "headword": "धास्ती",
+      "romanization": "dhāstī",
+      "gloss": "dread",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b740a03320597738",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to coax round, then the Marathi for to be crestfallen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धास्ती",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धास्ती — dhāstī — \"dread\"."
+            },
+            {
+              "kind": "speech",
+              "text": "परीक्षेची धास्ती तिच्या मनात होती. parīkṣecī dhāstī ticyā manāt hotī. Dread of the exam was on her mind."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine: परीक्षेची धास्ती (dhāstī), dread of the exam. धास्ती (dhāstī) वाटणे, to feel dread, with the dative."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धास्ती (dhāstī) is a Marathi noun whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāstī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāstī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāstī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāstī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parīkṣecī dhāstī ticyā manāt hotī. — Dread of the exam was on her mind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parīkṣecī dhāstī ticyā manāt hotī.* — Dread of the exam was on her mind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to coax round, then the Marathi for to be crestfallen, then say dhāstī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to coax round, then the Marathi for to be crestfallen, then say *dhāstī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धास्ती (dhāstī) mean? (\"Dread\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C455-becain",
+      "sequence": 26260,
+      "title": "बेचैन (becain) — restless; uneasy",
+      "headword": "बेचैन",
+      "romanization": "becain",
+      "gloss": "restless; uneasy",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63a33bc889cb4bfe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to be crestfallen, then the Marathi for dread."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बेचैन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बेचैन — becain — \"restless; uneasy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बाळ रात्रभर बेचैन होतं. bāḷ rātrabhar becain hotaṁ. The baby was restless all night."
+            },
+            {
+              "kind": "speech",
+              "text": "Unchanging. The prefix बे- means without: here, without rest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बेचैन (becain) is a loan from Persian bechain, \"restless\", built on be-, \"without\", and chain, \"rest\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "becain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *becain*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "becain, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *becain*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāḷ rātrabhar becain hotaṁ. — The baby was restless all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāḷ rātrabhar becain hotaṁ.* — The baby was restless all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to be crestfallen, then the Marathi for dread, then say becain again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to be crestfallen, then the Marathi for dread, then say *becain* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बेचैन (becain) mean? (\"Restless; uneasy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C455-dagdag",
+      "sequence": 26270,
+      "title": "दगदग (dagdag) — a wearing rush; exhausting bustle",
+      "headword": "दगदग",
+      "romanization": "dagdag",
+      "gloss": "a wearing rush; exhausting bustle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a2089eaeb75e66b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for dread, then the Marathi for restless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दगदग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दगदग — dagdag — \"a wearing rush; exhausting bustle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रोजच्या दगदगीमुळे आई थकते. rojcyā dagdagīmuḷe āī thakte. Mother gets tired from the daily rush."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine; oblique दगदगी-. दगदग (dagdag) करणे, to wear oneself out rushing about."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दगदग (dagdag) is a Marathi noun built by doubling a syllable; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dagdag",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dagdag*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dagdag, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dagdag*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rojcyā dagdagīmuḷe āī thakte. — Mother gets tired from the daily rush.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rojcyā dagdagīmuḷe āī thakte.* — Mother gets tired from the daily rush.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for dread, then the Marathi for restless, then say dagdag again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for dread, then the Marathi for restless, then say *dagdag* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दगदग (dagdag) mean? (\"A wearing rush; exhausting bustle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C455-talmalne",
+      "sequence": 26280,
+      "title": "तळमळणे (taḷmaḷṇe) — to toss and turn; to fret",
+      "headword": "तळमळणे",
+      "romanization": "taḷmaḷṇe",
+      "gloss": "to toss and turn; to fret",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21f7b6be4597a068",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for restless, then the Marathi for a wearing rush."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तळमळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तळमळणे — taḷmaḷṇe — \"to toss and turn; to fret\"."
+            },
+            {
+              "kind": "speech",
+              "text": "काळजीमुळे तो रात्रभर तळमळला. kāḷjīmuḷe to rātrabhar taḷmaḷlā. He tossed and turned all night with worry."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो तळमळला, to taḷmaḷlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a sleepless night or a restless longing; तळमळ, the restlessness itself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तळमळणे (taḷmaḷṇe) is a Marathi verb built on a doubled syllable, तळ-मळ; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḷmaḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḷmaḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḷmaḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḷmaḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāḷjīmuḷe to rātrabhar taḷmaḷlā. — He tossed and turned all night with worry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāḷjīmuḷe to rātrabhar taḷmaḷlā.* — He tossed and turned all night with worry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for restless, then the Marathi for a wearing rush, then say taḷmaḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for restless, then the Marathi for a wearing rush, then say *taḷmaḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तळमळणे (taḷmaḷṇe) mean? (\"To toss and turn; to fret\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C455-ghusmatne",
+      "sequence": 26290,
+      "title": "घुसमटणे (ghusmaṭṇe) — to feel stifled",
+      "headword": "घुसमटणे",
+      "romanization": "ghusmaṭṇe",
+      "gloss": "to feel stifled",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc539ef71b6ff104",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a wearing rush, then the Marathi for to toss and turn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घुसमटणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घुसमटणे — ghusmaṭṇe — \"to feel stifled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गर्दीच्या बसमध्ये मी घुसमटलो. gardīcyā basmadhye mī ghusmaṭlo. I felt stifled in the crowded bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो घुसमटला, to ghusmaṭlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a body in a stuffy room, and of a mind with no one to talk to: तिचा जीव घुसमटत होता."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घुसमटणे (ghusmaṭṇe) is a Marathi verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghusmaṭṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghusmaṭṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghusmaṭṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghusmaṭṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gardīcyā basmadhye mī ghusmaṭlo. — I felt stifled in the crowded bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gardīcyā basmadhye mī ghusmaṭlo.* — I felt stifled in the crowded bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a wearing rush, then the Marathi for to toss and turn, then say ghusmaṭṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a wearing rush, then the Marathi for to toss and turn, then say *ghusmaṭṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घुसमटणे (ghusmaṭṇe) mean? (\"To feel stifled\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

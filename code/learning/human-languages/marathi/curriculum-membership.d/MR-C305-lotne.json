@@ -1,0 +1,11 @@
+{
+  "id": "MR-C305-lotne",
+  "pathSegment": "MR-PATH-305-GATVARSH305",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-305-GATVARSH305",
+      "order": 4
+    }
+  ]
+}

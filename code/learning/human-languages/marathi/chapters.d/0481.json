@@ -1,0 +1,21 @@
+{
+  "chapter": 481,
+  "title": "Coughs and Colds",
+  "label": "ch:mr-coughs-and-colds",
+  "canDo": "I can talk about a runny cold, sneezing and clearing my throat.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-R481-review-474-481",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can talk about a runny cold, sneezing and clearing my throat.",
+    "assesses": [
+      "MR-LEX-C481-SARDI481-01",
+      "MR-LEX-C481-SARDI481-02",
+      "MR-LEX-C481-SARDI481-03",
+      "MR-LEX-C481-SARDI481-04",
+      "MR-LEX-C481-SARDI481-05"
+    ]
+  }
+}

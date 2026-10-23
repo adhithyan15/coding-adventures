@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:cff948351de85fc2",
+  "lessonIds": [
+    "MR-C499-garodar",
+    "MR-C499-balantpan",
+    "MR-C499-tanha",
+    "MR-C499-rangne",
+    "MR-C499-pajne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch499.txt",
+  "json": "marathi/narration/ch499.json",
+  "textHash": "fnv1a64:bbf0da0965047dc5",
+  "jsonHash": "fnv1a64:974f6060cdad5ca5",
+  "findings": []
+}

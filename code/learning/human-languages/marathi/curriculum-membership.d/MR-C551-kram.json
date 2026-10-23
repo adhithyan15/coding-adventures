@@ -1,0 +1,11 @@
+{
+  "id": "MR-C551-kram",
+  "pathSegment": "MR-PATH-551-YADI551",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-551-YADI551",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C552-sutne",
+    "language": "marathi",
+    "chapter": 552,
+    "sequence": 31500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ecd6e7734c6c7699"
+  },
+  "findings": []
+}

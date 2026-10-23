@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:f23fdd2143c8ab78",
+  "lessonIds": [
+    "MR-C356-loksahi",
+    "MR-C356-bahumat",
+    "MR-C356-alpasankhyak",
+    "MR-C356-janmat",
+    "MR-C356-kaul-dene"
+  ],
+  "tex": "marathi/book/chapters/ch356-democracy-and-majorities.tex"
+}

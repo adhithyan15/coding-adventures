@@ -1,0 +1,11 @@
+{
+  "id": "MR-C350-dos-dene",
+  "pathSegment": "MR-PATH-350-SVIKAR350",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-350-SVIKAR350",
+      "order": 3
+    }
+  ]
+}

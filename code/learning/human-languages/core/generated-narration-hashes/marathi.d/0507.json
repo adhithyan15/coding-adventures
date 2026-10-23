@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:1945be6be356fcf1",
+  "lessonIds": [
+    "MR-C507-bharti",
+    "MR-C507-rojgar",
+    "MR-C507-prasiksan",
+    "MR-C507-hatoti",
+    "MR-C507-ruju-hone"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch507.txt",
+  "json": "marathi/narration/ch507.json",
+  "textHash": "fnv1a64:a3f707381cf972b7",
+  "jsonHash": "fnv1a64:514fe910f5b10cee",
+  "findings": []
+}

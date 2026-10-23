@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "Boats and Oars",
+  "label": "ch:mr-boats-and-oars",
+  "canDo": "I can talk about a boatman, oars, rowing and a boat rocking at anchor.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C408-nangar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can talk about a boatman, oars, rowing and a boat rocking at anchor.",
+    "assesses": [
+      "MR-LEX-C408-NAVADI408-03",
+      "MR-LEX-C408-NAVADI408-04",
+      "MR-LEX-C408-NAVADI408-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C412-ghutmalne",
+    "language": "marathi",
+    "chapter": 412,
+    "sequence": 23860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e064d4dd4e2d9e70"
+  },
+  "findings": []
+}

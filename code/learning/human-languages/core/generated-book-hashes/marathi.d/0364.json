@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:90f5f4b9cb16d68b",
+  "lessonIds": [
+    "MR-C364-samstha",
+    "MR-C364-samiti",
+    "MR-C364-sabha",
+    "MR-C364-pravakta",
+    "MR-C364-karyakarta"
+  ],
+  "tex": "marathi/book/chapters/ch364-organizations.tex"
+}

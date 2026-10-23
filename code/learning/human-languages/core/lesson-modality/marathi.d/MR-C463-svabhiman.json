@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C463-svabhiman",
+    "language": "marathi",
+    "chapter": 463,
+    "sequence": 26680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c494fc43456b4bca"
+  },
+  "findings": []
+}

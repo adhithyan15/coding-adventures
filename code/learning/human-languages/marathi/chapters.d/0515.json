@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Experts at Work",
+  "label": "ch:mr-experts-at-work",
+  "canDo": "I can name some experts and say how they help.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C515-atopne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can name some experts and say how they help.",
+    "assesses": [
+      "MR-LEX-C515-VISHESH515-03",
+      "MR-LEX-C515-VISHESH515-04",
+      "MR-LEX-C515-VISHESH515-05"
+    ]
+  }
+}

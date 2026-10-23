@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C393-dhudkavne",
+    "language": "marathi",
+    "chapter": 393,
+    "sequence": 22630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e4109d0e846ab37"
+  },
+  "findings": []
+}

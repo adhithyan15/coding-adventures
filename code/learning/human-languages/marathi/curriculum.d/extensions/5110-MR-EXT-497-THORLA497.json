@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-497-THORLA497",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say who is younger or elder, an only child, a cousin or a step-relation.",
+  "prerequisites": []
+}

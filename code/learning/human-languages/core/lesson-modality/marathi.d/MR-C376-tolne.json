@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C376-tolne",
+    "language": "marathi",
+    "chapter": 376,
+    "sequence": 21740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90d15f88524c7c18"
+  },
+  "findings": []
+}

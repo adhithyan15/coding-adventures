@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "Droughts and Cloudbursts",
+  "label": "ch:mr-droughts-and-cloudbursts",
+  "canDo": "I can talk about droughts, cloudbursts and hard spells, and say rain lashed and the water went down.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C440-osarne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can talk about droughts, cloudbursts and hard spells, and say rain lashed and the water went down.",
+    "assesses": [
+      "MR-LEX-C440-DUSHKAL440-03",
+      "MR-LEX-C440-DUSHKAL440-04",
+      "MR-LEX-C440-DUSHKAL440-05"
+    ]
+  }
+}

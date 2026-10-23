@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:b8fb97e541d307d4",
+  "lessonIds": [
+    "MR-C436-vatavaran",
+    "MR-C436-usnata",
+    "MR-C436-ukada",
+    "MR-C436-damat",
+    "MR-C436-talapne"
+  ],
+  "tex": "marathi/book/chapters/ch436-heat-and-humidity.tex"
+}

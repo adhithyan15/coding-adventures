@@ -1,0 +1,11 @@
+{
+  "id": "MR-C418-nagarpalika",
+  "pathSegment": "MR-PATH-418-NAGAR418",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-418-NAGAR418",
+      "order": 2
+    }
+  ]
+}

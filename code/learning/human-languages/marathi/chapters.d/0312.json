@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "On the Air",
+  "label": "ch:mr-on-the-air",
+  "canDo": "I can talk about radio, television and broadcasts.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C312-prasarit-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can talk about radio, television and broadcasts.",
+    "assesses": [
+      "MR-LEX-C312-VAHINI312-03",
+      "MR-LEX-C312-VAHINI312-04",
+      "MR-LEX-C312-VAHINI312-05"
+    ]
+  }
+}

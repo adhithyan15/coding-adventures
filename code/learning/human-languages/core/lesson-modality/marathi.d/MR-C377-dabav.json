@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C377-dabav",
+    "language": "marathi",
+    "chapter": 377,
+    "sequence": 21800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b6f4746d9a610c2"
+  },
+  "findings": []
+}

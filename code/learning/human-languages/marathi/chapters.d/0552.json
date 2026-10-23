@@ -1,0 +1,19 @@
+{
+  "chapter": 552,
+  "title": "When Plans Fail",
+  "label": "ch:mr-when-plans-fail",
+  "canDo": "I can say how plans fall apart and things come loose.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C552-sutne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 552: I can say how plans fall apart and things come loose.",
+    "assesses": [
+      "MR-LEX-C552-BIGHADNE552-03",
+      "MR-LEX-C552-BIGHADNE552-04",
+      "MR-LEX-C552-BIGHADNE552-05"
+    ]
+  }
+}

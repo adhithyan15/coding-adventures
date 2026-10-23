@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:13bb28544e570a05",
+  "lessonIds": [
+    "MR-C371-uttirna-hone",
+    "MR-C371-napas-hone",
+    "MR-C371-ujalni-karne",
+    "MR-C371-ghokne",
+    "MR-C371-pramanpatra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch371.txt",
+  "json": "marathi/narration/ch371.json",
+  "textHash": "fnv1a64:e4618e4355071c60",
+  "jsonHash": "fnv1a64:91acf268b9db21d0",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:018df617635819a4",
+  "lessonIds": [
+    "MR-C463-garva",
+    "MR-C463-ahankar",
+    "MR-C463-svabhiman",
+    "MR-C463-saramne",
+    "MR-C463-osalne"
+  ],
+  "tex": "marathi/book/chapters/ch463-pride-and-shame.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 463,
+  "title": "Pride and Shame",
+  "label": "ch:mr-pride-and-shame",
+  "canDo": "I can talk about pride, ego and feeling ashamed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C463-osalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can talk about pride, ego and feeling ashamed.",
+    "assesses": [
+      "MR-LEX-C463-GARVA463-03",
+      "MR-LEX-C463-GARVA463-04",
+      "MR-LEX-C463-GARVA463-05"
+    ]
+  }
+}

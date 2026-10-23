@@ -1,0 +1,11 @@
+{
+  "id": "MR-C342-uddes",
+  "pathSegment": "MR-PATH-342-HETU342",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-342-HETU342",
+      "order": 1
+    }
+  ]
+}

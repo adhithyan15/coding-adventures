@@ -1,0 +1,19 @@
+{
+  "chapter": 499,
+  "title": "A New Baby",
+  "label": "ch:mr-a-new-baby",
+  "canDo": "I can talk about pregnancy, childbirth and a newborn baby.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C499-pajne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 499: I can talk about pregnancy, childbirth and a newborn baby.",
+    "assesses": [
+      "MR-LEX-C499-BAL499-03",
+      "MR-LEX-C499-BAL499-04",
+      "MR-LEX-C499-BAL499-05"
+    ]
+  }
+}

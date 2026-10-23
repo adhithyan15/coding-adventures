@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:d8d1525d9cf23337",
+  "lessonIds": [
+    "MR-C516-sanganak",
+    "MR-C516-bhramandhvani",
+    "MR-C516-durdhvani",
+    "MR-C516-citraphit",
+    "MR-C516-vaparne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch516.txt",
+  "json": "marathi/narration/ch516.json",
+  "textHash": "fnv1a64:30387619fefd4e05",
+  "jsonHash": "fnv1a64:078b051facacfb44",
+  "findings": []
+}

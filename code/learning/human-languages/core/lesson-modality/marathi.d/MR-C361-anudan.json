@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C361-anudan",
+    "language": "marathi",
+    "chapter": 361,
+    "sequence": 21000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:934e07b3e28dd3d0"
+  },
+  "findings": []
+}

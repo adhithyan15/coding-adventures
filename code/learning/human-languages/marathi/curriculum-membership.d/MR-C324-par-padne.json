@@ -1,0 +1,11 @@
+{
+  "id": "MR-C324-par-padne",
+  "pathSegment": "MR-PATH-324-SHRADDHA324",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-324-SHRADDHA324",
+      "order": 3
+    }
+  ]
+}

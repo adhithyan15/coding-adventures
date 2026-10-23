@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:1a0bfac60376d5f4",
+  "lessonIds": [
+    "MR-C339-nayak",
+    "MR-C339-khalnayak",
+    "MR-C339-patra",
+    "MR-C339-sadhu",
+    "MR-C339-savkar"
+  ],
+  "tex": "marathi/book/chapters/ch339-heroes-and-villains.tex"
+}

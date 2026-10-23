@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C372-vidvan",
+    "language": "marathi",
+    "chapter": 372,
+    "sequence": 21550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c26a0a99cd6344a"
+  },
+  "findings": []
+}

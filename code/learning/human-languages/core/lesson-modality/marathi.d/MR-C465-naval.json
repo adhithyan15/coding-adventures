@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C465-naval",
+    "language": "marathi",
+    "chapter": 465,
+    "sequence": 26760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0274039997142410"
+  },
+  "findings": []
+}

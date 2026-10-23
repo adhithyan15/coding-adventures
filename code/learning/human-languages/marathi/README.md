@@ -366,6 +366,43 @@ first-person can-do sentence and the lesson that pays it off.
   carries all four inherited ordinals as headwords and none of the built ones.
   A1 exam coverage 161/301 → **162/301**.
 
+- **Chapters 276–287 — the B1 core** ([`lessons/`](./lessons/), `MR-C276-*`
+  to `MR-W287-six-lines`): 276–277 bridge the A2 past and future the track
+  had left empty (मी गेलो, the ergative त्याने काम केलं with the verb agreeing
+  with the object, होता; मी जाईन and -णार आहे), then two chapters for each of
+  the five B1 spine nodes. Narrating (-त होतो, असताना, the habitual -ायचो, आधी
+  / मग / त्यानंतर / शेवटी, the -ऊन form, an eighty-six-word reading), giving
+  reasons (मला वाटतं की, म्हणून / त्यामुळे, -ायला पाहिजे / हवं, -ऊ नये, -मुळे
+  and कारण), travel (the way, a ticket, a lost bag, a missed train),
+  experience (feelings in the dative, -ायचं आहे, -पेक्षा and सर्वात, -पासून)
+  and conditions (जर … तर, -ल्यास / नाहीतर, … -वर अवलंबून आहे, the unreal
+  past + असतो), closing on a six-line writing task. The letter lessons
+  `MR-W279-letter-vocalic-r` and `MR-W281-letter-nya` sit right after their
+  anchor words ऋतू ("a season") and ज्ञान ("knowledge") and quote the
+  inventory's source-backed stroke order.
+- **Chapters 288–557 — the B1 vocabulary** ([`lessons/`](./lessons/),
+  `MR-C288-*` to `MR-R557-review-final-557`): 1,350 headwords, 408 of them
+  verbs (each shown with its past, तो बुडाला "he sank", त्याने लुटलं "he
+  looted"), one word per lesson, with eight reviews in each of the five
+  tranches:
+  - 288–341: narrating (incidents, crime and the police, disasters, news and
+    the media, weddings and festivals, kings and wars, legends);
+  - 342–395: reasons and conditions (argument and evidence, citizens,
+    elections and the courts, university and research, then conditions,
+    limits, likelihood and goals);
+  - 396–449: travel (trains, roads and boats, a place to stay, the city,
+    shopping and money, things breaking down, the weather and nature);
+  - 450–503: experience (feelings and character, the body and health,
+    family);
+  - 504–557: work, technology and the home, free time, sport and the arts,
+    then insurance, risks, rules, plans and chance.
+
+  The first words of chapters 288–295 practise the core's last four grammar
+  points (… -वर अवलंबून आहे, the past + असतो, जर … तर and -ल्यास), two words
+  each, and the first words of chapters 302 and 319 bring back ऋ through
+  ऋतू, of 305 and 322 ञ through ज्ञान. With the core, Marathi teaches 2,572
+  headwords at or below B1 and attains B1 on the level gate.
+
 Chapters 9–12 **are** in the ledger with scored payoffs, and that is a change
 worth recording rather than quietly editing. This paragraph used to say the
 opposite, because those chapters' lessons were schema v1 and declared no

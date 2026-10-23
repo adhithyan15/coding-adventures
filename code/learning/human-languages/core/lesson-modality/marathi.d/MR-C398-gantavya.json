@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C398-gantavya",
+    "language": "marathi",
+    "chapter": 398,
+    "sequence": 23130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:027058d60bbeb782"
+  },
+  "findings": []
+}

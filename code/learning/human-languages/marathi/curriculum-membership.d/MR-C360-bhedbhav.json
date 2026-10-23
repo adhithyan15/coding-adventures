@@ -1,0 +1,11 @@
+{
+  "id": "MR-C360-bhedbhav",
+  "pathSegment": "MR-PATH-360-SAMANTA360",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-360-SAMANTA360",
+      "order": 1
+    }
+  ]
+}

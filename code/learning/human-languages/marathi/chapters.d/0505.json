@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Old Crafts",
+  "label": "ch:mr-old-crafts",
+  "canDo": "I can name some old crafts and the people who practise them.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C505-thatne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can name some old crafts and the people who practise them.",
+    "assesses": [
+      "MR-LEX-C505-KARAGIR505-03",
+      "MR-LEX-C505-KARAGIR505-04",
+      "MR-LEX-C505-KARAGIR505-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:ad7c2c8b674be244",
+  "lessonIds": [
+    "MR-C371-uttirna-hone",
+    "MR-C371-napas-hone",
+    "MR-C371-ujalni-karne",
+    "MR-C371-ghokne",
+    "MR-C371-pramanpatra"
+  ],
+  "tex": "marathi/book/chapters/ch371-passing-and-failing.tex"
+}

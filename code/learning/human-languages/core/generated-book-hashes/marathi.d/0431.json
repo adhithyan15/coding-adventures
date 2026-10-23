@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:341bff92cd875210",
+  "lessonIds": [
+    "MR-C431-bighad",
+    "MR-C431-nikami",
+    "MR-C431-tutne",
+    "MR-C431-phutne",
+    "MR-C431-phatne"
+  ],
+  "tex": "marathi/book/chapters/ch431-when-things-break-down.tex"
+}

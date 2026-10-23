@@ -1,0 +1,11 @@
+{
+  "id": "MR-C318-munj",
+  "pathSegment": "MR-PATH-318-BARSE318",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-318-BARSE318",
+      "order": 3
+    }
+  ]
+}

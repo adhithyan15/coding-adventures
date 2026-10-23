@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C495-bhaca",
+    "language": "marathi",
+    "chapter": 495,
+    "sequence": 28310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:deeaf3c76bef16df"
+  },
+  "findings": []
+}

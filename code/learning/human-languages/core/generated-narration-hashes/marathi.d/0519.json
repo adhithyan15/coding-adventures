@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:d98b655d84d75222",
+  "lessonIds": [
+    "MR-C519-vijeri",
+    "MR-C519-jhumbar",
+    "MR-C519-ujed",
+    "MR-C519-andhar",
+    "MR-C519-ujalne",
+    "MR-R519-review-512-519"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch519.txt",
+  "json": "marathi/narration/ch519.json",
+  "textHash": "fnv1a64:bb1ad78cdc53afa9",
+  "jsonHash": "fnv1a64:a4f2b772d3638958",
+  "findings": []
+}

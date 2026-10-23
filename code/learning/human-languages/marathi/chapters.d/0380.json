@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "Must or May",
+  "label": "ch:mr-must-or-may",
+  "canDo": "I can say what is compulsory, optional or unavoidable.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C380-tartud",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can say what is compulsory, optional or unavoidable.",
+    "assesses": [
+      "MR-LEX-C380-ANIVARYA380-03",
+      "MR-LEX-C380-ANIVARYA380-04",
+      "MR-LEX-C380-ANIVARYA380-05"
+    ]
+  }
+}

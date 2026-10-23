@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:4ab7bf96075f5efc",
+  "lessonIds": [
+    "MR-C338-raksas",
+    "MR-C338-pari",
+    "MR-C338-jadu",
+    "MR-C338-cetkin",
+    "MR-C338-sap"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch338.txt",
+  "json": "marathi/narration/ch338.json",
+  "textHash": "fnv1a64:d992a016311400bc",
+  "jsonHash": "fnv1a64:f377448eb8ce8c06",
+  "findings": []
+}

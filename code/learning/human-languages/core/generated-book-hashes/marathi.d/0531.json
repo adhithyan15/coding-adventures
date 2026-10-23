@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:eaff482722cc7c86",
+  "lessonIds": [
+    "MR-C531-phalandaj",
+    "MR-C531-golandaj",
+    "MR-C531-dhavpatu",
+    "MR-C531-tolavne",
+    "MR-C531-jhelne"
+  ],
+  "tex": "marathi/book/chapters/ch531-players-and-plays.tex"
+}

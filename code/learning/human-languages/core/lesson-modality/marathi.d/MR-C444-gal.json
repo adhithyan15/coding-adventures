@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C444-gal",
+    "language": "marathi",
+    "chapter": 444,
+    "sequence": 25470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ba54233a24d2087"
+  },
+  "findings": []
+}

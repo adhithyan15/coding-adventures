@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "Cleaning Day",
+  "label": "ch:mr-cleaning-day",
+  "canDo": "I can talk about rubbish, sweeping and scrubbing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C524-ghasne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can talk about rubbish, sweeping and scrubbing.",
+    "assesses": [
+      "MR-LEX-C524-SAPHAI524-03",
+      "MR-LEX-C524-SAPHAI524-04",
+      "MR-LEX-C524-SAPHAI524-05"
+    ]
+  }
+}

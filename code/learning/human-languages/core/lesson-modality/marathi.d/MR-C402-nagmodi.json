@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C402-nagmodi",
+    "language": "marathi",
+    "chapter": 402,
+    "sequence": 23330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ea39ab3abf21743"
+  },
+  "findings": []
+}

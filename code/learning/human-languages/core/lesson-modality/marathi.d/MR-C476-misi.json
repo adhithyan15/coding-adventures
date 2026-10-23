@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C476-misi",
+    "language": "marathi",
+    "chapter": 476,
+    "sequence": 27370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a066333f359cd671"
+  },
+  "findings": []
+}

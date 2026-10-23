@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:23d96d38102a8bbc",
+  "lessonIds": [
+    "MR-C488-rugna",
+    "MR-C488-paricarika",
+    "MR-C488-vaidya",
+    "MR-C488-nidan",
+    "MR-C488-upcar"
+  ],
+  "tex": "marathi/book/chapters/ch488-at-the-clinic.tex"
+}

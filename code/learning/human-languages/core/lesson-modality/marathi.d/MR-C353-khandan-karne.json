@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C353-khandan-karne",
+    "language": "marathi",
+    "chapter": 353,
+    "sequence": 20580,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1bdd07d10bf41ef8"
+  },
+  "findings": []
+}

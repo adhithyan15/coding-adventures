@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C505-kumbhar",
+    "language": "marathi",
+    "chapter": 505,
+    "sequence": 29050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a30ab1b26336a782"
+  },
+  "findings": []
+}

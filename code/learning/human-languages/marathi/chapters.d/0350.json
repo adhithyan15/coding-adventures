@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "Accepting and Blaming",
+  "label": "ch:mr-accepting-and-blaming",
+  "canDo": "I can accept an argument, admit a fault or lay blame.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C350-arop-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can accept an argument, admit a fault or lay blame.",
+    "assesses": [
+      "MR-LEX-C350-SVIKAR350-03",
+      "MR-LEX-C350-SVIKAR350-04",
+      "MR-LEX-C350-SVIKAR350-05"
+    ]
+  }
+}

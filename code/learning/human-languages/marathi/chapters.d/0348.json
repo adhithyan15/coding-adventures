@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "Links and Likenesses",
+  "label": "ch:mr-links-and-likenesses",
+  "canDo": "I can say how two things are linked or alike.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C348-yaulat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can say how two things are linked or alike.",
+    "assesses": [
+      "MR-LEX-C348-SAMBANDH348-03",
+      "MR-LEX-C348-SAMBANDH348-04",
+      "MR-LEX-C348-SAMBANDH348-05"
+    ]
+  }
+}

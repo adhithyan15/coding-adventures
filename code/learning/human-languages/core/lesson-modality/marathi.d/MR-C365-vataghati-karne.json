@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C365-vataghati-karne",
+    "language": "marathi",
+    "chapter": 365,
+    "sequence": 21170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6224745b0ba7ae9"
+  },
+  "findings": []
+}

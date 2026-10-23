@@ -1,0 +1,19 @@
+{
+  "chapter": 316,
+  "title": "A Wedding",
+  "label": "ch:mr-a-wedding",
+  "canDo": "I can talk about a wedding: the engagement, the henna, the procession.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C316-mandap",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can talk about a wedding: the engagement, the henna, the procession.",
+    "assesses": [
+      "MR-LEX-C316-LAGNA316-03",
+      "MR-LEX-C316-LAGNA316-04",
+      "MR-LEX-C316-LAGNA316-05"
+    ]
+  }
+}

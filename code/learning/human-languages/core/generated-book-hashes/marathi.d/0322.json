@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:848ffaf794192f04",
+  "lessonIds": [
+    "MR-C322-puraskar",
+    "MR-C322-satkar-karne",
+    "MR-C322-gaurav",
+    "MR-C322-abhinandan-karne",
+    "MR-C322-udghatan-karne"
+  ],
+  "tex": "marathi/book/chapters/ch322-honours-and-awards.tex"
+}

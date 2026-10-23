@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:68a561e980d8e20f",
+  "lessonIds": [
+    "MR-C470-labad",
+    "MR-C470-dhongi",
+    "MR-C470-bhola",
+    "MR-C470-niragas",
+    "MR-C470-thakavne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch470.txt",
+  "json": "marathi/narration/ch470.json",
+  "textHash": "fnv1a64:9dd42d3fdfea26de",
+  "jsonHash": "fnv1a64:a457548c3e59152f",
+  "findings": []
+}

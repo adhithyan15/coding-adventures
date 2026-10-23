@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C462-heva",
+    "language": "marathi",
+    "chapter": 462,
+    "sequence": 26610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6bdba0e79a62df1"
+  },
+  "findings": []
+}

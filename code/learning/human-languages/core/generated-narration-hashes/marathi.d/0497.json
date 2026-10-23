@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:4cf977695af330ea",
+  "lessonIds": [
+    "MR-C497-dhakta",
+    "MR-C497-thorla",
+    "MR-C497-ekulta",
+    "MR-C497-culat",
+    "MR-C497-savatra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch497.txt",
+  "json": "marathi/narration/ch497.json",
+  "textHash": "fnv1a64:69dd3f8a60dcc5e2",
+  "jsonHash": "fnv1a64:c590efce66217bec",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "Made in a Factory",
+  "label": "ch:mr-made-in-a-factory",
+  "canDo": "I can talk about factories, goods and supplies.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C512-khapne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can talk about factories, goods and supplies.",
+    "assesses": [
+      "MR-LEX-C512-KARKHANA512-03",
+      "MR-LEX-C512-KARKHANA512-04",
+      "MR-LEX-C512-KARKHANA512-05"
+    ]
+  }
+}

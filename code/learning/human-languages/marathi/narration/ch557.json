@@ -1,0 +1,935 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 557,
+  "title": "Means and Notice",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:e81299cd5689cf48",
+  "lessons": [
+    {
+      "id": "MR-C557-kuvat",
+      "sequence": 31710,
+      "title": "कुवत (kuvat) — capacity; means",
+      "headword": "कुवत",
+      "romanization": "kuvat",
+      "gloss": "capacity; means",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:827fb8a5e97a15a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for dire, then the Marathi for confusion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कुवत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुवत — kuvat — \"capacity; means\"."
+            },
+            {
+              "kind": "speech",
+              "text": "घर घेण्याची आमची अजून कुवत नाही. ghar gheṇyācī āmcī ajūn kuvat nāhī. We do not yet have the means to buy a house."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुवत (kuvat) is a loan through Persian usually traced to Arabic quwwa, \"strength\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuvat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuvat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuvat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuvat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghar gheṇyācī āmcī ajūn kuvat nāhī. — We do not yet have the means to buy a house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghar gheṇyācī āmcī ajūn kuvat nāhī.* — We do not yet have the means to buy a house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for dire, then the Marathi for confusion, then say kuvat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for dire, then the Marathi for confusion, then say *kuvat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कुवत (kuvat) mean? (\"Capacity; means\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C557-avaka",
+      "sequence": 31720,
+      "title": "आवाका (āvākā) — scope; reach",
+      "headword": "आवाका",
+      "romanization": "āvākā",
+      "gloss": "scope; reach",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac8581109a116d8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for confusion, then the Marathi for capacity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आवाका",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आवाका — āvākā — \"scope; reach\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हे काम माझ्या आवाक्याबाहेर आहे. he kām mājhyā āvākyābāher āhe. This job is beyond my reach."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "The oblique is आवाक्या-: आवाक्याबाहेर, beyond reach."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आवाका (āvākā) is a Marathi word for the reach of one's ability; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvākā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvākā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvākā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvākā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "he kām mājhyā āvākyābāher āhe. — This job is beyond my reach.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *he kām mājhyā āvākyābāher āhe.* — This job is beyond my reach.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for confusion, then the Marathi for capacity, then say āvākā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for confusion, then the Marathi for capacity, then say *āvākā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आवाका (āvākā) mean? (\"Scope; reach\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C557-katkasar",
+      "sequence": 31730,
+      "title": "काटकसर (kāṭkasar) — thrift",
+      "headword": "काटकसर",
+      "romanization": "kāṭkasar",
+      "gloss": "thrift",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e69a4e22f8ebe78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for capacity, then the Marathi for scope."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: काटकसर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काटकसर — kāṭkasar — \"thrift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आजीने काटकसर करून थोडे पैसे वाचवले. ājīne kāṭkasar karūn thoḍe paise vācavle. By being thrifty Grandmother saved a little money."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "काटकसर (kāṭkasar) करणे, to economize."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काटकसर (kāṭkasar) is a Marathi word for careful spending; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṭkasar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṭkasar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṭkasar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṭkasar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ājīne kāṭkasar karūn thoḍe paise vācavle. — By being thrifty Grandmother saved a little money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ājīne kāṭkasar karūn thoḍe paise vācavle.* — By being thrifty Grandmother saved a little money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for capacity, then the Marathi for scope, then say kāṭkasar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for capacity, then the Marathi for scope, then say *kāṭkasar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does काटकसर (kāṭkasar) mean? (\"Thrift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C557-purvasucana",
+      "sequence": 31740,
+      "title": "पूर्वसूचना (pūrvasūcanā) — advance notice",
+      "headword": "पूर्वसूचना",
+      "romanization": "pūrvasūcanā",
+      "gloss": "advance notice",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9c96e1a5ccb1765",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for scope, then the Marathi for thrift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पूर्वसूचना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पूर्वसूचना — pūrvasūcanā — \"advance notice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कोणतीही पूर्वसूचना न देता वीज गेली. koṇtīhī pūrvasūcanā na detā vīj gelī. The power went off without any advance notice."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पूर्वसूचना (pūrvasūcanā) is a tatsama compound of Sanskrit pūrva, \"before\", and sūcanā, \"indication\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrvasūcanā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrvasūcanā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrvasūcanā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrvasūcanā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṇtīhī pūrvasūcanā na detā vīj gelī. — The power went off without any advance notice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṇtīhī pūrvasūcanā na detā vīj gelī.* — The power went off without any advance notice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for scope, then the Marathi for thrift, then say pūrvasūcanā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for scope, then the Marathi for thrift, then say *pūrvasūcanā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पूर्वसूचना (pūrvasūcanā) mean? (\"Advance notice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C557-anumati",
+      "sequence": 31750,
+      "title": "अनुमती (anumatī) — formal permission",
+      "headword": "अनुमती",
+      "romanization": "anumatī",
+      "gloss": "formal permission",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75b6537811b31c80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for thrift, then the Marathi for advance notice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनुमती",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुमती — anumatī — \"formal permission\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शिक्षकांची अनुमती घेऊन मी वर्गाबाहेर गेलो. śikṣakāñcī anumatī gheūn mī vargābāher gelo. With the teacher's permission I went out of the class."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "अनुमती (anumatī) is the formal word beside परवानगी."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुमती (anumatī) is a tatsama, taken from Sanskrit anumati, \"assent, permission\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anumatī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anumatī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anumatī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anumatī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikṣakāñcī anumatī gheūn mī vargābāher gelo. — With the teacher's permission I went out of the class.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikṣakāñcī anumatī gheūn mī vargābāher gelo.* — With the teacher's permission I went out of the class.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for thrift, then the Marathi for advance notice, then say anumatī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for thrift, then the Marathi for advance notice, then say *anumatī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनुमती (anumatī) mean? (\"Formal permission\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R557-review-551-557",
+      "sequence": 31760,
+      "title": "Looking Back at Chances and Choices",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Waiting Lists to Means and Notice",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81085b82e8f8d36d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for waiting and a list."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waiting, a list, a sequence, reserved, unforeseen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: waiting, a list, a sequence, reserved, unforeseen]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fall apart, to fizzle out, to crumble, to break down, to come loose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fall apart, to fizzle out, to crumble, to break down, to come loose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to achieve, to elude, accurate, without fail, prompt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to achieve, to elude, accurate, without fail, prompt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "on purpose, in advance, at the last moment, mostly, roughly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: on purpose, in advance, at the last moment, mostly, roughly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a span of time, a needless delay, urgency, a rush, a scramble",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a span of time, a needless delay, urgency, a rush, a scramble]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "favourable, unfavourable, a muddle, dire, confusion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: favourable, unfavourable, a muddle, dire, confusion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "capacity, scope, thrift, advance notice, formal permission",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: capacity, scope, thrift, advance notice, formal permission]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Waiting? (प्रतीक्षा, pratīkṣā.) A list? (यादी, yādī.) A sequence? (क्रम, kram.) Reserved? (राखीव, rākhīv.) Unforeseen? (आकस्मिक, ākasmik.) To fall apart? (फिसकटणे, phiskaṭṇe.) To fizzle out? (बारगळणे, bārgaḷṇe.) To crumble? (ढासळणे, ḍhāsaḷṇe.) To break down? (कोलमडणे, kolmaḍṇe.) To come loose? (सुटणे, suṭṇe.) To achieve? (साध्य करणे, sādhya karṇe.) To elude? (हुलकावणी देणे, hulkāvṇī deṇe.) Accurate? (अचूक, acūk.) Without fail? (हमखास, hamkhās.) Prompt? (तत्पर, tatpar.) On purpose? (मुद्दाम, muddām.) In advance? (आगाऊ, āgāū.) At the last moment? (ऐनवेळी, ainveḷī.) Mostly? (बहुतेक, bahutek.) Roughly? (साधारण, sādhāraṇ.) A span of time? (अवधी, avadhī.) A needless delay? (दिरंगाई, diraṅgāī.) Urgency? (तातडी, tātḍī.) A rush? (धांदल, dhāndal.) A scramble? (तारांबळ, tārāmbaḷ.) Favourable? (अनुकूल, anukūl.) Unfavourable? (प्रतिकूल, pratikūl.) A muddle? (घोळ, ghoḷ.) Dire? (बिकट, bikaṭ.) Confusion? (संभ्रम, sambhram.) Capacity? (कुवत, kuvat.) Scope? (आवाका, āvākā.) Thrift? (काटकसर, kāṭkasar.) Advance notice? (पूर्वसूचना, pūrvasūcanā.) Formal permission? (अनुमती, anumatī.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R557-review-final-557",
+      "sequence": 31770,
+      "title": "Means and Notice — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7a1b9968adf546a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for capacity and scope."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "capacity, scope, thrift, advance notice, formal permission",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: capacity, scope, thrift, advance notice, formal permission]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Capacity? (कुवत, kuvat.) Scope? (आवाका, āvākā.) Thrift? (काटकसर, kāṭkasar.) Advance notice? (पूर्वसूचना, pūrvasūcanā.) Formal permission? (अनुमती, anumatī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-492-UCAKI492",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-492-UCAKI492"
+  ],
+  "after": []
+}

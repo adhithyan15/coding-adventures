@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Sailors and Tides",
+  "label": "ch:mr-sailors-and-tides",
+  "canDo": "I can talk about sailors, low tide, a swelling sea and a boat rocking.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C409-hindkalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can talk about sailors, low tide, a swelling sea and a boat rocking.",
+    "assesses": [
+      "MR-LEX-C409-KHALASHI409-03",
+      "MR-LEX-C409-KHALASHI409-04",
+      "MR-LEX-C409-KHALASHI409-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C365-vad-ghalne",
+  "pathSegment": "MR-PATH-365-VATAGHATI365",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-365-VATAGHATI365",
+      "order": 1
+    }
+  ]
+}

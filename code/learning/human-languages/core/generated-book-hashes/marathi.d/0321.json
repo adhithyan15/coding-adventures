@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:386a641cbd43d968",
+  "lessonIds": [
+    "MR-C321-pangat",
+    "MR-C321-pahuncar",
+    "MR-C321-snehsammelan",
+    "MR-C321-upasthit-rahne",
+    "MR-C321-hajeri"
+  ],
+  "tex": "marathi/book/chapters/ch321-guests-and-a-feast.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C343-tarka",
+  "pathSegment": "MR-PATH-343-MUDDA343",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-343-MUDDA343",
+      "order": 1
+    }
+  ]
+}

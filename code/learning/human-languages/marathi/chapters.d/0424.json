@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Sellers and Hawkers",
+  "label": "ch:mr-sellers-and-hawkers",
+  "canDo": "I can talk about sales, hawkers, wholesale buying, brokers and bills.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C424-bil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can talk about sales, hawkers, wholesale buying, brokers and bills.",
+    "assesses": [
+      "MR-LEX-C424-VIKRI424-03",
+      "MR-LEX-C424-VIKRI424-04",
+      "MR-LEX-C424-VIKRI424-05"
+    ]
+  }
+}

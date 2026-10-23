@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Bones and Joints",
+  "label": "ch:mr-bones-and-joints",
+  "canDo": "I can name the skull, the spine, a rib, the gut and a joint.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C478-sandha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can name the skull, the spine, a rib, the gut and a joint.",
+    "assesses": [
+      "MR-LEX-C478-HAD478-03",
+      "MR-LEX-C478-HAD478-04",
+      "MR-LEX-C478-HAD478-05"
+    ]
+  }
+}

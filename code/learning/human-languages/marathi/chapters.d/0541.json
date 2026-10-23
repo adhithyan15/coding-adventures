@@ -1,0 +1,19 @@
+{
+  "chapter": 541,
+  "title": "Taking Care",
+  "label": "ch:mr-taking-care",
+  "canDo": "I can talk about caution, precautions and warnings.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C541-isara-dene",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 541: I can talk about caution, precautions and warnings.",
+    "assesses": [
+      "MR-LEX-C541-SAVADH541-03",
+      "MR-LEX-C541-SAVADH541-04",
+      "MR-LEX-C541-SAVADH541-05"
+    ]
+  }
+}

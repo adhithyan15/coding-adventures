@@ -1,0 +1,935 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 341,
+  "title": "Books to Remember",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:0f4818c7630fd5be",
+  "lessons": [
+    {
+      "id": "MR-C341-kadambari",
+      "sequence": 19710,
+      "title": "कादंबरी (kādambarī) — a novel",
+      "headword": "कादंबरी",
+      "romanization": "kādambarī",
+      "gloss": "a novel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dce1a883cf4b7590",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for thrilling, then the Marathi for to wrestle with."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कादंबरी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कादंबरी — kādambarī — \"a novel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मी सुट्टीत एक मोठी कादंबरी वाचली. mī suṭṭīt ek moṭhī kādambarī vāclī. I read a long novel during the holidays."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "कादंबरीकार, a novelist."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कादंबरी (kādambarī) comes from Sanskrit Kādambarī, the title of a celebrated prose romance (Monier-Williams); Marathi made the title the word for every novel."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kādambarī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kādambarī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kādambarī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kādambarī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī suṭṭīt ek moṭhī kādambarī vāclī. — I read a long novel during the holidays.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī suṭṭīt ek moṭhī kādambarī vāclī.* — I read a long novel during the holidays.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for thrilling, then the Marathi for to wrestle with, then say kādambarī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for thrilling, then the Marathi for to wrestle with, then say *kādambarī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कादंबरी (kādambarī) mean? (\"A novel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C341-caritra",
+      "sequence": 19720,
+      "title": "चरित्र (caritra) — a biography",
+      "headword": "चरित्र",
+      "romanization": "caritra",
+      "gloss": "a biography",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:080ce3430ea39c7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to wrestle with, then the Marathi for a novel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चरित्र",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चरित्र — caritra — \"a biography\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तिने एका खेळाडूचं चरित्र लिहिलं. tine ekā kheḷāḍūcaṁ caritra lihilaṁ. She wrote the biography of a sportsman."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "चरित्र (caritra) लिहिणे, to write a life story."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चरित्र (caritra) is a tatsama, taken from Sanskrit caritra, 'behaviour, deeds, adventures' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caritra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caritra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caritra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caritra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tine ekā kheḷāḍūcaṁ caritra lihilaṁ. — She wrote the biography of a sportsman.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tine ekā kheḷāḍūcaṁ caritra lihilaṁ.* — She wrote the biography of a sportsman.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to wrestle with, then the Marathi for a novel, then say caritra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to wrestle with, then the Marathi for a novel, then say *caritra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चरित्र (caritra) mean? (\"A biography\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C341-adbhut",
+      "sequence": 19730,
+      "title": "अद्भुत (adbhut) — wondrous; marvellous",
+      "headword": "अद्भुत",
+      "romanization": "adbhut",
+      "gloss": "wondrous; marvellous",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70a4a7488ed2af13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a novel, then the Marathi for a biography."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अद्भुत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अद्भुत — adbhut — \"wondrous; marvellous\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पुस्तकातलं जग अद्भुत होतं. pustakātlaṁ jag adbhut hotaṁ. The world in the book was wondrous."
+            },
+            {
+              "kind": "speech",
+              "text": "अद्भुत (adbhut) keeps one form: अद्भुत (adbhut) कथा, अद्भुत (adbhut) दृश्य."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अद्भुत (adbhut) is a tatsama, taken from Sanskrit adbhuta, 'wonderful, marvellous' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adbhut",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adbhut*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adbhut, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adbhut*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pustakātlaṁ jag adbhut hotaṁ. — The world in the book was wondrous.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pustakātlaṁ jag adbhut hotaṁ.* — The world in the book was wondrous.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a novel, then the Marathi for a biography, then say adbhut again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a novel, then the Marathi for a biography, then say *adbhut* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अद्भुत (adbhut) mean? (\"Wondrous; marvellous\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C341-avismaraniy",
+      "sequence": 19740,
+      "title": "अविस्मरणीय (avismaraṇīy) — unforgettable",
+      "headword": "अविस्मरणीय",
+      "romanization": "avismaraṇīy",
+      "gloss": "unforgettable",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d5770898967d9f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a biography, then the Marathi for wondrous."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अविस्मरणीय",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अविस्मरणीय — avismaraṇīy — \"unforgettable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ती सहल माझ्यासाठी अविस्मरणीय होती. tī sahal mājhyāsāṭhī avismaraṇīy hotī. That trip was unforgettable for me."
+            },
+            {
+              "kind": "speech",
+              "text": "अविस्मरणीय (avismaraṇīy) keeps one form; अ-, not, + विस्मरणीय, to be forgotten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अविस्मरणीय (avismaraṇīy) is built from the Sanskrit prefix a-, 'not', and vismaraṇīya, 'to be forgotten' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avismaraṇīy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avismaraṇīy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avismaraṇīy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avismaraṇīy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tī sahal mājhyāsāṭhī avismaraṇīy hotī. — That trip was unforgettable for me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tī sahal mājhyāsāṭhī avismaraṇīy hotī.* — That trip was unforgettable for me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a biography, then the Marathi for wondrous, then say avismaraṇīy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a biography, then the Marathi for wondrous, then say *avismaraṇīy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अविस्मरणीय (avismaraṇīy) mean? (\"Unforgettable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C341-ciradne",
+      "sequence": 19750,
+      "title": "चिरडणे (ciraḍṇe) — to crush",
+      "headword": "चिरडणे",
+      "romanization": "ciraḍṇe",
+      "gloss": "to crush",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab6e20533d904d05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for wondrous, then the Marathi for unforgettable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चिरडणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिरडणे — ciraḍṇe — \"to crush\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गोष्टीत हत्तीने राक्षसाला पायाखाली चिरडलं. goṣṭīt hattīne rākṣasālā pāyākhālī ciraḍlaṁ. In the story the elephant crushed the ogre underfoot."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने चिरडलं, tyāne ciraḍlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Transitive: the one crushed takes -ला."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिरडणे (ciraḍṇe) is a Marathi verb of crushing; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciraḍṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciraḍṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciraḍṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciraḍṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goṣṭīt hattīne rākṣasālā pāyākhālī ciraḍlaṁ. — In the story the elephant crushed the ogre underfoot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goṣṭīt hattīne rākṣasālā pāyākhālī ciraḍlaṁ.* — In the story the elephant crushed the ogre underfoot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for wondrous, then the Marathi for unforgettable, then say ciraḍṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for wondrous, then the Marathi for unforgettable, then say *ciraḍṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चिरडणे (ciraḍṇe) mean? (\"To crush\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R341-review-335-341",
+      "sequence": 19760,
+      "title": "Looking back: legends, ballads and books",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Digging Up the Past to Books to Remember",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8030172f24172fa9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for an excavation and remains."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an excavation, remains, age-old, to dig, to carve",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an excavation, remains, age-old, to dig, to carve]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rock-cut caves, a cave, secret, an underground passage, a treasure",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rock-cut caves, a cave, secret, an underground passage, a treasure]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a legend, a heroic ballad, immortal, renowned, a poet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a legend, a heroic ballad, immortal, renowned, a poet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an ogre, a fairy, magic, a witch, a curse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an ogre, a fairy, magic, a witch, a curse]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a protagonist, a villain, a character, a holy man, a moneylender",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a protagonist, a villain, a character, a holy man, a moneylender]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mystery, the moral, extraordinary, thrilling, to wrestle with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mystery, the moral, extraordinary, thrilling, to wrestle with]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a novel, a biography, wondrous, unforgettable, to crush",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a novel, a biography, wondrous, unforgettable, to crush]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An excavation? (उत्खनन, utkhanan.) Remains? (अवशेष, avaśeṣ.) Age-old? (पुरातन, purātan.) To dig? (खोदणे, khodṇe.) To carve? (कोरणे, korṇe.) Rock-cut caves? (लेणी, leṇī.) A cave? (गुहा, guhā.) Secret? (गुप्त, gupta.) An underground passage? (भुयार, bhuyār.) A treasure? (खजिना, khajinā.) A legend? (दंतकथा, dantkathā.) A heroic ballad? (पोवाडा, povāḍā.) Immortal? (अमर, amar.) Renowned? (प्रख्यात, prakhyāt.) A poet? (कवी, kavī.) An ogre? (राक्षस, rākṣas.) A fairy? (परी, parī.) Magic? (जादू, jādū.) A witch? (चेटकीण, ceṭkīṇ.) A curse? (शाप, śāp.) A protagonist? (नायक, nāyak.) A villain? (खलनायक, khalnāyak.) A character? (पात्र, pātra.) A holy man? (साधू, sādhū.) A moneylender? (सावकार, sāvkār.) A mystery? (रहस्य, rahasya.) The moral? (तात्पर्य, tātparya.) Extraordinary? (विलक्षण, vilakṣaṇ.) Thrilling? (थरारक, tharārak.) To wrestle with? (झगडणे, jhagaḍṇe.) A novel? (कादंबरी, kādambarī.) A biography? (चरित्र, caritra.) Wondrous? (अद्भुत, adbhut.) Unforgettable? (अविस्मरणीय, avismaraṇīy.) To crush? (चिरडणे, ciraḍṇe.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R341-review-final-341",
+      "sequence": 19770,
+      "title": "Books to Remember — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10fa160849761378",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for a novel and a biography."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a novel, a biography, wondrous, unforgettable, to crush",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a novel, a biography, wondrous, unforgettable, to crush]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A novel? (कादंबरी, kādambarī.) A biography? (चरित्र, caritra.) Wondrous? (अद्भुत, adbhut.) Unforgettable? (अविस्मरणीय, avismaraṇīy.) To crush? (चिरडणे, ciraḍṇe.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

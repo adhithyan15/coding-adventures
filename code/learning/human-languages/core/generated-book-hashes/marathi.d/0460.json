@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:3cc3a19a856c21b1",
+  "lessonIds": [
+    "MR-C460-maya",
+    "MR-C460-jivhala",
+    "MR-C460-apulki",
+    "MR-C460-javlik",
+    "MR-C460-ladka"
+  ],
+  "tex": "marathi/book/chapters/ch460-affection.tex"
+}

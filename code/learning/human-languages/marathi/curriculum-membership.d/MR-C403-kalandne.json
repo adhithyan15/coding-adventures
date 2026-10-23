@@ -1,0 +1,11 @@
+{
+  "id": "MR-C403-kalandne",
+  "pathSegment": "MR-PATH-403-KHADDA403",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-403-KHADDA403",
+      "order": 3
+    }
+  ]
+}

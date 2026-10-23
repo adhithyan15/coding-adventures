@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C304-pasarne",
+    "language": "marathi",
+    "chapter": 304,
+    "sequence": 17860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40fe3dd06d09fa53"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Screens and Phones",
+  "label": "ch:mr-screens-and-phones",
+  "canDo": "I can talk about computers, phones and video clips.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C516-vaparne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can talk about computers, phones and video clips.",
+    "assesses": [
+      "MR-LEX-C516-PHON516-03",
+      "MR-LEX-C516-PHON516-04",
+      "MR-LEX-C516-PHON516-05"
+    ]
+  }
+}

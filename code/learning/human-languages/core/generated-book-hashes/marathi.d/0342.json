@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:859e193b658bdd3d",
+  "lessonIds": [
+    "MR-C342-hetu",
+    "MR-C342-uddes",
+    "MR-C342-parinam",
+    "MR-C342-spastikaran",
+    "MR-C342-nirman-hone"
+  ],
+  "tex": "marathi/book/chapters/ch342-why-things-happen.tex"
+}

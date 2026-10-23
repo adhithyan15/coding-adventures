@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:6112d91fb4395851",
+  "lessonIds": [
+    "MR-C313-aphva",
+    "MR-C313-khalbal",
+    "MR-C313-ghosna",
+    "MR-C313-thalak",
+    "MR-C313-pukarne"
+  ],
+  "tex": "marathi/book/chapters/ch313-rumour-and-sensation.tex"
+}

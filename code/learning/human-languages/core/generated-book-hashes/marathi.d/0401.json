@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:67928bfcb1d466bd",
+  "lessonIds": [
+    "MR-C401-indhan",
+    "MR-C401-petrol",
+    "MR-C401-tayar",
+    "MR-C401-pankcar",
+    "MR-C401-sampne"
+  ],
+  "tex": "marathi/book/chapters/ch401-fuel-and-tyres.tex"
+}

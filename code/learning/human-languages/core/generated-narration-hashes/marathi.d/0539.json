@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:6eff24ca9767aec4",
+  "lessonIds": [
+    "MR-C539-prakasak",
+    "MR-C539-atmacaritra",
+    "MR-C539-pradarsan",
+    "MR-C539-digdarsak",
+    "MR-C539-dad-dene"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch539.txt",
+  "json": "marathi/narration/ch539.json",
+  "textHash": "fnv1a64:3de311af1ccdadea",
+  "jsonHash": "fnv1a64:d4c0e1aab2c4053f",
+  "findings": []
+}

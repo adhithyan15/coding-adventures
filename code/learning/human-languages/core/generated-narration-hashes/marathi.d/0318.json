@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:198e565f9867d38c",
+  "lessonIds": [
+    "MR-C318-janma",
+    "MR-C318-barse",
+    "MR-C318-vadhdivas",
+    "MR-C318-munj",
+    "MR-C318-patrika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch318.txt",
+  "json": "marathi/narration/ch318.json",
+  "textHash": "fnv1a64:09d6115133c276d5",
+  "jsonHash": "fnv1a64:23c640512cb7adf8",
+  "findings": []
+}

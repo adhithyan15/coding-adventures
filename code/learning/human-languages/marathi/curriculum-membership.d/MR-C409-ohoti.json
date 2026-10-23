@@ -1,0 +1,11 @@
+{
+  "id": "MR-C409-ohoti",
+  "pathSegment": "MR-PATH-409-KHALASHI409",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-409-KHALASHI409",
+      "order": 1
+    }
+  ]
+}

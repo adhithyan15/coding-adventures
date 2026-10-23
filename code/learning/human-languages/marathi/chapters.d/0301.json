@@ -1,0 +1,19 @@
+{
+  "chapter": 301,
+  "title": "Strange Sights",
+  "label": "ch:mr-strange-sights",
+  "canDo": "I can say what someone saw, found or came across.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C301-nirakhne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can say what someone saw, found or came across.",
+    "assesses": [
+      "MR-LEX-C301-DISNE301-03",
+      "MR-LEX-C301-DISNE301-04",
+      "MR-LEX-C301-DISNE301-05"
+    ]
+  }
+}

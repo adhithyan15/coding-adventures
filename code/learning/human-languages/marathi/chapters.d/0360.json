@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "Fair and Unfair",
+  "label": "ch:mr-fair-and-unfair",
+  "canDo": "I can talk about equality, discrimination and poverty.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C360-saksarta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can talk about equality, discrimination and poverty.",
+    "assesses": [
+      "MR-LEX-C360-SAMANTA360-03",
+      "MR-LEX-C360-SAMANTA360-04",
+      "MR-LEX-C360-SAMANTA360-05"
+    ]
+  }
+}

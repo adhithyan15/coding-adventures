@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:0cd1838b78ff4ad9",
+  "lessonIds": [
+    "MR-C529-samna",
+    "MR-C529-karnadhar",
+    "MR-C529-panc",
+    "MR-C529-maidan",
+    "MR-C529-mat-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch529.txt",
+  "json": "marathi/narration/ch529.json",
+  "textHash": "fnv1a64:8bf93e6216845c89",
+  "jsonHash": "fnv1a64:d508f25b53b490d9",
+  "findings": []
+}

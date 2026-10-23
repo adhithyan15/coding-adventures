@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:42f0c8f58fffbfde",
+  "lessonIds": [
+    "MR-C476-bubul",
+    "MR-C476-nakpudi",
+    "MR-C476-hirdi",
+    "MR-C476-dadhi",
+    "MR-C476-misi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch476.txt",
+  "json": "marathi/narration/ch476.json",
+  "textHash": "fnv1a64:fe1c7065a25e1aac",
+  "jsonHash": "fnv1a64:d5986bb333c20052",
+  "findings": []
+}

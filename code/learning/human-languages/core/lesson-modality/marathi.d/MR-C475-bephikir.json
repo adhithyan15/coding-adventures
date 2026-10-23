@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C475-bephikir",
+    "language": "marathi",
+    "chapter": 475,
+    "sequence": 27310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ff5052e99bbc95a"
+  },
+  "findings": []
+}

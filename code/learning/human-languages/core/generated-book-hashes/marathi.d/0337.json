@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:b429856673f32f38",
+  "lessonIds": [
+    "MR-C337-dantkatha",
+    "MR-C337-povada",
+    "MR-C337-amar",
+    "MR-C337-prakhyat",
+    "MR-C337-kavi"
+  ],
+  "tex": "marathi/book/chapters/ch337-legends-and-ballads.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-529-SAMNA529",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-529-SAMNA529"
+  ],
+  "after": []
+}

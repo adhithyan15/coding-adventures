@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:815b8ceafa99b21f",
+  "lessonIds": [
+    "MR-C355-matdan",
+    "MR-C355-pratinidhi",
+    "MR-C355-umedvar",
+    "MR-C355-pracar",
+    "MR-C355-nivdun-yene"
+  ],
+  "tex": "marathi/book/chapters/ch355-election-day.tex"
+}

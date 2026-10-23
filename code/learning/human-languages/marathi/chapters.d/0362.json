@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "Making Voices Heard",
+  "label": "ch:mr-making-voices-heard",
+  "canDo": "I can talk about movements, protests and boycotts.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C362-bahiskar-ghalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can talk about movements, protests and boycotts.",
+    "assesses": [
+      "MR-LEX-C362-ANDOLAN362-03",
+      "MR-LEX-C362-ANDOLAN362-04",
+      "MR-LEX-C362-ANDOLAN362-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C437-gothne",
+  "pathSegment": "MR-PATH-437-GARVA437",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-437-GARVA437",
+      "order": 3
+    }
+  ]
+}

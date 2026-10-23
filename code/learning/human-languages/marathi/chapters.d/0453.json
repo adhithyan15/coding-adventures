@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "Losing Your Temper",
+  "label": "ch:mr-losing-your-temper",
+  "canDo": "I can describe someone losing their temper.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C453-kurkurne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can describe someone losing their temper.",
+    "assesses": [
+      "MR-LEX-C453-TAPAT453-03",
+      "MR-LEX-C453-TAPAT453-04",
+      "MR-LEX-C453-TAPAT453-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 557,
+  "title": "Means and Notice",
+  "label": "ch:mr-means-and-notice",
+  "canDo": "I can talk about means, scope, thrift, notice and permission.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-R557-review-final-557",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 557: I can talk about means, scope, thrift, notice and permission.",
+    "assesses": [
+      "MR-LEX-C557-KUVAT557-01",
+      "MR-LEX-C557-KUVAT557-02",
+      "MR-LEX-C557-KUVAT557-03",
+      "MR-LEX-C557-KUVAT557-04",
+      "MR-LEX-C557-KUVAT557-05"
+    ]
+  }
+}

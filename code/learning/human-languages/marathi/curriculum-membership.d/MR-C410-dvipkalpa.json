@@ -1,0 +1,11 @@
+{
+  "id": "MR-C410-dvipkalpa",
+  "pathSegment": "MR-PATH-410-KHADI410",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-410-KHADI410",
+      "order": 3
+    }
+  ]
+}

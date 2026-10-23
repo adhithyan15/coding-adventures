@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C301-disne",
+    "language": "marathi",
+    "chapter": 301,
+    "sequence": 17660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d51bcc8108bf131b"
+  },
+  "findings": []
+}

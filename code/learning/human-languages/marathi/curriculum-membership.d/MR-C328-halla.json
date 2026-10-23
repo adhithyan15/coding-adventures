@@ -1,0 +1,11 @@
+{
+  "id": "MR-C328-halla",
+  "pathSegment": "MR-PATH-328-LADHAI328",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-328-LADHAI328",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C341-adbhut",
+  "pathSegment": "MR-PATH-341-KADAMBARI341",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-341-KADAMBARI341",
+      "order": 2
+    }
+  ]
+}

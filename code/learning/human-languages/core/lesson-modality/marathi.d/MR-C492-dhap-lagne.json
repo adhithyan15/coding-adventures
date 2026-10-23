@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C492-dhap-lagne",
+    "language": "marathi",
+    "chapter": 492,
+    "sequence": 28180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72862ea97f1c68e2"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C391-tikne",
+    "language": "marathi",
+    "chapter": 391,
+    "sequence": 22520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:feb89c6ab584c7a0"
+  },
+  "findings": []
+}

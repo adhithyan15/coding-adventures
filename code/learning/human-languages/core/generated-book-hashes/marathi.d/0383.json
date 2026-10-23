@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:c12c57bb9371a842",
+  "lessonIds": [
+    "MR-C383-bhakit",
+    "MR-C383-grhit-dharne",
+    "MR-C383-apeksa",
+    "MR-C383-kal",
+    "MR-C383-tadne"
+  ],
+  "tex": "marathi/book/chapters/ch383-predicting-and-assuming.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:ee3d98638529fa45",
+  "lessonIds": [
+    "MR-C300-dhamkavne",
+    "MR-C300-lac",
+    "MR-C300-siksa",
+    "MR-C300-pal-kadhne",
+    "MR-C300-kondne"
+  ],
+  "tex": "marathi/book/chapters/ch300-threats-and-bribes.tex"
+}

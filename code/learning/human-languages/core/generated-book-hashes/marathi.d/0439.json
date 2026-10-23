@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:4313edf48c9782c5",
+  "lessonIds": [
+    "MR-C439-cakrivadal",
+    "MR-C439-vavtal",
+    "MR-C439-gadgadat",
+    "MR-C439-ghongavne",
+    "MR-C439-kadadne"
+  ],
+  "tex": "marathi/book/chapters/ch439-storms-and-thunder.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:9bf2b4f2aa4491fa",
+  "lessonIds": [
+    "MR-C502-tatatut",
+    "MR-C502-kurbur",
+    "MR-C502-duravne",
+    "MR-C502-dhusphusne",
+    "MR-C502-abola-dharne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch502.txt",
+  "json": "marathi/narration/ch502.json",
+  "textHash": "fnv1a64:efdf9f6ff5860041",
+  "jsonHash": "fnv1a64:b02b561dc19a1559",
+  "findings": []
+}

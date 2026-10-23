@@ -1,0 +1,21 @@
+{
+  "chapter": 442,
+  "title": "Peaks and Valleys",
+  "label": "ch:mr-peaks-and-valleys",
+  "canDo": "I can talk about peaks, valleys, cliffs, the foot of a hill and a mountain range.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-R442-review-436-442",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can talk about peaks, valleys, cliffs, the foot of a hill and a mountain range.",
+    "assesses": [
+      "MR-LEX-C442-SHIKHAR442-01",
+      "MR-LEX-C442-SHIKHAR442-02",
+      "MR-LEX-C442-SHIKHAR442-03",
+      "MR-LEX-C442-SHIKHAR442-04",
+      "MR-LEX-C442-SHIKHAR442-05"
+    ]
+  }
+}

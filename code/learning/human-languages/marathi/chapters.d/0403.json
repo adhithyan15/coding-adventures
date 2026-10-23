@@ -1,0 +1,21 @@
+{
+  "chapter": 403,
+  "title": "Potholes and Bumps",
+  "label": "ch:mr-potholes-and-bumps",
+  "canDo": "I can talk about potholes, speed breakers and a bumpy ride.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-R403-review-396-403",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can talk about potholes, speed breakers and a bumpy ride.",
+    "assesses": [
+      "MR-LEX-C403-KHADDA403-01",
+      "MR-LEX-C403-KHADDA403-02",
+      "MR-LEX-C403-KHADDA403-03",
+      "MR-LEX-C403-KHADDA403-04",
+      "MR-LEX-C403-KHADDA403-05"
+    ]
+  }
+}

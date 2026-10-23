@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:f933486d975b9706",
+  "lessonIds": [
+    "MR-C463-garva",
+    "MR-C463-ahankar",
+    "MR-C463-svabhiman",
+    "MR-C463-saramne",
+    "MR-C463-osalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch463.txt",
+  "json": "marathi/narration/ch463.json",
+  "textHash": "fnv1a64:750a67b63c8b9fc5",
+  "jsonHash": "fnv1a64:1ef723ca8f20a594",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 548,
+  "sourceHash": "fnv1a64:3cec33b651df6449",
+  "lessonIds": [
+    "MR-C548-adthala",
+    "MR-C548-todga",
+    "MR-C548-pelne",
+    "MR-C548-nistarne",
+    "MR-C548-dalmalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch548.txt",
+  "json": "marathi/narration/ch548.json",
+  "textHash": "fnv1a64:dcc8d98e2a70c4c2",
+  "jsonHash": "fnv1a64:126dac449512af84",
+  "findings": []
+}

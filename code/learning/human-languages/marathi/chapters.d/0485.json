@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "Long Illnesses",
+  "label": "ch:mr-long-illnesses",
+  "canDo": "I can name diabetes, blood pressure, asthma, jaundice and chickenpox.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C485-kanjinya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can name diabetes, blood pressure, asthma, jaundice and chickenpox.",
+    "assesses": [
+      "MR-LEX-C485-MADHUMEH485-03",
+      "MR-LEX-C485-MADHUMEH485-04",
+      "MR-LEX-C485-MADHUMEH485-05"
+    ]
+  }
+}

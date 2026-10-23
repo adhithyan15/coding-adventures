@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:eef5241cda599d9e",
+  "lessonIds": [
+    "MR-C528-chand",
+    "MR-C528-virangula",
+    "MR-C528-phursat",
+    "MR-C528-karamnuk",
+    "MR-C528-dang-hone"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch528.txt",
+  "json": "marathi/narration/ch528.json",
+  "textHash": "fnv1a64:5e915b6b64b449cc",
+  "jsonHash": "fnv1a64:fad60da03672c46d",
+  "findings": []
+}

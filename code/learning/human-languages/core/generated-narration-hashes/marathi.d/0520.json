@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:ab556e2ed81af005",
+  "lessonIds": [
+    "MR-C520-nal",
+    "MR-C520-galne",
+    "MR-C520-galti",
+    "MR-C520-gatar",
+    "MR-C520-tumbne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch520.txt",
+  "json": "marathi/narration/ch520.json",
+  "textHash": "fnv1a64:d80fa4995508b157",
+  "jsonHash": "fnv1a64:96af0ff5829563f0",
+  "findings": []
+}

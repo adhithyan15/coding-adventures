@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C328-halla",
+    "language": "marathi",
+    "chapter": 328,
+    "sequence": 19060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f1ff2a8139cfeb1"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 551,
+  "title": "Waiting Lists",
+  "label": "ch:mr-waiting-lists",
+  "canDo": "I can talk about waiting, lists and turns.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C551-akasmik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 551: I can talk about waiting, lists and turns.",
+    "assesses": [
+      "MR-LEX-C551-YADI551-03",
+      "MR-LEX-C551-YADI551-04",
+      "MR-LEX-C551-YADI551-05"
+    ]
+  }
+}

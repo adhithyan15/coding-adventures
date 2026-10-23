@@ -1,0 +1,11 @@
+{
+  "id": "MR-C477-ghota",
+  "pathSegment": "MR-PATH-477-HAT477",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-477-HAT477",
+      "order": 4
+    }
+  ]
+}

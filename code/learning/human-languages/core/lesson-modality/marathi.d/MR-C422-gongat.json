@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C422-gongat",
+    "language": "marathi",
+    "chapter": 422,
+    "sequence": 24340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65ae17130010adef"
+  },
+  "findings": []
+}

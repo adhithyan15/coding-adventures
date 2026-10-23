@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-487-CATKA487",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-487-CATKA487"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C354-loksankhya",
+  "pathSegment": "MR-PATH-354-NAGARIK354",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-354-NAGARIK354",
+      "order": 3
+    }
+  ]
+}

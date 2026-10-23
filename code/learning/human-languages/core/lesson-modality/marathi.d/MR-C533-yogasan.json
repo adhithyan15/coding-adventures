@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C533-yogasan",
+    "language": "marathi",
+    "chapter": 533,
+    "sequence": 30490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca307cd71253eadf"
+  },
+  "findings": []
+}

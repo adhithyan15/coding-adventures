@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:ef72a71aa0bb0402",
+  "lessonIds": [
+    "MR-C421-bandhkam",
+    "MR-C421-majla",
+    "MR-C421-jhopadpatti",
+    "MR-C421-ves",
+    "MR-C421-hadda"
+  ],
+  "tex": "marathi/book/chapters/ch421-building-sites-and-boundaries.tex"
+}

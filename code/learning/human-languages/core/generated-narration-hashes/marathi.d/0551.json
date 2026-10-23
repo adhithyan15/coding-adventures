@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 551,
+  "sourceHash": "fnv1a64:aed134913668b0e4",
+  "lessonIds": [
+    "MR-C551-pratiksa",
+    "MR-C551-yadi",
+    "MR-C551-kram",
+    "MR-C551-rakhiv",
+    "MR-C551-akasmik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch551.txt",
+  "json": "marathi/narration/ch551.json",
+  "textHash": "fnv1a64:207a6ccd1ebd30b6",
+  "jsonHash": "fnv1a64:5225e52e3c21cb67",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C298-hahakar",
+    "language": "marathi",
+    "chapter": 298,
+    "sequence": 17530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:192e5acf35917386"
+  },
+  "findings": []
+}

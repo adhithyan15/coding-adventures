@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:7b5b46e7474add3f",
+  "lessonIds": [
+    "MR-C368-palan-karne",
+    "MR-C368-ullanghan-karne",
+    "MR-C368-bajavne",
+    "MR-C368-sopavne",
+    "MR-C368-hatalne"
+  ],
+  "tex": "marathi/book/chapters/ch368-duties-and-rules.tex"
+}

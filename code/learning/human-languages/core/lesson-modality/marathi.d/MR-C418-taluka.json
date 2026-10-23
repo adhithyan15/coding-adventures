@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C418-taluka",
+    "language": "marathi",
+    "chapter": 418,
+    "sequence": 24160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5139817f3c26a6d9"
+  },
+  "findings": []
+}

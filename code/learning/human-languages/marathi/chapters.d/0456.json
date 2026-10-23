@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "Shyness and Confidence",
+  "label": "ch:mr-shyness-and-confidence",
+  "canDo": "I can talk about confidence, hesitation and shyness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C456-bujne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can talk about confidence, hesitation and shyness.",
+    "assesses": [
+      "MR-LEX-C456-SANKOC456-03",
+      "MR-LEX-C456-SANKOC456-04",
+      "MR-LEX-C456-SANKOC456-05"
+    ]
+  }
+}

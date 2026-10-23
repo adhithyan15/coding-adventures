@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 552,
+  "sourceHash": "fnv1a64:79ee202f9c8aae19",
+  "lessonIds": [
+    "MR-C552-phiskatne",
+    "MR-C552-bargalne",
+    "MR-C552-dhasalne",
+    "MR-C552-kolmadne",
+    "MR-C552-sutne"
+  ],
+  "tex": "marathi/book/chapters/ch552-when-plans-fail.tex"
+}

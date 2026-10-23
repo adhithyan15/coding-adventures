@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:624258e532070c59",
+  "lessonIds": [
+    "MR-C498-balpan",
+    "MR-C498-tarunya",
+    "MR-C498-vardhakya",
+    "MR-C498-vay",
+    "MR-C498-kisor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch498.txt",
+  "json": "marathi/narration/ch498.json",
+  "textHash": "fnv1a64:18e29cf00d6215d4",
+  "jsonHash": "fnv1a64:c55f2b7cb5e0fa6a",
+  "findings": []
+}

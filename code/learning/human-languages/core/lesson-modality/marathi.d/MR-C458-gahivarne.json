@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C458-gahivarne",
+    "language": "marathi",
+    "chapter": 458,
+    "sequence": 26450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63711c5f21d75a26"
+  },
+  "findings": []
+}

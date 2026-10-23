@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "Emperors and Princesses",
+  "label": "ch:mr-emperors-and-princesses",
+  "canDo": "I can talk about an emperor, a throne and a crown.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C326-pradhan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can talk about an emperor, a throne and a crown.",
+    "assesses": [
+      "MR-LEX-C326-SAMRAT326-03",
+      "MR-LEX-C326-SAMRAT326-04",
+      "MR-LEX-C326-SAMRAT326-05"
+    ]
+  }
+}

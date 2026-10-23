@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "A Day at the Match",
+  "label": "ch:mr-a-day-at-the-match",
+  "canDo": "I can talk about a match, its captain and its umpire.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C529-mat-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can talk about a match, its captain and its umpire.",
+    "assesses": [
+      "MR-LEX-C529-SAMNA529-03",
+      "MR-LEX-C529-SAMNA529-04",
+      "MR-LEX-C529-SAMNA529-05"
+    ]
+  }
+}

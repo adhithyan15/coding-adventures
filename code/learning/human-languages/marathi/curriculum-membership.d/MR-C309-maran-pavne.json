@@ -1,0 +1,11 @@
+{
+  "id": "MR-C309-maran-pavne",
+  "pathSegment": "MR-PATH-309-MRUTYU309",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-309-MRUTYU309",
+      "order": 3
+    }
+  ]
+}

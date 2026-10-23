@@ -1,0 +1,19 @@
+{
+  "chapter": 555,
+  "title": "Time Pressure",
+  "label": "ch:mr-time-pressure",
+  "canDo": "I can talk about time left, urgency and rushing.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C555-tarambal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 555: I can talk about time left, urgency and rushing.",
+    "assesses": [
+      "MR-LEX-C555-GHAI555-03",
+      "MR-LEX-C555-GHAI555-04",
+      "MR-LEX-C555-GHAI555-05"
+    ]
+  }
+}

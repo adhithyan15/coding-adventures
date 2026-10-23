@@ -1,0 +1,19 @@
+{
+  "chapter": 538,
+  "title": "Rhythm and Dance",
+  "label": "ch:mr-rhythm-and-dance",
+  "canDo": "I can talk about rhythm, dancers and moving to music.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C538-dolne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 538: I can talk about rhythm, dancers and moving to music.",
+    "assesses": [
+      "MR-LEX-C538-NRUTYA538-03",
+      "MR-LEX-C538-NRUTYA538-04",
+      "MR-LEX-C538-NRUTYA538-05"
+    ]
+  }
+}

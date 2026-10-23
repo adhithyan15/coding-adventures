@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:254502b2d5b0a1ff",
+  "lessonIds": [
+    "MR-C417-anamat",
+    "MR-C417-sthayik-hone",
+    "MR-C417-bhadekaru",
+    "MR-C417-tijori",
+    "MR-C417-udvahak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch417.txt",
+  "json": "marathi/narration/ch417.json",
+  "textHash": "fnv1a64:7492d08ce853dc45",
+  "jsonHash": "fnv1a64:ce1327cb113b8243",
+  "findings": []
+}

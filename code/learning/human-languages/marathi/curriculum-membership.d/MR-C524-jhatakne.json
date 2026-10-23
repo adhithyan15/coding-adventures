@@ -1,0 +1,11 @@
+{
+  "id": "MR-C524-jhatakne",
+  "pathSegment": "MR-PATH-524-SAPHAI524",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-524-SAPHAI524",
+      "order": 3
+    }
+  ]
+}

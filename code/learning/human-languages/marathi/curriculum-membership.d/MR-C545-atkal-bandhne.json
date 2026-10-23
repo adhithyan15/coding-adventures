@@ -1,0 +1,11 @@
+{
+  "id": "MR-C545-atkal-bandhne",
+  "pathSegment": "MR-PATH-545-BHAVISHYA545",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-545-BHAVISHYA545",
+      "order": 3
+    }
+  ]
+}

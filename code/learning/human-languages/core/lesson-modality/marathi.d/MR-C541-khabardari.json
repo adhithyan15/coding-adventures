@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C541-khabardari",
+    "language": "marathi",
+    "chapter": 541,
+    "sequence": 30900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:952eed250b2d1c2f"
+  },
+  "findings": []
+}

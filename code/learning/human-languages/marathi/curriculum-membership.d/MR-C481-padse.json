@@ -1,0 +1,11 @@
+{
+  "id": "MR-C481-padse",
+  "pathSegment": "MR-PATH-481-SARDI481",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-481-SARDI481",
+      "order": 0
+    }
+  ]
+}

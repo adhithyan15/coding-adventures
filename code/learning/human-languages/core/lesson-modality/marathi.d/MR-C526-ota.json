@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C526-ota",
+    "language": "marathi",
+    "chapter": 526,
+    "sequence": 30130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e156a9f55b9b54e9"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C340-thararak",
+  "pathSegment": "MR-PATH-340-RAHASYA340",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-340-RAHASYA340",
+      "order": 3
+    }
+  ]
+}

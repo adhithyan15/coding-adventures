@@ -1,0 +1,11 @@
+{
+  "id": "MR-C395-apratyaksa",
+  "pathSegment": "MR-PATH-395-UPAYUKTA395",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-395-UPAYUKTA395",
+      "order": 3
+    }
+  ]
+}

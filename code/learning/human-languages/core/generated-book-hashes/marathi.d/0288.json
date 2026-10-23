@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:ce257d6af658e276",
+  "lessonIds": [
+    "MR-C288-ghatna",
+    "MR-C288-apghat",
+    "MR-C288-cori",
+    "MR-C288-budne",
+    "MR-C288-kirkol"
+  ],
+  "tex": "marathi/book/chapters/ch288-something-happened.tex"
+}

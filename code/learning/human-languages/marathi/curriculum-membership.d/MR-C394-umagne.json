@@ -1,0 +1,11 @@
+{
+  "id": "MR-C394-umagne",
+  "pathSegment": "MR-PATH-394-BHAN394",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-394-BHAN394",
+      "order": 4
+    }
+  ]
+}

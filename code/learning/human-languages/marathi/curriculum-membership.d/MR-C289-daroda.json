@@ -1,0 +1,11 @@
+{
+  "id": "MR-C289-daroda",
+  "pathSegment": "MR-PATH-289-GUNHA289",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-289-GUNHA289",
+      "order": 2
+    }
+  ]
+}

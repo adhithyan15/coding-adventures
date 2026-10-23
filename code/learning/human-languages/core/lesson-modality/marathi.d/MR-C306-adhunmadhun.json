@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C306-adhunmadhun",
+    "language": "marathi",
+    "chapter": 306,
+    "sequence": 17940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73b51e6f2ebb36b5"
+  },
+  "findings": []
+}

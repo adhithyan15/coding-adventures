@@ -1,0 +1,11 @@
+{
+  "id": "MR-C421-jhopadpatti",
+  "pathSegment": "MR-PATH-421-BANDHKAM421",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-421-BANDHKAM421",
+      "order": 2
+    }
+  ]
+}

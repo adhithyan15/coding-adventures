@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C390-vyatirikta",
+    "language": "marathi",
+    "chapter": 390,
+    "sequence": 22500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3c23eed1d6197fe"
+  },
+  "findings": []
+}

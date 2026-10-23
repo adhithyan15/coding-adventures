@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "Shopping and Bargains",
+  "label": "ch:mr-shopping-and-bargains",
+  "canDo": "I can talk about shopping, deals and prices, and say I bargained and bought.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C423-vikat-ghene",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can talk about shopping, deals and prices, and say I bargained and bought.",
+    "assesses": [
+      "MR-LEX-C423-KHAREDI423-03",
+      "MR-LEX-C423-KHAREDI423-04",
+      "MR-LEX-C423-KHAREDI423-05"
+    ]
+  }
+}

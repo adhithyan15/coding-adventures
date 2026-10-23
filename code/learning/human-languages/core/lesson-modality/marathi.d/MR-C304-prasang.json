@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C304-prasang",
+    "language": "marathi",
+    "chapter": 304,
+    "sequence": 17830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98df616083b9e9d7"
+  },
+  "findings": []
+}

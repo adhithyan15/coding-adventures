@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C303-kahani",
+    "language": "marathi",
+    "chapter": 303,
+    "sequence": 17780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6076ed887b232553"
+  },
+  "findings": []
+}

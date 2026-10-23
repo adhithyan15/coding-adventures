@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:d95ff239877ead57",
+  "lessonIds": [
+    "MR-C306-kramasah",
+    "MR-C306-anekda",
+    "MR-C306-adhunmadhun",
+    "MR-C306-apoap",
+    "MR-C306-nuktac"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch306.txt",
+  "json": "marathi/narration/ch306.json",
+  "textHash": "fnv1a64:ad1a5b743d3a0656",
+  "jsonHash": "fnv1a64:58969b004ae84a10",
+  "findings": []
+}

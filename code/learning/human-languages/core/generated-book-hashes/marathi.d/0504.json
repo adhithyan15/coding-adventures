@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:8033b1e7599b34e4",
+  "lessonIds": [
+    "MR-C504-sutar",
+    "MR-C504-simpi",
+    "MR-C504-gavandi",
+    "MR-C504-nhavi",
+    "MR-C504-thokne"
+  ],
+  "tex": "marathi/book/chapters/ch504-trades-of-the-town.tex"
+}

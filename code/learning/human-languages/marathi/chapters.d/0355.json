@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Election Day",
+  "label": "ch:mr-election-day",
+  "canDo": "I can talk about voting, candidates and representatives.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C355-nivdun-yene",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can talk about voting, candidates and representatives.",
+    "assesses": [
+      "MR-LEX-C355-MATDAN355-03",
+      "MR-LEX-C355-MATDAN355-04",
+      "MR-LEX-C355-MATDAN355-05"
+    ]
+  }
+}

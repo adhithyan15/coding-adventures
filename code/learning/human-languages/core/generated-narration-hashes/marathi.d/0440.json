@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:b5de51b61cb666b4",
+  "lessonIds": [
+    "MR-C440-duskal",
+    "MR-C440-dhagphuti",
+    "MR-C440-kadaka",
+    "MR-C440-jhodapne",
+    "MR-C440-osarne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch440.txt",
+  "json": "marathi/narration/ch440.json",
+  "textHash": "fnv1a64:a28e98f4dccef2f2",
+  "jsonHash": "fnv1a64:355af420456d525f",
+  "findings": []
+}

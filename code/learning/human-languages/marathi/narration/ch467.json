@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 467,
+  "title": "Bearing It",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9beb3108a8fcde60",
+  "lessons": [
+    {
+      "id": "MR-C467-yatna",
+      "sequence": 26870,
+      "title": "यातना (yātnā) — torment; agony",
+      "headword": "यातना",
+      "romanization": "yātnā",
+      "gloss": "torment; agony",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3cbee5106c33ac06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to rest a while, then the Marathi for to brighten up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: यातना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यातना — yātnā — \"torment; agony\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आजारपणात आजोबांनी खूप यातना सहन केल्या. ājārpaṇāt ājobānnī khūp yātnā sahan kelyā. Grandfather bore great agony during his illness."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Often plural: यातना (yātnā) सहन करणे, to bear agony."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यातना (yātnā) is a tatsama, taken from Sanskrit yātanā, \"torment\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ājārpaṇāt ājobānnī khūp yātnā sahan kelyā. — Grandfather bore great agony during his illness.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ājārpaṇāt ājobānnī khūp yātnā sahan kelyā.* — Grandfather bore great agony during his illness.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to rest a while, then the Marathi for to brighten up, then say yātnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to rest a while, then the Marathi for to brighten up, then say *yātnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does यातना (yātnā) mean? (\"Torment; agony\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C467-tadphadne",
+      "sequence": 26880,
+      "title": "तडफडणे (taḍphaḍṇe) — to writhe",
+      "headword": "तडफडणे",
+      "romanization": "taḍphaḍṇe",
+      "gloss": "to writhe",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34685d044a4374b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to brighten up, then the Marathi for torment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तडफडणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तडफडणे — taḍphaḍṇe — \"to writhe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पाण्याबाहेर काढलेला मासा तडफडत होता. pāṇyābāher kāḍhlelā māsā taḍphaḍat hotā. The fish taken out of the water was writhing."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो तडफडला, to taḍphaḍlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Of pain, or of fierce impatience: भेटायला तडफडणे (taḍphaḍṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तडफडणे (taḍphaḍṇe) is inherited: CDIAL lists Marathi taḍphaḍṇẽ, \"to toss about\", under the expressive taḍapphaḍ (CDIAL 5634)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍphaḍṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍphaḍṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍphaḍṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍphaḍṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṇyābāher kāḍhlelā māsā taḍphaḍat hotā. — The fish taken out of the water was writhing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṇyābāher kāḍhlelā māsā taḍphaḍat hotā.* — The fish taken out of the water was writhing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to brighten up, then the Marathi for torment, then say taḍphaḍṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to brighten up, then the Marathi for torment, then say *taḍphaḍṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तडफडणे (taḍphaḍṇe) mean? (\"To writhe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C467-kalvalne",
+      "sequence": 26890,
+      "title": "कळवळणे (kaḷvaḷṇe) — to ache with pity",
+      "headword": "कळवळणे",
+      "romanization": "kaḷvaḷṇe",
+      "gloss": "to ache with pity",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:147c4ab42657755e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for torment, then the Marathi for to writhe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कळवळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कळवळणे — kaḷvaḷṇe — \"to ache with pity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भुकेल्या मुलाला पाहून आईचा जीव कळवळला. bhukelyā mulālā pāhūn āīcā jīv kaḷvaḷlā. Seeing the hungry child, the mother's heart was wrung."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो कळवळला, to kaḷvaḷlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Usually of the जीव or the मन: pity that hurts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कळवळणे (kaḷvaḷṇe) is a Marathi verb built on a doubled syllable; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷvaḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷvaḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷvaḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷvaḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhukelyā mulālā pāhūn āīcā jīv kaḷvaḷlā. — Seeing the hungry child, the mother's heart was wrung.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhukelyā mulālā pāhūn āīcā jīv kaḷvaḷlā.* — Seeing the hungry child, the mother's heart was wrung.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for torment, then the Marathi for to writhe, then say kaḷvaḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for torment, then the Marathi for to writhe, then say *kaḷvaḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कळवळणे (kaḷvaḷṇe) mean? (\"To ache with pity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C467-jagne-live",
+      "sequence": 26900,
+      "title": "जगणे (jagṇe) — to stay alive; to live",
+      "headword": "जगणे",
+      "romanization": "jagṇe",
+      "gloss": "to stay alive; to live",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ae7b74ad96f5b22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to writhe, then the Marathi for to ache with pity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जगणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जगणे — jagṇe — \"to stay alive; to live\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पाण्याशिवाय कोणीही जगू शकत नाही. pāṇyāśivāy koṇīhī jagū śakat nāhī. No one can live without water."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो जगला, to jaglā."
+            },
+            {
+              "kind": "speech",
+              "text": "Staying alive, where राहणे is living somewhere."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जगणे (jagṇe) is a Marathi verb whose origin is not settled; CDIAL lists the older Marathi verb of living, jiṇẽ, under Sanskrit jīvati (CDIAL 5241)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jagṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jagṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jagṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jagṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṇyāśivāy koṇīhī jagū śakat nāhī. — No one can live without water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṇyāśivāy koṇīhī jagū śakat nāhī.* — No one can live without water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to writhe, then the Marathi for to ache with pity, then say jagṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to writhe, then the Marathi for to ache with pity, then say *jagṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जगणे (jagṇe) mean? (\"To stay alive; to live\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C467-dagmagne",
+      "sequence": 26910,
+      "title": "डगमगणे (ḍagmagṇe) — to wobble; to waver",
+      "headword": "डगमगणे",
+      "romanization": "ḍagmagṇe",
+      "gloss": "to wobble; to waver",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b044c8cb8c31270",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to ache with pity, then the Marathi for to stay alive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: डगमगणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डगमगणे — ḍagmagṇe — \"to wobble; to waver\"."
+            },
+            {
+              "kind": "speech",
+              "text": "संकटातही तिचा धीर डगमगला नाही. saṅkaṭātahī ticā dhīr ḍagmaglā nāhī. Even in the crisis her courage did not waver."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो डगमगला, to ḍagmaglā."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a boat, a step or resolve: पाय डगमगणे (ḍagmagṇe), to stagger."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डगमगणे (ḍagmagṇe) is inherited: CDIAL lists Marathi ḍagmagṇẽ, \"to tremble\", under the expressive ḍag (CDIAL 5522)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍagmagṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍagmagṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍagmagṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍagmagṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅkaṭātahī ticā dhīr ḍagmaglā nāhī. — Even in the crisis her courage did not waver.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅkaṭātahī ticā dhīr ḍagmaglā nāhī.* — Even in the crisis her courage did not waver.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to ache with pity, then the Marathi for to stay alive, then say ḍagmagṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to ache with pity, then the Marathi for to stay alive, then say *ḍagmagṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does डगमगणे (ḍagmagṇe) mean? (\"To wobble; to waver\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

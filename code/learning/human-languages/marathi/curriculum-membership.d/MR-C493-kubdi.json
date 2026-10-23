@@ -1,0 +1,11 @@
+{
+  "id": "MR-C493-kubdi",
+  "pathSegment": "MR-PATH-493-TOL493",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-493-TOL493",
+      "order": 0
+    }
+  ]
+}

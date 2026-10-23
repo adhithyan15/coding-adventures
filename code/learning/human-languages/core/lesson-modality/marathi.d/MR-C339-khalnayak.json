@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C339-khalnayak",
+    "language": "marathi",
+    "chapter": 339,
+    "sequence": 19620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e85c9d1a9910153"
+  },
+  "findings": []
+}

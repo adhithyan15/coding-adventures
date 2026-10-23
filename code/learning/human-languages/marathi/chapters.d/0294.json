@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "The Flood",
+  "label": "ch:mr-the-flood",
+  "canDo": "I can describe a flood: rising water, people stuck, volunteers helping.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C294-adakne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can describe a flood: rising water, people stuck, volunteers helping.",
+    "assesses": [
+      "MR-LEX-C294-PUR294-03",
+      "MR-LEX-C294-PUR294-04",
+      "MR-LEX-C294-PUR294-05"
+    ]
+  }
+}

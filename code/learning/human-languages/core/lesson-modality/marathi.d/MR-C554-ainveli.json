@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C554-ainveli",
+    "language": "marathi",
+    "chapter": 554,
+    "sequence": 31580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8446f7a158f32b7"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C400-riksa",
+  "pathSegment": "MR-PATH-400-VAHAN400",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-400-VAHAN400",
+      "order": 2
+    }
+  ]
+}

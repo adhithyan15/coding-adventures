@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-498-VAY498",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-498-VAY498"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R557-review-551-557",
+    "language": "marathi",
+    "chapter": 557,
+    "sequence": 31760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:81085b82e8f8d36d"
+  },
+  "findings": []
+}

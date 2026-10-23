@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-557-KUVAT557",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "MR-EXT-557-KUVAT557"
+  ],
+  "after": []
+}

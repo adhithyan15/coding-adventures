@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:5d85ae3bba4853fa",
+  "lessonIds": [
+    "MR-C394-bhan",
+    "MR-C394-janiv",
+    "MR-C394-jagarukta",
+    "MR-C394-vivek",
+    "MR-C394-umagne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch394.txt",
+  "json": "marathi/narration/ch394.json",
+  "textHash": "fnv1a64:9168f465beb01356",
+  "jsonHash": "fnv1a64:319172da5b7af39c",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:1251036f053d0b35",
+  "lessonIds": [
+    "MR-C386-pratibandh-karne",
+    "MR-C386-rokhne",
+    "MR-C386-adavne",
+    "MR-C386-dakhal-ghene",
+    "MR-C386-palvat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch386.txt",
+  "json": "marathi/narration/ch386.json",
+  "textHash": "fnv1a64:87d02dff13e99b5d",
+  "jsonHash": "fnv1a64:ac031e6bb54e0b7d",
+  "findings": []
+}

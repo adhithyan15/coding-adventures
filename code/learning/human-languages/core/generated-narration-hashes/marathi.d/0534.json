@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:aeafd9ee88d49e3b",
+  "lessonIds": [
+    "MR-C534-giryarohan",
+    "MR-C534-jaltaran",
+    "MR-C534-sibir",
+    "MR-C534-tambu",
+    "MR-C534-sekoti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch534.txt",
+  "json": "marathi/narration/ch534.json",
+  "textHash": "fnv1a64:e979c0f3fd26c540",
+  "jsonHash": "fnv1a64:f5a86c708467f941",
+  "findings": []
+}

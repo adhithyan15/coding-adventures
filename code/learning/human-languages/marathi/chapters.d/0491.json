@@ -1,0 +1,19 @@
+{
+  "chapter": 491,
+  "title": "Sleep and Naps",
+  "label": "ch:mr-sleep-and-naps",
+  "canDo": "I can talk about sleeplessness, snoring, yawning and napping.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C491-nijne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can talk about sleeplessness, snoring, yawning and napping.",
+    "assesses": [
+      "MR-LEX-C491-ZOP491-03",
+      "MR-LEX-C491-ZOP491-04",
+      "MR-LEX-C491-ZOP491-05"
+    ]
+  }
+}

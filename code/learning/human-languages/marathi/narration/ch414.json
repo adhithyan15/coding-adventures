@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 414,
+  "title": "Guests and Hosts",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:202cacb1573a966b",
+  "lessons": [
+    {
+      "id": "MR-C414-atithi",
+      "sequence": 23920,
+      "title": "अतिथी (atithī) — an honoured guest",
+      "headword": "अतिथी",
+      "romanization": "atithī",
+      "gloss": "an honoured guest",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99f6fd0db454cba5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an overnight stay, then the Marathi for an eating house."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अतिथी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अतिथी — atithī — \"an honoured guest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "समारंभाला मोठे अतिथी आले होते. samārambhālā moṭhe atithī āle hote. Distinguished guests had come to the ceremony."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "More formal than पाहुणा; the plural is the same: एक अतिथी (atithī), अनेक अतिथी (atithī)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अतिथी (atithī) is a tatsama, taken from Sanskrit atithi, \"a guest\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atithī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atithī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atithī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atithī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samārambhālā moṭhe atithī āle hote. — Distinguished guests had come to the ceremony.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samārambhālā moṭhe atithī āle hote.* — Distinguished guests had come to the ceremony.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an overnight stay, then the Marathi for an eating house, then say atithī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an overnight stay, then the Marathi for an eating house, then say *atithī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अतिथी (atithī) mean? (\"An honoured guest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C414-adaratithya",
+      "sequence": 23930,
+      "title": "आदरातिथ्य (ādarātithya) — hospitality",
+      "headword": "आदरातिथ्य",
+      "romanization": "ādarātithya",
+      "gloss": "hospitality",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b4d1d80db8ad7bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an eating house, then the Marathi for an honoured guest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आदरातिथ्य",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आदरातिथ्य — ādarātithya — \"hospitality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्यांच्या आदरातिथ्याने आम्ही खूश झालो. tyāñcyā ādarātithyāne āmhī khūś jhālo. We were delighted by their hospitality."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "आदर, respect, joined to आतिथ्य, guest care."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आदरातिथ्य (ādarātithya) is built from आदर, \"respect\", and Sanskrit ātithya, \"proper for a guest, hospitality\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādarātithya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādarātithya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādarātithya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādarātithya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyāñcyā ādarātithyāne āmhī khūś jhālo. — We were delighted by their hospitality.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyāñcyā ādarātithyāne āmhī khūś jhālo.* — We were delighted by their hospitality.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an eating house, then the Marathi for an honoured guest, then say ādarātithya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an eating house, then the Marathi for an honoured guest, then say *ādarātithya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आदरातिथ्य (ādarātithya) mean? (\"Hospitality\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C414-svagatkaksa",
+      "sequence": 23940,
+      "title": "स्वागतकक्ष (svāgatkakṣa) — a reception desk",
+      "headword": "स्वागतकक्ष",
+      "romanization": "svāgatkakṣa",
+      "gloss": "a reception desk",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28677892ca09492a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an honoured guest, then the Marathi for hospitality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्वागतकक्ष",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्वागतकक्ष — svāgatkakṣa — \"a reception desk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "स्वागतकक्षात आम्हाला खोलीची किल्ली मिळाली. svāgatkakṣāt āmhālā kholīcī killī miḷālī. We got our room key at the reception desk."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "The front desk of a hotel or an office; कक्ष is a room."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्वागतकक्ष (svāgatkakṣa) is a modern word built from Sanskrit svāgata, \"welcome\", and kakṣa, \"an inner room\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svāgatkakṣa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svāgatkakṣa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svāgatkakṣa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svāgatkakṣa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svāgatkakṣāt āmhālā kholīcī killī miḷālī. — We got our room key at the reception desk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svāgatkakṣāt āmhālā kholīcī killī miḷālī.* — We got our room key at the reception desk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an honoured guest, then the Marathi for hospitality, then say svāgatkakṣa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an honoured guest, then the Marathi for hospitality, then say *svāgatkakṣa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्वागतकक्ष (svāgatkakṣa) mean? (\"A reception desk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C414-vicarpus-karne",
+      "sequence": 23950,
+      "title": "विचारपूस करणे (vicārpūs karṇe) — to ask after",
+      "headword": "विचारपूस करणे",
+      "romanization": "vicārpūs karṇe",
+      "gloss": "to ask after",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccf22518fe627299",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for hospitality, then the Marathi for a reception desk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विचारपूस करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विचारपूस करणे — vicārpūs karṇe — \"to ask after\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आजीने फोनवर सगळ्यांची विचारपूस केली. ājīne phonvar sagaḷyāñcī vicārpūs kelī. Grandmother asked after everyone on the phone."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने विचारपूस केली, tyāne vicārpūs kelī."
+            },
+            {
+              "kind": "speech",
+              "text": "The person asked about takes -ची: माझी विचारपूस केली, asked after me."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विचारपूस करणे (vicārpūs karṇe) is built from विचार, \"a thought, a question\", and pūs, \"asking\", from the family of Sanskrit pṛcchati, \"asks\", where CDIAL lists Marathi pusṇẽ, \"to ask\" (CDIAL 8352); करणे makes it a verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicārpūs karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicārpūs karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicārpūs karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicārpūs karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ājīne phonvar sagaḷyāñcī vicārpūs kelī. — Grandmother asked after everyone on the phone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ājīne phonvar sagaḷyāñcī vicārpūs kelī.* — Grandmother asked after everyone on the phone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for hospitality, then the Marathi for a reception desk, then say vicārpūs karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for hospitality, then the Marathi for a reception desk, then say *vicārpūs karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विचारपूस करणे (vicārpūs karṇe) mean? (\"To ask after\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C414-phirakne",
+      "sequence": 23960,
+      "title": "फिरकणे (phirakṇe) — to drop by",
+      "headword": "फिरकणे",
+      "romanization": "phirakṇe",
+      "gloss": "to drop by",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0a48dccac2f205c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a reception desk, then the Marathi for to ask after."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फिरकणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फिरकणे — phirakṇe — \"to drop by\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सुट्टीत तो आमच्याकडे फिरकलाच नाही. suṭṭīt to āmcyākaḍe phiraklāc nāhī. In the holidays he did not even drop by our place."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो फिरकला, to phiraklā."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly with a negative: इकडे फिरकला नाही, he never came this way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फिरकणे (phirakṇe) is a Marathi verb that looks built on phir-, \"to turn\" (CDIAL 9078); how it came to mean dropping in is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phirakṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phirakṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phirakṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phirakṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suṭṭīt to āmcyākaḍe phiraklāc nāhī. — In the holidays he did not even drop by our place.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suṭṭīt to āmcyākaḍe phiraklāc nāhī.* — In the holidays he did not even drop by our place.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a reception desk, then the Marathi for to ask after, then say phirakṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a reception desk, then the Marathi for to ask after, then say *phirakṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फिरकणे (phirakṇe) mean? (\"To drop by\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

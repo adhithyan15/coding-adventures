@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 499,
+  "title": "A New Baby",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cff948351de85fc2",
+  "lessons": [
+    {
+      "id": "MR-C499-garodar",
+      "sequence": 28510,
+      "title": "गरोदर (garodar) — pregnant",
+      "headword": "गरोदर",
+      "romanization": "garodar",
+      "gloss": "pregnant",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:537a6132fda6ff59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for age, then the Marathi for a teenager."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गरोदर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गरोदर — garodar — \"pregnant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माझी मावशी गरोदर आहे. mājhī māvśī garodar āhe. My aunt is pregnant."
+            },
+            {
+              "kind": "speech",
+              "text": "Unchanging; the formal word is गर्भवती."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गरोदर (garodar) is usually traced to two Sanskrit words, garbha, \"womb\", and udara, \"belly\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garodar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garodar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garodar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garodar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhī māvśī garodar āhe. — My aunt is pregnant.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhī māvśī garodar āhe.* — My aunt is pregnant.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for age, then the Marathi for a teenager, then say garodar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for age, then the Marathi for a teenager, then say *garodar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गरोदर (garodar) mean? (\"Pregnant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C499-balantpan",
+      "sequence": 28520,
+      "title": "बाळंतपण (bāḷantpaṇ) — childbirth; confinement",
+      "headword": "बाळंतपण",
+      "romanization": "bāḷantpaṇ",
+      "gloss": "childbirth; confinement",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4fee1497a4b742f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a teenager, then the Marathi for pregnant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बाळंतपण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाळंतपण — bāḷantpaṇ — \"childbirth; confinement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मुलीचं बाळंतपण आईच्या घरी झालं. mulīcaṁ bāḷantpaṇ āīcyā gharī jhālaṁ. The daughter gave birth at her mother's house."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "बाळंत, a woman who has recently given birth, + -पण."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाळंतपण (bāḷantpaṇ) is a Marathi derivation: बाळंत, a woman who has recently given birth, with -paṇ; the origin of बाळंत is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāḷantpaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāḷantpaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāḷantpaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāḷantpaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mulīcaṁ bāḷantpaṇ āīcyā gharī jhālaṁ. — The daughter gave birth at her mother's house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mulīcaṁ bāḷantpaṇ āīcyā gharī jhālaṁ.* — The daughter gave birth at her mother's house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a teenager, then the Marathi for pregnant, then say bāḷantpaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a teenager, then the Marathi for pregnant, then say *bāḷantpaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बाळंतपण (bāḷantpaṇ) mean? (\"Childbirth; confinement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C499-tanha",
+      "sequence": 28530,
+      "title": "तान्हा (tānhā) — newborn; infant",
+      "headword": "तान्हा",
+      "romanization": "tānhā",
+      "gloss": "newborn; infant",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4726bdf62bc8d02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for pregnant, then the Marathi for childbirth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तान्हा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तान्हा — tānhā — \"newborn; infant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तान्हं बाळ दिवसभर झोपतं. tānhaṁ bāḷ divasbhar jhoptaṁ. A newborn baby sleeps all day."
+            },
+            {
+              "kind": "speech",
+              "text": "Agrees: तान्हं बाळ, a newborn baby."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तान्हा (tānhā) is inherited: CDIAL lists Marathi tānhā, \"sucking, of a baby or young animal\", under Sanskrit tṛṣṇaka, \"thirsty\" (CDIAL 5940)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tānhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tānhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tānhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tānhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tānhaṁ bāḷ divasbhar jhoptaṁ. — A newborn baby sleeps all day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tānhaṁ bāḷ divasbhar jhoptaṁ.* — A newborn baby sleeps all day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for pregnant, then the Marathi for childbirth, then say tānhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for pregnant, then the Marathi for childbirth, then say *tānhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तान्हा (tānhā) mean? (\"Newborn; infant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C499-rangne",
+      "sequence": 28540,
+      "title": "रांगणे (rāṅgṇe) — to crawl",
+      "headword": "रांगणे",
+      "romanization": "rāṅgṇe",
+      "gloss": "to crawl",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bfb14173d3a0800c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for childbirth, then the Marathi for newborn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रांगणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रांगणे — rāṅgṇe — \"to crawl\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आमचं बाळ आता रांगायला लागलं. āmcaṁ bāḷ ātā rāṅgāylā lāglaṁ. Our baby has started crawling now."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो रांगला, to rāṅglā."
+            },
+            {
+              "kind": "speech",
+              "text": "रांगायला लागणे, to start crawling."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रांगणे (rāṅgṇe) is a Marathi verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāṅgṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāṅgṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāṅgṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāṅgṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmcaṁ bāḷ ātā rāṅgāylā lāglaṁ. — Our baby has started crawling now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmcaṁ bāḷ ātā rāṅgāylā lāglaṁ.* — Our baby has started crawling now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for childbirth, then the Marathi for newborn, then say rāṅgṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for childbirth, then the Marathi for newborn, then say *rāṅgṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रांगणे (rāṅgṇe) mean? (\"To crawl\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C499-pajne",
+      "sequence": 28550,
+      "title": "पाजणे (pājṇe) — to give to drink",
+      "headword": "पाजणे",
+      "romanization": "pājṇe",
+      "gloss": "to give to drink",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c88b3199eecb17d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for newborn, then the Marathi for to crawl."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पाजणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाजणे — pājṇe — \"to give to drink\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आईने बाळाला दूध पाजलं. āīne bāḷālā dūdh pājlaṁ. The mother fed the baby milk."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने बाळाला दूध पाजलं, tyāne bāḷālā dūdh pājlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The one given the drink takes -ला: बाळाला पाजणे (pājṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाजणे (pājṇe) is a tadbhava, inherited from Sanskrit pāyayati, \"gives to drink\"; CDIAL lists Marathi pājṇẽ (CDIAL 8098)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pājṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pājṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pājṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pājṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āīne bāḷālā dūdh pājlaṁ. — The mother fed the baby milk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āīne bāḷālā dūdh pājlaṁ.* — The mother fed the baby milk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for newborn, then the Marathi for to crawl, then say pājṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for newborn, then the Marathi for to crawl, then say *pājṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पाजणे (pājṇe) mean? (\"To give to drink\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

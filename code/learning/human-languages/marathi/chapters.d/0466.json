@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Peace of Mind",
+  "label": "ch:mr-peace-of-mind",
+  "canDo": "I can talk about satisfaction, ease and resting a while.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C466-khulne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can talk about satisfaction, ease and resting a while.",
+    "assesses": [
+      "MR-LEX-C466-SAMADHAN466-03",
+      "MR-LEX-C466-SAMADHAN466-04",
+      "MR-LEX-C466-SAMADHAN466-05"
+    ]
+  }
+}

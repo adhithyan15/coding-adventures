@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C339-sadhu",
+    "language": "marathi",
+    "chapter": 339,
+    "sequence": 19640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0dd5081f6812904"
+  },
+  "findings": []
+}

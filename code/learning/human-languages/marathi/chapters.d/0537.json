@@ -1,0 +1,19 @@
+{
+  "chapter": 537,
+  "title": "On Stage",
+  "label": "ch:mr-on-stage",
+  "canDo": "I can talk about acting, roles, rehearsals and costumes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C537-sakarne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 537: I can talk about acting, roles, rehearsals and costumes.",
+    "assesses": [
+      "MR-LEX-C537-NATYA537-03",
+      "MR-LEX-C537-NATYA537-04",
+      "MR-LEX-C537-NATYA537-05"
+    ]
+  }
+}

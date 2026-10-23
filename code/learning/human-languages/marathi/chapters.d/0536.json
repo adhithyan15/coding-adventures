@@ -1,0 +1,19 @@
+{
+  "chapter": 536,
+  "title": "Music Making",
+  "label": "ch:mr-music-making",
+  "canDo": "I can talk about singing, notes and practising music.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C536-riyaj-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 536: I can talk about singing, notes and practising music.",
+    "assesses": [
+      "MR-LEX-C536-GAYAN536-03",
+      "MR-LEX-C536-GAYAN536-04",
+      "MR-LEX-C536-GAYAN536-05"
+    ]
+  }
+}

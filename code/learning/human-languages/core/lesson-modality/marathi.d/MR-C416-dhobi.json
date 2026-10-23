@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C416-dhobi",
+    "language": "marathi",
+    "chapter": 416,
+    "sequence": 24030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ffad3d51a1aa963"
+  },
+  "findings": []
+}

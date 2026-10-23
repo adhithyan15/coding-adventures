@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C418-khede",
+    "language": "marathi",
+    "chapter": 418,
+    "sequence": 24150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27ba8bc84a118b97"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:bc459111cddbc5a9",
+  "lessonIds": [
+    "MR-C310-vrttapatra",
+    "MR-C310-dainik",
+    "MR-C310-saptahik",
+    "MR-C310-mathla",
+    "MR-C310-chapne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch310.txt",
+  "json": "marathi/narration/ch310.json",
+  "textHash": "fnv1a64:c5bd5588ab8b030b",
+  "jsonHash": "fnv1a64:a674f2d2dd15b3f2",
+  "findings": []
+}

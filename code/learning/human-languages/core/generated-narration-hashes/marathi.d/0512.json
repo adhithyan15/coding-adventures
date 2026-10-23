@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:24b3e0b0073b4f2a",
+  "lessonIds": [
+    "MR-C512-karkhana",
+    "MR-C512-utpadan",
+    "MR-C512-mal",
+    "MR-C512-puravtha",
+    "MR-C512-khapne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch512.txt",
+  "json": "marathi/narration/ch512.json",
+  "textHash": "fnv1a64:a3c37b3ecacab6f2",
+  "jsonHash": "fnv1a64:006837d5b059ac9b",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R550-review-544-550",
+    "language": "marathi",
+    "chapter": 550,
+    "sequence": 31400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6519e6336fa8ece0"
+  },
+  "findings": []
+}

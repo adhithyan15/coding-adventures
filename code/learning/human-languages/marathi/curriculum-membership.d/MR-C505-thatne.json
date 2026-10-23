@@ -1,0 +1,11 @@
+{
+  "id": "MR-C505-thatne",
+  "pathSegment": "MR-PATH-505-KARAGIR505",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-505-KARAGIR505",
+      "order": 4
+    }
+  ]
+}

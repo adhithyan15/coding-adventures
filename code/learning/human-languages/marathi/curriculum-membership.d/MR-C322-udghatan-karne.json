@@ -1,0 +1,11 @@
+{
+  "id": "MR-C322-udghatan-karne",
+  "pathSegment": "MR-PATH-322-PURASKAR322",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-322-PURASKAR322",
+      "order": 4
+    }
+  ]
+}

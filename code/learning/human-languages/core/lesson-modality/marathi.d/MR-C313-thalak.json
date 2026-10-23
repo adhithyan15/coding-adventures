@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C313-thalak",
+    "language": "marathi",
+    "chapter": 313,
+    "sequence": 18310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c87d553a26b42726"
+  },
+  "findings": []
+}

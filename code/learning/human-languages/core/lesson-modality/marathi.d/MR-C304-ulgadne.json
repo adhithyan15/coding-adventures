@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C304-ulgadne",
+    "language": "marathi",
+    "chapter": 304,
+    "sequence": 17840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98ffbb3d038f9182"
+  },
+  "findings": []
+}

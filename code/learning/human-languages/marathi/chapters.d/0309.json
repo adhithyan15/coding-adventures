@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "Losses",
+  "label": "ch:mr-losses",
+  "canDo": "I can talk about loss and death in a news story.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C309-udbhavne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can talk about loss and death in a news story.",
+    "assesses": [
+      "MR-LEX-C309-MRUTYU309-03",
+      "MR-LEX-C309-MRUTYU309-04",
+      "MR-LEX-C309-MRUTYU309-05"
+    ]
+  }
+}

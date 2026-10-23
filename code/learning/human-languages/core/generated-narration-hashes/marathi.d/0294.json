@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:eef29718b6691256",
+  "lessonIds": [
+    "MR-C294-pur",
+    "MR-C294-sacne",
+    "MR-C294-madatkarya",
+    "MR-C294-svayamsevak",
+    "MR-C294-adakne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch294.txt",
+  "json": "marathi/narration/ch294.json",
+  "textHash": "fnv1a64:dfa7a707326974aa",
+  "jsonHash": "fnv1a64:211e5e5ff8a2ba65",
+  "findings": []
+}

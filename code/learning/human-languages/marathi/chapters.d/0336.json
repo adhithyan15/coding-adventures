@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "Caves and Hidden Treasure",
+  "label": "ch:mr-caves-and-hidden-treasure",
+  "canDo": "I can tell of caves, secret passages and treasure.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C336-khajina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can tell of caves, secret passages and treasure.",
+    "assesses": [
+      "MR-LEX-C336-LENI336-03",
+      "MR-LEX-C336-LENI336-04",
+      "MR-LEX-C336-LENI336-05"
+    ]
+  }
+}

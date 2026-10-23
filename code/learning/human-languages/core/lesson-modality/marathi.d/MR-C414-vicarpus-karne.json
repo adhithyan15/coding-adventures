@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C414-vicarpus-karne",
+    "language": "marathi",
+    "chapter": 414,
+    "sequence": 23950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ccf22518fe627299"
+  },
+  "findings": []
+}

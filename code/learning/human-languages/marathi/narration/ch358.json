@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 358,
+  "title": "Making Laws",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f6676e02054cfe71",
+  "lessons": [
+    {
+      "id": "MR-C358-samvidhan",
+      "sequence": 20820,
+      "title": "संविधान (saṁvidhān) — a constitution",
+      "headword": "संविधान",
+      "romanization": "saṁvidhān",
+      "gloss": "a constitution",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6fc3ef2527e9315a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a leader, then the Marathi for to appoint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संविधान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संविधान — saṁvidhān — \"a constitution\"."
+            },
+            {
+              "kind": "speech",
+              "text": "संविधानाने प्रत्येक नागरिकाला समान हक्क दिले आहेत. saṁvidhānāne pratyek nāgarikālā samān hakka dile āhet. The constitution has given every citizen equal rights."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter; also राज्यघटना."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संविधान (saṁvidhān) is a tatsama, taken from Sanskrit saṁvidhāna, \"arrangement, disposition\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁvidhān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁvidhān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁvidhān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁvidhān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁvidhānāne pratyek nāgarikālā samān hakka dile āhet. — The constitution has given every citizen equal rights.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁvidhānāne pratyek nāgarikālā samān hakka dile āhet.* — The constitution has given every citizen equal rights.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a leader, then the Marathi for to appoint, then say saṁvidhān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a leader, then the Marathi for to appoint, then say *saṁvidhān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संविधान (saṁvidhān) mean? (\"A constitution\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C358-dhoran",
+      "sequence": 20830,
+      "title": "धोरण (dhoraṇ) — a policy",
+      "headword": "धोरण",
+      "romanization": "dhoraṇ",
+      "gloss": "a policy",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:017f71108888fdcf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to appoint, then the Marathi for a constitution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धोरण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धोरण — dhoraṇ — \"a policy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सरकारचं नवं शिक्षण धोरण जाहीर झालं. sarkārcaṁ navaṁ śikṣaṇ dhoraṇ jāhīr jhālaṁ. The government's new education policy was announced."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter: नवं धोरण (dhoraṇ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धोरण (dhoraṇ) is a Marathi noun whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhoraṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhoraṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhoraṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhoraṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarkārcaṁ navaṁ śikṣaṇ dhoraṇ jāhīr jhālaṁ. — The government's new education policy was announced.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarkārcaṁ navaṁ śikṣaṇ dhoraṇ jāhīr jhālaṁ.* — The government's new education policy was announced.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to appoint, then the Marathi for a constitution, then say dhoraṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to appoint, then the Marathi for a constitution, then say *dhoraṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धोरण (dhoraṇ) mean? (\"A policy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C358-lagu-karne",
+      "sequence": 20840,
+      "title": "लागू करणे (lāgū karṇe) — to enforce; to bring into force",
+      "headword": "लागू करणे",
+      "romanization": "lāgū karṇe",
+      "gloss": "to enforce; to bring into force",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c58bafb2c74ceb46",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a constitution, then the Marathi for a policy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लागू करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लागू करणे — lāgū karṇe — \"to enforce; to bring into force\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सरकारने नवा नियम लागू केला. sarkārne navā niyam lāgū kelā. The government brought a new rule into force."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने नियम लागू केला, tyāne niyam lāgū kelā."
+            },
+            {
+              "kind": "speech",
+              "text": "लागू होणे, to apply: हा नियम सगळ्यांना लागू होतो."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लागू करणे (lāgū karṇe) joins लागू, \"in force, applying\", built on लागणे, \"to attach\", which is inherited from Sanskrit lagyati, \"adheres to\" (CDIAL 10895), to करणे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāgū karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāgū karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāgū karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāgū karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarkārne navā niyam lāgū kelā. — The government brought a new rule into force.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarkārne navā niyam lāgū kelā.* — The government brought a new rule into force.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a constitution, then the Marathi for a policy, then say lāgū karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a constitution, then the Marathi for a policy, then say *lāgū karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लागू करणे (lāgū karṇe) mean? (\"To enforce; to bring into force\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C358-radda-karne",
+      "sequence": 20850,
+      "title": "रद्द करणे (radda karṇe) — to cancel; to repeal",
+      "headword": "रद्द करणे",
+      "romanization": "radda karṇe",
+      "gloss": "to cancel; to repeal",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76885149640ff218",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a policy, then the Marathi for to enforce."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रद्द करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रद्द करणे — radda karṇe — \"to cancel; to repeal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पावसामुळे शाळेने सहल रद्द केली. pāvsāmuḷe śāḷene sahal radda kelī. Because of the rain, the school cancelled the trip."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने रद्द केलं, tyāne radda kelaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "रद्द होणे, to be cancelled."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रद्द करणे (radda karṇe) joins रद्द, \"void\", a loan from Persian usually traced to Arabic radd, \"returning, rejection\", to करणे, \"to make\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "radda karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *radda karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "radda karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *radda karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāvsāmuḷe śāḷene sahal radda kelī. — Because of the rain, the school cancelled the trip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāvsāmuḷe śāḷene sahal radda kelī.* — Because of the rain, the school cancelled the trip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a policy, then the Marathi for to enforce, then say radda karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a policy, then the Marathi for to enforce, then say *radda karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रद्द करणे (radda karṇe) mean? (\"To cancel; to repeal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C358-bahal-karne",
+      "sequence": 20860,
+      "title": "बहाल करणे (bahāl karṇe) — to grant; to confer",
+      "headword": "बहाल करणे",
+      "romanization": "bahāl karṇe",
+      "gloss": "to grant; to confer",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f15f671e1e3bfa4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to enforce, then the Marathi for to cancel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बहाल करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बहाल करणे — bahāl karṇe — \"to grant; to confer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "संविधानाने स्त्रियांना मताचा हक्क बहाल केला. saṁvidhānāne striyānnā matācā hakka bahāl kelā. The constitution granted women the right to vote."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने बहाल केलं, tyāne bahāl kelaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The receiver takes -ला: स्त्रियांना हक्क बहाल करणे (bahāl karṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बहाल करणे (bahāl karṇe) joins बहाल, \"confirmed, granted\", a loan usually traced to Persian ba-ḥāl, \"in (its proper) state\", built on Arabic ḥāl, \"state\", to करणे, \"to make\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahāl karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahāl karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahāl karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahāl karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁvidhānāne striyānnā matācā hakka bahāl kelā. — The constitution granted women the right to vote.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁvidhānāne striyānnā matācā hakka bahāl kelā.* — The constitution granted women the right to vote.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to enforce, then the Marathi for to cancel, then say bahāl karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to enforce, then the Marathi for to cancel, then say *bahāl karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बहाल करणे (bahāl karṇe) mean? (\"To grant; to confer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

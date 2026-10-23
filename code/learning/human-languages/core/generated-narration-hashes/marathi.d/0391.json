@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:02085913e31baa08",
+  "lessonIds": [
+    "MR-C391-ghatne",
+    "MR-C391-tikne",
+    "MR-C391-takka",
+    "MR-C391-praman",
+    "MR-C391-star"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch391.txt",
+  "json": "marathi/narration/ch391.json",
+  "textHash": "fnv1a64:ce94145afc981cfb",
+  "jsonHash": "fnv1a64:69f1b0e20d64f573",
+  "findings": []
+}

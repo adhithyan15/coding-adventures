@@ -1,0 +1,11 @@
+{
+  "id": "MR-C367-pravrtti",
+  "pathSegment": "MR-PATH-367-PRATHA367",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-367-PRATHA367",
+      "order": 3
+    }
+  ]
+}

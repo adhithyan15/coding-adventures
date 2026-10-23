@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C406-uddanpul",
+    "language": "marathi",
+    "chapter": 406,
+    "sequence": 23540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bbe15977fc5538e8"
+  },
+  "findings": []
+}

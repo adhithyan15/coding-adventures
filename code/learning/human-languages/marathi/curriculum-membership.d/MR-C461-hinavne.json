@@ -1,0 +1,11 @@
+{
+  "id": "MR-C461-hinavne",
+  "pathSegment": "MR-PATH-461-APMAN461",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-461-APMAN461",
+      "order": 4
+    }
+  ]
+}

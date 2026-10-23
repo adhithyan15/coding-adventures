@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "Office Life",
+  "label": "ch:mr-office-life",
+  "canDo": "I can talk about clerks, papers and stamps in an office.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C506-channi-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can talk about clerks, papers and stamps in an office.",
+    "assesses": [
+      "MR-LEX-C506-KACHERI506-03",
+      "MR-LEX-C506-KACHERI506-04",
+      "MR-LEX-C506-KACHERI506-05"
+    ]
+  }
+}

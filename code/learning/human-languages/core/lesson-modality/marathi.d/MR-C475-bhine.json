@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C475-bhine",
+    "language": "marathi",
+    "chapter": 475,
+    "sequence": 27320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dcd7e3d9c1942f66"
+  },
+  "findings": []
+}

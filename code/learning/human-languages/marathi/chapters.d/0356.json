@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Democracy and Majorities",
+  "label": "ch:mr-democracy-and-majorities",
+  "canDo": "I can talk about democracy, majorities and public opinion.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C356-kaul-dene",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can talk about democracy, majorities and public opinion.",
+    "assesses": [
+      "MR-LEX-C356-LOKSHAHI356-03",
+      "MR-LEX-C356-LOKSHAHI356-04",
+      "MR-LEX-C356-LOKSHAHI356-05"
+    ]
+  }
+}

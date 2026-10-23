@@ -1,0 +1,21 @@
+{
+  "chapter": 334,
+  "title": "Turning Points",
+  "label": "ch:mr-turning-points",
+  "canDo": "I can talk about great changes and what people set up.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-R334-review-328-334",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can talk about great changes and what people set up.",
+    "assesses": [
+      "MR-LEX-C334-KRANTI334-01",
+      "MR-LEX-C334-KRANTI334-02",
+      "MR-LEX-C334-KRANTI334-03",
+      "MR-LEX-C334-KRANTI334-04",
+      "MR-LEX-C334-KRANTI334-05"
+    ]
+  }
+}

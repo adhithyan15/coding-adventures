@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C408-valhe",
+    "language": "marathi",
+    "chapter": 408,
+    "sequence": 23620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f54516775cdada07"
+  },
+  "findings": []
+}

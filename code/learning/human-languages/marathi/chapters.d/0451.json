@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "Cheerful and Gloomy",
+  "label": "ch:mr-cheerful-and-gloomy",
+  "canDo": "I can say whether someone is cheerful, gloomy, pleased or upset.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C451-vaitagne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can say whether someone is cheerful, gloomy, pleased or upset.",
+    "assesses": [
+      "MR-LEX-C451-MOOD451-03",
+      "MR-LEX-C451-MOOD451-04",
+      "MR-LEX-C451-MOOD451-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C452-dhakka",
+    "language": "marathi",
+    "chapter": 452,
+    "sequence": 26100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:760fa663c156eb6b"
+  },
+  "findings": []
+}

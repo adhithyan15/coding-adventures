@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:354070b746ea756f",
+  "lessonIds": [
+    "MR-C402-ghat",
+    "MR-C402-khind",
+    "MR-C402-utar",
+    "MR-C402-nagmodi",
+    "MR-C402-sulka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch402.txt",
+  "json": "marathi/narration/ch402.json",
+  "textHash": "fnv1a64:e875e2c419f06955",
+  "jsonHash": "fnv1a64:b2b503355793799a",
+  "findings": []
+}

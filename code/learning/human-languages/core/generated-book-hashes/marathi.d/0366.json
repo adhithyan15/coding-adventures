@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:152947efa39a51bc",
+  "lessonIds": [
+    "MR-C366-mulya",
+    "MR-C366-naitikta",
+    "MR-C366-sacoti",
+    "MR-C366-tyag",
+    "MR-C366-hit"
+  ],
+  "tex": "marathi/book/chapters/ch366-values.tex"
+}

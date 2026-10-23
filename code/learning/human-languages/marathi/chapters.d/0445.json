@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "Blossom and Fall",
+  "label": "ch:mr-blossom-and-fall",
+  "canDo": "I can talk about sprouts, and say plants take root, bloom, blossom and wither.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C445-komejne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can talk about sprouts, and say plants take root, bloom, blossom and wither.",
+    "assesses": [
+      "MR-LEX-C445-ANKUR445-03",
+      "MR-LEX-C445-ANKUR445-04",
+      "MR-LEX-C445-ANKUR445-05"
+    ]
+  }
+}

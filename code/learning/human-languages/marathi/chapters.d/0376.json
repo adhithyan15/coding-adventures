@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "Weighing Things Up",
+  "label": "ch:mr-weighing-things-up",
+  "canDo": "I can weigh up choices and judge quality.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C376-darja",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can weigh up choices and judge quality.",
+    "assesses": [
+      "MR-LEX-C376-MULYAMAPAN376-03",
+      "MR-LEX-C376-MULYAMAPAN376-04",
+      "MR-LEX-C376-MULYAMAPAN376-05"
+    ]
+  }
+}

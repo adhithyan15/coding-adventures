@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 342,
+  "title": "Why Things Happen",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b73df061bb20a5bd",
+  "lessons": [
+    {
+      "id": "MR-C342-hetu",
+      "sequence": 20000,
+      "title": "हेतू (hetū) — a motive; an intention",
+      "headword": "हेतू",
+      "romanization": "hetū",
+      "gloss": "a motive; an intention",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8224f3c984981aef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for dance, then the Marathi for a stage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हेतू",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हेतू — hetū — \"a motive; an intention\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्याच्या मदतीमागचा हेतू चांगला होता. tyācyā madtīmāgcā hetū cāṅglā hotā. The motive behind his help was good."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "हेतूने, with the intention: शिकण्याच्या हेतूने, with the aim of learning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हेतू (hetū) is a tatsama, taken from Sanskrit hetu, \"impulse, motive, cause\" (Monier-Williams). Marathi lengthens the final vowel."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hetū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hetū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hetū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hetū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyācyā madtīmāgcā hetū cāṅglā hotā. — The motive behind his help was good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyācyā madtīmāgcā hetū cāṅglā hotā.* — The motive behind his help was good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for dance, then the Marathi for a stage, then say hetū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for dance, then the Marathi for a stage, then say *hetū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हेतू (hetū) mean? (\"A motive; an intention\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C342-uddes",
+      "sequence": 20010,
+      "title": "उद्देश (uddeś) — a purpose; an aim",
+      "headword": "उद्देश",
+      "romanization": "uddeś",
+      "gloss": "a purpose; an aim",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa09bcbd45b91ece",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a stage, then the Marathi for a motive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उद्देश",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उद्देश — uddeś — \"a purpose; an aim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "या प्रवासाचा उद्देश काय आहे? yā pravāsācā uddeś kāy āhe? What is the purpose of this trip?"
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "The thing whose purpose it is takes -चा: प्रवासाचा उद्देश (uddeś)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उद्देश (uddeś) is a tatsama, taken from Sanskrit uddeśa, \"pointing at; aim, object\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uddeś",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uddeś*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uddeś, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uddeś*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yā pravāsācā uddeś kāy āhe? — What is the purpose of this trip?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yā pravāsācā uddeś kāy āhe?* — What is the purpose of this trip?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a stage, then the Marathi for a motive, then say uddeś again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a stage, then the Marathi for a motive, then say *uddeś* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उद्देश (uddeś) mean? (\"A purpose; an aim\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C342-parinam",
+      "sequence": 20020,
+      "title": "परिणाम (pariṇām) — a consequence; an effect",
+      "headword": "परिणाम",
+      "romanization": "pariṇām",
+      "gloss": "a consequence; an effect",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8553273498c0559",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a motive, then the Marathi for a purpose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: परिणाम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिणाम — pariṇām — \"a consequence; an effect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पावसाचा परिणाम भाजीच्या दरावर झाला. pāvsācā pariṇām bhājīcyā darāvar jhālā. The rain had an effect on vegetable prices."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "X चा परिणाम (pariṇām) Y वर होतो: X has an effect on Y."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिणाम (pariṇām) is a tatsama, taken from Sanskrit pariṇāma, \"change, development, result\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pariṇām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pariṇām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pariṇām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pariṇām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāvsācā pariṇām bhājīcyā darāvar jhālā. — The rain had an effect on vegetable prices.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāvsācā pariṇām bhājīcyā darāvar jhālā.* — The rain had an effect on vegetable prices.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a motive, then the Marathi for a purpose, then say pariṇām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a motive, then the Marathi for a purpose, then say *pariṇām* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does परिणाम (pariṇām) mean? (\"A consequence; an effect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C342-spastikaran",
+      "sequence": 20030,
+      "title": "स्पष्टीकरण (spaṣṭīkaraṇ) — an explanation",
+      "headword": "स्पष्टीकरण",
+      "romanization": "spaṣṭīkaraṇ",
+      "gloss": "an explanation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ffc39cbbb5ca1fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a purpose, then the Marathi for a consequence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्पष्टीकरण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्पष्टीकरण — spaṣṭīkaraṇ — \"an explanation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उशिराबद्दल त्याने स्पष्टीकरण दिलं. uśirābaddal tyāne spaṣṭīkaraṇ dilaṁ. He gave an explanation for being late."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "स्पष्टीकरण (spaṣṭīkaraṇ) देणे, to give an explanation; it is built on स्पष्ट, clear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्पष्टीकरण (spaṣṭīkaraṇ) is a tatsama, taken from Sanskrit spaṣṭīkaraṇa, \"making clear\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spaṣṭīkaraṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *spaṣṭīkaraṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spaṣṭīkaraṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *spaṣṭīkaraṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uśirābaddal tyāne spaṣṭīkaraṇ dilaṁ. — He gave an explanation for being late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uśirābaddal tyāne spaṣṭīkaraṇ dilaṁ.* — He gave an explanation for being late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a purpose, then the Marathi for a consequence, then say spaṣṭīkaraṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a purpose, then the Marathi for a consequence, then say *spaṣṭīkaraṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्पष्टीकरण (spaṣṭīkaraṇ) mean? (\"An explanation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C342-nirman-hone",
+      "sequence": 20040,
+      "title": "निर्माण होणे (nirmāṇ hoṇe) — to come about; to arise",
+      "headword": "निर्माण होणे",
+      "romanization": "nirmāṇ hoṇe",
+      "gloss": "to come about; to arise",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6308af36d468c2b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a consequence, then the Marathi for an explanation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निर्माण होणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निर्माण होणे — nirmāṇ hoṇe — \"to come about; to arise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "या निर्णयामुळे नवा प्रश्न निर्माण झाला. yā nirṇayāmuḷe navā praśna nirmāṇ jhālā. A new question arose because of this decision."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो निर्माण झाला, to nirmāṇ jhālā."
+            },
+            {
+              "kind": "speech",
+              "text": "Intransitive: what arises is the subject. निर्माण करणे is to create."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निर्माण होणे (nirmāṇ hoṇe) joins the tatsama निर्माण, Sanskrit nirmāṇa, \"measuring, making\" (CDIAL 7368), to होणे, \"to become\": to come into being."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirmāṇ hoṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirmāṇ hoṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirmāṇ hoṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirmāṇ hoṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yā nirṇayāmuḷe navā praśna nirmāṇ jhālā. — A new question arose because of this decision.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yā nirṇayāmuḷe navā praśna nirmāṇ jhālā.* — A new question arose because of this decision.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a consequence, then the Marathi for an explanation, then say nirmāṇ hoṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a consequence, then the Marathi for an explanation, then say *nirmāṇ hoṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निर्माण होणे (nirmāṇ hoṇe) mean? (\"To come about; to arise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

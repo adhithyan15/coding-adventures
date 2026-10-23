@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:0cbffa2cee2c30c6",
+  "lessonIds": [
+    "MR-C538-tal",
+    "MR-C538-nartak",
+    "MR-C538-ghungru",
+    "MR-C538-theka-dharne",
+    "MR-C538-dolne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch538.txt",
+  "json": "marathi/narration/ch538.json",
+  "textHash": "fnv1a64:14491525271d68e5",
+  "jsonHash": "fnv1a64:e23643636eafb1db",
+  "findings": []
+}

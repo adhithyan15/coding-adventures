@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C371-pramanpatra",
+    "language": "marathi",
+    "chapter": 371,
+    "sequence": 21520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e1886b22aa4af18"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:b54543e8debdab88",
+  "lessonIds": [
+    "MR-C466-samadhan",
+    "MR-C466-svasthya",
+    "MR-C466-nivant",
+    "MR-C466-visavne",
+    "MR-C466-khulne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch466.txt",
+  "json": "marathi/narration/ch466.json",
+  "textHash": "fnv1a64:4f8291a21e979857",
+  "jsonHash": "fnv1a64:92c232f270a80f36",
+  "findings": []
+}

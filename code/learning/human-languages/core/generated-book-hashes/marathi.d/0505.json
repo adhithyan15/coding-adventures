@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:769e6954842fdee9",
+  "lessonIds": [
+    "MR-C505-kumbhar",
+    "MR-C505-lohar",
+    "MR-C505-sonar",
+    "MR-C505-vinkar",
+    "MR-C505-thatne"
+  ],
+  "tex": "marathi/book/chapters/ch505-old-crafts.tex"
+}

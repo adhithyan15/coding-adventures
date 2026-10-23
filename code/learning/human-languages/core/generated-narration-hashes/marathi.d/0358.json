@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:f6676e02054cfe71",
+  "lessonIds": [
+    "MR-C358-samvidhan",
+    "MR-C358-dhoran",
+    "MR-C358-lagu-karne",
+    "MR-C358-radda-karne",
+    "MR-C358-bahal-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch358.txt",
+  "json": "marathi/narration/ch358.json",
+  "textHash": "fnv1a64:aa847e2cf4043fb5",
+  "jsonHash": "fnv1a64:c7266023879580b0",
+  "findings": []
+}

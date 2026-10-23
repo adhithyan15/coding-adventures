@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 288,
+  "title": "Something Happened",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6bcf881fef326a69",
+  "lessons": [
+    {
+      "id": "MR-C288-ghatna",
+      "sequence": 17000,
+      "title": "घटना (ghaṭnā) — an event; an incident",
+      "headword": "घटना",
+      "romanization": "ghaṭnā",
+      "gloss": "an event; an incident",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb6b0a68a1b7c61b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for dance, then the Marathi for a stage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घटना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घटना — ghaṭnā — \"an event; an incident\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ही घटना किती मोठी होती, हे तुम्ही कोणाला विचारता यावर अवलंबून आहे. hī ghaṭnā kitī moṭhī hotī, he tumhī koṇālā vicārtā yāvar avlambūn āhe. How big this incident was depends on whom you ask."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "घटना (ghaṭnā) घडणे, an event takes place; the oblique is घटने-: घटनेचा, of the event."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घटना (ghaṭnā) is a tatsama, taken from Sanskrit ghaṭanā, 'exertion; a taking effect, a coming about' (Monier-Williams). Marathi uses it for anything that happens."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghaṭnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghaṭnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghaṭnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghaṭnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hī ghaṭnā kitī moṭhī hotī, he tumhī koṇālā vicārtā yāvar avlambūn āhe. — How big this incident was depends on whom you ask.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hī ghaṭnā kitī moṭhī hotī, he tumhī koṇālā vicārtā yāvar avlambūn āhe.* — How big this incident was depends on whom you ask.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for dance, then the Marathi for a stage, then say ghaṭnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for dance, then the Marathi for a stage, then say *ghaṭnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घटना (ghaṭnā) mean? (\"An event; an incident\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C288-apghat",
+      "sequence": 17010,
+      "title": "अपघात (apghāt) — an accident",
+      "headword": "अपघात",
+      "romanization": "apghāt",
+      "gloss": "an accident",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85371a84fa8f382e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a stage, then the Marathi for an event."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अपघात",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अपघात — apghāt — \"an accident\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शाळेजवळ काल एक मोठा अपघात झाला. śāḷejvaḷ kāl ek moṭhā apghāt jhālā. There was a big accident near the school yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "अपघात (apghāt) होणे, an accident happens; अपघातात, in an accident."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अपघात (apghāt) is a tatsama, taken from Sanskrit apaghāta, 'a striking off, a warding off' (Monier-Williams); the sense 'an accident' is the modern one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apghāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apghāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apghāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apghāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāḷejvaḷ kāl ek moṭhā apghāt jhālā. — There was a big accident near the school yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāḷejvaḷ kāl ek moṭhā apghāt jhālā.* — There was a big accident near the school yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a stage, then the Marathi for an event, then say apghāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a stage, then the Marathi for an event, then say *apghāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अपघात (apghāt) mean? (\"An accident\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C288-cori",
+      "sequence": 17020,
+      "title": "चोरी (corī) — a theft",
+      "headword": "चोरी",
+      "romanization": "corī",
+      "gloss": "a theft",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:792f807b2a74322e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an event, then the Marathi for an accident."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चोरी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चोरी — corī — \"a theft\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आमच्या गल्लीत दोन घरांमध्ये चोरी झाली. āmacyā gallīt don gharāmmadhye corī jhālī. There was a theft in two houses on our lane."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "चोरी (corī) होणे, a theft happens; the verb चोरणे is to steal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चोरी (corī) is a tadbhava, inherited from Sanskrit caurikā, 'theft' (CDIAL 4937), which is built on cora, 'a thief'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "corī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *corī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "corī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *corī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmacyā gallīt don gharāmmadhye corī jhālī. — There was a theft in two houses on our lane.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmacyā gallīt don gharāmmadhye corī jhālī.* — There was a theft in two houses on our lane.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an event, then the Marathi for an accident, then say corī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an event, then the Marathi for an accident, then say *corī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चोरी (corī) mean? (\"A theft\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C288-budne",
+      "sequence": 17030,
+      "title": "बुडणे (buḍṇe) — to sink; to drown",
+      "headword": "बुडणे",
+      "romanization": "buḍṇe",
+      "gloss": "to sink; to drown",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d39cbc26870f57e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an accident, then the Marathi for a theft."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बुडणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुडणे — buḍṇe — \"to sink; to drown\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वादळात एक जुनी होडी नदीत बुडाली. vādḷāt ek junī hoḍī nadīt buḍālī. An old boat sank in the river during the storm."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो बुडाला, to buḍālā."
+            },
+            {
+              "kind": "speech",
+              "text": "The water takes -त: पाण्यात बुडणे (buḍṇe), to sink in the water."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुडणे (buḍṇe) is inherited: CDIAL lists Marathi buḍṇe, 'to be drowned', under buḍyati, 'sinks' (CDIAL 9272)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buḍṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buḍṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buḍṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buḍṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vādḷāt ek junī hoḍī nadīt buḍālī. — An old boat sank in the river during the storm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vādḷāt ek junī hoḍī nadīt buḍālī.* — An old boat sank in the river during the storm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an accident, then the Marathi for a theft, then say buḍṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an accident, then the Marathi for a theft, then say *buḍṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बुडणे (buḍṇe) mean? (\"To sink; to drown\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C288-kirkol",
+      "sequence": 17040,
+      "title": "किरकोळ (kirkoḷ) — minor; petty",
+      "headword": "किरकोळ",
+      "romanization": "kirkoḷ",
+      "gloss": "minor; petty",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fb3973233a92d4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a theft, then the Marathi for to sink."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: किरकोळ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किरकोळ — kirkoḷ — \"minor; petty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अपघात किरकोळ होता, कोणालाही लागलं नाही. apghāt kirkoḷ hotā, koṇālāhī lāglaṁ nāhī. The accident was minor; nobody was hurt."
+            },
+            {
+              "kind": "speech",
+              "text": "किरकोळ (kirkoḷ) keeps one form: किरकोळ (kirkoḷ) अपघात (apghāt), किरकोळ (kirkoḷ) जखम. It also means retail: किरकोळ (kirkoḷ) दुकान, a retail shop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किरकोळ (kirkoḷ) is a Marathi word for small, scattered things, from retail goods to minor injuries; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kirkoḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kirkoḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kirkoḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kirkoḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apghāt kirkoḷ hotā, koṇālāhī lāglaṁ nāhī. — The accident was minor; nobody was hurt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apghāt kirkoḷ hotā, koṇālāhī lāglaṁ nāhī.* — The accident was minor; nobody was hurt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a theft, then the Marathi for to sink, then say kirkoḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a theft, then the Marathi for to sink, then say *kirkoḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does किरकोळ (kirkoḷ) mean? (\"Minor; petty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

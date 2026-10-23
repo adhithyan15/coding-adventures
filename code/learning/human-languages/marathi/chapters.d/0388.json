@@ -1,0 +1,21 @@
+{
+  "chapter": 388,
+  "title": "Goals and Progress",
+  "label": "ch:mr-goals-and-progress",
+  "canDo": "I can talk about priorities, targets and progress.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-R388-review-382-388",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 388: I can talk about priorities, targets and progress.",
+    "assesses": [
+      "MR-LEX-C388-UDDISHTA388-01",
+      "MR-LEX-C388-UDDISHTA388-02",
+      "MR-LEX-C388-UDDISHTA388-03",
+      "MR-LEX-C388-UDDISHTA388-04",
+      "MR-LEX-C388-UDDISHTA388-05"
+    ]
+  }
+}

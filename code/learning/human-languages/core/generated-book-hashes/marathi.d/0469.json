@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:4ec8f9b6d70ba46b",
+  "lessonIds": [
+    "MR-C469-kathor",
+    "MR-C469-nirdayi",
+    "MR-C469-dusta",
+    "MR-C469-ugra",
+    "MR-C469-kapti"
+  ],
+  "tex": "marathi/book/chapters/ch469-harsh-natures.tex"
+}

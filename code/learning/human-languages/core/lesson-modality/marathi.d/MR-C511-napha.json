@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C511-napha",
+    "language": "marathi",
+    "chapter": 511,
+    "sequence": 29360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ab5d0c7cfd640ec"
+  },
+  "findings": []
+}

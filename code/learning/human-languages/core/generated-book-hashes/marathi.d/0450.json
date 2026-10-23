@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:1be6e8c791e84590",
+  "lessonIds": [
+    "MR-C450-man",
+    "MR-C450-jiv",
+    "MR-C450-sukh",
+    "MR-C450-ascarya",
+    "MR-C450-helavne"
+  ],
+  "tex": "marathi/book/chapters/ch450-mind-and-heart.tex"
+}

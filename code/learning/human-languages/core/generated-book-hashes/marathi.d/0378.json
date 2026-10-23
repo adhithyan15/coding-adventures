@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:9083777dacff6765",
+  "lessonIds": [
+    "MR-C378-at",
+    "MR-C378-apvad",
+    "MR-C378-nirbandh",
+    "MR-C378-nikas",
+    "MR-C378-purtata-karne"
+  ],
+  "tex": "marathi/book/chapters/ch378-conditions-and-exceptions.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:cad48241b284b0cb",
+  "lessonIds": [
+    "MR-C416-khunti",
+    "MR-C416-dhobi",
+    "MR-C416-pilne",
+    "MR-C416-hamal",
+    "MR-C416-simpadne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch416.txt",
+  "json": "marathi/narration/ch416.json",
+  "textHash": "fnv1a64:36cf1eb116fac34b",
+  "jsonHash": "fnv1a64:c7048fb850ff9fab",
+  "findings": []
+}

@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 519,
+  "title": "Light at Home",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:d98b655d84d75222",
+  "lessons": [
+    {
+      "id": "MR-C519-vijeri",
+      "sequence": 29760,
+      "title": "विजेरी (vijerī) — a torch; a flashlight",
+      "headword": "विजेरी",
+      "romanization": "vijerī",
+      "gloss": "a torch; a flashlight",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66d8193e101ff9a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for automatic, then the Marathi for to spray."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विजेरी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विजेरी — vijerī — \"a torch; a flashlight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वीज गेली, म्हणून मी विजेरी लावली. vīj gelī, mhaṇūn mī vijerī lāvlī. The power went, so I switched on a torch."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विजेरी (vijerī) is built on वीज, \"lightning, electricity\", inherited from Sanskrit vidyut (CDIAL 11742), with a Marathi ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vijerī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vijerī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vijerī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vijerī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīj gelī, mhaṇūn mī vijerī lāvlī. — The power went, so I switched on a torch.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīj gelī, mhaṇūn mī vijerī lāvlī.* — The power went, so I switched on a torch.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for automatic, then the Marathi for to spray, then say vijerī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for automatic, then the Marathi for to spray, then say *vijerī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विजेरी (vijerī) mean? (\"A torch; a flashlight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C519-jhumbar",
+      "sequence": 29770,
+      "title": "झुंबर (jhumbar) — a chandelier",
+      "headword": "झुंबर",
+      "romanization": "jhumbar",
+      "gloss": "a chandelier",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b898d9f055b51e3f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to spray, then the Marathi for a torch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झुंबर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झुंबर — jhumbar — \"a chandelier\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जुन्या घरात काचेचं मोठं झुंबर होतं. junyā gharāt kācecaṁ moṭhaṁ jhumbar hotaṁ. There was a big glass chandelier in the old house."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झुंबर (jhumbar) names a hanging cluster of lamps; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhumbar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhumbar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhumbar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhumbar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "junyā gharāt kācecaṁ moṭhaṁ jhumbar hotaṁ. — There was a big glass chandelier in the old house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *junyā gharāt kācecaṁ moṭhaṁ jhumbar hotaṁ.* — There was a big glass chandelier in the old house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to spray, then the Marathi for a torch, then say jhumbar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to spray, then the Marathi for a torch, then say *jhumbar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झुंबर (jhumbar) mean? (\"A chandelier\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C519-ujed",
+      "sequence": 29780,
+      "title": "उजेड (ujeḍ) — daylight; light",
+      "headword": "उजेड",
+      "romanization": "ujeḍ",
+      "gloss": "daylight; light",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa206fc70f022325",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a torch, then the Marathi for a chandelier."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उजेड",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उजेड — ujeḍ — \"daylight; light\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सकाळी खोलीत छान उजेड येतो. sakāḷī kholīt chān ujeḍ yeto. In the morning lovely light comes into the room."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "उजेड (ujeḍ) येणे, light comes in; उजेड (ujeḍ) पडणे, light falls."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उजेड (ujeḍ) is a tadbhava: CDIAL lists Marathi ujeḍ, \"light\", under Sanskrit uddyōta, \"flashing, light\" (CDIAL 2000)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ujeḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ujeḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ujeḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ujeḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakāḷī kholīt chān ujeḍ yeto. — In the morning lovely light comes into the room.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakāḷī kholīt chān ujeḍ yeto.* — In the morning lovely light comes into the room.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a torch, then the Marathi for a chandelier, then say ujeḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a torch, then the Marathi for a chandelier, then say *ujeḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उजेड (ujeḍ) mean? (\"Daylight; light\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C519-andhar",
+      "sequence": 29790,
+      "title": "अंधार (andhār) — darkness",
+      "headword": "अंधार",
+      "romanization": "andhār",
+      "gloss": "darkness",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29730abd97096939",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a chandelier, then the Marathi for daylight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अंधार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंधार — andhār — \"darkness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात्री बागेत खूप अंधार असतो. rātrī bāget khūp andhār asto. At night it is very dark in the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंधार (andhār) is a tadbhava, inherited from Sanskrit andhakāra, \"darkness\" (CDIAL 386)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "andhār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *andhār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "andhār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *andhār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātrī bāget khūp andhār asto. — At night it is very dark in the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātrī bāget khūp andhār asto.* — At night it is very dark in the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a chandelier, then the Marathi for daylight, then say andhār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a chandelier, then the Marathi for daylight, then say *andhār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अंधार (andhār) mean? (\"Darkness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C519-ujalne",
+      "sequence": 29800,
+      "title": "उजळणे (ujaḷṇe) — to light up; to brighten",
+      "headword": "उजळणे",
+      "romanization": "ujaḷṇe",
+      "gloss": "to light up; to brighten",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2810f2e63dc18990",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for daylight, then the Marathi for darkness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उजळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उजळणे — ujaḷṇe — \"to light up; to brighten\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दिवे लागले आणि सगळा रस्ता उजळला. dive lāgle āṇi sagḷā rastā ujaḷlā. The lamps came on and the whole street lit up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो रस्ता उजळला, to rastā ujaḷlā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उजळणे (ujaḷṇe) is a tadbhava: CDIAL lists Marathi ujaḷṇẽ under Sanskrit ujjvalati, \"blazes up, shines\" (CDIAL 1671)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ujaḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ujaḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ujaḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ujaḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dive lāgle āṇi sagḷā rastā ujaḷlā. — The lamps came on and the whole street lit up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dive lāgle āṇi sagḷā rastā ujaḷlā.* — The lamps came on and the whole street lit up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for daylight, then the Marathi for darkness, then say ujaḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for daylight, then the Marathi for darkness, then say *ujaḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उजळणे (ujaḷṇe) mean? (\"To light up; to brighten\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R519-review-512-519",
+      "sequence": 29810,
+      "title": "Looking back: from Made in a Factory to Light at Home",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Made in a Factory to Light at Home",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba62bc41f293c99f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for a factory and production."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a factory, production, goods, a supply, to sell well",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a factory, production, goods, a supply, to sell well]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a workshop, a command, a department, to present, to host a programme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a workshop, a command, a department, to present, to host a programme]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a task, the day's business, a shift, to get done, to struggle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a task, the day's business, a shift, to get done, to struggle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an engineer, a consultant, a translator, an accountant, to wrap up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an engineer, a consultant, a translator, an accountant, to wrap up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a computer, a mobile phone, a telephone, a video clip, to use",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a computer, a mobile phone, a telephone, a video clip, to use]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a password, the internet, a message, a link, to store",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a password, the internet, a message, a link, to store]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a machine, a device, a robot, automatic, to spray",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a machine, a device, a robot, automatic, to spray]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a torch, a chandelier, daylight, darkness, to light up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a torch, a chandelier, daylight, darkness, to light up]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A factory? (कारखाना, kārkhānā.) Production? (उत्पादन, utpādan.) Goods? (माल, māl.) A supply? (पुरवठा, puravṭhā.) To sell well? (खपणे, khapṇe.) A workshop? (कार्यशाळा, kāryaśāḷā.) A command? (आदेश, ādeś.) A department? (विभाग, vibhāg.) To present? (सादर करणे, sādar karṇe.) To host a programme? (सूत्रसंचालन करणे, sūtrasañcālan karṇe.) A task? (कार्य, kārya.) The day's business? (कामकाज, kāmkāj.) A shift? (पाळी, pāḷī.) To get done? (उरकणे, urakṇe.) To struggle? (धडपडणे, dhaḍpaḍṇe.) An engineer? (अभियंता, abhiyantā.) A consultant? (सल्लागार, sallāgār.) A translator? (अनुवादक, anuvādak.) An accountant? (लेखापाल, lekhāpāl.) To wrap up? (आटोपणे, āṭopṇe.) A computer? (संगणक, saṅgaṇak.) A mobile phone? (भ्रमणध्वनी, bhramaṇdhvanī.) A telephone? (दूरध्वनी, dūrdhvanī.) A video clip? (चित्रफीत, citraphīt.) To use? (वापरणे, vāparṇe.) A password? (संकेतशब्द, saṅketśabda.) The internet? (आंतरजाल, āntarjāl.) A message? (संदेश, sandeś.) A link? (दुवा, duvā.) To store? (साठवणे, sāṭhavṇe.) A machine? (यंत्र, yantra.) A device? (उपकरण, upakaraṇ.) A robot? (यंत्रमानव, yantramānav.) Automatic? (स्वयंचलित, svayañcalit.) To spray? (फवारणे, phavārṇe.) A torch? (विजेरी, vijerī.) A chandelier? (झुंबर, jhumbar.) Daylight? (उजेड, ujeḍ.) Darkness? (अंधार, andhār.) To light up? (उजळणे, ujaḷṇe.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

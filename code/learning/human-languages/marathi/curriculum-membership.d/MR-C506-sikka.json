@@ -1,0 +1,11 @@
+{
+  "id": "MR-C506-sikka",
+  "pathSegment": "MR-PATH-506-KACHERI506",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-506-KACHERI506",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:6ac35a8b349b9d89",
+  "lessonIds": [
+    "MR-C382-sambhavya",
+    "MR-C382-bahudha",
+    "MR-C382-sahjikac",
+    "MR-C382-niscit",
+    "MR-C382-bhasne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch382.txt",
+  "json": "marathi/narration/ch382.json",
+  "textHash": "fnv1a64:f073a1963abae4d1",
+  "jsonHash": "fnv1a64:97a0b5e81f683612",
+  "findings": []
+}

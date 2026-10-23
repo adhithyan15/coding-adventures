@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "Spending and Saving",
+  "label": "ch:mr-spending-and-saving",
+  "canDo": "I can talk about squandering, a balance, an investment, what I can afford and a thrifty choice.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C428-kiphayatsir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can talk about squandering, a balance, an investment, what I can afford and a thrifty choice.",
+    "assesses": [
+      "MR-LEX-C428-SHILLAK428-03",
+      "MR-LEX-C428-SHILLAK428-04",
+      "MR-LEX-C428-SHILLAK428-05"
+    ]
+  }
+}

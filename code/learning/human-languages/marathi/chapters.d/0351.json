@@ -1,0 +1,19 @@
+{
+  "chapter": 351,
+  "title": "Linking Ideas",
+  "label": "ch:mr-linking-ideas",
+  "canDo": "I can join ideas with however, likewise and for example.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C351-udaharanartha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can join ideas with however, likewise and for example.",
+    "assesses": [
+      "MR-LEX-C351-JODNE351-03",
+      "MR-LEX-C351-JODNE351-04",
+      "MR-LEX-C351-JODNE351-05"
+    ]
+  }
+}

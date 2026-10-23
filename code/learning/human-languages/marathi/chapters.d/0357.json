@@ -1,0 +1,21 @@
+{
+  "chapter": 357,
+  "title": "Who Governs",
+  "label": "ch:mr-who-governs",
+  "canDo": "I can talk about parliament, ministers and leaders.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-R357-review-350-357",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can talk about parliament, ministers and leaders.",
+    "assesses": [
+      "MR-LEX-C357-SHASAN357-01",
+      "MR-LEX-C357-SHASAN357-02",
+      "MR-LEX-C357-SHASAN357-03",
+      "MR-LEX-C357-SHASAN357-04",
+      "MR-LEX-C357-SHASAN357-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:e1c34b235f01240e",
+  "lessonIds": [
+    "MR-C302-dacakne",
+    "MR-C302-thabakne",
+    "MR-C302-ksan",
+    "MR-C302-tevadhyat",
+    "MR-C302-tabadtob"
+  ],
+  "tex": "marathi/book/chapters/ch302-in-a-split-second.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:91f317bb93bcb71e",
+  "lessonIds": [
+    "MR-C380-anivarya",
+    "MR-C380-aicchik",
+    "MR-C380-apariharya",
+    "MR-C380-ladne",
+    "MR-C380-tartud"
+  ],
+  "tex": "marathi/book/chapters/ch380-must-or-may.tex"
+}

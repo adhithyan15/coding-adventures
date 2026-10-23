@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C351-udaharanartha",
+    "language": "marathi",
+    "chapter": 351,
+    "sequence": 20500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46dd008c29e04122"
+  },
+  "findings": []
+}

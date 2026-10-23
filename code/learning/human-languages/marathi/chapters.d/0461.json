@@ -1,0 +1,19 @@
+{
+  "chapter": 461,
+  "title": "Hurt Feelings",
+  "label": "ch:mr-hurt-feelings",
+  "canDo": "I can talk about an insult, a taunt and hurt feelings.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C461-hinavne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can talk about an insult, a taunt and hurt feelings.",
+    "assesses": [
+      "MR-LEX-C461-APMAN461-03",
+      "MR-LEX-C461-APMAN461-04",
+      "MR-LEX-C461-APMAN461-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:389011aa4e351944",
+  "lessonIds": [
+    "MR-C388-pradhanya",
+    "MR-C388-uddista",
+    "MR-C388-pragti",
+    "MR-C388-vikas",
+    "MR-C388-amlat-anne",
+    "MR-R388-review-382-388"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch388.txt",
+  "json": "marathi/narration/ch388.json",
+  "textHash": "fnv1a64:3511fc09ac9b3b89",
+  "jsonHash": "fnv1a64:ff4b3c753ed2d918",
+  "findings": []
+}

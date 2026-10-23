@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C411-rengalne",
+    "language": "marathi",
+    "chapter": 411,
+    "sequence": 23800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c188f87ff9b47286"
+  },
+  "findings": []
+}

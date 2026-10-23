@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 434,
+  "title": "Mix-ups and Fiascos",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7ef5cd5107ae60e0",
+  "lessons": [
+    {
+      "id": "MR-C434-gairsoy",
+      "sequence": 24940,
+      "title": "गैरसोय (gairsoy) — inconvenience",
+      "headword": "गैरसोय",
+      "romanization": "gairsoy",
+      "gloss": "inconvenience",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9cdc6aa714617e80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to get dented, then the Marathi for to stop working."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गैरसोय",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गैरसोय — gairsoy — \"inconvenience\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पाणी नसल्यामुळे सगळ्यांची गैरसोय झाली. pāṇī nasalyāmuḷe sagaḷyāñcī gairsoy jhālī. Everyone was put out because there was no water."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "गैरसोय (gairsoy) होणे, to be inconvenienced: the person takes -ची."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गैरसोय (gairsoy) is built from gair-, \"un-, other than\", a loan usually traced to Arabic ġair, and सोय, \"convenience\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gairsoy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gairsoy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gairsoy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gairsoy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṇī nasalyāmuḷe sagaḷyāñcī gairsoy jhālī. — Everyone was put out because there was no water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṇī nasalyāmuḷe sagaḷyāñcī gairsoy jhālī.* — Everyone was put out because there was no water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to get dented, then the Marathi for to stop working, then say gairsoy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to get dented, then the Marathi for to stop working, then say *gairsoy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गैरसोय (gairsoy) mean? (\"Inconvenience\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C434-cukamuk",
+      "sequence": 24950,
+      "title": "चुकामूक (cukāmūk) — missing each other",
+      "headword": "चुकामूक",
+      "romanization": "cukāmūk",
+      "gloss": "missing each other",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6728d891bca9f121",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to stop working, then the Marathi for inconvenience."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चुकामूक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चुकामूक — cukāmūk — \"missing each other\"."
+            },
+            {
+              "kind": "speech",
+              "text": "स्टेशनवर आमची चुकामूक झाली. sṭeśanvar āmcī cukāmūk jhālī. We missed each other at the station."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "चुकामूक (cukāmūk) होणे, two people fail to meet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चुकामूक (cukāmūk) is an echo compound built on चुकणे, \"to miss\", whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cukāmūk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cukāmūk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cukāmūk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cukāmūk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sṭeśanvar āmcī cukāmūk jhālī. — We missed each other at the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sṭeśanvar āmcī cukāmūk jhālī.* — We missed each other at the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to stop working, then the Marathi for inconvenience, then say cukāmūk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to stop working, then the Marathi for inconvenience, then say *cukāmūk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चुकामूक (cukāmūk) mean? (\"Missing each other\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C434-phajiti",
+      "sequence": 24960,
+      "title": "फजिती (phajitī) — a fiasco; an embarrassment",
+      "headword": "फजिती",
+      "romanization": "phajitī",
+      "gloss": "a fiasco; an embarrassment",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0184279fbecd151d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for inconvenience, then the Marathi for missing each other."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फजिती",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फजिती — phajitī — \"a fiasco; an embarrassment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पावसात छत्री उलटली आणि माझी फजिती झाली. pāvsāt chatrī ulaṭlī āṇi mājhī phajitī jhālī. In the rain my umbrella turned inside out and I was embarrassed."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "फजिती (phajitī) होणे, to be made to look foolish; the person takes -ची."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फजिती (phajitī) is a loan through Persian, usually traced to Arabic faḍīḥat, \"disgrace\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phajitī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phajitī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phajitī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phajitī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāvsāt chatrī ulaṭlī āṇi mājhī phajitī jhālī. — In the rain my umbrella turned inside out and I was embarrassed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāvsāt chatrī ulaṭlī āṇi mājhī phajitī jhālī.* — In the rain my umbrella turned inside out and I was embarrassed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for inconvenience, then the Marathi for missing each other, then say phajitī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for inconvenience, then the Marathi for missing each other, then say *phajitī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फजिती (phajitī) mean? (\"A fiasco; an embarrassment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C434-dhavpal-karne",
+      "sequence": 24970,
+      "title": "धावपळ करणे (dhāvpaḷ karṇe) — to rush about",
+      "headword": "धावपळ करणे",
+      "romanization": "dhāvpaḷ karṇe",
+      "gloss": "to rush about",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c06afdb46b8a747",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for missing each other, then the Marathi for a fiasco."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धावपळ करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धावपळ करणे — dhāvpaḷ karṇe — \"to rush about\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गाडी पकडण्यासाठी आम्ही खूप धावपळ केली. gāḍī pakḍaṇyāsāṭhī āmhī khūp dhāvpaḷ kelī. We rushed about a lot to catch the train."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने धावपळ केली, tyāne dhāvpaḷ kelī."
+            },
+            {
+              "kind": "speech",
+              "text": "धावपळ is feminine, so the past is धावपळ केली."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धावपळ करणे (dhāvpaḷ karṇe) is built from धाव, \"a run\" (CDIAL 6800), and paḷ, the stem of पळणे, \"to run off\", with करणे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāvpaḷ karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāvpaḷ karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāvpaḷ karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāvpaḷ karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāḍī pakḍaṇyāsāṭhī āmhī khūp dhāvpaḷ kelī. — We rushed about a lot to catch the train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāḍī pakḍaṇyāsāṭhī āmhī khūp dhāvpaḷ kelī.* — We rushed about a lot to catch the train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for missing each other, then the Marathi for a fiasco, then say dhāvpaḷ karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for missing each other, then the Marathi for a fiasco, then say *dhāvpaḷ karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धावपळ करणे (dhāvpaḷ karṇe) mean? (\"To rush about\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C434-marga-kadhne",
+      "sequence": 24980,
+      "title": "मार्ग काढणे (mārga kāḍhṇe) — to find a way; to get round a problem",
+      "headword": "मार्ग काढणे",
+      "romanization": "mārga kāḍhṇe",
+      "gloss": "to find a way; to get round a problem",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c129da5f8ad45e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a fiasco, then the Marathi for to rush about."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मार्ग काढणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मार्ग काढणे — mārga kāḍhṇe — \"to find a way; to get round a problem\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पुलावर कोंडी होती, पण चालकाने मार्ग काढला. pulāvar koṇḍī hotī, paṇ cālakāne mārga kāḍhlā. The bridge was jammed, but the driver found a way through."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने मार्ग काढला, tyāne mārga kāḍhlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to solve a problem: अडचणीतून मार्ग काढणे (mārga kāḍhṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मार्ग काढणे (mārga kāḍhṇe) joins मार्ग, \"a way\", a tatsama from Sanskrit mārga (Monier-Williams), to काढणे, \"to take out\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārga kāḍhṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārga kāḍhṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārga kāḍhṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārga kāḍhṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulāvar koṇḍī hotī, paṇ cālakāne mārga kāḍhlā. — The bridge was jammed, but the driver found a way through.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulāvar koṇḍī hotī, paṇ cālakāne mārga kāḍhlā.* — The bridge was jammed, but the driver found a way through.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a fiasco, then the Marathi for to rush about, then say mārga kāḍhṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a fiasco, then the Marathi for to rush about, then say *mārga kāḍhṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मार्ग काढणे (mārga kāḍhṇe) mean? (\"To find a way; to get round a problem\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

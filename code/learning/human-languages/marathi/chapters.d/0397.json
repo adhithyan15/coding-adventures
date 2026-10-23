@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "Held Up on the Way",
+  "label": "ch:mr-held-up-on-the-way",
+  "canDo": "I can say a trip was delayed, held up or stalled, and that it set off at last.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C397-ravana-hone",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can say a trip was delayed, held up or stalled, and that it set off at last.",
+    "assesses": [
+      "MR-LEX-C397-VILAMB397-03",
+      "MR-LEX-C397-VILAMB397-04",
+      "MR-LEX-C397-VILAMB397-05"
+    ]
+  }
+}

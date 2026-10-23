@@ -1,0 +1,19 @@
+{
+  "chapter": 549,
+  "title": "Losses and Protection",
+  "label": "ch:mr-losses-and-protection",
+  "canDo": "I can talk about compensation, protection and trust.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C549-bharavsa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 549: I can talk about compensation, protection and trust.",
+    "assesses": [
+      "MR-LEX-C549-SANRAKSHAN549-03",
+      "MR-LEX-C549-SANRAKSHAN549-04",
+      "MR-LEX-C549-SANRAKSHAN549-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:cdbd415c1fc8ff2c",
+  "lessonIds": [
+    "MR-C309-gamavne",
+    "MR-C309-sosne",
+    "MR-C309-mrtyu",
+    "MR-C309-maran-pavne",
+    "MR-C309-udbhavne"
+  ],
+  "tex": "marathi/book/chapters/ch309-losses.tex"
+}

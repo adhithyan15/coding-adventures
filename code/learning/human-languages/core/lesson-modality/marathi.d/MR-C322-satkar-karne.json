@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C322-satkar-karne",
+    "language": "marathi",
+    "chapter": 322,
+    "sequence": 18750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18cd6dc2acf7ea57"
+  },
+  "findings": []
+}

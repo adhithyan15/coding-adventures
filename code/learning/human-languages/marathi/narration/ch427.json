@@ -1,0 +1,874 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 427,
+  "title": "Interest and Arrears",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b9e2e1b2e3de1165",
+  "lessons": [
+    {
+      "id": "MR-C427-vyaj",
+      "sequence": 24580,
+      "title": "व्याज (vyāj) — interest on money",
+      "headword": "व्याज",
+      "romanization": "vyāj",
+      "gloss": "interest on money",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b3c3204c3dc608e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a sum of money, then the Marathi for to deposit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: व्याज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "व्याज — vyāj — \"interest on money\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मी दर महिन्याला कर्जावर व्याज भरतो. mī dar mahinyālā karjāvar vyāj bharto. Every month I pay interest on the loan."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "व्याज (vyāj) मिळणे, to earn interest; व्याज (vyāj) भरणे, to pay it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "व्याज (vyāj) is the Marathi word for interest on money; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyāj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyāj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyāj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyāj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī dar mahinyālā karjāvar vyāj bharto. — Every month I pay interest on the loan.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī dar mahinyālā karjāvar vyāj bharto.* — Every month I pay interest on the loan.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a sum of money, then the Marathi for to deposit, then say vyāj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a sum of money, then the Marathi for to deposit, then say *vyāj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does व्याज (vyāj) mean? (\"Interest on money\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C427-thakbaki",
+      "sequence": 24590,
+      "title": "थकबाकी (thakbākī) — arrears",
+      "headword": "थकबाकी",
+      "romanization": "thakbākī",
+      "gloss": "arrears",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce49370126f6f528",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to deposit, then the Marathi for interest on money."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: थकबाकी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थकबाकी — thakbākī — \"arrears\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्याच्यावर विजेच्या बिलाची थकबाकी आहे. tyācyāvar vijecyā bilācī thakbākī āhe. He has arrears on his electricity bill."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Money owed and overdue; the person owing takes -वर."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थकबाकी (thakbākī) is built from the stem of थकणे, \"to tire, to fall behind\", and बाकी (bākī), \"what remains\", a loan usually traced to Arabic bāqī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thakbākī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thakbākī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thakbākī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thakbākī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyācyāvar vijecyā bilācī thakbākī āhe. — He has arrears on his electricity bill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyācyāvar vijecyā bilācī thakbākī āhe.* — He has arrears on his electricity bill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to deposit, then the Marathi for interest on money, then say thakbākī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to deposit, then the Marathi for interest on money, then say *thakbākī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does थकबाकी (thakbākī) mean? (\"Arrears\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C427-udhar",
+      "sequence": 24600,
+      "title": "उधार (udhār) — on credit",
+      "headword": "उधार",
+      "romanization": "udhār",
+      "gloss": "on credit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ac2b82366548b94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for interest on money, then the Marathi for arrears."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उधार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उधार — udhār — \"on credit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तो वाण्याकडून उधार सामान घेतो. to vāṇyākaḍūn udhār sāmān gheto. He buys groceries on credit from the grocer."
+            },
+            {
+              "kind": "speech",
+              "text": "उधार (udhār) घेणे, to take on credit; उधार (udhār) देणे, to give on credit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उधार (udhār) is inherited: CDIAL lists Marathi udhār, \"buying and selling on credit\", under Sanskrit uddhāra, \"raising; a loan\" (CDIAL 2018)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udhār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udhār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udhār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udhār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to vāṇyākaḍūn udhār sāmān gheto. — He buys groceries on credit from the grocer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *to vāṇyākaḍūn udhār sāmān gheto.* — He buys groceries on credit from the grocer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for interest on money, then the Marathi for arrears, then say udhār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for interest on money, then the Marathi for arrears, then say *udhār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उधार (udhār) mean? (\"On credit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C427-baki",
+      "sequence": 24610,
+      "title": "बाकी (bākī) — the remainder; the rest",
+      "headword": "बाकी",
+      "romanization": "bākī",
+      "gloss": "the remainder; the rest",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bfad60231aaab12b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for arrears, then the Marathi for on credit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बाकी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाकी — bākī — \"the remainder; the rest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मी अर्धे पैसे दिले, बाकी उद्या देईन. mī ardhe paise dile, bākī udyā deīn. I paid half the money; I will give the rest tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the balance of an account: बाकी (bākī) किती?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाकी (bākī) is a loan through Persian, usually traced to Arabic bāqī, \"remaining\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bākī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bākī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bākī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bākī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī ardhe paise dile, bākī udyā deīn. — I paid half the money; I will give the rest tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī ardhe paise dile, bākī udyā deīn.* — I paid half the money; I will give the rest tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for arrears, then the Marathi for on credit, then say bākī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for arrears, then the Marathi for on credit, then say *bākī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बाकी (bākī) mean? (\"The remainder; the rest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C427-phedne",
+      "sequence": 24620,
+      "title": "फेडणे (pheḍṇe) — to repay",
+      "headword": "फेडणे",
+      "romanization": "pheḍṇe",
+      "gloss": "to repay",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ab4c66dc064049d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for on credit, then the Marathi for the remainder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फेडणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फेडणे — pheḍṇe — \"to repay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्याने पाच वर्षांत कर्ज फेडलं. tyāne pāc varṣānt karja pheḍlaṁ. He repaid the loan in five years."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने फेडलं, tyāne pheḍlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "कर्ज फेडणे (pheḍṇe), to pay off a debt; the debt is the object."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फेडणे (pheḍṇe) is inherited: CDIAL lists Marathi pheḍṇẽ, \"to loosen\", under sphiṭati, \"gets loose\" (CDIAL 13838); paying off a debt is its everyday sense today."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pheḍṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pheḍṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pheḍṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pheḍṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyāne pāc varṣānt karja pheḍlaṁ. — He repaid the loan in five years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyāne pāc varṣānt karja pheḍlaṁ.* — He repaid the loan in five years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for on credit, then the Marathi for the remainder, then say pheḍṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for on credit, then the Marathi for the remainder, then say *pheḍṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फेडणे (pheḍṇe) mean? (\"To repay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R427-review-420-427",
+      "sequence": 24630,
+      "title": "Looking back: from Embassies and Zoos to Interest and Arrears",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Embassies and Zoos to Interest and Arrears",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35c8a2ce9cbed4c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for an embassy and a planetarium."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an embassy, a planetarium, a zoo, a resident, the surroundings",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an embassy, a planetarium, a zoo, a resident, the surroundings]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "construction, a floor, a slum, a village gate, a boundary",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: construction, a floor, a slum, a village gate, a boundary]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a vegetable market, noise, an uproar, bustling, bustle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a vegetable market, noise, an uproar, bustling, bustle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to go shopping, a deal, a price, to bargain, to buy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to go shopping, a deal, a price, to bargain, to buy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sale, a hawker, wholesale, a broker, a bill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sale, a hawker, wholesale, a broker, a bill]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pair of scales, to measure, genuine, fake, a copy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pair of scales, to measure, genuine, fake, a copy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cash, a cheque, small change, a sum of money, to deposit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cash, a cheque, small change, a sum of money, to deposit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "interest on money, arrears, on credit, the remainder, to repay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: interest on money, arrears, on credit, the remainder, to repay]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An embassy? (दूतावास, dūtāvās.) A planetarium? (तारांगण, tārāṅgaṇ.) A zoo? (प्राणिसंग्रहालय, prāṇisaṅgrahālay.) A resident? (रहिवासी, rahivāsī.) The surroundings? (परिसर, parisar.) Construction? (बांधकाम, bāndhkām.) A floor? (मजला, majlā.) A slum? (झोपडपट्टी, jhopaḍpaṭṭī.) A village gate? (वेस, ves.) A boundary? (हद्द, hadda.) A vegetable market? (मंडई, maṇḍaī.) Noise? (गोंगाट, goṅgāṭ.) An uproar? (कोलाहल, kolāhal.) Bustling? (गजबजलेला, gajbajlelā.) Bustle? (वर्दळ, vardaḷ.) To go shopping? (खरेदी करणे, kharedī karṇe.) A deal? (सौदा, saudā.) A price? (किंमत, kimmat.) To bargain? (भाव करणे, bhāv karṇe.) To buy? (विकत घेणे, vikat gheṇe.) A sale? (विक्री, vikrī.) A hawker? (फेरीवाला, pherīvālā.) Wholesale? (घाऊक, ghāūk.) A broker? (दलाल, dalāl.) A bill? (बिल, bil.) A pair of scales? (तराजू, tarājū.) To measure? (मापणे, māpṇe.) Genuine? (अस्सल, assal.) Fake? (बनावट, banāvaṭ.) A copy? (नक्कल, nakkal.) Cash? (रोकड, rokaḍ.) A cheque? (धनादेश, dhanādeś.) Small change? (चिल्लर, cillar.) A sum of money? (रक्कम, rakkam.) To deposit? (जमा करणे, jamā karṇe.) Interest on money? (व्याज, vyāj.) Arrears? (थकबाकी, thakbākī.) On credit? (उधार, udhār.) The remainder? (बाकी, bākī.) To repay? (फेडणे, pheḍṇe.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

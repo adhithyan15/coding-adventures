@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-293-BHUKAMP293",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe an earthquake: the ground shakes, walls fall, roads cave in.",
+  "prerequisites": []
+}

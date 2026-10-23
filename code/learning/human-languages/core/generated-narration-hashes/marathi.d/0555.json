@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 555,
+  "sourceHash": "fnv1a64:4b45e5f6b8a23095",
+  "lessonIds": [
+    "MR-C555-avadhi",
+    "MR-C555-dirangai",
+    "MR-C555-tatdi",
+    "MR-C555-dhandal",
+    "MR-C555-tarambal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch555.txt",
+  "json": "marathi/narration/ch555.json",
+  "textHash": "fnv1a64:4f752bbb057c4a4a",
+  "jsonHash": "fnv1a64:9feb0831fe37d70b",
+  "findings": []
+}

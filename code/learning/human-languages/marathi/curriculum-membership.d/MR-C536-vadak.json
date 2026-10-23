@@ -1,0 +1,11 @@
+{
+  "id": "MR-C536-vadak",
+  "pathSegment": "MR-PATH-536-GAYAN536",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-536-GAYAN536",
+      "order": 1
+    }
+  ]
+}

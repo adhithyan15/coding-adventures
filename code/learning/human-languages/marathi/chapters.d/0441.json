@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "Sunrise and Moonlight",
+  "label": "ch:mr-sunrise-and-moonlight",
+  "canDo": "I can talk about the horizon and moonlight, and say the sun rose, set and shone.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C441-camakne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can talk about the horizon and moonlight, and say the sun rose, set and shone.",
+    "assesses": [
+      "MR-LEX-C441-KSHITIJ441-03",
+      "MR-LEX-C441-KSHITIJ441-04",
+      "MR-LEX-C441-KSHITIJ441-05"
+    ]
+  }
+}

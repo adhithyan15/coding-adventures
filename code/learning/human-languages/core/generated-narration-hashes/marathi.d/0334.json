@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:d251f69e89490c12",
+  "lessonIds": [
+    "MR-C334-kranti",
+    "MR-C334-sthapan-karne",
+    "MR-C334-ubharne",
+    "MR-C334-bakhar",
+    "MR-C334-silalekh",
+    "MR-R334-review-328-334"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch334.txt",
+  "json": "marathi/narration/ch334.json",
+  "textHash": "fnv1a64:9f2488e18dd2765c",
+  "jsonHash": "fnv1a64:bdb64d76b83d636e",
+  "findings": []
+}

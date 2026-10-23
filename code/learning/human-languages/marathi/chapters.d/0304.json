@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "Telling It Well",
+  "label": "ch:mr-telling-it-well",
+  "canDo": "I can describe an episode and say how the news spread.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C304-pasarne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can describe an episode and say how the news spread.",
+    "assesses": [
+      "MR-LEX-C304-VARNAN304-03",
+      "MR-LEX-C304-VARNAN304-04",
+      "MR-LEX-C304-VARNAN304-05"
+    ]
+  }
+}

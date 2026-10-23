@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "Guests and a Feast",
+  "label": "ch:mr-guests-and-a-feast",
+  "canDo": "I can talk about guests, attendance and a shared meal.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C321-hajeri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can talk about guests, attendance and a shared meal.",
+    "assesses": [
+      "MR-LEX-C321-PANGAT321-03",
+      "MR-LEX-C321-PANGAT321-04",
+      "MR-LEX-C321-PANGAT321-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:de586e3115bfec6e",
+  "lessonIds": [
+    "MR-C417-anamat",
+    "MR-C417-sthayik-hone",
+    "MR-C417-bhadekaru",
+    "MR-C417-tijori",
+    "MR-C417-udvahak"
+  ],
+  "tex": "marathi/book/chapters/ch417-renting-a-room.tex"
+}

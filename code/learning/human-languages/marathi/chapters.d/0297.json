@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "Thieves in the Night",
+  "label": "ch:mr-thieves-in-the-night",
+  "canDo": "I can tell how thieves broke in and what they took.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C297-lubadne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can tell how thieves broke in and what they took.",
+    "assesses": [
+      "MR-LEX-C297-CHOR297-03",
+      "MR-LEX-C297-CHOR297-04",
+      "MR-LEX-C297-CHOR297-05"
+    ]
+  }
+}

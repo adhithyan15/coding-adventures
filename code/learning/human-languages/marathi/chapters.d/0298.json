@@ -1,0 +1,19 @@
+{
+  "chapter": 298,
+  "title": "Uproar in the Street",
+  "label": "ch:mr-uproar-in-the-street",
+  "canDo": "I can describe a commotion: screams, a crowd, whispers.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C298-kujbujne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 298: I can describe a commotion: screams, a crowd, whispers.",
+    "assesses": [
+      "MR-LEX-C298-GONDHAL298-03",
+      "MR-LEX-C298-GONDHAL298-04",
+      "MR-LEX-C298-GONDHAL298-05"
+    ]
+  }
+}

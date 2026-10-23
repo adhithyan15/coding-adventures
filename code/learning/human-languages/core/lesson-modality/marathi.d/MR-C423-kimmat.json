@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C423-kimmat",
+    "language": "marathi",
+    "chapter": 423,
+    "sequence": 24400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d9ff0d6856028b0"
+  },
+  "findings": []
+}

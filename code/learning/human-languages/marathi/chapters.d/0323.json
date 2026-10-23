@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "Farewells and Anniversaries",
+  "label": "ch:mr-farewells-and-anniversaries",
+  "canDo": "I can talk about farewells, retirement and anniversaries.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C323-samarop",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can talk about farewells, retirement and anniversaries.",
+    "assesses": [
+      "MR-LEX-C323-NIROP323-03",
+      "MR-LEX-C323-NIROP323-04",
+      "MR-LEX-C323-NIROP323-05"
+    ]
+  }
+}

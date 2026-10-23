@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C522-gacci",
+    "language": "marathi",
+    "chapter": 522,
+    "sequence": 29940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b45df9a1e7b32994"
+  },
+  "findings": []
+}

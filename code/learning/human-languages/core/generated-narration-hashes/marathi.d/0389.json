@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:b1ef0577430d27bf",
+  "lessonIds": [
+    "MR-C389-amsatah",
+    "MR-C389-purnapane",
+    "MR-C389-keval",
+    "MR-C389-nivval",
+    "MR-C389-sahsa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch389.txt",
+  "json": "marathi/narration/ch389.json",
+  "textHash": "fnv1a64:e4b682e5ff750767",
+  "jsonHash": "fnv1a64:ecc897190a704e64",
+  "findings": []
+}

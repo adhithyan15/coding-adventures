@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:6725545e15619bb9",
+  "lessonIds": [
+    "MR-C512-karkhana",
+    "MR-C512-utpadan",
+    "MR-C512-mal",
+    "MR-C512-puravtha",
+    "MR-C512-khapne"
+  ],
+  "tex": "marathi/book/chapters/ch512-made-in-a-factory.tex"
+}

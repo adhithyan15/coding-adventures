@@ -1,0 +1,19 @@
+{
+  "chapter": 471,
+  "title": "Good Sense",
+  "label": "ch:mr-good-sense",
+  "canDo": "I can describe a sensible, shrewd, intelligent or understanding person.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C471-akkal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can describe a sensible, shrewd, intelligent or understanding person.",
+    "assesses": [
+      "MR-LEX-C471-SAHANA471-03",
+      "MR-LEX-C471-SAHANA471-04",
+      "MR-LEX-C471-SAHANA471-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C407-brek",
+  "pathSegment": "MR-PATH-407-VEG407",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-407-VEG407",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "Sewage and Stench",
+  "label": "ch:mr-sewage-and-stench",
+  "canDo": "I can talk about sewage, a stench and polluted water, and say things rot and decay.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C448-sadne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can talk about sewage, a stench and polluted water, and say things rot and decay.",
+    "assesses": [
+      "MR-LEX-C448-DURGANDHI448-03",
+      "MR-LEX-C448-DURGANDHI448-04",
+      "MR-LEX-C448-DURGANDHI448-05"
+    ]
+  }
+}

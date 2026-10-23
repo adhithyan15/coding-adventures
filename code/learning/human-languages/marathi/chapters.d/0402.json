@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "Mountain Roads",
+  "label": "ch:mr-mountain-roads",
+  "canDo": "I can talk about ghat roads, passes, slopes and a winding road.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C402-sulka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can talk about ghat roads, passes, slopes and a winding road.",
+    "assesses": [
+      "MR-LEX-C402-GHAT402-03",
+      "MR-LEX-C402-GHAT402-04",
+      "MR-LEX-C402-GHAT402-05"
+    ]
+  }
+}

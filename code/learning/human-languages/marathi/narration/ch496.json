@@ -1,0 +1,869 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 496,
+  "title": "In-Laws",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:cb80c0561ea94c49",
+  "lessons": [
+    {
+      "id": "MR-C496-dir",
+      "sequence": 28350,
+      "title": "दीर (dīr) — a husband's brother",
+      "headword": "दीर",
+      "romanization": "dīr",
+      "gloss": "a husband's brother",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e847f78b31fc9412",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a great-grandfather, then the Marathi for a father's sister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दीर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दीर — dīr — \"a husband's brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लग्नानंतर तिचा दीर तिच्याशी नीट वागतो. lagnānantar ticā dīr ticyāśī nīṭ vāgto. After the wedding her husband's brother treats her well."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman's husband's brother, usually the younger one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दीर (dīr) is a tadbhava, inherited from Sanskrit devṛ, \"husband's brother\"; CDIAL lists Marathi dīr (CDIAL 6546)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lagnānantar ticā dīr ticyāśī nīṭ vāgto. — After the wedding her husband's brother treats her well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lagnānantar ticā dīr ticyāśī nīṭ vāgto.* — After the wedding her husband's brother treats her well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a great-grandfather, then the Marathi for a father's sister, then say dīr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a great-grandfather, then the Marathi for a father's sister, then say *dīr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दीर (dīr) mean? (\"A husband's brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C496-nanand",
+      "sequence": 28360,
+      "title": "नणंद (naṇand) — a husband's sister",
+      "headword": "नणंद",
+      "romanization": "naṇand",
+      "gloss": "a husband's sister",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:feaa555a1bf5f09f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a father's sister, then the Marathi for a husband's brother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नणंद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नणंद — naṇand — \"a husband's sister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सुनेची आणि नणंदेची चांगली मैत्री आहे. sunecī āṇi naṇandecī cāṅglī maitrī āhe. The daughter-in-law and her husband's sister are good friends."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Oblique नणंदे-."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नणंद (naṇand) is a tadbhava, inherited from Sanskrit nanāndṛ, \"husband's sister\"; CDIAL lists Marathi naṇãd (CDIAL 6946)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṇand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṇand*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṇand, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṇand*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sunecī āṇi naṇandecī cāṅglī maitrī āhe. — The daughter-in-law and her husband's sister are good friends.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sunecī āṇi naṇandecī cāṅglī maitrī āhe.* — The daughter-in-law and her husband's sister are good friends.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a father's sister, then the Marathi for a husband's brother, then say naṇand again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a father's sister, then the Marathi for a husband's brother, then say *naṇand* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नणंद (naṇand) mean? (\"A husband's sister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C496-mehuna",
+      "sequence": 28370,
+      "title": "मेहुणा (mehuṇā) — a wife's brother",
+      "headword": "मेहुणा",
+      "romanization": "mehuṇā",
+      "gloss": "a wife's brother",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:362dacfd61db961e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a husband's brother, then the Marathi for a husband's sister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मेहुणा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेहुणा — mehuṇā — \"a wife's brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माझा मेहुणा मला भेटायला आला. mājhā mehuṇā malā bheṭāylā ālā. My wife's brother came to see me."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a sister's husband; मेहुणी, a wife's sister."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेहुणा (mehuṇā) is a tadbhava: CDIAL lists Marathi mehuṇā, \"wife's brother, sister's husband\", under Sanskrit maithuna (CDIAL 10341)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mehuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mehuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mehuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mehuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhā mehuṇā malā bheṭāylā ālā. — My wife's brother came to see me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhā mehuṇā malā bheṭāylā ālā.* — My wife's brother came to see me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a husband's brother, then the Marathi for a husband's sister, then say mehuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a husband's brother, then the Marathi for a husband's sister, then say *mehuṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मेहुणा (mehuṇā) mean? (\"A wife's brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C496-vahini",
+      "sequence": 28380,
+      "title": "वहिनी (vahinī) — a brother's wife",
+      "headword": "वहिनी",
+      "romanization": "vahinī",
+      "gloss": "a brother's wife",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74e6ff99e67640d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a husband's sister, then the Marathi for a wife's brother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वहिनी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वहिनी — vahinī — \"a brother's wife\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वहिनीने सगळ्यांसाठी स्वयंपाक केला. vahinīne sagḷyāṁsāṭhī svayampāk kelā. My brother's wife cooked for everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a polite way to address a friend's wife."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वहिनी (vahinī) is a tadbhava: CDIAL lists Marathi vahinī, \"elder brother's wife\", under Sanskrit vadhū, \"bride\" (CDIAL 11250)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vahinī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vahinī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vahinī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vahinī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vahinīne sagḷyāṁsāṭhī svayampāk kelā. — My brother's wife cooked for everyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vahinīne sagḷyāṁsāṭhī svayampāk kelā.* — My brother's wife cooked for everyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a husband's sister, then the Marathi for a wife's brother, then say vahinī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a husband's sister, then the Marathi for a wife's brother, then say *vahinī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वहिनी (vahinī) mean? (\"A brother's wife\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C496-vyahi",
+      "sequence": 28390,
+      "title": "व्याही (vyāhī) — a child's father-in-law",
+      "headword": "व्याही",
+      "romanization": "vyāhī",
+      "gloss": "a child's father-in-law",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ca6353c960d9f90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a wife's brother, then the Marathi for a brother's wife."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: व्याही",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "व्याही — vyāhī — \"a child's father-in-law\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लग्नात दोन्ही व्याही आनंदाने भेटले. lagnāt donhī vyāhī ānandāne bheṭle. At the wedding the two fathers-in-law met happily."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "विहीण, a child's mother-in-law: the parents of a married couple are each other's व्याही (vyāhī)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "व्याही (vyāhī) is a tadbhava: CDIAL lists Marathi vyāhī, \"son's or daughter's father-in-law\", under Sanskrit vivāhin (CDIAL 11925), a word of marriage."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyāhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyāhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyāhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyāhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lagnāt donhī vyāhī ānandāne bheṭle. — At the wedding the two fathers-in-law met happily.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lagnāt donhī vyāhī ānandāne bheṭle.* — At the wedding the two fathers-in-law met happily.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a wife's brother, then the Marathi for a brother's wife, then say vyāhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a wife's brother, then the Marathi for a brother's wife, then say *vyāhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does व्याही (vyāhī) mean? (\"A child's father-in-law\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R496-review-490-496",
+      "sequence": 28400,
+      "title": "Looking back: from Staying Healthy to In-Laws",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Staying Healthy to In-Laws",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d932649873bd0916",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for a diet regimen and healthy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a diet regimen, healthy, immunity, to apply heat, to rub",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a diet regimen, healthy, immunity, to apply heat, to rub]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "insomnia, to snore, to yawn, to take a nap, to lie down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: insomnia, to snore, to yawn, to take a nap, to lie down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to have hiccups, to burp, to spit, to get breathless, to choke on food",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to have hiccups, to burp, to spit, to get breathless, to choke on food]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a crutch, to feel dizzy, to stumble, to shiver with cold, to limp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a crutch, to feel dizzy, to stumble, to shiver with cold, to limp]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a relationship, a relative, a household, an orphan, full-blood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a relationship, a relative, a household, an orphan, full-blood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a brother's son, a sister's son, a grandson, a great-grandfather, a father's sister",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a brother's son, a sister's son, a grandson, a great-grandfather, a father's sister]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a husband's brother, a husband's sister, a wife's brother, a brother's wife, a child's father-in-law",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a husband's brother, a husband's sister, a wife's brother, a brother's wife, a child's father-in-law]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A diet regimen? (पथ्य, pathya.) Healthy? (निरोगी, nirogī.) Immunity? (प्रतिकारशक्ती, pratikārśaktī.) To apply heat? (शेकणे, śekṇe.) To rub? (चोळणे, coḷṇe.) Insomnia? (निद्रानाश, nidrānāś.) To snore? (घोरणे, ghorṇe.) To yawn? (जांभई देणे, jāmbhaī deṇe.) To take a nap? (डुलकी घेणे, ḍulkī gheṇe.) To lie down? (निजणे, nijṇe.) To have hiccups? (उचकी लागणे, uckī lāgṇe.) To burp? (ढेकर देणे, ḍhekar deṇe.) To spit? (थुंकणे, thuṅkṇe.) To get breathless? (धाप लागणे, dhāp lāgṇe.) To choke on food? (ठसका लागणे, ṭhaskā lāgṇe.) A crutch? (कुबडी, kubḍī.) To feel dizzy? (चक्कर येणे, cakkar yeṇe.) To stumble? (अडखळणे, aḍkhaḷṇe.) To shiver with cold? (कुडकुडणे, kuḍkuḍṇe.) To limp? (लंगडणे, laṅgaḍṇe.) A relationship? (नाते, nāte.) A relative? (नातेवाईक, nātevāīk.) A household? (परिवार, parivār.) An orphan? (अनाथ, anāth.) Full-blood? (सख्खा, sakkhā.) A brother's son? (पुतण्या, putaṇyā.) A sister's son? (भाचा, bhācā.) A grandson? (नातू, nātū.) A great-grandfather? (पणजोबा, paṇjobā.) A father's sister? (आत्या, ātyā.) A husband's brother? (दीर, dīr.) A husband's sister? (नणंद, naṇand.) A wife's brother? (मेहुणा, mehuṇā.) A brother's wife? (वहिनी, vahinī.) A child's father-in-law? (व्याही, vyāhī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:b4db8a44d4e735a2",
+  "lessonIds": [
+    "MR-C470-labad",
+    "MR-C470-dhongi",
+    "MR-C470-bhola",
+    "MR-C470-niragas",
+    "MR-C470-thakavne"
+  ],
+  "tex": "marathi/book/chapters/ch470-trust-and-trickery.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C492-dhap-lagne",
+  "pathSegment": "MR-PATH-492-UCAKI492",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-492-UCAKI492",
+      "order": 3
+    }
+  ]
+}

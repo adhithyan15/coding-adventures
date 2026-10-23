@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-302-KSHAN302",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell what happened in a sudden moment.",
+  "prerequisites": []
+}

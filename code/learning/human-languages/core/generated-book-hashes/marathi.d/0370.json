@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:f07e87075f1ac0e8",
+  "lessonIds": [
+    "MR-C370-vyakhyan",
+    "MR-C370-nibandh",
+    "MR-C370-bhasan",
+    "MR-C370-parisamvad",
+    "MR-C370-vakta"
+  ],
+  "tex": "marathi/book/chapters/ch370-talks-and-essays.tex"
+}

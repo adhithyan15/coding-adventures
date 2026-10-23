@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:dd82e7e450be9361",
+  "lessonIds": [
+    "MR-C378-at",
+    "MR-C378-apvad",
+    "MR-C378-nirbandh",
+    "MR-C378-nikas",
+    "MR-C378-purtata-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch378.txt",
+  "json": "marathi/narration/ch378.json",
+  "textHash": "fnv1a64:3a2c650fa802070a",
+  "jsonHash": "fnv1a64:42177d5192893639",
+  "findings": []
+}

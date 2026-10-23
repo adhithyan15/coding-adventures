@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C407-disadarsak",
+    "language": "marathi",
+    "chapter": 407,
+    "sequence": 23590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:709366ea1ed72e4f"
+  },
+  "findings": []
+}

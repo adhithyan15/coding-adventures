@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:cb80c0561ea94c49",
+  "lessonIds": [
+    "MR-C496-dir",
+    "MR-C496-nanand",
+    "MR-C496-mehuna",
+    "MR-C496-vahini",
+    "MR-C496-vyahi",
+    "MR-R496-review-490-496"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch496.txt",
+  "json": "marathi/narration/ch496.json",
+  "textHash": "fnv1a64:6f9379c2442f259b",
+  "jsonHash": "fnv1a64:0ebe4a55dc38b52e",
+  "findings": []
+}

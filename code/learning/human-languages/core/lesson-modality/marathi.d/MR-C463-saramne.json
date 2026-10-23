@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C463-saramne",
+    "language": "marathi",
+    "chapter": 463,
+    "sequence": 26690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de833dc03ad1761f"
+  },
+  "findings": []
+}

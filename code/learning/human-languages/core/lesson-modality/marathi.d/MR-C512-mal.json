@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C512-mal",
+    "language": "marathi",
+    "chapter": 512,
+    "sequence": 29430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:decbf1e279b5f0fa"
+  },
+  "findings": []
+}

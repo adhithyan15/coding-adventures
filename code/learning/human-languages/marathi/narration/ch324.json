@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 324,
+  "title": "Remembering a Life",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5972b1c5d5703bb5",
+  "lessons": [
+    {
+      "id": "MR-C324-nidhan",
+      "sequence": 18840,
+      "title": "निधन (nidhan) — a passing; a death",
+      "headword": "निधन",
+      "romanization": "nidhan",
+      "gloss": "a passing; a death",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4227219441f430b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an anniversary, then the Marathi for a closing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निधन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निधन — nidhan — \"a passing; a death\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रसिद्ध गायकाच्या निधनाची बातमी काल आली. prasiddha gāykācyā nidhanācī bātmī kāl ālī. News of the famous singer's passing came yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "The respectful word: X-चं निधन (nidhan) झालं."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निधन (nidhan) is a tatsama, taken from Sanskrit nidhana, 'a settling, a close; death' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nidhan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nidhan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nidhan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nidhan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prasiddha gāykācyā nidhanācī bātmī kāl ālī. — News of the famous singer's passing came yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prasiddha gāykācyā nidhanācī bātmī kāl ālī.* — News of the famous singer's passing came yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an anniversary, then the Marathi for a closing, then say nidhan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an anniversary, then the Marathi for a closing, then say *nidhan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निधन (nidhan) mean? (\"A passing; a death\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C324-sraddhanjali",
+      "sequence": 18850,
+      "title": "श्रद्धांजली (śraddhāñjalī) — a tribute",
+      "headword": "श्रद्धांजली",
+      "romanization": "śraddhāñjalī",
+      "gloss": "a tribute",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:942f0db08cef9254",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a closing, then the Marathi for a passing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: श्रद्धांजली",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "श्रद्धांजली — śraddhāñjalī — \"a tribute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सभेत सगळ्यांनी त्यांना श्रद्धांजली वाहिली. sabhet sagaḷyānnī tyānnā śraddhāñjalī vāhilī. At the meeting everyone paid tribute to him."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "श्रद्धांजली (śraddhāñjalī) वाहणे, to pay tribute."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "श्रद्धांजली (śraddhāñjalī) is built from Sanskrit śraddhā, 'faith, reverence', and añjali, 'hands held together in offering' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śraddhāñjalī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śraddhāñjalī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śraddhāñjalī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śraddhāñjalī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabhet sagaḷyānnī tyānnā śraddhāñjalī vāhilī. — At the meeting everyone paid tribute to him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabhet sagaḷyānnī tyānnā śraddhāñjalī vāhilī.* — At the meeting everyone paid tribute to him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a closing, then the Marathi for a passing, then say śraddhāñjalī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a closing, then the Marathi for a passing, then say *śraddhāñjalī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does श्रद्धांजली (śraddhāñjalī) mean? (\"A tribute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C324-ayojan-karne",
+      "sequence": 18860,
+      "title": "आयोजन करणे (āyojan karṇe) — to organise",
+      "headword": "आयोजन करणे",
+      "romanization": "āyojan karṇe",
+      "gloss": "to organise",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7fb15312908e8b08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a passing, then the Marathi for a tribute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आयोजन करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आयोजन करणे — āyojan karṇe — \"to organise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मित्रांनी त्यांच्या आठवणीत एका सभेचं आयोजन केलं. mitrānnī tyāñcyā āṭhavṇīt ekā sabhecaṁ āyojan kelaṁ. Friends organised a meeting in his memory."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने आयोजन केलं, tyāne āyojan kelaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is organised takes -चं: स्पर्धेचं आयोजन करणे (āyojan karṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आयोजन करणे (āyojan karṇe) joins āyojan, a tatsama taken from Sanskrit āyojana, 'a joining, a bringing together' (Monier-Williams), to karṇe, 'to do'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyojan karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyojan karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyojan karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyojan karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitrānnī tyāñcyā āṭhavṇīt ekā sabhecaṁ āyojan kelaṁ. — Friends organised a meeting in his memory.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitrānnī tyāñcyā āṭhavṇīt ekā sabhecaṁ āyojan kelaṁ.* — Friends organised a meeting in his memory.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a passing, then the Marathi for a tribute, then say āyojan karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a passing, then the Marathi for a tribute, then say *āyojan karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आयोजन करणे (āyojan karṇe) mean? (\"To organise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C324-par-padne",
+      "sequence": 18870,
+      "title": "पार पडणे (pār paḍṇe) — to go off; to be carried through",
+      "headword": "पार पडणे",
+      "romanization": "pār paḍṇe",
+      "gloss": "to go off; to be carried through",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:995edf8cfec25693",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a tribute, then the Marathi for to organise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पार पडणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पार पडणे — pār paḍṇe — \"to go off; to be carried through\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सगळा कार्यक्रम शांतपणे पार पडला. sagḷā kāryakram śāntapṇe pār paḍlā. The whole event went off peacefully."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो पार पडला, to pār paḍlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Intransitive, said of events: लग्न छान पार पडलं."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पार पडणे (pār paḍṇe) is built from pār, 'the far bank, the end', inherited from Sanskrit pāra (CDIAL 8100), and paḍṇe, 'to fall': to come through to the other side."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pār paḍṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pār paḍṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pār paḍṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pār paḍṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sagḷā kāryakram śāntapṇe pār paḍlā. — The whole event went off peacefully.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sagḷā kāryakram śāntapṇe pār paḍlā.* — The whole event went off peacefully.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a tribute, then the Marathi for to organise, then say pār paḍṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a tribute, then the Marathi for to organise, then say *pār paḍṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पार पडणे (pār paḍṇe) mean? (\"To go off; to be carried through\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C324-racne",
+      "sequence": 18880,
+      "title": "रचणे (racṇe) — to compose; to arrange",
+      "headword": "रचणे",
+      "romanization": "racṇe",
+      "gloss": "to compose; to arrange",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ae2ea08063adf9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to organise, then the Marathi for to go off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रचणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रचणे — racṇe — \"to compose; to arrange\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्यांच्या मित्राने त्यांच्यावर एक कविता रचली. tyāñcyā mitrāne tyāñcyāvar ek kavitā raclī. His friend composed a poem about him."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने रचलं, tyāne raclaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Transitive: कविता रचणे (racṇe), to compose a poem; दगड रचणे (racṇe), to stack stones."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रचणे (racṇe) is built on Sanskrit racayati, 'produces, arranges, composes' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "racṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *racṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "racṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *racṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyāñcyā mitrāne tyāñcyāvar ek kavitā raclī. — His friend composed a poem about him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyāñcyā mitrāne tyāñcyāvar ek kavitā raclī.* — His friend composed a poem about him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to organise, then the Marathi for to go off, then say racṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to organise, then the Marathi for to go off, then say *racṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रचणे (racṇe) mean? (\"To compose; to arrange\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C454-hirmusne",
+  "pathSegment": "MR-PATH-454-RUSVA454",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-454-RUSVA454",
+      "order": 4
+    }
+  ]
+}

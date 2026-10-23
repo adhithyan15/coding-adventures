@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:4a35a5e72b90dddc",
+  "lessonIds": [
+    "MR-C351-matra",
+    "MR-C351-tasec",
+    "MR-C351-kimbahuna",
+    "MR-C351-tathapi",
+    "MR-C351-udaharanartha"
+  ],
+  "tex": "marathi/book/chapters/ch351-linking-ideas.tex"
+}

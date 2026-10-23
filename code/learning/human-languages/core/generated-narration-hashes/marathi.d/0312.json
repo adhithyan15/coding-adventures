@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:6c1558900d82328f",
+  "lessonIds": [
+    "MR-C312-akasvani",
+    "MR-C312-durdarsan",
+    "MR-C312-vahini",
+    "MR-C312-nivedak",
+    "MR-C312-prasarit-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch312.txt",
+  "json": "marathi/narration/ch312.json",
+  "textHash": "fnv1a64:049d44955849c500",
+  "jsonHash": "fnv1a64:bd5916348c515517",
+  "findings": []
+}

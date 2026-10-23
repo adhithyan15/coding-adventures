@@ -1,0 +1,11 @@
+{
+  "id": "MR-C402-sulka",
+  "pathSegment": "MR-PATH-402-GHAT402",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-402-GHAT402",
+      "order": 4
+    }
+  ]
+}

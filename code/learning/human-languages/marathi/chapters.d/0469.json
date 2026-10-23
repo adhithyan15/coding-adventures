@@ -1,0 +1,19 @@
+{
+  "chapter": 469,
+  "title": "Harsh Natures",
+  "label": "ch:mr-harsh-natures",
+  "canDo": "I can describe a harsh, merciless, wicked, fierce or deceitful person.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C469-kapti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can describe a harsh, merciless, wicked, fierce or deceitful person.",
+    "assesses": [
+      "MR-LEX-C469-KATHOR469-03",
+      "MR-LEX-C469-KATHOR469-04",
+      "MR-LEX-C469-KATHOR469-05"
+    ]
+  }
+}

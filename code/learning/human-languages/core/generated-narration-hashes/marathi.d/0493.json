@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:7fbb45e2a235e90d",
+  "lessonIds": [
+    "MR-C493-kubdi",
+    "MR-C493-cakkar-yene",
+    "MR-C493-adkhalne",
+    "MR-C493-kudkudne",
+    "MR-C493-langadne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch493.txt",
+  "json": "marathi/narration/ch493.json",
+  "textHash": "fnv1a64:0bff2545dde8f87f",
+  "jsonHash": "fnv1a64:d6eb4dd1649dc459",
+  "findings": []
+}

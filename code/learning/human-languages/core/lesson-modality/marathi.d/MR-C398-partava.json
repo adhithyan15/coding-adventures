@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C398-partava",
+    "language": "marathi",
+    "chapter": 398,
+    "sequence": 23120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6e53e686cc23c71"
+  },
+  "findings": []
+}

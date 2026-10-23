@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C553-tatpar",
+    "language": "marathi",
+    "chapter": 553,
+    "sequence": 31550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ae7163bb7942ae0"
+  },
+  "findings": []
+}

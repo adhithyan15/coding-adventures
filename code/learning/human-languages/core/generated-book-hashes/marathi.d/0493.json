@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:87f18aaee28fb4c1",
+  "lessonIds": [
+    "MR-C493-kubdi",
+    "MR-C493-cakkar-yene",
+    "MR-C493-adkhalne",
+    "MR-C493-kudkudne",
+    "MR-C493-langadne"
+  ],
+  "tex": "marathi/book/chapters/ch493-dizzy-and-stumbling.tex"
+}

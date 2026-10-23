@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:31ffb92d83e657da",
+  "lessonIds": [
+    "MR-C321-pangat",
+    "MR-C321-pahuncar",
+    "MR-C321-snehsammelan",
+    "MR-C321-upasthit-rahne",
+    "MR-C321-hajeri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch321.txt",
+  "json": "marathi/narration/ch321.json",
+  "textHash": "fnv1a64:9c4f34fcad52fddd",
+  "jsonHash": "fnv1a64:41c692463e2f4fec",
+  "findings": []
+}

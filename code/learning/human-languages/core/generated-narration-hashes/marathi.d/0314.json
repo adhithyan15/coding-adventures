@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:23457ef057b650f0",
+  "lessonIds": [
+    "MR-C314-vacak",
+    "MR-C314-preksak",
+    "MR-C314-srota",
+    "MR-C314-sirsak",
+    "MR-C314-mukhprstha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch314.txt",
+  "json": "marathi/narration/ch314.json",
+  "textHash": "fnv1a64:5781cd5bbe713cae",
+  "jsonHash": "fnv1a64:2991f7e08cca59c5",
+  "findings": []
+}

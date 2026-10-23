@@ -1,0 +1,19 @@
+{
+  "chapter": 302,
+  "title": "In a Split Second",
+  "label": "ch:mr-in-a-split-second",
+  "canDo": "I can tell what happened in a sudden moment.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C302-tabadtob",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 302: I can tell what happened in a sudden moment.",
+    "assesses": [
+      "MR-LEX-C302-KSHAN302-03",
+      "MR-LEX-C302-KSHAN302-04",
+      "MR-LEX-C302-KSHAN302-05"
+    ]
+  }
+}

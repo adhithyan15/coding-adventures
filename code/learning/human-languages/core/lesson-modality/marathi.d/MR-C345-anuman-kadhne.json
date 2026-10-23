@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C345-anuman-kadhne",
+    "language": "marathi",
+    "chapter": 345,
+    "sequence": 20160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8882aef24b116ab7"
+  },
+  "findings": []
+}

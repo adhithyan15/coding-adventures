@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:3676f2e4ecf6af9b",
+  "lessonIds": [
+    "MR-C480-tabyet",
+    "MR-C480-laksan",
+    "MR-C480-thakva",
+    "MR-C480-asakta",
+    "MR-C480-malmalne"
+  ],
+  "tex": "marathi/book/chapters/ch480-feeling-unwell.tex"
+}

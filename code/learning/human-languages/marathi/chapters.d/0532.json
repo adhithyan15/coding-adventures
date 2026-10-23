@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "Games at Home",
+  "label": "ch:mr-games-at-home",
+  "canDo": "I can talk about board games, dice and puzzles.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C532-lapachpi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can talk about board games, dice and puzzles.",
+    "assesses": [
+      "MR-LEX-C532-BAITHE532-03",
+      "MR-LEX-C532-BAITHE532-04",
+      "MR-LEX-C532-BAITHE532-05"
+    ]
+  }
+}

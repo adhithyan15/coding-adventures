@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:99f7812ba8e4159c",
+  "lessonIds": [
+    "MR-C339-nayak",
+    "MR-C339-khalnayak",
+    "MR-C339-patra",
+    "MR-C339-sadhu",
+    "MR-C339-savkar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch339.txt",
+  "json": "marathi/narration/ch339.json",
+  "textHash": "fnv1a64:419431b60858b3e3",
+  "jsonHash": "fnv1a64:eaca305f0007621d",
+  "findings": []
+}

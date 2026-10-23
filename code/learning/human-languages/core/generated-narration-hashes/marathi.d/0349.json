@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:b3aacad125e4a8d1",
+  "lessonIds": [
+    "MR-C349-samasya",
+    "MR-C349-adcan",
+    "MR-C349-upay",
+    "MR-C349-paryay",
+    "MR-C349-ukalne",
+    "MR-R349-review-342-349"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch349.txt",
+  "json": "marathi/narration/ch349.json",
+  "textHash": "fnv1a64:7c24e2a41a4c6aae",
+  "jsonHash": "fnv1a64:747b4d946ea4a04b",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:202cacb1573a966b",
+  "lessonIds": [
+    "MR-C414-atithi",
+    "MR-C414-adaratithya",
+    "MR-C414-svagatkaksa",
+    "MR-C414-vicarpus-karne",
+    "MR-C414-phirakne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch414.txt",
+  "json": "marathi/narration/ch414.json",
+  "textHash": "fnv1a64:fc014a894f19a938",
+  "jsonHash": "fnv1a64:99de858525e299f0",
+  "findings": []
+}

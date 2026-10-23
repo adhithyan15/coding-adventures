@@ -1,0 +1,11 @@
+{
+  "id": "MR-C504-gavandi",
+  "pathSegment": "MR-PATH-504-KAMGAR504",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-504-KAMGAR504",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C335-puratan",
+  "pathSegment": "MR-PATH-335-UTKHANAN335",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-335-UTKHANAN335",
+      "order": 2
+    }
+  ]
+}

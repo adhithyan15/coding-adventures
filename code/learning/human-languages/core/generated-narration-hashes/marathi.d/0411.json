@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:f7c4ccbcc64ec477",
+  "lessonIds": [
+    "MR-C411-saphar",
+    "MR-C411-rapet",
+    "MR-C411-pherphatka",
+    "MR-C411-hindne",
+    "MR-C411-rengalne",
+    "MR-R411-review-404-411"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch411.txt",
+  "json": "marathi/narration/ch411.json",
+  "textHash": "fnv1a64:d281b7facae6dcf4",
+  "jsonHash": "fnv1a64:82905be495a622cd",
+  "findings": []
+}

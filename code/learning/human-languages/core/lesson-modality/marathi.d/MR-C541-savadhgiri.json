@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C541-savadhgiri",
+    "language": "marathi",
+    "chapter": 541,
+    "sequence": 30890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3886bdc75829843d"
+  },
+  "findings": []
+}

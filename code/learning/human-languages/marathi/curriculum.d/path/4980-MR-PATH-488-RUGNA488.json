@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-488-RUGNA488",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-488-RUGNA488"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C488-paricarika",
+  "pathSegment": "MR-PATH-488-RUGNA488",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-488-RUGNA488",
+      "order": 1
+    }
+  ]
+}

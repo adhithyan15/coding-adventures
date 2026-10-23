@@ -1,0 +1,21 @@
+{
+  "chapter": 411,
+  "title": "Trips and Outings",
+  "label": "ch:mr-trips-and-outings",
+  "canDo": "I can talk about trips, rides and strolls, and say I roamed or lingered.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-R411-review-404-411",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can talk about trips, rides and strolls, and say I roamed or lingered.",
+    "assesses": [
+      "MR-LEX-C411-SAFAR411-01",
+      "MR-LEX-C411-SAFAR411-02",
+      "MR-LEX-C411-SAFAR411-03",
+      "MR-LEX-C411-SAFAR411-04",
+      "MR-LEX-C411-SAFAR411-05"
+    ]
+  }
+}

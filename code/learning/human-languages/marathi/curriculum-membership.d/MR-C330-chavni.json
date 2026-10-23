@@ -1,0 +1,11 @@
+{
+  "id": "MR-C330-chavni",
+  "pathSegment": "MR-PATH-330-SENAPATI330",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-330-SENAPATI330",
+      "order": 2
+    }
+  ]
+}

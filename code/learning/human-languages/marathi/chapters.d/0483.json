@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "An Upset Stomach",
+  "label": "ch:mr-an-upset-stomach",
+  "canDo": "I can talk about indigestion, acidity, diarrhoea and being sick.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C483-pacne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can talk about indigestion, acidity, diarrhoea and being sick.",
+    "assesses": [
+      "MR-LEX-C483-PACAN483-03",
+      "MR-LEX-C483-PACAN483-04",
+      "MR-LEX-C483-PACAN483-05"
+    ]
+  }
+}

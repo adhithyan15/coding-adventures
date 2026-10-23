@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:a4e816410f75da1b",
+  "lessonIds": [
+    "MR-C535-citrakala",
+    "MR-C535-kalakar",
+    "MR-C535-silpa",
+    "MR-C535-kuncla",
+    "MR-C535-chata",
+    "MR-R535-review-528-535"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch535.txt",
+  "json": "marathi/narration/ch535.json",
+  "textHash": "fnv1a64:810c1323a5140c4b",
+  "jsonHash": "fnv1a64:2d7c5ad11338027b",
+  "findings": []
+}

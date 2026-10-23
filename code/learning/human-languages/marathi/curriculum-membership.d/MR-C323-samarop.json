@@ -1,0 +1,11 @@
+{
+  "id": "MR-C323-samarop",
+  "pathSegment": "MR-PATH-323-NIROP323",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-323-NIROP323",
+      "order": 4
+    }
+  ]
+}

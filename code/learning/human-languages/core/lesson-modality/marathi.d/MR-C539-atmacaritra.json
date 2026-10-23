@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C539-atmacaritra",
+    "language": "marathi",
+    "chapter": 539,
+    "sequence": 30800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:760a2b3351db9e16"
+  },
+  "findings": []
+}

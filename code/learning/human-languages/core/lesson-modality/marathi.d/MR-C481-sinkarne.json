@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C481-sinkarne",
+    "language": "marathi",
+    "chapter": 481,
+    "sequence": 27610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d3ad4ee9a546501"
+  },
+  "findings": []
+}

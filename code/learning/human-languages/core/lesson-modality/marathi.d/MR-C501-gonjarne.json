@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C501-gonjarne",
+    "language": "marathi",
+    "chapter": 501,
+    "sequence": 28630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd30bf0a31065315"
+  },
+  "findings": []
+}

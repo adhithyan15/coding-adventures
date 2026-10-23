@@ -1,0 +1,11 @@
+{
+  "id": "MR-C406-nyahalne",
+  "pathSegment": "MR-PATH-406-PADPATH406",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-406-PADPATH406",
+      "order": 4
+    }
+  ]
+}

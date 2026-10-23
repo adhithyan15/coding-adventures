@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 552,
+  "title": "When Plans Fail",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:23cb942494d59437",
+  "lessons": [
+    {
+      "id": "MR-C552-phiskatne",
+      "sequence": 31460,
+      "title": "फिसकटणे (phiskaṭṇe) — to fall apart; to fall through",
+      "headword": "फिसकटणे",
+      "romanization": "phiskaṭṇe",
+      "gloss": "to fall apart; to fall through",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49794fd1adbbe3c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for reserved, then the Marathi for unforeseen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फिसकटणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फिसकटणे — phiskaṭṇe — \"to fall apart; to fall through\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पावसामुळे आमचा सहलीचा बेत फिसकटला. pāvsāmuḷe āmcā sahlīcā bet phiskaṭlā. Because of the rain our plan for a trip fell through."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो सौदा फिसकटला, to saudā phiskaṭlā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फिसकटणे (phiskaṭṇe) is inherited: CDIAL lists Marathi phiskaṭṇẽ, \"to fall away\", under phiss, \"slip\" (CDIAL 9080)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phiskaṭṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phiskaṭṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phiskaṭṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phiskaṭṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāvsāmuḷe āmcā sahlīcā bet phiskaṭlā. — Because of the rain our plan for a trip fell through.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāvsāmuḷe āmcā sahlīcā bet phiskaṭlā.* — Because of the rain our plan for a trip fell through.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for reserved, then the Marathi for unforeseen, then say phiskaṭṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for reserved, then the Marathi for unforeseen, then say *phiskaṭṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फिसकटणे (phiskaṭṇe) mean? (\"To fall apart; to fall through\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C552-bargalne",
+      "sequence": 31470,
+      "title": "बारगळणे (bārgaḷṇe) — to fizzle out",
+      "headword": "बारगळणे",
+      "romanization": "bārgaḷṇe",
+      "gloss": "to fizzle out",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d55d401dbe53a095",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for unforeseen, then the Marathi for to fall apart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बारगळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बारगळणे — bārgaḷṇe — \"to fizzle out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पैसे नसल्यामुळे नवीन दुकानाची योजना बारगळली. paise naslyāmuḷe navīn dukānācī yojnā bārgaḷlī. For lack of money the plan for a new shop fizzled out."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो प्रयत्न बारगळला, to prayatna bārgaḷlā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बारगळणे (bārgaḷṇe) is a Marathi verb for a plan that comes to nothing; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārgaḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārgaḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārgaḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārgaḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paise naslyāmuḷe navīn dukānācī yojnā bārgaḷlī. — For lack of money the plan for a new shop fizzled out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paise naslyāmuḷe navīn dukānācī yojnā bārgaḷlī.* — For lack of money the plan for a new shop fizzled out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for unforeseen, then the Marathi for to fall apart, then say bārgaḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for unforeseen, then the Marathi for to fall apart, then say *bārgaḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बारगळणे (bārgaḷṇe) mean? (\"To fizzle out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C552-dhasalne",
+      "sequence": 31480,
+      "title": "ढासळणे (ḍhāsaḷṇe) — to crumble; to cave in",
+      "headword": "ढासळणे",
+      "romanization": "ḍhāsaḷṇe",
+      "gloss": "to crumble; to cave in",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb63a175d3935854",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to fall apart, then the Marathi for to fizzle out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ढासळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ढासळणे — ḍhāsaḷṇe — \"to crumble; to cave in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जोरदार पावसात जुन्या किल्ल्याची भिंत ढासळली. jordār pāvsāt junyā killyācī bhint ḍhāsaḷlī. In the heavy rain the old fort's wall crumbled."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो किल्ला ढासळला, to killā ḍhāsaḷlā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ढासळणे (ḍhāsaḷṇe) is a tadbhava: CDIAL lists Marathi dhāsaḷṇẽ, \"to fall\", under Sanskrit dhvaṁsati, \"falls to pieces\" (CDIAL 6896)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhāsaḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhāsaḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhāsaḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhāsaḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jordār pāvsāt junyā killyācī bhint ḍhāsaḷlī. — In the heavy rain the old fort's wall crumbled.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jordār pāvsāt junyā killyācī bhint ḍhāsaḷlī.* — In the heavy rain the old fort's wall crumbled.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to fall apart, then the Marathi for to fizzle out, then say ḍhāsaḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to fall apart, then the Marathi for to fizzle out, then say *ḍhāsaḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ढासळणे (ḍhāsaḷṇe) mean? (\"To crumble; to cave in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C552-kolmadne",
+      "sequence": 31490,
+      "title": "कोलमडणे (kolmaḍṇe) — to break down; to collapse",
+      "headword": "कोलमडणे",
+      "romanization": "kolmaḍṇe",
+      "gloss": "to break down; to collapse",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06f7e490e4eaf6f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to fizzle out, then the Marathi for to crumble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कोलमडणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोलमडणे — kolmaḍṇe — \"to break down; to collapse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वडील आजारी पडले आणि घराचं सगळं गणित कोलमडलं. vaḍīl ājārī paḍle āṇi gharācaṁ sagḷaṁ gaṇit kolmaḍlaṁ. Father fell ill and the family's whole budget collapsed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो कोलमडला, to kolmaḍlā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोलमडणे (kolmaḍṇe) is a Marathi verb for a person or a plan that gives way; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kolmaḍṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kolmaḍṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kolmaḍṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kolmaḍṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḍīl ājārī paḍle āṇi gharācaṁ sagḷaṁ gaṇit kolmaḍlaṁ. — Father fell ill and the family's whole budget collapsed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḍīl ājārī paḍle āṇi gharācaṁ sagḷaṁ gaṇit kolmaḍlaṁ.* — Father fell ill and the family's whole budget collapsed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to fizzle out, then the Marathi for to crumble, then say kolmaḍṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to fizzle out, then the Marathi for to crumble, then say *kolmaḍṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कोलमडणे (kolmaḍṇe) mean? (\"To break down; to collapse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C552-sutne",
+      "sequence": 31500,
+      "title": "सुटणे (suṭṇe) — to come loose; to be let off",
+      "headword": "सुटणे",
+      "romanization": "suṭṇe",
+      "gloss": "to come loose; to be let off",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ecd6e7734c6c7699",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to crumble, then the Marathi for to break down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सुटणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुटणे — suṭṇe — \"to come loose; to be let off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गाठ नीट बांधली नव्हती, म्हणून दोरी सुटली. gāṭh nīṭ bāndhlī navhatī, mhaṇūn dorī suṭlī. The knot was not tied well, so the rope came loose."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो सुटला, to suṭlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Also शाळा सुटली, school let out, and प्रश्न सुटला, the problem was solved."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुटणे (suṭṇe) is inherited: CDIAL lists Marathi suṭā, \"loosened\", under kṣuṭyatē, \"is released\" (CDIAL 3707)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suṭṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suṭṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suṭṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suṭṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāṭh nīṭ bāndhlī navhatī, mhaṇūn dorī suṭlī. — The knot was not tied well, so the rope came loose.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāṭh nīṭ bāndhlī navhatī, mhaṇūn dorī suṭlī.* — The knot was not tied well, so the rope came loose.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to crumble, then the Marathi for to break down, then say suṭṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to crumble, then the Marathi for to break down, then say *suṭṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सुटणे (suṭṇe) mean? (\"To come loose; to be let off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:b6400196ba10d68e",
+  "lessonIds": [
+    "MR-C412-disa",
+    "MR-C412-hokayantra",
+    "MR-C412-khun",
+    "MR-C412-bharkatne",
+    "MR-C412-ghutmalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch412.txt",
+  "json": "marathi/narration/ch412.json",
+  "textHash": "fnv1a64:4436b23e045f38cf",
+  "jsonHash": "fnv1a64:6bb2a05d0d373a8e",
+  "findings": []
+}

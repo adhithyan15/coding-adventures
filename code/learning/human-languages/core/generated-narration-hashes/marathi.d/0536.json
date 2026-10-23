@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:f8c75989c27269e1",
+  "lessonIds": [
+    "MR-C536-gayan",
+    "MR-C536-vadak",
+    "MR-C536-sur-note",
+    "MR-C536-gungunne",
+    "MR-C536-riyaj-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch536.txt",
+  "json": "marathi/narration/ch536.json",
+  "textHash": "fnv1a64:3d03f56fdb1b7e7d",
+  "jsonHash": "fnv1a64:d7fd447fe6f50e53",
+  "findings": []
+}

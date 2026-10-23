@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:c231f5eb1ef03194",
+  "lessonIds": [
+    "MR-C483-apcan",
+    "MR-C483-pitta",
+    "MR-C483-julab",
+    "MR-C483-okne",
+    "MR-C483-pacne"
+  ],
+  "tex": "marathi/book/chapters/ch483-an-upset-stomach.tex"
+}

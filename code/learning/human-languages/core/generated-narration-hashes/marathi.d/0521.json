@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:55c9c972849e0457",
+  "lessonIds": [
+    "MR-C521-bheg",
+    "MR-C521-tadakne",
+    "MR-C521-gond",
+    "MR-C521-karvat",
+    "MR-C521-limpne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch521.txt",
+  "json": "marathi/narration/ch521.json",
+  "textHash": "fnv1a64:c1b7308de9a71905",
+  "jsonHash": "fnv1a64:82dfcface756f5a4",
+  "findings": []
+}

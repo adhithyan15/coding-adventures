@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:ab9cc3fde8c172e4",
+  "lessonIds": [
+    "MR-C447-bagla",
+    "MR-C447-ghar",
+    "MR-C447-gidhad",
+    "MR-C447-kilbilne",
+    "MR-C447-sthalantar"
+  ],
+  "tex": "marathi/book/chapters/ch447-herons-and-kites.tex"
+}

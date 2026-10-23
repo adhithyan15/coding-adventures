@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C426-rakkam",
+    "language": "marathi",
+    "chapter": 426,
+    "sequence": 24560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0bb2f4051cf1ee5"
+  },
+  "findings": []
+}

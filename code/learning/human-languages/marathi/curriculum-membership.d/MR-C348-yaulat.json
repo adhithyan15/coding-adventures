@@ -1,0 +1,11 @@
+{
+  "id": "MR-C348-yaulat",
+  "pathSegment": "MR-PATH-348-SAMBANDH348",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-348-SAMBANDH348",
+      "order": 4
+    }
+  ]
+}

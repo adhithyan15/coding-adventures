@@ -1,0 +1,11 @@
+{
+  "id": "MR-C434-cukamuk",
+  "pathSegment": "MR-PATH-434-GAIRSOY434",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-434-GAIRSOY434",
+      "order": 1
+    }
+  ]
+}
