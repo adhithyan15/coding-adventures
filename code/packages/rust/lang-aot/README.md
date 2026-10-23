@@ -43,8 +43,10 @@ may also supply static offsets or factors around the root when checked
 arithmetic keeps the grouped result exact and within `2^53`; zero or dynamic
 divisors and inexact real divisions stay conservative. These grouped reductions
 may include right-associative checked powers within the existing exponent cap;
-negative or dynamic exponents and overflowing powers stay conservative. Positive
-variable-free whole-number powers may raise the exact sign-rooted integer
+negative or dynamic exponents and overflowing powers stay conservative.
+Built-in `abs`, `sign`, and `entier` may normalize those checked reductions as
+static offsets, factors, or exponents, while shadowed procedures and dynamic or
+oversized inputs remain conservative. Positive variable-free whole-number powers may raise the exact sign-rooted integer
 transform within the existing exponent-unroll cap while checked exponentiation
 remains within `2^53`; zero, negative, dynamic, deeper, and oversized powers
 stay conservative. Integer `div` by a variable-free nonzero whole number may
