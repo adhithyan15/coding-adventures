@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "Poverty",
+  "label": "ch:ml-poverty",
+  "canDo": "I can say poverty, a poor man, hunger, a slum and literacy.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C427-saksarata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can say poverty, a poor man, hunger, a slum and literacy.",
+    "assesses": [
+      "ML-LEX-C427-DARIDRYAM427-03",
+      "ML-LEX-C427-DARIDRYAM427-04",
+      "ML-LEX-C427-DARIDRYAM427-05"
+    ]
+  }
+}

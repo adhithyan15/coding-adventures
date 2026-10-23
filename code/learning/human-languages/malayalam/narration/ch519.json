@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 519,
+  "title": "Worry and Relief",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8935553fa3818065",
+  "lessons": [
+    {
+      "id": "ML-C519-utkantha",
+      "sequence": 26100,
+      "title": "ഉത്കണ്ഠ (utkaṇṭha) — anxiety; nervous worry",
+      "headword": "ഉത്കണ്ഠ",
+      "romanization": "utkaṇṭha",
+      "gloss": "anxiety; nervous worry",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f0abe6619cee899a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to long for, then the Malayalam for bliss."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉത്കണ്ഠ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉത്കണ്ഠ — utkaṇṭha — \"anxiety; nervous worry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പരീക്ഷയ്ക്ക് മുൻപ് അവൾക്ക് വലിയ ഉത്കണ്ഠ ഉണ്ടായിരുന്നു. parīkṣaykkŭ munpŭ avaḷkkŭ valiya utkaṇṭha uṇṭāyirunnu. She was very anxious before the exam."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal and close to ആശങ്ക; the one who feels it takes -ക്ക്."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉത്കണ്ഠ (utkaṇṭha) is borrowed from Sanskrit utkaṇṭhā, \"longing for someone, missing them\" (Monier-Williams). In Malayalam the anxious waiting in that longing became the main sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utkaṇṭha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utkaṇṭha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utkaṇṭha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utkaṇṭha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parīkṣaykkŭ munpŭ avaḷkkŭ valiya utkaṇṭha uṇṭāyirunnu. — She was very anxious before the exam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parīkṣaykkŭ munpŭ avaḷkkŭ valiya utkaṇṭha uṇṭāyirunnu.* — She was very anxious before the exam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to long for, then the Malayalam for bliss, then say utkaṇṭha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to long for, then the Malayalam for bliss, then say *utkaṇṭha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉത്കണ്ഠ (utkaṇṭha) mean? (\"Anxiety; nervous worry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C519-atmabhimanam",
+      "sequence": 26110,
+      "title": "ആത്മാഭിമാനം (ātmābhimānaṁ) — self-respect",
+      "headword": "ആത്മാഭിമാനം",
+      "romanization": "ātmābhimānaṁ",
+      "gloss": "self-respect",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d30fa130592cb611",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for bliss, then the Malayalam for anxiety."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആത്മാഭിമാനം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആത്മാഭിമാനം — ātmābhimānaṁ — \"self-respect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ വാക്കുകൾ അവന്റെ ആത്മാഭിമാനത്തെ വേദനിപ്പിച്ചു. ā vākkukaḷ avanṟe ātmābhimānatte vēdanippiccu. Those words hurt his self-respect."
+            },
+            {
+              "kind": "speech",
+              "text": "ആത്മ- self + അഭിമാനം pride: pride in oneself, already familiar as അഭിമാനം."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആത്മാഭിമാനം (ātmābhimānaṁ) is a learned compound built from Sanskrit ātman, \"self\" (Monier-Williams), and abhimāna, \"pride\" (CDIAL 524)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmābhimānaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmābhimānaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmābhimānaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmābhimānaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā vākkukaḷ avanṟe ātmābhimānatte vēdanippiccu. — Those words hurt his self-respect.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā vākkukaḷ avanṟe ātmābhimānatte vēdanippiccu.* — Those words hurt his self-respect.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for bliss, then the Malayalam for anxiety, then say ātmābhimānaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for bliss, then the Malayalam for anxiety, then say *ātmābhimānaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആത്മാഭിമാനം (ātmābhimānaṁ) mean? (\"Self-respect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C519-amparakkuka",
+      "sequence": 26120,
+      "title": "അമ്പരക്കുക (amparakkuka) — to be astonished; to be bewildered",
+      "headword": "അമ്പരക്കുക",
+      "romanization": "amparakkuka",
+      "gloss": "to be astonished; to be bewildered",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8c4d569c9c72b39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for anxiety, then the Malayalam for self-respect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അമ്പരക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അമ്പരക്കുക — amparakkuka — \"to be astonished; to be bewildered\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വലിയ നഗരം കണ്ട് ഗ്രാമത്തിലെ കുട്ടി അമ്പരന്നു. valiya nagaraṁ kaṇṭŭ grāmattile kuṭṭi amparannu. The village child was bewildered by the big city."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: അമ്പരന്നു, amparannu."
+            },
+            {
+              "kind": "speech",
+              "text": "The past is അമ്പരന്നു, with -ന്നു. The noun is അമ്പരപ്പ്, astonishment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അമ്പരക്കുക (amparakkuka) is native Dravidian: DEDR 172 gives the Malayalam verb as to be confounded or perplexed, with the noun അമ്പരപ്പ്, perplexity (DEDR 172)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amparakkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amparakkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amparakkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amparakkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valiya nagaraṁ kaṇṭŭ grāmattile kuṭṭi amparannu. — The village child was bewildered by the big city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valiya nagaraṁ kaṇṭŭ grāmattile kuṭṭi amparannu.* — The village child was bewildered by the big city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for anxiety, then the Malayalam for self-respect, then say amparakkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for anxiety, then the Malayalam for self-respect, then say *amparakkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അമ്പരക്കുക (amparakkuka) mean? (\"To be astonished; to be bewildered\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C519-vatsalyam",
+      "sequence": 26130,
+      "title": "വാത്സല്യം (vātsalyaṁ) — tender affection",
+      "headword": "വാത്സല്യം",
+      "romanization": "vātsalyaṁ",
+      "gloss": "tender affection",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4edb20c23551f79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for self-respect, then the Malayalam for to be astonished."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വാത്സല്യം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വാത്സല്യം — vātsalyaṁ — \"tender affection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മുത്തശ്ശിക്ക് പേരക്കുട്ടികളോട് വലിയ വാത്സല്യമാണ്. muttaśśikkŭ pērakkuṭṭikaḷōṭŭ valiya vātsalyamāṇŭ. Grandmother has great affection for her grandchildren."
+            },
+            {
+              "kind": "speech",
+              "text": "The tender love of an older person for a younger one; the one loved takes -ഓട്."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വാത്സല്യം (vātsalyaṁ) is borrowed from Sanskrit vātsalya, \"affection\" (CDIAL 11506), the noun of vatsala, \"fond, tender\", a word built on vatsa, \"a calf\": the love of a cow for her calf."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vātsalyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vātsalyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vātsalyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vātsalyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muttaśśikkŭ pērakkuṭṭikaḷōṭŭ valiya vātsalyamāṇŭ. — Grandmother has great affection for her grandchildren.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muttaśśikkŭ pērakkuṭṭikaḷōṭŭ valiya vātsalyamāṇŭ.* — Grandmother has great affection for her grandchildren.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for self-respect, then the Malayalam for to be astonished, then say vātsalyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for self-respect, then the Malayalam for to be astonished, then say *vātsalyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വാത്സല്യം (vātsalyaṁ) mean? (\"Tender affection\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C519-murumurukkuka",
+      "sequence": 26140,
+      "title": "മുറുമുറുക്കുക (muṟumuṟukkuka) — to grumble",
+      "headword": "മുറുമുറുക്കുക",
+      "romanization": "muṟumuṟukkuka",
+      "gloss": "to grumble",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ced91d588a55118d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to be astonished, then the Malayalam for tender affection."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മുറുമുറുക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുറുമുറുക്കുക — muṟumuṟukkuka — \"to grumble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കൂടുതൽ ജോലി കിട്ടിയപ്പോൾ ജീവനക്കാർ മുറുമുറുത്തു. kūṭutal jōli kiṭṭiyappōḷ jīvanakkār muṟumuṟuttu. The staff grumbled when they were given more work."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: മുറുമുറുത്തു, muṟumuṟuttu."
+            },
+            {
+              "kind": "speech",
+              "text": "Complaining under one's breath, not out loud; the past is മുറുമുറുത്തു."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുറുമുറുക്കുക (muṟumuṟukkuka) is native Dravidian: DEDR 5013 gives the Malayalam verb as to murmur (DEDR 5013). The doubled sound copies the low noise of a grumble."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṟumuṟukkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṟumuṟukkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṟumuṟukkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṟumuṟukkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭutal jōli kiṭṭiyappōḷ jīvanakkār muṟumuṟuttu. — The staff grumbled when they were given more work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭutal jōli kiṭṭiyappōḷ jīvanakkār muṟumuṟuttu.* — The staff grumbled when they were given more work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to be astonished, then the Malayalam for tender affection, then say muṟumuṟukkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to be astonished, then the Malayalam for tender affection, then say *muṟumuṟukkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മുറുമുറുക്കുക (muṟumuṟukkuka) mean? (\"To grumble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

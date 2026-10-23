@@ -1,0 +1,19 @@
+{
+  "chapter": 570,
+  "title": "Furniture and Laundry",
+  "label": "ch:ml-furniture-and-laundry",
+  "canDo": "I can say furniture, a balcony, a tenant, to do the laundry and to polish.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C570-minukkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 570: I can say furniture, a balcony, a tenant, to do the laundry and to polish.",
+    "assesses": [
+      "ML-LEX-C570-VITTUPAKARANAM570-03",
+      "ML-LEX-C570-VITTUPAKARANAM570-04",
+      "ML-LEX-C570-VITTUPAKARANAM570-05"
+    ]
+  }
+}

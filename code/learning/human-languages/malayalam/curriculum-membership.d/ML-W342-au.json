@@ -1,0 +1,11 @@
+{
+  "id": "ML-W342-au",
+  "pathSegment": "ML-PATH-342-MUST-BECAUSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-342-MUST-BECAUSE",
+      "order": 2
+    }
+  ]
+}

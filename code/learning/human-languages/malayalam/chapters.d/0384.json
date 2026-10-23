@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Births, Deaths and Life Stories",
+  "label": "ch:ml-births-deaths-and-life-stories",
+  "canDo": "I can say birth, death, an obituary, an autobiography and a biography.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C384-jivacaritram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can say birth, death, an obituary, an autobiography and a biography.",
+    "assesses": [
+      "ML-LEX-C384-JANANAM384-03",
+      "ML-LEX-C384-JANANAM384-04",
+      "ML-LEX-C384-JANANAM384-05"
+    ]
+  }
+}

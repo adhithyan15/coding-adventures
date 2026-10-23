@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:a8f0213a0ba84c20",
+  "lessonIds": [
+    "ML-C378-abhayam",
+    "ML-C378-abhayartthi",
+    "ML-C378-jivahani",
+    "ML-C378-palayanam-ceyyuka",
+    "ML-C378-tetuka"
+  ],
+  "tex": "malayalam/book/chapters/ch378-shelter-and-flight.tex"
+}

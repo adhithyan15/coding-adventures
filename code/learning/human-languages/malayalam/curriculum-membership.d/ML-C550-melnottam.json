@@ -1,0 +1,11 @@
+{
+  "id": "ML-C550-melnottam",
+  "pathSegment": "ML-PATH-550-NETTAM550",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-550-NETTAM550",
+      "order": 1
+    }
+  ]
+}

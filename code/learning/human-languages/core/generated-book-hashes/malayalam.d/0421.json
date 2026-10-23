@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:359ee8ebc4c040ee",
+  "lessonIds": [
+    "ML-C421-bharanam",
+    "ML-C421-bharikkuka",
+    "ML-C421-mantri",
+    "ML-C421-mukhyamantri",
+    "ML-C421-gavarnar"
+  ],
+  "tex": "malayalam/book/chapters/ch421-who-governs.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "A Riot in the Town",
+  "label": "ch:ml-a-riot-in-the-town",
+  "canDo": "I can say a riot, a weapon, to surround, to drive away and to calm down.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C382-santamakuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can say a riot, a weapon, to surround, to drive away and to calm down.",
+    "assesses": [
+      "ML-LEX-C382-KALAPAM382-03",
+      "ML-LEX-C382-KALAPAM382-04",
+      "ML-LEX-C382-KALAPAM382-05"
+    ]
+  }
+}

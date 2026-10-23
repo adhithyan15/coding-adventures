@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:95087c5ff73655df",
+  "lessonIds": [
+    "ML-C435-ranku",
+    "ML-C435-birudadhari",
+    "ML-C435-birudadanam",
+    "ML-C435-unnatavidyabhyasam",
+    "ML-C435-mulyanirnnayam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch435.txt",
+  "json": "malayalam/narration/ch435.json",
+  "textHash": "fnv1a64:9432f4e2674b6280",
+  "jsonHash": "fnv1a64:bff0e3bf0cc4963b",
+  "findings": []
+}

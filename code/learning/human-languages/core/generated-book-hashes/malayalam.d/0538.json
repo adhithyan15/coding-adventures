@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:46ef2edbc010ef84",
+  "lessonIds": [
+    "ML-C538-sukham-prapikkuka",
+    "ML-C538-paricarikkuka",
+    "ML-C538-vilceyar",
+    "ML-C538-vedanikkuka",
+    "ML-C538-bodham-ketuka"
+  ],
+  "tex": "malayalam/book/chapters/ch538-injury-and-recovery.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:93b3fc366857d6d1",
+  "lessonIds": [
+    "ML-C351-sampresanam",
+    "ML-C351-srotavu",
+    "ML-C351-ripporttar",
+    "ML-C351-citrikarikkuka",
+    "ML-C351-sampresanam-ceyyuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch351.txt",
+  "json": "malayalam/narration/ch351.json",
+  "textHash": "fnv1a64:715611f13fa0cb0f",
+  "jsonHash": "fnv1a64:6c0dabde32cefd19",
+  "findings": []
+}

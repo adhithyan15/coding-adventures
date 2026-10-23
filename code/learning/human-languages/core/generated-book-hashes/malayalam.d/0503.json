@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:6f544c72e95d7621",
+  "lessonIds": [
+    "ML-C503-paristhiti",
+    "ML-C503-parisaram",
+    "ML-C503-malinikaranam",
+    "ML-C503-malinamakkuka",
+    "ML-C503-malinajalam"
+  ],
+  "tex": "malayalam/book/chapters/ch503-the-environment.tex"
+}

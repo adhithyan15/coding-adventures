@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C489-vinimayam",
+    "language": "malayalam",
+    "chapter": 489,
+    "sequence": 24440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:756399052704fb23"
+  },
+  "findings": []
+}

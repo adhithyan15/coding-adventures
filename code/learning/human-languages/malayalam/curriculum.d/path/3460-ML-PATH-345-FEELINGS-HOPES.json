@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-345-FEELINGS-HOPES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ML-EXT-345-FEELINGS-HOPES"
+  ],
+  "after": []
+}

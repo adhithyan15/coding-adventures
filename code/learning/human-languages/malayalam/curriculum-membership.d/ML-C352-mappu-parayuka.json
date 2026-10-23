@@ -1,0 +1,11 @@
+{
+  "id": "ML-C352-mappu-parayuka",
+  "pathSegment": "ML-PATH-352-PRESS352",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-352-PRESS352",
+      "order": 4
+    }
+  ]
+}

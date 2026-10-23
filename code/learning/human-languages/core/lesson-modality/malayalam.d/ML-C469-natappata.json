@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C469-natappata",
+    "language": "malayalam",
+    "chapter": 469,
+    "sequence": 23410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80384ec4d8109ce2"
+  },
+  "findings": []
+}

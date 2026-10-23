@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:c24314cc40171c3a",
+  "lessonIds": [
+    "ML-C434-pathyapaddhati",
+    "ML-C434-hajar",
+    "ML-C434-hosrral",
+    "ML-C434-skolarsippu",
+    "ML-C434-pasakuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch434.txt",
+  "json": "malayalam/narration/ch434.json",
+  "textHash": "fnv1a64:ab05c2f23f3a7fc1",
+  "jsonHash": "fnv1a64:9fc18e00f4ecef35",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Stumped, Stirred and Amused",
+  "label": "ch:ml-stumped-stirred-and-amused",
+  "canDo": "I can say to be stumped, to get agitated, to thrill, to be amused and to grow weary.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C526-musiyuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can say to be stumped, to get agitated, to thrill, to be amused and to grow weary.",
+    "assesses": [
+      "ML-LEX-C526-RASAM526-03",
+      "ML-LEX-C526-RASAM526-04",
+      "ML-LEX-C526-RASAM526-05"
+    ]
+  }
+}

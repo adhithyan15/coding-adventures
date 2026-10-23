@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "New Homes and New Names",
+  "label": "ch:ml-new-homes-and-new-names",
+  "canDo": "I can say a housewarming, a naming ceremony, a honeymoon, to settle and to migrate.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C389-kutiyeruka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can say a housewarming, a naming ceremony, a honeymoon, to settle and to migrate.",
+    "assesses": [
+      "ML-LEX-C389-GRIHAM389-03",
+      "ML-LEX-C389-GRIHAM389-04",
+      "ML-LEX-C389-GRIHAM389-05"
+    ]
+  }
+}

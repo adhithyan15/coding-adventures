@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C488-oppu",
+    "language": "malayalam",
+    "chapter": 488,
+    "sequence": 24380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc8662b258838aa1"
+  },
+  "findings": []
+}

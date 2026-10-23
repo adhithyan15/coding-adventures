@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C507-tulavarsam",
+    "language": "malayalam",
+    "chapter": 507,
+    "sequence": 25370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f56274c0b3a1a24"
+  },
+  "findings": []
+}

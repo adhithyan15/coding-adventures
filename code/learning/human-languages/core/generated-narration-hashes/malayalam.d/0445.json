@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:838d6ee0415503a1",
+  "lessonIds": [
+    "ML-C445-anivaryamaya",
+    "ML-C445-nirnnayakamaya",
+    "ML-C445-atisthanaparamaya",
+    "ML-C445-gurutaramaya",
+    "ML-C445-sankirnnamaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch445.txt",
+  "json": "malayalam/narration/ch445.json",
+  "textHash": "fnv1a64:74478e6018c924a5",
+  "jsonHash": "fnv1a64:fce4a0c483f4b99e",
+  "findings": []
+}

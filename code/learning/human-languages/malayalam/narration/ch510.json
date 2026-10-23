@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 510,
+  "title": "Fog and Hail",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7d3551476ff74908",
+  "lessons": [
+    {
+      "id": "ML-C510-mutalmannu",
+      "sequence": 25510,
+      "title": "മൂടൽമഞ്ഞ് (mūṭalmaññŭ) — fog",
+      "headword": "മൂടൽമഞ്ഞ്",
+      "romanization": "mūṭalmaññŭ",
+      "gloss": "fog",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ccfcd51f41c4a94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a chill, then the Malayalam for to get hot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മൂടൽമഞ്ഞ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മൂടൽമഞ്ഞ് — mūṭalmaññŭ — \"fog\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മൂടൽമഞ്ഞ് കാരണം വഴി കാണാൻ കഴിഞ്ഞില്ല. mūṭalmaññŭ kāraṇaṁ vaḻi kāṇān kaḻiññilla. Because of the fog we could not make out the road."
+            },
+            {
+              "kind": "speech",
+              "text": "മൂടൽ, a covering, from മൂടുക, plus മഞ്ഞ്, mist."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മൂടൽമഞ്ഞ് (mūṭalmaññŭ) is a native Dravidian compound of മൂടൽ, a covering, from മൂടുക (DEDR 5034), and മഞ്ഞ്, mist (DEDR 4641)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūṭalmaññŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūṭalmaññŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūṭalmaññŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūṭalmaññŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūṭalmaññŭ kāraṇaṁ vaḻi kāṇān kaḻiññilla. — Because of the fog we could not make out the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūṭalmaññŭ kāraṇaṁ vaḻi kāṇān kaḻiññilla.* — Because of the fog we could not make out the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a chill, then the Malayalam for to get hot, then say mūṭalmaññŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a chill, then the Malayalam for to get hot, then say *mūṭalmaññŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മൂടൽമഞ്ഞ് (mūṭalmaññŭ) mean? (\"Fog\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C510-alippalam",
+      "sequence": 25520,
+      "title": "ആലിപ്പഴം (ālippaḻaṁ) — hail; a hailstone",
+      "headword": "ആലിപ്പഴം",
+      "romanization": "ālippaḻaṁ",
+      "gloss": "hail; a hailstone",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dfc8596557df2568",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to get hot, then the Malayalam for fog."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആലിപ്പഴം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആലിപ്പഴം — ālippaḻaṁ — \"hail; a hailstone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇന്നലെ വൈകുന്നേരം ആലിപ്പഴം വീണു. innale vaikunnēraṁ ālippaḻaṁ vīṇu. Yesterday evening there was hail."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally hail fruit: ആലി, hail, plus പഴം, a fruit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആലിപ്പഴം (ālippaḻaṁ) is native Dravidian; DEDR lists ആലി and ആലിപ്പഴം as hail (DEDR 384), with പഴം, a fruit."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālippaḻaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālippaḻaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālippaḻaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālippaḻaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "innale vaikunnēraṁ ālippaḻaṁ vīṇu. — Yesterday evening there was hail.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *innale vaikunnēraṁ ālippaḻaṁ vīṇu.* — Yesterday evening there was hail.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to get hot, then the Malayalam for fog, then say ālippaḻaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to get hot, then the Malayalam for fog, then say *ālippaḻaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആലിപ്പഴം (ālippaḻaṁ) mean? (\"Hail; a hailstone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C510-mutikkettuka",
+      "sequence": 25530,
+      "title": "മൂടിക്കെട്ടുക (mūṭikkeṭṭuka) — to cloud over",
+      "headword": "മൂടിക്കെട്ടുക",
+      "romanization": "mūṭikkeṭṭuka",
+      "gloss": "to cloud over",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:908467c6d79aa911",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for fog, then the Malayalam for hail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മൂടിക്കെട്ടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മൂടിക്കെട്ടുക — mūṭikkeṭṭuka — \"to cloud over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഉച്ചയ്ക്ക് ആകാശം മൂടിക്കെട്ടി. uccaykkŭ ākāśaṁ mūṭikkeṭṭi. At noon the sky clouded over."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: മൂടിക്കെട്ടി, mūṭikkeṭṭi."
+            },
+            {
+              "kind": "speech",
+              "text": "The sky is the subject: ആകാശം മൂടിക്കെട്ടി. Literally covered and tied up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മൂടിക്കെട്ടുക (mūṭikkeṭṭuka) is a native Dravidian compound of മൂടുക, to cover (DEDR 5034), and കെട്ടുക, to tie (DEDR 1147)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūṭikkeṭṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūṭikkeṭṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūṭikkeṭṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūṭikkeṭṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uccaykkŭ ākāśaṁ mūṭikkeṭṭi. — At noon the sky clouded over.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uccaykkŭ ākāśaṁ mūṭikkeṭṭi.* — At noon the sky clouded over.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for fog, then the Malayalam for hail, then say mūṭikkeṭṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for fog, then the Malayalam for hail, then say *mūṭikkeṭṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മൂടിക്കെട്ടുക (mūṭikkeṭṭuka) mean? (\"To cloud over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C510-tanukkuka",
+      "sequence": 25540,
+      "title": "തണുക്കുക (taṇukkuka) — to grow cold; to cool down",
+      "headword": "തണുക്കുക",
+      "romanization": "taṇukkuka",
+      "gloss": "to grow cold; to cool down",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9858f604e2d82d3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for hail, then the Malayalam for to cloud over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തണുക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തണുക്കുക — taṇukkuka — \"to grow cold; to cool down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "സന്ധ്യയായപ്പോൾ കാറ്റ് തണുത്തു. sandhyayāyappōḷ kāṟṟŭ taṇuttu. When dusk came, the wind grew cold."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: തണുത്തു, taṇuttu."
+            },
+            {
+              "kind": "speech",
+              "text": "For weather, food and drink: ചായ തണുത്തു, the tea went cold."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തണുക്കുക (taṇukkuka) is native Dravidian, \"to grow cold, to be cooled\" (DEDR 3045)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṇukkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṇukkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṇukkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṇukkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandhyayāyappōḷ kāṟṟŭ taṇuttu. — When dusk came, the wind grew cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandhyayāyappōḷ kāṟṟŭ taṇuttu.* — When dusk came, the wind grew cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for hail, then the Malayalam for to cloud over, then say taṇukkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for hail, then the Malayalam for to cloud over, then say *taṇukkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തണുക്കുക (taṇukkuka) mean? (\"To grow cold; to cool down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C510-irampuka",
+      "sequence": 25550,
+      "title": "ഇരമ്പുക (irampuka) — to rumble; to roar",
+      "headword": "ഇരമ്പുക",
+      "romanization": "irampuka",
+      "gloss": "to rumble; to roar",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10ce06dab9f4520b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to cloud over, then the Malayalam for to grow cold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഇരമ്പുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇരമ്പുക — irampuka — \"to rumble; to roar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "രാത്രി കടൽ ഉറക്കെ ഇരമ്പി. rātri kaṭal uṟakke irampi. At night the sea roared loudly."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഇരമ്പി, irampi."
+            },
+            {
+              "kind": "speech",
+              "text": "For the sea, the wind, engines and a crowd."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇരമ്പുക (irampuka) is native Dravidian, \"to roar as the sea, to bluster\" (DEDR 489)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irampuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irampuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irampuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irampuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātri kaṭal uṟakke irampi. — At night the sea roared loudly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātri kaṭal uṟakke irampi.* — At night the sea roared loudly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to cloud over, then the Malayalam for to grow cold, then say irampuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to cloud over, then the Malayalam for to grow cold, then say *irampuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഇരമ്പുക (irampuka) mean? (\"To rumble; to roar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

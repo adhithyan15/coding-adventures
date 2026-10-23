@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:2ca8f078f10a2841",
+  "lessonIds": [
+    "ML-C527-dayayulla",
+    "ML-C527-ksamayulla",
+    "ML-C527-pisukkan",
+    "ML-C527-udaramaya",
+    "ML-C527-visvastan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch527.txt",
+  "json": "malayalam/narration/ch527.json",
+  "textHash": "fnv1a64:83db73b49b310a7b",
+  "jsonHash": "fnv1a64:97a8cd13152199d8",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "Facing a Crisis",
+  "label": "ch:ml-facing-a-crisis",
+  "canDo": "I can say a crisis, a challenge, an obstacle, to analyse and a method.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C448-riti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can say a crisis, a challenge, an obstacle, to analyse and a method.",
+    "assesses": [
+      "ML-LEX-C448-PRATISANDHI448-03",
+      "ML-LEX-C448-PRATISANDHI448-04",
+      "ML-LEX-C448-PRATISANDHI448-05"
+    ]
+  }
+}

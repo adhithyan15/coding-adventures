@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C500-kutukuttuka",
+    "language": "malayalam",
+    "chapter": 500,
+    "sequence": 25030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7a273a12c7bc6ab"
+  },
+  "findings": []
+}

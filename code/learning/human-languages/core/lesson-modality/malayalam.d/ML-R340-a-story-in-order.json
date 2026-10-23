@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R340-a-story-in-order",
+    "language": "malayalam",
+    "chapter": 340,
+    "sequence": 16190,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0474061bf09033f7"
+  },
+  "findings": []
+}

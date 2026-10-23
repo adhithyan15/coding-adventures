@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C560-silpi",
+    "language": "malayalam",
+    "chapter": 560,
+    "sequence": 28230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26624055f68dcdc5"
+  },
+  "findings": []
+}

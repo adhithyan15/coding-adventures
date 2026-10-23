@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:3e32e00aa29de39f",
+  "lessonIds": [
+    "ML-C508-caruka-drizzle",
+    "ML-C508-pemari",
+    "ML-C508-nanayuka",
+    "ML-C508-malakkottu",
+    "ML-C508-unakkuka",
+    "ML-R508-review-501-508"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch508.txt",
+  "json": "malayalam/narration/ch508.json",
+  "textHash": "fnv1a64:3b7692e92ff5a05b",
+  "jsonHash": "fnv1a64:e79d111d5ab3e3c8",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C524-kurrabodham",
+  "pathSegment": "ML-PATH-524-APAMANAM524",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-524-APAMANAM524",
+      "order": 2
+    }
+  ]
+}

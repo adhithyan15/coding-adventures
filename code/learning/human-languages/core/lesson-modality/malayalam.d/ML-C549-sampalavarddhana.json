@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C549-sampalavarddhana",
+    "language": "malayalam",
+    "chapter": 549,
+    "sequence": 27670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:520e9a6cf5275fff"
+  },
+  "findings": []
+}

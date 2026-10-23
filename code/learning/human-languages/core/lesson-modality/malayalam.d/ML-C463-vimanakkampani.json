@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C463-vimanakkampani",
+    "language": "malayalam",
+    "chapter": 463,
+    "sequence": 23120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7269f656f12362a4"
+  },
+  "findings": []
+}

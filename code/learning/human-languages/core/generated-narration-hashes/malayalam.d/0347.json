@@ -1,0 +1,17 @@
+{
+  "language": "malayalam",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:be0d8fcea03349f5",
+  "lessonIds": [
+    "ML-C347-varunnundenkil",
+    "ML-C347-maza-peytal",
+    "ML-R347-if-and-otherwise"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "malayalam/narration/ch347.txt",
+  "json": "malayalam/narration/ch347.json",
+  "textHash": "fnv1a64:ae871e26972dffb3",
+  "jsonHash": "fnv1a64:c61bfb0851316682",
+  "findings": []
+}

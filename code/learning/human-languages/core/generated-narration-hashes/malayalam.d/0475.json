@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:c51c46fba5e51304",
+  "lessonIds": [
+    "ML-C475-kappal",
+    "ML-C475-navikan",
+    "ML-C475-jetti",
+    "ML-C475-vallam",
+    "ML-C475-tula"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch475.txt",
+  "json": "malayalam/narration/ch475.json",
+  "textHash": "fnv1a64:87f02b842050c1dd",
+  "jsonHash": "fnv1a64:f4ccc7a0414ed9ae",
+  "findings": []
+}

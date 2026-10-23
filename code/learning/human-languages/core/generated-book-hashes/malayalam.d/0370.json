@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:89d0cbe26876be14",
+  "lessonIds": [
+    "ML-C370-moli",
+    "ML-C370-drksaksi",
+    "ML-C370-kallam",
+    "ML-C370-moli-nalkuka",
+    "ML-C370-satyam-ceyyuka"
+  ],
+  "tex": "malayalam/book/chapters/ch370-testimony.tex"
+}

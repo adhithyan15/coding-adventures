@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R341-opinion-and-result",
+    "language": "malayalam",
+    "chapter": 341,
+    "sequence": 16250,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fe9620987529bec5"
+  },
+  "findings": []
+}

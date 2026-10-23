@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "Zoo and Shore",
+  "label": "ch:ml-zoo-and-shore",
+  "canDo": "I can say a zoo, a public garden, a whale, an entry fee and to drift in.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C501-olukiyettuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can say a zoo, a public garden, a whale, an entry fee and to drift in.",
+    "assesses": [
+      "ML-LEX-C501-MRGASALA501-03",
+      "ML-LEX-C501-MRGASALA501-04",
+      "ML-LEX-C501-MRGASALA501-05"
+    ]
+  }
+}

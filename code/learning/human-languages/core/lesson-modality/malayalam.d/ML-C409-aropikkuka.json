@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C409-aropikkuka",
+    "language": "malayalam",
+    "chapter": 409,
+    "sequence": 20220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9b10a21ad04853c"
+  },
+  "findings": []
+}

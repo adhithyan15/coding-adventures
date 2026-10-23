@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C393-anusmarikkuka",
+    "language": "malayalam",
+    "chapter": 393,
+    "sequence": 19290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:565f16f3a980fc9f"
+  },
+  "findings": []
+}

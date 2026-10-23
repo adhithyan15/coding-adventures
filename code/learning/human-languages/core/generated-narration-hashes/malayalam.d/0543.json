@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:33796f9d497bf2f6",
+  "lessonIds": [
+    "ML-C543-bonasu",
+    "ML-C543-apeksikkuka",
+    "ML-C543-jolikketukkuka",
+    "ML-C543-piriccuvituka",
+    "ML-C543-tolilutama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch543.txt",
+  "json": "malayalam/narration/ch543.json",
+  "textHash": "fnv1a64:48cf7479261bd65d",
+  "jsonHash": "fnv1a64:77f3a9837bcd7229",
+  "findings": []
+}

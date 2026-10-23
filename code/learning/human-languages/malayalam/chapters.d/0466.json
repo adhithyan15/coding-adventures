@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Bags and Loads",
+  "label": "ch:ml-bags-and-loads",
+  "canDo": "I can say a suitcase, a load, a porter, a cloakroom and to drag along.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C466-valiccukontupokuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can say a suitcase, a load, a porter, a cloakroom and to drag along.",
+    "assesses": [
+      "ML-LEX-C466-CUMATU466-03",
+      "ML-LEX-C466-CUMATU466-04",
+      "ML-LEX-C466-CUMATU466-05"
+    ]
+  }
+}

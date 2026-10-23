@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-374-DURANTHAM374",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-374-DURANTHAM374"
+  ],
+  "after": []
+}

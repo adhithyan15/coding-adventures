@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:ced4ff3eb6183388",
+  "lessonIds": [
+    "ML-C361-yugam",
+    "ML-C361-bhutakalam",
+    "ML-C361-sandarbham",
+    "ML-C361-tutakkam",
+    "ML-C361-apratiksitamayi"
+  ],
+  "tex": "malayalam/book/chapters/ch361-ages-and-occasions.tex"
+}

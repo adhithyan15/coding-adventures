@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 526,
+  "title": "Stumped, Stirred and Amused",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9bf482809851ab46",
+  "lessons": [
+    {
+      "id": "ML-C526-kulannuka",
+      "sequence": 26460,
+      "title": "കുഴങ്ങുക (kuḻaṅṅuka) — to be stumped; to be at a loss",
+      "headword": "കുഴങ്ങുക",
+      "romanization": "kuḻaṅṅuka",
+      "gloss": "to be stumped; to be at a loss",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:741dd008c86a6a2e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to burst out laughing, then the Malayalam for confusion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കുഴങ്ങുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുഴങ്ങുക — kuḻaṅṅuka — \"to be stumped; to be at a loss\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ചോദ്യം കേട്ട് കുട്ടി കുഴങ്ങി. cōdyaṁ kēṭṭŭ kuṭṭi kuḻaṅṅi. The child was stumped by the question."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കുഴങ്ങി, kuḻaṅṅi."
+            },
+            {
+              "kind": "speech",
+              "text": "Often കുഴങ്ങിപ്പോയി, was left at a loss. ആശയക്കുഴപ്പം shares its root."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുഴങ്ങുക (kuḻaṅṅuka) is native Dravidian, the verb beside കുഴപ്പം, \"intricacy, trouble\" (DEDR 1817)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻaṅṅuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻaṅṅuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻaṅṅuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻaṅṅuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōdyaṁ kēṭṭŭ kuṭṭi kuḻaṅṅi. — The child was stumped by the question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōdyaṁ kēṭṭŭ kuṭṭi kuḻaṅṅi.* — The child was stumped by the question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to burst out laughing, then the Malayalam for confusion, then say kuḻaṅṅuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to burst out laughing, then the Malayalam for confusion, then say *kuḻaṅṅuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കുഴങ്ങുക (kuḻaṅṅuka) mean? (\"To be stumped; to be at a loss\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C526-ksobhikkuka",
+      "sequence": 26470,
+      "title": "ക്ഷോഭിക്കുക (kṣōbhikkuka) — to get agitated; to flare up",
+      "headword": "ക്ഷോഭിക്കുക",
+      "romanization": "kṣōbhikkuka",
+      "gloss": "to get agitated; to flare up",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12cce7984cd58f32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for confusion, then the Malayalam for to be stumped."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ക്ഷോഭിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്ഷോഭിക്കുക — kṣōbhikkuka — \"to get agitated; to flare up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ശമ്പളം കിട്ടാതെ വന്നപ്പോൾ തൊഴിലാളികൾ ക്ഷോഭിച്ചു. śampaḷaṁ kiṭṭāte vannappōḷ toḻilāḷikaḷ kṣōbhiccu. When their wages did not come, the workers grew agitated."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ക്ഷോഭിച്ചു, kṣōbhiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; the noun is ക്ഷോഭം, agitation, also of the sea."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്ഷോഭിക്കുക (kṣōbhikkuka) is built from Sanskrit kṣobha, \"shaking, agitation, emotion\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣōbhikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣōbhikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣōbhikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣōbhikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śampaḷaṁ kiṭṭāte vannappōḷ toḻilāḷikaḷ kṣōbhiccu. — When their wages did not come, the workers grew agitated.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śampaḷaṁ kiṭṭāte vannappōḷ toḻilāḷikaḷ kṣōbhiccu.* — When their wages did not come, the workers grew agitated.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for confusion, then the Malayalam for to be stumped, then say kṣōbhikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for confusion, then the Malayalam for to be stumped, then say *kṣōbhikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ക്ഷോഭിക്കുക (kṣōbhikkuka) mean? (\"To get agitated; to flare up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C526-korittarikkuka",
+      "sequence": 26480,
+      "title": "കോരിത്തരിക്കുക (kōrittarikkuka) — to thrill; to get goosebumps",
+      "headword": "കോരിത്തരിക്കുക",
+      "romanization": "kōrittarikkuka",
+      "gloss": "to thrill; to get goosebumps",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f90c5ef1a07a1418",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to be stumped, then the Malayalam for to get agitated."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കോരിത്തരിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കോരിത്തരിക്കുക — kōrittarikkuka — \"to thrill; to get goosebumps\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ പാട്ട് കേട്ട് ഞാൻ കോരിത്തരിച്ചു. ā pāṭṭŭ kēṭṭŭ ñān kōrittariccu. I got goosebumps listening to that song."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കോരിത്തരിച്ചു, kōrittariccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The thrill one feels on the skin, as when the hair stands on end."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കോരിത്തരിക്കുക (kōrittarikkuka) looks like a native compound verb, but DEDR has no entry that clearly holds it, so its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōrittarikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōrittarikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōrittarikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōrittarikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pāṭṭŭ kēṭṭŭ ñān kōrittariccu. — I got goosebumps listening to that song.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pāṭṭŭ kēṭṭŭ ñān kōrittariccu.* — I got goosebumps listening to that song.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to be stumped, then the Malayalam for to get agitated, then say kōrittarikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to be stumped, then the Malayalam for to get agitated, then say *kōrittarikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കോരിത്തരിക്കുക (kōrittarikkuka) mean? (\"To thrill; to get goosebumps\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C526-rasikkuka",
+      "sequence": 26490,
+      "title": "രസിക്കുക (rasikkuka) — to be amused; to have fun",
+      "headword": "രസിക്കുക",
+      "romanization": "rasikkuka",
+      "gloss": "to be amused; to have fun",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61e7ee20544f339a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to get agitated, then the Malayalam for to thrill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: രസിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രസിക്കുക — rasikkuka — \"to be amused; to have fun\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കുട്ടികൾ നാടകം കണ്ട് ഒരുപാട് രസിച്ചു. kuṭṭikaḷ nāṭakaṁ kaṇṭŭ orupāṭŭ rasiccu. The children had great fun watching the play."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: രസിച്ചു, rasiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Its noun രസം, fun, also gives രസകരമായ, interesting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രസിക്കുക (rasikkuka) is built from Sanskrit rasa, \"sap, taste, relish\" (CDIAL 10650), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rasikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rasikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rasikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rasikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭṭikaḷ nāṭakaṁ kaṇṭŭ orupāṭŭ rasiccu. — The children had great fun watching the play.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭṭikaḷ nāṭakaṁ kaṇṭŭ orupāṭŭ rasiccu.* — The children had great fun watching the play.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to get agitated, then the Malayalam for to thrill, then say rasikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to get agitated, then the Malayalam for to thrill, then say *rasikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does രസിക്കുക (rasikkuka) mean? (\"To be amused; to have fun\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C526-musiyuka",
+      "sequence": 26500,
+      "title": "മുഷിയുക (muṣiyuka) — to grow weary; to get grubby",
+      "headword": "മുഷിയുക",
+      "romanization": "muṣiyuka",
+      "gloss": "to grow weary; to get grubby",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc55650c342f65e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to thrill, then the Malayalam for to be amused."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മുഷിയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുഷിയുക — muṣiyuka — \"to grow weary; to get grubby\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഒരുപാട് നേരം കാത്തിരുന്ന് ഞങ്ങൾ മുഷിഞ്ഞു. orupāṭŭ nēraṁ kāttirunnŭ ñaṅṅaḷ muṣiññu. We grew weary of waiting so long."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: മുഷിഞ്ഞു, muṣiññu."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of clothes it means to get grubby: മുഷിഞ്ഞ ഷർട്ട്, a grubby shirt. The past is മുഷിഞ്ഞു."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുഷിയുക (muṣiyuka) is native Dravidian: DEDR 4903 gives the Malayalam verb with both senses, to grow weary and to get dirty (DEDR 4903)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṣiyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṣiyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṣiyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṣiyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "orupāṭŭ nēraṁ kāttirunnŭ ñaṅṅaḷ muṣiññu. — We grew weary of waiting so long.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *orupāṭŭ nēraṁ kāttirunnŭ ñaṅṅaḷ muṣiññu.* — We grew weary of waiting so long.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to thrill, then the Malayalam for to be amused, then say muṣiyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to thrill, then the Malayalam for to be amused, then say *muṣiyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മുഷിയുക (muṣiyuka) mean? (\"To grow weary; to get grubby\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

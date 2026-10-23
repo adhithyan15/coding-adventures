@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "Money Matters",
+  "label": "ch:ml-money-matters",
+  "canDo": "I can say currency, exchange, to break a note, to make a payment and to stand in line.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C489-varinilkkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can say currency, exchange, to break a note, to make a payment and to stand in line.",
+    "assesses": [
+      "ML-LEX-C489-PANAM489-03",
+      "ML-LEX-C489-PANAM489-04",
+      "ML-LEX-C489-PANAM489-05"
+    ]
+  }
+}

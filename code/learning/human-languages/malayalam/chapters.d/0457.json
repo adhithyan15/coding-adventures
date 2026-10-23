@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "Getting Things Done",
+  "label": "ch:ml-getting-things-done",
+  "canDo": "I can say to appeal, to arrange, to carry out, to found and to maintain.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C457-nilanirttuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can say to appeal, to arrange, to carry out, to found and to maintain.",
+    "assesses": [
+      "ML-LEX-C457-ASUTRANAM457-03",
+      "ML-LEX-C457-ASUTRANAM457-04",
+      "ML-LEX-C457-ASUTRANAM457-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C461-yatrakkuli",
+    "language": "malayalam",
+    "chapter": 461,
+    "sequence": 23020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5bc5e15fa819ad12"
+  },
+  "findings": []
+}

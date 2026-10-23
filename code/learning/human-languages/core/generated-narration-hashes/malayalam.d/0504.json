@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:beec53e7a7ea3187",
+  "lessonIds": [
+    "ML-C504-cavaru",
+    "ML-C504-valicceriyuka",
+    "ML-C504-kuminnukutuka",
+    "ML-C504-nasikkuka",
+    "ML-C504-punarupayogikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch504.txt",
+  "json": "malayalam/narration/ch504.json",
+  "textHash": "fnv1a64:3ac0c16ac01e9fa0",
+  "jsonHash": "fnv1a64:ad87c64c8b4c1d28",
+  "findings": []
+}

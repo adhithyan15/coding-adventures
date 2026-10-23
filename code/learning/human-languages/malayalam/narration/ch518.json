@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 518,
+  "title": "Dread and Longing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:540b8224061f3dcf",
+  "lessons": [
+    {
+      "id": "ML-C518-bhayam",
+      "sequence": 26050,
+      "title": "ഭയം (bhayaṁ) — dread; fear",
+      "headword": "ഭയം",
+      "romanization": "bhayaṁ",
+      "gloss": "dread; fear",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa5d5b9dfda36bc0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for wrath, then the Malayalam for to be upset."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഭയം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഭയം — bhayaṁ — \"dread; fear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കുട്ടിക്ക് ഇരുട്ടിനെ ഭയമായിരുന്നു. kuṭṭikkŭ iruṭṭine bhayamāyirunnu. The child was afraid of the dark."
+            },
+            {
+              "kind": "speech",
+              "text": "Written and formal; in speech പേടി is more usual. The one afraid takes -ക്ക്, the thing feared -എ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഭയം (bhayaṁ) is borrowed from Sanskrit bhaya, \"fear, peril\", from the root bhī, \"to fear\" (CDIAL 9390)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhayaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhayaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhayaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhayaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭṭikkŭ iruṭṭine bhayamāyirunnu. — The child was afraid of the dark.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭṭikkŭ iruṭṭine bhayamāyirunnu.* — The child was afraid of the dark.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for wrath, then the Malayalam for to be upset, then say bhayaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for wrath, then the Malayalam for to be upset, then say *bhayaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഭയം (bhayaṁ) mean? (\"Dread; fear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C518-lajjikkuka",
+      "sequence": 26060,
+      "title": "ലജ്ജിക്കുക (lajjikkuka) — to feel ashamed",
+      "headword": "ലജ്ജിക്കുക",
+      "romanization": "lajjikkuka",
+      "gloss": "to feel ashamed",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1e9432a70e90022",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to be upset, then the Malayalam for dread."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ലജ്ജിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ലജ്ജിക്കുക — lajjikkuka — \"to feel ashamed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തെറ്റ് ചെയ്തതിൽ അവൻ ലജ്ജിച്ചു. teṟṟŭ ceytatil avan lajjiccu. He felt ashamed of doing wrong."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ലജ്ജിച്ചു, lajjiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is ലജ്ജ, shame; what one is ashamed of takes -ഇൽ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ലജ്ജിക്കുക (lajjikkuka) is built from Sanskrit lajjā, \"shame, modesty\" (CDIAL 10910), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lajjikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lajjikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lajjikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lajjikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teṟṟŭ ceytatil avan lajjiccu. — He felt ashamed of doing wrong.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teṟṟŭ ceytatil avan lajjiccu.* — He felt ashamed of doing wrong.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to be upset, then the Malayalam for dread, then say lajjikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to be upset, then the Malayalam for dread, then say *lajjikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ലജ്ജിക്കുക (lajjikkuka) mean? (\"To feel ashamed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C518-ekantata",
+      "sequence": 26070,
+      "title": "ഏകാന്തത (ēkāntata) — loneliness; solitude",
+      "headword": "ഏകാന്തത",
+      "romanization": "ēkāntata",
+      "gloss": "loneliness; solitude",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c97df9d6ee079eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for dread, then the Malayalam for to feel ashamed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഏകാന്തത",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഏകാന്തത — ēkāntata — \"loneliness; solitude\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നഗരത്തിൽ മുത്തശ്ശിക്ക് ഏകാന്തത തോന്നി. nagarattil muttaśśikkŭ ēkāntata tōnni. In the city, grandmother felt lonely."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on ഏകാന്തം, a lonely place, with -ത, which makes a noun of a quality."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഏകാന്തത (ēkāntata) is borrowed from Sanskrit ekānta, \"a lonely or retired place\" (Monier-Williams), with the noun ending -tā. The Sanskrit word joins eka, \"one\", and anta, \"end, side\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēkāntata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēkāntata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēkāntata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēkāntata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagarattil muttaśśikkŭ ēkāntata tōnni. — In the city, grandmother felt lonely.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagarattil muttaśśikkŭ ēkāntata tōnni.* — In the city, grandmother felt lonely.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for dread, then the Malayalam for to feel ashamed, then say ēkāntata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for dread, then the Malayalam for to feel ashamed, then say *ēkāntata* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഏകാന്തത (ēkāntata) mean? (\"Loneliness; solitude\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C518-kotikkuka",
+      "sequence": 26080,
+      "title": "കൊതിക്കുക (kotikkuka) — to long for; to crave",
+      "headword": "കൊതിക്കുക",
+      "romanization": "kotikkuka",
+      "gloss": "to long for; to crave",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e00b2b68bb8f379",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to feel ashamed, then the Malayalam for loneliness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കൊതിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൊതിക്കുക — kotikkuka — \"to long for; to crave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നാട്ടിലെ ഭക്ഷണം കഴിക്കാൻ ഞാൻ കൊതിച്ചു. nāṭṭile bhakṣaṇaṁ kaḻikkān ñān koticcu. I longed to eat the food of home."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കൊതിച്ചു, koticcu."
+            },
+            {
+              "kind": "speech",
+              "text": "What you long for takes -ആൻ (a verb) or -ഇന് (a noun). The noun is കൊതി, a craving."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൊതിക്കുക (kotikkuka) is native Dravidian: DEDR 2084 lists Malayalam കൊതി, \"eagerness, greed\", and the verb, \"to covet, to crave\" (DEDR 2084)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kotikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kotikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kotikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kotikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭṭile bhakṣaṇaṁ kaḻikkān ñān koticcu. — I longed to eat the food of home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭṭile bhakṣaṇaṁ kaḻikkān ñān koticcu.* — I longed to eat the food of home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to feel ashamed, then the Malayalam for loneliness, then say kotikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to feel ashamed, then the Malayalam for loneliness, then say *kotikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കൊതിക്കുക (kotikkuka) mean? (\"To long for; to crave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C518-anandam",
+      "sequence": 26090,
+      "title": "ആനന്ദം (ānandaṁ) — bliss; great joy",
+      "headword": "ആനന്ദം",
+      "romanization": "ānandaṁ",
+      "gloss": "bliss; great joy",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e651ff6bb8e3c09",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for loneliness, then the Malayalam for to long for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആനന്ദം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആനന്ദം — ānandaṁ — \"bliss; great joy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കുഞ്ഞിനെ കണ്ടപ്പോൾ മുത്തച്ഛന്റെ മുഖത്ത് ആനന്ദം നിറഞ്ഞു. kuññine kaṇṭappōḷ muttacchanṟe mukhattŭ ānandaṁ niṟaññu. When he saw the baby, joy filled grandfather's face."
+            },
+            {
+              "kind": "speech",
+              "text": "Stronger than സന്തോഷം; a word of songs and of writing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആനന്ദം (ānandaṁ) is borrowed from Sanskrit ānanda, \"happiness, bliss\" (CDIAL 1172)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānandaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānandaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānandaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānandaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuññine kaṇṭappōḷ muttacchanṟe mukhattŭ ānandaṁ niṟaññu. — When he saw the baby, joy filled grandfather's face.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuññine kaṇṭappōḷ muttacchanṟe mukhattŭ ānandaṁ niṟaññu.* — When he saw the baby, joy filled grandfather's face.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for loneliness, then the Malayalam for to long for, then say ānandaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for loneliness, then the Malayalam for to long for, then say *ānandaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആനന്ദം (ānandaṁ) mean? (\"Bliss; great joy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

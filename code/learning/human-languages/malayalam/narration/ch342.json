@@ -1,0 +1,739 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 342,
+  "title": "Must, Ought To, and Because",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:e2017f2d2f5c0bc0",
+  "lessons": [
+    {
+      "id": "ML-C342-pokanam",
+      "sequence": 16260,
+      "title": "ഞാൻ പോകണം (ñān pōkaṇaṁ) — I must go",
+      "headword": "ഞാൻ പോകണം",
+      "romanization": "ñān pōkaṇaṁ",
+      "gloss": "I must go — the വേണം you know, worn onto the verb; and ought to, and need not",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14eae5564d0dc0ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I want tea\". (enikkŭ cāya vēṇaṁ.) Then \"no need, I don't want it\". (vēṇṭa.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: -അണം on the verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take a verb's dictionary form, drop -ഉക, and add -അണം:"
+            },
+            {
+              "kind": "speech",
+              "text": "പോകുക becomes പോകണം, pōkaṇaṁ, വരുക becomes വരണം, varaṇaṁ, പഠിക്കുക becomes പഠിക്കണം, paṭhikkaṇaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Grammars explain -അണം as വേണം itself, worn down and joined to the verb. Who stands in front decides what it means:"
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ നാളെ പോകണം. ñān nāḷe pōkaṇaṁ. — \"I must go tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "എനിക്ക് നാളെ പോകണം. enikkŭ nāḷe pōkaṇaṁ. — \"I want to go tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "With ഞാൻ it is a duty; with the dative എനിക്ക്, as with വേണം alone, it is a wish or a need."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: ought to, need not, must not",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-ഏണ്ടതാണ് says what is right to do: \"ought to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നീ നേരത്തെ ഉറങ്ങേണ്ടതാണ്. nī nēratte uṟaṅṅēṇṭatāṇŭ. — \"You ought to sleep early.\""
+            },
+            {
+              "kind": "speech",
+              "text": "-ഏണ്ട, the വേണ്ട you know, says \"need not\": നീ വരേണ്ട (nī varēṇṭa), \"you need not come\". -അരുത് forbids: നീ വൈകരുത് (nī vaikarutŭ), \"you must not be late\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I must go tomorrow\", then \"I want to go tomorrow\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I must go tomorrow\", then \"I want to go tomorrow\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"you must come\", \"I must study\" — nī varaṇaṁ, ñān paṭhikkaṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"you must come\", \"I must study\" — *nī varaṇaṁ*, *ñān paṭhikkaṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You ought to sleep early.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You ought to sleep early.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You need not come\", then \"you must not be late\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You need not come\", then \"you must not be late\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I must go\"? (ñān pōkaṇaṁ.) What does enikkŭ pōkaṇaṁ say instead? (I want to go.) \"Ought to sleep\"? (uṟaṅṅēṇṭatāṇŭ.) \"Need not come\"? (varēṇṭa.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C342-audyogikamaya",
+      "sequence": 16270,
+      "title": "ഔദ്യോഗികമായ (audyōgikamāya) — official",
+      "headword": "ഔദ്യോഗികമായ",
+      "romanization": "audyōgikamāya",
+      "gloss": "official",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a75714374f0ee42b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"an official, an officer\", then \"a document\". (udyōgasthan, rēkha.) Then \"I must go\". (ñān pōkaṇaṁ.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഔദ്യോഗികമായ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഔദ്യോഗികമായ — audyōgikamāya — \"official\": of an office, done formally."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇത് ഒരു ഔദ്യോഗികമായ രേഖയാണ്. itŭ oru audyōgikamāya rēkhayāṇŭ. — \"This is an official document.\""
+            },
+            {
+              "kind": "speech",
+              "text": "In set phrases it stands before its noun without -മായ:"
+            },
+            {
+              "kind": "speech",
+              "text": "മലയാളം കേരളത്തിന്റെ ഔദ്യോഗിക ഭാഷയാണ്. malayāḷaṁ kēraḷattinṟe audyōgika bhāṣayāṇŭ. — \"Malayalam is the official language of Kerala.\""
+            },
+            {
+              "kind": "speech",
+              "text": "With -ആയി it becomes ഔദ്യോഗികമായി (audyōgikamāyi), \"officially\". Its first letter is new; the next lesson takes it out and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഔദ്യോഗികമായ (audyōgikamāya) is a learned word built the Sanskrit way on udyoga, \"undertaking, exertion\" (Monier-Williams), which Malayalam took up for a post in an office: ഉദ്യോഗസ്ഥൻ, \"an officer\", is the same root. Strengthening the first vowel, u to au, and adding -ika makes \"having to do with\" it, so \"of the office\". The Malayalam -മായ then makes it an adjective."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "audyōgikamāya, in five beats: au-dyō-gi-ka-māya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *audyōgikamāya*, in five beats: *au-dyō-gi-ka-māya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"This is an official document.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"This is an official document.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Malayalam is the official language of Kerala.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Malayalam is the official language of Kerala.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"officially\" — audyōgikamāyi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"officially\" — *audyōgikamāyi*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Official\"? (ഔദ്യോഗികമായ (audyōgikamāya).) \"The official language\"? (audyōgika bhāṣa.) Which word for a person shares its root? (ഉദ്യോഗസ്ഥൻ, \"an officer\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W342-au",
+      "sequence": 16280,
+      "title": "ഔ (au) — the letter that opens ഔദ്യോഗികമായ (audyōgikamāya)",
+      "headword": "ഔ",
+      "romanization": "au",
+      "gloss": "au — the letter that opens ഔദ്യോഗികമായ",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:3a900b6a06be72cd",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ഔ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ഔ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ഓ and ഊ once each, and name them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say ഔദ്യോഗികമായ (audyōgikamāya), \"official\". This lesson takes its first letter out and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ഔ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഔ — au, at the start of a word. It is rare: a handful of learned words begin with it."
+            },
+            {
+              "kind": "speech",
+              "text": "Its body is the shape of ഒ, which you write inside ഓ: an inner loop, a broad arch, a rounded lobe. On its right it carries the tail you have written on ഊ: a small lobe, a notch, and a broader lobe that sweeps back along its foot. A later letter lesson is about that tail alone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ഔ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഔ (au) is two parts side by side: the body of ഒ on the left, and on the right the tail you know from ഊ. Write the body first, then add the tail beside it: a small lobe, a notch, and a broader lobe that sweeps back along its foot."
+            },
+            {
+              "kind": "speech",
+              "text": "Write ഔ (au) yourself, slowly, and larger than it is printed. Copy the printed shape."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ഔ (au) at the start of ഔദ്യോഗികമായ (audyōgikamāya)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: ഔ at the start of **ഔദ്യോഗികമായ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ഔ three times, saying au as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ഔ three times, saying *au* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ഊ, then ഔ (au), from memory, and compare their tails",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ഊ, then ഔ, from memory, and compare their tails]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ഔദ്യോഗികമായ (audyōgikamāya)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ഔദ്യോഗികമായ**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ഔ? (au, at the start of a word.) Which word did it come from? (ഔദ്യോഗികമായ, audyōgikamāya, \"official\".) Which other letter carries the same tail? (ഊ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C342-vannatukondu",
+      "sequence": 16290,
+      "title": "വന്നതുകൊണ്ട് (vannatukoṇṭŭ) — because he came",
+      "headword": "വന്നതുകൊണ്ട്",
+      "romanization": "vannatukoṇṭŭ",
+      "gloss": "because (he) came — a reason built into one sentence; and a plan with its reason",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba80dda2ef3a9380",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I had a fever. So I did not come.\" Then the same with kāraṇaṁ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: -അതുകൊണ്ട് on a verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To put the reason inside the sentence, turn its verb into \"the …-ing\" with -അത്, as in vaikiyatŭ, and add കൊണ്ട്, \"with\":"
+            },
+            {
+              "kind": "speech",
+              "text": "വന്നു becomes വന്നതുകൊണ്ട് — vannatukoṇṭŭ — because (he) came."
+            },
+            {
+              "kind": "speech",
+              "text": "മഴ പെയ്തതുകൊണ്ട് ഞാൻ വന്നില്ല. maḻa peytatukoṇṭŭ ñān vannilla. — \"Because it rained, I did not come.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The present works the same way: വരുന്നു gives വരുന്നതുകൊണ്ട്. ഇല്ല gives ഇല്ലാത്തതുകൊണ്ട്:"
+            },
+            {
+              "kind": "speech",
+              "text": "സമയം ഇല്ലാത്തതുകൊണ്ട് ഞാൻ ബസിൽ പോയി. samayaṁ illāttatukoṇṭŭ ñān basil pōyi. — \"Because there was no time, I went by bus.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a plan and its reason",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A plan is in the future in -ഉം. Give its reason after കാരണം:"
+            },
+            {
+              "kind": "speech",
+              "text": "അടുത്ത വർഷം ഞാൻ കേരളത്തിൽ പോകും, കാരണം എനിക്ക് കൂടുതൽ മലയാളം പഠിക്കണം. aṭutta varṣaṁ ñān kēraḷattil pōkuṁ, kāraṇaṁ enikkŭ kūṭutal malayāḷaṁ paṭhikkaṇaṁ. — \"Next year I will go to Kerala, because I want to learn more Malayalam.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Because it rained, I did not come.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Because it rained, I did not come.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Because there was no time, I went by bus.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Because there was no time, I went by bus.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "next year's plan, and its reason after kāraṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: next year's plan, and its reason after *kāraṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one thing you must do this week, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one thing you must do this week, and why]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Because he came\"? (vannatukoṇṭŭ.) \"Because there was no …\"? (illāttatukoṇṭŭ.) Which word gives the reason for a plan? (കാരണം, after the plan.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R342-advice-and-reasons",
+      "sequence": 16300,
+      "title": "Review — advice and reasons",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "must, ought to and need not, with reasons and a plan, and the letter ഔ",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:5f49c2fa907b17ce",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"official\". (audyōgikamāya.) Write ഔ (au) once from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I must go tomorrow\", then \"I want to go tomorrow\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I must go tomorrow\", then \"I want to go tomorrow\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You ought to sleep early. You must not be late.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You ought to sleep early. You must not be late.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"This is an official document.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"This is an official document.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Because it rained, I did not come.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Because it rained, I did not come.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "next year's plan, with its reason after kāraṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: next year's plan, with its reason after *kāraṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think you must come. So I am calling.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think you must come. So I am calling.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ഔദ്യോഗിക ഭാഷ, then ഐക്യം",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ഔദ്യോഗിക ഭാഷ**, then **ഐക്യം**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I must\"? (ñān pōkaṇaṁ: -അണം on the verb.) \"Ought to\"? (-ഏണ്ടതാണ്.) \"Because it rained\"? (peytatukoṇṭŭ.) \"Official\"? (ഔദ്യോഗികമായ (audyōgikamāya), which opens with ഔ (au).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

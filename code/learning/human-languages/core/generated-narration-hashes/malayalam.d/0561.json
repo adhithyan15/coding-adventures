@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 561,
+  "sourceHash": "fnv1a64:0ce73069a7d2807b",
+  "lessonIds": [
+    "ML-C561-kacceri",
+    "ML-C561-vadyam",
+    "ML-C561-kottuka-drum",
+    "ML-C561-girrar",
+    "ML-C561-otakkulal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch561.txt",
+  "json": "malayalam/narration/ch561.json",
+  "textHash": "fnv1a64:06a61a21d083baf8",
+  "jsonHash": "fnv1a64:c0d9db63ec621bfa",
+  "findings": []
+}
