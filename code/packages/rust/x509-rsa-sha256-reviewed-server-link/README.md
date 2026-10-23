@@ -54,10 +54,13 @@ revocation; TLS; HTTP; OAuth transport; or network effects.
 `webpki-roots` remains reviewed public data only; no external executable TLS,
 X.509, or cryptographic implementation is linked here.
 
-The focused unit tests cover the security-sensitive exact-object predicate,
-the public two-link target-binding contract and complete-input getters,
+The focused unit and integration tests cover the security-sensitive
+exact-object predicate, the public two-link target binding with a static public
+Let's Encrypt precertificate, R13 intermediate, and reviewed ISRG Root X1, the
+byte-equal separately decoded target rejection, complete-input getters,
 unconstrained and constrained policy branches, exact reviewed `.tr` bytes,
 all-target-DNS matching, DNS-absent SANs, malformed inputs, independent decoder
-budgets, and payload-free failures. The upstream evidence types intentionally
-expose no forging constructors, so this package does not weaken those types
-with a test-only construction path.
+budgets, and payload-free failures. The static integration fixtures record
+their public sources and SHA-256 digests; tests perform no network effects. The
+upstream evidence types intentionally expose no forging constructors, so this
+package does not weaken those types with a test-only construction path.

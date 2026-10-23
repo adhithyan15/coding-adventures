@@ -9,8 +9,10 @@
 - Added a distinct non-copyable success type that retains the server policy,
   both authenticated links, complete intermediate policy, advanced path-length
   state, and reviewed-root selection.
-- Added a public-API contract test without introducing a forging constructor
-  for upstream evidence, while preserving payload-free mismatch failures.
+- Added public-API runtime coverage over a static public Let's Encrypt
+  target-to-R13-to-ISRG-Root-X1 chain, including retained target,
+  intermediate, root, and path-length evidence plus byte-equal distinct-target
+  rejection, without introducing a forging constructor for upstream evidence.
 
 ## 0.3.0 - 2026-10-22
 
