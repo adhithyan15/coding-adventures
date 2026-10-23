@@ -278,6 +278,104 @@ impl fmt::Debug for ValidatedX509RsaSha256ReviewedServerAnchorPolicy<'_, '_, '_,
     }
 }
 
+/// Non-copyable reviewed two-link server-path evidence after anchor DNS policy.
+///
+/// Success proves either that the selected snapshot entry carries no
+/// out-of-band name constraints or that its supported permitted DNS subtrees
+/// were applied to every dNSName in the exact target certificate retained by
+/// the complete target-to-intermediate-to-reviewed-root path. This is not
+/// evidence for excluded or non-DNS constraints, generalized path validation,
+/// revocation, TLS, HTTP, OAuth, or network authority.
+pub struct ValidatedX509RsaSha256ReviewedIntermediateServerAnchorPolicy<
+    'server_certificate,
+    'path_child_certificate,
+    'child_encoded,
+    'intermediate_certificate,
+    'intermediate_encoded,
+    'parent_child_certificate,
+    'parent_child_encoded,
+    'root_certificate,
+    'root_encoded,
+> {
+    reviewed_intermediate_server_path: BoundX509RsaSha256ReviewedIntermediateServerPath<
+        'server_certificate,
+        'path_child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >,
+    permitted_dns_names: Option<PermittedDnsNames>,
+}
+
+impl<
+        'server_certificate,
+        'path_child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >
+    ValidatedX509RsaSha256ReviewedIntermediateServerAnchorPolicy<
+        'server_certificate,
+        'path_child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >
+{
+    /// Return the consumed complete reviewed two-link server-path evidence.
+    pub const fn reviewed_intermediate_server_path(
+        &self,
+    ) -> &BoundX509RsaSha256ReviewedIntermediateServerPath<
+        'server_certificate,
+        'path_child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    > {
+        &self.reviewed_intermediate_server_path
+    }
+
+    /// Return DNS-constraint evidence when the selected anchor carried the
+    /// supported out-of-band constraint form.
+    pub const fn permitted_dns_names(&self) -> Option<PermittedDnsNames> {
+        self.permitted_dns_names
+    }
+}
+
+impl fmt::Debug
+    for ValidatedX509RsaSha256ReviewedIntermediateServerAnchorPolicy<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("ValidatedX509RsaSha256ReviewedIntermediateServerAnchorPolicy")
+    }
+}
+
 fn same_exact_object<T>(left: &T, right: &T) -> bool {
     std::ptr::eq(left, right)
 }
@@ -488,6 +586,75 @@ pub fn validate_x509_rsa_sha256_reviewed_server_anchor_policy<
         reviewed_server_link,
         permitted_dns_names,
     })
+}
+
+/// Apply supported selected-anchor DNS policy to one complete two-link path.
+///
+/// The reviewed snapshot is data-driven. Entries without constraints succeed
+/// without DNS evidence. For entries carrying constraint bytes, this function
+/// decodes those exact selected-entry bytes and the exact target certificate's
+/// Subject Alternative Name under separate caller-owned limits, then requires
+/// every target dNSName to satisfy the permitted subtree set. The complete
+/// target-to-intermediate-to-reviewed-root proof remains retained intact.
+pub fn validate_x509_rsa_sha256_reviewed_intermediate_server_anchor_policy<
+    'server_certificate,
+    'path_child_certificate,
+    'child_encoded,
+    'intermediate_certificate,
+    'intermediate_encoded,
+    'parent_child_certificate,
+    'parent_child_encoded,
+    'root_certificate,
+    'root_encoded,
+>(
+    reviewed_intermediate_server_path: BoundX509RsaSha256ReviewedIntermediateServerPath<
+        'server_certificate,
+        'path_child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedX509RsaSha256ReviewedIntermediateServerAnchorPolicy<
+        'server_certificate,
+        'path_child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >,
+    X509RsaSha256ReviewedServerLinkError,
+> {
+    let certificate = reviewed_intermediate_server_path
+        .server_policy()
+        .certificate();
+    let name_constraints = reviewed_intermediate_server_path
+        .reviewed_intermediate_path()
+        .reviewed_parent_link()
+        .reviewed_anchor()
+        .name_constraints();
+    let permitted_dns_names = evaluate_selected_anchor_dns_policy(
+        certificate,
+        name_constraints,
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
+
+    Ok(
+        ValidatedX509RsaSha256ReviewedIntermediateServerAnchorPolicy {
+            reviewed_intermediate_server_path,
+            permitted_dns_names,
+        },
+    )
 }
 
 #[cfg(test)]

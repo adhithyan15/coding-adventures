@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.0 - 2026-10-23
+
+### Added
+
+- Applied the selected reviewed root's supported permitted DNS constraints to
+  the exact target retained by a complete two-link server-path proof.
+- Added distinct non-copyable success evidence retaining the entire
+  target-to-intermediate-to-reviewed-root path plus optional payload-free DNS
+  count evidence.
+- Added public-API runtime coverage over the static public Let's Encrypt chain,
+  proving the unconstrained ISRG Root X1 branch retains the exact target and
+  reviewed root without weakening upstream evidence construction.
+
 ## 0.4.0 - 2026-10-23
 
 ### Added
