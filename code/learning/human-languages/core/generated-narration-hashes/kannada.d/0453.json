@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:6b5d74ace9cffbbd",
+  "lessonIds": [
+    "KA-C453-hadagu",
+    "KA-C453-navika",
+    "KA-C453-langaru",
+    "KA-C453-diksuci",
+    "KA-C453-sagara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch453.txt",
+  "json": "kannada/narration/ch453.json",
+  "textHash": "fnv1a64:bc5e506fbdba3d25",
+  "jsonHash": "fnv1a64:4cf2b3ffa16f8d16",
+  "findings": []
+}

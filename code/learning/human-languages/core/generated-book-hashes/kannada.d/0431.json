@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:32d3dd635f579974",
+  "lessonIds": [
+    "KA-C431-tirmanisu",
+    "KA-C431-samalocisu",
+    "KA-C431-samvada",
+    "KA-C431-tharavu",
+    "KA-C431-olagollu"
+  ],
+  "tex": "kannada/book/chapters/ch431-reaching-a-decision.tex"
+}

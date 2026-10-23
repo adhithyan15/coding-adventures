@@ -1,0 +1,11 @@
+{
+  "id": "KA-C432-takararu",
+  "pathSegment": "KA-PATH-432-HATTIKKU432",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-432-HATTIKKU432",
+      "order": 2
+    }
+  ]
+}

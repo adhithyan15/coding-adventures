@@ -1,0 +1,21 @@
+{
+  "chapter": 532,
+  "title": "Song, Dance and Laughter",
+  "label": "ch:ka-song-dance-and-laughter",
+  "canDo": "I can say a song, a dance form, humour, a lullaby and to reminisce.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-R532-review-526-532",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can say a song, a dance form, humour, a lullaby and to reminisce.",
+    "assesses": [
+      "KA-LEX-C532-GITA532-01",
+      "KA-LEX-C532-GITA532-02",
+      "KA-LEX-C532-GITA532-03",
+      "KA-LEX-C532-GITA532-04",
+      "KA-LEX-C532-GITA532-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C494-mududu",
+    "language": "kannada",
+    "chapter": 494,
+    "sequence": 25200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b31c8703a314446a"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 316,
+  "title": "Bigger, Best and How Long",
+  "label": "ch:ka-bigger-best-and-how-long",
+  "canDo": "I can compare two things with -ginta, say which is most with ellakkinta, say how long something has gone on with -inda, and give a span from … until.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-R316-comparing-and-time",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: compare with -ginta and ellakkinta, and say how long with -inda and varege.",
+    "assesses": [
+      "KA-GRAMMAR-C316-KINTA-01",
+      "KA-GRAMMAR-C316-MOST-01",
+      "KA-GRAMMAR-C316-SPAN-INDA-01",
+      "KA-GRAMMAR-C316-FROM-UNTIL-01"
+    ]
+  }
+}

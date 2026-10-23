@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "Paying Back",
+  "label": "ch:ka-paying-back",
+  "canDo": "I can say an instalment, arrears, savings, to recover dues and to submit.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C417-sallisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can say an instalment, arrears, savings, to recover dues and to submit.",
+    "assesses": [
+      "KA-LEX-C417-KANTU417-03",
+      "KA-LEX-C417-KANTU417-04",
+      "KA-LEX-C417-KANTU417-05"
+    ]
+  }
+}

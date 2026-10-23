@@ -1,0 +1,21 @@
+{
+  "chapter": 525,
+  "title": "In-laws and Cousins",
+  "label": "ch:ka-in-laws-and-cousins",
+  "canDo": "I can say a brother-in-law, husband's sister, husband's younger brother, a cousin and a brother.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-R525-review-519-525",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can say a brother-in-law, husband's sister, husband's younger brother, a cousin and a brother.",
+    "assesses": [
+      "KA-LEX-C525-NENTARU525-01",
+      "KA-LEX-C525-NENTARU525-02",
+      "KA-LEX-C525-NENTARU525-03",
+      "KA-LEX-C525-NENTARU525-04",
+      "KA-LEX-C525-NENTARU525-05"
+    ]
+  }
+}

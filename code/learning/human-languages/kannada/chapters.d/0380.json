@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "Winning People Over",
+  "label": "ch:ka-winning-people-over",
+  "canDo": "I can say to persuade, to motivate, to drive home, an inducement and to attract.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C380-akarsisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can say to persuade, to motivate, to drive home, an inducement and to attract.",
+    "assesses": [
+      "KA-LEX-C380-MANAVOLISU380-03",
+      "KA-LEX-C380-MANAVOLISU380-04",
+      "KA-LEX-C380-MANAVOLISU380-05"
+    ]
+  }
+}

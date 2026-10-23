@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C525-nadini",
+    "language": "kannada",
+    "chapter": 525,
+    "sequence": 26800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f67db3548d9501a4"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-512-ROGA512",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say blood pressure, a heart attack, bleeding, a stroke and to faint.",
+  "prerequisites": []
+}

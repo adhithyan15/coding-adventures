@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:ee820645f672ee79",
+  "lessonIds": [
+    "KA-C393-samsattu",
+    "KA-C393-mantri",
+    "KA-C393-samvidhana",
+    "KA-C393-prajaprabhutva",
+    "KA-C393-pratinidhisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch393.txt",
+  "json": "kannada/narration/ch393.json",
+  "textHash": "fnv1a64:be7b66cfca8cbb62",
+  "jsonHash": "fnv1a64:0fa07d7c1db7379e",
+  "findings": []
+}

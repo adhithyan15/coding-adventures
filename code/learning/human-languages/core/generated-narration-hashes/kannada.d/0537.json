@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:65c94f1609c8dce9",
+  "lessonIds": [
+    "KA-C537-kavi",
+    "KA-C537-kavite",
+    "KA-C537-sahitya",
+    "KA-C537-kalakrti",
+    "KA-C537-racisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch537.txt",
+  "json": "kannada/narration/ch537.json",
+  "textHash": "fnv1a64:92075a57d195c872",
+  "jsonHash": "fnv1a64:6d2de02e9a5c3ae3",
+  "findings": []
+}

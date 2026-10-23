@@ -1,0 +1,11 @@
+{
+  "id": "KA-C531-atike",
+  "pathSegment": "KA-PATH-531-ATIKE531",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-531-ATIKE531",
+      "order": 4
+    }
+  ]
+}

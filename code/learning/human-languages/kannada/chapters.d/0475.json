@@ -1,0 +1,21 @@
+{
+  "chapter": 475,
+  "title": "Into the Woods",
+  "label": "ch:ka-into-the-woods",
+  "canDo": "I can say woodland, a rainforest, a forest fire, to fell and to conserve.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-R475-review-469-475",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can say woodland, a rainforest, a forest fire, to fell and to conserve.",
+    "assesses": [
+      "KA-LEX-C475-ARANYA475-01",
+      "KA-LEX-C475-ARANYA475-02",
+      "KA-LEX-C475-ARANYA475-03",
+      "KA-LEX-C475-ARANYA475-04",
+      "KA-LEX-C475-ARANYA475-05"
+    ]
+  }
+}

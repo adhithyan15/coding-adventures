@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C386-sabubu",
+    "language": "kannada",
+    "chapter": 386,
+    "sequence": 19520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d04635c0a45752ec"
+  },
+  "findings": []
+}

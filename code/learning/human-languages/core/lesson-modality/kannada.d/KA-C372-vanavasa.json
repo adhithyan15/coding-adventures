@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C372-vanavasa",
+    "language": "kannada",
+    "chapter": 372,
+    "sequence": 18720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1dbd98adbd4ca60"
+  },
+  "findings": []
+}

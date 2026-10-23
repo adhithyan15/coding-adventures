@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R333-review-327-333",
+    "language": "kannada",
+    "chapter": 333,
+    "sequence": 16760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdfe3479ac7261a6"
+  },
+  "findings": []
+}

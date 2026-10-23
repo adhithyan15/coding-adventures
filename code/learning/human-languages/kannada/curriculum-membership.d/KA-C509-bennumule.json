@@ -1,0 +1,11 @@
+{
+  "id": "KA-C509-bennumule",
+  "pathSegment": "KA-PATH-509-ELUBU509",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-509-ELUBU509",
+      "order": 2
+    }
+  ]
+}

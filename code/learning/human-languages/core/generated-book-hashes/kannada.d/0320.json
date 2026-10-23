@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:42f5acf8c1860845",
+  "lessonIds": [
+    "KA-C320-varadigara",
+    "KA-C320-sambhavisu",
+    "KA-C320-prasara",
+    "KA-C320-bittarisu",
+    "KA-C320-sirsike"
+  ],
+  "tex": "kannada/book/chapters/ch320-the-reporter-on-the-spot.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C433-hali",
+  "pathSegment": "KA-PATH-433-RAIL433",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-433-RAIL433",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:d01b6f0783ac3606",
+  "lessonIds": [
+    "KA-C357-vancisu",
+    "KA-C357-gaupya",
+    "KA-C357-muccidu",
+    "KA-C357-bahirangapadisu",
+    "KA-C357-sancu"
+  ],
+  "tex": "kannada/book/chapters/ch357-a-hidden-fraud.tex"
+}

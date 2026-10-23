@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C391-baddhate",
+    "language": "kannada",
+    "chapter": 391,
+    "sequence": 19810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3f95f32168f3c57"
+  },
+  "findings": []
+}

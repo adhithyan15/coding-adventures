@@ -1,0 +1,19 @@
+{
+  "chapter": 463,
+  "title": "Hotel Services",
+  "label": "ch:ka-hotel-services",
+  "canDo": "I can say a service, a facility, to provide, a water heater and a resort.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C463-resart",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can say a service, a facility, to provide, a water heater and a resort.",
+    "assesses": [
+      "KA-LEX-C463-SEVE463-03",
+      "KA-LEX-C463-SEVE463-04",
+      "KA-LEX-C463-SEVE463-05"
+    ]
+  }
+}

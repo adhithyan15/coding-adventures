@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 540,
+  "title": "Kicks and Punches",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a74c9dc5ef2f1948",
+  "lessons": [
+    {
+      "id": "KA-C540-kabaddi",
+      "sequence": 27570,
+      "title": "ಕಬಡ್ಡಿ (kabaḍḍi) — kabaddi",
+      "headword": "ಕಬಡ್ಡಿ",
+      "romanization": "kabaḍḍi",
+      "gloss": "kabaddi",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48d2aba9725f04a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a lead, then the Kannada for to contend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಬಡ್ಡಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಬಡ್ಡಿ — kabaḍḍi — \"kabaddi\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಳ್ಳಿಯ ಹುಡುಗರು ಮೈದಾನದಲ್ಲಿ ಕಬಡ್ಡಿ ಆಡುತ್ತಾರೆ. haḷḷiya huḍugaru maidānadalli kabaḍḍi āḍuttāre. The village boys play kabaddi on the ground."
+            },
+            {
+              "kind": "speech",
+              "text": "A raider holds his breath, chants, and tags players on the other side."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಬಡ್ಡಿ (kabaḍḍi) is the name of a team game of south Asia; the origin of the name is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kabaḍḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kabaḍḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kabaḍḍi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kabaḍḍi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haḷḷiya huḍugaru maidānadalli kabaḍḍi āḍuttāre. — The village boys play kabaddi on the ground.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haḷḷiya huḍugaru maidānadalli kabaḍḍi āḍuttāre.* — The village boys play kabaddi on the ground.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a lead, then the Kannada for to contend, then say kabaḍḍi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a lead, then the Kannada for to contend, then say *kabaḍḍi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಬಡ್ಡಿ (kabaḍḍi) mean? (\"Kabaddi\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C540-kusti",
+      "sequence": 27580,
+      "title": "ಕುಸ್ತಿ (kusti) — wrestling",
+      "headword": "ಕುಸ್ತಿ",
+      "romanization": "kusti",
+      "gloss": "wrestling",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5db25ca03e26329b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to contend, then the Kannada for kabaddi."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕುಸ್ತಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕುಸ್ತಿ — kusti — \"wrestling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಜಾತ್ರೆಯಲ್ಲಿ ದೊಡ್ಡ ಕುಸ್ತಿ ಸ್ಪರ್ಧೆ ನಡೆಯಿತು. jātreyalli doḍḍa kusti spardhe naḍeyitu. A big wrestling contest was held at the fair."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕುಸ್ತಿಪಟು, a wrestler."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕುಸ್ತಿ (kusti) is usually traced to Persian kushtī, \"wrestling\", which is thought to have reached Kannada through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kusti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kusti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kusti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kusti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jātreyalli doḍḍa kusti spardhe naḍeyitu. — A big wrestling contest was held at the fair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jātreyalli doḍḍa kusti spardhe naḍeyitu.* — A big wrestling contest was held at the fair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to contend, then the Kannada for kabaddi, then say kusti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to contend, then the Kannada for kabaddi, then say *kusti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕುಸ್ತಿ (kusti) mean? (\"Wrestling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C540-golu",
+      "sequence": 27590,
+      "title": "ಗೋಲು (gōlu) — a goal in sport",
+      "headword": "ಗೋಲು",
+      "romanization": "gōlu",
+      "gloss": "a goal in sport",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8d3b5c76cc031dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for kabaddi, then the Kannada for wrestling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗೋಲು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗೋಲು — gōlu — \"a goal in sport\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕೊನೆಯ ನಿಮಿಷದಲ್ಲಿ ಅವನು ಗೋಲು ಹೊಡೆದನು. koneya nimiṣadalli avanu gōlu hoḍedanu. He scored a goal in the last minute."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗೋಲು (gōlu) ಹೊಡೆ, to score a goal. A goal in life is ಗುರಿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗೋಲು (gōlu) is a loan from English goal, with the -ು many loans take in speech."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gōlu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gōlu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gōlu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gōlu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koneya nimiṣadalli avanu gōlu hoḍedanu. — He scored a goal in the last minute.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koneya nimiṣadalli avanu gōlu hoḍedanu.* — He scored a goal in the last minute.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for kabaddi, then the Kannada for wrestling, then say gōlu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for kabaddi, then the Kannada for wrestling, then say *gōlu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗೋಲು (gōlu) mean? (\"A goal in sport\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C540-ode-kick",
+      "sequence": 27600,
+      "title": "ಒದೆ (ode) — to kick",
+      "headword": "ಒದೆ",
+      "romanization": "ode",
+      "gloss": "to kick",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5145748ca9439466",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for wrestling, then the Kannada for a goal in sport."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಒದೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒದೆ — ode — \"to kick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹುಡುಗ ಚೆಂಡನ್ನು ಜೋರಾಗಿ ಒದ್ದನು. huḍuga ceṇḍannu jōrāgi oddanu. The boy kicked the ball hard."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಒದ್ದೆ, odde."
+            },
+            {
+              "kind": "speech",
+              "text": "The past ಒದ್ದೆ, I kicked, is spelled like ಒದ್ದೆ, wet; the sentence tells them apart."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒದೆ (ode) is native Dravidian: DEDR 616 lists Kannada ode, odi, \"to kick, spur\", with odd- in the past."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ode",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ode*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ode, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ode*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huḍuga ceṇḍannu jōrāgi oddanu. — The boy kicked the ball hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huḍuga ceṇḍannu jōrāgi oddanu.* — The boy kicked the ball hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for wrestling, then the Kannada for a goal in sport, then say ode again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for wrestling, then the Kannada for a goal in sport, then say *ode* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಒದೆ (ode) mean? (\"To kick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C540-guddu",
+      "sequence": 27610,
+      "title": "ಗುದ್ದು (guddu) — to punch",
+      "headword": "ಗುದ್ದು",
+      "romanization": "guddu",
+      "gloss": "to punch",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a5e17b6d3aacd26e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a goal in sport, then the Kannada for to kick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗುದ್ದು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗುದ್ದು — guddu — \"to punch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆಟದಲ್ಲಿ ತಮ್ಮ ನನ್ನ ಬೆನ್ನಿಗೆ ಗುದ್ದಿದನು. āṭadalli tamma nanna bennige guddidanu. In the game my younger brother punched my back."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಗುದ್ದಿದೆ, guddide."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a noun, a punch."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗುದ್ದು (guddu) is native Dravidian: DEDR 1850 lists Kannada kuttu, \"to beat, strike\", and guddu, \"to strike with the fist\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guddu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guddu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guddu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guddu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṭadalli tamma nanna bennige guddidanu. — In the game my younger brother punched my back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṭadalli tamma nanna bennige guddidanu.* — In the game my younger brother punched my back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a goal in sport, then the Kannada for to kick, then say guddu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a goal in sport, then the Kannada for to kick, then say *guddu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗುದ್ದು (guddu) mean? (\"To punch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

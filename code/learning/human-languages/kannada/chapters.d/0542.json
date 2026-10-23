@@ -1,0 +1,19 @@
+{
+  "chapter": 542,
+  "title": "Rooms of a House",
+  "label": "ch:ka-rooms-of-a-house",
+  "canDo": "I can say an upper storey, a threshold, a hall, a basement and a cabinet.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C542-kapatu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 542: I can say an upper storey, a threshold, a hall, a basement and a cabinet.",
+    "assesses": [
+      "KA-LEX-C542-MANE542-03",
+      "KA-LEX-C542-MANE542-04",
+      "KA-LEX-C542-MANE542-05"
+    ]
+  }
+}

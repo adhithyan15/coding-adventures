@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:94720205e123c676",
+  "lessonIds": [
+    "KA-C322-raja",
+    "KA-C322-rani",
+    "KA-C322-alu-rule",
+    "KA-C322-simhasana",
+    "KA-C322-kirita"
+  ],
+  "tex": "kannada/book/chapters/ch322-the-king-and-the-queen.tex"
+}

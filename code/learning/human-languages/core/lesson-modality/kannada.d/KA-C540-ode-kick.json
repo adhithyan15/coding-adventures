@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C540-ode-kick",
+    "language": "kannada",
+    "chapter": 540,
+    "sequence": 27600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5145748ca9439466"
+  },
+  "findings": []
+}

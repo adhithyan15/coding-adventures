@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:c03526bb43df88a6",
+  "lessonIds": [
+    "KA-C474-tyajya",
+    "KA-C474-marubalake",
+    "KA-C474-vingadisu",
+    "KA-C474-tyajisu",
+    "KA-C474-saurasakti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch474.txt",
+  "json": "kannada/narration/ch474.json",
+  "textHash": "fnv1a64:27ebc56d9dc0855b",
+  "jsonHash": "fnv1a64:31b9407e901c88ed",
+  "findings": []
+}

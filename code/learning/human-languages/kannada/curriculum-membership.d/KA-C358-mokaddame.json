@@ -1,0 +1,11 @@
+{
+  "id": "KA-C358-mokaddame",
+  "pathSegment": "KA-PATH-358-VICHARANE358",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-358-VICHARANE358",
+      "order": 1
+    }
+  ]
+}

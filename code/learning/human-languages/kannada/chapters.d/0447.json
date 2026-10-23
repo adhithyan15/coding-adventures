@@ -1,0 +1,21 @@
+{
+  "chapter": 447,
+  "title": "A Blocked Road",
+  "label": "ch:ka-a-blocked-road",
+  "canDo": "I can say a roadblock, to clear away, to obstruct, to stall and to ply.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-R447-review-441-447",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can say a roadblock, to clear away, to obstruct, to stall and to ply.",
+    "assesses": [
+      "KA-LEX-C447-TADE447-01",
+      "KA-LEX-C447-TADE447-02",
+      "KA-LEX-C447-TADE447-03",
+      "KA-LEX-C447-TADE447-04",
+      "KA-LEX-C447-TADE447-05"
+    ]
+  }
+}

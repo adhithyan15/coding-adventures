@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:a1ea7851b567fc0e",
+  "lessonIds": [
+    "KA-C463-seve",
+    "KA-C463-saulabhya",
+    "KA-C463-odagisu",
+    "KA-C463-gisar",
+    "KA-C463-resart"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch463.txt",
+  "json": "kannada/narration/ch463.json",
+  "textHash": "fnv1a64:4db30861489c2eaf",
+  "jsonHash": "fnv1a64:d27a84f7063c61c2",
+  "findings": []
+}

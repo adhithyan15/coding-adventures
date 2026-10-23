@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:b4771f7a0d0ebdb6",
+  "lessonIds": [
+    "KA-C530-virama",
+    "KA-C530-manaranjane",
+    "KA-C530-harate",
+    "KA-C530-asvadisu",
+    "KA-C530-maimare"
+  ],
+  "tex": "kannada/book/chapters/ch530-free-time.tex"
+}

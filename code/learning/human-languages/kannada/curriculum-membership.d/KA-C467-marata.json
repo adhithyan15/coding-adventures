@@ -1,0 +1,11 @@
+{
+  "id": "KA-C467-marata",
+  "pathSegment": "KA-PATH-467-MARUKATTE467",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-467-MARUKATTE467",
+      "order": 3
+    }
+  ]
+}

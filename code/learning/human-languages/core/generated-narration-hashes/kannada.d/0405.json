@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:0d6a2bd128da9b5a",
+  "lessonIds": [
+    "KA-C405-maitri",
+    "KA-C405-sandhana",
+    "KA-C405-madhyasthike",
+    "KA-C405-hondanike",
+    "KA-C405-pracodisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch405.txt",
+  "json": "kannada/narration/ch405.json",
+  "textHash": "fnv1a64:b55d44e42c8fe103",
+  "jsonHash": "fnv1a64:feb1e0ae3db78f56",
+  "findings": []
+}

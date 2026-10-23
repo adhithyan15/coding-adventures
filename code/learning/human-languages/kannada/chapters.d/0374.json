@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "Magic and Miracles",
+  "label": "ch:ka-magic-and-miracles",
+  "canDo": "I can say magic, a miracle, false, a noise and to kill.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C374-kollu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can say magic, a miracle, false, a noise and to kill.",
+    "assesses": [
+      "KA-LEX-C374-JADU374-03",
+      "KA-LEX-C374-JADU374-04",
+      "KA-LEX-C374-JADU374-05"
+    ]
+  }
+}

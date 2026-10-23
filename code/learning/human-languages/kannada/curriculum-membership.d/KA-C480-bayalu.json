@@ -1,0 +1,11 @@
+{
+  "id": "KA-C480-bayalu",
+  "pathSegment": "KA-PATH-480-BAYALU480",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-480-BAYALU480",
+      "order": 2
+    }
+  ]
+}

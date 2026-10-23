@@ -1,0 +1,11 @@
+{
+  "id": "KA-C445-tirugu",
+  "pathSegment": "KA-PATH-445-PARK445",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-445-PARK445",
+      "order": 1
+    }
+  ]
+}

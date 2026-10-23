@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C381-pariganisu",
+    "language": "kannada",
+    "chapter": 381,
+    "sequence": 19250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f10571991c9228d"
+  },
+  "findings": []
+}

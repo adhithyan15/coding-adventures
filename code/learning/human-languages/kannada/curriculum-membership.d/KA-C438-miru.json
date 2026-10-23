@@ -1,0 +1,11 @@
+{
+  "id": "KA-C438-miru",
+  "pathSegment": "KA-PATH-438-TUKA438",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-438-TUKA438",
+      "order": 2
+    }
+  ]
+}

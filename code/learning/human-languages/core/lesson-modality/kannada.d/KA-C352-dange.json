@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C352-dange",
+    "language": "kannada",
+    "chapter": 352,
+    "sequence": 17690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6049ce31466f3c2"
+  },
+  "findings": []
+}

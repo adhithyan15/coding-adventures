@@ -1,0 +1,11 @@
+{
+  "id": "KA-C336-senapati",
+  "pathSegment": "KA-PATH-336-SAINYA336",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-336-SAINYA336",
+      "order": 1
+    }
+  ]
+}

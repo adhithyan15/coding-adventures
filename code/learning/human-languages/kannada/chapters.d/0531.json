@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "Games at Home",
+  "label": "ch:ka-games-at-home",
+  "canDo": "I can say a dice game, carrom, hide-and-seek, a swing and a toy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C531-atike",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can say a dice game, carrom, hide-and-seek, a swing and a toy.",
+    "assesses": [
+      "KA-LEX-C531-ATIKE531-03",
+      "KA-LEX-C531-ATIKE531-04",
+      "KA-LEX-C531-ATIKE531-05"
+    ]
+  }
+}

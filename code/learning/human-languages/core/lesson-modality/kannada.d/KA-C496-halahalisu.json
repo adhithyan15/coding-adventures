@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C496-halahalisu",
+    "language": "kannada",
+    "chapter": 496,
+    "sequence": 25310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3d24a3179d3edf1"
+  },
+  "findings": []
+}

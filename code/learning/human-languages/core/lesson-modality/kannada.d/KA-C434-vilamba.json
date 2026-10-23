@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C434-vilamba",
+    "language": "kannada",
+    "chapter": 434,
+    "sequence": 22050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e55c01f7119e39a"
+  },
+  "findings": []
+}

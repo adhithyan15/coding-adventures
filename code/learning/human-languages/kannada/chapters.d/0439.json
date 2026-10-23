@@ -1,0 +1,19 @@
+{
+  "chapter": 439,
+  "title": "Crossing a Border",
+  "label": "ch:ka-crossing-a-border",
+  "canDo": "I can say a visa, customs, a customs duty, to exchange money and a cash machine.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C439-etiem",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can say a visa, customs, a customs duty, to exchange money and a cash machine.",
+    "assesses": [
+      "KA-LEX-C439-GADI439-03",
+      "KA-LEX-C439-GADI439-04",
+      "KA-LEX-C439-GADI439-05"
+    ]
+  }
+}

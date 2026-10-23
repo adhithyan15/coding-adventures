@@ -1,0 +1,11 @@
+{
+  "id": "KA-C364-tirulu",
+  "pathSegment": "KA-PATH-364-DINACHARI364",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-364-DINACHARI364",
+      "order": 4
+    }
+  ]
+}

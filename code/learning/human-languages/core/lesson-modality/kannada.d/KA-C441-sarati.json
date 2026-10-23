@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C441-sarati",
+    "language": "kannada",
+    "chapter": 441,
+    "sequence": 22410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2708b4694fd021c7"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C488-biruku",
+  "pathSegment": "KA-PATH-488-BISIGALI488",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-488-BISIGALI488",
+      "order": 3
+    }
+  ]
+}

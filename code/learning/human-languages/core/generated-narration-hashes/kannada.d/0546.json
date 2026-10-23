@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:fad17df70f52c755",
+  "lessonIds": [
+    "KA-C546-kaitota",
+    "KA-C546-nerehore",
+    "KA-C546-sunna",
+    "KA-C546-tarasi",
+    "KA-C546-udu",
+    "KA-R546-review-540-546",
+    "KA-R546-review-final-546"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch546.txt",
+  "json": "kannada/narration/ch546.json",
+  "textHash": "fnv1a64:8106d2705072dcbc",
+  "jsonHash": "fnv1a64:e57c76440075f7d2",
+  "findings": []
+}

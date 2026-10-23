@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:e36e05e7563a882b",
+  "lessonIds": [
+    "KA-C510-noyu",
+    "KA-C510-jomu",
+    "KA-C510-ubbu",
+    "KA-C510-osadu",
+    "KA-C510-davade"
+  ],
+  "tex": "kannada/book/chapters/ch510-aches-and-swellings.tex"
+}

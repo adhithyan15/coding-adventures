@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R390-review-384-390",
+    "language": "kannada",
+    "chapter": 390,
+    "sequence": 19760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79c182954f9a44cf"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C531-atike",
+    "language": "kannada",
+    "chapter": 531,
+    "sequence": 27140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a8b6a709880d8ab"
+  },
+  "findings": []
+}

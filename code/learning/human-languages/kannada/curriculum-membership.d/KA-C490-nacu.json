@@ -1,0 +1,11 @@
+{
+  "id": "KA-C490-nacu",
+  "pathSegment": "KA-PATH-490-BHAYA490",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-490-BHAYA490",
+      "order": 1
+    }
+  ]
+}

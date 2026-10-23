@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:2a9f3de1cf0d2d0c",
+  "lessonIds": [
+    "KA-C424-avalokisu",
+    "KA-C424-vimarsisu",
+    "KA-C424-suttole",
+    "KA-C424-nirdista",
+    "KA-C424-parisodhane"
+  ],
+  "tex": "kannada/book/chapters/ch424-checks-and-reviews.tex"
+}

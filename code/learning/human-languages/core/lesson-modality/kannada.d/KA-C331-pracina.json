@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C331-pracina",
+    "language": "kannada",
+    "chapter": 331,
+    "sequence": 16640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe7db0a10c7b641a"
+  },
+  "findings": []
+}

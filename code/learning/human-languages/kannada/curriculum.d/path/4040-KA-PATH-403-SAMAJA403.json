@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-403-SAMAJA403",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "KA-EXT-403-SAMAJA403"
+  ],
+  "after": []
+}

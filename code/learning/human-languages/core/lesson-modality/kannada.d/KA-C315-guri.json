@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C315-guri",
+    "language": "kannada",
+    "chapter": 315,
+    "sequence": 15270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:942ea95484cc60af"
+  },
+  "findings": []
+}

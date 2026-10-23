@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:2c76d48928d746a5",
+  "lessonIds": [
+    "KA-C411-sarattu",
+    "KA-C411-oppanda",
+    "KA-C411-odambadike",
+    "KA-C411-iderisu",
+    "KA-C411-badhyate",
+    "KA-R411-review-405-411"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch411.txt",
+  "json": "kannada/narration/ch411.json",
+  "textHash": "fnv1a64:9cb58d3497dd68b1",
+  "jsonHash": "fnv1a64:bc8b2ffb7257274a",
+  "findings": []
+}

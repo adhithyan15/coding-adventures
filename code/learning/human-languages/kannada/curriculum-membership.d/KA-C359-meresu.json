@@ -1,0 +1,11 @@
+{
+  "id": "KA-C359-meresu",
+  "pathSegment": "KA-PATH-359-UTSAVA359",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-359-UTSAVA359",
+      "order": 3
+    }
+  ]
+}

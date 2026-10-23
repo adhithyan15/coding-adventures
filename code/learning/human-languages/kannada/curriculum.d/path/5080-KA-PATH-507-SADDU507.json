@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-507-SADDU507",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-507-SADDU507"
+  ],
+  "after": []
+}

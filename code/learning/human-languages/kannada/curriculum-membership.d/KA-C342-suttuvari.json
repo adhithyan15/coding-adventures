@@ -1,0 +1,11 @@
+{
+  "id": "KA-C342-suttuvari",
+  "pathSegment": "KA-PATH-342-MUTTIGE342",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-342-MUTTIGE342",
+      "order": 2
+    }
+  ]
+}

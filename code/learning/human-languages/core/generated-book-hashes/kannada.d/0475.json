@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:afb655b09efa0a65",
+  "lessonIds": [
+    "KA-C475-aranya",
+    "KA-C475-malekadu",
+    "KA-C475-kadgiccu",
+    "KA-C475-kadi-fell",
+    "KA-C475-samraksisu",
+    "KA-R475-review-469-475"
+  ],
+  "tex": "kannada/book/chapters/ch475-into-the-woods.tex"
+}

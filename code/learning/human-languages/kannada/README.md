@@ -89,6 +89,36 @@ pieces taught before the whole; and a book you can read straight through.
   **10**, down from 18, and closure violations at **30**, down from 36. The ten
   that remain are the digits ೦–೯, logged as HL-C194.
 
+- **Chapters 309–318 — the B1 core** ([`lessons/`](./lessons/), `KA-C309-*`
+  to `KA-W318-six-lines`): two chapters for each of the five B1 spine nodes.
+  Narrating (the past by person, -ುತ್ತಿದ್ದೆ for a scene or a habit, -ುವಾಗ,
+  ಮೊದಲು … ಅದರ ನಂತರ … ಕೊನೆಗೆ), giving reasons (… ಅಂತ ನನಗೆ ಅನಿಸುತ್ತದೆ,
+  ಹಾಗಾಗಿ, -ಬೇಕು and -ಬಾರದು, ಯಾಕೆಂದರೆ), travel (the way, a ticket, a missed
+  bus, a lost bag), experience (ನನಗೆ … ಆಯಿತು, -ಗಿಂತ, -ಇಂದ for how long) and
+  conditions (-ದರೆ with ಒಂದು ವೇಳೆ, … ಮೇಲೆ ಅವಲಂಬಿಸಿದೆ, the unreal -ಇದ್ದರೆ …
+  -ುತ್ತಿದ್ದೆ), closing on a six-line writing task. Two letter lessons sit right
+  after their anchor words: ಛ (ಸ್ವಚ್ಛ, "clean") and the independent ಔ (ಔಷಧ,
+  "a medicine"), taught by recognition and by copying the printed shape, with
+  no stroke-order claim.
+- **Chapters 319–546 — the B1 vocabulary** ([`lessons/`](./lessons/),
+  `KA-C319-*` to `KA-R546-*`): 1,140 headwords, 348 of them verbs (each shown
+  with its past, ಓಡಿಹೋದೆ "I ran away"), one word per lesson, with nine reviews
+  in each of the four tranches, one per B1 node:
+  - 319–375: narrating (news, incidents and the courts, life events and
+    ceremonies, history and legends);
+  - 376–432: reasons and conditions (opinion and argument, society and the
+    law, education, terms and chances);
+  - 433–489: travel (transport, lodging, the town, nature and the weather);
+  - 490–546: experience (feelings and character, health, work, family, free
+    time, the arts, the home).
+
+  Origins cite DEDR for native Dravidian words and CDIAL or Monier-Williams
+  for Sanskrit ones, name the donor of a loan, and are hedged where no source
+  settles them. The first words of chapters 319–326 practise the core's
+  conditions again, and chapters 333–334 and 350–351 revisit ಛ and ಔ through
+  ಸ್ವಚ್ಛ and ಔಷಧ. With the core, Kannada teaches 2,535 headwords at or below
+  B1 and **attains B1** on the level gate.
+
 Kannada now covers **fourteen** of the shared spine's core forty verbs.
 
 Every Kannada lesson now remains below five effective minutes, including the

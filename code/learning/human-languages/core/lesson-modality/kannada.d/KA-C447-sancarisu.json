@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C447-sancarisu",
+    "language": "kannada",
+    "chapter": 447,
+    "sequence": 22750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14d77169875cfa88"
+  },
+  "findings": []
+}

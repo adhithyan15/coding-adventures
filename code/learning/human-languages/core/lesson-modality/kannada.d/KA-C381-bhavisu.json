@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C381-bhavisu",
+    "language": "kannada",
+    "chapter": 381,
+    "sequence": 19260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76707a8a1d7c1700"
+  },
+  "findings": []
+}

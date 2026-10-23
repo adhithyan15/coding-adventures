@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C338-pasarisu",
+    "language": "kannada",
+    "chapter": 338,
+    "sequence": 16980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0232768f9ab3c8ed"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C353-varasudara",
+    "language": "kannada",
+    "chapter": 353,
+    "sequence": 17750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c66b6dfa76bf1cf2"
+  },
+  "findings": []
+}

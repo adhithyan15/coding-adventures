@@ -1,0 +1,10 @@
+{
+  "id": "KA-EXT-311-OPINION-SO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can give my view with … anta nanage anisuttade and nanna abhiprāyadalli, ask for someone else's, and give a result with hāgāgi, adakkē and ādudarinda.",
+  "prerequisites": [
+    "KA-EXT-310-STORY-ORDER"
+  ]
+}

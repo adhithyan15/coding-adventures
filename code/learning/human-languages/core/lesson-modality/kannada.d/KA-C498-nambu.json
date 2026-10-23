@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C498-nambu",
+    "language": "kannada",
+    "chapter": 498,
+    "sequence": 25410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64a943e1f4797da3"
+  },
+  "findings": []
+}

@@ -376,6 +376,11 @@ describe("the gate that would have caught the A2 claim", () => {
     // -ఆలి, travel, comparison with కంటే, and the conditional -తే with the unreal
     // -ఇ ఉంటే, realizing all five B1 nodes, plus letter lessons for ఈ ఓ ఊ ఔ ః)
     // and chapters 326-549 (1,120 headwords, 388 verbs).
+    // Kannada followed as the twelfth, with chapters 309-318 (the B1 core: the
+    // past by person and -ುತ್ತಿದ್ದೆ, reasons, travel, experience, -ದರೆ and the
+    // unreal -ಇದ್ದರೆ … -ುತ್ತಿದ್ದೆ, realizing all five B1 nodes, plus letter
+    // lessons for ಛ and ಔ) and chapters 319-546 (1,140 headwords, 348 verbs),
+    // which moved it from the A2 row of HELD to B1.
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

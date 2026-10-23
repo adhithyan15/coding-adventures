@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:c200a4d6f7cdabec",
+  "lessonIds": [
+    "KA-C472-halagu",
+    "KA-C472-emaru",
+    "KA-C472-paragu",
+    "KA-C472-asraya",
+    "KA-C472-sahayavani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch472.txt",
+  "json": "kannada/narration/ch472.json",
+  "textHash": "fnv1a64:904165f5aa022449",
+  "jsonHash": "fnv1a64:9f029376b5f4b722",
+  "findings": []
+}

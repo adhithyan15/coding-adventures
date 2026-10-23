@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:99219847afca61cd",
+  "lessonIds": [
+    "KA-C452-sarige",
+    "KA-C452-dipo",
+    "KA-C452-saraku",
+    "KA-C452-sagisu",
+    "KA-C452-koriyar"
+  ],
+  "tex": "kannada/book/chapters/ch452-moving-goods.tex"
+}

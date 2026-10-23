@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 373,
+  "title": "The Rise and Fall of a Kingdom",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7dbd6f9e4d32a04c",
+  "lessons": [
+    {
+      "id": "KA-C373-udaya",
+      "sequence": 18770,
+      "title": "ಉದಯ (udaya) — a rise; a dawn",
+      "headword": "ಉದಯ",
+      "romanization": "udaya",
+      "gloss": "a rise; a dawn",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41f78f3bb52e7f73",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for former, then the Kannada for theft."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉದಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉದಯ — udaya — \"a rise; a dawn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ರಾಜ್ಯದ ಉದಯ ಒಂದು ಸಣ್ಣ ಹಳ್ಳಿಯಲ್ಲಿ ಆಯಿತು. ā rājyada udaya ondu saṇṇa haḷḷiyalli āyitu. The rise of that kingdom began in a small village."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸೂರ್ಯೋದಯ is sunrise. Of a kingdom or a leader, its rise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉದಯ (udaya) is borrowed from Sanskrit udaya, \"rise, rising of the sun\" (CDIAL 1931)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udaya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udaya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udaya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udaya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā rājyada udaya ondu saṇṇa haḷḷiyalli āyitu. — The rise of that kingdom began in a small village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā rājyada udaya ondu saṇṇa haḷḷiyalli āyitu.* — The rise of that kingdom began in a small village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for former, then the Kannada for theft, then say udaya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for former, then the Kannada for theft, then say *udaya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಉದಯ (udaya) mean? (\"A rise; a dawn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C373-patana",
+      "sequence": 18780,
+      "title": "ಪತನ (patana) — a downfall; a fall",
+      "headword": "ಪತನ",
+      "romanization": "patana",
+      "gloss": "a downfall; a fall",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00ca80b53e57165b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for theft, then the Kannada for a rise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪತನ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪತನ — patana — \"a downfall; a fall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸೋಮಾರಿ ರಾಜರಿಂದ ಆ ಸಾಮ್ರಾಜ್ಯದ ಪತನ ಆಯಿತು. sōmāri rājarinda ā sāmrājyada patana āyitu. That empire fell because of lazy kings."
+            },
+            {
+              "kind": "speech",
+              "text": "The opposite of ಉದಯ (udaya): the fall of a kingdom, a government or a price."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪತನ (patana) is borrowed from Sanskrit patana, \"the act of flying or coming down, falling\" (CDIAL 7724)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sōmāri rājarinda ā sāmrājyada patana āyitu. — That empire fell because of lazy kings.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sōmāri rājarinda ā sāmrājyada patana āyitu.* — That empire fell because of lazy kings.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for theft, then the Kannada for a rise, then say patana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for theft, then the Kannada for a rise, then say *patana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪತನ (patana) mean? (\"A downfall; a fall\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C373-gatakala",
+      "sequence": 18790,
+      "title": "ಗತಕಾಲ (gatakāla) — the past; bygone days",
+      "headword": "ಗತಕಾಲ",
+      "romanization": "gatakāla",
+      "gloss": "the past; bygone days",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e26ecd36a719afd2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a rise, then the Kannada for a downfall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗತಕಾಲ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗತಕಾಲ — gatakāla — \"the past; bygone days\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಜ್ಜ ಯಾವಾಗಲೂ ಗತಕಾಲದ ವೈಭವದ ಬಗ್ಗೆ ಮಾತಾಡುತ್ತಾರೆ. ajja yāvāgalū gatakālada vaibhavada bagge mātāḍuttāre. Grandfather always talks about the glory of the past."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗತ, gone, and ಕಾಲ, time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗತಕಾಲ (gatakāla) is borrowed from Sanskrit, a compound of gata, \"gone, past\" (CDIAL 4008), and kāla, \"time\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gatakāla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gatakāla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gatakāla, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gatakāla*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajja yāvāgalū gatakālada vaibhavada bagge mātāḍuttāre. — Grandfather always talks about the glory of the past.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajja yāvāgalū gatakālada vaibhavada bagge mātāḍuttāre.* — Grandfather always talks about the glory of the past.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a rise, then the Kannada for a downfall, then say gatakāla again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a rise, then the Kannada for a downfall, then say *gatakāla* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗತಕಾಲ (gatakāla) mean? (\"The past; bygone days\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C373-vrttanta",
+      "sequence": 18800,
+      "title": "ವೃತ್ತಾಂತ (vṛttānta) — a narrative; an account",
+      "headword": "ವೃತ್ತಾಂತ",
+      "romanization": "vṛttānta",
+      "gloss": "a narrative; an account",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:631e5c4e66414b45",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a downfall, then the Kannada for the past."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವೃತ್ತಾಂತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವೃತ್ತಾಂತ — vṛttānta — \"a narrative; an account\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರವಾಸಿ ತನ್ನ ಪ್ರಯಾಣದ ವೃತ್ತಾಂತ ಬರೆದನು. pravāsi tanna prayāṇada vṛttānta baredanu. The traveller wrote an account of his journey."
+            },
+            {
+              "kind": "speech",
+              "text": "A full telling of what happened, in order."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವೃತ್ತಾಂತ (vṛttānta) is borrowed from Sanskrit vṛttānta, \"the end of a course of action, an occurrence, a tale\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛttānta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛttānta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛttānta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛttānta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravāsi tanna prayāṇada vṛttānta baredanu. — The traveller wrote an account of his journey.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravāsi tanna prayāṇada vṛttānta baredanu.* — The traveller wrote an account of his journey.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a downfall, then the Kannada for the past, then say vṛttānta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a downfall, then the Kannada for the past, then say *vṛttānta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವೃತ್ತಾಂತ (vṛttānta) mean? (\"A narrative; an account\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C373-vijaya",
+      "sequence": 18810,
+      "title": "ವಿಜಯ (vijaya) — a triumph; a victory",
+      "headword": "ವಿಜಯ",
+      "romanization": "vijaya",
+      "gloss": "a triumph; a victory",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18699650a7d0a584",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for the past, then the Kannada for a narrative."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಿಜಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಜಯ — vijaya — \"a triumph; a victory\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಯುದ್ಧದಲ್ಲಿ ವಿಜಯದ ನಂತರ ರಾಜ ಊರಿಗೆ ಹಿಂತಿರುಗಿದನು. yuddhadalli vijayada nantara rāja ūrige hintirugidanu. After the victory in the war the king returned to the town."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಿಜಯ (vijaya) is the grand word; ಗೆಲುವು is the everyday one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಜಯ (vijaya) is borrowed from Sanskrit vijaya, \"contest for victory, victory, conquest, triumph\" (Monier-Williams), from ji, \"to win\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vijaya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vijaya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vijaya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vijaya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuddhadalli vijayada nantara rāja ūrige hintirugidanu. — After the victory in the war the king returned to the town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuddhadalli vijayada nantara rāja ūrige hintirugidanu.* — After the victory in the war the king returned to the town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for the past, then the Kannada for a narrative, then say vijaya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for the past, then the Kannada for a narrative, then say *vijaya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಿಜಯ (vijaya) mean? (\"A triumph; a victory\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

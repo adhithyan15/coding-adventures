@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C416-pramanavacana",
+    "language": "kannada",
+    "chapter": 416,
+    "sequence": 21090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27d97412b2099852"
+  },
+  "findings": []
+}

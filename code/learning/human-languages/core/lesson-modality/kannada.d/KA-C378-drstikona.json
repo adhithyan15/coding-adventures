@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C378-drstikona",
+    "language": "kannada",
+    "chapter": 378,
+    "sequence": 19100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff6e42a08695ef34"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C473-masi",
+  "pathSegment": "KA-PATH-473-PARISARA473",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-473-PARISARA473",
+      "order": 3
+    }
+  ]
+}

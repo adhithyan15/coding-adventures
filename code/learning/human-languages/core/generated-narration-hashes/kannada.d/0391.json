@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:90401508fdc7ab72",
+  "lessonIds": [
+    "KA-C391-samanate",
+    "KA-C391-taratamya-madu",
+    "KA-C391-sosisu",
+    "KA-C391-sabalikarana",
+    "KA-C391-baddhate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch391.txt",
+  "json": "kannada/narration/ch391.json",
+  "textHash": "fnv1a64:44a90d0d09859186",
+  "jsonHash": "fnv1a64:cb84be838bee6a88",
+  "findings": []
+}

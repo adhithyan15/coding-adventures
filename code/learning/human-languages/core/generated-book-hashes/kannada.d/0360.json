@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:bc272aa30f134b10",
+  "lessonIds": [
+    "KA-C360-beteyadu",
+    "KA-C360-aledadu",
+    "KA-C360-honcu-haku",
+    "KA-C360-nuggu",
+    "KA-C360-muri"
+  ],
+  "tex": "kannada/book/chapters/ch360-the-hunt-in-the-forest.tex"
+}

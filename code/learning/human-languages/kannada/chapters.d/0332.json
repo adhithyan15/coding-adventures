@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "After the Disaster",
+  "label": "ch:ka-after-the-disaster",
+  "canDo": "I can say a disaster, to be caught, to survive, a victim and a forewarning.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C332-munsucane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can say a disaster, to be caught, to survive, a victim and a forewarning.",
+    "assesses": [
+      "KA-LEX-C332-VIPATTU332-03",
+      "KA-LEX-C332-VIPATTU332-04",
+      "KA-LEX-C332-VIPATTU332-05"
+    ]
+  }
+}

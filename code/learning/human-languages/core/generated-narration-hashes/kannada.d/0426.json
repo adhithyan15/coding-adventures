@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:7b238b4fce7194f8",
+  "lessonIds": [
+    "KA-C426-tolagisu",
+    "KA-C426-kadeganisu",
+    "KA-C426-jagaruka",
+    "KA-C426-todaku",
+    "KA-C426-pratikula"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch426.txt",
+  "json": "kannada/narration/ch426.json",
+  "textHash": "fnv1a64:f4a3b7074a35a800",
+  "jsonHash": "fnv1a64:7ffc60a7e254da4d",
+  "findings": []
+}

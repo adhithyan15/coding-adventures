@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:798b82aff08929ba",
+  "lessonIds": [
+    "KA-C520-todagu",
+    "KA-C520-vahisu",
+    "KA-C520-palagu",
+    "KA-C520-melvicarane",
+    "KA-C520-samayapalane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch520.txt",
+  "json": "kannada/narration/ch520.json",
+  "textHash": "fnv1a64:2f969976758e22a4",
+  "jsonHash": "fnv1a64:290c50240693b768",
+  "findings": []
+}

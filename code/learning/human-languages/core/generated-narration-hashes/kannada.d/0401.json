@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:b3e395a102c578be",
+  "lessonIds": [
+    "KA-C401-abhivrddhi",
+    "KA-C401-arthika",
+    "KA-C401-hanakasu",
+    "KA-C401-uttejisu",
+    "KA-C401-hudu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch401.txt",
+  "json": "kannada/narration/ch401.json",
+  "textHash": "fnv1a64:839bed08291ed980",
+  "jsonHash": "fnv1a64:0f24b4fdbac5da25",
+  "findings": []
+}

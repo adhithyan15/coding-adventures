@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "A Late Train",
+  "label": "ch:ka-a-late-train",
+  "canDo": "I can say a delay, to arrive, to depart, a halt and to enquire.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C434-vicarisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can say a delay, to arrive, to depart, a halt and to enquire.",
+    "assesses": [
+      "KA-LEX-C434-VILAMBA434-03",
+      "KA-LEX-C434-VILAMBA434-04",
+      "KA-LEX-C434-VILAMBA434-05"
+    ]
+  }
+}

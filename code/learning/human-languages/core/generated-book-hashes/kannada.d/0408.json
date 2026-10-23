@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:afb291511e841fa9",
+  "lessonIds": [
+    "KA-C408-kendrikarisu",
+    "KA-C408-adhyayana",
+    "KA-C408-aicchika",
+    "KA-C408-pathyakrama",
+    "KA-C408-punaravartane"
+  ],
+  "tex": "kannada/book/chapters/ch408-studying-well.tex"
+}

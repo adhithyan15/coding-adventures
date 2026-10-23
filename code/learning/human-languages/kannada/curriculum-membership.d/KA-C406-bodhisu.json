@@ -1,0 +1,11 @@
+{
+  "id": "KA-C406-bodhisu",
+  "pathSegment": "KA-PATH-406-VISHVAVIDYALAYA406",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-406-VISHVAVIDYALAYA406",
+      "order": 4
+    }
+  ]
+}

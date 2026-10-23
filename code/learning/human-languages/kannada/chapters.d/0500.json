@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "What Someone Is Like",
+  "label": "ch:ka-what-someone-is-like",
+  "canDo": "I can say temperament, personality, conduct, attitude and to imitate.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C500-anukarisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can say temperament, personality, conduct, attitude and to imitate.",
+    "assesses": [
+      "KA-LEX-C500-SVABHAVA500-03",
+      "KA-LEX-C500-SVABHAVA500-04",
+      "KA-LEX-C500-SVABHAVA500-05"
+    ]
+  }
+}

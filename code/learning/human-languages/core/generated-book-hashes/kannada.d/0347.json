@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:4d68ca65d152df7c",
+  "lessonIds": [
+    "KA-C347-suddigosthi",
+    "KA-C347-prasnisu",
+    "KA-C347-pratikriyisu",
+    "KA-C347-ullekhisu",
+    "KA-C347-saramsa",
+    "KA-R347-review-341-347"
+  ],
+  "tex": "kannada/book/chapters/ch347-the-press-conference.tex"
+}

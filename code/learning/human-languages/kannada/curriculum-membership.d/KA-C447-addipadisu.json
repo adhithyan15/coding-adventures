@@ -1,0 +1,11 @@
+{
+  "id": "KA-C447-addipadisu",
+  "pathSegment": "KA-PATH-447-TADE447",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-447-TADE447",
+      "order": 2
+    }
+  ]
+}

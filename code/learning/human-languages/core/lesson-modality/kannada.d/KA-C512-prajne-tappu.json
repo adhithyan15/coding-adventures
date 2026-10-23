@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C512-prajne-tappu",
+    "language": "kannada",
+    "chapter": 512,
+    "sequence": 26170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a56cc8d4f8b68b5d"
+  },
+  "findings": []
+}

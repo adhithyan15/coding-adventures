@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C357-vancisu",
+    "language": "kannada",
+    "chapter": 357,
+    "sequence": 17950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:488742087999ad81"
+  },
+  "findings": []
+}

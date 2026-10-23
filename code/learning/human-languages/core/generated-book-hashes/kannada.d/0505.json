@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:9030707c3f3a2d5f",
+  "lessonIds": [
+    "KA-C505-sraddhe",
+    "KA-C505-nirlaksya",
+    "KA-C505-cata",
+    "KA-C505-sramisu",
+    "KA-C505-bedu"
+  ],
+  "tex": "kannada/book/chapters/ch505-effort-and-neglect.tex"
+}

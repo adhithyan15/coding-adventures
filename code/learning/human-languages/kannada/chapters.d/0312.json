@@ -1,0 +1,20 @@
+{
+  "chapter": 312,
+  "title": "Must, Must Not, and Because",
+  "label": "ch:ka-must-must-not-and-because",
+  "canDo": "I can say what I or someone else must or should do with -bēku, what must not be done with -bāradu, and give the reason with … kāraṇa or yākendare.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-R312-advice-and-reasons",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: give advice with -bēku and -bāradu, and the reasons for it with kāraṇa and yākendare.",
+    "assesses": [
+      "KA-GRAMMAR-C312-OBLIGATIVE-01",
+      "KA-GRAMMAR-C312-PROHIBITIVE-01",
+      "KA-GRAMMAR-C312-KARANA-CLAUSE-01",
+      "KA-GRAMMAR-C312-REASON-ORDER-01"
+    ]
+  }
+}

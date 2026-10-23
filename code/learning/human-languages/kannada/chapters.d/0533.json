@@ -1,0 +1,19 @@
+{
+  "chapter": 533,
+  "title": "Handwork",
+  "label": "ch:ka-handwork",
+  "canDo": "I can say embroidery, handicraft, to knit, to string beads and to adorn.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C533-singarisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can say embroidery, handicraft, to knit, to string beads and to adorn.",
+    "assesses": [
+      "KA-LEX-C533-KASUTI533-03",
+      "KA-LEX-C533-KASUTI533-04",
+      "KA-LEX-C533-KASUTI533-05"
+    ]
+  }
+}

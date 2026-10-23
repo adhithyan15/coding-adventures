@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:c9ba81438af47710",
+  "lessonIds": [
+    "KA-C479-sasya",
+    "KA-C479-pode",
+    "KA-C479-hullugavalu",
+    "KA-C479-ciguru",
+    "KA-C479-jaugu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch479.txt",
+  "json": "kannada/narration/ch479.json",
+  "textHash": "fnv1a64:638aa2cc3f770624",
+  "jsonHash": "fnv1a64:1ba5c9f389aa3bb6",
+  "findings": []
+}

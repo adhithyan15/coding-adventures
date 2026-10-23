@@ -1,0 +1,11 @@
+{
+  "id": "KA-C534-gunugu",
+  "pathSegment": "KA-PATH-534-SANGITA534",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-534-SANGITA534",
+      "order": 3
+    }
+  ]
+}

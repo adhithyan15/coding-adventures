@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Politics and Leaders",
+  "label": "ch:ka-politics-and-leaders",
+  "canDo": "I can say politics, a politician, a political party, to boycott and leadership.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C394-nayakatva",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can say politics, a politician, a political party, to boycott and leadership.",
+    "assesses": [
+      "KA-LEX-C394-RAJAKIYA394-03",
+      "KA-LEX-C394-RAJAKIYA394-04",
+      "KA-LEX-C394-RAJAKIYA394-05"
+    ]
+  }
+}

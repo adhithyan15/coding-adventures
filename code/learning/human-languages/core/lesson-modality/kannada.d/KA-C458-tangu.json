@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C458-tangu",
+    "language": "kannada",
+    "chapter": 458,
+    "sequence": 23320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e1a0d9ed7d156ac"
+  },
+  "findings": []
+}

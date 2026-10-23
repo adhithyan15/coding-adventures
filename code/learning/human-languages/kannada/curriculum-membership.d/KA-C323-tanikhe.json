@@ -1,0 +1,11 @@
+{
+  "id": "KA-C323-tanikhe",
+  "pathSegment": "KA-PATH-323-APARADHA323",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-323-APARADHA323",
+      "order": 3
+    }
+  ]
+}

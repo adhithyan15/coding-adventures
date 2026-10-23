@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C361-smarisu",
+    "language": "kannada",
+    "chapter": 361,
+    "sequence": 18170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:863f854d9bfc4dd4"
+  },
+  "findings": []
+}

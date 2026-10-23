@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C439-kastams",
+    "language": "kannada",
+    "chapter": 439,
+    "sequence": 22310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdf0b749ea921d9f"
+  },
+  "findings": []
+}

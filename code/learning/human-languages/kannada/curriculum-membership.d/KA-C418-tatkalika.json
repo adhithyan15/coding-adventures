@@ -1,0 +1,11 @@
+{
+  "id": "KA-C418-tatkalika",
+  "pathSegment": "KA-PATH-418-PARYAYA418",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-418-PARYAYA418",
+      "order": 2
+    }
+  ]
+}

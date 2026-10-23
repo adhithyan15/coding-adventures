@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C423-hanta",
+    "language": "kannada",
+    "chapter": 423,
+    "sequence": 21410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46d17a1c4438d75b"
+  },
+  "findings": []
+}

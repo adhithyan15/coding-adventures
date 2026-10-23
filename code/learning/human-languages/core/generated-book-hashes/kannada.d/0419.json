@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:71f739b17d77d59e",
+  "lessonIds": [
+    "KA-C419-viphalavagu",
+    "KA-C419-phalisu",
+    "KA-C419-kaigudu",
+    "KA-C419-bikkattu",
+    "KA-C419-anivarya"
+  ],
+  "tex": "kannada/book/chapters/ch419-success-and-failure.tex"
+}

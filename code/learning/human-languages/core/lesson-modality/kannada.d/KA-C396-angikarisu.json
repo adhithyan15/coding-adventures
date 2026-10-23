@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C396-angikarisu",
+    "language": "kannada",
+    "chapter": 396,
+    "sequence": 20030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:485e408d5e7739ac"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:4bfd8e4ca9e3e22c",
+  "lessonIds": [
+    "KA-C501-saumya",
+    "KA-C501-mugdha",
+    "KA-C501-krura",
+    "KA-C501-nisthura",
+    "KA-C501-anakisu"
+  ],
+  "tex": "kannada/book/chapters/ch501-gentle-and-cruel.tex"
+}

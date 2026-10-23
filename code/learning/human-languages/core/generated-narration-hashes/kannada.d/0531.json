@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:21b4501690f76ddd",
+  "lessonIds": [
+    "KA-C531-pagade",
+    "KA-C531-keram",
+    "KA-C531-kannamuccale",
+    "KA-C531-uyyale",
+    "KA-C531-atike"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch531.txt",
+  "json": "kannada/narration/ch531.json",
+  "textHash": "fnv1a64:85aec182621ba18d",
+  "jsonHash": "fnv1a64:da13e8ce8bf0b574",
+  "findings": []
+}

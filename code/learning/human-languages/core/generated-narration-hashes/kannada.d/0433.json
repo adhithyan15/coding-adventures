@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:8269e8c83898f2fc",
+  "lessonIds": [
+    "KA-C433-prayanika",
+    "KA-C433-platpharm",
+    "KA-C433-bogi",
+    "KA-C433-hali",
+    "KA-C433-talupu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch433.txt",
+  "json": "kannada/narration/ch433.json",
+  "textHash": "fnv1a64:92c2003b4ff304d3",
+  "jsonHash": "fnv1a64:73314d827dbb2ee7",
+  "findings": []
+}

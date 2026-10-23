@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 415,
+  "title": "Suspensions and Exemptions",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:eaa4d9dfbeb11635",
+  "lessons": [
+    {
+      "id": "KA-C415-amanatu",
+      "sequence": 21000,
+      "title": "ಅಮಾನತು (amānatu) — suspension",
+      "headword": "ಅಮಾನತು",
+      "romanization": "amānatu",
+      "gloss": "suspension",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72b90318798956ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to fix, then the Kannada for to restrict."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಮಾನತು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಮಾನತು — amānatu — \"suspension\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಲಂಚ ತೆಗೆದುಕೊಂಡ ಅಧಿಕಾರಿಯನ್ನು ಅಮಾನತು ಮಾಡಿದರು. lañca tegedukoṇḍa adhikāriyannu amānatu māḍidaru. The official who took a bribe was suspended."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಮಾನತು (amānatu) ಮಾಡು, to suspend from a job."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಮಾನತು (amānatu) is usually traced to Arabic amānat, \"a trust, a deposit\", through Hindustani: a post held in trust, not used."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amānatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amānatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amānatu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amānatu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lañca tegedukoṇḍa adhikāriyannu amānatu māḍidaru. — The official who took a bribe was suspended.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lañca tegedukoṇḍa adhikāriyannu amānatu māḍidaru.* — The official who took a bribe was suspended.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to fix, then the Kannada for to restrict, then say amānatu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to fix, then the Kannada for to restrict, then say *amānatu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಮಾನತು (amānatu) mean? (\"Suspension\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C415-horagidu",
+      "sequence": 21010,
+      "title": "ಹೊರಗಿಡು (horagiḍu) — to exclude; to leave out",
+      "headword": "ಹೊರಗಿಡು",
+      "romanization": "horagiḍu",
+      "gloss": "to exclude; to leave out",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b77746bc39ddb510",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to restrict, then the Kannada for suspension."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೊರಗಿಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊರಗಿಡು — horagiḍu — \"to exclude; to leave out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗಾಯದಿಂದ ಅವನನ್ನು ತಂಡದಿಂದ ಹೊರಗಿಟ್ಟರು. gāyadinda avanannu taṇḍadinda horagiṭṭaru. Because of an injury they left him out of the team."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಹೊರಗಿಟ್ಟೆ, horagiṭṭe."
+            },
+            {
+              "kind": "speech",
+              "text": "What is left out takes -ಅನ್ನು, the group -ಇಂದ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊರಗಿಡು (horagiḍu) is native Dravidian, built from horage, \"outside\" (DEDR 4333), and iḍu, \"to put\" (DEDR 442)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "horagiḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *horagiḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "horagiḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *horagiḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāyadinda avanannu taṇḍadinda horagiṭṭaru. — Because of an injury they left him out of the team.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāyadinda avanannu taṇḍadinda horagiṭṭaru.* — Because of an injury they left him out of the team.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to restrict, then the Kannada for suspension, then say horagiḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to restrict, then the Kannada for suspension, then say *horagiḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹೊರಗಿಡು (horagiḍu) mean? (\"To exclude; to leave out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C415-vinayiti",
+      "sequence": 21020,
+      "title": "ವಿನಾಯಿತಿ (vināyiti) — an exemption; a concession",
+      "headword": "ವಿನಾಯಿತಿ",
+      "romanization": "vināyiti",
+      "gloss": "an exemption; a concession",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:370c560da701eaa2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for suspension, then the Kannada for to exclude."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಿನಾಯಿತಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿನಾಯಿತಿ — vināyiti — \"an exemption; a concession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಿರಿಯರಿಗೆ ಶುಲ್ಕದಲ್ಲಿ ವಿನಾಯಿತಿ ಇದೆ. hiriyarige śulkadalli vināyiti ide. Elders get a concession on the fee."
+            },
+            {
+              "kind": "speech",
+              "text": "ತೆರಿಗೆ ವಿನಾಯಿತಿ (vināyiti), a tax exemption."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿನಾಯಿತಿ (vināyiti) is a Kannada word of the offices whose origin is not settled: neither DEDR nor CDIAL lists it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vināyiti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vināyiti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vināyiti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vināyiti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiriyarige śulkadalli vināyiti ide. — Elders get a concession on the fee.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiriyarige śulkadalli vināyiti ide.* — Elders get a concession on the fee.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for suspension, then the Kannada for to exclude, then say vināyiti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for suspension, then the Kannada for to exclude, then say *vināyiti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಿನಾಯಿತಿ (vināyiti) mean? (\"An exemption; a concession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C415-manjuru-madu",
+      "sequence": 21030,
+      "title": "ಮಂಜೂರು ಮಾಡು (mañjūru māḍu) — to sanction; to grant",
+      "headword": "ಮಂಜೂರು ಮಾಡು",
+      "romanization": "mañjūru māḍu",
+      "gloss": "to sanction; to grant",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c55cf87dd77625de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to exclude, then the Kannada for an exemption."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಂಜೂರು ಮಾಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಂಜೂರು ಮಾಡು — mañjūru māḍu — \"to sanction; to grant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬ್ಯಾಂಕ್ ನನಗೆ ಸಾಲ ಮಂಜೂರು ಮಾಡಿತು. byāṅk nanage sāla mañjūru māḍitu. The bank granted me a loan."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಮಂಜೂರು ಮಾಡಿದೆ, mañjūru māḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಂಜೂರಾಗು, to be sanctioned."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಂಜೂರು ಮಾಡು (mañjūru māḍu) is built from mañjūru, a loan from Hindustani manzūr, \"approved\", which comes from Arabic, with māḍu, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañjūru māḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañjūru māḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañjūru māḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañjūru māḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "byāṅk nanage sāla mañjūru māḍitu. — The bank granted me a loan.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *byāṅk nanage sāla mañjūru māḍitu.* — The bank granted me a loan.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to exclude, then the Kannada for an exemption, then say mañjūru māḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to exclude, then the Kannada for an exemption, then say *mañjūru māḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮಂಜೂರು ಮಾಡು (mañjūru māḍu) mean? (\"To sanction; to grant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C415-adesa",
+      "sequence": 21040,
+      "title": "ಆದೇಶ (ādēśa) — an official order",
+      "headword": "ಆದೇಶ",
+      "romanization": "ādēśa",
+      "gloss": "an official order",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a3459f39296bc3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an exemption, then the Kannada for to sanction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಆದೇಶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆದೇಶ — ādēśa — \"an official order\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸರ್ಕಾರ ಶಾಲೆಗಳಿಗೆ ಹೊಸ ಆದೇಶ ಕಳುಹಿಸಿತು. sarkāra śālegaḷige hosa ādēśa kaḷuhisitu. The government sent a new order to the schools."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆದೇಶ (ādēśa) ಹೊರಡಿಸು, to issue an order."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆದೇಶ (ādēśa) is borrowed from Sanskrit ādeśa, \"advice, instruction, command\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādēśa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādēśa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādēśa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādēśa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarkāra śālegaḷige hosa ādēśa kaḷuhisitu. — The government sent a new order to the schools.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarkāra śālegaḷige hosa ādēśa kaḷuhisitu.* — The government sent a new order to the schools.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an exemption, then the Kannada for to sanction, then say ādēśa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an exemption, then the Kannada for to sanction, then say *ādēśa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಆದೇಶ (ādēśa) mean? (\"An official order\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

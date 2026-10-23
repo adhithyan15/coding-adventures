@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:f0971f83d81ce2bb",
+  "lessonIds": [
+    "KA-C388-naitika",
+    "KA-C388-tyaga",
+    "KA-C388-manassaksi",
+    "KA-C388-hita",
+    "KA-C388-khandisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch388.txt",
+  "json": "kannada/narration/ch388.json",
+  "textHash": "fnv1a64:f891c512a948eb3a",
+  "jsonHash": "fnv1a64:043ec7d0aa4e2960",
+  "findings": []
+}

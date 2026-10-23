@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C373-patana",
+    "language": "kannada",
+    "chapter": 373,
+    "sequence": 18780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00ca80b53e57165b"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C363-molagu",
+  "pathSegment": "KA-PATH-363-SANJE363",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-363-SANJE363",
+      "order": 2
+    }
+  ]
+}

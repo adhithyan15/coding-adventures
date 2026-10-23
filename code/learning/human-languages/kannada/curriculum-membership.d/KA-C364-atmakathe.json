@@ -1,0 +1,11 @@
+{
+  "id": "KA-C364-atmakathe",
+  "pathSegment": "KA-PATH-364-DINACHARI364",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-364-DINACHARI364",
+      "order": 1
+    }
+  ]
+}

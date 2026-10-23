@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:8b93570bd87cb083",
+  "lessonIds": [
+    "KA-C400-bajet",
+    "KA-C400-adaya",
+    "KA-C400-sabsidi",
+    "KA-C400-viniyogisu",
+    "KA-C400-vyartha-madu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch400.txt",
+  "json": "kannada/narration/ch400.json",
+  "textHash": "fnv1a64:8218d19bcdc278e4",
+  "jsonHash": "fnv1a64:8def9c4c3d759d9a",
+  "findings": []
+}

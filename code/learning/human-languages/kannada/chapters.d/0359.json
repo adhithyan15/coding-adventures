@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "The Town Festival",
+  "label": "ch:ka-the-town-festival",
+  "canDo": "I can say a public festival, a procession, a slogan, to parade and a flag.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C359-dhvaja",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can say a public festival, a procession, a slogan, to parade and a flag.",
+    "assesses": [
+      "KA-LEX-C359-UTSAVA359-03",
+      "KA-LEX-C359-UTSAVA359-04",
+      "KA-LEX-C359-UTSAVA359-05"
+    ]
+  }
+}

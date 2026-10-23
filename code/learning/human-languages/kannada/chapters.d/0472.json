@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "When Things Go Wrong",
+  "label": "ch:ka-when-things-go-wrong",
+  "canDo": "I can say to get damaged, to be off guard, to escape unharmed, shelter and a helpline.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C472-sahayavani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can say to get damaged, to be off guard, to escape unharmed, shelter and a helpline.",
+    "assesses": [
+      "KA-LEX-C472-HALU472-03",
+      "KA-LEX-C472-HALU472-04",
+      "KA-LEX-C472-HALU472-05"
+    ]
+  }
+}

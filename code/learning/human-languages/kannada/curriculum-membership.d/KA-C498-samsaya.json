@@ -1,0 +1,11 @@
+{
+  "id": "KA-C498-samsaya",
+  "pathSegment": "KA-PATH-498-NAMBIKE498",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-498-NAMBIKE498",
+      "order": 2
+    }
+  ]
+}

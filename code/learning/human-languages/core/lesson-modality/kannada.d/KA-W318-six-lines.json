@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-W318-six-lines",
+    "language": "kannada",
+    "chapter": 318,
+    "sequence": 15390,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:387f0658df833209",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

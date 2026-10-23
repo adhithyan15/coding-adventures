@@ -1,0 +1,11 @@
+{
+  "id": "KA-C355-puratatva",
+  "pathSegment": "KA-PATH-355-UTKHANANA355",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-355-UTKHANANA355",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C343-nirupisu",
+    "language": "kannada",
+    "chapter": 343,
+    "sequence": 17230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f891b0d32d9770e2"
+  },
+  "findings": []
+}

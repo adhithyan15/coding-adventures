@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "If and Otherwise",
+  "label": "ch:ka-if-and-otherwise",
+  "canDo": "I can say if ever, or else, in any case, applicability and overall.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C428-ottare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can say if ever, or else, in any case, applicability and overall.",
+    "assesses": [
+      "KA-LEX-C428-ONDOMME428-03",
+      "KA-LEX-C428-ONDOMME428-04",
+      "KA-LEX-C428-ONDOMME428-05"
+    ]
+  }
+}

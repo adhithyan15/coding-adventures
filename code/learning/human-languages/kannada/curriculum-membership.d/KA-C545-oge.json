@@ -1,0 +1,11 @@
+{
+  "id": "KA-C545-oge",
+  "pathSegment": "KA-PATH-545-BATTE545",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-545-BATTE545",
+      "order": 3
+    }
+  ]
+}

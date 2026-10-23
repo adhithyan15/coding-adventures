@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C316-tingalinda",
+    "language": "kannada",
+    "chapter": 316,
+    "sequence": 15310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cac5fdbb887f54df"
+  },
+  "findings": []
+}

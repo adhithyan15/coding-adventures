@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:8278d177f27d1479",
+  "lessonIds": [
+    "KA-C420-aluku",
+    "KA-C420-eccettuko",
+    "KA-C420-balavanta",
+    "KA-C420-aniscita",
+    "KA-C420-apattu"
+  ],
+  "tex": "kannada/book/chapters/ch420-facing-the-unknown.tex"
+}

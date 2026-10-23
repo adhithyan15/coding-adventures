@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 378,
+  "title": "Taking a Stand",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7d9efcd90f6bd3a2",
+  "lessons": [
+    {
+      "id": "KA-C378-drstikona",
+      "sequence": 19100,
+      "title": "ದೃಷ್ಟಿಕೋನ (dṛṣṭikōna) — a point of view",
+      "headword": "ದೃಷ್ಟಿಕೋನ",
+      "romanization": "dṛṣṭikōna",
+      "gloss": "a point of view",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff6e42a08695ef34",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to object, then the Kannada for reasonable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ದೃಷ್ಟಿಕೋನ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದೃಷ್ಟಿಕೋನ — dṛṣṭikōna — \"a point of view\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿಯೊಬ್ಬರಿಗೂ ಬೇರೆ ಬೇರೆ ದೃಷ್ಟಿಕೋನ ಇರುತ್ತದೆ. pratiyobbarigū bēre bēre dṛṣṭikōna iruttade. Everyone has a different point of view."
+            },
+            {
+              "kind": "speech",
+              "text": "Word by word it is sight + angle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದೃಷ್ಟಿಕೋನ (dṛṣṭikōna) is built from Sanskrit dṛṣṭi, \"sight, view\", and koṇa, \"a corner, an angle\" (Monier-Williams): the angle you look from."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dṛṣṭikōna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dṛṣṭikōna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dṛṣṭikōna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dṛṣṭikōna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiyobbarigū bēre bēre dṛṣṭikōna iruttade. — Everyone has a different point of view.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiyobbarigū bēre bēre dṛṣṭikōna iruttade.* — Everyone has a different point of view.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to object, then the Kannada for reasonable, then say dṛṣṭikōna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to object, then the Kannada for reasonable, then say *dṛṣṭikōna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ದೃಷ್ಟಿಕೋನ (dṛṣṭikōna) mean? (\"A point of view\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C378-niluvu",
+      "sequence": 19110,
+      "title": "ನಿಲುವು (niluvu) — a stance; a position",
+      "headword": "ನಿಲುವು",
+      "romanization": "niluvu",
+      "gloss": "a stance; a position",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:918e01011ed46f3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for reasonable, then the Kannada for a point of view."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಿಲುವು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿಲುವು — niluvu — \"a stance; a position\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ವಿಷಯದಲ್ಲಿ ನಿಮ್ಮ ನಿಲುವು ಏನು? ī viṣayadalli nimma niluvu ēnu? What is your position on this matter?"
+            },
+            {
+              "kind": "speech",
+              "text": "From ನಿಲ್ಲು, to stand: where one stands."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿಲುವು (niluvu) is native Dravidian, a noun from nil, \"to stand\" (DEDR 3675), the root of ನಿಲ್ಲು."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niluvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niluvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niluvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niluvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī viṣayadalli nimma niluvu ēnu? — What is your position on this matter?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī viṣayadalli nimma niluvu ēnu?* — What is your position on this matter?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for reasonable, then the Kannada for a point of view, then say niluvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for reasonable, then the Kannada for a point of view, then say *niluvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಿಲುವು (niluvu) mean? (\"A stance; a position\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C378-tatastha",
+      "sequence": 19120,
+      "title": "ತಟಸ್ಥ (taṭastha) — neutral",
+      "headword": "ತಟಸ್ಥ",
+      "romanization": "taṭastha",
+      "gloss": "neutral",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b39ae1591b33485",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a point of view, then the Kannada for a stance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತಟಸ್ಥ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಟಸ್ಥ — taṭastha — \"neutral\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಜಗಳದಲ್ಲಿ ನಾನು ತಟಸ್ಥವಾಗಿ ಇದ್ದೆ. jagaḷadalli nānu taṭasthavāgi idde. In the quarrel I stayed neutral."
+            },
+            {
+              "kind": "speech",
+              "text": "Word by word it is standing on the bank, out of the stream."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಟಸ್ಥ (taṭastha) is borrowed from Sanskrit taṭastha, \"standing on a bank\" (Monier-Williams), from taṭa, \"a bank\", and stha, \"standing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭastha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭastha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭastha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭastha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jagaḷadalli nānu taṭasthavāgi idde. — In the quarrel I stayed neutral.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jagaḷadalli nānu taṭasthavāgi idde.* — In the quarrel I stayed neutral.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a point of view, then the Kannada for a stance, then say taṭastha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a point of view, then the Kannada for a stance, then say *taṭastha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತಟಸ್ಥ (taṭastha) mean? (\"Neutral\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C378-paksapata",
+      "sequence": 19130,
+      "title": "ಪಕ್ಷಪಾತ (pakṣapāta) — bias; partiality",
+      "headword": "ಪಕ್ಷಪಾತ",
+      "romanization": "pakṣapāta",
+      "gloss": "bias; partiality",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d3d5f7a8aaf039c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a stance, then the Kannada for neutral."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪಕ್ಷಪಾತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಕ್ಷಪಾತ — pakṣapāta — \"bias; partiality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಶಿಕ್ಷಕರು ಯಾರಿಗೂ ಪಕ್ಷಪಾತ ಮಾಡುವುದಿಲ್ಲ. śikṣakaru yārigū pakṣapāta māḍuvudilla. The teacher shows no bias to anyone."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪಕ್ಷಪಾತ (pakṣapāta) ಮಾಡು, to be partial."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಕ್ಷಪಾತ (pakṣapāta) is borrowed from Sanskrit pakṣapāta, \"siding with, partiality\" (Monier-Williams), from pakṣa, \"a side, a wing\", and pāta, \"falling\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakṣapāta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakṣapāta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakṣapāta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakṣapāta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikṣakaru yārigū pakṣapāta māḍuvudilla. — The teacher shows no bias to anyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikṣakaru yārigū pakṣapāta māḍuvudilla.* — The teacher shows no bias to anyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a stance, then the Kannada for neutral, then say pakṣapāta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a stance, then the Kannada for neutral, then say *pakṣapāta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪಕ್ಷಪಾತ (pakṣapāta) mean? (\"Bias; partiality\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C378-pratipadisu",
+      "sequence": 19140,
+      "title": "ಪ್ರತಿಪಾದಿಸು (pratipādisu) — to advocate; to argue for",
+      "headword": "ಪ್ರತಿಪಾದಿಸು",
+      "romanization": "pratipādisu",
+      "gloss": "to advocate; to argue for",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05cee9da10cfd423",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for neutral, then the Kannada for bias."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರತಿಪಾದಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿಪಾದಿಸು — pratipādisu — \"to advocate; to argue for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವರು ಎಲ್ಲರಿಗೂ ಉಚಿತ ಶಿಕ್ಷಣವನ್ನು ಪ್ರತಿಪಾದಿಸಿದರು. avaru ellarigū ucita śikṣaṇavannu pratipādisidaru. They argued for free education for all."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಪ್ರತಿಪಾದಿಸಿದೆ, pratipādiside."
+            },
+            {
+              "kind": "speech",
+              "text": "What you argue for takes -ಅನ್ನು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿಪಾದಿಸು (pratipādisu) is built on Sanskrit pratipādana, \"presenting, setting forth\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratipādisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratipādisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratipādisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratipādisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaru ellarigū ucita śikṣaṇavannu pratipādisidaru. — They argued for free education for all.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaru ellarigū ucita śikṣaṇavannu pratipādisidaru.* — They argued for free education for all.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for neutral, then the Kannada for bias, then say pratipādisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for neutral, then the Kannada for bias, then say *pratipādisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರತಿಪಾದಿಸು (pratipādisu) mean? (\"To advocate; to argue for\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

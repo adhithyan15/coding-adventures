@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "Stages of Life",
+  "label": "ch:ka-stages-of-life",
+  "canDo": "I can say an adult, the teenage years, solitude, infatuation and to live.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C529-baduku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can say an adult, the teenage years, solitude, infatuation and to live.",
+    "assesses": [
+      "KA-LEX-C529-JIVANA529-03",
+      "KA-LEX-C529-JIVANA529-04",
+      "KA-LEX-C529-JIVANA529-05"
+    ]
+  }
+}

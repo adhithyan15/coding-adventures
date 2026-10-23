@@ -1,0 +1,11 @@
+{
+  "id": "KA-C408-pathyakrama",
+  "pathSegment": "KA-PATH-408-PATHYAKRAMA408",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-408-PATHYAKRAMA408",
+      "order": 3
+    }
+  ]
+}

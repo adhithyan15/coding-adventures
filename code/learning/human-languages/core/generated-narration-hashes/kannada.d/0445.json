@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:ae6737422f1b043b",
+  "lessonIds": [
+    "KA-C445-park-madu",
+    "KA-C445-tirugu",
+    "KA-C445-alugadu",
+    "KA-C445-calisu",
+    "KA-C445-samipisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch445.txt",
+  "json": "kannada/narration/ch445.json",
+  "textHash": "fnv1a64:e5cb9e019be59098",
+  "jsonHash": "fnv1a64:37f4c47d574be92c",
+  "findings": []
+}

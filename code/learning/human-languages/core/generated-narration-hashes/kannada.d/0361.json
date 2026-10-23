@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:4643be82fe549a34",
+  "lessonIds": [
+    "KA-C361-smaraka",
+    "KA-C361-samadhi",
+    "KA-C361-smarisu",
+    "KA-C361-buruju",
+    "KA-C361-hulu",
+    "KA-R361-review-355-361"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch361.txt",
+  "json": "kannada/narration/ch361.json",
+  "textHash": "fnv1a64:d4dab66c0e798c91",
+  "jsonHash": "fnv1a64:c89f58bf9986cf09",
+  "findings": []
+}

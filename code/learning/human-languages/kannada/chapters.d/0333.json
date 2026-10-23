@@ -1,0 +1,21 @@
+{
+  "chapter": 333,
+  "title": "Rites and Ceremonies",
+  "label": "ch:ka-rites-and-ceremonies",
+  "canDo": "I can say to carry out, a ceremony, to offer, to set up and an invitation card.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-R333-review-327-333",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can say to carry out, a ceremony, to offer, to set up and an invitation card.",
+    "assesses": [
+      "KA-LEX-C333-NERAVERU333-01",
+      "KA-LEX-C333-NERAVERU333-02",
+      "KA-LEX-C333-NERAVERU333-03",
+      "KA-LEX-C333-NERAVERU333-04",
+      "KA-LEX-C333-NERAVERU333-05"
+    ]
+  }
+}

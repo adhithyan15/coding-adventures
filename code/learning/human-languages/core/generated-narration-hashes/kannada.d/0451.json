@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:b0fd2a638719c599",
+  "lessonIds": [
+    "KA-C451-lari",
+    "KA-C451-jipu",
+    "KA-C451-tyaksi",
+    "KA-C451-baik",
+    "KA-C451-ettinagadi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch451.txt",
+  "json": "kannada/narration/ch451.json",
+  "textHash": "fnv1a64:f71789a58f1fe2a1",
+  "jsonHash": "fnv1a64:2c0eb2dd8faf8c8b",
+  "findings": []
+}

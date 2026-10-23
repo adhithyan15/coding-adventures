@@ -1,0 +1,19 @@
+{
+  "chapter": 538,
+  "title": "Winning",
+  "label": "ch:ka-winning",
+  "canDo": "I can say a medal, an athlete, a winner, a tournament and to defeat.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C538-solisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 538: I can say a medal, an athlete, a winner, a tournament and to defeat.",
+    "assesses": [
+      "KA-LEX-C538-PADAKA538-03",
+      "KA-LEX-C538-PADAKA538-04",
+      "KA-LEX-C538-PADAKA538-05"
+    ]
+  }
+}

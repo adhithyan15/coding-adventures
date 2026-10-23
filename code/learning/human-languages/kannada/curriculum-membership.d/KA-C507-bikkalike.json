@@ -1,0 +1,11 @@
+{
+  "id": "KA-C507-bikkalike",
+  "pathSegment": "KA-PATH-507-SADDU507",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-507-SADDU507",
+      "order": 3
+    }
+  ]
+}

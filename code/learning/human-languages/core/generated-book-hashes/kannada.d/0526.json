@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:3acd7a70eb96bfaa",
+  "lessonIds": [
+    "KA-C526-bandhu",
+    "KA-C526-tavaru",
+    "KA-C526-avali",
+    "KA-C526-marimaga",
+    "KA-C526-kiriya"
+  ],
+  "tex": "kannada/book/chapters/ch526-kin.tex"
+}

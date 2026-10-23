@@ -1,0 +1,11 @@
+{
+  "id": "KA-C448-savari-madu",
+  "pathSegment": "KA-PATH-448-INDHANA448",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-448-INDHANA448",
+      "order": 4
+    }
+  ]
+}

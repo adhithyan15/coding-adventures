@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C534-svara",
+    "language": "kannada",
+    "chapter": 534,
+    "sequence": 27280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e447d7fc5a94cec"
+  },
+  "findings": []
+}

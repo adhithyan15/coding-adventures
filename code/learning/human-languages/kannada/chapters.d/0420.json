@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Facing the Unknown",
+  "label": "ch:ka-facing-the-unknown",
+  "canDo": "I can say to waver, to wake up to, compulsion, uncertain and a calamity.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C420-apattu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can say to waver, to wake up to, compulsion, uncertain and a calamity.",
+    "assesses": [
+      "KA-LEX-C420-ALUKU420-03",
+      "KA-LEX-C420-ALUKU420-04",
+      "KA-LEX-C420-ALUKU420-05"
+    ]
+  }
+}

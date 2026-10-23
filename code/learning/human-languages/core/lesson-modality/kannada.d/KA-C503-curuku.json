@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C503-curuku",
+    "language": "kannada",
+    "chapter": 503,
+    "sequence": 25660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:684de19606d07ad1"
+  },
+  "findings": []
+}

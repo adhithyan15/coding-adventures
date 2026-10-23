@@ -1,0 +1,11 @@
+{
+  "id": "KA-C471-tuluku",
+  "pathSegment": "KA-PATH-471-GADDALA471",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-471-GADDALA471",
+      "order": 4
+    }
+  ]
+}

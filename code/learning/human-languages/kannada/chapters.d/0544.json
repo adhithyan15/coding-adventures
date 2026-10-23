@@ -1,0 +1,19 @@
+{
+  "chapter": 544,
+  "title": "Power and Water",
+  "label": "ch:ka-power-and-water",
+  "canDo": "I can say a switch, a plug, a gas cylinder, a tube and a wire.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C544-tanti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 544: I can say a switch, a plug, a gas cylinder, a tube and a wire.",
+    "assesses": [
+      "KA-LEX-C544-VIDYUT544-03",
+      "KA-LEX-C544-VIDYUT544-04",
+      "KA-LEX-C544-VIDYUT544-05"
+    ]
+  }
+}

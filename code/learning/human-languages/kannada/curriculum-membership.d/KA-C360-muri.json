@@ -1,0 +1,11 @@
+{
+  "id": "KA-C360-muri",
+  "pathSegment": "KA-PATH-360-BETE360",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-360-BETE360",
+      "order": 4
+    }
+  ]
+}

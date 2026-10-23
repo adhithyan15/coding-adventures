@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:1975841a28faad0d",
+  "lessonIds": [
+    "KA-C378-drstikona",
+    "KA-C378-niluvu",
+    "KA-C378-tatastha",
+    "KA-C378-paksapata",
+    "KA-C378-pratipadisu"
+  ],
+  "tex": "kannada/book/chapters/ch378-taking-a-stand.tex"
+}

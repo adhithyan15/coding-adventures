@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:b87fef35b449b173",
+  "lessonIds": [
+    "KA-C503-curuku",
+    "KA-C503-pratibhe",
+    "KA-C503-dadda",
+    "KA-C503-marevu",
+    "KA-C503-ekagrate"
+  ],
+  "tex": "kannada/book/chapters/ch503-quick-minds-and-slow.tex"
+}

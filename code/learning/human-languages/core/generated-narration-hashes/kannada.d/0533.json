@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:2432a972492033bb",
+  "lessonIds": [
+    "KA-C533-kasuti",
+    "KA-C533-karakusala",
+    "KA-C533-hene",
+    "KA-C533-ponisu",
+    "KA-C533-singarisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch533.txt",
+  "json": "kannada/narration/ch533.json",
+  "textHash": "fnv1a64:9e0c112a97a23e8d",
+  "jsonHash": "fnv1a64:cd6e7e9460882890",
+  "findings": []
+}

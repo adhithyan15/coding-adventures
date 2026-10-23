@@ -1,0 +1,11 @@
+{
+  "id": "KA-C365-gastu",
+  "pathSegment": "KA-PATH-365-HODEDATA365",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-365-HODEDATA365",
+      "order": 4
+    }
+  ]
+}

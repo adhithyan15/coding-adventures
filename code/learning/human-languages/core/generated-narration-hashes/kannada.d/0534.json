@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:de166c9a93c52e63",
+  "lessonIds": [
+    "KA-C534-raga",
+    "KA-C534-tala",
+    "KA-C534-svara",
+    "KA-C534-gunugu",
+    "KA-C534-nudisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch534.txt",
+  "json": "kannada/narration/ch534.json",
+  "textHash": "fnv1a64:ba42a88a2d9c1495",
+  "jsonHash": "fnv1a64:7ce88d594ecac5e0",
+  "findings": []
+}

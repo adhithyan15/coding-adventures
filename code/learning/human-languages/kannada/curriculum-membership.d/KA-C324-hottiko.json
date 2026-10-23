@@ -1,0 +1,11 @@
+{
+  "id": "KA-C324-hottiko",
+  "pathSegment": "KA-PATH-324-BENKI324",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-324-BENKI324",
+      "order": 1
+    }
+  ]
+}

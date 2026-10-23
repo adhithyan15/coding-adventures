@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "Grassland and Swamp",
+  "label": "ch:ka-grassland-and-swamp",
+  "canDo": "I can say vegetation, a bush, a grassland, to sprout and a swamp.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C479-jaugu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can say vegetation, a bush, a grassland, to sprout and a swamp.",
+    "assesses": [
+      "KA-LEX-C479-SASYA479-03",
+      "KA-LEX-C479-SASYA479-04",
+      "KA-LEX-C479-SASYA479-05"
+    ]
+  }
+}

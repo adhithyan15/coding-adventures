@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C526-tavaru",
+    "language": "kannada",
+    "chapter": 526,
+    "sequence": 26860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a047f57d2c5f023"
+  },
+  "findings": []
+}

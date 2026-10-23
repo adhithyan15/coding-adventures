@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:61562b6f398da2ff",
+  "lessonIds": [
+    "KA-C403-samaja",
+    "KA-C403-svavalambane",
+    "KA-C403-jagrti",
+    "KA-C403-vaividhya",
+    "KA-C403-rupisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch403.txt",
+  "json": "kannada/narration/ch403.json",
+  "textHash": "fnv1a64:3abd6c68d2c9df4d",
+  "jsonHash": "fnv1a64:df1a0332423e5c88",
+  "findings": []
+}

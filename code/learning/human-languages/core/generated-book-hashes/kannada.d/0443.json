@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:65ea13036db166e1",
+  "lessonIds": [
+    "KA-C443-sancara",
+    "KA-C443-signal",
+    "KA-C443-padacari",
+    "KA-C443-dattane",
+    "KA-C443-niyantrisu"
+  ],
+  "tex": "kannada/book/chapters/ch443-city-traffic.tex"
+}

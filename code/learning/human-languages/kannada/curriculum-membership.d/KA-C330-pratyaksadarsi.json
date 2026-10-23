@@ -1,0 +1,11 @@
+{
+  "id": "KA-C330-pratyaksadarsi",
+  "pathSegment": "KA-PATH-330-DIKKI330",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-330-DIKKI330",
+      "order": 1
+    }
+  ]
+}

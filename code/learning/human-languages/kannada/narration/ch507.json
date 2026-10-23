@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 507,
+  "title": "Small Body Sounds",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:613c53446239bb1e",
+  "lessons": [
+    {
+      "id": "KA-C507-tegu",
+      "sequence": 25870,
+      "title": "ತೇಗು (tēgu) — to belch; to burp",
+      "headword": "ತೇಗು",
+      "romanization": "tēgu",
+      "gloss": "to belch; to burp",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70aa92cf4eff1296",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to stretch, then the Kannada for an eyelid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತೇಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತೇಗು — tēgu — \"to belch; to burp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಊಟದ ನಂತರ ಮಗು ತೇಗಿತು. ūṭada nantara magu tēgitu. After the meal the baby burped."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ತೇಗಿದೆ, tēgide."
+            },
+            {
+              "kind": "speech",
+              "text": "ತೇಗು (tēgu) is also the burp itself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತೇಗು (tēgu) is native Dravidian: DEDR 3451 lists Kannada tēgu, tēku, \"to belch; a belch\", beside Tamil tēkku."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēgu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēgu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēgu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēgu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūṭada nantara magu tēgitu. — After the meal the baby burped.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūṭada nantara magu tēgitu.* — After the meal the baby burped.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to stretch, then the Kannada for an eyelid, then say tēgu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to stretch, then the Kannada for an eyelid, then say *tēgu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತೇಗು (tēgu) mean? (\"To belch; to burp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C507-mitukisu",
+      "sequence": 25880,
+      "title": "ಮಿಟುಕಿಸು (miṭukisu) — to blink; to wink",
+      "headword": "ಮಿಟುಕಿಸು",
+      "romanization": "miṭukisu",
+      "gloss": "to blink; to wink",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e5283f262b11b58",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an eyelid, then the Kannada for to belch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಿಟುಕಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಿಟುಕಿಸು — miṭukisu — \"to blink; to wink\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಿಸಿಲಿನಲ್ಲಿ ಅವನು ಕಣ್ಣು ಮಿಟುಕಿಸಿದನು. bisilinalli avanu kaṇṇu miṭukisidanu. In the sunshine he blinked."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಮಿಟುಕಿಸಿದೆ, miṭukiside."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಣ್ಣು ಮಿಟುಕಿಸು (miṭukisu), to blink; to wink at someone, add -ಗೆ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಿಟುಕಿಸು (miṭukisu) is native Dravidian: DEDR 4845 lists Kannada miṭakisu, \"to open and shut the eyes rapidly, blink, wink\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miṭukisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miṭukisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miṭukisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miṭukisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bisilinalli avanu kaṇṇu miṭukisidanu. — In the sunshine he blinked.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bisilinalli avanu kaṇṇu miṭukisidanu.* — In the sunshine he blinked.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an eyelid, then the Kannada for to belch, then say miṭukisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an eyelid, then the Kannada for to belch, then say *miṭukisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮಿಟುಕಿಸು (miṭukisu) mean? (\"To blink; to wink\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C507-edusiru-bidu",
+      "sequence": 25890,
+      "title": "ಏದುಸಿರು ಬಿಡು (ēdusiru biḍu) — to pant; to gasp",
+      "headword": "ಏದುಸಿರು ಬಿಡು",
+      "romanization": "ēdusiru biḍu",
+      "gloss": "to pant; to gasp",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea5474f2702628ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to belch, then the Kannada for to blink."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಏದುಸಿರು ಬಿಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಏದುಸಿರು ಬಿಡು — ēdusiru biḍu — \"to pant; to gasp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮೆಟ್ಟಿಲು ಹತ್ತಿ ಅಜ್ಜಿ ಏದುಸಿರು ಬಿಟ್ಟರು. meṭṭilu hatti ajji ēdusiru biṭṭaru. Grandmother panted after climbing the stairs."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಏದುಸಿರು ಬಿಟ್ಟೆ, ēdusiru biṭṭe."
+            },
+            {
+              "kind": "speech",
+              "text": "ಏದುಸಿರು is panting breath, built on ಉಸಿರು, breath; ಬಿಡು, to let out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಏದುಸಿರು ಬಿಡು (ēdusiru biḍu) is a native Kannada phrase: usiru, \"breath\" (DEDR 645), and biḍu, \"to let go\" (DEDR 5393). The origin of the first part, ēd-, is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēdusiru biḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēdusiru biḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēdusiru biḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēdusiru biḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meṭṭilu hatti ajji ēdusiru biṭṭaru. — Grandmother panted after climbing the stairs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meṭṭilu hatti ajji ēdusiru biṭṭaru.* — Grandmother panted after climbing the stairs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to belch, then the Kannada for to blink, then say ēdusiru biḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to belch, then the Kannada for to blink, then say *ēdusiru biḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಏದುಸಿರು ಬಿಡು (ēdusiru biḍu) mean? (\"To pant; to gasp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C507-bikkalike",
+      "sequence": 25900,
+      "title": "ಬಿಕ್ಕಳಿಕೆ (bikkaḷike) — hiccups",
+      "headword": "ಬಿಕ್ಕಳಿಕೆ",
+      "romanization": "bikkaḷike",
+      "gloss": "hiccups",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70bc4a82b80c000a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to blink, then the Kannada for to pant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಿಕ್ಕಳಿಕೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಿಕ್ಕಳಿಕೆ — bikkaḷike — \"hiccups\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೇಗ ಬೇಗ ತಿಂದಿದ್ದರಿಂದ ನನಗೆ ಬಿಕ್ಕಳಿಕೆ ಬಂದಿತು. bēga bēga tindiddarinda nanage bikkaḷike banditu. Because I ate too fast, I got hiccups."
+            },
+            {
+              "kind": "speech",
+              "text": "Hiccups \"come\": ಬಿಕ್ಕಳಿಕೆ (bikkaḷike) ಬರು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಿಕ್ಕಳಿಕೆ (bikkaḷike) is native Dravidian: DEDR 5383 sets Kannada bikkaḷike beside Tamil vikku, \"to hiccup\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bikkaḷike",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bikkaḷike*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bikkaḷike, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bikkaḷike*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bēga bēga tindiddarinda nanage bikkaḷike banditu. — Because I ate too fast, I got hiccups.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bēga bēga tindiddarinda nanage bikkaḷike banditu.* — Because I ate too fast, I got hiccups.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to blink, then the Kannada for to pant, then say bikkaḷike again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to blink, then the Kannada for to pant, then say *bikkaḷike* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಿಕ್ಕಳಿಕೆ (bikkaḷike) mean? (\"Hiccups\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C507-ubbasa",
+      "sequence": 25910,
+      "title": "ಉಬ್ಬಸ (ubbasa) — asthma; breathlessness",
+      "headword": "ಉಬ್ಬಸ",
+      "romanization": "ubbasa",
+      "gloss": "asthma; breathlessness",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63cc2788b38def57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to pant, then the Kannada for hiccups."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉಬ್ಬಸ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಬ್ಬಸ — ubbasa — \"asthma; breathlessness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಚಳಿಗಾಲದಲ್ಲಿ ಅಜ್ಜನ ಉಬ್ಬಸ ಹೆಚ್ಚಾಗುತ್ತದೆ. caḷigāladalli ajjana ubbasa heccāguttade. In winter grandfather's asthma gets worse."
+            },
+            {
+              "kind": "speech",
+              "text": "Doctors also say ಆಸ್ತಮಾ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಬ್ಬಸ (ubbasa) is native Dravidian: DEDR 632 lists Kannada ubbasa with Tamil and Kota words for asthma and panting."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ubbasa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ubbasa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ubbasa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ubbasa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caḷigāladalli ajjana ubbasa heccāguttade. — In winter grandfather's asthma gets worse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caḷigāladalli ajjana ubbasa heccāguttade.* — In winter grandfather's asthma gets worse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to pant, then the Kannada for hiccups, then say ubbasa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to pant, then the Kannada for hiccups, then say *ubbasa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಉಬ್ಬಸ (ubbasa) mean? (\"Asthma; breathlessness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
