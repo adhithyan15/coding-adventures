@@ -1,0 +1,11 @@
+{
+  "id": "TE-R320-asking-the-way",
+  "pathSegment": "TE-PATH-320-ASK-THE-WAY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-320-ASK-THE-WAY",
+      "order": 4
+    }
+  ]
+}

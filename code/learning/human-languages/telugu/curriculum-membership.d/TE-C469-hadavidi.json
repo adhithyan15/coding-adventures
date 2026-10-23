@@ -1,0 +1,11 @@
+{
+  "id": "TE-C469-hadavidi",
+  "pathSegment": "TE-PATH-469-SAMME469",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-469-SAMME469",
+      "order": 3
+    }
+  ]
+}

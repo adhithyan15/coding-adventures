@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "Leaving home",
+  "label": "ch:ar-leaving-home",
+  "canDo": "I can say to emigrate, to settle, to move away, to be displaced and to bid farewell.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-R332-review-325-332",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can say to emigrate, to settle, to move away, to be displaced and to bid farewell.",
+    "assesses": [
+      "AR-LEX-C332-HIJRA332-03",
+      "AR-LEX-C332-HIJRA332-04",
+      "AR-LEX-C332-HIJRA332-05"
+    ]
+  }
+}

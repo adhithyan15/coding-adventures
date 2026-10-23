@@ -265,7 +265,7 @@ describe("corpus level summary", () => {
       expect(readdirSync(join(root, "core", entry.name)), entry.name).toEqual([]);
     }
   });
-  it("shows fourteen tracks have reached A2, and every track has now reached A1", () => {
+  it("shows eleven tracks have reached A2, and every track has now reached A1", () => {
     const { lessons, curricula: paths, spine } = REAL_EVERYTHING;
     const summary = summarizeLevels(lessons, paths, spine);
     // `reach` is the highest level a track has ANY lesson at, so this names the tracks
@@ -284,12 +284,12 @@ describe("corpus level summary", () => {
     // chapters 281-290, the same five nodes, so the list is 17. Russian leaves
     // it with chapters 261-270, the same five nodes, so the list is 16. Persian
     // leaves it with chapters 290-299, the same five nodes, so the list is 15.
-    // Kannada leaves it with chapters 309-318, the same five nodes, so the list
-    // is 14.
+    // Arabic leaves it with chapters 283-292, Malayalam with chapters 339-348,
+    // Telugu with chapters 316-325 and Kannada with chapters 309-318, the same
+    // five nodes each, so the list is 11.
     expect(
       summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
     ).toEqual([
-      "arabic",
       "bengali",
       // Chinese joins the list with the 了 and 呢/对 chapters: an aspect particle
       // realizing SPINE-TALK-ABOUT-PAST and a follow-up particle on
@@ -303,13 +303,11 @@ describe("corpus level summary", () => {
       // nodes. `reach` only TOUCHES A2; attained stays A1 until the A2
       // vocabulary and verb counts are met.
       "japanese",
-      "malayalam",
       "marathi",
       "marwadi",
       "punjabi",
       "sanskrit",
       "tamil",
-      "telugu",
       "urdu",
     ]);
     // Nine tracks now exceed A2, and naming them is stronger than a blanket
@@ -318,12 +316,14 @@ describe("corpus level summary", () => {
     // core, chapters 259-268, French with its B1 core, chapters 258-267,
     // German with its B1 core, chapters 252-261, Latin with its B1 core,
     // chapters 281-290, Russian with its B1 core, chapters 261-270,
-    // Persian with its B1 core, chapters 290-299, and Kannada with its B1
-    // core, chapters 309-318.
+    // Persian with its B1 core, chapters 290-299, Arabic with its B1 core,
+    // chapters 283-292, Malayalam with its B1 core, chapters 339-348, Telugu
+    // with its B1 core, chapters 316-325, and Kannada with its B1 core,
+    // chapters 309-318.
     expect(
       summary.tracks.filter((track) => track.reach !== null && levelRank(track.reach) > levelRank("A2"))
         .map((track) => track.language),
-    ).toEqual(["french", "german", "italian", "kannada", "latin", "persian", "portuguese", "russian", "spanish"]);
+    ).toEqual(["arabic", "french", "german", "italian", "kannada", "latin", "malayalam", "persian", "portuguese", "russian", "spanish", "telugu"]);
     expect(
       summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
       // HL-C230: chinese leaves this list. Its numerals chapter realizes

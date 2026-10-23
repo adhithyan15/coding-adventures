@@ -1,0 +1,11 @@
+{
+  "id": "AR-C287-idhhab",
+  "pathSegment": "AR-PATH-287-WAY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-287-WAY",
+      "order": 1
+    }
+  ]
+}

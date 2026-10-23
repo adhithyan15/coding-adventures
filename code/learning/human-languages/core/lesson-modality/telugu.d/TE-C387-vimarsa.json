@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C387-vimarsa",
+    "language": "telugu",
+    "chapter": 387,
+    "sequence": 19250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39d74bba53384732"
+  },
+  "findings": []
+}

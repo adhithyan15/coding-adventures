@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C525-antaja",
+    "language": "arabic",
+    "chapter": 525,
+    "sequence": 29090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9af7c4b4459abff1"
+  },
+  "findings": []
+}

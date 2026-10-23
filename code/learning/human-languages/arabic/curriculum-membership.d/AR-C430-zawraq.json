@@ -1,0 +1,11 @@
+{
+  "id": "AR-C430-zawraq",
+  "pathSegment": "AR-PATH-430-MARFA430",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-430-MARFA430",
+      "order": 3
+    }
+  ]
+}

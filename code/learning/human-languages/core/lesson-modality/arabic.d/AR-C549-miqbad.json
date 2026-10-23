@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C549-miqbad",
+    "language": "arabic",
+    "chapter": 549,
+    "sequence": 30340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8c6839197d7408d"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C359-cakravarti",
+    "language": "telugu",
+    "chapter": 359,
+    "sequence": 17700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0828e56ea9e5d41b"
+  },
+  "findings": []
+}

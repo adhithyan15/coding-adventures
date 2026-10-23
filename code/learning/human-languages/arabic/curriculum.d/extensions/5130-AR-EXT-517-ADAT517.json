@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-517-ADAT517",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone smokes, became addicted, got hungry, was full or craved something.",
+  "prerequisites": []
+}

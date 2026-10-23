@@ -1,0 +1,11 @@
+{
+  "id": "TE-C405-pettubadi",
+  "pathSegment": "TE-PATH-405-ARTHIKA405",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-405-ARTHIKA405",
+      "order": 2
+    }
+  ]
+}

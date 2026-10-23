@@ -1340,6 +1340,11 @@ backend immediately) come before the enabler-dependent items.
   conservative.
   Additional built-in `entier` calls may wrap that already integral bounded
   result; an unrestricted runtime `entier` operand remains conservative.
+  A checked static integer reduction may contain a conditional whose selector
+  does not call a procedure when both branches independently reduce to the
+  same exact integer. The selector still executes at runtime; unequal,
+  dynamic, invalid, or oversized branch reductions and procedure-calling
+  selectors remain conservative.
   Built-in `sqrt` may also map an `abs`-normalized bounded result to exact `0`
   or `1` before `entier`; an unnormalized or unrestricted operand remains
   conservative. Additional built-in `sqrt` calls may wrap that nonnegative
@@ -1484,10 +1489,30 @@ backend immediately) come before the enabler-dependent items.
   Static whole-number numerator factors may precede the sign-rooted transform,
   including exact divisions among those factors, when multiplication connects
   the resulting prefix to its root; division by the root remains conservative.
+  Variable-free integer `div` and `mod` reductions may also be folded
+  left-to-right before that multiplying connection, including composition
+  through later exact operations. Zero and dynamic divisors, oversized folded
+  prefixes, and non-multiplying connections to the root remain conservative.
+  Parenthesized variable-free integer reductions may likewise become checked
+  static offsets or factors around the sign-rooted transform. Grouped zero or
+  dynamic divisors, inexact real divisions, and results beyond `2^53` remain
+  conservative.
+  Those grouped reductions may use right-associative checked powers when every
+  exponent is nonnegative, the exponent chain stays within the existing unroll
+  cap, and the powered result remains within `2^53`. Dynamic or negative
+  exponents, deeper chains, and overflowing powers remain conservative.
+  Built-in `abs`, `sign`, and `entier` may normalize those checked
+  variable-free integer reductions before they become a static offset, factor,
+  or exponent. User-declared procedures with those names, dynamic inputs, zero
+  divisors, and results beyond `2^53` remain conservative.
   Positive variable-free whole-number powers may raise that exact sign-rooted
   integer transform within the existing exponent-unroll cap when checked
   exponentiation keeps its worst-case magnitude within `2^53`; zero, negative,
   dynamic, deeper, and oversized powers remain conservative.
+  Integer `div` by a variable-free nonzero whole number may reduce the exact
+  sign-rooted transform with a truncation-toward-zero bound, including
+  composition through later powers, remainders, and exact real division; zero,
+  dynamic, and sign-rooted divisors remain outside this composed proof.
   Integer `mod` by a variable-free nonzero whole number may reduce the exact
   sign-rooted transform, including composition through later exact powers and
   divisions; zero and dynamic divisors remain outside this composed provenance

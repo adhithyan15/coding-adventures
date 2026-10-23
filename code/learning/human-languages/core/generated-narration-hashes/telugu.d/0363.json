@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:a9d2829257a70044",
+  "lessonIds": [
+    "TE-C363-tirugubatu",
+    "TE-C363-tiragabadu",
+    "TE-C363-anaciveyu",
+    "TE-C363-usigolpu",
+    "TE-C363-svatantryam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch363.txt",
+  "json": "telugu/narration/ch363.json",
+  "textHash": "fnv1a64:c47a12fc8ba48631",
+  "jsonHash": "fnv1a64:165482c0d4413728",
+  "findings": []
+}

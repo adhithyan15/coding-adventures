@@ -1,0 +1,19 @@
+{
+  "chapter": 450,
+  "title": "Keeping Things Safe",
+  "label": "ch:ml-keeping-things-safe",
+  "canDo": "I can say to lower, to ensure, to protect, to improve and to end.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C450-avasanippikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 450: I can say to lower, to ensure, to protect, to improve and to end.",
+    "assesses": [
+      "ML-LEX-C450-SAMRAKSANAM450-03",
+      "ML-LEX-C450-SAMRAKSANAM450-04",
+      "ML-LEX-C450-SAMRAKSANAM450-05"
+    ]
+  }
+}

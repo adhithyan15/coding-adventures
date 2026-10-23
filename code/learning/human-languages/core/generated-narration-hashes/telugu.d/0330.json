@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:58a18fdc092da504",
+  "lessonIds": [
+    "TE-C330-vilekari",
+    "TE-C330-patrika",
+    "TE-C330-sirsika",
+    "TE-C330-kathanam",
+    "TE-C330-pracurincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch330.txt",
+  "json": "telugu/narration/ch330.json",
+  "textHash": "fnv1a64:e22937650dd969bc",
+  "jsonHash": "fnv1a64:2ce4aeb77bdb2f48",
+  "findings": []
+}

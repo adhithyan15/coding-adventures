@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C360-khadgam",
+    "language": "telugu",
+    "chapter": 360,
+    "sequence": 17740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8cd0a45391ae568c"
+  },
+  "findings": []
+}

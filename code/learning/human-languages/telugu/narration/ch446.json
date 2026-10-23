@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 446,
+  "title": "Bumps on the Road",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:43c42b84fac38bad",
+  "lessons": [
+    {
+      "id": "TE-C446-egududigudu",
+      "sequence": 22410,
+      "title": "ఎగుడుదిగుడు (eguḍudiguḍu) — bumpy; uneven; ups and downs",
+      "headword": "ఎగుడుదిగుడు",
+      "romanization": "eguḍudiguḍu",
+      "gloss": "bumpy; uneven; ups and downs",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f85448ff51de6f85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to slow down, then the Telugu for to lose control."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఎగుడుదిగుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎగుడుదిగుడు — eguḍudiguḍu — \"bumpy; uneven; ups and downs\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పల్లెకు వెళ్ళే రోడ్డు ఎగుడుదిగుడుగా ఉంది. palleku veḷḷē rōḍḍu eguḍudiguḍugā undi. The road to the village is bumpy."
+            },
+            {
+              "kind": "speech",
+              "text": "With ఉండు it takes -గా: ఎగుడుదిగుడుగా ఉంది, it is bumpy. It is also said of a life full of ups and downs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎగుడుదిగుడు (eguḍudiguḍu) is native Dravidian, a rhyming pair: ఎగుడు, \"high, raised\", which DEDR 3730 lists beside ega diga, \"up and down\", and దిగుడు, \"a going down\", from దిగు, \"to go down\" (DEDR 502)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eguḍudiguḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eguḍudiguḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eguḍudiguḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eguḍudiguḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palleku veḷḷē rōḍḍu eguḍudiguḍugā undi. — The road to the village is bumpy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palleku veḷḷē rōḍḍu eguḍudiguḍugā undi.* — The road to the village is bumpy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to slow down, then the Telugu for to lose control, then say eguḍudiguḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to slow down, then the Telugu for to lose control, then say *eguḍudiguḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఎగుడుదిగుడు (eguḍudiguḍu) mean? (\"Bumpy; uneven; ups and downs\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C446-kudupu",
+      "sequence": 22420,
+      "title": "కుదుపు (kudupu) — a jolt; a shake",
+      "headword": "కుదుపు",
+      "romanization": "kudupu",
+      "gloss": "a jolt; a shake",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e86d384e6b21e4d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to lose control, then the Telugu for bumpy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కుదుపు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కుదుపు — kudupu — \"a jolt; a shake\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బస్సు గుంటలో పడినప్పుడు పెద్ద కుదుపు వచ్చింది. bassu guṇṭalō paḍinappuḍu pedda kudupu vaccindi. When the bus hit the pothole there was a big jolt."
+            },
+            {
+              "kind": "speech",
+              "text": "The same word is a verb, to shake something: సీసాను కుదుపు (kudupu), to shake a bottle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కుదుపు (kudupu) is native Dravidian: DEDR 1705 gives Telugu kudupu, \"to shake, to jolt\", and as a noun \"a jolting\", in the family of Tamil kuti, \"to leap\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kudupu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kudupu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kudupu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kudupu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bassu guṇṭalō paḍinappuḍu pedda kudupu vaccindi. — When the bus hit the pothole there was a big jolt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bassu guṇṭalō paḍinappuḍu pedda kudupu vaccindi.* — When the bus hit the pothole there was a big jolt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to lose control, then the Telugu for bumpy, then say kudupu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to lose control, then the Telugu for bumpy, then say *kudupu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కుదుపు (kudupu) mean? (\"A jolt; a shake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C446-tappincu",
+      "sequence": 22430,
+      "title": "తప్పించు (tappiñcu) — to avoid; to dodge",
+      "headword": "తప్పించు",
+      "romanization": "tappiñcu",
+      "gloss": "to avoid; to dodge",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85f9baf7c90fb9b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for bumpy, then the Telugu for a jolt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తప్పించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తప్పించు — tappiñcu — \"to avoid; to dodge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "డ్రైవరు గుంటను తప్పించి వెళ్ళాడు. ḍraivaru guṇṭanu tappiñci veḷḷāḍu. The driver steered round the pothole."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): తప్పించాను, tappiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "తప్పించుకో, to escape, is the same verb with -కో: you get yourself out of something. తప్పించు (tappiñcu) is to steer clear of a thing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తప్పించు (tappiñcu) is native Dravidian: DEDR 3071 lists Telugu tappincu beside tappu, \"to slip, to miss, to escape\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tappiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tappiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tappiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tappiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍraivaru guṇṭanu tappiñci veḷḷāḍu. — The driver steered round the pothole.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍraivaru guṇṭanu tappiñci veḷḷāḍu.* — The driver steered round the pothole.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for bumpy, then the Telugu for a jolt, then say tappiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for bumpy, then the Telugu for a jolt, then say *tappiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తప్పించు (tappiñcu) mean? (\"To avoid; to dodge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C446-boltapadu",
+      "sequence": 22440,
+      "title": "బోల్తాపడు (bōltāpaḍu) — to overturn; to topple over",
+      "headword": "బోల్తాపడు",
+      "romanization": "bōltāpaḍu",
+      "gloss": "to overturn; to topple over",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76b06b1daf61f67d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a jolt, then the Telugu for to avoid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బోల్తాపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బోల్తాపడు — bōltāpaḍu — \"to overturn; to topple over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మలుపు దగ్గర ఒక ఆటో బోల్తాపడింది. malupu daggara oka āṭō bōltāpaḍindi. An auto overturned at the bend."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): బోల్తాపడ్డాను, bōltāpaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of a vehicle that rolls on its side. Spoken Telugu also uses it of a plan that falls through."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బోల్తాపడు (bōltāpaḍu) is a Telugu compound: బోల్తా, \"a tumble\", whose origin is not settled, and the native పడు, \"to fall into, to undergo\" (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bōltāpaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bōltāpaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bōltāpaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bōltāpaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malupu daggara oka āṭō bōltāpaḍindi. — An auto overturned at the bend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malupu daggara oka āṭō bōltāpaḍindi.* — An auto overturned at the bend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a jolt, then the Telugu for to avoid, then say bōltāpaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a jolt, then the Telugu for to avoid, then say *bōltāpaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బోల్తాపడు (bōltāpaḍu) mean? (\"To overturn; to topple over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C446-sottapadu",
+      "sequence": 22450,
+      "title": "సొట్టపడు (soṭṭapaḍu) — to get dented",
+      "headword": "సొట్టపడు",
+      "romanization": "soṭṭapaḍu",
+      "gloss": "to get dented",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c46e372999960899",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to avoid, then the Telugu for to overturn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సొట్టపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సొట్టపడు — soṭṭapaḍu — \"to get dented\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చిన్న ప్రమాదంలో మా కారు తలుపు సొట్టపడింది. cinna pramādaṁlō mā kāru talupu soṭṭapaḍindi. In a small accident the door of our car got dented."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): సొట్టపడింది, soṭṭapaḍindi."
+            },
+            {
+              "kind": "speech",
+              "text": "సొట్ట, a dent, + పడు. A dented pot is a సొట్ట గిన్నె. Its subject is a thing, so the past shown is the third person: సొట్టపడింది, it got dented."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సొట్టపడు (soṭṭapaḍu) is native Dravidian: సొట్ట, \"a dent, a crookedness\" (DEDR 2838), with పడు, \"to undergo\" (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soṭṭapaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soṭṭapaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soṭṭapaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soṭṭapaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cinna pramādaṁlō mā kāru talupu soṭṭapaḍindi. — In a small accident the door of our car got dented.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cinna pramādaṁlō mā kāru talupu soṭṭapaḍindi.* — In a small accident the door of our car got dented.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to avoid, then the Telugu for to overturn, then say soṭṭapaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to avoid, then the Telugu for to overturn, then say *soṭṭapaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సొట్టపడు (soṭṭapaḍu) mean? (\"To get dented\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

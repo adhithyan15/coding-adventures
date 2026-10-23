@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-538-PARIKKU538",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ML-EXT-538-PARIKKU538"
+  ],
+  "after": []
+}

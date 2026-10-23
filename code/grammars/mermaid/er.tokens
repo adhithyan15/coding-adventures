@@ -9,6 +9,15 @@ skip:
 
 NEWLINE             = /\r?\n/
 HEADER              = "erDiagram"
+ACC_DESCR_BLOCK     = /accDescr[ \t]*\{[^}]*\}/
+ACC_TITLE           = /accTitle[ \t]*:[^#\r\n;]*/
+ACC_DESCR           = /accDescr[ \t]*:[^#\r\n;]*/
+DIRECTION_KW        = "direction"
+TITLE_KW            = "title"
+CLASSDEF_KW         = "classDef"
+CLASS_KW            = "class"
+STYLE_KW            = "style"
+DIRECTION           = /TB|BT|LR|RL/
 STYLE_SEPARATOR     = ":::"
 LBRACE              = "{"
 RBRACE              = "}"
@@ -18,6 +27,7 @@ COMMA               = ","
 COLON               = ":"
 QUESTION            = "?"
 STRING              = /"([^"\\]|\\.)*"/
+ESCAPED_ATTRIBUTE   = /`[^`\r\n]+`/
 ZERO_OR_ONE         = /\|o|o\||zero[ \t]+or[ \t]+one|one[ \t]+or[ \t]+zero/
 ZERO_OR_MORE        = /o\{|\}o|0\+|many\(0\)|zero[ \t]+or[ \t]+(?:more|many)|many/
 ONE_OR_MORE         = /\|\{|\}\||1\+|many\(1\)|one[ \t]+or[ \t]+(?:more|many)/
@@ -29,14 +39,3 @@ ATTRIBUTE_KEY       = /PK|FK|UK/
 NUMBER              = /[0-9]+(?:\.[0-9]+)?/
 IDENTIFIER          = /[\p{L}_*][\p{L}\p{N}_.()*~-]*/
 STYLE_VALUE         = /#[0-9A-Fa-f]+|[0-9]+%|;|-/
-
-keywords:
-  direction
-  title
-  classDef
-  class
-  style
-  TB
-  BT
-  LR
-  RL

@@ -10,3 +10,8 @@ selector still panicked while loading
 used for build planning must include `code/packages/starlark` as well as the Go
 replacement closure. Verify that rule path before running the selector so a
 missing support file is not mistaken for a BUILD-file failure.
+
+This recurred after the Go replacement closure was repaired: the selector
+compiled and then panicked on `go_library.star` before evaluating the diff.
+Treat `code/packages/go` and `code/packages/starlark` as one sparse preflight
+set for the build tool, and verify both before the first planning attempt.

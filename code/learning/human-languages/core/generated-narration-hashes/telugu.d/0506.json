@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:4fb26145268584cb",
+  "lessonIds": [
+    "TE-C506-sahincu",
+    "TE-C506-tattuko",
+    "TE-C506-nigraham",
+    "TE-C506-manassanti",
+    "TE-C506-upasamanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch506.txt",
+  "json": "telugu/narration/ch506.json",
+  "textHash": "fnv1a64:c999018ed7e10dcf",
+  "jsonHash": "fnv1a64:093ec831f1937bb0",
+  "findings": []
+}

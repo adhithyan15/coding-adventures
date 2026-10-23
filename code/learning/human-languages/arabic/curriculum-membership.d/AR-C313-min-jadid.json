@@ -1,0 +1,11 @@
+{
+  "id": "AR-C313-min-jadid",
+  "pathSegment": "AR-PATH-313-FAWR313",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-313-FAWR313",
+      "order": 3
+    }
+  ]
+}

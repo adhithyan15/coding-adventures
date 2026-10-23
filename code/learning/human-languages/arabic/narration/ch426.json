@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 426,
+  "title": "Through customs",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:80b872eaa2dba62a",
+  "lessons": [
+    {
+      "id": "AR-C426-jamarik",
+      "sequence": 23950,
+      "title": "جمارك (jamārik) — customs (at a border)",
+      "headword": "جمارك",
+      "romanization": "jamārik",
+      "gloss": "customs (at a border)",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c4940441a99b902",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to tighten, then the Arabic for arrival."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جمارك",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جمارك — jamārik — \"customs (at a border)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وقفنا في الجمارك مدة طويلة. waqafnā fī al-jamārik mudda ṭawīla. We stood in customs for a long time."
+            },
+            {
+              "kind": "speech",
+              "text": "The singular جمرك (jumruk) names one customs post; the plural names the service."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جمارك (jamārik) is usually traced to Turkish gümrük, which goes back to Greek kommerkion, a duty on trade."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jamārik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jamārik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jamārik, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jamārik*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waqafnā fī al-jamārik mudda ṭawīla. — We stood in customs for a long time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waqafnā fī al-jamārik mudda ṭawīla.* — We stood in customs for a long time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to tighten, then the Arabic for arrival, then say jamārik again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to tighten, then the Arabic for arrival, then say *jamārik* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جمارك (jamārik) mean? (\"Customs (at a border)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C426-fattasha",
+      "sequence": 23960,
+      "title": "فتش (fattasha) — to search; to inspect",
+      "headword": "فتش",
+      "romanization": "fattasha",
+      "gloss": "to search; to inspect",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32a20b4876477dde",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for arrival, then the Arabic for customs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فتش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فتش — fattasha — \"to search; to inspect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "فتش الموظف حقيبتي في الجمارك. fattasha al-muwaẓẓaf ḥaqībatī fī al-jamārik. The officer searched my bag at customs."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يفتش, yufattish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فتش (fattasha) is built on the native Arabic root f-t-sh, \"to search\" (Lane). It is Form II, \"to search thoroughly\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fattasha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fattasha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fattasha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fattasha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fattasha al-muwaẓẓaf ḥaqībatī fī al-jamārik. — The officer searched my bag at customs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fattasha al-muwaẓẓaf ḥaqībatī fī al-jamārik.* — The officer searched my bag at customs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for arrival, then the Arabic for customs, then say fattasha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for arrival, then the Arabic for customs, then say *fattasha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فتش (fattasha) mean? (\"To search; to inspect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C426-khatama",
+      "sequence": 23970,
+      "title": "ختم (khatama) — to stamp; to seal",
+      "headword": "ختم",
+      "romanization": "khatama",
+      "gloss": "to stamp; to seal",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3eb1e0d21d24fed6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for customs, then the Arabic for to search."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ختم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ختم — khatama — \"to stamp; to seal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ختم الموظف جوازي عند الوصول. khatama al-muwaẓẓaf jawāzī ʿinda al-wuṣūl. The officer stamped my passport on arrival."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يختم, yakhtim."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun khatm is a stamp; khatama also means to finish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ختم (khatama) is built on the native Arabic root kh-t-m, \"to seal\" (Lane). It is the root of khātam, \"a ring\", once a seal ring."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khatama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khatama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khatama, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khatama*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khatama al-muwaẓẓaf jawāzī ʿinda al-wuṣūl. — The officer stamped my passport on arrival.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khatama al-muwaẓẓaf jawāzī ʿinda al-wuṣūl.* — The officer stamped my passport on arrival.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for customs, then the Arabic for to search, then say khatama again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for customs, then the Arabic for to search, then say *khatama* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ختم (khatama) mean? (\"To stamp; to seal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C426-afragha",
+      "sequence": 23980,
+      "title": "أفرغ (afragha) — to empty out; to unpack",
+      "headword": "أفرغ",
+      "romanization": "afragha",
+      "gloss": "to empty out; to unpack",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c574f671123d161e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to search, then the Arabic for to stamp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أفرغ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أفرغ — afragha — \"to empty out; to unpack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أفرغ المسافر حقيبته أمام الموظف. afragha al-musāfir ḥaqībatahu amāma al-muwaẓẓaf. The traveller emptied out his bag in front of the officer."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يفرغ, yufrigh."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أفرغ (afragha) is built on the native Arabic root f-r-gh, \"to be empty, to be free\" (Lane). It is Form IV, \"to make empty\", beside fārigh, \"empty\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afragha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afragha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afragha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afragha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afragha al-musāfir ḥaqībatahu amāma al-muwaẓẓaf. — The traveller emptied out his bag in front of the officer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afragha al-musāfir ḥaqībatahu amāma al-muwaẓẓaf.* — The traveller emptied out his bag in front of the officer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to search, then the Arabic for to stamp, then say afragha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to search, then the Arabic for to stamp, then say *afragha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أفرغ (afragha) mean? (\"To empty out; to unpack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C426-sadara",
+      "sequence": 23990,
+      "title": "صادر (ṣādara) — to confiscate",
+      "headword": "صادر",
+      "romanization": "ṣādara",
+      "gloss": "to confiscate",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a59f057c9f4e13d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to stamp, then the Arabic for to empty out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صادر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صادر — ṣādara — \"to confiscate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "صادر موظف الجمارك العسل من حقيبتي. ṣādara muwaẓẓaf al-jamārik al-ʿasal min ḥaqībatī. The customs officer confiscated the honey from my bag."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يصادر, yuṣādir."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صادر (ṣādara) is built on the native Arabic root ṣ-d-r, \"to come forth\" (Lane). It is Form III."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣādara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣādara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣādara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣādara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣādara muwaẓẓaf al-jamārik al-ʿasal min ḥaqībatī. — The customs officer confiscated the honey from my bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣādara muwaẓẓaf al-jamārik al-ʿasal min ḥaqībatī.* — The customs officer confiscated the honey from my bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to stamp, then the Arabic for to empty out, then say ṣādara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to stamp, then the Arabic for to empty out, then say *ṣādara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صادر (ṣādara) mean? (\"To confiscate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

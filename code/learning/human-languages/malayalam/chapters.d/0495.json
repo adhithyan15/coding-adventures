@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "In the Hills",
+  "label": "ch:ml-in-the-hills",
+  "canDo": "I can say a peak, a hillside, a mountain pass, a meadow and shade.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C495-tanal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can say a peak, a hillside, a mountain pass, a meadow and shade.",
+    "assesses": [
+      "ML-LEX-C495-MALA495-03",
+      "ML-LEX-C495-MALA495-04",
+      "ML-LEX-C495-MALA495-05"
+    ]
+  }
+}

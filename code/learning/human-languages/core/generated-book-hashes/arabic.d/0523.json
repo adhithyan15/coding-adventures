@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:bed38ba23b3ea336",
+  "lessonIds": [
+    "AR-C523-khattata",
+    "AR-C523-atamma",
+    "AR-C523-tafarragha",
+    "AR-C523-taqyim",
+    "AR-C523-intaj"
+  ],
+  "tex": "arabic/book/chapters/ch523-getting-it-done.tex"
+}

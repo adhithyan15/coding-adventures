@@ -1,0 +1,11 @@
+{
+  "id": "TE-C387-prasamsincu",
+  "pathSegment": "TE-PATH-387-VIMARSA387",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-387-VIMARSA387",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-400-ENNIKA400",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TE-EXT-400-ENNIKA400"
+  ],
+  "after": []
+}

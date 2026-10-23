@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:94fc816bdc384821",
+  "lessonIds": [
+    "TE-C482-vadagallu",
+    "TE-C482-mancugadda",
+    "TE-C482-himapatam",
+    "TE-C482-pillagali",
+    "TE-C482-callabadu"
+  ],
+  "tex": "telugu/book/chapters/ch482-cold-weather.tex"
+}

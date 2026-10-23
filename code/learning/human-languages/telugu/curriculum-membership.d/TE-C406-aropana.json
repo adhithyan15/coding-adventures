@@ -1,0 +1,11 @@
+{
+  "id": "TE-C406-aropana",
+  "pathSegment": "TE-PATH-406-AVINITI406",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-406-AVINITI406",
+      "order": 3
+    }
+  ]
+}

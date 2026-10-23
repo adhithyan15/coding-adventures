@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-364-VIMUKTI364",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-364-VIMUKTI364"
+  ],
+  "after": []
+}

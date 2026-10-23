@@ -1,0 +1,11 @@
+{
+  "id": "ML-C424-netavu",
+  "pathSegment": "ML-PATH-424-ADHIKARAM424",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-424-ADHIKARAM424",
+      "order": 4
+    }
+  ]
+}

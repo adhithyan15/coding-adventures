@@ -1,0 +1,14 @@
+{
+  "language": "malayalam",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:a66202562fab26ac",
+  "lessonIds": [
+    "ML-C436-laborattari",
+    "ML-C436-pariksanam",
+    "ML-C436-sarve",
+    "ML-C436-kantupitittam",
+    "ML-C436-sastriyamaya",
+    "ML-R436-review-429-436"
+  ],
+  "tex": "malayalam/book/chapters/ch436-in-the-lab.tex"
+}

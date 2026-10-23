@@ -1,0 +1,21 @@
+{
+  "chapter": 186,
+  "title": "What Will Happen? Who Will Come?",
+  "label": "ch:pa-a2-third-person-future",
+  "canDo": "I can recognise and use common masculine and feminine third-person future forms of to be and to come.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C186-payoff",
+    "kind": "production",
+    "summary": "Retrieve four exact third-person future forms through listening, speaking, reading, and bounded copying after a slow agreement ramp.",
+    "assesses": [
+      "PA-FORM-HOVEGA-186",
+      "PA-FORM-HOVEGI-186",
+      "PA-FORM-AAVEGA-186",
+      "PA-FORM-AAVEGI-186"
+    ],
+    "note": "This ninth Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

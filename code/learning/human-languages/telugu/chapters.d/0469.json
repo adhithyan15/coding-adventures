@@ -1,0 +1,21 @@
+{
+  "chapter": 469,
+  "title": "A City at a Standstill",
+  "label": "ch:te-a-city-at-a-standstill",
+  "canDo": "I can say a strike, a closure, a disruption, a rush and a mix-up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-R469-review-462-469",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can say a strike, a closure, a disruption, a rush and a mix-up.",
+    "assesses": [
+      "TE-LEX-C469-SAMME469-01",
+      "TE-LEX-C469-SAMME469-02",
+      "TE-LEX-C469-SAMME469-03",
+      "TE-LEX-C469-SAMME469-04",
+      "TE-LEX-C469-SAMME469-05"
+    ]
+  }
+}

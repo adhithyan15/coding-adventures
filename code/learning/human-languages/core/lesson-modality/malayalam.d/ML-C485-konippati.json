@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C485-konippati",
+    "language": "malayalam",
+    "chapter": 485,
+    "sequence": 24240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60647702aac73ba8"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:06e920a8a248bdd2",
+  "lessonIds": [
+    "AR-C431-nafaq",
+    "AR-C431-ishara",
+    "AR-C431-murur",
+    "AR-C431-izdiham",
+    "AR-C431-inatafa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch431.txt",
+  "json": "arabic/narration/ch431.json",
+  "textHash": "fnv1a64:63b360bf45627926",
+  "jsonHash": "fnv1a64:913e9dc38cf372f7",
+  "findings": []
+}

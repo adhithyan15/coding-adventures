@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-401-VIPLAVAM401",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-401-VIPLAVAM401"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 549,
+  "sourceHash": "fnv1a64:a8c675cb329e4eb1",
+  "lessonIds": [
+    "TE-C549-amarcu",
+    "TE-C549-paracu",
+    "TE-C549-veligincu",
+    "TE-C549-ciluku",
+    "TE-C549-alasipovu",
+    "TE-R549-review-542-549",
+    "TE-R549-review-final-549"
+  ],
+  "tex": "telugu/book/chapters/ch549-making-a-home.tex"
+}

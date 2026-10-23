@@ -1,0 +1,19 @@
+{
+  "chapter": 545,
+  "title": "Duties at Work",
+  "label": "ch:ml-duties-at-work",
+  "canDo": "I can say a superior, being in charge, a job transfer, planning and to cooperate.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C545-sahakarikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 545: I can say a superior, being in charge, a job transfer, planning and to cooperate.",
+    "assesses": [
+      "ML-LEX-C545-CUMATALA545-03",
+      "ML-LEX-C545-CUMATALA545-04",
+      "ML-LEX-C545-CUMATALA545-05"
+    ]
+  }
+}

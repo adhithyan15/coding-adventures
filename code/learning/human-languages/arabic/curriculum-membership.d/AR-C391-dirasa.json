@@ -1,0 +1,11 @@
+{
+  "id": "AR-C391-dirasa",
+  "pathSegment": "AR-PATH-391-BAHTH391",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-391-BAHTH391",
+      "order": 1
+    }
+  ]
+}

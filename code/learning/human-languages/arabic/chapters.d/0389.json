@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "Power and influence",
+  "label": "ch:ar-power-and-influence",
+  "canDo": "I can talk about influence and stability, and say that something prevailed, or that someone joined or forced.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-R389-review-382-389",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can talk about influence and stability, and say that something prevailed, or that someone joined or forced.",
+    "assesses": [
+      "AR-LEX-C389-NUFUDH389-03",
+      "AR-LEX-C389-NUFUDH389-04",
+      "AR-LEX-C389-NUFUDH389-05"
+    ]
+  }
+}

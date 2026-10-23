@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:643622a3db5141b8",
+  "lessonIds": [
+    "AR-C367-adraka",
+    "AR-C367-tasawwara",
+    "AR-C367-istawaba",
+    "AR-C367-way",
+    "AR-C367-marifa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch367.txt",
+  "json": "arabic/narration/ch367.json",
+  "textHash": "fnv1a64:6b19fef5aae96f39",
+  "jsonHash": "fnv1a64:e67da8bd420ca97c",
+  "findings": []
+}

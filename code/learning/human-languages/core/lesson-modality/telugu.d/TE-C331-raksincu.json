@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C331-raksincu",
+    "language": "telugu",
+    "chapter": 331,
+    "sequence": 16280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a4ed7f9bf4e9a49"
+  },
+  "findings": []
+}

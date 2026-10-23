@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:e41b7d01d5364c15",
+  "lessonIds": [
+    "AR-C334-muhakama",
+    "AR-C334-jalsa",
+    "AR-C334-difa",
+    "AR-C334-adana",
+    "AR-C334-baraa"
+  ],
+  "tex": "arabic/book/chapters/ch334-a-trial.tex"
+}

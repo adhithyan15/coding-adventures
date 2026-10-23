@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:580f33bfe4aaad2f",
+  "lessonIds": [
+    "TE-C360-khadgam",
+    "TE-C360-kavacam",
+    "TE-C360-ayudham",
+    "TE-C360-villu",
+    "TE-C360-tupaki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch360.txt",
+  "json": "telugu/narration/ch360.json",
+  "textHash": "fnv1a64:64d0b9e1f4d0ce90",
+  "jsonHash": "fnv1a64:e8a24b307fa2b841",
+  "findings": []
+}

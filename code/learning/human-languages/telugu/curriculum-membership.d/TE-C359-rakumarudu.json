@@ -1,0 +1,11 @@
+{
+  "id": "TE-C359-rakumarudu",
+  "pathSegment": "TE-PATH-359-SAMRAJYAM359",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-359-SAMRAJYAM359",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C337-ninditudu",
+  "pathSegment": "TE-PATH-337-ARESTU337",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-337-ARESTU337",
+      "order": 4
+    }
+  ]
+}

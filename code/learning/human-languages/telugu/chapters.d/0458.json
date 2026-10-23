@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Settling In",
+  "label": "ch:te-settling-in",
+  "canDo": "I can say to settle in, to get used to, a mosquito net, a toilet and drinking water.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C458-taguniru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can say to settle in, to get used to, a mosquito net, a toilet and drinking water.",
+    "assesses": [
+      "TE-LEX-C458-GADI458-03",
+      "TE-LEX-C458-GADI458-04",
+      "TE-LEX-C458-GADI458-05"
+    ]
+  }
+}

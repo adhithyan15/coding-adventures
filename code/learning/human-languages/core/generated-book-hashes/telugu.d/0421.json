@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:bbb51a7830bfaa52",
+  "lessonIds": [
+    "TE-C421-apayam",
+    "TE-C421-mundujagratta",
+    "TE-C421-jagrattapadu",
+    "TE-C421-nivarincu",
+    "TE-C421-sandigdham",
+    "TE-R421-review-414-421"
+  ],
+  "tex": "telugu/book/chapters/ch421-risk-and-caution.tex"
+}

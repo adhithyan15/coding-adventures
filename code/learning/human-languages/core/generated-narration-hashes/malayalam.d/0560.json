@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 560,
+  "sourceHash": "fnv1a64:7e6818ee0bc1e46e",
+  "lessonIds": [
+    "ML-C560-vinodayatra",
+    "ML-C560-citraracana",
+    "ML-C560-silpam",
+    "ML-C560-silpi",
+    "ML-C560-pradarsanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch560.txt",
+  "json": "malayalam/narration/ch560.json",
+  "textHash": "fnv1a64:2b8bc34c17e9f8ee",
+  "jsonHash": "fnv1a64:041b714a35580e77",
+  "findings": []
+}

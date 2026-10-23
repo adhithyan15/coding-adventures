@@ -1,0 +1,11 @@
+{
+  "id": "AR-C525-mubarmij",
+  "pathSegment": "AR-PATH-525-TASMIM525",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-525-TASMIM525",
+      "order": 4
+    }
+  ]
+}

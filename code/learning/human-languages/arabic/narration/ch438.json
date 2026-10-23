@@ -1,0 +1,850 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 438,
+  "title": "Sightseeing",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:59c26b01ece38366",
+  "lessons": [
+    {
+      "id": "AR-C438-siyaha",
+      "sequence": 24560,
+      "title": "سياحة (siyāḥa) — tourism",
+      "headword": "سياحة",
+      "romanization": "siyāḥa",
+      "gloss": "tourism",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e5a95b76394cf899",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to guide, then the Arabic for an itinerary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سياحة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سياحة — siyāḥa — \"tourism\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تعمل أختي في السياحة. taʿmalu ukhtī fī as-siyāḥa. My sister works in tourism."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سياحة (siyāḥa) is built on the native Arabic root s-y-ḥ, \"to flow; to roam the land\" (Lane). It is the verbal noun of sāḥa, \"to travel about\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siyāḥa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siyāḥa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siyāḥa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siyāḥa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿmalu ukhtī fī as-siyāḥa. — My sister works in tourism.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿmalu ukhtī fī as-siyāḥa.* — My sister works in tourism.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to guide, then the Arabic for an itinerary, then say siyāḥa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to guide, then the Arabic for an itinerary, then say *siyāḥa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سياحة (siyāḥa) mean? (\"Tourism\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C438-jawla",
+      "sequence": 24570,
+      "title": "جولة (jawla) — a tour; a round",
+      "headword": "جولة",
+      "romanization": "jawla",
+      "gloss": "a tour; a round",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c55ae548bc68b65",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an itinerary, then the Arabic for tourism."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جولة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جولة — jawla — \"a tour; a round\"."
+            },
+            {
+              "kind": "speech",
+              "text": "قمنا بجولة في المدينة القديمة. qumnā bi-jawla fī al-madīna al-qadīma. We went on a tour of the old city."
+            },
+            {
+              "kind": "speech",
+              "text": "qāma bi-jawla: to go on a tour."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جولة (jawla) is built on the native Arabic root j-w-l, \"to go round, to roam\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jawla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jawla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jawla, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jawla*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qumnā bi-jawla fī al-madīna al-qadīma. — We went on a tour of the old city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qumnā bi-jawla fī al-madīna al-qadīma.* — We went on a tour of the old city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an itinerary, then the Arabic for tourism, then say jawla again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an itinerary, then the Arabic for tourism, then say *jawla* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جولة (jawla) mean? (\"A tour; a round\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C438-nuzha",
+      "sequence": 24580,
+      "title": "نزهة (nuzha) — an outing; a pleasure trip",
+      "headword": "نزهة",
+      "romanization": "nuzha",
+      "gloss": "an outing; a pleasure trip",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82b6592bc9f22210",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for tourism, then the Arabic for a tour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نزهة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نزهة — nuzha — \"an outing; a pleasure trip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "خرجنا في نزهة إلى البحيرة. kharajnā fī nuzha ilā al-buḥayra. We went out on an outing to the lake."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نزهة (nuzha) is usually traced to the native Arabic root n-z-h, \"to keep far from what is unclean\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nuzha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nuzha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nuzha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nuzha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharajnā fī nuzha ilā al-buḥayra. — We went out on an outing to the lake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharajnā fī nuzha ilā al-buḥayra.* — We went out on an outing to the lake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for tourism, then the Arabic for a tour, then say nuzha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for tourism, then the Arabic for a tour, then say *nuzha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نزهة (nuzha) mean? (\"An outing; a pleasure trip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C438-tajawwala",
+      "sequence": 24590,
+      "title": "تجول (tajawwala) — to wander around; to tour",
+      "headword": "تجول",
+      "romanization": "tajawwala",
+      "gloss": "to wander around; to tour",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6eeb6429f56e49d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a tour, then the Arabic for an outing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تجول",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تجول — tajawwala — \"to wander around; to tour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تجولنا في السوق حتى المساء. tajawwalnā fī as-sūq ḥattā al-masāʾ. We wandered around the market until the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتجول, yatajawwal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تجول (tajawwala) is built on the native Arabic root j-w-l, \"to go round, to roam\" (Lane). It is Form V."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tajawwala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tajawwala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tajawwala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tajawwala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tajawwalnā fī as-sūq ḥattā al-masāʾ. — We wandered around the market until the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tajawwalnā fī as-sūq ḥattā al-masāʾ.* — We wandered around the market until the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a tour, then the Arabic for an outing, then say tajawwala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a tour, then the Arabic for an outing, then say *tajawwala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تجول (tajawwala) mean? (\"To wander around; to tour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C438-rahhala",
+      "sequence": 24600,
+      "title": "رحالة (raḥḥāla) — a great traveller; an explorer",
+      "headword": "رحالة",
+      "romanization": "raḥḥāla",
+      "gloss": "a great traveller; an explorer",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0def532f2748425",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an outing, then the Arabic for to wander around."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رحالة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رحالة — raḥḥāla — \"a great traveller; an explorer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كتب الرحالة عن رحلته في الصحراء. kataba ar-raḥḥāla ʿan riḥlatihi fī aṣ-ṣaḥrāʾ. The explorer wrote about his journey in the desert."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending -a here marks a man who does a thing a great deal, not a woman."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رحالة (raḥḥāla) is built on the native Arabic root r-ḥ-l, \"to set out on a journey\" (Lane). It shares its root with riḥla, \"a journey\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raḥḥāla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raḥḥāla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raḥḥāla, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raḥḥāla*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kataba ar-raḥḥāla ʿan riḥlatihi fī aṣ-ṣaḥrāʾ. — The explorer wrote about his journey in the desert.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kataba ar-raḥḥāla ʿan riḥlatihi fī aṣ-ṣaḥrāʾ.* — The explorer wrote about his journey in the desert.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an outing, then the Arabic for to wander around, then say raḥḥāla again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an outing, then the Arabic for to wander around, then say *raḥḥāla* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رحالة (raḥḥāla) mean? (\"A great traveller; an explorer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R438-review-431-438",
+      "sequence": 24610,
+      "title": "Words from chapters 431–438 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 431-438",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d2c7dd18506225c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Arabic for a tunnel and a signal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tunnel, a signal, traffic, congestion, to turn off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tunnel, a signal, traffic, congestion, to turn off]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuel, petrol, an engine, brakes, to supply",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fuel, petrol, an engine, brakes, to supply]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tyre, a wheel, a hole, a pump, to tow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tyre, a wheel, a hole, a pump, to tow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a licence, a bend, to renew, to issue, to overtake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a licence, a bend, to renew, to issue, to overtake]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a route, a fare, a subscription, a pedestrian crossing, to turn around",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a route, a fare, a subscription, a pedestrian crossing, to turn around]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a garage, a kiosk, a ticket window, a porter, to travel about",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a garage, a kiosk, a ticket window, a porter, to travel about]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a compass, speed, a tour guide, to guide, an itinerary",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a compass, speed, a tour guide, to guide, an itinerary]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tourism, a tour, an outing, to wander around, a great traveller",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tourism, a tour, an outing, to wander around, a great traveller]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A tunnel? (نفق, nafaq.) A signal? (إشارة, ishāra.) Traffic? (مرور, murūr.) Congestion? (ازدحام, izdiḥām.) To turn off? (انعطف, inʿaṭafa.) Fuel? (وقود, waqūd.) Petrol? (بنزين, banzīn.) An engine? (محرك, muḥarrik.) Brakes? (فرامل, farāmil.) To supply? (زود, zawwada.) A tyre? (إطار, iṭār.) A wheel? (عجلة, ʿajala.) A hole? (ثقب, thuqb.) A pump? (مضخة, miḍakhkha.) To tow? (جر, jarra.) A licence? (رخصة, rukhṣa.) A bend? (منعطف, munʿaṭaf.) To renew? (جدد, jaddada.) To issue? (أصدر, aṣdara.) To overtake? (تجاوز, tajāwaza.) A route? (مسار, masār.) A fare? (أجرة, ujra.) A subscription? (اشتراك, ishtirāk.) A pedestrian crossing? (ممر مشاة, mamarr mushāh.) To turn around? (استدار, istadāra.) A garage? (مرآب, mirʾāb.) A kiosk? (كشك, kushk.) A ticket window? (شباك, shubbāk.) A porter? (حمال, ḥammāl.) To travel about? (تنقل, tanaqqala.) A compass? (بوصلة, būṣala.) Speed? (سرعة, surʿa.) A tour guide? (مرشد, murshid.) To guide? (أرشد, arshada.) An itinerary? (خط سير, khaṭṭ sayr.) Tourism? (سياحة, siyāḥa.) A tour? (جولة, jawla.) An outing? (نزهة, nuzha.) To wander around? (تجول, tajawwala.) A great traveller? (رحالة, raḥḥāla.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

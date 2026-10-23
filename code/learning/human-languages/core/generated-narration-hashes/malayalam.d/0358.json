@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:6bd6aba3ee2b5d91",
+  "lessonIds": [
+    "ML-C358-pantupantu",
+    "ML-C358-akkalattu",
+    "ML-C358-anneram",
+    "ML-C358-tutarnnu",
+    "ML-C358-utanilam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch358.txt",
+  "json": "malayalam/narration/ch358.json",
+  "textHash": "fnv1a64:8d3e2f0203658185",
+  "jsonHash": "fnv1a64:4f614df8ecc2bb5a",
+  "findings": []
+}

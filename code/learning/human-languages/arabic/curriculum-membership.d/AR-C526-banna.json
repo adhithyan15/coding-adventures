@@ -1,0 +1,11 @@
+{
+  "id": "AR-C526-banna",
+  "pathSegment": "AR-PATH-526-HIRAF526",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-526-HIRAF526",
+      "order": 3
+    }
+  ]
+}

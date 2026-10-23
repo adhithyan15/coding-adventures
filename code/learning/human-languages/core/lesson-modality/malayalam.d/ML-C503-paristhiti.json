@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C503-paristhiti",
+    "language": "malayalam",
+    "chapter": 503,
+    "sequence": 25150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4f66c0d340d6b9b"
+  },
+  "findings": []
+}

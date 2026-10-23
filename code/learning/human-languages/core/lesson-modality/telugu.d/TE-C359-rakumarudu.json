@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C359-rakumarudu",
+    "language": "telugu",
+    "chapter": 359,
+    "sequence": 17710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e8198847bfce911"
+  },
+  "findings": []
+}

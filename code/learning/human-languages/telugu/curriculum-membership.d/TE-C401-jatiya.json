@@ -1,0 +1,11 @@
+{
+  "id": "TE-C401-jatiya",
+  "pathSegment": "TE-PATH-401-PAURUDU401",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-401-PAURUDU401",
+      "order": 3
+    }
+  ]
+}

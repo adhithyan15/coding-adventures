@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:326127957809c6d2",
+  "lessonIds": [
+    "TE-C423-pratiphalam",
+    "TE-C423-vrtha",
+    "TE-C423-anavasaram",
+    "TE-C423-saripovu",
+    "TE-C423-viniyogincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch423.txt",
+  "json": "telugu/narration/ch423.json",
+  "textHash": "fnv1a64:cd3b51d9e9989081",
+  "jsonHash": "fnv1a64:aaae568c65fd1080",
+  "findings": []
+}

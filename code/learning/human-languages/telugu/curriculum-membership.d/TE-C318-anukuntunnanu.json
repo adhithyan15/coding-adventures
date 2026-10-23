@@ -1,0 +1,11 @@
+{
+  "id": "TE-C318-anukuntunnanu",
+  "pathSegment": "TE-PATH-318-OPINION-SO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-318-OPINION-SO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:b9d56fa998690d5e",
+  "lessonIds": [
+    "ML-C495-kotumuti",
+    "ML-C495-malancerivu",
+    "ML-C495-curam",
+    "ML-C495-pulmetu",
+    "ML-C495-tanal"
+  ],
+  "tex": "malayalam/book/chapters/ch495-in-the-hills.tex"
+}

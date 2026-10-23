@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-547-PROFESSION547",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ML-EXT-547-PROFESSION547"
+  ],
+  "after": []
+}

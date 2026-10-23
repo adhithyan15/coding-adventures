@@ -1,0 +1,11 @@
+{
+  "id": "TE-C538-gatram",
+  "pathSegment": "TE-PATH-538-SANGITAM538",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-538-SANGITAM538",
+      "order": 1
+    }
+  ]
+}

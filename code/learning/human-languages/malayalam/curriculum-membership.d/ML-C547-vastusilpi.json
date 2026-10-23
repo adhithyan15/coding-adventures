@@ -1,0 +1,11 @@
+{
+  "id": "ML-C547-vastusilpi",
+  "pathSegment": "ML-PATH-547-PROFESSION547",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-547-PROFESSION547",
+      "order": 2
+    }
+  ]
+}

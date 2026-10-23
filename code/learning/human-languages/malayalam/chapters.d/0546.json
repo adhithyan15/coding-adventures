@@ -1,0 +1,19 @@
+{
+  "chapter": 546,
+  "title": "Industry and Stress",
+  "label": "ch:ml-industry-and-stress",
+  "canDo": "I can say manual labour, a livelihood, a workload, work experience and to lead.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C546-nayikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 546: I can say manual labour, a livelihood, a workload, work experience and to lead.",
+    "assesses": [
+      "ML-LEX-C546-VYAVASAYAM546-03",
+      "ML-LEX-C546-VYAVASAYAM546-04",
+      "ML-LEX-C546-VYAVASAYAM546-05"
+    ]
+  }
+}

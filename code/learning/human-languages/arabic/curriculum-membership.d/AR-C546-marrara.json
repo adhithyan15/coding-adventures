@@ -1,0 +1,11 @@
+{
+  "id": "AR-C546-marrara",
+  "pathSegment": "AR-PATH-546-MUBARA546",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-546-MUBARA546",
+      "order": 3
+    }
+  ]
+}

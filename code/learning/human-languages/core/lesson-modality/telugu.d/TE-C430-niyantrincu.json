@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C430-niyantrincu",
+    "language": "telugu",
+    "chapter": 430,
+    "sequence": 21490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ce1c02b2d46c554"
+  },
+  "findings": []
+}

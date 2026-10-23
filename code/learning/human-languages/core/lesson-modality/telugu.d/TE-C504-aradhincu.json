@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C504-aradhincu",
+    "language": "telugu",
+    "chapter": 504,
+    "sequence": 25510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a12c515fc3444989"
+  },
+  "findings": []
+}

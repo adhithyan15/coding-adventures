@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:6b8dbcc3fef7f079",
+  "lessonIds": [
+    "ML-C344-ticket-venam",
+    "ML-C344-saukaryam",
+    "ML-W344-au-sign",
+    "ML-C344-bus-kittiyilla",
+    "ML-R344-at-the-station"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "malayalam/narration/ch344.txt",
+  "json": "malayalam/narration/ch344.json",
+  "textHash": "fnv1a64:6dcab5eb85e18b9d",
+  "jsonHash": "fnv1a64:04490296cd425227",
+  "findings": []
+}

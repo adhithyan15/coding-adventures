@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-365-DROHAM365",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a scout, a betrayal, a vow, to order and to banish.",
+  "prerequisites": []
+}

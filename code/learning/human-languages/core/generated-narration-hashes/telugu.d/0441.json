@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:0a39472f7a8202dd",
+  "lessonIds": [
+    "TE-C441-pasportu",
+    "TE-C441-gurtimpu",
+    "TE-C441-sunkam",
+    "TE-C441-bhadrata",
+    "TE-C441-dhruvapatram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch441.txt",
+  "json": "telugu/narration/ch441.json",
+  "textHash": "fnv1a64:45731cce18f91851",
+  "jsonHash": "fnv1a64:0270d410859d7793",
+  "findings": []
+}

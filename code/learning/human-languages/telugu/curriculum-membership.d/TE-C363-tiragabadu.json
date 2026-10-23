@@ -1,0 +1,11 @@
+{
+  "id": "TE-C363-tiragabadu",
+  "pathSegment": "TE-PATH-363-TIRUGUBATU363",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-363-TIRUGUBATU363",
+      "order": 1
+    }
+  ]
+}

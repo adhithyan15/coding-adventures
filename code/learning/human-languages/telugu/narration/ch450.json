@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 450,
+  "title": "Parking and Dropping Off",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3f2b11668025eb6b",
+  "lessons": [
+    {
+      "id": "TE-C450-parkingu",
+      "sequence": 22610,
+      "title": "పార్కింగు (pārkiṅgu) — parking",
+      "headword": "పార్కింగు",
+      "romanization": "pārkiṅgu",
+      "gloss": "parking",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32d2daecab3c435d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to seize up, then the Telugu for to get blocked."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పార్కింగు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పార్కింగు — pārkiṅgu — \"parking\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ దుకాణం దగ్గర పార్కింగు లేదు. ā dukāṇaṁ daggara pārkiṅgu lēdu. There is no parking near that shop."
+            },
+            {
+              "kind": "speech",
+              "text": "A parking place is పార్కింగు (pārkiṅgu) స్థలం."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పార్కింగు (pārkiṅgu) is a loan from English parking, with the Telugu final -ఉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pārkiṅgu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pārkiṅgu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pārkiṅgu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pārkiṅgu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā dukāṇaṁ daggara pārkiṅgu lēdu. — There is no parking near that shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā dukāṇaṁ daggara pārkiṅgu lēdu.* — There is no parking near that shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to seize up, then the Telugu for to get blocked, then say pārkiṅgu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to seize up, then the Telugu for to get blocked, then say *pārkiṅgu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పార్కింగు (pārkiṅgu) mean? (\"Parking\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C450-nilupu",
+      "sequence": 22620,
+      "title": "నిలుపు (nilupu) — to pull up; to park",
+      "headword": "నిలుపు",
+      "romanization": "nilupu",
+      "gloss": "to pull up; to park",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8be3e4056850a7a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to get blocked, then the Telugu for parking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిలుపు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిలుపు — nilupu — \"to pull up; to park\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను కారును చెట్టు కింద నిలిపాడు. atanu kārunu ceṭṭu kinda nilipāḍu. He parked the car under a tree."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): నిలిపాను, nilipānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The causative of నిలుచు, to stand: to make something stand. It also means to stop a process."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిలుపు (nilupu) is native Dravidian: DEDR 3675 lists Telugu nilupu, \"to cause to stand, to stop\", beside nilucu, \"to stand\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nilupu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nilupu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nilupu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nilupu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu kārunu ceṭṭu kinda nilipāḍu. — He parked the car under a tree.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu kārunu ceṭṭu kinda nilipāḍu.* — He parked the car under a tree.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to get blocked, then the Telugu for parking, then say nilupu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to get blocked, then the Telugu for parking, then say *nilupu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిలుపు (nilupu) mean? (\"To pull up; to park\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C450-ekkincu",
+      "sequence": 22630,
+      "title": "ఎక్కించు (ekkiñcu) — to put aboard; to load",
+      "headword": "ఎక్కించు",
+      "romanization": "ekkiñcu",
+      "gloss": "to put aboard; to load",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f672e6c52385f2a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for parking, then the Telugu for to pull up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఎక్కించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎక్కించు — ekkiñcu — \"to put aboard; to load\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నాన్న పిల్లలను బస్సు ఎక్కించాడు. nānna pillalanu bassu ekkiñcāḍu. Father put the children on the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఎక్కించాను, ekkiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The causative of ఎక్కు, to climb on, to board: to make someone or something get on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎక్కించు (ekkiñcu) is native Dravidian: DEDR 766 lists Telugu ekkincu, \"to cause to ascend\", beside ekku, \"to climb, to get on\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekkiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekkiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekkiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekkiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānna pillalanu bassu ekkiñcāḍu. — Father put the children on the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānna pillalanu bassu ekkiñcāḍu.* — Father put the children on the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for parking, then the Telugu for to pull up, then say ekkiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for parking, then the Telugu for to pull up, then say *ekkiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఎక్కించు (ekkiñcu) mean? (\"To put aboard; to load\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C450-dincu",
+      "sequence": 22640,
+      "title": "దించు (diñcu) — to unload; to lower",
+      "headword": "దించు",
+      "romanization": "diñcu",
+      "gloss": "to unload; to lower",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1462cdf4e184287",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to pull up, then the Telugu for to put aboard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దించు — diñcu — \"to unload; to lower\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కూలీలు లారీ నుంచి బస్తాలు దించారు. kūlīlu lārī nuñci bastālu diñcāru. The labourers unloaded the sacks from the lorry."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): దించాను, diñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The causative of దిగు, to get down: to bring something down. బరువు దించు (diñcu), to put down a load."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దించు (diñcu) is native Dravidian: DEDR 502 lists Telugu dincu beside digu, \"to descend, to get off\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūlīlu lārī nuñci bastālu diñcāru. — The labourers unloaded the sacks from the lorry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūlīlu lārī nuñci bastālu diñcāru.* — The labourers unloaded the sacks from the lorry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to pull up, then the Telugu for to put aboard, then say diñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to pull up, then the Telugu for to put aboard, then say *diñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దించు (diñcu) mean? (\"To unload; to lower\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C450-digabettu",
+      "sequence": 22650,
+      "title": "దిగబెట్టు (digabeṭṭu) — to drop someone off",
+      "headword": "దిగబెట్టు",
+      "romanization": "digabeṭṭu",
+      "gloss": "to drop someone off",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33264026bb0ec56d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to put aboard, then the Telugu for to unload."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దిగబెట్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దిగబెట్టు — digabeṭṭu — \"to drop someone off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నా స్నేహితుడు నన్ను స్టేషన్ దగ్గర దిగబెట్టాడు. nā snēhituḍu nannu sṭēṣan daggara digabeṭṭāḍu. My friend dropped me off near the station."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): దిగబెట్టాను, digabeṭṭānu."
+            },
+            {
+              "kind": "speech",
+              "text": "దిగు, to get down, + పెట్టు, to put: to see someone safely to a place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దిగబెట్టు (digabeṭṭu) is native Dravidian: దిగు, \"to get down\" (DEDR 502), and పెట్టు, \"to put, to place\" (DEDR 4390)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "digabeṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *digabeṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "digabeṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *digabeṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nā snēhituḍu nannu sṭēṣan daggara digabeṭṭāḍu. — My friend dropped me off near the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nā snēhituḍu nannu sṭēṣan daggara digabeṭṭāḍu.* — My friend dropped me off near the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to put aboard, then the Telugu for to unload, then say digabeṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to put aboard, then the Telugu for to unload, then say *digabeṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దిగబెట్టు (digabeṭṭu) mean? (\"To drop someone off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

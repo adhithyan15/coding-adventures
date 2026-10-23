@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Setting Out",
+  "label": "ch:te-setting-out",
+  "canDo": "I can say a passenger, to travel, a destination, a route and to set foot in a place.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C438-adugupettu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can say a passenger, to travel, a destination, a route and to set foot in a place.",
+    "assesses": [
+      "TE-LEX-C438-PRAYANAM438-03",
+      "TE-LEX-C438-PRAYANAM438-04",
+      "TE-LEX-C438-PRAYANAM438-05"
+    ]
+  }
+}

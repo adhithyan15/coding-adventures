@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Taking Part",
+  "label": "ch:te-taking-part",
+  "canDo": "I can talk about taking part, contributing, rallying support and dividing.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C436-vibhajincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can talk about taking part, contributing, rallying support and dividing.",
+    "assesses": [
+      "TE-LEX-C436-PALGONU436-03",
+      "TE-LEX-C436-PALGONU436-04",
+      "TE-LEX-C436-PALGONU436-05"
+    ]
+  }
+}

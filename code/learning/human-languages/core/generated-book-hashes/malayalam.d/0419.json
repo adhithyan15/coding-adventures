@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:aaae77093152ead1",
+  "lessonIds": [
+    "ML-C419-tirannetuppu",
+    "ML-C419-vottu",
+    "ML-C419-vottar",
+    "ML-C419-sthanartthi",
+    "ML-C419-balarru"
+  ],
+  "tex": "malayalam/book/chapters/ch419-election-day.tex"
+}

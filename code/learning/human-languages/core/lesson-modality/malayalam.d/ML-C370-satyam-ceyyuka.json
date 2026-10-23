@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C370-satyam-ceyyuka",
+    "language": "malayalam",
+    "chapter": 370,
+    "sequence": 18110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8fdeabf81a751a3"
+  },
+  "findings": []
+}

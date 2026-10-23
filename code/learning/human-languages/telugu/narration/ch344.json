@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 344,
+  "title": "Saying Goodbye",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d858d2ba199003f9",
+  "lessons": [
+    {
+      "id": "TE-C344-santapam",
+      "sequence": 16920,
+      "title": "సంతాపం (santāpaṁ) — condolence; sympathy",
+      "headword": "సంతాపం",
+      "romanization": "santāpaṁ",
+      "gloss": "condolence; sympathy",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:222c6de38144247b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for narrowly, then the Telugu for to get out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సంతాపం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంతాపం — santāpaṁ — \"condolence; sympathy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అందరూ ఆ కుటుంబానికి సంతాపం తెలిపారు. andarū ā kuṭumbāniki santāpaṁ telipāru. Everyone offered condolences to that family."
+            },
+            {
+              "kind": "speech",
+              "text": "సంతాపం (santāpaṁ) తెలుపు, to express condolence; the one who receives it takes -కి. It is offered to a family in దుఃఖం, grief."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంతాపం (santāpaṁ) is borrowed from Sanskrit saṁtāpa, \"burning heat\", and then \"affliction, remorse\" (CDIAL 12885)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "santāpaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *santāpaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "santāpaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *santāpaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "andarū ā kuṭumbāniki santāpaṁ telipāru. — Everyone offered condolences to that family.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *andarū ā kuṭumbāniki santāpaṁ telipāru.* — Everyone offered condolences to that family.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for narrowly, then the Telugu for to get out, then say santāpaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for narrowly, then the Telugu for to get out, then say *santāpaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సంతాపం (santāpaṁ) mean? (\"Condolence; sympathy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C344-maranam",
+      "sequence": 16930,
+      "title": "మరణం (maraṇaṁ) — death",
+      "headword": "మరణం",
+      "romanization": "maraṇaṁ",
+      "gloss": "death",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91566acac424a57d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to get out, then the Telugu for condolence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మరణం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మరణం — maraṇaṁ — \"death\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆయన మరణం గురించి పత్రికలో వార్త వచ్చింది. āyana maraṇaṁ guriñci patrikalō vārta vaccindi. The news of his death appeared in the paper."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word: in speech people say చనిపోవు, to die."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మరణం (maraṇaṁ) is borrowed from Sanskrit maraṇa, \"dying, death\" (CDIAL 9869), from the root mṛ, \"to die\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maraṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maraṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maraṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maraṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyana maraṇaṁ guriñci patrikalō vārta vaccindi. — The news of his death appeared in the paper.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyana maraṇaṁ guriñci patrikalō vārta vaccindi.* — The news of his death appeared in the paper.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to get out, then the Telugu for condolence, then say maraṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to get out, then the Telugu for condolence, then say *maraṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మరణం (maraṇaṁ) mean? (\"Death\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C344-tudisvasa",
+      "sequence": 16940,
+      "title": "తుదిశ్వాస (tudiśvāsa) — one's last breath",
+      "headword": "తుదిశ్వాస",
+      "romanization": "tudiśvāsa",
+      "gloss": "one's last breath",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3dfe7e810faa1cf6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for condolence, then the Telugu for death."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తుదిశ్వాస",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తుదిశ్వాస — tudiśvāsa — \"one's last breath\"."
+            },
+            {
+              "kind": "speech",
+              "text": "తాతగారు ఆసుపత్రిలో తుదిశ్వాస విడిచారు. tātagāru āsupatrilō tudiśvāsa viḍicāru. Grandfather breathed his last in hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "తుదిశ్వాస (tudiśvāsa) విడుచు, to let go the last breath: a gentle way to say died."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తుదిశ్వాస (tudiśvāsa) is a mixed compound: native tudi, \"the end\" (DEDR 3314), and Sanskrit śvāsa, \"breath\" (CDIAL 12769)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tudiśvāsa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tudiśvāsa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tudiśvāsa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tudiśvāsa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tātagāru āsupatrilō tudiśvāsa viḍicāru. — Grandfather breathed his last in hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tātagāru āsupatrilō tudiśvāsa viḍicāru.* — Grandfather breathed his last in hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for condolence, then the Telugu for death, then say tudiśvāsa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for condolence, then the Telugu for death, then say *tudiśvāsa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తుదిశ్వాస (tudiśvāsa) mean? (\"One's last breath\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C344-antimayatra",
+      "sequence": 16950,
+      "title": "అంతిమయాత్ర (antimayātra) — a funeral procession",
+      "headword": "అంతిమయాత్ర",
+      "romanization": "antimayātra",
+      "gloss": "a funeral procession",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82dbbba1f9e12406",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for death, then the Telugu for one's last breath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అంతిమయాత్ర",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అంతిమయాత్ర — antimayātra — \"a funeral procession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అంతిమయాత్రలో వందల మంది నడిచారు. antimayātralō vandala mandi naḍicāru. Hundreds walked in the funeral procession."
+            },
+            {
+              "kind": "speech",
+              "text": "అంతిమ, last, and యాత్ర, a journey: the last journey."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అంతిమయాత్ర (antimayātra) is borrowed from Sanskrit: antima, \"last\" (Monier-Williams), and yātrā, \"a journey\" (CDIAL 10456)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antimayātra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antimayātra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antimayātra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antimayātra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antimayātralō vandala mandi naḍicāru. — Hundreds walked in the funeral procession.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antimayātralō vandala mandi naḍicāru.* — Hundreds walked in the funeral procession.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for death, then the Telugu for one's last breath, then say antimayātra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for death, then the Telugu for one's last breath, then say *antimayātra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అంతిమయాత్ర (antimayātra) mean? (\"A funeral procession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C344-antyakriyalu",
+      "sequence": 16960,
+      "title": "అంత్యక్రియలు (antyakriyalu) — a funeral; last rites",
+      "headword": "అంత్యక్రియలు",
+      "romanization": "antyakriyalu",
+      "gloss": "a funeral; last rites",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6dca9b8ee45645da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for one's last breath, then the Telugu for a funeral procession."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అంత్యక్రియలు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అంత్యక్రియలు — antyakriyalu — \"a funeral; last rites\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సాయంత్రం అంత్యక్రియలు జరిగాయి. sāyantraṁ antyakriyalu jarigāyi. The funeral took place in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "A plural word: అంత్య, last, and క్రియలు, rites or acts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అంత్యక్రియలు (antyakriyalu) is borrowed from Sanskrit: antya, \"last\", and kriyā, \"work, an act\" (CDIAL 3587)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antyakriyalu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antyakriyalu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antyakriyalu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antyakriyalu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāyantraṁ antyakriyalu jarigāyi. — The funeral took place in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāyantraṁ antyakriyalu jarigāyi.* — The funeral took place in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for one's last breath, then the Telugu for a funeral procession, then say antyakriyalu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for one's last breath, then the Telugu for a funeral procession, then say *antyakriyalu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అంత్యక్రియలు (antyakriyalu) mean? (\"A funeral; last rites\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

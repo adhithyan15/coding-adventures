@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 505,
+  "title": "Kindness and Comfort",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:255205c687ac4425",
+  "lessons": [
+    {
+      "id": "TE-C505-jali",
+      "sequence": 25560,
+      "title": "జాలి (jāli) — pity; sympathy",
+      "headword": "జాలి",
+      "romanization": "jāli",
+      "gloss": "pity; sympathy",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e565bb6e90691ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to appreciate, then the Telugu for acclaim."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: జాలి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జాలి — jāli — \"pity; sympathy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆకలితో ఉన్న కుక్కపిల్లను చూసి నాకు జాలి వేసింది. ākalitō unna kukkapillanu cūsi nāku jāli vēsindi. Seeing the hungry puppy, I felt pity."
+            },
+            {
+              "kind": "speech",
+              "text": "జాలి (jāli) వేయు or జాలి (jāli) కలుగు, to feel pity; -మీద జాలిపడు, to pity someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జాలి (jāli) is a Telugu word for the pity you feel for someone weaker; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākalitō unna kukkapillanu cūsi nāku jāli vēsindi. — Seeing the hungry puppy, I felt pity.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākalitō unna kukkapillanu cūsi nāku jāli vēsindi.* — Seeing the hungry puppy, I felt pity.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to appreciate, then the Telugu for acclaim, then say jāli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to appreciate, then the Telugu for acclaim, then say *jāli* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does జాలి (jāli) mean? (\"Pity; sympathy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C505-karuna",
+      "sequence": 25570,
+      "title": "కరుణ (karuṇa) — compassion; mercy",
+      "headword": "కరుణ",
+      "romanization": "karuṇa",
+      "gloss": "compassion; mercy",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a29fe7fd475f9b08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for acclaim, then the Telugu for pity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కరుణ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కరుణ — karuṇa — \"compassion; mercy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ డాక్టరు పేదల పట్ల కరుణ చూపించారు. ā ḍākṭaru pēdala paṭla karuṇa cūpiñcāru. That doctor showed compassion to the poor."
+            },
+            {
+              "kind": "speech",
+              "text": "కరుణ (karuṇa) చూపించు, to show mercy; a formal word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కరుణ (karuṇa) is borrowed from Sanskrit karuṇā, \"pity\" (CDIAL 2811)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karuṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karuṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karuṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karuṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā ḍākṭaru pēdala paṭla karuṇa cūpiñcāru. — That doctor showed compassion to the poor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā ḍākṭaru pēdala paṭla karuṇa cūpiñcāru.* — That doctor showed compassion to the poor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for acclaim, then the Telugu for pity, then say karuṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for acclaim, then the Telugu for pity, then say *karuṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కరుణ (karuṇa) mean? (\"Compassion; mercy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C505-adarincu",
+      "sequence": 25580,
+      "title": "ఆదరించు (ādariñcu) — to welcome warmly; to cherish",
+      "headword": "ఆదరించు",
+      "romanization": "ādariñcu",
+      "gloss": "to welcome warmly; to cherish",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e3625207280e20a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for pity, then the Telugu for compassion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆదరించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆదరించు — ādariñcu — \"to welcome warmly; to cherish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కొత్తగా వచ్చిన కోడలిని అత్త ఆదరించింది. kottagā vaccina kōḍalini atta ādariñcindi. The mother-in-law warmly welcomed her new daughter-in-law."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఆదరించాను, ādariñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun ఆదరణ is a warm reception or support."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆదరించు (ādariñcu) is built on Sanskrit ādara, \"respect\" (CDIAL 1142), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādariñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādariñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādariñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādariñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kottagā vaccina kōḍalini atta ādariñcindi. — The mother-in-law warmly welcomed her new daughter-in-law.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kottagā vaccina kōḍalini atta ādariñcindi.* — The mother-in-law warmly welcomed her new daughter-in-law.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for pity, then the Telugu for compassion, then say ādariñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for pity, then the Telugu for compassion, then say *ādariñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆదరించు (ādariñcu) mean? (\"To welcome warmly; to cherish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C505-aduko",
+      "sequence": 25590,
+      "title": "ఆదుకో (ādukō) — to stand by; to help in need",
+      "headword": "ఆదుకో",
+      "romanization": "ādukō",
+      "gloss": "to stand by; to help in need",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f879ce4b39ba0c91",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for compassion, then the Telugu for to welcome warmly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆదుకో",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆదుకో — ādukō — \"to stand by; to help in need\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కష్టకాలంలో స్నేహితులు మమ్మల్ని ఆదుకున్నారు. kaṣṭakālaṁlō snēhitulu mammalni ādukunnāru. In hard times our friends stood by us."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఆదుకున్నాను, ādukunnānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Help given when someone is in trouble, not everyday help."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆదుకో (ādukō) is a Telugu verb ending in the reflexive -కో; the origin of its stem is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādukō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādukō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādukō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādukō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṣṭakālaṁlō snēhitulu mammalni ādukunnāru. — In hard times our friends stood by us.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṣṭakālaṁlō snēhitulu mammalni ādukunnāru.* — In hard times our friends stood by us.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for compassion, then the Telugu for to welcome warmly, then say ādukō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for compassion, then the Telugu for to welcome warmly, then say *ādukō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆదుకో (ādukō) mean? (\"To stand by; to help in need\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C505-samudayincu",
+      "sequence": 25600,
+      "title": "సముదాయించు (samudāyiñcu) — to console; to pacify",
+      "headword": "సముదాయించు",
+      "romanization": "samudāyiñcu",
+      "gloss": "to console; to pacify",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d49e2bd68c81722",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to welcome warmly, then the Telugu for to stand by."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సముదాయించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సముదాయించు — samudāyiñcu — \"to console; to pacify\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పరీక్ష తప్పిన తమ్ముడిని అక్క సముదాయించింది. parīkṣa tappina tammuḍini akka samudāyiñcindi. Big sister consoled our little brother, who had failed the exam."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): సముదాయించాను, samudāyiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Calming someone who is upset, often a child."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సముదాయించు (samudāyiñcu) is a Telugu verb for calming and consoling someone; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samudāyiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samudāyiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samudāyiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samudāyiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parīkṣa tappina tammuḍini akka samudāyiñcindi. — Big sister consoled our little brother, who had failed the exam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parīkṣa tappina tammuḍini akka samudāyiñcindi.* — Big sister consoled our little brother, who had failed the exam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to welcome warmly, then the Telugu for to stand by, then say samudāyiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to welcome warmly, then the Telugu for to stand by, then say *samudāyiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సముదాయించు (samudāyiñcu) mean? (\"To console; to pacify\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

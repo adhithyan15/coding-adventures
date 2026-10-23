@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Digging Up the Past",
+  "label": "ch:te-digging-up-the-past",
+  "canDo": "I can say ruins, ancient, excavations, remains and to unearth.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C367-velikitiyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can say ruins, ancient, excavations, remains and to unearth.",
+    "assesses": [
+      "TE-LEX-C367-TAVVAKALU367-03",
+      "TE-LEX-C367-TAVVAKALU367-04",
+      "TE-LEX-C367-TAVVAKALU367-05"
+    ]
+  }
+}

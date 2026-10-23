@@ -1,0 +1,11 @@
+{
+  "id": "AR-C392-mushrif",
+  "pathSegment": "AR-PATH-392-MUHADIR392",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-392-MUHADIR392",
+      "order": 3
+    }
+  ]
+}

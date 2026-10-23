@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:9cc07e3d45436dc0",
+  "lessonIds": [
+    "TE-C519-cikitsa",
+    "TE-C519-sastracikitsa",
+    "TE-C519-mattumandu",
+    "TE-C519-patti",
+    "TE-C519-paramarsincu"
+  ],
+  "tex": "telugu/book/chapters/ch519-treatment.tex"
+}

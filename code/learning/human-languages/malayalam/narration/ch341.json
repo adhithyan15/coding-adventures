@@ -1,0 +1,869 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 341,
+  "title": "What I Think, and So",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:cba32c7d8c8d2ab7",
+  "lessons": [
+    {
+      "id": "ML-C341-vicarikkuka",
+      "sequence": 16200,
+      "title": "വിചാരിക്കുക (vicārikkuka) — to think, to suppose",
+      "headword": "വിചാരിക്കുക",
+      "romanization": "vicārikkuka",
+      "gloss": "to think, to suppose",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:737c9110d0e0ce5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for \"a thought\". (vicāraṁ.) Then \"I think it is good\". (nallatāṇŭ ennŭ ñān cintikkunnu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിചാരിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിചാരിക്കുക — vicārikkuka — \"to think, to suppose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the everyday verb for what you think is so, and it takes what you think in front of it, closed with എന്ന്, the way ചിന്തിക്കുക did when you met it."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇത് ഒരു ചെറിയ പ്രശ്നമാണ് എന്ന് ഞാൻ വിചാരിച്ചു. itŭ oru ceṟiya praśnamāṇŭ ennŭ ñān vicāriccu. — \"I thought this was a small problem.\""
+            },
+            {
+              "kind": "speech",
+              "text": "അവൻ വരും എന്ന് ഞാൻ വിചാരിച്ചു. avan varuṁ ennŭ ñān vicāriccu. — \"I thought he would come.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The past, വിചാരിച്ചു, often carries a hint that you were wrong: he did not come after all. ചിന്തിക്കുക leans the other way, towards thinking something over."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിചാരിക്കുക (vicārikkuka) is വിചാരം, \"a thought\", from Sanskrit vicāra, \"pondering\" (CDIAL 11683), made into a verb with -ഇക്കുക. That ending turns many Sanskrit nouns into Malayalam verbs: സഹായം, \"help\", gives സഹായിക്കുക, \"to help\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicārikkuka, then the past vicāriccu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicārikkuka*, then the past *vicāriccu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I thought this was a small problem\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I thought this was a small problem\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I thought he would come\" — avan varuṁ ennŭ ñān vicāriccu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I thought he would come\" — *avan varuṁ ennŭ ñān vicāriccu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the noun this verb is built on — vicāraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the noun this verb is built on — *vicāraṁ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിചാരിക്കുക (vicārikkuka) mean? (to think, to suppose.) What closes the thing you think? (എന്ന്.) What hint does vicāriccu often carry? (That you were wrong.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C341-ennu-karutunnu",
+      "sequence": 16210,
+      "title": "എന്ന് ഞാൻ കരുതുന്നു (ennŭ ñān karutunnu) — I think that …",
+      "headword": "എന്ന് ഞാൻ കരുതുന്നു",
+      "romanization": "ennŭ ñān karutunnu",
+      "gloss": "I think that … — an opinion three ways, and in my opinion",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1601af7e2d39d344",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"to think, to suppose\". (vicārikkuka.) Then \"to feel, to seem\". (tōnnuka.) Then \"an opinion\". (abhiprāyaṁ.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: … എന്ന് ഞാൻ വിചാരിക്കുന്നു / കരുതുന്നു",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "An opinion has the same frame as a report: what you think, then എന്ന്, then you, then the verb. Two verbs fill the last slot:"
+            },
+            {
+              "kind": "speech",
+              "text": "ഇത് നല്ലതാണ് എന്ന് ഞാൻ വിചാരിക്കുന്നു. itŭ nallatāṇŭ ennŭ ñān vicārikkunnu. — \"I think this is good.\""
+            },
+            {
+              "kind": "speech",
+              "text": "അത് ശരിയാണ് എന്ന് ഞാൻ കരുതുന്നു. atŭ śariyāṇŭ ennŭ ñān karutunnu. — \"I consider that right.\""
+            },
+            {
+              "kind": "speech",
+              "text": "കരുതുക, \"to consider, to hold\", is a little weightier than വിചാരിക്കുക (vicārikkuka): the view is thought through, not a guess."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: എനിക്ക് … എന്ന് തോന്നുന്നു",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The softest way puts you in the dative, as with എനിക്ക് അറിയാം: the thought comes to you."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇത് നല്ലതാണ് എന്ന് എനിക്ക് തോന്നുന്നു. itŭ nallatāṇŭ ennŭ enikkŭ tōnnunnu. — \"It seems to me this is good.\""
+            },
+            {
+              "kind": "speech",
+              "text": "For a view you stand behind, open with എന്റെ അഭിപ്രായത്തിൽ (enṟe abhiprāyattil), \"in my opinion\":"
+            },
+            {
+              "kind": "speech",
+              "text": "എന്റെ അഭിപ്രായത്തിൽ ഇത് ഒരു നല്ല തീരുമാനമാണ്. enṟe abhiprāyattil itŭ oru nalla tīrumānamāṇŭ. — \"In my opinion, this is a good decision.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think this is good\", with vicārikkunnu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think this is good\", with *vicārikkunnu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I consider that right\", with karutunnu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I consider that right\", with *karutunnu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It seems to me this is good\", with enikkŭ … tōnnunnu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It seems to me this is good\", with *enikkŭ … tōnnunnu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In my opinion, this is a good decision.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In my opinion, this is a good decision.\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two verbs fill \"… ennŭ ñān ___\"? (vicārikkunnu, karutunnu.) Which way puts you in the dative? (enikkŭ … ennŭ tōnnunnu.) \"In my opinion\"? (എന്റെ അഭിപ്രായത്തിൽ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C341-aikyam",
+      "sequence": 16220,
+      "title": "ഐക്യം (aikyaṁ) — unity",
+      "headword": "ഐക്യം",
+      "romanization": "aikyaṁ",
+      "gloss": "unity, togetherness",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e12fbefee42e980",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I think this is good\", then \"it seems to me this is good\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഐക്യം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഐക്യം — aikyaṁ — \"unity, togetherness\": people holding together as one."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞങ്ങളുടെ ഗ്രാമത്തിൽ നല്ല ഐക്യം ഉണ്ട്. ñaṅṅaḷuṭe grāmattil nalla aikyaṁ uṇṭŭ. — \"There is real unity in our village.\""
+            },
+            {
+              "kind": "speech",
+              "text": "കുടുംബത്തിൽ ഐക്യം വേണം എന്ന് ഞാൻ കരുതുന്നു. kuṭumbattil aikyaṁ vēṇaṁ ennŭ ñān karutunnu. — \"I think a family needs unity.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is a word for speeches and newspapers as much as for kitchens, and it opens with a letter you have not written yet. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഐക്യം (aikyaṁ) from Sanskrit aikya, \"oneness\", taken over whole as a tatsama with Malayalam's noun ending (CDIAL 2533). aikya is built on eka, \"one\": Sanskrit strengthens the first vowel, e to ai, to make \"the state of being one\". Hindi ek, \"one\", is the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aikyaṁ, slowly, then at speed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aikyaṁ*, slowly, then at speed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"There is real unity in our village.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"There is real unity in our village.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think a family needs unity.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think a family needs unity.\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഐക്യം (aikyaṁ) mean? (unity, togetherness.) Which Sanskrit number is inside it? (eka, \"one\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W341-ai",
+      "sequence": 16230,
+      "title": "ഐ (ai) — the letter that opens ഐക്യം (aikyaṁ)",
+      "headword": "ഐ",
+      "romanization": "ai",
+      "gloss": "ai — the letter that opens ഐക്യം",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:4884c0f2836b0f41",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ഐ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ഐ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write എ and ൈ once each, and name them. (e at the start of a word; the ai sign, printed before its consonant, as in കൈ.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say ഐക്യം (aikyaṁ), \"unity\". This lesson takes its first letter out and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ഐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഐ — ai, at the start of a word."
+            },
+            {
+              "kind": "speech",
+              "text": "After a consonant, ai is the sign ൈ, printed before the consonant it follows in speech: കൈ, kai. At the start of a word it stands as a letter of its own, ഐ."
+            },
+            {
+              "kind": "speech",
+              "text": "Its left half has the shape of എ. The right half is a second piece: a small loop, a short base, and a tall loop that drops below the line."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ഐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഐ (ai) is two parts side by side. The left half is the shape of എ, which you already write. The right half is a small loop, a short base and stem, and a tall loop that drops below the line. Write the left half first, then the right half beside it."
+            },
+            {
+              "kind": "speech",
+              "text": "Write ഐ (ai) yourself, slowly, and larger than it is printed. Copy the printed shape."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ഐ (ai) at the start of ഐക്യം (aikyaṁ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: ഐ at the start of **ഐക്യം**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ഐ three times, saying ai as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ഐ three times, saying *ai* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "എ, then ഐ (ai), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: എ, then ഐ, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ഐക്യം (aikyaṁ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ഐക്യം**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ഐ? (ai, at the start of a word.) Which word did it come from? (ഐക്യം, aikyaṁ, \"unity\".) Which letter is its left half shaped like? (എ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C341-atukondu",
+      "sequence": 16240,
+      "title": "അതുകൊണ്ട് ഞാൻ വന്നില്ല (atukoṇṭŭ ñān vannilla) — so I did not come",
+      "headword": "അതുകൊണ്ട് ഞാൻ വന്നില്ല",
+      "romanization": "atukoṇṭŭ ñān vannilla",
+      "gloss": "so I did not come — a reason first, then its result; and that is why",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de079057b395da47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"so, therefore\". (atukoṇṭŭ.) Then \"a reason; because\". (kāraṇaṁ.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the reason first, then അതുകൊണ്ട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അതുകൊണ്ട് is അത്, \"that\", with കൊണ്ട്, \"with\": \"with that\", \"so\". It points forward, from a reason to what it caused."
+            },
+            {
+              "kind": "speech",
+              "text": "എനിക്ക് പനിയായിരുന്നു. അതുകൊണ്ട് ഞാൻ വന്നില്ല. enikkŭ paniyāyirunnu. atukoṇṭŭ ñān vannilla. — \"I had a fever. So I did not come.\""
+            },
+            {
+              "kind": "speech",
+              "text": "കാരണം points the other way, back from the result to its reason:"
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ വന്നില്ല, കാരണം എനിക്ക് പനിയായിരുന്നു. ñān vannilla, kāraṇaṁ enikkŭ paniyāyirunnu. — \"I did not come, because I had a fever.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Same facts, opposite order. Pick the one that puts first what your listener needs first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: അതുകൊണ്ടാണ് — that is why",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Add -ആണ് and the result is singled out: \"that is why\". The verb after it takes -അത്, \"the …-ing\", so the whole sentence says \"it is with that that the …-ing happened\":"
+            },
+            {
+              "kind": "speech",
+              "text": "മഴയായിരുന്നു. അതുകൊണ്ടാണ് ഞാൻ വൈകിയത്. maḻayāyirunnu. atukoṇṭāṇŭ ñān vaikiyatŭ. — \"It was raining. That is why I was late.\""
+            },
+            {
+              "kind": "speech",
+              "text": "വൈകി gives വൈകിയത്, and വന്നു gives വന്നത്, the same way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I had a fever. So I did not come.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I had a fever. So I did not come.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same, the other way round, with kāraṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same, the other way round, with *kāraṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It was raining. That is why I was late.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It was raining. That is why I was late.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think the village needs unity. So I am going to the meeting.\" — grāmattinŭ aikyaṁ vēṇaṁ ennŭ ñān karutunnu. atukoṇṭŭ ñān yōgattinŭ pōkunnu.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think the village needs unity. So I am going to the meeting.\" — *grāmattinŭ aikyaṁ vēṇaṁ ennŭ ñān karutunnu. atukoṇṭŭ ñān yōgattinŭ pōkunnu.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word points forward to a result? (അതുകൊണ്ട്.) Which points back to a reason? (കാരണം.) \"That is why I was late\"? (atukoṇṭāṇŭ ñān vaikiyatŭ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R341-opinion-and-result",
+      "sequence": 16250,
+      "title": "Review — what I think, and so",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "an opinion three ways, a reason and its result, and the letter ഐ",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:fe9620987529bec5",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"to think, to suppose\" and \"unity\". (vicārikkuka, aikyaṁ.) Write ഐ (ai) once from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I thought he would come.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I thought he would come.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think this is good\", first with vicārikkunnu, then with karutunnu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think this is good\", first with *vicārikkunnu*, then with *karutunnu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It seems to me this is good.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It seems to me this is good.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In my opinion, this is a good decision.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In my opinion, this is a good decision.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"There is real unity in our village.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"There is real unity in our village.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I had a fever. So I did not come.\" Then: \"That is why I was late.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I had a fever. So I did not come.\" Then: \"That is why I was late.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ഐക്യം (aikyaṁ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ഐക്യം**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I thought (wrongly) he would come\"? (avan varuṁ ennŭ ñān vicāriccu.) The softest \"I think\"? (enikkŭ … ennŭ tōnnunnu.) Reason first, then result: which word? (അതുകൊണ്ട്.) \"Unity\"? (ഐക്യം (aikyaṁ), which opens with ഐ (ai).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 415,
+  "title": "Learning and Teaching",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:16eb60e79e2b2109",
+  "lessons": [
+    {
+      "id": "TE-C415-vidya",
+      "sequence": 20690,
+      "title": "విద్య (vidya) — education; learning",
+      "headword": "విద్య",
+      "romanization": "vidya",
+      "gloss": "education; learning",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1958ee9f91415419",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a scholarship, then the Telugu for to question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: విద్య",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విద్య — vidya — \"education; learning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రతి పిల్లవాడికి విద్య అవసరం. prati pillavāḍiki vidya avasaraṁ. Every child needs education."
+            },
+            {
+              "kind": "speech",
+              "text": "విద్యార్థి, a student, and విశ్వవిద్యాలయం, a university, which you know, are built on it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విద్య (vidya) is borrowed from Sanskrit vidyā, \"knowledge\" (CDIAL 11741), from vid, \"to know\"; Telugu shortens the final long a."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prati pillavāḍiki vidya avasaraṁ. — Every child needs education.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prati pillavāḍiki vidya avasaraṁ.* — Every child needs education.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a scholarship, then the Telugu for to question, then say vidya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a scholarship, then the Telugu for to question, then say *vidya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does విద్య (vidya) mean? (\"Education; learning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C415-jnanam",
+      "sequence": 20700,
+      "title": "జ్ఞానం (jñānaṁ) — knowledge; wisdom",
+      "headword": "జ్ఞానం",
+      "romanization": "jñānaṁ",
+      "gloss": "knowledge; wisdom",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:366d2a7fdcd73bed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to question, then the Telugu for education."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: జ్ఞానం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జ్ఞానం — jñānaṁ — \"knowledge; wisdom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పుస్తకాలు చదివితే జ్ఞానం పెరుగుతుంది. pustakālu cadivitē jñānaṁ perugutundi. If you read books, your knowledge grows."
+            },
+            {
+              "kind": "speech",
+              "text": "జ్ఞాని, a wise person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జ్ఞానం (jñānaṁ) is borrowed from Sanskrit jñāna, \"knowledge\" (CDIAL 5281), from jñā, \"to know\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jñānaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jñānaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jñānaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jñānaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pustakālu cadivitē jñānaṁ perugutundi. — If you read books, your knowledge grows.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pustakālu cadivitē jñānaṁ perugutundi.* — If you read books, your knowledge grows.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to question, then the Telugu for education, then say jñānaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to question, then the Telugu for education, then say *jñānaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does జ్ఞానం (jñānaṁ) mean? (\"Knowledge; wisdom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C415-adhyayanam",
+      "sequence": 20710,
+      "title": "అధ్యయనం (adhyayanaṁ) — study; a study",
+      "headword": "అధ్యయనం",
+      "romanization": "adhyayanaṁ",
+      "gloss": "study; a study",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cda4547040791656",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for education, then the Telugu for knowledge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అధ్యయనం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అధ్యయనం — adhyayanaṁ — \"study; a study\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ అధ్యయనంలో కొత్త విషయాలు తెలిశాయి. ā adhyayanaṁlō kotta viṣayālu teliśāyi. New facts came to light in that study."
+            },
+            {
+              "kind": "speech",
+              "text": "అధ్యయనం (adhyayanaṁ) చేయు, to study a subject closely."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అధ్యయనం (adhyayanaṁ) is borrowed from Sanskrit adhyayana, \"reading, studying\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhyayanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhyayanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhyayanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhyayanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā adhyayanaṁlō kotta viṣayālu teliśāyi. — New facts came to light in that study.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā adhyayanaṁlō kotta viṣayālu teliśāyi.* — New facts came to light in that study.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for education, then the Telugu for knowledge, then say adhyayanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for education, then the Telugu for knowledge, then say *adhyayanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అధ్యయనం (adhyayanaṁ) mean? (\"Study; a study\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C415-tarkincu",
+      "sequence": 20720,
+      "title": "తర్కించు (tarkiñcu) — to debate; to reason",
+      "headword": "తర్కించు",
+      "romanization": "tarkiñcu",
+      "gloss": "to debate; to reason",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a175b8f479d0d386",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for knowledge, then the Telugu for study."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తర్కించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తర్కించు — tarkiñcu — \"to debate; to reason\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వాళ్ళు రాత్రంతా ఆ ప్రశ్న గురించి తర్కించారు. vāḷḷu rātrantā ā praśna guriñci tarkiñcāru. They debated that question all night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): తర్కించాను, tarkiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb of తర్కం, logic."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తర్కించు (tarkiñcu) is built on Sanskrit tarka, \"inquiry\" (CDIAL 5714), \"reasoning\" (Monier-Williams), with the Telugu verb ending -ఇంచు; the noun is తర్కం."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarkiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarkiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarkiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarkiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḷḷu rātrantā ā praśna guriñci tarkiñcāru. — They debated that question all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḷḷu rātrantā ā praśna guriñci tarkiñcāru.* — They debated that question all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for knowledge, then the Telugu for study, then say tarkiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for knowledge, then the Telugu for study, then say *tarkiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తర్కించు (tarkiñcu) mean? (\"To debate; to reason\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C415-bodhincu",
+      "sequence": 20730,
+      "title": "బోధించు (bōdhiñcu) — to instruct; to teach",
+      "headword": "బోధించు",
+      "romanization": "bōdhiñcu",
+      "gloss": "to instruct; to teach",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36095e127aa8e52f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for study, then the Telugu for to debate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బోధించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బోధించు — bōdhiñcu — \"to instruct; to teach\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె పిల్లలకు గణితం బోధిస్తుంది. āme pillalaku gaṇitaṁ bōdhistundi. She teaches mathematics to children."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): బోధించాను, bōdhiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal beside నేర్పు, which you know; the person taught takes -కి."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బోధించు (bōdhiñcu) is built on Sanskrit bodhana, \"causing to awake; enlightening, teaching\" (Monier-Williams), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bōdhiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bōdhiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bōdhiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bōdhiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme pillalaku gaṇitaṁ bōdhistundi. — She teaches mathematics to children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme pillalaku gaṇitaṁ bōdhistundi.* — She teaches mathematics to children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for study, then the Telugu for to debate, then say bōdhiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for study, then the Telugu for to debate, then say *bōdhiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బోధించు (bōdhiñcu) mean? (\"To instruct; to teach\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

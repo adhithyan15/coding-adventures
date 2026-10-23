@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "On Air",
+  "label": "ch:te-on-air",
+  "canDo": "I can say a commentary, a commentator, a listener, to behold and a face-to-face interview.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C374-mukhamukhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can say a commentary, a commentator, a listener, to behold and a face-to-face interview.",
+    "assesses": [
+      "TE-LEX-C374-PRASARAM374-03",
+      "TE-LEX-C374-PRASARAM374-04",
+      "TE-LEX-C374-PRASARAM374-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-390-YATRAYAYAPPU390",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-390-YATRAYAYAPPU390"
+  ],
+  "after": []
+}

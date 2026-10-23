@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:a9f3678c9b8e7067",
+  "lessonIds": [
+    "TE-C319-vellali",
+    "TE-C319-otu",
+    "TE-S175-letter-oo",
+    "TE-C319-nadavadam-valla",
+    "TE-R319-advice-and-reasons"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "telugu/narration/ch319.txt",
+  "json": "telugu/narration/ch319.json",
+  "textHash": "fnv1a64:90bad426162ffd19",
+  "jsonHash": "fnv1a64:dce9031927b1771b",
+  "findings": []
+}

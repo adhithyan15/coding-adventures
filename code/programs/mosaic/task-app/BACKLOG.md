@@ -69,14 +69,25 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next priority: [#17682](https://github.com/adhithyan15/coding-adventures/issues/17682)
+**Current bounded item: [#17950](https://github.com/adhithyan15/coding-adventures/issues/17950)
+— prepare, publish, and audit `task-app-v0.5.9`.** P0 lifecycle gates are
+complete. Qt Text widths shipped in #17915 with native payload CI passing;
+both themes now measure 78 drops instead of 81. Prioritize the compatible
+release checkpoint under #13543 before further fidelity work. Include the
+authoritative Web Component input/focus and web theme-token changes, require
+every existing payload validation, and publish only after preparation merges.
+Audit immutable provenance, assets, and checksums before closing #17950.
+Artifact coverage is unchanged; signing remains blocked in #13977.
+
+**Published checkpoint: [#17682](https://github.com/adhithyan15/coding-adventures/issues/17682)
 — publish and audit `task-app-v0.5.8`.** The P0 native lifecycle gates and the
 immutable v0.5.7 publication/audit (#17610) are complete. The timeline
 milestone and legend-swatch diamonds now retain centered native Qt rotation
 through #17676, with both themes measuring 81 style drops instead of 83.
 Validate every existing release payload, publish after preparation merges,
 and audit the immutable assets before closing #17682. Artifact coverage is
-unchanged; preparation is not publication.
+unchanged. Published from `22755d9313ce8fed25a7e9a14aa96cb6865b9e4c`;
+the immutable tag, manifest, thirteen assets and twelve checksums were audited.
 
 The durable product backlog is [GitHub issue #13517](https://github.com/adhithyan15/coding-adventures/issues/13517).
 It tracks the local-first, Rust-scheduled, native TaskApp completion loop and

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C450-urappakkuka",
+    "language": "malayalam",
+    "chapter": 450,
+    "sequence": 22310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f31e82a4282f5c4"
+  },
+  "findings": []
+}

@@ -1,6 +1,7 @@
 {
   "upstream_version": "11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "all native-renderable fixtures from the pinned Swimlane syntax corpus",
   "fixtures": [
     "basic-handoff",
     "default-lane-for-loose-nodes",
@@ -108,6 +109,8 @@
     "multiline-markdown-string-labels",
     "cross-lane-rank-constraints",
     "rank-crossing-optimization",
-    "icon-glyph-node"
+    "icon-glyph-node",
+    "icon-node-forms",
+    "image-node"
   ]
 }

@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "Townspeople",
+  "label": "ch:te-townspeople",
+  "canDo": "I can say a municipality, population, a resident, a local person and a stranger.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C465-aparicitudu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can say a municipality, population, a resident, a local person and a stranger.",
+    "assesses": [
+      "TE-LEX-C465-NIVASI465-03",
+      "TE-LEX-C465-NIVASI465-04",
+      "TE-LEX-C465-NIVASI465-05"
+    ]
+  }
+}

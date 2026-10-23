@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:6b33e4092508552a",
+  "lessonIds": [
+    "AR-C320-ilam",
+    "AR-C320-wakala",
+    "AR-C320-masdar",
+    "AR-C320-afada",
+    "AR-C320-awdaha"
+  ],
+  "tex": "arabic/book/chapters/ch320-the-media.tex"
+}

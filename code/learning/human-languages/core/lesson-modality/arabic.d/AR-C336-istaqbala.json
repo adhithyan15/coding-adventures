@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C336-istaqbala",
+    "language": "arabic",
+    "chapter": 336,
+    "sequence": 19210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d1486998718824c"
+  },
+  "findings": []
+}

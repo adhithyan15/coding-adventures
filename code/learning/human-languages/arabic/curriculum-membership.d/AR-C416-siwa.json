@@ -1,0 +1,11 @@
+{
+  "id": "AR-C416-siwa",
+  "pathSegment": "AR-PATH-416-BADAL416",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-416-BADAL416",
+      "order": 4
+    }
+  ]
+}

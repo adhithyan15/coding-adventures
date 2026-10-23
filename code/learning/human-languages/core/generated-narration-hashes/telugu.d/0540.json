@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:4bad6e79e69bf0ff",
+  "lessonIds": [
+    "TE-C540-sahityam",
+    "TE-C540-kathanika",
+    "TE-C540-racana",
+    "TE-C540-racincu",
+    "TE-C540-anuvadam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch540.txt",
+  "json": "telugu/narration/ch540.json",
+  "textHash": "fnv1a64:81a6ae85d912b9e6",
+  "jsonHash": "fnv1a64:7302bef1f0273fad",
+  "findings": []
+}

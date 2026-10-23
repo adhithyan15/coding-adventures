@@ -1,0 +1,11 @@
+{
+  "id": "TE-C471-samraksincu",
+  "pathSegment": "TE-PATH-471-PARYAVARANAM471",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-471-PARYAVARANAM471",
+      "order": 4
+    }
+  ]
+}

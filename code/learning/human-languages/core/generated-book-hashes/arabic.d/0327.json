@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:9d00b3c1539ed94d",
+  "lessonIds": [
+    "AR-C327-fi-tilka-al-layla",
+    "AR-C327-fi-al-waqt-nafsih",
+    "AR-C327-halama",
+    "AR-C327-ila-an",
+    "AR-C327-tuwala"
+  ],
+  "tex": "arabic/book/chapters/ch327-that-night.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C429-resan",
+    "language": "malayalam",
+    "chapter": 429,
+    "sequence": 21240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4ec1335f1932df4"
+  },
+  "findings": []
+}

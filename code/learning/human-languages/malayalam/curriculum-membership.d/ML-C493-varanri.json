@@ -1,0 +1,11 @@
+{
+  "id": "ML-C493-varanri",
+  "pathSegment": "ML-PATH-493-VANGAL493",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-493-VANGAL493",
+      "order": 2
+    }
+  ]
+}

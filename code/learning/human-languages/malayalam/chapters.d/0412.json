@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "In Short",
+  "label": "ch:ml-in-short",
+  "canDo": "I can say in short, on the contrary, or, generally and that means.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-R412-review-405-412",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can say in short, on the contrary, or, generally and that means.",
+    "assesses": [
+      "ML-LEX-C412-CURUKKAM412-03",
+      "ML-LEX-C412-CURUKKAM412-04",
+      "ML-LEX-C412-CURUKKAM412-05"
+    ]
+  }
+}

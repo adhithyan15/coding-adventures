@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C532-garabam",
+    "language": "telugu",
+    "chapter": 532,
+    "sequence": 26950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9315e2e7463639e"
+  },
+  "findings": []
+}

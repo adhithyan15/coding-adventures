@@ -1,0 +1,25 @@
+[package]
+name = "x509-rsa-sha256-reviewed-server-link"
+version = "0.4.0"
+edition = "2021"
+description = "Reviewed-root RSA SHA-256 server-path binding with exact anchor DNS policy"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-certificate = { path = "../x509-certificate" }
+x509-name-constraints = { path = "../x509-name-constraints" }
+x509-rsa-sha256-reviewed-anchor-link = { path = "../x509-rsa-sha256-reviewed-anchor-link" }
+x509-server-certificate-policy = { path = "../x509-server-certificate-policy" }
+x509-subject-alt-name = { path = "../x509-subject-alt-name" }
+
+[dev-dependencies]
+rsa-public-operation = { path = "../rsa-public-operation" }
+tls-server-identity = { path = "../tls-server-identity" }
+x509-certificate-issuer-candidate-selection = { path = "../x509-certificate-issuer-candidate-selection" }
+x509-certificate-path-length-policy = { path = "../x509-certificate-path-length-policy" }
+x509-certificate-policy = { path = "../x509-certificate-policy" }
+x509-intermediate-certificate-policy = { path = "../x509-intermediate-certificate-policy" }
+x509-rsa-public-key = { path = "../x509-rsa-public-key" }
+x509-rsa-sha256-issuer-link = { path = "../x509-rsa-sha256-issuer-link" }
+x509-time = { path = "../x509-time" }
+x509-webpki-root-anchor-selection = { path = "../x509-webpki-root-anchor-selection" }

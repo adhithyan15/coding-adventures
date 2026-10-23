@@ -1,0 +1,873 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 487,
+  "title": "Floods and shelter",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:61cc75bc4cf309e9",
+  "lessons": [
+    {
+      "id": "AR-C487-ghamara",
+      "sequence": 27080,
+      "title": "غمر (ghamara) — to submerge; to flood",
+      "headword": "غمر",
+      "romanization": "ghamara",
+      "gloss": "to submerge; to flood",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72afbc3e50f2e219",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for refreshing, then the Arabic for to be exposed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: غمر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غمر — ghamara — \"to submerge; to flood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "غمر الماء الشارع بعد المطر. ghamara al-māʾ ash-shāriʿ baʿda al-maṭar. Water flooded the street after the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يغمر, yaghmur."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غمر (ghamara) is built on the native Arabic root gh-m-r, \"abundant water; to cover\" (Lane). It is the plain verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghamara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghamara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghamara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghamara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghamara al-māʾ ash-shāriʿ baʿda al-maṭar. — Water flooded the street after the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghamara al-māʾ ash-shāriʿ baʿda al-maṭar.* — Water flooded the street after the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for refreshing, then the Arabic for to be exposed, then say ghamara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for refreshing, then the Arabic for to be exposed, then say *ghamara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does غمر (ghamara) mean? (\"To submerge; to flood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C487-jarafa",
+      "sequence": 27090,
+      "title": "جرف (jarafa) — to sweep away",
+      "headword": "جرف",
+      "romanization": "jarafa",
+      "gloss": "to sweep away",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9540209eadf28bea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to be exposed, then the Arabic for to submerge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جرف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جرف — jarafa — \"to sweep away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "جرف الماء السيارات في الوادي. jarafa al-māʾ as-sayyārāt fī al-wādī. The water swept the cars away in the valley."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يجرف, yajruf."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun jurf is a bank undercut by water, a cliff."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جرف (jarafa) is built on the native Arabic root j-r-f, \"to sweep away\" (Lane). EtymDB lists Syriac relatives."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jarafa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jarafa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jarafa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jarafa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jarafa al-māʾ as-sayyārāt fī al-wādī. — The water swept the cars away in the valley.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jarafa al-māʾ as-sayyārāt fī al-wādī.* — The water swept the cars away in the valley.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to be exposed, then the Arabic for to submerge, then say jarafa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to be exposed, then the Arabic for to submerge, then say *jarafa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جرف (jarafa) mean? (\"To sweep away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C487-ihtama",
+      "sequence": 27100,
+      "title": "احتمى (iḥtamā) — to take shelter",
+      "headword": "احتمى",
+      "romanization": "iḥtamā",
+      "gloss": "to take shelter",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10b84018f78b7281",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to submerge, then the Arabic for to sweep away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: احتمى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "احتمى — iḥtamā — \"to take shelter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "احتمينا من المطر تحت الجسر. iḥtamaynā min al-maṭar taḥta al-jisr. We took shelter from the rain under the bridge."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يحتمي, yaḥtamī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "احتمى (iḥtamā) is built on the native Arabic root ḥ-m-y, \"to protect, to defend\" (Lane). It is Form VIII, \"to protect oneself\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtamā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtamā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtamā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtamā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtamaynā min al-maṭar taḥta al-jisr. — We took shelter from the rain under the bridge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtamaynā min al-maṭar taḥta al-jisr.* — We took shelter from the rain under the bridge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to submerge, then the Arabic for to sweep away, then say iḥtamā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to submerge, then the Arabic for to sweep away, then say *iḥtamā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does احتمى (iḥtamā) mean? (\"To take shelter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C487-lajaa",
+      "sequence": 27110,
+      "title": "لجأ (lajaʾa) — to seek refuge",
+      "headword": "لجأ",
+      "romanization": "lajaʾa",
+      "gloss": "to seek refuge",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e87d2eaaddd99b4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to sweep away, then the Arabic for to take shelter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لجأ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لجأ — lajaʾa — \"to seek refuge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لجأ الناس إلى المدرسة أثناء الفيضان. lajaʾa an-nās ilā al-madrasa athnāʾa al-fayaḍān. People took refuge in the school during the flood."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يلجأ, yaljaʾ."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes ilā before the place of refuge."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لجأ (lajaʾa) is built on the native Arabic root l-j-ʾ, \"to take refuge\" (Lane). It is the plain verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lajaʾa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lajaʾa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lajaʾa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lajaʾa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lajaʾa an-nās ilā al-madrasa athnāʾa al-fayaḍān. — People took refuge in the school during the flood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lajaʾa an-nās ilā al-madrasa athnāʾa al-fayaḍān.* — People took refuge in the school during the flood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to sweep away, then the Arabic for to take shelter, then say lajaʾa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to sweep away, then the Arabic for to take shelter, then say *lajaʾa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does لجأ (lajaʾa) mean? (\"To seek refuge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C487-malja",
+      "sequence": 27120,
+      "title": "ملجأ (maljaʾ) — a shelter; a refuge",
+      "headword": "ملجأ",
+      "romanization": "maljaʾ",
+      "gloss": "a shelter; a refuge",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f439e8f20f1f6d7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to take shelter, then the Arabic for to seek refuge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ملجأ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ملجأ — maljaʾ — \"a shelter; a refuge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نام الأطفال في الملجأ حتى الصباح. nāma al-aṭfāl fī al-maljaʾ ḥattā aṣ-ṣabāḥ. The children slept in the shelter until morning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ملجأ (maljaʾ) is built on the native Arabic root l-j-ʾ, \"to take refuge\" (Lane). The pattern mafʿal makes it the place of refuge."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maljaʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maljaʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maljaʾ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maljaʾ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāma al-aṭfāl fī al-maljaʾ ḥattā aṣ-ṣabāḥ. — The children slept in the shelter until morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāma al-aṭfāl fī al-maljaʾ ḥattā aṣ-ṣabāḥ.* — The children slept in the shelter until morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to take shelter, then the Arabic for to seek refuge, then say maljaʾ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to take shelter, then the Arabic for to seek refuge, then say *maljaʾ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ملجأ (maljaʾ) mean? (\"A shelter; a refuge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R487-review-487-487",
+      "sequence": 27130,
+      "title": "Weather words — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 487-487",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5babc67f79f3dd88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Arabic for to submerge and to sweep away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to submerge, to sweep away, to take shelter, to seek refuge, a shelter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to submerge, to sweep away, to take shelter, to seek refuge, a shelter]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To submerge? (غمر, ghamara.) To sweep away? (جرف, jarafa.) To take shelter? (احتمى, iḥtamā.) To seek refuge? (لجأ, lajaʾa.) A shelter? (ملجأ, maljaʾ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R487-review-final-487",
+      "sequence": 27140,
+      "title": "Floods and shelter — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over chapter 487",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76e74c05575f25d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Arabic for to submerge and to sweep away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to submerge, to sweep away, to take shelter, to seek refuge, a shelter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to submerge, to sweep away, to take shelter, to seek refuge, a shelter]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To submerge? (غمر, ghamara.) To sweep away? (جرف, jarafa.) To take shelter? (احتمى, iḥtamā.) To seek refuge? (لجأ, lajaʾa.) A shelter? (ملجأ, maljaʾ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 364,
+  "title": "The Price of Freedom",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3d63920f11ee36b9",
+  "lessons": [
+    {
+      "id": "TE-C364-banisa",
+      "sequence": 17940,
+      "title": "బానిస (bānisa) — a slave",
+      "headword": "బానిస",
+      "romanization": "bānisa",
+      "gloss": "a slave",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5e09bc94720e7cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to incite, then the Telugu for independence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బానిస",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బానిస — bānisa — \"a slave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పూర్వం బానిసలను అమ్మేవారు. pūrvaṁ bānisalanu ammēvāru. In the past, slaves were sold."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: బానిసలు, bānisalu."
+            },
+            {
+              "kind": "speech",
+              "text": "బానిసత్వం is slavery."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బానిస (bānisa) is the Telugu word for a slave; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bānisa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bānisa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bānisa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bānisa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrvaṁ bānisalanu ammēvāru. — In the past, slaves were sold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrvaṁ bānisalanu ammēvāru.* — In the past, slaves were sold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to incite, then the Telugu for independence, then say bānisa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to incite, then the Telugu for independence, then say *bānisa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బానిస (bānisa) mean? (\"A slave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C364-vimukti",
+      "sequence": 17950,
+      "title": "విముక్తి (vimukti) — liberation; release",
+      "headword": "విముక్తి",
+      "romanization": "vimukti",
+      "gloss": "liberation; release",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:717b82cb38304851",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for independence, then the Telugu for a slave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: విముక్తి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విముక్తి — vimukti — \"liberation; release\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బానిసలకు చివరికి విముక్తి లభించింది. bānisalaku civariki vimukti labhiñcindi. At last the slaves won their freedom."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విముక్తి (vimukti) is borrowed from Sanskrit vimukti, \"giving up; release\" (Monier-Williams), from vi-muc, \"to set loose\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimukti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimukti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimukti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimukti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bānisalaku civariki vimukti labhiñcindi. — At last the slaves won their freedom.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bānisalaku civariki vimukti labhiñcindi.* — At last the slaves won their freedom.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for independence, then the Telugu for a slave, then say vimukti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for independence, then the Telugu for a slave, then say *vimukti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does విముక్తి (vimukti) mean? (\"Liberation; release\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C364-poratam",
+      "sequence": 17960,
+      "title": "పోరాటం (pōrāṭaṁ) — a struggle",
+      "headword": "పోరాటం",
+      "romanization": "pōrāṭaṁ",
+      "gloss": "a struggle",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29cb9bd8c6250869",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a slave, then the Telugu for liberation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పోరాటం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పోరాటం — pōrāṭaṁ — \"a struggle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "స్వాతంత్ర్యం కోసం పోరాటం చాలా కాలం జరిగింది. svātantryaṁ kōsaṁ pōrāṭaṁ cālā kālaṁ jarigindi. The struggle for independence went on for a long time."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: పోరాటాలు, pōrāṭālu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun of పోరాడు, to fight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పోరాటం (pōrāṭaṁ) is native Dravidian, the noun of pōru, \"to fight, struggle\" (DEDR 4540)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōrāṭaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōrāṭaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōrāṭaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōrāṭaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svātantryaṁ kōsaṁ pōrāṭaṁ cālā kālaṁ jarigindi. — The struggle for independence went on for a long time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svātantryaṁ kōsaṁ pōrāṭaṁ cālā kālaṁ jarigindi.* — The struggle for independence went on for a long time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a slave, then the Telugu for liberation, then say pōrāṭaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a slave, then the Telugu for liberation, then say *pōrāṭaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పోరాటం (pōrāṭaṁ) mean? (\"A struggle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C364-tyagam",
+      "sequence": 17970,
+      "title": "త్యాగం (tyāgaṁ) — a sacrifice",
+      "headword": "త్యాగం",
+      "romanization": "tyāgaṁ",
+      "gloss": "a sacrifice",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7235e3d3ddb9c43",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for liberation, then the Telugu for a struggle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: త్యాగం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "త్యాగం — tyāgaṁ — \"a sacrifice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అమ్మ పిల్లల కోసం చాలా త్యాగాలు చేసింది. amma pillala kōsaṁ cālā tyāgālu cēsindi. Mother made many sacrifices for her children."
+            },
+            {
+              "kind": "speech",
+              "text": "త్యాగం (tyāgaṁ) చేయు, to make a sacrifice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "త్యాగం (tyāgaṁ) is borrowed from Sanskrit tyāga, \"abandonment\", and later \"liberality\" (CDIAL 5985): giving something up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyāgaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyāgaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyāgaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyāgaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amma pillala kōsaṁ cālā tyāgālu cēsindi. — Mother made many sacrifices for her children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amma pillala kōsaṁ cālā tyāgālu cēsindi.* — Mother made many sacrifices for her children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for liberation, then the Telugu for a struggle, then say tyāgaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for liberation, then the Telugu for a struggle, then say *tyāgaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does త్యాగం (tyāgaṁ) mean? (\"A sacrifice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C364-virudu",
+      "sequence": 17980,
+      "title": "వీరుడు (vīruḍu) — a brave man; a hero",
+      "headword": "వీరుడు",
+      "romanization": "vīruḍu",
+      "gloss": "a brave man; a hero",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8fd74ddae6b0a93",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a struggle, then the Telugu for a sacrifice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వీరుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వీరుడు — vīruḍu — \"a brave man; a hero\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ వీరుడు ఒంటరిగా శత్రువులతో పోరాడాడు. ā vīruḍu oṇṭarigā śatruvulatō pōrāḍāḍu. That brave man fought the enemies alone."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: వీరులు, vīrulu."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వీరుడు (vīruḍu) is borrowed from Sanskrit vīra, \"a man, a hero\" (CDIAL 12056), with the Telugu masculine ending -uḍu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīruḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīruḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīruḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīruḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā vīruḍu oṇṭarigā śatruvulatō pōrāḍāḍu. — That brave man fought the enemies alone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā vīruḍu oṇṭarigā śatruvulatō pōrāḍāḍu.* — That brave man fought the enemies alone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a struggle, then the Telugu for a sacrifice, then say vīruḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a struggle, then the Telugu for a sacrifice, then say *vīruḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వీరుడు (vīruḍu) mean? (\"A brave man; a hero\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

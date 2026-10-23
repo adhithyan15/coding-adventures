@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Giving and Serving",
+  "label": "ch:te-giving-and-serving",
+  "canDo": "I can talk about service, donations and volunteers.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C410-data",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can talk about service, donations and volunteers.",
+    "assesses": [
+      "TE-LEX-C410-SEVA410-03",
+      "TE-LEX-C410-SEVA410-04",
+      "TE-LEX-C410-SEVA410-05"
+    ]
+  }
+}

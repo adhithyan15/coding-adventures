@@ -1,0 +1,11 @@
+{
+  "id": "ML-C523-kusumpu",
+  "pathSegment": "ML-PATH-523-PAKA523",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-523-PAKA523",
+      "order": 3
+    }
+  ]
+}

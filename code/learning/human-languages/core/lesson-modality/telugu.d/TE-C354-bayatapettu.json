@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C354-bayatapettu",
+    "language": "telugu",
+    "chapter": 354,
+    "sequence": 17450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41a09c203cc517e0"
+  },
+  "findings": []
+}

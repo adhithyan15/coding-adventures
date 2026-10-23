@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C489-migulu",
+    "language": "telugu",
+    "chapter": 489,
+    "sequence": 24650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca7aa0f37efb73c0"
+  },
+  "findings": []
+}

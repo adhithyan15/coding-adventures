@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C572-silikkuka",
+    "language": "malayalam",
+    "chapter": 572,
+    "sequence": 28810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c1da8f36be5c497"
+  },
+  "findings": []
+}

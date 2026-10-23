@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:4967618c67c32abd",
+  "lessonIds": [
+    "TE-C369-rajabhavanam",
+    "TE-C369-ratham",
+    "TE-C369-varasatvam",
+    "TE-C369-kulcu",
+    "TE-C369-nirmincu"
+  ],
+  "tex": "telugu/book/chapters/ch369-palaces-and-chariots.tex"
+}

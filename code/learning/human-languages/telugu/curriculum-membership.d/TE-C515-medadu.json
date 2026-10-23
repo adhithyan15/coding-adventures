@@ -1,0 +1,11 @@
+{
+  "id": "TE-C515-medadu",
+  "pathSegment": "TE-PATH-515-SARIRAM515",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-515-SARIRAM515",
+      "order": 0
+    }
+  ]
+}

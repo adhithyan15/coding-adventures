@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 343,
+  "title": "A Narrow Escape",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:29dc9881c160b178",
+  "lessons": [
+    {
+      "id": "TE-C343-ksatagatrulu",
+      "sequence": 16870,
+      "title": "క్షతగాత్రులు (kṣatagātrulu) — the injured",
+      "headword": "క్షతగాత్రులు",
+      "romanization": "kṣatagātrulu",
+      "gloss": "the injured",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b66bd9fa631b9094",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a speech, then the Telugu for to give a speech."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: క్షతగాత్రులు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "క్షతగాత్రులు — kṣatagātrulu — \"the injured\"."
+            },
+            {
+              "kind": "speech",
+              "text": "క్షతగాత్రులను ఆసుపత్రికి తీసుకెళ్ళారు. kṣatagātrulanu āsupatriki tīsukeḷḷāru. The injured were taken to hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "A news word, nearly only in the plural: క్షత, wounded, and గాత్ర, the body. At the hospital the క్షతగాత్రులు (kṣatagātrulu) are given ఔషధం."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "క్షతగాత్రులు (kṣatagātrulu) is borrowed from Sanskrit: kṣata, \"wounded\" (CDIAL 3645), and gātra, \"a limb, the body\" (CDIAL 4124): those wounded in body."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣatagātrulu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣatagātrulu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣatagātrulu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣatagātrulu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣatagātrulanu āsupatriki tīsukeḷḷāru. — The injured were taken to hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣatagātrulanu āsupatriki tīsukeḷḷāru.* — The injured were taken to hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a speech, then the Telugu for to give a speech, then say kṣatagātrulu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a speech, then the Telugu for to give a speech, then say *kṣatagātrulu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does క్షతగాత్రులు (kṣatagātrulu) mean? (\"The injured\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C343-durghatana",
+      "sequence": 16880,
+      "title": "దుర్ఘటన (durghaṭana) — a tragic accident; a disaster",
+      "headword": "దుర్ఘటన",
+      "romanization": "durghaṭana",
+      "gloss": "a tragic accident; a disaster",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e52c7c6b37e26b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to give a speech, then the Telugu for the injured."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దుర్ఘటన",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దుర్ఘటన — durghaṭana — \"a tragic accident; a disaster\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ దుర్ఘటన నిన్న సాయంత్రం జరిగింది. ā durghaṭana ninna sāyantraṁ jarigindi. That tragic accident happened yesterday evening."
+            },
+            {
+              "kind": "speech",
+              "text": "దుర్-, ill, with ఘటన, a happening: compare సంఘటన."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దుర్ఘటన (durghaṭana) is built from Sanskrit dur-, \"ill, bad\", and ghaṭana, \"a joining, a coming together\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durghaṭana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durghaṭana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durghaṭana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durghaṭana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā durghaṭana ninna sāyantraṁ jarigindi. — That tragic accident happened yesterday evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā durghaṭana ninna sāyantraṁ jarigindi.* — That tragic accident happened yesterday evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to give a speech, then the Telugu for the injured, then say durghaṭana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to give a speech, then the Telugu for the injured, then say *durghaṭana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దుర్ఘటన (durghaṭana) mean? (\"A tragic accident; a disaster\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C343-tokkisalata",
+      "sequence": 16890,
+      "title": "తొక్కిసలాట (tokkisalāṭa) — a stampede",
+      "headword": "తొక్కిసలాట",
+      "romanization": "tokkisalāṭa",
+      "gloss": "a stampede",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e2ee7d235e89263",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for the injured, then the Telugu for a tragic accident."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తొక్కిసలాట",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తొక్కిసలాట — tokkisalāṭa — \"a stampede\"."
+            },
+            {
+              "kind": "speech",
+              "text": "జాతరలో తొక్కిసలాట జరిగింది. jātaralō tokkisalāṭa jarigindi. There was a stampede at the fair."
+            },
+            {
+              "kind": "speech",
+              "text": "From తొక్కు, to tread on: people treading on one another."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తొక్కిసలాట (tokkisalāṭa) is native Dravidian, built on tokku, trokku, \"to tread, trample\" (DEDR 3522)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokkisalāṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokkisalāṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokkisalāṭa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokkisalāṭa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jātaralō tokkisalāṭa jarigindi. — There was a stampede at the fair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jātaralō tokkisalāṭa jarigindi.* — There was a stampede at the fair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for the injured, then the Telugu for a tragic accident, then say tokkisalāṭa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for the injured, then the Telugu for a tragic accident, then say *tokkisalāṭa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తొక్కిసలాట (tokkisalāṭa) mean? (\"A stampede\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C343-trutilo",
+      "sequence": 16900,
+      "title": "త్రుటిలో (truṭilō) — narrowly; by a whisker",
+      "headword": "త్రుటిలో",
+      "romanization": "truṭilō",
+      "gloss": "narrowly; by a whisker",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b82c5b398a9adb5e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a tragic accident, then the Telugu for a stampede."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: త్రుటిలో",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "త్రుటిలో — truṭilō — \"narrowly; by a whisker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను త్రుటిలో ప్రమాదం నుంచి తప్పించుకున్నాడు. atanu truṭilō pramādaṁ nuñci tappiñcukunnāḍu. He narrowly escaped the accident."
+            },
+            {
+              "kind": "speech",
+              "text": "త్రుటి, a tiny instant, with -లో, in: in a split second. Headlines often spell it తృటిలో."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "త్రుటిలో (truṭilō) is built on Sanskrit truṭi, \"a small space of time\" (CDIAL 6064), with the Telugu locative -lō, \"in\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "truṭilō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *truṭilō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "truṭilō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *truṭilō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu truṭilō pramādaṁ nuñci tappiñcukunnāḍu. — He narrowly escaped the accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu truṭilō pramādaṁ nuñci tappiñcukunnāḍu.* — He narrowly escaped the accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a tragic accident, then the Telugu for a stampede, then say truṭilō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a tragic accident, then the Telugu for a stampede, then say *truṭilō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does త్రుటిలో (truṭilō) mean? (\"Narrowly; by a whisker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C343-bayatapadu",
+      "sequence": 16910,
+      "title": "బయటపడు (bayaṭapaḍu) — to get out; to come to light",
+      "headword": "బయటపడు",
+      "romanization": "bayaṭapaḍu",
+      "gloss": "to get out; to come to light",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00da61136d30d959",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a stampede, then the Telugu for narrowly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బయటపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బయటపడు — bayaṭapaḍu — \"to get out; to come to light\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మంటల నుంచి అందరూ క్షేమంగా బయటపడ్డారు. maṇṭala nuñci andarū kṣēmaṅgā bayaṭapaḍḍāru. Everyone got out of the fire safely."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): బయటపడ్డాను, bayaṭapaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "బయట, outside, with పడు: to come out, or for a secret to come out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బయటపడు (bayaṭapaḍu) is a native compound: bayaṭa, \"outside\", which sits beside bayalu, \"the outside, open space\" (DEDR 3940), with the helping verb paḍu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bayaṭapaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bayaṭapaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bayaṭapaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bayaṭapaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṇṭala nuñci andarū kṣēmaṅgā bayaṭapaḍḍāru. — Everyone got out of the fire safely.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṇṭala nuñci andarū kṣēmaṅgā bayaṭapaḍḍāru.* — Everyone got out of the fire safely.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a stampede, then the Telugu for narrowly, then say bayaṭapaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a stampede, then the Telugu for narrowly, then say *bayaṭapaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బయటపడు (bayaṭapaḍu) mean? (\"To get out; to come to light\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

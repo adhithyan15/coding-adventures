@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-184-A2-NEARBY-TIME",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-184-A2-NEARBY-TIME"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-348-DOPIDI348",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-348-DOPIDI348"
+  ],
+  "after": []
+}

@@ -114,9 +114,13 @@ calendar-event text omissions tracked by #17146 (#17128). Qt now passes the
 event surface's supported color and font size to descendant text and lowers
 the authored hidden/ellipsis/nowrap trio as native clipping and right elision,
 retiring those final five omissions (#17146).
+Qt Text also preserves the calendar heading fill width and timeline column
+widths (150 and 190), reducing both themes from 81 to 78 reported style drops.
+This is generated-source evidence; native build validation runs in release CI.
+
 Qt controls now lower their 15 exact `width: 100%` declarations to
 `Layout.fillWidth: true`, reducing the Qt inventory from 108 to 93. The three
-remaining Qt width omissions belong to `Text` geometry, while other
+Text geometry omissions were subsequently resolved by #17913, while other
 percentages and mixed fixed/fill states remain explicit debt (#17338).
 Qt now also treats the ten non-inset CSS shadows paired with supported
 `elevation` tokens as consumed by their emitted native `MultiEffect` depth,
@@ -234,10 +238,13 @@ cd host/web && npm install && npm run dev       # http://localhost:5173
 
 ## Incremental releases
 
-The prepared `task-app-v0.5.8` patch preserves the timeline milestone and
-legend-swatch diamond rotations (#17675), reducing measured Qt style drops from
-83 to 81. Publication and immutable asset auditing remain pending in #17682.
-Downloadable coverage is unchanged.
+The prepared `task-app-v0.5.9` patch preserves Qt calendar/timeline text widths
+(#17913), reducing measured Qt style drops from 81 to 78. It also includes Web
+Component per-keystroke input/focus acceptance and stylesheet-derived web host
+theme tokens. Publication and immutable asset auditing remain pending in
+#17950. The previous `task-app-v0.5.8` release was published and audited in
+#17682. Downloadable coverage is unchanged; HTML, Web Components, and Paint
+remain CI-only, and signing remains tracked in #13977.
 
 TaskApp uses product-scoped [Semantic Versioning](https://semver.org/):
 `task-app-vMAJOR.MINOR.PATCH`. Compatible fixes and packaging improvements bump

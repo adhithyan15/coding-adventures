@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:e950840172cbe62d",
+  "lessonIds": [
+    "TE-C506-sahincu",
+    "TE-C506-tattuko",
+    "TE-C506-nigraham",
+    "TE-C506-manassanti",
+    "TE-C506-upasamanam"
+  ],
+  "tex": "telugu/book/chapters/ch506-bearing-it.tex"
+}

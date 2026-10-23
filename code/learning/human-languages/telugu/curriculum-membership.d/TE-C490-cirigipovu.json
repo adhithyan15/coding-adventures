@@ -1,0 +1,11 @@
+{
+  "id": "TE-C490-cirigipovu",
+  "pathSegment": "TE-PATH-490-CIRUGU490",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-490-CIRUGU490",
+      "order": 1
+    }
+  ]
+}

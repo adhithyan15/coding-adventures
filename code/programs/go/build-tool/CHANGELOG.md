@@ -1,8 +1,28 @@
 # Changelog
 
+## 2026-10-21 — BF03 Go native fixture selection
+
+- Seed go/compiler-ir from the exact compiler-ir-v1/cases.json external path
+  before fixture early return for all/Go filters; preserve downstream closure,
+  deleted/renamed old paths, source union and three-platform build plans.
+- Fail closed on a missing native reader; ignore lookalike/schema/docs paths
+  and unrelated languages. Add exact selector and atomic-plan regressions.
+
+
 All notable changes to the Go build tool will be documented in this file.
 
 ## [Unreleased]
+
+### Fixed
+
+- The `global:luarocks-tree` lock now covers `luarocks install`, not only
+  `make` and `remove`. LuaRocks takes an exclusive lock on the shared rocks
+  tree for all three, so an unserialized install fails outright
+  ("requires exclusive write access to ~/.luarocks"). `lua/tcp_client`'s
+  `luarocks install luasocket --local` did exactly that beside another
+  package's `luarocks make` and failed a full-build shard. 17 Lua packages
+  run `luarocks install`. The match is now a command-word regex, like the
+  opam and gem locks, and applies to any package's BUILD, not only Lua's.
 
 ### Added
 

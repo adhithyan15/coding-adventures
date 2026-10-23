@@ -12,7 +12,7 @@ mod apple {
     use std::collections::{BTreeMap, BTreeSet};
 
     use diagram_ir::{
-        DiagramIconGlyph, DiagramStyle, EdgeKind, SequenceBlockKind, SequenceEvent, TemporalBody,
+        DiagramDirection, DiagramIconGlyph, DiagramStyle, EdgeKind, SequenceBlockKind, SequenceEvent, TemporalBody,
         TemporalDiagram, TemporalKind,
     };
     use diagram_layout_board::layout_board_diagram;
@@ -31,7 +31,7 @@ mod apple {
     use diagram_to_paint::{
         diagram_to_paint, diagram_to_paint_board, diagram_to_paint_chart,
         diagram_to_paint_event_model, diagram_to_paint_packet, diagram_to_paint_sequence,
-        diagram_to_paint_cynefin, diagram_to_paint_info, diagram_to_paint_ishikawa, diagram_to_paint_railroad, diagram_to_paint_swimlane, diagram_to_paint_treeview, diagram_to_paint_treemap, diagram_to_paint_venn, diagram_to_paint_wardley,
+        diagram_to_paint_cynefin, diagram_to_paint_info, diagram_to_paint_ishikawa, diagram_to_paint_railroad, diagram_to_paint_swimlane, diagram_to_paint_swimlane_with_images, diagram_to_paint_treeview, diagram_to_paint_treemap, diagram_to_paint_venn, diagram_to_paint_wardley,
         diagram_to_paint_structural, diagram_to_paint_temporal, DiagramToPaintOptions,
     };
     use dot_parser::parse_to_diagram;
@@ -44,7 +44,7 @@ mod apple {
         parse_to_diagram as parse_mermaid_to_diagram, parse_cynefin, parse_info, parse_ishikawa, parse_radar, parse_railroad, parse_swimlane, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart, parse_zenuml,
     };
     use paint_codec_png::write_png;
-    use paint_instructions::{PaintInstruction, PathCommand};
+    use paint_instructions::{PaintInstruction, PathCommand, PixelContainer};
     use paint_metal::render;
     use serde_json::Value;
     use text_native_coretext::{CoreTextMetrics, CoreTextResolver, CoreTextShaper};
@@ -96,6 +96,54 @@ mod apple {
     const SWIMLANE_VISUAL_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/swimlane-11.16.1-visual-corpus.json"
+    ));
+    const ER_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-11.16.1-corpus.json"
+    ));
+    const ER_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-11.16.1-visual-corpus.json"
+    ));
+    const ER_STYLES_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-styles-11.16.1-corpus.json"
+    ));
+    const ER_STYLES_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-styles-11.16.1-visual-corpus.json"
+    ));
+    const ER_DEFAULT_CLASS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-default-class-11.16.1-corpus.json"
+    ));
+    const ER_DEFAULT_CLASS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-default-class-11.16.1-visual-corpus.json"
+    ));
+    const ER_QUOTED_TEXT_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-quoted-text-11.16.1-corpus.json"
+    ));
+    const ER_QUOTED_TEXT_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-quoted-text-11.16.1-visual-corpus.json"
+    ));
+    const ER_ACCESSIBILITY_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-accessibility-11.16.1-corpus.json"
+    ));
+    const ER_ACCESSIBILITY_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-accessibility-11.16.1-visual-corpus.json"
+    ));
+    const ER_BACKTICK_ATTRIBUTES_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-backtick-attributes-11.16.1-corpus.json"
+    ));
+    const ER_BACKTICK_ATTRIBUTES_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-backtick-attributes-11.16.1-visual-corpus.json"
     ));
     const TIMELINE_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
@@ -1927,6 +1975,274 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(pixels.width > 0);
         assert!(pixels.height > 0);
         assert!(!scene.instructions.is_empty());
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_directions_to_png() {
+        let syntax: Value = serde_json::from_str(ER_CORPUS).expect("ER corpus JSON");
+        let visual: Value = serde_json::from_str(ER_VISUAL_CORPUS).expect("ER visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("ER fixtures");
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+
+        for (index, fixture_name) in visual["fixtures"].as_array().expect("ER visual fixtures").iter().enumerate() {
+            let fixture_name = fixture_name.as_str().expect("ER visual fixture name");
+            let fixture = fixtures.iter().find(|fixture| fixture["name"] == fixture_name)
+                .unwrap_or_else(|| panic!("missing ER fixture {fixture_name}"));
+            let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER fixture source"))
+                .unwrap_or_else(|error| panic!("failed to parse {fixture_name}: {error}"));
+            let direction = diagram.direction.clone().expect("ER fixture direction");
+            let layout = layout_structural_diagram(&diagram);
+            let customer = layout.nodes.iter().find(|node| node.id == "CUSTOMER").expect("CUSTOMER node");
+            let order = layout.nodes.iter().find(|node| node.id == "ORDER").expect("ORDER node");
+            match direction {
+                DiagramDirection::Tb => assert!(order.y > customer.y),
+                DiagramDirection::Bt => assert!(customer.y > order.y),
+                DiagramDirection::Lr => assert!(order.x > customer.x),
+                DiagramDirection::Rl => assert!(customer.x > order.x),
+            }
+            let scene = diagram_to_paint_structural(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty());
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_er_direction_{index}_e2e.png");
+            write_png(&pixels, &path)
+                .expect("ER direction PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_styles_to_png() {
+        let syntax: Value = serde_json::from_str(ER_STYLES_CORPUS).expect("ER style corpus JSON");
+        let visual: Value =
+            serde_json::from_str(ER_STYLES_VISUAL_CORPUS).expect("ER style visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("ER style fixtures");
+        let expected_fills = [vec!["#dbeafe"], vec!["#dcfce7", "#fef3c7"]];
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+
+        for (index, fixture_name) in visual["fixtures"]
+            .as_array()
+            .expect("ER style visual fixtures")
+            .iter()
+            .enumerate()
+        {
+            let fixture_name = fixture_name.as_str().expect("ER style visual fixture name");
+            let fixture = fixtures
+                .iter()
+                .find(|fixture| fixture["name"] == fixture_name)
+                .unwrap_or_else(|| panic!("missing ER style fixture {fixture_name}"));
+            let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER style fixture source"))
+                .unwrap_or_else(|error| panic!("failed to parse {fixture_name}: {error}"));
+            let layout = layout_structural_diagram(&diagram);
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            for expected_fill in &expected_fills[index] {
+                assert!(scene.instructions.iter().any(|instruction| matches!(
+                    instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some(*expected_fill)
+                )));
+            }
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_er_style_{index}_e2e.png");
+            write_png(&pixels, &path).expect("ER style PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_default_class_to_png() {
+        let syntax: Value =
+            serde_json::from_str(ER_DEFAULT_CLASS_CORPUS).expect("ER default class corpus JSON");
+        let visual: Value = serde_json::from_str(ER_DEFAULT_CLASS_VISUAL_CORPUS)
+            .expect("ER default class visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+        let diagram = parse_er_diagram(
+            syntax["fixtures"][0]["source"].as_str().expect("ER default class source"),
+        )
+        .expect("ER default class fixture must parse");
+        let layout = layout_structural_diagram(&diagram);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        for expected_fill in ["#fce7f3", "#dbeafe", "#fef3c7"] {
+            assert!(scene.instructions.iter().any(|instruction| matches!(
+                instruction,
+                PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some(expected_fill)
+            )));
+        }
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_er_default_class_e2e.png")
+            .expect("ER default class PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_quoted_text_to_png() {
+        let syntax: Value =
+            serde_json::from_str(ER_QUOTED_TEXT_CORPUS).expect("ER quoted text corpus JSON");
+        let visual: Value = serde_json::from_str(ER_QUOTED_TEXT_VISUAL_CORPUS)
+            .expect("ER quoted text visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+        let diagram = parse_er_diagram(
+            syntax["fixtures"][0]["source"].as_str().expect("ER quoted text source"),
+        )
+        .expect("ER quoted text fixture must parse");
+        let layout = layout_structural_diagram(&diagram);
+        assert!(layout.nodes.iter().any(|node| node.header == "Customer ❤"));
+        assert!(layout.nodes.iter().any(|node| node.header == "Customer Account"));
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(_)
+        )));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_er_quoted_text_e2e.png")
+            .expect("ER quoted text PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_accessibility_to_png() {
+        let syntax: Value =
+            serde_json::from_str(ER_ACCESSIBILITY_CORPUS).expect("ER accessibility corpus JSON");
+        let visual: Value = serde_json::from_str(ER_ACCESSIBILITY_VISUAL_CORPUS)
+            .expect("ER accessibility visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("ER accessibility fixtures");
+        let visual_names = visual["fixtures"].as_array().expect("ER accessibility visuals");
+        assert_eq!(fixtures.len(), visual_names.len());
+
+        for (index, fixture) in fixtures.iter().enumerate() {
+            assert_eq!(visual_names[index], fixture["name"]);
+            let diagram = parse_er_diagram(
+                fixture["source"].as_str().expect("ER accessibility source"),
+            )
+            .expect("ER accessibility fixture must parse");
+            let expected_title = diagram.accessibility_title.clone().expect("accessibility title");
+            let expected_description =
+                diagram.accessibility_description.clone().expect("accessibility description");
+            let layout = layout_structural_diagram(&diagram);
+            let shaper = CoreTextShaper;
+            let metrics = CoreTextMetrics;
+            let resolver = CoreTextResolver::new();
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            let metadata = scene.metadata.as_ref().expect("ER accessibility scene metadata");
+            assert_eq!(metadata.get("accessibility.title"), Some(&expected_title));
+            assert_eq!(
+                metadata.get("accessibility.description"),
+                Some(&expected_description)
+            );
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_er_accessibility_{index}_e2e.png");
+            write_png(&pixels, &path).expect("ER accessibility PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_backtick_attributes_to_png() {
+        let syntax: Value = serde_json::from_str(ER_BACKTICK_ATTRIBUTES_CORPUS)
+            .expect("ER backtick attribute corpus JSON");
+        let visual: Value = serde_json::from_str(ER_BACKTICK_ATTRIBUTES_VISUAL_CORPUS)
+            .expect("ER backtick attribute visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+        let diagram = parse_er_diagram(
+            syntax["fixtures"][0]["source"]
+                .as_str()
+                .expect("ER backtick attribute source"),
+        )
+        .expect("ER backtick attribute fixture must parse");
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(
+            layout.nodes[0].compartments[0].rows,
+            ["address: my.type", "geo.accuracy: string [PK] - Precision source"]
+        );
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(_)
+        )));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_er_backtick_attributes_e2e.png")
+            .expect("ER backtick attribute PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
     }
 
     #[test]
@@ -3826,13 +4142,15 @@ line "Target" [35, 50, 68, 82]"##,
                 .unwrap_or_else(|error| panic!("failed to parse {fixture_name}: {error}"));
             let icon_options = SwimlaneLayoutOptions { icon_glyphs: BTreeMap::from([(
                 "logos:rust".into(), DiagramIconGlyph { text: "R".into(), font_family: "Helvetica".into() },
+            )]), image_dimensions: BTreeMap::from([(
+                "https://example.com/logo.png".into(), (160.0, 80.0),
             )]) };
-            let layout = if fixture_name == "icon-glyph-node" {
+            let layout = if matches!(fixture_name, "icon-glyph-node" | "icon-node-forms" | "image-node") {
                 layout_swimlane_with_options(&diagram, Some(&icon_options))
             } else {
                 layout_swimlane(&diagram)
             };
-            let scene = diagram_to_paint_swimlane(&layout, &DiagramToPaintOptions {
+            let paint_options = DiagramToPaintOptions {
                 background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
                 device_pixel_ratio: 2.0,
                 label_font: font_spec("Helvetica", 13.0),
@@ -3840,7 +4158,16 @@ line "Target" [35, 50, 68, 82]"##,
                 shaper: &shaper,
                 metrics: &metrics,
                 resolver: &resolver,
-            });
+            };
+            let decoded_images = BTreeMap::from([(
+                "https://example.com/logo.png".into(),
+                PixelContainer::from_data(2, 1, vec![235, 87, 87, 255, 54, 122, 246, 255]),
+            )]);
+            let scene = if fixture_name == "image-node" {
+                diagram_to_paint_swimlane_with_images(&layout, &paint_options, &decoded_images)
+            } else {
+                diagram_to_paint_swimlane(&layout, &paint_options)
+            };
             assert!(!scene.instructions.is_empty(), "{fixture_name} must lower to paint");
             if fixture_name == "icon-glyph-node" {
                 assert_eq!(layout.icons.get("parser").map(String::as_str), Some("logos:rust"));
@@ -3852,6 +4179,38 @@ line "Target" [35, 50, 68, 82]"##,
                 assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
                     PaintInstruction::GlyphRun(run) if run.font_size == 24.0 && !run.glyphs.is_empty()
                 )), "resolved icon glyph must lower to backend-neutral text paint");
+            }
+            if fixture_name == "icon-node-forms" {
+                assert_eq!(layout.nodes.iter().find(|node| node.id == "plain").unwrap().label.text, "");
+                assert_eq!(layout.icon_nodes["square"].height, 60.0);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(ellipse) if ellipse.rx == 32.0 && ellipse.ry == 32.0
+                )), "circle icon form must lower to backend-neutral ellipse paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.circle.iconPosition")), Some(&"t".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.square.iconHeight")), Some(&"60".to_string()));
+            }
+            if fixture_name == "image-node" {
+                assert_eq!((layout.image_nodes["logo"].width, layout.image_nodes["logo"].height), (128.0, 64.0));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Image(image) if image.width == 128.0 && image.height == 64.0
+                        && matches!(&image.src, paint_instructions::ImageSrc::Pixels(pixels)
+                            if pixels.width == 2 && pixels.height == 1
+                                && pixels.data == vec![235, 87, 87, 255, 54, 122, 246, 255])
+                )), "image node must lower supplied pixels to backend-neutral image paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.logo.imageConstraint")), Some(&"on".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.logo.imageResolved")), Some(&"true".to_string()));
+                let uri_scene = diagram_to_paint_swimlane(&layout, &paint_options);
+                assert!(uri_scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Image(image)
+                        if matches!(&image.src, paint_instructions::ImageSrc::Uri(source)
+                            if source == "https://example.com/logo.png")
+                )), "image node must preserve its URI when decoded pixels are unavailable");
+                assert_eq!(uri_scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.logo.imageResolved")), Some(&"false".to_string()));
             }
             if fixture_name == "default-lane-for-loose-nodes" {
                 assert_eq!(layout.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>(),

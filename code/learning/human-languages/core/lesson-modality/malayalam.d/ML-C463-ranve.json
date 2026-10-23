@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C463-ranve",
+    "language": "malayalam",
+    "chapter": 463,
+    "sequence": 23110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e52f52848065a447"
+  },
+  "findings": []
+}

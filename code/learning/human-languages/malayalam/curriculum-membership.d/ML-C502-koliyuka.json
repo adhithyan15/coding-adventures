@@ -1,0 +1,11 @@
+{
+  "id": "ML-C502-koliyuka",
+  "pathSegment": "ML-PATH-502-TOTTAM502",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-502-TOTTAM502",
+      "order": 3
+    }
+  ]
+}

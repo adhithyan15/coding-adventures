@@ -789,6 +789,7 @@ members = [
     "x509-key-usage",
     "x509-extended-key-usage",
     "x509-subject-alt-name",
+    "x509-name-constraints",
     "x509-serial-number",
     "x509-certificate-version",
     "x509-name",
@@ -1288,6 +1289,9 @@ members = [
   "x509-rsa-pkcs1-v1-5-sha256-signature",
   "x509-rsa-sha256-issuer-link",
   "x509-rsa-sha256-reviewed-anchor-link",
+  "x509-rsa-sha256-reviewed-server-link",
+  "x509-server-certificate-policy",
+  "x509-intermediate-certificate-policy",
   "x509-certificate-issuer-candidate-selection",
   "x509-certificate-path-length-policy",
 ]

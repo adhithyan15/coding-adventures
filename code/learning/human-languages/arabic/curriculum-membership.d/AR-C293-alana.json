@@ -1,0 +1,11 @@
+{
+  "id": "AR-C293-alana",
+  "pathSegment": "AR-PATH-293-AKHBAR293",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-293-AKHBAR293",
+      "order": 3
+    }
+  ]
+}

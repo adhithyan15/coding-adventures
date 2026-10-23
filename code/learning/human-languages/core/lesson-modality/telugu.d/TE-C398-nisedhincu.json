@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C398-nisedhincu",
+    "language": "telugu",
+    "chapter": 398,
+    "sequence": 19860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4df48122ac1ffe70"
+  },
+  "findings": []
+}

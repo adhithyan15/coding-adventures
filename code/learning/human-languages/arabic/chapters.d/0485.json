@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "Sky and light",
+  "label": "ch:ar-sky-and-light",
+  "canDo": "I can say clear weather, a rainbow, dew, to shine and to grow dark.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C485-azlama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can say clear weather, a rainbow, dew, to shine and to grow dark.",
+    "assesses": [
+      "AR-LEX-C485-SAMA485-03",
+      "AR-LEX-C485-SAMA485-04",
+      "AR-LEX-C485-SAMA485-05"
+    ]
+  }
+}

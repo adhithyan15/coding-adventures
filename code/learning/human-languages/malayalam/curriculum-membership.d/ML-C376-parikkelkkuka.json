@@ -1,0 +1,11 @@
+{
+  "id": "ML-C376-parikkelkkuka",
+  "pathSegment": "ML-PATH-376-JEEVAN376",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-376-JEEVAN376",
+      "order": 3
+    }
+  ]
+}

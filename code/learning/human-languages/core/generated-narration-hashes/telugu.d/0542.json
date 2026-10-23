@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:e8eb2162c00205d1",
+  "lessonIds": [
+    "TE-C542-citralekhanam",
+    "TE-C542-citrincu",
+    "TE-C542-silpam",
+    "TE-C542-silpi",
+    "TE-C542-kalakhandam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch542.txt",
+  "json": "telugu/narration/ch542.json",
+  "textHash": "fnv1a64:6c6904f4b25d7292",
+  "jsonHash": "fnv1a64:36deca9e040f182b",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Around the Square",
+  "label": "ch:te-around-the-square",
+  "canDo": "I can say a town square, a public garden, a lawn, a street lamp and surroundings.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C466-parisaralu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can say a town square, a public garden, a lawn, a street lamp and surroundings.",
+    "assesses": [
+      "TE-LEX-C466-CAURASTA466-03",
+      "TE-LEX-C466-CAURASTA466-04",
+      "TE-LEX-C466-CAURASTA466-05"
+    ]
+  }
+}

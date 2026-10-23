@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "Magic and Ghosts",
+  "label": "ch:te-magic-and-ghosts",
+  "canDo": "I can say a sorcerer, magic, a ghost, a boon and a curse.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C371-sapam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can say a sorcerer, magic, a ghost, a boon and a curse.",
+    "assesses": [
+      "TE-LEX-C371-MAYA371-03",
+      "TE-LEX-C371-MAYA371-04",
+      "TE-LEX-C371-MAYA371-05"
+    ]
+  }
+}

@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 336,
+  "title": "Gifts and blessings",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0e4b2c9710bbe113",
+  "lessons": [
+    {
+      "id": "AR-C336-ahda",
+      "sequence": 19200,
+      "title": "أهدى (ahdā) — to gift; to dedicate",
+      "headword": "أهدى",
+      "romanization": "ahdā",
+      "gloss": "to gift; to dedicate",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38a1a7f58ce6d37f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a giant, then the Arabic for a dwarf."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أهدى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أهدى — ahdā — \"to gift; to dedicate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أهدت البنت وردة إلى أمها. ahdat al-bint wardatan ilā ummihā. The girl gave her mother a rose."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يهدي, yuhdī."
+            },
+            {
+              "kind": "speech",
+              "text": "The taught هدية, a gift, is its noun. Of a book: أهدى (ahdā) الكتاب إلى أمه, he dedicated it to his mother."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أهدى (ahdā) is built on the native Arabic root h-d-y (Lane), \"to guide\", the root of the taught hadiyya, a gift. It is Form IV, \"to send a gift\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahdā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahdā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahdā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahdā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahdat al-bint wardatan ilā ummihā. — The girl gave her mother a rose.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahdat al-bint wardatan ilā ummihā.* — The girl gave her mother a rose.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a giant, then the Arabic for a dwarf, then say ahdā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a giant, then the Arabic for a dwarf, then say *ahdā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أهدى (ahdā) mean? (\"To gift; to dedicate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C336-istaqbala",
+      "sequence": 19210,
+      "title": "استقبل (istaqbala) — to receive guests; to welcome",
+      "headword": "استقبل",
+      "romanization": "istaqbala",
+      "gloss": "to receive guests; to welcome",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d1486998718824c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a dwarf, then the Arabic for to gift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استقبل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استقبل — istaqbala — \"to receive guests; to welcome\"."
+            },
+            {
+              "kind": "speech",
+              "text": "استقبل الأهل الضيوف عند الباب. istaqbala al-ahl aḍ-ḍuyūf ʿinda al-bāb. The family welcomed the guests at the door."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يستقبل, yastaqbil."
+            },
+            {
+              "kind": "speech",
+              "text": "A hotel reception desk is الاستقبال."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استقبل (istaqbala) is built on the native Arabic root q-b-l (Lane), \"to be in front of, to face\". It is Form X, \"to go to meet\"; mustaqbal, the future, is what comes to meet us."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaqbala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaqbala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaqbala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaqbala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaqbala al-ahl aḍ-ḍuyūf ʿinda al-bāb. — The family welcomed the guests at the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaqbala al-ahl aḍ-ḍuyūf ʿinda al-bāb.* — The family welcomed the guests at the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a dwarf, then the Arabic for to gift, then say istaqbala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a dwarf, then the Arabic for to gift, then say *istaqbala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استقبل (istaqbala) mean? (\"To receive guests; to welcome\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C336-baraka",
+      "sequence": 19220,
+      "title": "بارك (bāraka) — to bless; to congratulate",
+      "headword": "بارك",
+      "romanization": "bāraka",
+      "gloss": "to bless; to congratulate",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4179d8e662b44d64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to gift, then the Arabic for to receive guests."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بارك",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بارك — bāraka — \"to bless; to congratulate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بارك الأصدقاء للعروسين. bāraka al-aṣdiqāʾ li-l-ʿarūsayn. The friends congratulated the bride and groom."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يبارك, yubārik."
+            },
+            {
+              "kind": "speech",
+              "text": "بارك (bāraka) لـ someone: to congratulate them. The wish مبروك is the same root."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بارك (bāraka) is built on the native Arabic root b-r-k (Lane), said of a camel that kneels and stays. Baraka, a blessing, is good that stays; Form III bāraka is \"to wish blessing on\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāraka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāraka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāraka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāraka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāraka al-aṣdiqāʾ li-l-ʿarūsayn. — The friends congratulated the bride and groom.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāraka al-aṣdiqāʾ li-l-ʿarūsayn.* — The friends congratulated the bride and groom.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to gift, then the Arabic for to receive guests, then say bāraka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to gift, then the Arabic for to receive guests, then say *bāraka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بارك (bāraka) mean? (\"To bless; to congratulate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C336-mahr",
+      "sequence": 19230,
+      "title": "مهر (mahr) — a dowry, a bride gift",
+      "headword": "مهر",
+      "romanization": "mahr",
+      "gloss": "a dowry, a bride gift",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5cab1a2364c0f13a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to receive guests, then the Arabic for to bless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مهر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مهر — mahr — \"a dowry, a bride gift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دفع العريس مهرا للعروس. dafaʿa al-ʿarīs mahran li-l-ʿarūs. The groom paid a bride gift to the bride."
+            },
+            {
+              "kind": "speech",
+              "text": "The groom gives it to the bride; it is hers."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مهر (mahr) is built on the native Arabic root m-h-r (Lane), where mahr is the gift a man gives his bride; muhr, a foal, is written the same."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dafaʿa al-ʿarīs mahran li-l-ʿarūs. — The groom paid a bride gift to the bride.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dafaʿa al-ʿarīs mahran li-l-ʿarūs.* — The groom paid a bride gift to the bride.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to receive guests, then the Arabic for to bless, then say mahr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to receive guests, then the Arabic for to bless, then say *mahr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مهر (mahr) mean? (\"A dowry, a bride gift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C336-ashiyya",
+      "sequence": 19240,
+      "title": "عشية (ʿashiyya) — the eve; the evening before",
+      "headword": "عشية",
+      "romanization": "ʿashiyya",
+      "gloss": "the eve; the evening before",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cdf3d4bf005d04c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to bless, then the Arabic for a dowry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عشية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عشية — ʿashiyya — \"the eve; the evening before\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سافرنا عشية (ʿashiyya) العيد. sāfarnā ʿashiyyat al-ʿīd. We travelled on the eve of the holiday."
+            },
+            {
+              "kind": "speech",
+              "text": "عشية (ʿashiyya) الانتخابات: on the eve of the election."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عشية (ʿashiyya) is built on the native Arabic root ʿ-sh-w (Lane), where ʿashiyy is the evening; the taught ʿashāʾ, dinner, is the evening meal."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿashiyya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿashiyya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿashiyya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿashiyya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāfarnā ʿashiyyat al-ʿīd. — We travelled on the eve of the holiday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāfarnā ʿashiyyat al-ʿīd.* — We travelled on the eve of the holiday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to bless, then the Arabic for a dowry, then say ʿashiyya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to bless, then the Arabic for a dowry, then say *ʿashiyya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عشية (ʿashiyya) mean? (\"The eve; the evening before\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

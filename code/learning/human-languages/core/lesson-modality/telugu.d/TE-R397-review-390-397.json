@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R397-review-390-397",
+    "language": "telugu",
+    "chapter": 397,
+    "sequence": 19810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24b924c00d82861f"
+  },
+  "findings": []
+}

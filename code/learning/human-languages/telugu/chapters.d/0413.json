@@ -1,0 +1,21 @@
+{
+  "chapter": 413,
+  "title": "Science",
+  "label": "ch:te-science",
+  "canDo": "I can talk about science, scientists and experiments.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-R413-review-406-413",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can talk about science, scientists and experiments.",
+    "assesses": [
+      "TE-LEX-C413-SASTRAM413-01",
+      "TE-LEX-C413-SASTRAM413-02",
+      "TE-LEX-C413-SASTRAM413-03",
+      "TE-LEX-C413-SASTRAM413-04",
+      "TE-LEX-C413-SASTRAM413-05"
+    ]
+  }
+}

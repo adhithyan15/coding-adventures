@@ -1,0 +1,19 @@
+{
+  "chapter": 450,
+  "title": "Parking and Dropping Off",
+  "label": "ch:te-parking-and-dropping-off",
+  "canDo": "I can say parking, to pull up, to put aboard, to drop off and to drop someone off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C450-digabettu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 450: I can say parking, to pull up, to put aboard, to drop off and to drop someone off.",
+    "assesses": [
+      "TE-LEX-C450-PARKINGU450-03",
+      "TE-LEX-C450-PARKINGU450-04",
+      "TE-LEX-C450-PARKINGU450-05"
+    ]
+  }
+}

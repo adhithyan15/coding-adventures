@@ -1,0 +1,11 @@
+{
+  "id": "TE-C476-vedekku",
+  "pathSegment": "TE-PATH-476-USHNOGRATA476",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-476-USHNOGRATA476",
+      "order": 4
+    }
+  ]
+}

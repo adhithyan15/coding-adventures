@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:64d997a1df4c1415",
+  "lessonIds": [
+    "ML-C354-prasamgam",
+    "ML-C354-madhyamam",
+    "ML-C354-prasamgikkuka",
+    "ML-C354-kayyatikkuka",
+    "ML-C354-paramarsikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch354.txt",
+  "json": "malayalam/narration/ch354.json",
+  "textHash": "fnv1a64:e964a31fff6ffd4e",
+  "jsonHash": "fnv1a64:5f01cede10f1e4ae",
+  "findings": []
+}

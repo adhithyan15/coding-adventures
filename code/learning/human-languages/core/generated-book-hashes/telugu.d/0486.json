@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:08767635778849e6",
+  "lessonIds": [
+    "TE-C486-kolata",
+    "TE-C486-parimanam",
+    "TE-C486-namuna",
+    "TE-C486-viluva",
+    "TE-C486-tucu"
+  ],
+  "tex": "telugu/book/chapters/ch486-weights-and-measures.tex"
+}

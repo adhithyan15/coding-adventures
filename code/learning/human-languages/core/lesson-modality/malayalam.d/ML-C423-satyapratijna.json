@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C423-satyapratijna",
+    "language": "malayalam",
+    "chapter": 423,
+    "sequence": 20960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ccf848acc1aa1c9a"
+  },
+  "findings": []
+}

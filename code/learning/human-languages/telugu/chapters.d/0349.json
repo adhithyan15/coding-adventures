@@ -1,0 +1,21 @@
+{
+  "chapter": 349,
+  "title": "In Court",
+  "label": "ch:te-in-court",
+  "canDo": "I can say a court of law, a judge, an advocate, a verdict and bail.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-R349-review-342-349",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can say a court of law, a judge, an advocate, a verdict and bail.",
+    "assesses": [
+      "TE-LEX-C349-NYAYAM349-01",
+      "TE-LEX-C349-NYAYAM349-02",
+      "TE-LEX-C349-NYAYAM349-03",
+      "TE-LEX-C349-NYAYAM349-04",
+      "TE-LEX-C349-NYAYAM349-05"
+    ]
+  }
+}

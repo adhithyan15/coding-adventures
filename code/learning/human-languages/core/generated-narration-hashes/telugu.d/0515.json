@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:4c61af0f9a7aab87",
+  "lessonIds": [
+    "TE-C515-medadu",
+    "TE-C515-naram",
+    "TE-C515-kaleyam",
+    "TE-C515-vennemuka",
+    "TE-C515-svasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch515.txt",
+  "json": "telugu/narration/ch515.json",
+  "textHash": "fnv1a64:a4f5efcc92c0dc5a",
+  "jsonHash": "fnv1a64:d7663e35ac378c0a",
+  "findings": []
+}

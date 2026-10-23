@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C410-abaha",
+    "language": "arabic",
+    "chapter": 410,
+    "sequence": 23060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5dbc08d874d42849"
+  },
+  "findings": []
+}

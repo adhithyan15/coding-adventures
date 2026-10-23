@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C445-tram",
+    "language": "arabic",
+    "chapter": 445,
+    "sequence": 24920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0896d85784ec9567"
+  },
+  "findings": []
+}

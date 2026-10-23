@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:fcfb7920382bac90",
+  "lessonIds": [
+    "ML-C438-grahikkuka",
+    "ML-C438-hrdisthamakkuka",
+    "ML-C438-parisilippikkuka",
+    "ML-C438-vyakhyanikkuka",
+    "ML-C438-nirvacikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch438-ways-of-learning.tex"
+}

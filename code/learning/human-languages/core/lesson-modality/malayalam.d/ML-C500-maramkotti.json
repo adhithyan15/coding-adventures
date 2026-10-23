@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C500-maramkotti",
+    "language": "malayalam",
+    "chapter": 500,
+    "sequence": 25000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:53583310c5448519"
+  },
+  "findings": []
+}

@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 453,
+  "title": "For and Against",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:390845add5525a1e",
+  "lessons": [
+    {
+      "id": "ML-C453-vottu-ceyyuka",
+      "sequence": 22460,
+      "title": "വോട്ട് ചെയ്യുക (vōṭṭŭ ceyyuka) — to vote",
+      "headword": "വോട്ട് ചെയ്യുക",
+      "romanization": "vōṭṭŭ ceyyuka",
+      "gloss": "to vote",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c371ee9713b67e50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an approach, then the Malayalam for cooperation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വോട്ട് ചെയ്യുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വോട്ട് ചെയ്യുക — vōṭṭŭ ceyyuka — \"to vote\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ ഇന്നലെ ആദ്യമായി വോട്ട് ചെയ്തു. ñān innale ādyamāyi vōṭṭŭ ceytu. Yesterday I voted for the first time."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വോട്ട് ചെയ്തു, vōṭṭŭ ceytu."
+            },
+            {
+              "kind": "speech",
+              "text": "For someone: -ന് വോട്ട് ചെയ്യുക (vōṭṭŭ ceyyuka)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വോട്ട് ചെയ്യുക (vōṭṭŭ ceyyuka) is a phrase verb built on വോട്ട്, which was borrowed from English vote, with ചെയ്യുക, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vōṭṭŭ ceyyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vōṭṭŭ ceyyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vōṭṭŭ ceyyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vōṭṭŭ ceyyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñān innale ādyamāyi vōṭṭŭ ceytu. — Yesterday I voted for the first time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñān innale ādyamāyi vōṭṭŭ ceytu.* — Yesterday I voted for the first time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an approach, then the Malayalam for cooperation, then say vōṭṭŭ ceyyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an approach, then the Malayalam for cooperation, then say *vōṭṭŭ ceyyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വോട്ട് ചെയ്യുക (vōṭṭŭ ceyyuka) mean? (\"To vote\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C453-pintunaykkuka",
+      "sequence": 22470,
+      "title": "പിന്തുണയ്ക്കുക (pintuṇaykkuka) — to stand by; to support",
+      "headword": "പിന്തുണയ്ക്കുക",
+      "romanization": "pintuṇaykkuka",
+      "gloss": "to stand by; to support",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45cc744f244f5271",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for cooperation, then the Malayalam for to vote."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പിന്തുണയ്ക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പിന്തുണയ്ക്കുക — pintuṇaykkuka — \"to stand by; to support\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നാട്ടുകാർ അവളുടെ പദ്ധതിയെ പിന്തുണച്ചു. nāṭṭukār avaḷuṭe paddhatiye pintuṇaccu. The local people supported her plan."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പിന്തുണച്ചു, pintuṇaccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Its past is പിന്തുണച്ചു. What is supported takes -നെ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പിന്തുണയ്ക്കുക (pintuṇaykkuka) is native Dravidian, the verb of പിന്തുണ: പിൻ, \"behind\" (DEDR 4205), and തുണ, \"help\" (DEDR 3308), whose verb tuṇekka, \"to help\", DEDR also lists."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pintuṇaykkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pintuṇaykkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pintuṇaykkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pintuṇaykkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭṭukār avaḷuṭe paddhatiye pintuṇaccu. — The local people supported her plan.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭṭukār avaḷuṭe paddhatiye pintuṇaccu.* — The local people supported her plan.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for cooperation, then the Malayalam for to vote, then say pintuṇaykkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for cooperation, then the Malayalam for to vote, then say *pintuṇaykkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പിന്തുണയ്ക്കുക (pintuṇaykkuka) mean? (\"To stand by; to support\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C453-etirppu",
+      "sequence": 22480,
+      "title": "എതിർപ്പ് (etirppŭ) — an objection; resistance",
+      "headword": "എതിർപ്പ്",
+      "romanization": "etirppŭ",
+      "gloss": "an objection; resistance",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67ff58d621021d94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to vote, then the Malayalam for to stand by."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: എതിർപ്പ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എതിർപ്പ് — etirppŭ — \"an objection; resistance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പുതിയ നികുതിക്കെതിരെ വലിയ എതിർപ്പ് ഉണ്ടായി. putiya nikutikketire valiya etirppŭ uṇṭāyi. There was strong resistance to the new tax."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun of എതിർക്കുക, to oppose."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എതിർപ്പ് (etirppŭ) is native Dravidian, the noun of എതിർക്കുക, from etir, \"that which is opposite, in front\" (DEDR 795)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "etirppŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *etirppŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "etirppŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *etirppŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putiya nikutikketire valiya etirppŭ uṇṭāyi. — There was strong resistance to the new tax.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putiya nikutikketire valiya etirppŭ uṇṭāyi.* — There was strong resistance to the new tax.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to vote, then the Malayalam for to stand by, then say etirppŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to vote, then the Malayalam for to stand by, then say *etirppŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does എതിർപ്പ് (etirppŭ) mean? (\"An objection; resistance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C453-codyam-ceyyuka",
+      "sequence": 22490,
+      "title": "ചോദ്യം ചെയ്യുക (cōdyaṁ ceyyuka) — to question; to challenge",
+      "headword": "ചോദ്യം ചെയ്യുക",
+      "romanization": "cōdyaṁ ceyyuka",
+      "gloss": "to question; to challenge",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6604ed0ecc5710a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to stand by, then the Malayalam for an objection."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചോദ്യം ചെയ്യുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചോദ്യം ചെയ്യുക — cōdyaṁ ceyyuka — \"to question; to challenge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പോലീസ് അവനെ മണിക്കൂറുകളോളം ചോദ്യം ചെയ്തു. pōlīsŭ avane maṇikkūṟukaḷōḷaṁ cōdyaṁ ceytu. The police questioned him for hours."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ചോദ്യം ചെയ്തു, cōdyaṁ ceytu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to challenge a decision: തീരുമാനം ചോദ്യം ചെയ്യുക (cōdyaṁ ceyyuka)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചോദ്യം ചെയ്യുക (cōdyaṁ ceyyuka) is a phrase verb built on ചോദ്യം, \"a question\", from Sanskrit codya, \"to be urged on\", on the root cud, \"to impel\" (Monier-Williams), with ചെയ്യുക, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōdyaṁ ceyyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōdyaṁ ceyyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōdyaṁ ceyyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōdyaṁ ceyyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsŭ avane maṇikkūṟukaḷōḷaṁ cōdyaṁ ceytu. — The police questioned him for hours.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsŭ avane maṇikkūṟukaḷōḷaṁ cōdyaṁ ceytu.* — The police questioned him for hours.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to stand by, then the Malayalam for an objection, then say cōdyaṁ ceyyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to stand by, then the Malayalam for an objection, then say *cōdyaṁ ceyyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചോദ്യം ചെയ്യുക (cōdyaṁ ceyyuka) mean? (\"To question; to challenge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C453-pratikarikkuka",
+      "sequence": 22500,
+      "title": "പ്രതികരിക്കുക (pratikarikkuka) — to respond; to react",
+      "headword": "പ്രതികരിക്കുക",
+      "romanization": "pratikarikkuka",
+      "gloss": "to respond; to react",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e90928bca02c68a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an objection, then the Malayalam for to question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രതികരിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രതികരിക്കുക — pratikarikkuka — \"to respond; to react\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ വാർത്തയോട് മന്ത്രി ഉടനെ പ്രതികരിച്ചു. ā vārttayōṭŭ mantri uṭane pratikariccu. The minister responded to that news at once."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പ്രതികരിച്ചു, pratikariccu."
+            },
+            {
+              "kind": "speech",
+              "text": "To something: -ഓട് പ്രതികരിക്കുക (pratikarikkuka). The noun is പ്രതികരണം, a response."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രതികരിക്കുക (pratikarikkuka) is built from Sanskrit prati-kṛ, \"to act back\", whose noun pratikāra means \"requital, counteraction\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratikarikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratikarikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratikarikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratikarikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā vārttayōṭŭ mantri uṭane pratikariccu. — The minister responded to that news at once.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā vārttayōṭŭ mantri uṭane pratikariccu.* — The minister responded to that news at once.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an objection, then the Malayalam for to question, then say pratikarikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an objection, then the Malayalam for to question, then say *pratikarikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രതികരിക്കുക (pratikarikkuka) mean? (\"To respond; to react\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

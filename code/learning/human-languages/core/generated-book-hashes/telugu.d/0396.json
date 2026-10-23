@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:7069c03a04ef798c",
+  "lessonIds": [
+    "TE-C396-ayinappatiki",
+    "TE-C396-marovaipu",
+    "TE-C396-kaga",
+    "TE-C396-viruddham",
+    "TE-C396-adevidhanga"
+  ],
+  "tex": "telugu/book/chapters/ch396-on-the-other-hand.tex"
+}

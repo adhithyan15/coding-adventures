@@ -1,0 +1,22 @@
+{
+  "chapter": 322,
+  "title": "Feelings and Hopes",
+  "label": "ch:te-feelings-and-hopes",
+  "canDo": "I can say how I feel and how I felt with nāku … -gā undi and anipiñcindi, and what I would like or dream of with -ālani.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-R322-feelings-and-hopes",
+    "kind": "production",
+    "summary": "Complete TE-R322-feelings-and-hopes: say how you feel and felt, what you would like and dream of, and read the visarga ః.",
+    "assesses": [
+      "TE-LEX-C322-DUHKHAM-01",
+      "TE-SCRIPT-RECOG-178",
+      "TE-GRAMMAR-C322-FEELING-GA-UNDI-01",
+      "TE-GRAMMAR-C322-FELT-01",
+      "TE-GRAMMAR-C322-ALANI-UNDI-01",
+      "TE-GRAMMAR-C322-MY-WISH-01"
+    ]
+  }
+}

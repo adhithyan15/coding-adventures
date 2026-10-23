@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-486-OPHIS486",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an embassy, a department, a branch office, office hours and a working day.",
+  "prerequisites": []
+}

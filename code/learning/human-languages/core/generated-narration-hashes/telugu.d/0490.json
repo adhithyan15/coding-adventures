@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:77723f06d00434c3",
+  "lessonIds": [
+    "TE-C490-cedagottu",
+    "TE-C490-cirigipovu",
+    "TE-C490-masipovu",
+    "TE-C490-cilipovu",
+    "TE-C490-virigipovu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch490.txt",
+  "json": "telugu/narration/ch490.json",
+  "textHash": "fnv1a64:cbb7d1677934b50e",
+  "jsonHash": "fnv1a64:d15a79702c4245ca",
+  "findings": []
+}

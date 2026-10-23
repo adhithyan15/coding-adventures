@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:714239c2a90cc5e1",
+  "lessonIds": [
+    "AR-C517-dakhkhana",
+    "AR-C517-ishtaha",
+    "AR-C517-admana",
+    "AR-C517-jaa",
+    "AR-C517-shabia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch517.txt",
+  "json": "arabic/narration/ch517.json",
+  "textHash": "fnv1a64:6369065f2b9bbbf9",
+  "jsonHash": "fnv1a64:5f5a9fe2b742269d",
+  "findings": []
+}

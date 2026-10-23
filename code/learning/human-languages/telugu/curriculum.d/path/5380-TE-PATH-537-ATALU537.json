@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-537-ATALU537",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TE-EXT-537-ATALU537"
+  ],
+  "after": []
+}

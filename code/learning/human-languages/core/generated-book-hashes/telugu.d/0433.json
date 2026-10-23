@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:766e91bc6428dfb5",
+  "lessonIds": [
+    "TE-C433-krsi",
+    "TE-C433-savalu",
+    "TE-C433-vyuham",
+    "TE-C433-adhipatyam",
+    "TE-C433-kolpovu"
+  ],
+  "tex": "telugu/book/chapters/ch433-effort-and-strategy.tex"
+}

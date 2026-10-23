@@ -1,0 +1,23 @@
+{
+  "chapter": 321,
+  "title": "Tickets, Seats and Trouble",
+  "label": "ch:te-tickets-seats-and-trouble",
+  "canDo": "I can buy a ticket, ask for a seat and when a train leaves, and report a missed bus or a lost bag.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-R321-at-the-station",
+    "kind": "production",
+    "summary": "Complete TE-R321-at-the-station: buy a ticket, ask for a seat and a time, report what went wrong, and read the new letter ఔ.",
+    "assesses": [
+      "TE-LEX-C321-AUSADHAM-01",
+      "TE-SCRIPT-RECOG-177",
+      "TE-LEX-C321-SITU-01",
+      "TE-GRAMMAR-C321-BUY-TICKET-01",
+      "TE-GRAMMAR-C321-WHEN-LEAVES-01",
+      "TE-GRAMMAR-C321-MISSED-01",
+      "TE-GRAMMAR-C321-LOST-REPORT-01"
+    ]
+  }
+}

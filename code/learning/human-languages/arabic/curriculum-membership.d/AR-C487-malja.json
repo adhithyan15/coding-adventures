@@ -1,0 +1,11 @@
+{
+  "id": "AR-C487-malja",
+  "pathSegment": "AR-PATH-487-MALJA487",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-487-MALJA487",
+      "order": 4
+    }
+  ]
+}

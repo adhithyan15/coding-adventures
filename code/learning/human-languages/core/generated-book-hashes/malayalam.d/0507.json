@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:1e1b07bdf895b685",
+  "lessonIds": [
+    "ML-C507-mansun",
+    "ML-C507-kalavarsam",
+    "ML-C507-tulavarsam",
+    "ML-C507-toruka",
+    "ML-C507-carralmala"
+  ],
+  "tex": "malayalam/book/chapters/ch507-the-monsoon.tex"
+}

@@ -7,8 +7,9 @@
 import { describe, expect, it } from "vitest";
 import {
   chapterTitleFromTex,
+  loadBookCorpus,
   loadChapterPolicy,
-  loadEverything,
+  loadLessons,
   loadTrackChapters,
 } from "../src/loader.js";
 import { CHAPTER_GATE_CODES, runChapterGates, runPatternGates } from "../src/chapters.js";
@@ -287,6 +288,31 @@ describe("the pattern gates", () => {
 });
 
 describe("corpus snapshot", () => {
+  // Every case in this block reads the committed corpus, and three of them ran
+  // the identical chapter-gate report over it — each one re-reading ~42,000
+  // lessons through `loadEverything()`, which also built the curricula and the
+  // dataset nobody here looks at. Under full-suite load on a 3-core macOS
+  // runner the later cases overran their 30 s budget. One read and one report
+  // now serve them all, built on first use so the cost lands inside a case's
+  // budget exactly once. The memo is per file (Vitest gives each file its own
+  // module graph) and no case mutates the lessons or the report it is handed.
+  let snapshot:
+    | { lessons: ReturnType<typeof loadLessons>; report: ReturnType<typeof runChapterGates> }
+    | undefined;
+  const committedSnapshot = () => {
+    if (snapshot === undefined) {
+      const lessons = loadLessons();
+      const report = runChapterGates({
+        books: loadBookCorpus(),
+        lessons,
+        trackChapters: loadTrackChapters(),
+        policy: loadChapterPolicy(),
+      });
+      snapshot = { lessons, report };
+    }
+    return snapshot;
+  };
+
   // The first published measurement (HL-C03). These are DEBT counts, not a pass mark:
   // the gates are report-only precisely because this debt predates them. Ratchet them
   // DOWN as tracks are authored; never up.
@@ -298,13 +324,7 @@ describe("corpus snapshot", () => {
   // every lesson, emptying the "taught so far" set. A gate that reports total failure is
   // reporting on itself.
   it("pins the first published chapter-gate snapshot", () => {
-    const { books: corpus, lessons } = loadEverything();
-    const report = runChapterGates({
-      books: corpus,
-      lessons,
-      trackChapters: loadTrackChapters(),
-      policy: loadChapterPolicy(),
-    });
+    const { report } = committedSnapshot();
     // HL-C63 authored the 98 capabilities that had lagged behind already published,
     // handwritten chapters. The book total therefore stays at 513 while the declared
     // capability total catches up from 415 to 513 and the missing-capability debt falls
@@ -348,13 +368,7 @@ describe("corpus snapshot", () => {
   });
 
   it("names the tracks whose chapter debt is already zero", () => {
-    const { books: corpus, lessons } = loadEverything();
-    const report = runChapterGates({
-      books: corpus,
-      lessons,
-      trackChapters: loadTrackChapters(),
-      policy: loadChapterPolicy(),
-    });
+    const { report } = committedSnapshot();
     // HL-C156: kannada, telugu left this list — each carried one-character
     // script segments whose typed-atom payoff debt was not yet paid.
     // Capability closure makes nine more tracks clean. Tracks omitted from this list
@@ -469,13 +483,7 @@ describe("corpus snapshot", () => {
   });
 
   it("validates the first canonical pattern lesson", () => {
-    const { books: corpus, lessons } = loadEverything();
-    const report = runChapterGates({
-      books: corpus,
-      lessons,
-      trackChapters: loadTrackChapters(),
-      policy: loadChapterPolicy(),
-    });
+    const { lessons, report } = committedSnapshot();
     const patternLessons = lessons.filter((lesson) => lesson.realization.type === "pattern");
     // Still one. The friends arc (HL-C88) teaches productive ENDING rules, and
     // they are deliberately `grammar` rather than `pattern`: this corpus
@@ -508,7 +516,7 @@ describe("corpus snapshot", () => {
   // Spanish-only: the defect is a property of how chapters are inserted, not of
   // one track.
   it("keeps chapter numbers non-decreasing when lessons are sorted by sequence", () => {
-    const { lessons } = loadEverything();
+    const { lessons } = committedSnapshot();
     const byTrack = new Map<string, { sequence: number; chapter: number; id: string }[]>();
     for (const lesson of lessons) {
       const sequence = Number(lesson.frontmatter.sequence);

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C400-pracaram",
+  "pathSegment": "TE-PATH-400-ENNIKA400",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-400-ENNIKA400",
+      "order": 3
+    }
+  ]
+}

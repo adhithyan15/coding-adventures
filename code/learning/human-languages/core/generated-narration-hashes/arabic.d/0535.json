@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:e3c7abdaeee1841e",
+  "lessonIds": [
+    "AR-C535-rafiq",
+    "AR-C535-aduww",
+    "AR-C535-khiyana",
+    "AR-C535-takhasama",
+    "AR-C535-hajara",
+    "AR-R535-review-528-535"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch535.txt",
+  "json": "arabic/narration/ch535.json",
+  "textHash": "fnv1a64:14e14b84211bb5c1",
+  "jsonHash": "fnv1a64:1ab9b286bcc1d071",
+  "findings": []
+}

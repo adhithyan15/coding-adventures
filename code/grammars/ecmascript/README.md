@@ -71,4 +71,13 @@ Under the LANG84 status stages they have therefore not reached stage G. The
 LANG84 phase 6 rewrite moves them to their measured stages. es2, es5.1, es2026
 and every `js1.x` release have no pair.
 
-`python3 code/scripts/release_inventory.py check` validates this file.
+`python3 code/scripts/release_inventory.py check --matrix` validates this
+file and `subsets.csv`.
+
+## Subsets (`subsets.csv`)
+
+`subsets.csv` (LANG84 phase 2b) declares the subsets that `grammar_subset`,
+`iir_status` and `backend_status` may name. It has one entry, `es-number-log`:
+LANG78's numeric `console.log` subset (phases 6d and 6e), defined in LANG78.
+Its corpus goes in `corpus/es-number-log/` when a release first claims stage
+I. No row names it yet.

@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 426,
+  "title": "Before You Act",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a5e213e223cf4bd1",
+  "lessons": [
+    {
+      "id": "TE-C426-sankocincu",
+      "sequence": 21250,
+      "title": "సంకోచించు (saṅkōciñcu) — to hold back; to hesitate",
+      "headword": "సంకోచించు",
+      "romanization": "saṅkōciñcu",
+      "gloss": "to hold back; to hesitate",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c846827d2712bd3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to finalise, then the Telugu for to reconsider."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సంకోచించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంకోచించు — saṅkōciñcu — \"to hold back; to hesitate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె నిజం చెప్పడానికి సంకోచించింది. āme nijaṁ ceppaḍāniki saṅkōciñcindi. She hesitated to tell the truth."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): సంకోచించాను, saṅkōciñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "What you hesitate over takes -డానికి. Close to వెనకాడు, which you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంకోచించు (saṅkōciñcu) is built on Sanskrit saṁkoca, \"contraction, shrinking; shyness\" (Monier-Williams), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅkōciñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅkōciñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅkōciñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅkōciñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme nijaṁ ceppaḍāniki saṅkōciñcindi. — She hesitated to tell the truth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme nijaṁ ceppaḍāniki saṅkōciñcindi.* — She hesitated to tell the truth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to finalise, then the Telugu for to reconsider, then say saṅkōciñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to finalise, then the Telugu for to reconsider, then say *saṅkōciñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సంకోచించు (saṅkōciñcu) mean? (\"To hold back; to hesitate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C426-siddhapadu",
+      "sequence": 21260,
+      "title": "సిద్ధపడు (siddhapaḍu) — to be willing; to get ready",
+      "headword": "సిద్ధపడు",
+      "romanization": "siddhapaḍu",
+      "gloss": "to be willing; to get ready",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b5d4ac774dfaa3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to reconsider, then the Telugu for to hold back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సిద్ధపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సిద్ధపడు — siddhapaḍu — \"to be willing; to get ready\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను ఎంత దూరమైనా వెళ్ళడానికి సిద్ధపడ్డాడు. atanu enta dūramainā veḷḷaḍāniki siddhapaḍḍāḍu. He was ready to go however far it took."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): సిద్ధపడ్డాను, siddhapaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "సిద్ధం, ready, + పడు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సిద్ధపడు (siddhapaḍu) is built from Sanskrit siddha, \"accomplished; prepared\" (CDIAL 13401), the word in సిద్ధం, and the native verb paḍu (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siddhapaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siddhapaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siddhapaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siddhapaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu enta dūramainā veḷḷaḍāniki siddhapaḍḍāḍu. — He was ready to go however far it took.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu enta dūramainā veḷḷaḍāniki siddhapaḍḍāḍu.* — He was ready to go however far it took.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to reconsider, then the Telugu for to hold back, then say siddhapaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to reconsider, then the Telugu for to hold back, then say *siddhapaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సిద్ధపడు (siddhapaḍu) mean? (\"To be willing; to get ready\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C426-asrayincu",
+      "sequence": 21270,
+      "title": "ఆశ్రయించు (āśrayiñcu) — to turn to; to resort to",
+      "headword": "ఆశ్రయించు",
+      "romanization": "āśrayiñcu",
+      "gloss": "to turn to; to resort to",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6078d351a20a1189",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to hold back, then the Telugu for to be willing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆశ్రయించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆశ్రయించు — āśrayiñcu — \"to turn to; to resort to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "న్యాయం కోసం వాళ్ళు కోర్టును ఆశ్రయించారు. nyāyaṁ kōsaṁ vāḷḷu kōrṭunu āśrayiñcāru. They turned to the court for justice."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఆశ్రయించాను, āśrayiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "For turning to someone for help or shelter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆశ్రయించు (āśrayiñcu) is built on Sanskrit āśraya, \"resting place, refuge\" (CDIAL 1466), with the Telugu verb ending -ఇంచు; విమానాశ్రయం, an airport, ends in the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśrayiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśrayiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśrayiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśrayiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyāyaṁ kōsaṁ vāḷḷu kōrṭunu āśrayiñcāru. — They turned to the court for justice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyāyaṁ kōsaṁ vāḷḷu kōrṭunu āśrayiñcāru.* — They turned to the court for justice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to hold back, then the Telugu for to be willing, then say āśrayiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to hold back, then the Telugu for to be willing, then say *āśrayiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆశ్రయించు (āśrayiñcu) mean? (\"To turn to; to resort to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C426-uddesapurvakanga",
+      "sequence": 21280,
+      "title": "ఉద్దేశపూర్వకంగా (uddēśapūrvakaṅgā) — deliberately; on purpose",
+      "headword": "ఉద్దేశపూర్వకంగా",
+      "romanization": "uddēśapūrvakaṅgā",
+      "gloss": "deliberately; on purpose",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ff41425e53c6a01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to be willing, then the Telugu for to turn to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఉద్దేశపూర్వకంగా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉద్దేశపూర్వకంగా — uddēśapūrvakaṅgā — \"deliberately; on purpose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను ఉద్దేశపూర్వకంగా ఆ విషయం దాచాడు. atanu uddēśapūrvakaṅgā ā viṣayaṁ dācāḍu. He hid the matter on purpose."
+            },
+            {
+              "kind": "speech",
+              "text": "ఉద్దేశం, an intention, + పూర్వకంగా, with... in front."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉద్దేశపూర్వకంగా (uddēśapūrvakaṅgā) is built from Sanskrit uddeśa, \"aim, direction\", and pūrvaka, \"earlier, preceded by\" (Monier-Williams), with the adverb ending -గా: with the aim already in front."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uddēśapūrvakaṅgā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uddēśapūrvakaṅgā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uddēśapūrvakaṅgā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uddēśapūrvakaṅgā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu uddēśapūrvakaṅgā ā viṣayaṁ dācāḍu. — He hid the matter on purpose.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu uddēśapūrvakaṅgā ā viṣayaṁ dācāḍu.* — He hid the matter on purpose.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to be willing, then the Telugu for to turn to, then say uddēśapūrvakaṅgā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to be willing, then the Telugu for to turn to, then say *uddēśapūrvakaṅgā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఉద్దేశపూర్వకంగా (uddēśapūrvakaṅgā) mean? (\"Deliberately; on purpose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C426-arambham",
+      "sequence": 21290,
+      "title": "ఆరంభం (ārambhaṁ) — a beginning; a start",
+      "headword": "ఆరంభం",
+      "romanization": "ārambhaṁ",
+      "gloss": "a beginning; a start",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0966c2d55e347b81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to turn to, then the Telugu for deliberately."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆరంభం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆరంభం — ārambhaṁ — \"a beginning; a start\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆరంభంలో పని కష్టంగా ఉంది. ārambhaṁlō pani kaṣṭaṅgā undi. At the start the work is hard."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal beside మొదలు; ఆరంభించు, to begin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆరంభం (ārambhaṁ) is borrowed from Sanskrit ārambha, \"beginning\" (CDIAL 1307)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārambhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārambhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārambhaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārambhaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārambhaṁlō pani kaṣṭaṅgā undi. — At the start the work is hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārambhaṁlō pani kaṣṭaṅgā undi.* — At the start the work is hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to turn to, then the Telugu for deliberately, then say ārambhaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to turn to, then the Telugu for deliberately, then say *ārambhaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆరంభం (ārambhaṁ) mean? (\"A beginning; a start\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

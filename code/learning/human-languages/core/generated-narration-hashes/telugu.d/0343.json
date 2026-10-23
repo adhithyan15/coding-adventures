@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:29dc9881c160b178",
+  "lessonIds": [
+    "TE-C343-ksatagatrulu",
+    "TE-C343-durghatana",
+    "TE-C343-tokkisalata",
+    "TE-C343-trutilo",
+    "TE-C343-bayatapadu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch343.txt",
+  "json": "telugu/narration/ch343.json",
+  "textHash": "fnv1a64:4e48f90d68571e08",
+  "jsonHash": "fnv1a64:9246060e9fa38017",
+  "findings": []
+}

@@ -1,2 +1,3 @@
 subset,description,corpus_dir,spec
+py-float-print,LANG79 float print subset,corpus/py-float-print,LANG79
 py-int-print,LANG84 phase 7a integer print subset: print() and print(<expr>) with decimal int literals and parentheses and unary + - and binary + - * // % (i64 with trapping overflow),corpus/py-int-print,LANG84

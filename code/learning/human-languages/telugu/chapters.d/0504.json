@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Admiration and Praise",
+  "label": "ch:te-admiration-and-praise",
+  "canDo": "I can say that I admire someone and praise their work.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C504-prasamsa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can say that I admire someone and praise their work.",
+    "assesses": [
+      "TE-LEX-C504-ABHIMANAM504-03",
+      "TE-LEX-C504-ABHIMANAM504-04",
+      "TE-LEX-C504-ABHIMANAM504-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-520-DAWAM520",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-520-DAWAM520"
+  ],
+  "after": []
+}

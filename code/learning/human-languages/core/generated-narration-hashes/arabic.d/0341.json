@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:d7b18f39f6a3d0d7",
+  "lessonIds": [
+    "AR-C341-faris",
+    "AR-C341-khudha",
+    "AR-C341-hudna",
+    "AR-C341-muahada",
+    "AR-C341-khana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch341.txt",
+  "json": "arabic/narration/ch341.json",
+  "textHash": "fnv1a64:9189d3305cc5b112",
+  "jsonHash": "fnv1a64:e84d84ab4c95877a",
+  "findings": []
+}

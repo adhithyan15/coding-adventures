@@ -1,0 +1,11 @@
+{
+  "id": "ML-C536-svasakosam",
+  "pathSegment": "ML-PATH-536-RAKTAM536",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-536-RAKTAM536",
+      "order": 3
+    }
+  ]
+}

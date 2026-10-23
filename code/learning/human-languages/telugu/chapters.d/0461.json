@@ -1,0 +1,21 @@
+{
+  "chapter": 461,
+  "title": "Bags and Boxes",
+  "label": "ch:te-bags-and-boxes",
+  "canDo": "I can say a cardboard box, to leave behind, to mislay, to shift elsewhere and to deliver.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-R461-review-454-461",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can say a cardboard box, to leave behind, to mislay, to shift elsewhere and to deliver.",
+    "assesses": [
+      "TE-LEX-C461-SAMANU461-01",
+      "TE-LEX-C461-SAMANU461-02",
+      "TE-LEX-C461-SAMANU461-03",
+      "TE-LEX-C461-SAMANU461-04",
+      "TE-LEX-C461-SAMANU461-05"
+    ]
+  }
+}

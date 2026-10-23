@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-417-NIBANDHANA417",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TE-EXT-417-NIBANDHANA417"
+  ],
+  "after": []
+}

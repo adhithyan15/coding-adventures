@@ -1,0 +1,22 @@
+{
+  "chapter": 316,
+  "title": "Was Doing, Did, Used To",
+  "label": "ch:te-was-doing-did-used-to",
+  "canDo": "I can say what happened in the plain past (veḷḷānu), set the scene with cēstunnappuḍu, and say what used to happen with cadivēvāḍini and uṇḍēdi.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-R316-the-past-three-ways",
+    "kind": "production",
+    "summary": "Complete TE-R316-the-past-three-ways: tell what happened, what was going on and what used to happen, in the plain past, -tunnappuḍu and -ēvāḍini.",
+    "assesses": [
+      "TE-GRAMMAR-C316-PAST-SIMPLE-01",
+      "TE-GRAMMAR-C316-PAST-STEMS-01",
+      "TE-GRAMMAR-C316-SCENE-EVENT-01",
+      "TE-GRAMMAR-C316-PROGRESSIVE-PAST-01",
+      "TE-GRAMMAR-C316-PAST-HABITUAL-01",
+      "TE-GRAMMAR-C316-UNDEDI-01"
+    ]
+  }
+}

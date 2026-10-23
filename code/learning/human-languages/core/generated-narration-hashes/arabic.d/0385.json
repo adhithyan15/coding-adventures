@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:b9010b1e6717a177",
+  "lessonIds": [
+    "AR-C385-munazzama",
+    "AR-C385-jamiyya",
+    "AR-C385-niqaba",
+    "AR-C385-majlis",
+    "AR-C385-udw"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch385.txt",
+  "json": "arabic/narration/ch385.json",
+  "textHash": "fnv1a64:b7caa8f008a15236",
+  "jsonHash": "fnv1a64:7c42cb6ae4d60e99",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:6509a6608c5aeb1f",
+  "lessonIds": [
+    "TE-C392-mulam",
+    "TE-C392-udbhavincu",
+    "TE-C392-daritiyu",
+    "TE-C392-kalugu",
+    "TE-C392-talettu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch392.txt",
+  "json": "telugu/narration/ch392.json",
+  "textHash": "fnv1a64:42c68114a23d2eef",
+  "jsonHash": "fnv1a64:a738e1db048766a3",
+  "findings": []
+}

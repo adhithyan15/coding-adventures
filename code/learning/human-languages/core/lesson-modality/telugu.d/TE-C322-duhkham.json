@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C322-duhkham",
+    "language": "telugu",
+    "chapter": 322,
+    "sequence": 15500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4efe7a38330dfe0"
+  },
+  "findings": []
+}

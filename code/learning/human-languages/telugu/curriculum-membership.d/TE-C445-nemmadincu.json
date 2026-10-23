@@ -1,0 +1,11 @@
+{
+  "id": "TE-C445-nemmadincu",
+  "pathSegment": "TE-PATH-445-RAHADARI445",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-445-RAHADARI445",
+      "order": 3
+    }
+  ]
+}

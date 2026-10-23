@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:74360e12c07dc7e5",
+  "lessonIds": [
+    "AR-C546-shawt",
+    "AR-C546-mushajji",
+    "AR-C546-taadala",
+    "AR-C546-marrara",
+    "AR-C546-tanafasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch546.txt",
+  "json": "arabic/narration/ch546.json",
+  "textHash": "fnv1a64:6f1255deb8806eba",
+  "jsonHash": "fnv1a64:03185e8c4866af5b",
+  "findings": []
+}

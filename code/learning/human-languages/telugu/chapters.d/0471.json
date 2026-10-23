@@ -1,0 +1,19 @@
+{
+  "chapter": 471,
+  "title": "Caring for the Environment",
+  "label": "ch:te-caring-for-the-environment",
+  "canDo": "I can say the environment, greenery, to chop down, to damage and to conserve.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C471-samraksincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can say the environment, greenery, to chop down, to damage and to conserve.",
+    "assesses": [
+      "TE-LEX-C471-PARYAVARANAM471-03",
+      "TE-LEX-C471-PARYAVARANAM471-04",
+      "TE-LEX-C471-PARYAVARANAM471-05"
+    ]
+  }
+}

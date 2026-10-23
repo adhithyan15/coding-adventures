@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:b0ac7ef79236b95f",
+  "lessonIds": [
+    "AR-C400-lawla",
+    "AR-C400-mahma",
+    "AR-C400-kullama",
+    "AR-C400-sawa",
+    "AR-C400-aynama"
+  ],
+  "tex": "arabic/book/chapters/ch400-whatever-and-wherever.tex"
+}

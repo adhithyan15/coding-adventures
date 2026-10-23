@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:bbb57371acc79539",
+  "lessonIds": [
+    "AR-C368-ahammiyya",
+    "AR-C368-qima",
+    "AR-C368-rakkaza",
+    "AR-C368-ahmala",
+    "AR-C368-ihtamma"
+  ],
+  "tex": "arabic/book/chapters/ch368-what-matters.tex"
+}

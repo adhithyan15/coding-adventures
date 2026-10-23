@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C466-cumatu",
+    "language": "malayalam",
+    "chapter": 466,
+    "sequence": 23260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eea67796658df9b0"
+  },
+  "findings": []
+}

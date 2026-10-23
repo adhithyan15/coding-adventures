@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "Fog and Hail",
+  "label": "ch:ml-fog-and-hail",
+  "canDo": "I can say fog, hail, to cloud over, to grow cold and to rumble.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C510-irampuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can say fog, hail, to cloud over, to grow cold and to rumble.",
+    "assesses": [
+      "ML-LEX-C510-MANJU510-03",
+      "ML-LEX-C510-MANJU510-04",
+      "ML-LEX-C510-MANJU510-05"
+    ]
+  }
+}

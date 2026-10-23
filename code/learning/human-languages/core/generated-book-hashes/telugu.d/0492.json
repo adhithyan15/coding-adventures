@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:30ea5bbcebd85b98",
+  "lessonIds": [
+    "TE-C492-porabadu",
+    "TE-C492-tadabadu",
+    "TE-C492-ancana-veyu",
+    "TE-C492-tappatadugu",
+    "TE-C492-gandaragolam"
+  ],
+  "tex": "telugu/book/chapters/ch492-mistakes-and-mix-ups.tex"
+}

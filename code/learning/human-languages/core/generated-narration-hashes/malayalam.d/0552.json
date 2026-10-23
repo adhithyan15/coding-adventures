@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 552,
+  "sourceHash": "fnv1a64:1dcdd33b4b73114d",
+  "lessonIds": [
+    "ML-C552-bandham",
+    "ML-C552-dampatyam",
+    "ML-C552-pranayalekhanam",
+    "ML-C552-kamukan",
+    "ML-C552-pranayikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch552.txt",
+  "json": "malayalam/narration/ch552.json",
+  "textHash": "fnv1a64:fdeaf29e83cfcd13",
+  "jsonHash": "fnv1a64:4dd9fec496bb021c",
+  "findings": []
+}

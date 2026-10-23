@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:e2a1039725f43bc9",
+  "lessonIds": [
+    "TE-C467-antastu",
+    "TE-C467-nelamaliga",
+    "TE-C467-prahari",
+    "TE-C467-visalamaina",
+    "TE-C467-nirmanusyamaina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch467.txt",
+  "json": "telugu/narration/ch467.json",
+  "textHash": "fnv1a64:3342f09ff40f877f",
+  "jsonHash": "fnv1a64:ff0ace7bb695a28f",
+  "findings": []
+}

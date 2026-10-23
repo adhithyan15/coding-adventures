@@ -1,0 +1,11 @@
+{
+  "id": "TE-C343-bayatapadu",
+  "pathSegment": "TE-PATH-343-TRUTILO343",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-343-TRUTILO343",
+      "order": 4
+    }
+  ]
+}

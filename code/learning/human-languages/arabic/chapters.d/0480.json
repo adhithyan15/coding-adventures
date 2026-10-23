@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "The forecast",
+  "label": "ch:ar-the-forecast",
+  "canDo": "I can say a weather forecast, a degree, to increase, to drop and mild.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C480-mutadil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can say a weather forecast, a degree, to increase, to drop and mild.",
+    "assesses": [
+      "AR-LEX-C480-NASHRA480-03",
+      "AR-LEX-C480-NASHRA480-04",
+      "AR-LEX-C480-NASHRA480-05"
+    ]
+  }
+}

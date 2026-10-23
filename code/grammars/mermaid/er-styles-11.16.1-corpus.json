@@ -1,0 +1,15 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER entity styling vertical slice",
+  "fixtures": [
+    {
+      "name": "inline-class",
+      "source": "erDiagram\nclassDef primary fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px,font-size:16px,font-weight:bold\nCUSTOMER:::primary ||--o{ ORDER : places\nCUSTOMER {\n  string id PK\n}\nORDER {\n  int id PK\n}"
+    },
+    {
+      "name": "class-and-direct-style",
+      "source": "erDiagram\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER {\n  string id PK\n}\nORDER {\n  int id PK\n}\nclassDef base fill:#dcfce7,stroke:#166534,color:#14532d,stroke-width:2px\nclass CUSTOMER,ORDER base\nstyle ORDER fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px"
+    }
+  ]
+}

@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 354,
+  "title": "A Plot Uncovered",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:26e3bed6ca0e81f8",
+  "lessons": [
+    {
+      "id": "TE-C354-kutra",
+      "sequence": 17430,
+      "title": "కుట్ర (kuṭra) — a conspiracy; a plot",
+      "headword": "కుట్ర",
+      "romanization": "kuṭra",
+      "gloss": "a conspiracy; a plot",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a72f009a9a4a2fe2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to appear suddenly, then the Telugu for to detect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కుట్ర",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కుట్ర — kuṭra — \"a conspiracy; a plot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రాజు మీద ఒక కుట్ర జరిగింది. rāju mīda oka kuṭra jarigindi. There was a plot against the king."
+            },
+            {
+              "kind": "speech",
+              "text": "కుట్ర (kuṭra) పన్ను, to hatch a plot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కుట్ర (kuṭra) is a Telugu word for a secret plot; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāju mīda oka kuṭra jarigindi. — There was a plot against the king.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāju mīda oka kuṭra jarigindi.* — There was a plot against the king.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to appear suddenly, then the Telugu for to detect, then say kuṭra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to appear suddenly, then the Telugu for to detect, then say *kuṭra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కుట్ర (kuṭra) mean? (\"A conspiracy; a plot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C354-mabhyapettu",
+      "sequence": 17440,
+      "title": "మభ్యపెట్టు (mabhyapeṭṭu) — to mislead; to hoodwink",
+      "headword": "మభ్యపెట్టు",
+      "romanization": "mabhyapeṭṭu",
+      "gloss": "to mislead; to hoodwink",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f41f236c74c6ac27",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to detect, then the Telugu for a conspiracy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మభ్యపెట్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మభ్యపెట్టు — mabhyapeṭṭu — \"to mislead; to hoodwink\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను అబద్ధాలతో అందరినీ మభ్యపెట్టాడు. atanu abaddhālatō andarinī mabhyapeṭṭāḍu. He misled everyone with lies."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): మభ్యపెట్టాను, mabhyapeṭṭānu."
+            },
+            {
+              "kind": "speech",
+              "text": "To cloud someone's mind; a written-style word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మభ్యపెట్టు (mabhyapeṭṭu) ends in native peṭṭu, \"to put\" (DEDR 4390); the origin of the first part is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mabhyapeṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mabhyapeṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mabhyapeṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mabhyapeṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu abaddhālatō andarinī mabhyapeṭṭāḍu. — He misled everyone with lies.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu abaddhālatō andarinī mabhyapeṭṭāḍu.* — He misled everyone with lies.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to detect, then the Telugu for a conspiracy, then say mabhyapeṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to detect, then the Telugu for a conspiracy, then say *mabhyapeṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మభ్యపెట్టు (mabhyapeṭṭu) mean? (\"To mislead; to hoodwink\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C354-bayatapettu",
+      "sequence": 17450,
+      "title": "బయటపెట్టు (bayaṭapeṭṭu) — to expose; to bring out",
+      "headword": "బయటపెట్టు",
+      "romanization": "bayaṭapeṭṭu",
+      "gloss": "to expose; to bring out",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41a09c203cc517e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a conspiracy, then the Telugu for to mislead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బయటపెట్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బయటపెట్టు — bayaṭapeṭṭu — \"to expose; to bring out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "విలేకరి ఆ కుట్రను బయటపెట్టాడు. vilēkari ā kuṭranu bayaṭapeṭṭāḍu. The reporter exposed the plot."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): బయటపెట్టాను, bayaṭapeṭṭānu."
+            },
+            {
+              "kind": "speech",
+              "text": "బయట, outside, with పెట్టు, to put: to put a secret outside."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బయటపెట్టు (bayaṭapeṭṭu) is a native compound: bayaṭa, \"outside\", which sits beside bayalu, \"the outside\" (DEDR 3940), and peṭṭu, \"to put\" (DEDR 4390)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bayaṭapeṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bayaṭapeṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bayaṭapeṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bayaṭapeṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilēkari ā kuṭranu bayaṭapeṭṭāḍu. — The reporter exposed the plot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilēkari ā kuṭranu bayaṭapeṭṭāḍu.* — The reporter exposed the plot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a conspiracy, then the Telugu for to mislead, then say bayaṭapeṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a conspiracy, then the Telugu for to mislead, then say *bayaṭapeṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బయటపెట్టు (bayaṭapeṭṭu) mean? (\"To expose; to bring out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C354-kappipuccu",
+      "sequence": 17460,
+      "title": "కప్పిపుచ్చు (kappipuccu) — to cover up; to hush up",
+      "headword": "కప్పిపుచ్చు",
+      "romanization": "kappipuccu",
+      "gloss": "to cover up; to hush up",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a213b28219801c65",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to mislead, then the Telugu for to expose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కప్పిపుచ్చు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కప్పిపుచ్చు — kappipuccu — \"to cover up; to hush up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అధికారులు ఆ తప్పును కప్పిపుచ్చారు. adhikārulu ā tappunu kappipuccāru. The officials covered up the mistake."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): కప్పిపుచ్చాను, kappipuccānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on కప్పు, to cover."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కప్పిపుచ్చు (kappipuccu) is a native compound built on kappu, \"to cover, conceal\" (DEDR 1221), which also gives కప్పు, a roof."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kappipuccu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kappipuccu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kappipuccu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kappipuccu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhikārulu ā tappunu kappipuccāru. — The officials covered up the mistake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhikārulu ā tappunu kappipuccāru.* — The officials covered up the mistake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to mislead, then the Telugu for to expose, then say kappipuccu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to mislead, then the Telugu for to expose, then say *kappipuccu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కప్పిపుచ్చు (kappipuccu) mean? (\"To cover up; to hush up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C354-gudhacari",
+      "sequence": 17470,
+      "title": "గూఢచారి (gūḍhacāri) — a spy",
+      "headword": "గూఢచారి",
+      "romanization": "gūḍhacāri",
+      "gloss": "a spy",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a6a6fbeaafdf3d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to expose, then the Telugu for to cover up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గూఢచారి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గూఢచారి — gūḍhacāri — \"a spy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "శత్రువు గూఢచారి కోటలోకి వచ్చాడు. śatruvu gūḍhacāri kōṭalōki vaccāḍu. An enemy spy came into the fort."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: గూఢచారులు, gūḍhacārulu."
+            },
+            {
+              "kind": "speech",
+              "text": "గూఢ, hidden, and చారి, one who goes about."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గూఢచారి (gūḍhacāri) is borrowed from Sanskrit: gūḍha, \"hidden\" (CDIAL 4223), and cārin, \"moving; a spy\" (CDIAL 4765)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gūḍhacāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gūḍhacāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gūḍhacāri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gūḍhacāri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śatruvu gūḍhacāri kōṭalōki vaccāḍu. — An enemy spy came into the fort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śatruvu gūḍhacāri kōṭalōki vaccāḍu.* — An enemy spy came into the fort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to expose, then the Telugu for to cover up, then say gūḍhacāri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to expose, then the Telugu for to cover up, then say *gūḍhacāri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గూఢచారి (gūḍhacāri) mean? (\"A spy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

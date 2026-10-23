@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-449-ADDANKI449",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TE-EXT-449-ADDANKI449"
+  ],
+  "after": []
+}

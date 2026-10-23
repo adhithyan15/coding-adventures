@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:d48189bc66074f2c",
+  "lessonIds": [
+    "TE-C460-asaukaryam",
+    "TE-C460-ibbandi",
+    "TE-C460-vakabu-ceyu",
+    "TE-C460-vapasu",
+    "TE-C460-saricusuko"
+  ],
+  "tex": "telugu/book/chapters/ch460-complaints-at-the-desk.tex"
+}

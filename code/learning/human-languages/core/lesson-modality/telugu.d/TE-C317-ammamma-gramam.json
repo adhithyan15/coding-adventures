@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "TE-C317-ammamma-gramam",
+    "language": "telugu",
+    "chapter": 317,
+    "sequence": 15280,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5565b8c34e030009"
+  },
+  "findings": []
+}

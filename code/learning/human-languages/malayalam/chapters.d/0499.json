@@ -1,0 +1,19 @@
+{
+  "chapter": 499,
+  "title": "In the Forest",
+  "label": "ch:ml-in-the-forest",
+  "canDo": "I can say a forest, a wild animal, a sanctuary, a wild elephant and a gaur.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C499-kattupottu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 499: I can say a forest, a wild animal, a sanctuary, a wild elephant and a gaur.",
+    "assesses": [
+      "ML-LEX-C499-VANAM499-03",
+      "ML-LEX-C499-VANAM499-04",
+      "ML-LEX-C499-VANAM499-05"
+    ]
+  }
+}

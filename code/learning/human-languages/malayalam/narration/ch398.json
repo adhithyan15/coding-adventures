@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 398,
+  "title": "The Throne and the Crown",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ec4d8755303c33eb",
+  "lessons": [
+    {
+      "id": "ML-C398-simhasanam",
+      "sequence": 19510,
+      "title": "സിംഹാസനം (siṁhāsanaṁ) — a throne",
+      "headword": "സിംഹാസനം",
+      "romanization": "siṁhāsanaṁ",
+      "gloss": "a throne",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b21a7406da1c9478",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a princess, then the Malayalam for a palace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സിംഹാസനം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സിംഹാസനം — siṁhāsanaṁ — \"a throne\"."
+            },
+            {
+              "kind": "speech",
+              "text": "രാജാവ് സിംഹാസനത്തിൽ ഇരുന്നു. rājāvŭ siṁhāsanattil irunnu. The king sat on the throne."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally a lion seat: സിംഹം, a lion, + ആസനം, a seat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സിംഹാസനം (siṁhāsanaṁ) is borrowed from Sanskrit siṁhāsana, \"a lion's seat, a king's seat, a throne\" (Monier-Williams), from siṁha, \"a lion\" (CDIAL 13384), and āsana, \"a seat\" (CDIAL 1484)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siṁhāsanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siṁhāsanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siṁhāsanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siṁhāsanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājāvŭ siṁhāsanattil irunnu. — The king sat on the throne.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājāvŭ siṁhāsanattil irunnu.* — The king sat on the throne.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a princess, then the Malayalam for a palace, then say siṁhāsanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a princess, then the Malayalam for a palace, then say *siṁhāsanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സിംഹാസനം (siṁhāsanaṁ) mean? (\"A throne\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C398-kiritam",
+      "sequence": 19520,
+      "title": "കിരീടം (kirīṭaṁ) — a crown",
+      "headword": "കിരീടം",
+      "romanization": "kirīṭaṁ",
+      "gloss": "a crown",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae82bb04bf64e8cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a palace, then the Malayalam for a throne."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കിരീടം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കിരീടം — kirīṭaṁ — \"a crown\"."
+            },
+            {
+              "kind": "speech",
+              "text": "രാജാവിന്റെ കിരീടം സ്വർണ്ണം കൊണ്ടുള്ളതായിരുന്നു. rājāvinṟe kirīṭaṁ svarṇṇaṁ koṇṭuḷḷatāyirunnu. The king's crown was made of gold."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a title in sport: the winner takes the കിരീടം (kirīṭaṁ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കിരീടം (kirīṭaṁ) is borrowed from Sanskrit kirīṭa, \"a diadem, a crest\" (CDIAL 3176)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kirīṭaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kirīṭaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kirīṭaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kirīṭaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājāvinṟe kirīṭaṁ svarṇṇaṁ koṇṭuḷḷatāyirunnu. — The king's crown was made of gold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājāvinṟe kirīṭaṁ svarṇṇaṁ koṇṭuḷḷatāyirunnu.* — The king's crown was made of gold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a palace, then the Malayalam for a throne, then say kirīṭaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a palace, then the Malayalam for a throne, then say *kirīṭaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കിരീടം (kirīṭaṁ) mean? (\"A crown\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C398-pattabhisekam",
+      "sequence": 19530,
+      "title": "പട്ടാഭിഷേകം (paṭṭābhiṣēkaṁ) — a coronation",
+      "headword": "പട്ടാഭിഷേകം",
+      "romanization": "paṭṭābhiṣēkaṁ",
+      "gloss": "a coronation",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0748dd7e7c566a0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a throne, then the Malayalam for a crown."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പട്ടാഭിഷേകം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പട്ടാഭിഷേകം — paṭṭābhiṣēkaṁ — \"a coronation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പുതിയ രാജാവിന്റെ പട്ടാഭിഷേകം ഒരു വലിയ ഉത്സവം ആയിരുന്നു. putiya rājāvinṟe paṭṭābhiṣēkaṁ oru valiya utsavaṁ āyirunnu. The new king's coronation was a great festival."
+            },
+            {
+              "kind": "speech",
+              "text": "പട്ടം, a royal band, + അഭിഷേകം, an anointing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പട്ടാഭിഷേകം (paṭṭābhiṣēkaṁ) is built from Sanskrit paṭṭa, \"cloth; a fillet, a diadem\" (CDIAL 7700), and abhiṣeka, \"anointing; the inauguration of a king\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭābhiṣēkaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭābhiṣēkaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭābhiṣēkaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭābhiṣēkaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putiya rājāvinṟe paṭṭābhiṣēkaṁ oru valiya utsavaṁ āyirunnu. — The new king's coronation was a great festival.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putiya rājāvinṟe paṭṭābhiṣēkaṁ oru valiya utsavaṁ āyirunnu.* — The new king's coronation was a great festival.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a throne, then the Malayalam for a crown, then say paṭṭābhiṣēkaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a throne, then the Malayalam for a crown, then say *paṭṭābhiṣēkaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പട്ടാഭിഷേകം (paṭṭābhiṣēkaṁ) mean? (\"A coronation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C398-bharanadhikari",
+      "sequence": 19540,
+      "title": "ഭരണാധികാരി (bharaṇādhikāri) — a sovereign; a ruler",
+      "headword": "ഭരണാധികാരി",
+      "romanization": "bharaṇādhikāri",
+      "gloss": "a sovereign; a ruler",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39e75652f26fa614",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a crown, then the Malayalam for a coronation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഭരണാധികാരി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഭരണാധികാരി — bharaṇādhikāri — \"a sovereign; a ruler\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അക്കാലത്ത് ആ രാജ്യത്തിന്റെ ഭരണാധികാരി ഒരു രാജ്ഞി ആയിരുന്നു. akkālattŭ ā rājyattinṟe bharaṇādhikāri oru rājñi āyirunnu. In those days the ruler of that country was a queen."
+            },
+            {
+              "kind": "speech",
+              "text": "One who holds the authority to rule a land."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഭരണാധികാരി (bharaṇādhikāri) is built from Sanskrit bharaṇa, \"bearing, maintaining\", and adhikārin, \"possessing authority; a governor\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharaṇādhikāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharaṇādhikāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharaṇādhikāri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharaṇādhikāri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akkālattŭ ā rājyattinṟe bharaṇādhikāri oru rājñi āyirunnu. — In those days the ruler of that country was a queen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akkālattŭ ā rājyattinṟe bharaṇādhikāri oru rājñi āyirunnu.* — In those days the ruler of that country was a queen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a crown, then the Malayalam for a coronation, then say bharaṇādhikāri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a crown, then the Malayalam for a coronation, then say *bharaṇādhikāri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഭരണാധികാരി (bharaṇādhikāri) mean? (\"A sovereign; a ruler\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C398-valuka",
+      "sequence": 19550,
+      "title": "വാഴുക (vāḻuka) — to reign",
+      "headword": "വാഴുക",
+      "romanization": "vāḻuka",
+      "gloss": "to reign",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45cae0ca995edf7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a coronation, then the Malayalam for a sovereign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വാഴുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വാഴുക — vāḻuka — \"to reign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ രാജാവ് നാൽപത് വർഷം വാണു. ā rājāvŭ nālpatŭ varṣaṁ vāṇu. That king reigned for forty years."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വാണു, vāṇu."
+            },
+            {
+              "kind": "speech",
+              "text": "Literary and old: to reign, to live in glory. The past is വാണു."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വാഴുക (vāḻuka) is native Dravidian: DEDR 5372 lists Malayalam vāḻuka, \"to live, to live well or happily, to rule, to reign\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḻuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḻuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḻuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḻuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā rājāvŭ nālpatŭ varṣaṁ vāṇu. — That king reigned for forty years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā rājāvŭ nālpatŭ varṣaṁ vāṇu.* — That king reigned for forty years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a coronation, then the Malayalam for a sovereign, then say vāḻuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a coronation, then the Malayalam for a sovereign, then say *vāḻuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വാഴുക (vāḻuka) mean? (\"To reign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

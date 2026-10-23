@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "Getting Wet",
+  "label": "ch:ml-getting-wet",
+  "canDo": "I can say to drizzle, a downpour, to get wet, a raincoat and to dry out.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-R508-review-501-508",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can say to drizzle, a downpour, to get wet, a raincoat and to dry out.",
+    "assesses": [
+      "ML-LEX-C508-CARRAL508-03",
+      "ML-LEX-C508-CARRAL508-04",
+      "ML-LEX-C508-CARRAL508-05"
+    ]
+  }
+}

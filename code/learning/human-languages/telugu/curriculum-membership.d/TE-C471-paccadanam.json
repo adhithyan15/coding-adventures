@@ -1,0 +1,11 @@
+{
+  "id": "TE-C471-paccadanam",
+  "pathSegment": "TE-PATH-471-PARYAVARANAM471",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-471-PARYAVARANAM471",
+      "order": 1
+    }
+  ]
+}

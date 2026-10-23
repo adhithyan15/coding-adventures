@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:6adfa973c8ce9fba",
+  "lessonIds": [
+    "TE-C403-paripalana",
+    "TE-C403-pratinidhi",
+    "TE-C403-samanvayam",
+    "TE-C403-pathakam",
+    "TE-C403-sanksemam"
+  ],
+  "tex": "telugu/book/chapters/ch403-running-things.tex"
+}

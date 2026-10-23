@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:ce62d78c6fc38a0a",
+  "lessonIds": [
+    "ML-C436-laborattari",
+    "ML-C436-pariksanam",
+    "ML-C436-sarve",
+    "ML-C436-kantupitittam",
+    "ML-C436-sastriyamaya",
+    "ML-R436-review-429-436"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch436.txt",
+  "json": "malayalam/narration/ch436.json",
+  "textHash": "fnv1a64:385ee4a59f97cf5a",
+  "jsonHash": "fnv1a64:0201f89a3441e07d",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "Hosts and Guests",
+  "label": "ch:ml-hosts-and-guests",
+  "canDo": "I can say a host, hospitality, a reception, to invite and to receive.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C386-svikarikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can say a host, hospitality, a reception, to invite and to receive.",
+    "assesses": [
+      "ML-LEX-C386-ATHITHEYAN386-03",
+      "ML-LEX-C386-ATHITHEYAN386-04",
+      "ML-LEX-C386-ATHITHEYAN386-05"
+    ]
+  }
+}

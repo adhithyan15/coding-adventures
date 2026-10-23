@@ -1,0 +1,11 @@
+{
+  "id": "AR-C500-mutakabbir",
+  "pathSegment": "AR-PATH-500-GHURUR500",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-500-GHURUR500",
+      "order": 1
+    }
+  ]
+}

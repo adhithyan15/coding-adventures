@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:021084c920032063",
+  "lessonIds": [
+    "TE-C520-kudutapadu",
+    "TE-C520-balapadu",
+    "TE-C520-naligipovu",
+    "TE-C520-cidu",
+    "TE-C520-punjuko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch520.txt",
+  "json": "telugu/narration/ch520.json",
+  "textHash": "fnv1a64:702339c27ec2c50a",
+  "jsonHash": "fnv1a64:78dbcf053d429982",
+  "findings": []
+}

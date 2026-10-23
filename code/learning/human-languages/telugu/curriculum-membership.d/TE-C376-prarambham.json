@@ -1,0 +1,11 @@
+{
+  "id": "TE-C376-prarambham",
+  "pathSegment": "TE-PATH-376-SPANDANA376",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-376-SPANDANA376",
+      "order": 1
+    }
+  ]
+}

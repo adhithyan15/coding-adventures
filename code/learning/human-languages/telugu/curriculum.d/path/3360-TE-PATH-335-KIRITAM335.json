@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-335-KIRITAM335",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-335-KIRITAM335"
+  ],
+  "after": []
+}

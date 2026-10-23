@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C519-tatawwaa",
+    "language": "arabic",
+    "chapter": 519,
+    "sequence": 28790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5e8ad44f9a85c03"
+  },
+  "findings": []
+}

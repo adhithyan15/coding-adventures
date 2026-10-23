@@ -1,0 +1,11 @@
+{
+  "id": "TE-C477-varsapatam",
+  "pathSegment": "TE-PATH-477-RUTUPAVANAM477",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-477-RUTUPAVANAM477",
+      "order": 1
+    }
+  ]
+}

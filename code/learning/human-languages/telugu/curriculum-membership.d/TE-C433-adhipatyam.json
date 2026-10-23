@@ -1,0 +1,11 @@
+{
+  "id": "TE-C433-adhipatyam",
+  "pathSegment": "TE-PATH-433-VYUHAM433",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-433-VYUHAM433",
+      "order": 3
+    }
+  ]
+}

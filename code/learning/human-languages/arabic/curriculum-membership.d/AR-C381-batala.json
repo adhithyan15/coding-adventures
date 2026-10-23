@@ -1,0 +1,11 @@
+{
+  "id": "AR-C381-batala",
+  "pathSegment": "AR-PATH-381-MUJTAMA381",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-381-MUJTAMA381",
+      "order": 1
+    }
+  ]
+}

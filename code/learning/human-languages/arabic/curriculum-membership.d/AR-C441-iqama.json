@@ -1,0 +1,11 @@
+{
+  "id": "AR-C441-iqama",
+  "pathSegment": "AR-PATH-441-ISTIQBAL441",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-441-ISTIQBAL441",
+      "order": 2
+    }
+  ]
+}

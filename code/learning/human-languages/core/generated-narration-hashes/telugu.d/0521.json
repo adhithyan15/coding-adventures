@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:c13bca940d191b4a",
+  "lessonIds": [
+    "TE-C521-balahinata",
+    "TE-C521-nirasincu",
+    "TE-C521-cikkipovu",
+    "TE-C521-lavekku",
+    "TE-C521-posakaharam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch521.txt",
+  "json": "telugu/narration/ch521.json",
+  "textHash": "fnv1a64:aaadac268cc8a0b0",
+  "jsonHash": "fnv1a64:5e7208b8d4bcc68b",
+  "findings": []
+}

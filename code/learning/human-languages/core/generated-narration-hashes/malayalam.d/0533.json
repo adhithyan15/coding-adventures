@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:8ea1a4c512954105",
+  "lessonIds": [
+    "ML-C533-vaksin",
+    "ML-C533-pratirodhasesi",
+    "ML-C533-kurippati",
+    "ML-C533-talaruka",
+    "ML-C533-svasammuttu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch533.txt",
+  "json": "malayalam/narration/ch533.json",
+  "textHash": "fnv1a64:f0d4320bc3bb4b01",
+  "jsonHash": "fnv1a64:8a8ce5a1e8446a5d",
+  "findings": []
+}

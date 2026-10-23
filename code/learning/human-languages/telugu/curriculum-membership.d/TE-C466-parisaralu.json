@@ -1,0 +1,11 @@
+{
+  "id": "TE-C466-parisaralu",
+  "pathSegment": "TE-PATH-466-CAURASTA466",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-466-CAURASTA466",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "Running Things",
+  "label": "ch:te-running-things",
+  "canDo": "I can talk about administration, schemes and welfare.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C403-sanksemam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can talk about administration, schemes and welfare.",
+    "assesses": [
+      "TE-LEX-C403-PARIPALANA403-03",
+      "TE-LEX-C403-PARIPALANA403-04",
+      "TE-LEX-C403-PARIPALANA403-05"
+    ]
+  }
+}

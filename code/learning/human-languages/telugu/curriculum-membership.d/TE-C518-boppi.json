@@ -1,0 +1,11 @@
+{
+  "id": "TE-C518-boppi",
+  "pathSegment": "TE-PATH-518-GAYAM518",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-518-GAYAM518",
+      "order": 1
+    }
+  ]
+}

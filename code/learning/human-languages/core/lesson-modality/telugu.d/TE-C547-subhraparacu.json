@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C547-subhraparacu",
+    "language": "telugu",
+    "chapter": 547,
+    "sequence": 27710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ee0b1a03fa4ad0c"
+  },
+  "findings": []
+}

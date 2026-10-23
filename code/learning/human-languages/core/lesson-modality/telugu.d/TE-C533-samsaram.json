@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C533-samsaram",
+    "language": "telugu",
+    "chapter": 533,
+    "sequence": 27000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:932de966131f8843"
+  },
+  "findings": []
+}

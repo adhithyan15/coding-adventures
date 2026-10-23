@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:a31fbee01cf44e9b",
+  "lessonIds": [
+    "AR-C431-nafaq",
+    "AR-C431-ishara",
+    "AR-C431-murur",
+    "AR-C431-izdiham",
+    "AR-C431-inatafa"
+  ],
+  "tex": "arabic/book/chapters/ch431-traffic.tex"
+}

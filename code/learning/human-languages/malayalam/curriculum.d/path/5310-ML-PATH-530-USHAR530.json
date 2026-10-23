@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-530-USHAR530",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ML-EXT-530-USHAR530"
+  ],
+  "after": []
+}

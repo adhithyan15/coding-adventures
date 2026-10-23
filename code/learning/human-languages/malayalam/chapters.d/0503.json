@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "The Environment",
+  "label": "ch:ml-the-environment",
+  "canDo": "I can say the environment, surroundings, pollution, to pollute and sewage.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C503-malinajalam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can say the environment, surroundings, pollution, to pollute and sewage.",
+    "assesses": [
+      "ML-LEX-C503-PARISTHITI503-03",
+      "ML-LEX-C503-PARISTHITI503-04",
+      "ML-LEX-C503-PARISTHITI503-05"
+    ]
+  }
+}

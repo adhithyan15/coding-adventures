@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "Rivers and Springs",
+  "label": "ch:ml-rivers-and-springs",
+  "canDo": "I can say a large river, a brook, a water spring, a dam and to dry up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C496-varruka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can say a large river, a brook, a water spring, a dam and to dry up.",
+    "assesses": [
+      "ML-LEX-C496-NADI496-03",
+      "ML-LEX-C496-NADI496-04",
+      "ML-LEX-C496-NADI496-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C530-vasi",
+  "pathSegment": "ML-PATH-530-USHAR530",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-530-USHAR530",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C537-taswir",
+  "pathSegment": "AR-PATH-537-HIWAYA537",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-537-HIWAYA537",
+      "order": 2
+    }
+  ]
+}

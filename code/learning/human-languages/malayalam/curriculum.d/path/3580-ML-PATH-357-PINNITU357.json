@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-357-PINNITU357",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-357-PINNITU357"
+  ],
+  "after": []
+}

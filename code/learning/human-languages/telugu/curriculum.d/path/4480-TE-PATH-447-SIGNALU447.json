@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-447-SIGNALU447",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TE-EXT-447-SIGNALU447"
+  ],
+  "after": []
+}

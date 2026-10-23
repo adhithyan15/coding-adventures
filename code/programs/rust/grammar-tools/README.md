@@ -43,9 +43,8 @@ The CSV is read by header name, and a row is refused, failing the whole
 generation, when it is quoted, has a different field count from the header,
 has an unsafe ID (outside `[A-Za-z0-9._-]`, empty, or containing `..`,
 because each ID becomes a file name) or a duplicate one, or names an unknown
-`grammar_status` or `grammar_stage`. Perl's inventory predates the LANG84
-schema's `grammar_stage` column, so its family derives the stage by the
-spec's migration rule (`pending` → `none`, otherwise `P`).
+`grammar_status` or `grammar_stage`. Every family needs the common LANG84
+header's `grammar_stage` column; Perl's inventory gained it in LANG84 phase 2b.
 
 ```bash
 grammar-tools generate-rust-compiled-grammars ruby     # 5 pairs

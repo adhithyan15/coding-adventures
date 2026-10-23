@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:49dfa106f3e6415c",
+  "lessonIds": [
+    "ML-C433-pravesanam",
+    "ML-C433-pravesanapariksa",
+    "ML-C433-kolsu",
+    "ML-C433-semasrrar",
+    "ML-C433-silabasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch433.txt",
+  "json": "malayalam/narration/ch433.json",
+  "textHash": "fnv1a64:b8157559a246b44c",
+  "jsonHash": "fnv1a64:63b8addaa131d8c0",
+  "findings": []
+}

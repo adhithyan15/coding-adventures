@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:fd2bf340fffa1544",
+  "lessonIds": [
+    "ML-C512-karakaviyuka",
+    "ML-C512-vellakkettu",
+    "ML-C512-ponnuka",
+    "ML-C512-munnippokuka",
+    "ML-C512-valitiriccuvituka"
+  ],
+  "tex": "malayalam/book/chapters/ch512-when-the-river-rises.tex"
+}

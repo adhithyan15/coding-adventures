@@ -1,0 +1,19 @@
+{
+  "chapter": 471,
+  "title": "At the Garage",
+  "label": "ch:ml-at-the-garage",
+  "canDo": "I can say an engine, a wheel, a fault, a horn and to get dented.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C471-calunnuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can say an engine, a wheel, a fault, a horn and to get dented.",
+    "assesses": [
+      "ML-LEX-C471-VANDI471-03",
+      "ML-LEX-C471-VANDI471-04",
+      "ML-LEX-C471-VANDI471-05"
+    ]
+  }
+}

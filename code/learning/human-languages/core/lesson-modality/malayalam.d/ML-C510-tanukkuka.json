@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C510-tanukkuka",
+    "language": "malayalam",
+    "chapter": 510,
+    "sequence": 25540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9858f604e2d82d3b"
+  },
+  "findings": []
+}

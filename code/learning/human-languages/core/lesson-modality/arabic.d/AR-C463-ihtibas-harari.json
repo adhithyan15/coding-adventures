@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C463-ihtibas-harari",
+    "language": "arabic",
+    "chapter": 463,
+    "sequence": 25860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae4c35e02d0ea3af"
+  },
+  "findings": []
+}

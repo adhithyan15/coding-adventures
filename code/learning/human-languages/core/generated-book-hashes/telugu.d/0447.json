@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:5918ae43903ffbc9",
+  "lessonIds": [
+    "TE-C447-signalu",
+    "TE-C447-laisensu",
+    "TE-C447-padacari",
+    "TE-C447-kalibata",
+    "TE-C447-atikramincu"
+  ],
+  "tex": "telugu/book/chapters/ch447-traffic-rules.tex"
+}

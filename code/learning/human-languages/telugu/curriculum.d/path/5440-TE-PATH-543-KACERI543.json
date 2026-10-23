@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-543-KACERI543",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TE-EXT-543-KACERI543"
+  ],
+  "after": []
+}

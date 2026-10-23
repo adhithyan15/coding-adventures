@@ -1,0 +1,21 @@
+{
+  "chapter": 285,
+  "title": "What I Think, And So",
+  "label": "ch:ar-what-i-think-and-so",
+  "canDo": "I can ask a question, give my opinion, and say what followed from a reason.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-R285-opinion-and-so",
+    "kind": "production",
+    "summary": "Complete AR-R285-opinion-and-so: an opinion with fī raʾyī or aʿtaqidu anna, its reason with li-anna, and its result with li-dhālika or fa-.",
+    "assesses": [
+      "AR-LEX-C285-RAY285-01",
+      "AR-GRAMMAR-C285-OPINION-ANNA-01",
+      "AR-LEX-C285-RAY285-02",
+      "AR-SCRIPT-C285-HAMZA-WAW-01",
+      "AR-GRAMMAR-C285-FA-SO-01"
+    ]
+  }
+}

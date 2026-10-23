@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 559,
+  "sourceHash": "fnv1a64:e1534d9de327b01f",
+  "lessonIds": [
+    "ML-C559-paripalikkuka",
+    "ML-C559-certtupitikkuka",
+    "ML-C559-ottupokuka",
+    "ML-C559-kattusuksikkuka",
+    "ML-C559-ksama-codikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch559.txt",
+  "json": "malayalam/narration/ch559.json",
+  "textHash": "fnv1a64:e81ab3a924f0286f",
+  "jsonHash": "fnv1a64:bea38a67fd4c8908",
+  "findings": []
+}

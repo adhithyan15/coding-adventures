@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "A crime",
+  "label": "ch:ar-a-crime",
+  "canDo": "I can say a crime, a criminal, a thief, to steal and to arrest.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-R300-review-293-300",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can say a crime, a criminal, a thief, to steal and to arrest.",
+    "assesses": [
+      "AR-LEX-C300-JARIMA300-03",
+      "AR-LEX-C300-JARIMA300-04",
+      "AR-LEX-C300-JARIMA300-05"
+    ]
+  }
+}

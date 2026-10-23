@@ -1,0 +1,11 @@
+{
+  "id": "AR-C299-fima-bad",
+  "pathSegment": "AR-PATH-299-ATHNA299",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-299-ATHNA299",
+      "order": 1
+    }
+  ]
+}

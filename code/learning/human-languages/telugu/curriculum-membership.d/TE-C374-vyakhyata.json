@@ -1,0 +1,11 @@
+{
+  "id": "TE-C374-vyakhyata",
+  "pathSegment": "TE-PATH-374-PRASARAM374",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-374-PRASARAM374",
+      "order": 1
+    }
+  ]
+}

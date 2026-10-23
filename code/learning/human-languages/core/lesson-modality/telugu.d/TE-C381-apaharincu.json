@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C381-apaharincu",
+    "language": "telugu",
+    "chapter": 381,
+    "sequence": 18820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8436d9ced5afe37"
+  },
+  "findings": []
+}

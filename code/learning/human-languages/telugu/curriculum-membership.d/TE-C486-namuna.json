@@ -1,0 +1,11 @@
+{
+  "id": "TE-C486-namuna",
+  "pathSegment": "TE-PATH-486-KOLATA486",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-486-KOLATA486",
+      "order": 2
+    }
+  ]
+}

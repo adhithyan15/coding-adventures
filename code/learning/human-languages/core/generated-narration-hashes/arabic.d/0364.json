@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:2f94d721e072b1f7",
+  "lessonIds": [
+    "AR-C364-hallala",
+    "AR-C364-unsur",
+    "AR-C364-miyar",
+    "AR-C364-haddada",
+    "AR-C364-mayyaza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch364.txt",
+  "json": "arabic/narration/ch364.json",
+  "textHash": "fnv1a64:c930268602751ec4",
+  "jsonHash": "fnv1a64:5bed8cd3ddb552c6",
+  "findings": []
+}

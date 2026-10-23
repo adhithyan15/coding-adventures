@@ -1,0 +1,19 @@
+{
+  "chapter": 385,
+  "title": "A Wedding",
+  "label": "ch:ml-a-wedding",
+  "canDo": "I can say a marriage, an engagement, a wedding pendant, an invitation card and to marry.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C385-vivaham-kalikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can say a marriage, an engagement, a wedding pendant, an invitation card and to marry.",
+    "assesses": [
+      "ML-LEX-C385-VIVAHAM385-03",
+      "ML-LEX-C385-VIVAHAM385-04",
+      "ML-LEX-C385-VIVAHAM385-05"
+    ]
+  }
+}

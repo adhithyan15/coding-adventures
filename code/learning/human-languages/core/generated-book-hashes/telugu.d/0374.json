@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:beb3aeaeaa6af7f3",
+  "lessonIds": [
+    "TE-C374-vyakhyanam",
+    "TE-C374-vyakhyata",
+    "TE-C374-srota",
+    "TE-C374-tilakincu",
+    "TE-C374-mukhamukhi"
+  ],
+  "tex": "telugu/book/chapters/ch374-on-air.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:2f071e8fc97a28b2",
+  "lessonIds": [
+    "ML-C473-srroppu",
+    "ML-C473-kaikanikkuka",
+    "ML-C473-irakkivituka",
+    "ML-C473-untuka",
+    "ML-C473-otiyettuka"
+  ],
+  "tex": "malayalam/book/chapters/ch473-catching-the-bus.tex"
+}

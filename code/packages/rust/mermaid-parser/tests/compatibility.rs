@@ -1,9 +1,10 @@
 use std::collections::BTreeSet;
 
+use diagram_ir::DiagramDirection;
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_architecture, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_kanban, parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
-    parse_cynefin, parse_event_modeling, parse_info, parse_ishikawa, parse_radar, parse_railroad, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart, parse_zenuml,
+    parse_cynefin, parse_er_diagram, parse_event_modeling, parse_info, parse_ishikawa, parse_radar, parse_railroad, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart, parse_zenuml,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -19,6 +20,54 @@ const SWIMLANE_CORPUS: &str = include_str!(concat!(
 const SWIMLANE_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/swimlane-11.16.1-visual-corpus.json"
+));
+const ER_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-11.16.1-corpus.json"
+));
+const ER_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-11.16.1-visual-corpus.json"
+));
+const ER_STYLES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-styles-11.16.1-corpus.json"
+));
+const ER_STYLES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-styles-11.16.1-visual-corpus.json"
+));
+const ER_DEFAULT_CLASS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-default-class-11.16.1-corpus.json"
+));
+const ER_DEFAULT_CLASS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-default-class-11.16.1-visual-corpus.json"
+));
+const ER_QUOTED_TEXT_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-quoted-text-11.16.1-corpus.json"
+));
+const ER_QUOTED_TEXT_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-quoted-text-11.16.1-visual-corpus.json"
+));
+const ER_ACCESSIBILITY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-accessibility-11.16.1-corpus.json"
+));
+const ER_ACCESSIBILITY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-accessibility-11.16.1-visual-corpus.json"
+));
+const ER_BACKTICK_ATTRIBUTES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-backtick-attributes-11.16.1-corpus.json"
+));
+const ER_BACKTICK_ATTRIBUTES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-backtick-attributes-11.16.1-visual-corpus.json"
 ));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -1836,8 +1885,17 @@ fn swimlane_loose_nodes_lower_into_the_default_lane() {
 }
 
 #[test]
-fn pinned_swimlane_subset_corpus_parses_to_ownership_ir() {
+fn pinned_swimlane_corpus_qualifies_full_compatibility() {
+    let manifest: Value = serde_json::from_str(COMPATIBILITY_MANIFEST)
+        .expect("compatibility manifest must be JSON");
+    let family = manifest["families"].as_array().expect("families must be an array")
+        .iter().find(|family| family["id"] == "swimlane").expect("swimlane family");
+    assert_eq!(family["status"].as_str(), Some("full"));
+
     let corpus: Value = serde_json::from_str(SWIMLANE_CORPUS).expect("swimlane corpus must be JSON");
+    assert_eq!(corpus["upstream_version"].as_str(), Some(MERMAID_COMPATIBILITY_BASELINE));
+    assert_eq!(corpus["upstream_commit"].as_str(), Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    assert_eq!(corpus["scope"].as_str(), Some("complete pinned Mermaid 11.16.1 Swimlane syntax corpus"));
     for fixture in corpus["fixtures"].as_array().expect("fixtures must be an array") {
         let source = fixture["source"].as_str().expect("fixture source must be a string");
         assert!(parse_swimlane(source).is_ok(), "fixture {:?} should parse", fixture["name"]);
@@ -1855,6 +1913,154 @@ fn pinned_swimlane_visual_corpus_references_syntax_fixtures() {
         .map(|fixture| fixture.as_str().expect("visual fixture name")).collect::<BTreeSet<_>>();
     assert_eq!(visual_names.len(), visual["fixtures"].as_array().expect("visual fixtures").len());
     assert!(visual_names.is_subset(&syntax_names));
+    let expected_nonvisual = BTreeSet::from([
+        "click-callback-action",
+        "click-legacy-callback-alias",
+        "click-url-tooltip",
+        "shapes-labels-and-accessibility",
+    ]);
+    assert_eq!(syntax_names.difference(&visual_names).copied().collect::<BTreeSet<_>>(),
+        expected_nonvisual);
+}
+
+#[test]
+fn pinned_er_direction_corpus_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_CORPUS).expect("ER corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_VISUAL_CORPUS).expect("ER visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = [
+        DiagramDirection::Tb,
+        DiagramDirection::Bt,
+        DiagramDirection::Lr,
+        DiagramDirection::Rl,
+    ];
+    let fixtures = syntax["fixtures"].as_array().expect("ER fixtures must be an array");
+    assert_eq!(fixtures.len(), expected.len());
+    for (fixture, direction) in fixtures.iter().zip(expected) {
+        let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER fixture source"))
+            .unwrap_or_else(|error| panic!("failed to parse {:?}: {error}", fixture["name"]));
+        assert_eq!(diagram.direction, Some(direction));
+    }
+}
+
+#[test]
+fn pinned_er_style_corpus_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_STYLES_CORPUS).expect("ER style corpus must be JSON");
+    let visual: Value =
+        serde_json::from_str(ER_STYLES_VISUAL_CORPUS).expect("ER style visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().expect("ER style fixtures must be an array");
+
+    let inline = parse_er_diagram(fixtures[0]["source"].as_str().expect("inline class source"))
+        .expect("inline ER class must parse");
+    let customer = inline.nodes.iter().find(|node| node.id == "CUSTOMER").expect("CUSTOMER");
+    let style = customer.style.as_ref().expect("inline class style");
+    assert_eq!(style.fill.as_deref(), Some("#dbeafe"));
+    assert_eq!(style.stroke.as_deref(), Some("#1d4ed8"));
+    assert_eq!(style.text_color.as_deref(), Some("#172554"));
+    assert_eq!(style.stroke_width, Some(3.0));
+    assert_eq!(style.font_size, Some(16.0));
+    assert_eq!(style.font_weight, Some(700));
+
+    let assigned = parse_er_diagram(fixtures[1]["source"].as_str().expect("assigned class source"))
+        .expect("assigned ER classes and direct style must parse");
+    let customer = assigned.nodes.iter().find(|node| node.id == "CUSTOMER").expect("CUSTOMER");
+    let order = assigned.nodes.iter().find(|node| node.id == "ORDER").expect("ORDER");
+    assert_eq!(customer.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#dcfce7"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fef3c7"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#b45309"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.stroke_width), Some(4.0));
+}
+
+#[test]
+fn pinned_er_default_class_respects_specific_style_precedence() {
+    let syntax: Value =
+        serde_json::from_str(ER_DEFAULT_CLASS_CORPUS).expect("ER default class corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_DEFAULT_CLASS_VISUAL_CORPUS)
+        .expect("ER default class visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let source = syntax["fixtures"][0]["source"].as_str().expect("ER default class source");
+    let diagram = parse_er_diagram(source).expect("ER default class fixture must parse");
+
+    let car = diagram.nodes.iter().find(|node| node.id == "CAR").expect("CAR");
+    let person = diagram.nodes.iter().find(|node| node.id == "PERSON").expect("PERSON");
+    let house = diagram.nodes.iter().find(|node| node.id == "HOUSE").expect("HOUSE");
+    assert_eq!(car.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fce7f3"));
+    assert_eq!(car.style.as_ref().and_then(|style| style.stroke_width), Some(4.0));
+    assert_eq!(person.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#dbeafe"));
+    assert_eq!(person.style.as_ref().and_then(|style| style.stroke_width), None);
+    assert_eq!(house.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fef3c7"));
+    assert_eq!(house.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#b45309"));
+    assert_eq!(house.style.as_ref().and_then(|style| style.stroke_width), Some(4.0));
+}
+
+#[test]
+fn pinned_er_quoted_text_reaches_semantic_ir() {
+    let syntax: Value =
+        serde_json::from_str(ER_QUOTED_TEXT_CORPUS).expect("ER quoted text corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_QUOTED_TEXT_VISUAL_CORPUS)
+        .expect("ER quoted text visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let source = syntax["fixtures"][0]["source"].as_str().expect("ER quoted text source");
+    let diagram = parse_er_diagram(source).expect("ER quoted text fixture must parse");
+
+    let customer = diagram
+        .nodes
+        .iter()
+        .find(|node| node.id == "Customer ❤")
+        .expect("quoted Unicode entity");
+    let account = diagram.nodes.iter().find(|node| node.id == "account").expect("account");
+    assert_eq!(customer.label, "Customer ❤");
+    assert_eq!(account.label, "Customer Account");
+    assert_eq!(customer.compartments[0].entries, ["id: string [PK] - Primary identifier"]);
+    assert_eq!(account.compartments[0].entries, ["displayName: string? - Preferred name"]);
+    assert_eq!(diagram.relationships[0].from, "Customer ❤");
+    assert_eq!(diagram.relationships[0].to, "account");
+    assert_eq!(diagram.relationships[0].label.as_deref(), Some("places order"));
+}
+
+#[test]
+fn pinned_er_accessibility_metadata_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_ACCESSIBILITY_CORPUS)
+        .expect("ER accessibility corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_ACCESSIBILITY_VISUAL_CORPUS)
+        .expect("ER accessibility visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().expect("ER accessibility fixtures");
+
+    let single = parse_er_diagram(fixtures[0]["source"].as_str().expect("single-line source"))
+        .expect("single-line ER accessibility metadata must parse");
+    assert_eq!(single.accessibility_title.as_deref(), Some("Account model"));
+    assert_eq!(single.accessibility_description.as_deref(), Some("Customer accounts"));
+
+    let multiline = parse_er_diagram(fixtures[1]["source"].as_str().expect("multiline source"))
+        .expect("multiline ER accessibility metadata must parse");
+    assert_eq!(multiline.accessibility_title.as_deref(), Some("Order model"));
+    assert_eq!(
+        multiline.accessibility_description.as_deref(),
+        Some("Customers place orders.\nOrders contain items.")
+    );
+}
+
+#[test]
+fn pinned_er_backtick_attributes_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_BACKTICK_ATTRIBUTES_CORPUS)
+        .expect("ER backtick attribute corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_BACKTICK_ATTRIBUTES_VISUAL_CORPUS)
+        .expect("ER backtick attribute visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"].as_str().expect("ER backtick attribute source"),
+    )
+    .expect("ER backtick attribute fixture must parse");
+    let hotel = diagram.nodes.iter().find(|node| node.id == "HOTEL").expect("HOTEL");
+
+    assert_eq!(
+        hotel.compartments[0].entries,
+        ["address: my.type", "geo.accuracy: string [PK] - Precision source"]
+    );
 }
 
 #[test]
@@ -1977,6 +2183,43 @@ fn swimlane_icon_identities_reach_semantic_ir() {
     assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::RoundedRect);
     assert_eq!(diagram.icons.get("parser").map(String::as_str), Some("logos:rust"));
     assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ icon: \"\" }\nend").is_err());
+}
+
+#[test]
+fn swimlane_icon_node_options_reach_semantic_ir() {
+    use diagram_ir::{SwimlaneIconForm, SwimlaneLabelPosition};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Runtime\n  plain@{ icon: \"logos:rust\" }\n  user@{ icon: \"fa:user\", form: circle, label: \"User\", pos: t, h: 60 }\nend",
+    ).expect("Swimlane icon node options should parse");
+
+    assert_eq!(diagram.nodes[0].label.text, "");
+    assert_eq!(diagram.icon_nodes["plain"].form, None);
+    assert_eq!(diagram.icon_nodes["plain"].height, 48.0);
+    assert_eq!(diagram.icon_nodes["user"].form, Some(SwimlaneIconForm::Circle));
+    assert_eq!(diagram.icon_nodes["user"].label_position, SwimlaneLabelPosition::Top);
+    assert_eq!(diagram.icon_nodes["user"].height, 60.0);
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ icon: x, form: hexagon }\nend").is_err());
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ icon: x, pos: left }\nend").is_err());
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ icon: x, h: nope }\nend").is_err());
+}
+
+#[test]
+fn swimlane_image_node_options_reach_semantic_ir() {
+    use diagram_ir::SwimlaneLabelPosition;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Runtime\n  logo@{ img: \"https://example.com/logo.png\", label: \"Logo\", pos: t, w: 96, h: 64, constraint: on }\nend",
+    ).expect("Swimlane image node options should parse");
+
+    let image = &diagram.image_nodes["logo"];
+    assert_eq!(image.source, "https://example.com/logo.png");
+    assert_eq!((image.width, image.height), (Some(96.0), Some(64.0)));
+    assert!(image.preserve_aspect_ratio);
+    assert_eq!(image.label_position, SwimlaneLabelPosition::Top);
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ img: x, constraint: maybe }\nend").is_err());
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ img: x, w: 0 }\nend").is_err());
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ img: x, icon: y }\nend").is_err());
 }
 
 #[test]

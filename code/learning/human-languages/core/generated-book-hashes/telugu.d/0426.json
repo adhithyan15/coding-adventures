@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:bb2f955f1d0181be",
+  "lessonIds": [
+    "TE-C426-sankocincu",
+    "TE-C426-siddhapadu",
+    "TE-C426-asrayincu",
+    "TE-C426-uddesapurvakanga",
+    "TE-C426-arambham"
+  ],
+  "tex": "telugu/book/chapters/ch426-before-you-act.tex"
+}

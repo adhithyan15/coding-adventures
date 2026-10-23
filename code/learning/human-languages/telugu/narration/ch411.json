@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 411,
+  "title": "Counting People",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c7495e5242d89fbb",
+  "lessons": [
+    {
+      "id": "TE-C411-janaganana",
+      "sequence": 20480,
+      "title": "జనగణన (janagaṇana) — a census",
+      "headword": "జనగణన",
+      "romanization": "janagaṇana",
+      "gloss": "a census",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1cf9c3ed08901430",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an activist, then the Telugu for a donor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: జనగణన",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జనగణన — janagaṇana — \"a census\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పది సంవత్సరాలకు ఒకసారి జనగణన జరుగుతుంది. padi saṁvatsarālaku okasāri janagaṇana jarugutundi. A census takes place once every ten years."
+            },
+            {
+              "kind": "speech",
+              "text": "జన, people, + గణన, counting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జనగణన (janagaṇana) is built from Sanskrit jana, \"a person, people\" (CDIAL 5098), and gaṇana, \"counting\" (CDIAL 3992)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janagaṇana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janagaṇana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janagaṇana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janagaṇana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padi saṁvatsarālaku okasāri janagaṇana jarugutundi. — A census takes place once every ten years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padi saṁvatsarālaku okasāri janagaṇana jarugutundi.* — A census takes place once every ten years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an activist, then the Telugu for a donor, then say janagaṇana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an activist, then the Telugu for a donor, then say *janagaṇana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does జనగణన (janagaṇana) mean? (\"A census\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C411-sarve",
+      "sequence": 20490,
+      "title": "సర్వే (sarvē) — a survey",
+      "headword": "సర్వే",
+      "romanization": "sarvē",
+      "gloss": "a survey",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7246e7cb81f571a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a donor, then the Telugu for a census."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సర్వే",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సర్వే — sarvē — \"a survey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ సర్వే ప్రకారం జనం ధరల గురించి బాధపడుతున్నారు. ā sarvē prakāraṁ janaṁ dharala guriñci bādhapaḍutunnāru. According to that survey, people are worried about prices."
+            },
+            {
+              "kind": "speech",
+              "text": "సర్వే (sarvē) చేయు, to carry out a survey."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సర్వే (sarvē) is a loan from English survey."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarvē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarvē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarvē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarvē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā sarvē prakāraṁ janaṁ dharala guriñci bādhapaḍutunnāru. — According to that survey, people are worried about prices.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā sarvē prakāraṁ janaṁ dharala guriñci bādhapaḍutunnāru.* — According to that survey, people are worried about prices.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a donor, then the Telugu for a census, then say sarvē again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a donor, then the Telugu for a census, then say *sarvē* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సర్వే (sarvē) mean? (\"A survey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C411-ganankalu",
+      "sequence": 20500,
+      "title": "గణాంకాలు (gaṇāṅkālu) — statistics; figures",
+      "headword": "గణాంకాలు",
+      "romanization": "gaṇāṅkālu",
+      "gloss": "statistics; figures",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b101c41d71da30d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a census, then the Telugu for a survey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గణాంకాలు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గణాంకాలు — gaṇāṅkālu — \"statistics; figures\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ గణాంకాలు సరైనవి కావు. ā gaṇāṅkālu sarainavi kāvu. Those figures are not correct."
+            },
+            {
+              "kind": "speech",
+              "text": "A plural noun: గణ, a number, + అంకాలు, marks, numerals."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గణాంకాలు (gaṇāṅkālu) is built from Sanskrit gaṇa, \"a troop, a number\" (CDIAL 3988), and aṅka, \"a mark, a sign\" (CDIAL 100); Telugu uses the plural for statistics."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṇāṅkālu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṇāṅkālu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṇāṅkālu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṇāṅkālu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā gaṇāṅkālu sarainavi kāvu. — Those figures are not correct.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā gaṇāṅkālu sarainavi kāvu.* — Those figures are not correct.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a census, then the Telugu for a survey, then say gaṇāṅkālu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a census, then the Telugu for a survey, then say *gaṇāṅkālu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గణాంకాలు (gaṇāṅkālu) mean? (\"Statistics; figures\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C411-prajabhiprayam",
+      "sequence": 20510,
+      "title": "ప్రజాభిప్రాయం (prajābhiprāyaṁ) — public opinion",
+      "headword": "ప్రజాభిప్రాయం",
+      "romanization": "prajābhiprāyaṁ",
+      "gloss": "public opinion",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b7002fa3aa65396",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a survey, then the Telugu for statistics."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రజాభిప్రాయం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రజాభిప్రాయం — prajābhiprāyaṁ — \"public opinion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రజాభిప్రాయం ఆ ప్రతిపాదనకు వ్యతిరేకంగా ఉంది. prajābhiprāyaṁ ā pratipādanaku vyatirēkaṅgā undi. Public opinion is against that proposal."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రజా, of the people, + అభిప్రాయం, an opinion, which you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రజాభిప్రాయం (prajābhiprāyaṁ) is built from Sanskrit prajā, \"offspring, people\", and abhiprāya, \"aim, intention\" (Monier-Williams), the word Telugu has as అభిప్రాయం."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prajābhiprāyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prajābhiprāyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prajābhiprāyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prajābhiprāyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prajābhiprāyaṁ ā pratipādanaku vyatirēkaṅgā undi. — Public opinion is against that proposal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prajābhiprāyaṁ ā pratipādanaku vyatirēkaṅgā undi.* — Public opinion is against that proposal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a survey, then the Telugu for statistics, then say prajābhiprāyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a survey, then the Telugu for statistics, then say *prajābhiprāyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రజాభిప్రాయం (prajābhiprāyaṁ) mean? (\"Public opinion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C411-satam",
+      "sequence": 20520,
+      "title": "శాతం (śātaṁ) — a percentage; per cent",
+      "headword": "శాతం",
+      "romanization": "śātaṁ",
+      "gloss": "a percentage; per cent",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48356a6ab6779115",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for statistics, then the Telugu for public opinion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: శాతం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శాతం — śātaṁ — \"a percentage; per cent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా తరగతిలో తొంభై శాతం మంది పాసయ్యారు. mā taragatilō tombhai śātaṁ mandi pāsayyāru. Ninety per cent of our class passed."
+            },
+            {
+              "kind": "speech",
+              "text": "With numbers spelt out: యాభై శాతం (śātaṁ), fifty per cent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శాతం (śātaṁ) goes back to Sanskrit śata, \"a hundred\" (CDIAL 12278): so many out of a hundred."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śātaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śātaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śātaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śātaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā taragatilō tombhai śātaṁ mandi pāsayyāru. — Ninety per cent of our class passed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā taragatilō tombhai śātaṁ mandi pāsayyāru.* — Ninety per cent of our class passed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for statistics, then the Telugu for public opinion, then say śātaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for statistics, then the Telugu for public opinion, then say *śātaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does శాతం (śātaṁ) mean? (\"A percentage; per cent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

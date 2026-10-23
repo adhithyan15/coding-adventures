@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-185-A2-POSSESSIVE-AGREEMENT",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can recognise and use common my, your, one's-own, and our forms that agree with familiar nouns.",
+  "prerequisites": [
+    "PA-EXT-184-A2-NEARBY-TIME"
+  ]
+}

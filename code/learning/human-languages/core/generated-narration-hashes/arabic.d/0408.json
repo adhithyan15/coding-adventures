@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:433ac01c24709d51",
+  "lessonIds": [
+    "AR-C408-istafada",
+    "AR-C408-tamattaa",
+    "AR-C408-harama",
+    "AR-C408-rafahiyya",
+    "AR-C408-riaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch408.txt",
+  "json": "arabic/narration/ch408.json",
+  "textHash": "fnv1a64:8533e52e23e78da0",
+  "jsonHash": "fnv1a64:f06170b9b9e0deb1",
+  "findings": []
+}

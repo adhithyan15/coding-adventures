@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:e1e1f2d674e91e01",
+  "lessonIds": [
+    "AR-C455-muntaj",
+    "AR-C455-marka",
+    "AR-C455-wajiha",
+    "AR-C455-arada-display",
+    "AR-C455-basta"
+  ],
+  "tex": "arabic/book/chapters/ch455-shop-windows.tex"
+}

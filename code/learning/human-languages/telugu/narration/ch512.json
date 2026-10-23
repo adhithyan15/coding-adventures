@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 512,
+  "title": "Falling Ill",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4c1e84c644df4663",
+  "lessons": [
+    {
+      "id": "TE-C512-jabbu",
+      "sequence": 25920,
+      "title": "జబ్బు (jabbu) — a sickness; an illness",
+      "headword": "జబ్బు",
+      "romanization": "jabbu",
+      "gloss": "a sickness; an illness",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73524294a81404a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to go over again, then the Telugu for to remind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: జబ్బు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జబ్బు — jabbu — \"a sickness; an illness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆయనకు గుండె జబ్బు ఉంది. āyanaku guṇḍe jabbu undi. He has heart trouble."
+            },
+            {
+              "kind": "speech",
+              "text": "An everyday word: గుండె జబ్బు (jabbu), heart disease. జబ్బుగా ఉంది, (he) is unwell."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జబ్బు (jabbu) is native Dravidian: DEDR 2338 lists Telugu jabbu, \"illness, sickness, weakness\", in the article of Tamil cappai, \"that which is weak\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jabbu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jabbu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jabbu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jabbu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyanaku guṇḍe jabbu undi. — He has heart trouble.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyanaku guṇḍe jabbu undi.* — He has heart trouble.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to go over again, then the Telugu for to remind, then say jabbu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to go over again, then the Telugu for to remind, then say *jabbu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does జబ్బు (jabbu) mean? (\"A sickness; an illness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C512-jabbupadu",
+      "sequence": 25930,
+      "title": "జబ్బుపడు (jabbupaḍu) — to fall ill",
+      "headword": "జబ్బుపడు",
+      "romanization": "jabbupaḍu",
+      "gloss": "to fall ill",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05122b5e653feeb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to remind, then the Telugu for a sickness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: జబ్బుపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జబ్బుపడు — jabbupaḍu — \"to fall ill\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వర్షంలో తడిసి తమ్ముడు జబ్బుపడ్డాడు. varṣaṁlō taḍisi tammuḍu jabbupaḍḍāḍu. My younger brother got wet in the rain and fell ill."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): జబ్బుపడ్డాను, jabbupaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "జబ్బు (jabbu) + పడు: to fall into illness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జబ్బుపడు (jabbupaḍu) is native Dravidian: jabbu, \"illness\" (DEDR 2338), and the native verb paḍu, \"to feel, to suffer\" (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jabbupaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jabbupaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jabbupaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jabbupaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varṣaṁlō taḍisi tammuḍu jabbupaḍḍāḍu. — My younger brother got wet in the rain and fell ill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varṣaṁlō taḍisi tammuḍu jabbupaḍḍāḍu.* — My younger brother got wet in the rain and fell ill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to remind, then the Telugu for a sickness, then say jabbupaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to remind, then the Telugu for a sickness, then say *jabbupaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does జబ్బుపడు (jabbupaḍu) mean? (\"To fall ill\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C512-nalata",
+      "sequence": 25940,
+      "title": "నలత (nalata) — a slight indisposition",
+      "headword": "నలత",
+      "romanization": "nalata",
+      "gloss": "a slight indisposition",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c5d9a0cc1875fc7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a sickness, then the Telugu for to fall ill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నలత",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నలత — nalata — \"a slight indisposition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నిన్నటి నుంచి నాకు కొంచెం నలతగా ఉంది. ninnaṭi nuñci nāku koñceṁ nalatagā undi. Since yesterday I have been feeling a bit off."
+            },
+            {
+              "kind": "speech",
+              "text": "Milder than జబ్బు (jabbu): నలతగా ఉంది, (I) feel a bit off."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నలత (nalata) is native Dravidian: DEDR 3611 lists Telugu nalata, \"disease\", beside naliyu, \"to be crushed, to be bruised\", and Tamil nalaṅku, \"to grow faint\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nalata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nalata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nalata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nalata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ninnaṭi nuñci nāku koñceṁ nalatagā undi. — Since yesterday I have been feeling a bit off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ninnaṭi nuñci nāku koñceṁ nalatagā undi.* — Since yesterday I have been feeling a bit off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a sickness, then the Telugu for to fall ill, then say nalata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a sickness, then the Telugu for to fall ill, then say *nalata* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నలత (nalata) mean? (\"A slight indisposition\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C512-mancam-pattu",
+      "sequence": 25950,
+      "title": "మంచం పట్టు (mañcaṁ paṭṭu) — to be bedridden; to take to one's bed",
+      "headword": "మంచం పట్టు",
+      "romanization": "mañcaṁ paṭṭu",
+      "gloss": "to be bedridden; to take to one's bed",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa0e55fc39c01f66",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to fall ill, then the Telugu for a slight indisposition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మంచం పట్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మంచం పట్టు — mañcaṁ paṭṭu — \"to be bedridden; to take to one's bed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "జ్వరంతో తాతయ్య వారం రోజులు మంచం పట్టారు. jvarantō tātayya vāraṁ rōjulu mañcaṁ paṭṭāru. With fever, grandpa was in bed for a week."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): మంచం పట్టాను, mañcaṁ paṭṭānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally to take hold of the bed: మంచం, bed, + పట్టు, to hold."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మంచం పట్టు (mañcaṁ paṭṭu) is a Telugu phrase: మంచం, \"a bed\", from Sanskrit mañca, \"a platform, a bed\" (CDIAL 9715), and the native verb paṭṭu, \"to hold, to seize\" (DEDR 4034)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañcaṁ paṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañcaṁ paṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañcaṁ paṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañcaṁ paṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jvarantō tātayya vāraṁ rōjulu mañcaṁ paṭṭāru. — With fever, grandpa was in bed for a week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jvarantō tātayya vāraṁ rōjulu mañcaṁ paṭṭāru.* — With fever, grandpa was in bed for a week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to fall ill, then the Telugu for a slight indisposition, then say mañcaṁ paṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to fall ill, then the Telugu for a slight indisposition, then say *mañcaṁ paṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మంచం పట్టు (mañcaṁ paṭṭu) mean? (\"To be bedridden; to take to one's bed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C512-teruko",
+      "sequence": 25960,
+      "title": "తేరుకో (tērukō) — to come round; to recover from a shock",
+      "headword": "తేరుకో",
+      "romanization": "tērukō",
+      "gloss": "to come round; to recover from a shock",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c028d6a09d3492cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a slight indisposition, then the Telugu for to be bedridden."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తేరుకో",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తేరుకో — tērukō — \"to come round; to recover from a shock\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ వార్త నుంచి అమ్మ తేరుకోవడానికి వారం పట్టింది. ā vārta nuñci amma tērukōvaḍāniki vāraṁ paṭṭindi. It took mum a week to get over that news."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): తేరుకున్నాను, tērukunnānu."
+            },
+            {
+              "kind": "speech",
+              "text": "-నుంచి తేరుకో (tērukō), to get over a shock, a fright or a faint."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తేరుకో (tērukō) is native Dravidian: DEDR 3471 lists Telugu tēṟu with Tamil tēṟu, \"to recover from swooning, to be comforted, to cheer up\"; -కో is the reflexive ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tērukō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tērukō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tērukō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tērukō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā vārta nuñci amma tērukōvaḍāniki vāraṁ paṭṭindi. — It took mum a week to get over that news.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā vārta nuñci amma tērukōvaḍāniki vāraṁ paṭṭindi.* — It took mum a week to get over that news.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a slight indisposition, then the Telugu for to be bedridden, then say tērukō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a slight indisposition, then the Telugu for to be bedridden, then say *tērukō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తేరుకో (tērukō) mean? (\"To come round; to recover from a shock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

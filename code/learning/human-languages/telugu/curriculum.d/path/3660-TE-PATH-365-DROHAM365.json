@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-365-DROHAM365",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-365-DROHAM365"
+  ],
+  "after": []
+}

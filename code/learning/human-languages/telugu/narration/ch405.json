@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 405,
+  "title": "Money and the Economy",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:4033adbadf3e2e82",
+  "lessons": [
+    {
+      "id": "TE-C405-arthika",
+      "sequence": 20170,
+      "title": "ఆర్థిక (ārthika) — economic; financial",
+      "headword": "ఆర్థిక",
+      "romanization": "ārthika",
+      "gloss": "economic; financial",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8fa0cddb8b99e338",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for independent, then the Telugu for unemployment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆర్థిక",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆర్థిక — ārthika — \"economic; financial\"."
+            },
+            {
+              "kind": "speech",
+              "text": "దేశం ఆర్థిక సమస్యల్లో ఉంది. dēśaṁ ārthika samasyallō undi. The country is in economic trouble."
+            },
+            {
+              "kind": "speech",
+              "text": "Before a noun: ఆర్థిక (ārthika) సహాయం, financial help. ఆర్థికంగా, financially."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆర్థిక (ārthika) is borrowed from Sanskrit ārthika, \"significant; wise; rich\" (Monier-Williams), from artha, \"aim, wealth\"; Telugu uses it for money matters."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārthika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārthika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārthika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārthika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēśaṁ ārthika samasyallō undi. — The country is in economic trouble.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēśaṁ ārthika samasyallō undi.* — The country is in economic trouble.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for independent, then the Telugu for unemployment, then say ārthika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for independent, then the Telugu for unemployment, then say *ārthika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆర్థిక (ārthika) mean? (\"Economic; financial\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C405-dravyolbanam",
+      "sequence": 20180,
+      "title": "ద్రవ్యోల్బణం (dravyōlbaṇaṁ) — inflation (of prices)",
+      "headword": "ద్రవ్యోల్బణం",
+      "romanization": "dravyōlbaṇaṁ",
+      "gloss": "inflation (of prices)",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb5200d67216c0c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for unemployment, then the Telugu for economic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ద్రవ్యోల్బణం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ద్రవ్యోల్బణం — dravyōlbaṇaṁ — \"inflation (of prices)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ద్రవ్యోల్బణం వల్ల ధరలు పెరుగుతున్నాయి. dravyōlbaṇaṁ valla dharalu perugutunnāyi. Prices are rising because of inflation."
+            },
+            {
+              "kind": "speech",
+              "text": "A newspaper word; in talk, ధరలు పెరగడం, prices going up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ద్రవ్యోల్బణం (dravyōlbaṇaṁ) is built from Sanskrit dravya, \"substance, property\" (CDIAL 6625), and ulbaṇa, \"laid over in addition\" (Monier-Williams); the compound is a modern one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dravyōlbaṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dravyōlbaṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dravyōlbaṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dravyōlbaṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dravyōlbaṇaṁ valla dharalu perugutunnāyi. — Prices are rising because of inflation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dravyōlbaṇaṁ valla dharalu perugutunnāyi.* — Prices are rising because of inflation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for unemployment, then the Telugu for economic, then say dravyōlbaṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for unemployment, then the Telugu for economic, then say *dravyōlbaṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ద్రవ్యోల్బణం (dravyōlbaṇaṁ) mean? (\"Inflation (of prices)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C405-pettubadi",
+      "sequence": 20190,
+      "title": "పెట్టుబడి (peṭṭubaḍi) — an investment; capital",
+      "headword": "పెట్టుబడి",
+      "romanization": "peṭṭubaḍi",
+      "gloss": "an investment; capital",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10e7289870f0e039",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for economic, then the Telugu for inflation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పెట్టుబడి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పెట్టుబడి — peṭṭubaḍi — \"an investment; capital\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను కొత్త దుకాణంలో పెట్టుబడి పెట్టాడు. atanu kotta dukāṇaṁlō peṭṭubaḍi peṭṭāḍu. He invested in a new shop."
+            },
+            {
+              "kind": "speech",
+              "text": "పెట్టుబడి (peṭṭubaḍi) పెట్టు, to invest; the first part is పెట్టు, to put."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పెట్టుబడి (peṭṭubaḍi) is native Telugu, built on peṭṭu, \"to put, to place\"; the origin of the second part, -బడి, is uncertain."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peṭṭubaḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peṭṭubaḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peṭṭubaḍi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peṭṭubaḍi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu kotta dukāṇaṁlō peṭṭubaḍi peṭṭāḍu. — He invested in a new shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu kotta dukāṇaṁlō peṭṭubaḍi peṭṭāḍu.* — He invested in a new shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for economic, then the Telugu for inflation, then say peṭṭubaḍi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for economic, then the Telugu for inflation, then say *peṭṭubaḍi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పెట్టుబడి (peṭṭubaḍi) mean? (\"An investment; capital\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C405-badjettu",
+      "sequence": 20200,
+      "title": "బడ్జెట్టు (baḍjeṭṭu) — a budget",
+      "headword": "బడ్జెట్టు",
+      "romanization": "baḍjeṭṭu",
+      "gloss": "a budget",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc3460c044251948",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for inflation, then the Telugu for an investment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బడ్జెట్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బడ్జెట్టు — baḍjeṭṭu — \"a budget\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా ఇంటి బడ్జెట్టు చాలా చిన్నది. mā iṇṭi baḍjeṭṭu cālā cinnadi. Our household budget is very small."
+            },
+            {
+              "kind": "speech",
+              "text": "Like బస్సు, the English loan ends in -ఉ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బడ్జెట్టు (baḍjeṭṭu) is a loan from English budget, with the final -ఉ that many English loans take."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baḍjeṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baḍjeṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baḍjeṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baḍjeṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā iṇṭi baḍjeṭṭu cālā cinnadi. — Our household budget is very small.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā iṇṭi baḍjeṭṭu cālā cinnadi.* — Our household budget is very small.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for inflation, then the Telugu for an investment, then say baḍjeṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for inflation, then the Telugu for an investment, then say *baḍjeṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బడ్జెట్టు (baḍjeṭṭu) mean? (\"A budget\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C405-runam",
+      "sequence": 20210,
+      "title": "రుణం (ruṇaṁ) — a loan; a debt",
+      "headword": "రుణం",
+      "romanization": "ruṇaṁ",
+      "gloss": "a loan; a debt",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:196b5f40dd788c5e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an investment, then the Telugu for a budget."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: రుణం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రుణం — ruṇaṁ — \"a loan; a debt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రైతులు బ్యాంకు నుంచి రుణం తీసుకున్నారు. raitulu byāṅku nuñci ruṇaṁ tīsukunnāru. The farmers took a loan from the bank."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: రుణాలు, ruṇālu."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal beside అప్పు: banks and governments give రుణాలు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రుణం (ruṇaṁ) is borrowed from Sanskrit ṛṇa, \"anything due, a debt, money owed\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ruṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ruṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ruṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ruṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raitulu byāṅku nuñci ruṇaṁ tīsukunnāru. — The farmers took a loan from the bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raitulu byāṅku nuñci ruṇaṁ tīsukunnāru.* — The farmers took a loan from the bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an investment, then the Telugu for a budget, then say ruṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an investment, then the Telugu for a budget, then say *ruṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does రుణం (ruṇaṁ) mean? (\"A loan; a debt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R405-review-398-405",
+      "sequence": 20220,
+      "title": "Words from chapters 398–405 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 398-405",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc8d8e058fd7efba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Telugu for a law and to violate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a law, to violate, to implement, a punishment, to ban",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a law, to violate, to implement, a punishment, to ban]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a duty, freedom, equality, injustice, to honour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a duty, freedom, equality, injustice, to honour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an election, a candidate, to elect, a campaign, a majority",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an election, a candidate, to elect, a campaign, a majority]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a citizen, democracy, a constitution, national, politics",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a citizen, democracy, a constitution, national, politics]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a legislative assembly, a minister, power, to govern, to approve",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a legislative assembly, a minister, power, to govern, to approve]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "administration, a representative, coordination, a scheme, welfare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: administration, a representative, coordination, a scheme, welfare]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poverty, rich, wealth, independent, unemployment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: poverty, rich, wealth, independent, unemployment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "economic, inflation, an investment, a budget, a loan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: economic, inflation, an investment, a budget, a loan]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A law? (చట్టం, caṭṭaṁ.) To violate? (ఉల్లంఘించు, ullaṅghiñcu.) To implement? (అమలు చేయు, amalu cēyu.) A punishment? (శిక్ష, śikṣa.) To ban? (నిషేధించు, niṣēdhiñcu.) A duty? (కర్తవ్యం, kartavyaṁ.) Freedom? (స్వేచ్ఛ, svēccha.) Equality? (సమానత్వం, samānatvaṁ.) Injustice? (అన్యాయం, anyāyaṁ.) To honour? (గౌరవించు, gauraviñcu.) An election? (ఎన్నిక, ennika.) A candidate? (అభ్యర్థి, abhyarthi.) To elect? (ఎన్నుకో, ennukō.) A campaign? (ప్రచారం, pracāraṁ.) A majority? (మెజారిటీ, mejāriṭī.) A citizen? (పౌరుడు, pauruḍu.) Democracy? (ప్రజాస్వామ్యం, prajāsvāmyaṁ.) A constitution? (రాజ్యాంగం, rājyāṅgaṁ.) National? (జాతీయ, jātīya.) Politics? (రాజకీయాలు, rājakīyālu.) A legislative assembly? (శాసనసభ, śāsanasabha.) A minister? (మంత్రి, mantri.) Power? (అధికారం, adhikāraṁ.) To govern? (పాలించు, pāliñcu.) To approve? (ఆమోదించు, āmōdiñcu.) Administration? (పరిపాలన, paripālana.) A representative? (ప్రతినిధి, pratinidhi.) Coordination? (సమన్వయం, samanvayaṁ.) A scheme? (పథకం, pathakaṁ.) Welfare? (సంక్షేమం, saṅkṣēmaṁ.) Poverty? (పేదరికం, pēdarikaṁ.) Rich? (ధనిక, dhanika.) Wealth? (సంపద, sampada.) Independent? (స్వతంత్ర, svatantra.) Unemployment? (నిరుద్యోగం, nirudyōgaṁ.) Economic? (ఆర్థిక, ārthika.) Inflation? (ద్రవ్యోల్బణం, dravyōlbaṇaṁ.) An investment? (పెట్టుబడి, peṭṭubaḍi.) A budget? (బడ్జెట్టు, baḍjeṭṭu.) A loan? (రుణం, ruṇaṁ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

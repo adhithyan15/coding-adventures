@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C378-penuguladu",
+    "language": "telugu",
+    "chapter": 378,
+    "sequence": 18690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1775520f66a0a482"
+  },
+  "findings": []
+}

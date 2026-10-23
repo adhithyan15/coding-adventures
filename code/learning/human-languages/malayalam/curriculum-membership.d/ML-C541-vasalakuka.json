@@ -1,0 +1,11 @@
+{
+  "id": "ML-C541-vasalakuka",
+  "pathSegment": "ML-PATH-541-DAHANAM541",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-541-DAHANAM541",
+      "order": 1
+    }
+  ]
+}

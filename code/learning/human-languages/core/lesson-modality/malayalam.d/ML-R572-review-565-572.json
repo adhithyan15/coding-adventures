@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R572-review-565-572",
+    "language": "malayalam",
+    "chapter": 572,
+    "sequence": 28860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c45bb335b04e36d9"
+  },
+  "findings": []
+}

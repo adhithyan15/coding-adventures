@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 345,
+  "output": "telugu/book/chapters/ch345-remembering.tex",
+  "scriptSet": "telugu-comparisons"
+}

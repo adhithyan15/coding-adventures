@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-479-TAZALLUJ479",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "AR-EXT-479-TAZALLUJ479"
+  ],
+  "after": []
+}

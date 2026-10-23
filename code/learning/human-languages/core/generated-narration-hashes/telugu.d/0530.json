@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:d48af6150af9ab10",
+  "lessonIds": [
+    "TE-C530-viyyankudu",
+    "TE-C530-muttata",
+    "TE-C530-menalludu",
+    "TE-C530-cuttam",
+    "TE-C530-avva"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch530.txt",
+  "json": "telugu/narration/ch530.json",
+  "textHash": "fnv1a64:e5acb6baa7f334b8",
+  "jsonHash": "fnv1a64:4e6fd890b552c80c",
+  "findings": []
+}

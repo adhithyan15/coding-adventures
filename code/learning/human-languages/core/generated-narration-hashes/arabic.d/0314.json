@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:833d31282bb90235",
+  "lessonIds": [
+    "AR-C314-janaza",
+    "AR-C314-tuwuffiya",
+    "AR-C314-dafana",
+    "AR-C314-shayyaa",
+    "AR-C314-qabr"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch314.txt",
+  "json": "arabic/narration/ch314.json",
+  "textHash": "fnv1a64:29a92725fcb55204",
+  "jsonHash": "fnv1a64:973bf27868980e36",
+  "findings": []
+}

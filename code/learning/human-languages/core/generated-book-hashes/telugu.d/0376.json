@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:fb3d0337877dd8ef",
+  "lessonIds": [
+    "TE-C376-spandana",
+    "TE-C376-prarambham",
+    "TE-C376-mugimpu",
+    "TE-C376-ghattam",
+    "TE-C376-yadrcchikanga"
+  ],
+  "tex": "telugu/book/chapters/ch376-how-it-began-and-ended.tex"
+}

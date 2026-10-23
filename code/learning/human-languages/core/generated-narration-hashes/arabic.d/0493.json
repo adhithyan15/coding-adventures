@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:3f8abadbfe378d0f",
+  "lessonIds": [
+    "AR-C493-nadima",
+    "AR-C493-nadim",
+    "AR-C493-shafaqa",
+    "AR-C493-ataba",
+    "AR-C493-yas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch493.txt",
+  "json": "arabic/narration/ch493.json",
+  "textHash": "fnv1a64:23c68f288dc3410c",
+  "jsonHash": "fnv1a64:35dd4a1b5619eb3c",
+  "findings": []
+}

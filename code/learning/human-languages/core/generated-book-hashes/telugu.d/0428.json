@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:811b2ae812ee6b00",
+  "lessonIds": [
+    "TE-C428-nindincu",
+    "TE-C428-avamanincu",
+    "TE-C428-vismarincu",
+    "TE-C428-lopam",
+    "TE-C428-savarincu"
+  ],
+  "tex": "telugu/book/chapters/ch428-blame-and-correction.tex"
+}

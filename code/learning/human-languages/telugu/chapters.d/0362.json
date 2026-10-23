@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "Truce",
+  "label": "ch:te-truce",
+  "canDo": "I can say to battle, to drive away, to bow one's head, a truce and an envoy.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C362-duta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can say to battle, to drive away, to bow one's head, a truce and an envoy.",
+    "assesses": [
+      "TE-LEX-C362-SANDHI362-03",
+      "TE-LEX-C362-SANDHI362-04",
+      "TE-LEX-C362-SANDHI362-05"
+    ]
+  }
+}

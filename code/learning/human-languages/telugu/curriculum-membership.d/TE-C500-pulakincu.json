@@ -1,0 +1,11 @@
+{
+  "id": "TE-C500-pulakincu",
+  "pathSegment": "TE-PATH-500-ANANDAM500",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-500-ANANDAM500",
+      "order": 3
+    }
+  ]
+}

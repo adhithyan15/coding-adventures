@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C316-cadivevadini",
+    "language": "telugu",
+    "chapter": 316,
+    "sequence": 15220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e36ebffb37b7ef4"
+  },
+  "findings": []
+}

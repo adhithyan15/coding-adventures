@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C403-umuman",
+    "language": "arabic",
+    "chapter": 403,
+    "sequence": 22740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:944c7661a1ac68f9"
+  },
+  "findings": []
+}

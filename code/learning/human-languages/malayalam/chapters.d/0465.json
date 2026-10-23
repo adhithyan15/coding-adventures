@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "Departures and Arrivals",
+  "label": "ch:ml-departures-and-arrivals",
+  "canDo": "I can say departure, arrival, a delay, to wait standing and to run and board.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C465-otikkayaruka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can say departure, arrival, a delay, to wait standing and to run and board.",
+    "assesses": [
+      "ML-LEX-C465-VARAVU465-03",
+      "ML-LEX-C465-VARAVU465-04",
+      "ML-LEX-C465-VARAVU465-05"
+    ]
+  }
+}

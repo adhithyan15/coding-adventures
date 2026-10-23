@@ -1,0 +1,19 @@
+{
+  "chapter": 455,
+  "title": "Respect and Fairness",
+  "label": "ch:ml-respect-and-fairness",
+  "canDo": "I can say to remind, to respect, equal, moral and to harm.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C455-upadravikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can say to remind, to respect, equal, moral and to harm.",
+    "assesses": [
+      "ML-LEX-C455-BAHUMANAM455-03",
+      "ML-LEX-C455-BAHUMANAM455-04",
+      "ML-LEX-C455-BAHUMANAM455-05"
+    ]
+  }
+}

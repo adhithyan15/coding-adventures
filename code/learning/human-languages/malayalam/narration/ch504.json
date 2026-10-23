@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 504,
+  "title": "Litter",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:beec53e7a7ea3187",
+  "lessons": [
+    {
+      "id": "ML-C504-cavaru",
+      "sequence": 25200,
+      "title": "ചവറ് (cavaṟŭ) — litter; rubbish",
+      "headword": "ചവറ്",
+      "romanization": "cavaṟŭ",
+      "gloss": "litter; rubbish",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3821da4207889647",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to pollute, then the Malayalam for sewage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചവറ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചവറ് — cavaṟŭ — \"litter; rubbish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കടപ്പുറത്ത് ധാരാളം ചവറ് ഉണ്ടായിരുന്നു. kaṭappuṟattŭ dhārāḷaṁ cavaṟŭ uṇṭāyirunnu. There was a lot of litter on the beach."
+            },
+            {
+              "kind": "speech",
+              "text": "Before some endings ചവറ് (cavaṟŭ) doubles its last consonant: ചവറ്റിൽ, in the rubbish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചവറ് (cavaṟŭ) is native Dravidian, \"rubbish, sweepings\"; DEDR also lists under it green leaves and rubbish used as manure (DEDR 2395)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cavaṟŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cavaṟŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cavaṟŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cavaṟŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭappuṟattŭ dhārāḷaṁ cavaṟŭ uṇṭāyirunnu. — There was a lot of litter on the beach.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭappuṟattŭ dhārāḷaṁ cavaṟŭ uṇṭāyirunnu.* — There was a lot of litter on the beach.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to pollute, then the Malayalam for sewage, then say cavaṟŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to pollute, then the Malayalam for sewage, then say *cavaṟŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചവറ് (cavaṟŭ) mean? (\"Litter; rubbish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C504-valicceriyuka",
+      "sequence": 25210,
+      "title": "വലിച്ചെറിയുക (valicceṟiyuka) — to throw away; to fling",
+      "headword": "വലിച്ചെറിയുക",
+      "romanization": "valicceṟiyuka",
+      "gloss": "to throw away; to fling",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5df870f83324624d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for sewage, then the Malayalam for litter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വലിച്ചെറിയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വലിച്ചെറിയുക — valicceṟiyuka — \"to throw away; to fling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആരോ പ്ലാസ്റ്റിക് കുപ്പി പുഴയിലേക്ക് വലിച്ചെറിഞ്ഞു. ārō plāsṟṟikŭ kuppi puḻayilēkkŭ valicceṟiññu. Someone flung a plastic bottle into the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വലിച്ചെറിഞ്ഞു, valicceṟiññu."
+            },
+            {
+              "kind": "speech",
+              "text": "വലിച്ച്, pulling, plus എറിയുക, to throw: to throw away carelessly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വലിച്ചെറിയുക (valicceṟiyuka) is a native Dravidian compound of വലിക്കുക, to pull (DEDR 5282), and എറിയുക, to throw (DEDR 859)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valicceṟiyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valicceṟiyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valicceṟiyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valicceṟiyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārō plāsṟṟikŭ kuppi puḻayilēkkŭ valicceṟiññu. — Someone flung a plastic bottle into the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārō plāsṟṟikŭ kuppi puḻayilēkkŭ valicceṟiññu.* — Someone flung a plastic bottle into the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for sewage, then the Malayalam for litter, then say valicceṟiyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for sewage, then the Malayalam for litter, then say *valicceṟiyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വലിച്ചെറിയുക (valicceṟiyuka) mean? (\"To throw away; to fling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C504-kuminnukutuka",
+      "sequence": 25220,
+      "title": "കുമിഞ്ഞുകൂടുക (kumiññukūṭuka) — to pile up",
+      "headword": "കുമിഞ്ഞുകൂടുക",
+      "romanization": "kumiññukūṭuka",
+      "gloss": "to pile up",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c6d5c0a2b5e48d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for litter, then the Malayalam for to throw away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കുമിഞ്ഞുകൂടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുമിഞ്ഞുകൂടുക — kumiññukūṭuka — \"to pile up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വഴിയോരത്ത് മാലിന്യം കുമിഞ്ഞുകൂടി. vaḻiyōrattŭ mālinyaṁ kumiññukūṭi. Rubbish piled up by the roadside."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കുമിഞ്ഞുകൂടി, kumiññukūṭi."
+            },
+            {
+              "kind": "speech",
+              "text": "കുമിയുക, to be heaped, plus കൂടുക, to gather. For rubbish, work or money."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുമിഞ്ഞുകൂടുക (kumiññukūṭuka) is a native Dravidian compound of കുമിയുക, to be heaped up (DEDR 1741), and കൂടുക, to come together (DEDR 1882)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumiññukūṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumiññukūṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumiññukūṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumiññukūṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḻiyōrattŭ mālinyaṁ kumiññukūṭi. — Rubbish piled up by the roadside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḻiyōrattŭ mālinyaṁ kumiññukūṭi.* — Rubbish piled up by the roadside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for litter, then the Malayalam for to throw away, then say kumiññukūṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for litter, then the Malayalam for to throw away, then say *kumiññukūṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കുമിഞ്ഞുകൂടുക (kumiññukūṭuka) mean? (\"To pile up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C504-nasikkuka",
+      "sequence": 25230,
+      "title": "നശിക്കുക (naśikkuka) — to be ruined; to perish",
+      "headword": "നശിക്കുക",
+      "romanization": "naśikkuka",
+      "gloss": "to be ruined; to perish",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6fe0d239ea850a95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to throw away, then the Malayalam for to pile up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നശിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നശിക്കുക — naśikkuka — \"to be ruined; to perish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മഴയിൽ വയലിലെ നെല്ല് നശിച്ചു. maḻayil vayalile nellŭ naśiccu. The paddy in the fields was ruined in the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: നശിച്ചു, naśiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "For crops, buildings and things left to rot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നശിക്കുക (naśikkuka) is built from the Sanskrit root naś, \"to be lost, to perish\" (CDIAL 7027), with the verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naśikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naśikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naśikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naśikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻayil vayalile nellŭ naśiccu. — The paddy in the fields was ruined in the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻayil vayalile nellŭ naśiccu.* — The paddy in the fields was ruined in the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to throw away, then the Malayalam for to pile up, then say naśikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to throw away, then the Malayalam for to pile up, then say *naśikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നശിക്കുക (naśikkuka) mean? (\"To be ruined; to perish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C504-punarupayogikkuka",
+      "sequence": 25240,
+      "title": "പുനരുപയോഗിക്കുക (punarupayōgikkuka) — to reuse; to recycle",
+      "headword": "പുനരുപയോഗിക്കുക",
+      "romanization": "punarupayōgikkuka",
+      "gloss": "to reuse; to recycle",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c5c2fdf4599c0a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to pile up, then the Malayalam for to be ruined."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പുനരുപയോഗിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുനരുപയോഗിക്കുക — punarupayōgikkuka — \"to reuse; to recycle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞങ്ങൾ പഴയ കുപ്പികൾ പുനരുപയോഗിക്കുന്നു. ñaṅṅaḷ paḻaya kuppikaḷ punarupayōgikkunnu. We reuse old bottles."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പുനരുപയോഗിച്ചു, punarupayōgiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "പുനർ-, again, plus ഉപയോഗിക്കുക, to use."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുനരുപയോഗിക്കുക (punarupayōgikkuka) is built from Sanskrit punar, \"again\", and upayoga, \"use\" (Monier-Williams), with the verb ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "punarupayōgikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *punarupayōgikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "punarupayōgikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *punarupayōgikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñaṅṅaḷ paḻaya kuppikaḷ punarupayōgikkunnu. — We reuse old bottles.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñaṅṅaḷ paḻaya kuppikaḷ punarupayōgikkunnu.* — We reuse old bottles.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to pile up, then the Malayalam for to be ruined, then say punarupayōgikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to pile up, then the Malayalam for to be ruined, then say *punarupayōgikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പുനരുപയോഗിക്കുക (punarupayōgikkuka) mean? (\"To reuse; to recycle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

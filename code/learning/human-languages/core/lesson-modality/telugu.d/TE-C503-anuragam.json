@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C503-anuragam",
+    "language": "telugu",
+    "chapter": 503,
+    "sequence": 25460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80bcbdfbcc05b4bb"
+  },
+  "findings": []
+}
