@@ -45,7 +45,7 @@ reviews_of: [PA-C189-chahunde-han, PA-C189-chahunde-ho]
 - **ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ** — a second-person plural or respectful question.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-CHAHUNDE-189, PA-PRON-OH-01, PA-LEX-YOU-REGISTER-02, PA-LEX-KI-02, PA-LEX-KARNA-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-CHAHUNDE-189, PA-PRON-OH-01, PA-LEX-KAMM-05, PA-LEX-YOU-REGISTER-02, PA-LEX-KI-02, PA-LEX-KARNA-05] -->
 
 - [YOU SAY: **ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ**]
 - [YOU SAY: **ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ**]

@@ -4,7 +4,7 @@
   "chapter": 189,
   "title": "They Want; Do You Want?",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:50baae2d1a8df71d",
+  "sourceHash": "fnv1a64:bda833280a4d816f",
   "lessons": [
     {
       "id": "PA-C189-want-return",
@@ -613,7 +613,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:7ea0670bb58c49f9",
+      "sourceHash": "fnv1a64:275c29fa26ef475d",
       "notice": {
         "modality": "sight",
         "needs": [
