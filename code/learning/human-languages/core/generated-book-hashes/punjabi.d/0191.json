@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:049ecc39fb2bcc36",
+  "lessonIds": [
+    "PA-C191-amount-return",
+    "PA-C191-ghatt",
+    "PA-C191-ghatt-review",
+    "PA-C191-paani-ghatt",
+    "PA-C191-samaa-ghatt",
+    "PA-C191-thaan-ghatt",
+    "PA-C191-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch191-less-water-time-and-space.tex"
+}

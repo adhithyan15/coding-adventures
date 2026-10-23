@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 191,
+  "title": "Less Water, Time, and Space",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:5394c00cf0218df8",
+  "lessons": [
+    {
+      "id": "PA-C191-amount-return",
+      "sequence": 10330,
+      "title": "Return to water, time, and place",
+      "headword": "ਪਾਣੀ · ਸਮਾਂ · ਥਾਂ",
+      "romanization": "paani; samaa; thaan",
+      "gloss": "retrieve familiar water, time, and place words",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09513a45f1d3fdc8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "paani; samaa; thaan; YOU SAY: ਪਾਣੀ; ਸਮਾਂ; ਥਾਂ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *paani; samaa; thaan*; YOU SAY: **ਪਾਣੀ; ਸਮਾਂ; ਥਾਂ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep three familiar nouns ready. One names water, one names time, and one names place. The next lesson adds one quantity word that can describe each noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "paani; YOU SAY: ਪਾਣੀ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *paani*; YOU SAY: **ਪਾਣੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "samaa; YOU SAY: ਸਮਾਂ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *samaa*; YOU SAY: **ਸਮਾਂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "thaan; YOU SAY: ਥਾਂ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *thaan*; YOU SAY: **ਥਾਂ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “water,” “time,” then “place.” This opener owns no new form."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C191-ghatt",
+      "sequence": 10340,
+      "title": "One word for a limited amount",
+      "headword": "ਘੱਟ",
+      "romanization": "ghatt",
+      "gloss": "little, less, or not much",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c50f14dcc24762f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve “water,” “time,” and “place” before describing their amount."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: direct owner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਘੱਟ (ghatt) — ghaṭṭ — little, less, or not much."
+            },
+            {
+              "kind": "speech",
+              "text": "Use the bounded meaning “not much” here. No comparison word is needed. The next lesson retrieves this one form before it enters a complete sentence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "cognates",
+          "title": "Across the family",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The word belongs to an inherited family that Turner traces through Middle Indo-Aryan ghaṭṭati, “becomes less.” The old idea and the modern quantity meaning stay close. Source: Turner, CDIAL."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "ghatt; YOU SAY: ਘੱਟ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *ghatt*; YOU SAY: **ਘੱਟ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਘੱਟ (ghatt)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਘੱਟ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਘੱਟ (ghatt) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਘੱਟ** once]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the word for “not much” without looking."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C191-ghatt-review",
+      "sequence": 10350,
+      "title": "Retrieve the quantity word",
+      "headword": "ਘੱਟ",
+      "romanization": "ghatt",
+      "gloss": "retrieve little, less, or not much",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a4cba08d1fbd3ef6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hear “not much” and prepare the single Punjabi word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ਘੱਟ (ghatt) bounded to “little, less, or not much.” This lesson adds no opposite word and no new comparison frame."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "ghatt; YOU SAY: ਘੱਟ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *ghatt*; YOU SAY: **ਘੱਟ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਘੱਟ (ghatt)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਘੱਟ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the model and write ਘੱਟ (ghatt)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the model and write **ਘੱਟ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the meaning, then produce the written form."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C191-paani-ghatt",
+      "sequence": 10360,
+      "title": "Build the water frame",
+      "headword": "ਪਾਣੀ ਘੱਟ ਹੈ",
+      "romanization": "paani ghatt hai",
+      "gloss": "there is not much water",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5937ed495d37d939",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve “water,” “not much,” and “is.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: first complete statement",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਾਣੀ ਘੱਟ ਹੈ (paani ghatt hai) — pāṇī ghaṭṭ hai — there is not much water."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the familiar noun, the new quantity word, and the familiar final verb as one small practical statement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "paani ghatt hai; YOU SAY: ਪਾਣੀ ਘੱਟ ਹੈ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *paani ghatt hai*; YOU SAY: **ਪਾਣੀ ਘੱਟ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਪਾਣੀ ਘੱਟ ਹੈ (paani ghatt hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਪਾਣੀ ਘੱਟ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਪਾਣੀ ਘੱਟ ਹੈ (paani ghatt hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਪਾਣੀ ਘੱਟ ਹੈ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce “there is not much water.”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C191-samaa-ghatt",
+      "sequence": 10370,
+      "title": "Build the time frame",
+      "headword": "ਸਮਾਂ ਘੱਟ ਹੈ",
+      "romanization": "samaa ghatt hai",
+      "gloss": "there is not much time",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd8115e8fc19cebc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve “time,” “not much,” and “is.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: complete statement",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਮਾਂ ਘੱਟ ਹੈ (samaa ghatt hai) — samā̃ ghaṭṭ hai — there is not much time."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the quantity frame from the water statement. Replace only the familiar noun at the front."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "samaa ghatt hai; YOU SAY: ਸਮਾਂ ਘੱਟ ਹੈ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *samaa ghatt hai*; YOU SAY: **ਸਮਾਂ ਘੱਟ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਸਮਾਂ ਘੱਟ ਹੈ (samaa ghatt hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਸਮਾਂ ਘੱਟ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਸਮਾਂ ਘੱਟ ਹੈ (samaa ghatt hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਸਮਾਂ ਘੱਟ ਹੈ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce “there is not much time.”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C191-thaan-ghatt",
+      "sequence": 10380,
+      "title": "Move the quantity word to space",
+      "headword": "ਥਾਂ ਘੱਟ ਹੈ",
+      "romanization": "thaan ghatt hai",
+      "gloss": "there is not much space",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:073c7e296b10926a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve “place,” “not much,” and “is.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: second familiar noun",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਥਾਂ ਘੱਟ ਹੈ (thaan ghatt hai) — thā̃ ghaṭṭ hai — there is not much space."
+            },
+            {
+              "kind": "speech",
+              "text": "The quantity word stays unchanged. Only the familiar noun changes from time to place or space."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "thaan ghatt hai; YOU SAY: ਥਾਂ ਘੱਟ ਹੈ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *thaan ghatt hai*; YOU SAY: **ਥਾਂ ਘੱਟ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਥਾਂ ਘੱਟ ਹੈ (thaan ghatt hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਥਾਂ ਘੱਟ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਥਾਂ ਘੱਟ ਹੈ (thaan ghatt hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਥਾਂ ਘੱਟ ਹੈ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce “there is not much space.”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C191-payoff",
+      "sequence": 10390,
+      "title": "A bounded quantity payoff",
+      "headword": "ਪਾਣੀ ਘੱਟ ਹੈ · ਸਮਾਂ ਘੱਟ ਹੈ · ਥਾਂ ਘੱਟ ਹੈ",
+      "romanization": "paani ghatt hai; samaa ghatt hai; thaan ghatt hai",
+      "gloss": "retrieve three limited-amount frames across four skills",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd60928e3eec61d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the quantity word, then prepare the three familiar nouns."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "paani ghatt hai; samaa ghatt hai; thaan ghatt hai; YOU SAY: ਪਾਣੀ ਘੱਟ ਹੈ; ਸਮਾਂ ਘੱਟ ਹੈ; ਥਾਂ ਘੱਟ ਹੈ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *paani ghatt hai; samaa ghatt hai; thaan ghatt hai*; YOU SAY: **ਪਾਣੀ ਘੱਟ ਹੈ; ਸਮਾਂ ਘੱਟ ਹੈ; ਥਾਂ ਘੱਟ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਪਾਣੀ ਘੱਟ ਹੈ (paani ghatt hai), ਸਮਾਂ ਘੱਟ ਹੈ (samaa ghatt hai), ਥਾਂ ਘੱਟ ਹੈ (thaan ghatt hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਪਾਣੀ ਘੱਟ ਹੈ · ਸਮਾਂ ਘੱਟ ਹੈ · ਥਾਂ ਘੱਟ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write ਘੱਟ (ghatt) once, then one complete statement",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write **ਘੱਟ** once, then one complete statement]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce all three complete statements once more."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the fourteenth prerequisite tranche exposed by Punjabi A2 mock drafting. It does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
