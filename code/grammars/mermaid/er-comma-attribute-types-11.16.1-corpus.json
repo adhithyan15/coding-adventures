@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER comma-separated attribute type parameters vertical slice",
+  "fixtures": [
+    {
+      "name": "comma-separated-attribute-type-parameters",
+      "source": "erDiagram\nBUILDING {\n  public.geometry(point,4326) location\n}"
+    }
+  ]
+}

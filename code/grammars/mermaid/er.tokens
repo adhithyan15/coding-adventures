@@ -28,6 +28,7 @@ COLON               = ":"
 QUESTION            = "?"
 STRING              = /"([^"\\]|\\.)*"/
 ESCAPED_ATTRIBUTE   = /`[^`\r\n]+`/
+COMMA_ATTRIBUTE_TYPE = /[\p{L}_*][\p{L}\p{N}_.~*-]*\([^()\r\n]*,[^()\r\n]*\)/
 ZERO_OR_ONE         = /\|o|o\||zero[ \t]+or[ \t]+one|one[ \t]+or[ \t]+zero/
 ZERO_OR_MORE        = /o\{|\}o|0\+|many\(0\)|zero[ \t]+or[ \t]+(?:more|many)|many/
 ONE_OR_MORE         = /\|\{|\}\||1\+|many\(1\)|one[ \t]+or[ \t]+(?:more|many)/
