@@ -12413,6 +12413,47 @@ fn exact_static_integer_reduction_value(node: &GrammarASTNode) -> Option<i64> {
     }
 
     let sequence = pieces(node);
+    if node.rule_name == "expr_pow"
+        && sequence
+            .iter()
+            .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
+    {
+        if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
+            return None;
+        }
+        let mut operands = Vec::new();
+        for (index, piece) in sequence.iter().enumerate() {
+            if index.is_multiple_of(2) {
+                let Piece::Node(operand) = piece else {
+                    return None;
+                };
+                operands.push(*operand);
+            } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "^" | "**"))
+            {
+                return None;
+            }
+        }
+        let (base, exponents) = operands.split_first()?;
+        let (last, prefix) = exponents.split_last()?;
+        let exponent_value = |operand: &GrammarASTNode| {
+            let value = exact_static_integer_reduction_value(operand)?;
+            (0..=MAX_POW_UNROLL_EXPONENT as i64)
+                .contains(&value)
+                .then_some(value as u32)
+        };
+        let mut exponent = exponent_value(last)? as u64;
+        for operand in prefix.iter().rev() {
+            let exponent_base = exponent_value(operand)? as u64;
+            exponent = exponent_base.checked_pow(exponent.try_into().ok()?)?;
+            if exponent > MAX_POW_UNROLL_EXPONENT as u64 {
+                return None;
+            }
+        }
+        let exponent = u32::try_from(exponent).ok()?;
+        let value = exact_static_integer_reduction_value(base)?.checked_pow(exponent)?;
+        return (value.unsigned_abs() <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE).then_some(value);
+    }
+
     let mut index = 0;
     let mut negate = false;
     if let Some(Piece::Op(operator)) = sequence.first() {
@@ -15626,6 +15667,42 @@ mod tests {
                     && instr.srcs.first().and_then(Operand::as_var)
                         == Some("__basic_print_real")
             }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_powered_static_integer_reductions() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(((6 div 4) ^ 3) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(sign(pick()) + ((11 mod 4) ^ 2)); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((((10 div 3) + (7 mod 4)) ^ (6 div 3)) * ((2 * sign(pick())) + 2)); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a checked power of a grouped static integer reduction remains exact around a sign-rooted transform for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_powered_static_integer_reductions_reject_unproven_forms() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(((6 div 0) ^ 3) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer exponent; real result; exponent := 3; result := entier(((6 div 4) ^ exponent) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(((6 div 4) ^ (-1)) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(((9007199254740992 div 1) ^ 2) * sign(pick())); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "a zero divisor, dynamic or negative exponent, or oversized powered reduction must remain outside the proof",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
         }
     }
 

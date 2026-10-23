@@ -105,6 +105,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/er-11.16.1-visual-corpus.json"
     ));
+    const ER_STYLES_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-styles-11.16.1-corpus.json"
+    ));
+    const ER_STYLES_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-styles-11.16.1-visual-corpus.json"
+    ));
     const TIMELINE_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/timeline-11.16.1-corpus.json"
@@ -1977,6 +1985,57 @@ line "Target" [35, 50, 68, 82]"##,
             let path = format!("/tmp/mermaid_er_direction_{index}_e2e.png");
             write_png(&pixels, &path)
                 .expect("ER direction PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_styles_to_png() {
+        let syntax: Value = serde_json::from_str(ER_STYLES_CORPUS).expect("ER style corpus JSON");
+        let visual: Value =
+            serde_json::from_str(ER_STYLES_VISUAL_CORPUS).expect("ER style visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("ER style fixtures");
+        let expected_fills = [vec!["#dbeafe"], vec!["#dcfce7", "#fef3c7"]];
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+
+        for (index, fixture_name) in visual["fixtures"]
+            .as_array()
+            .expect("ER style visual fixtures")
+            .iter()
+            .enumerate()
+        {
+            let fixture_name = fixture_name.as_str().expect("ER style visual fixture name");
+            let fixture = fixtures
+                .iter()
+                .find(|fixture| fixture["name"] == fixture_name)
+                .unwrap_or_else(|| panic!("missing ER style fixture {fixture_name}"));
+            let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER style fixture source"))
+                .unwrap_or_else(|error| panic!("failed to parse {fixture_name}: {error}"));
+            let layout = layout_structural_diagram(&diagram);
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            for expected_fill in &expected_fills[index] {
+                assert!(scene.instructions.iter().any(|instruction| matches!(
+                    instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some(*expected_fill)
+                )));
+            }
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_er_style_{index}_e2e.png");
+            write_png(&pixels, &path).expect("ER style PNG write failed");
             assert!(pixels.width > 0 && pixels.height > 0);
         }
     }

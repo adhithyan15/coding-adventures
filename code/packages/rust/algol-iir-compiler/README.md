@@ -265,6 +265,10 @@ The same checked reduction is accepted inside parentheses as a static additive
 term or multiplicative factor around the sign-rooted transform. Grouped zero
 or dynamic divisors, inexact real divisions, and results beyond `2^53` remain
 conservative.
+Those grouped reductions may also use right-associative checked powers whose
+nonnegative exponent chain stays within the existing unroll cap. Negative or
+dynamic exponents, overflowing powers, and deeper exponent chains remain
+conservative.
 Positive variable-free whole-number powers may raise the exact sign-rooted
 integer transform within the existing exponent-unroll cap while checked
 exponentiation remains within `2^53`; zero, negative, dynamic, deeper, and
