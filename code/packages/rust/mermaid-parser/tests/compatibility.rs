@@ -61,6 +61,14 @@ const ER_ACCESSIBILITY_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-accessibility-11.16.1-visual-corpus.json"
 ));
+const ER_BACKTICK_ATTRIBUTES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-backtick-attributes-11.16.1-corpus.json"
+));
+const ER_BACKTICK_ATTRIBUTES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-backtick-attributes-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2032,6 +2040,26 @@ fn pinned_er_accessibility_metadata_reaches_semantic_ir() {
     assert_eq!(
         multiline.accessibility_description.as_deref(),
         Some("Customers place orders.\nOrders contain items.")
+    );
+}
+
+#[test]
+fn pinned_er_backtick_attributes_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_BACKTICK_ATTRIBUTES_CORPUS)
+        .expect("ER backtick attribute corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_BACKTICK_ATTRIBUTES_VISUAL_CORPUS)
+        .expect("ER backtick attribute visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"].as_str().expect("ER backtick attribute source"),
+    )
+    .expect("ER backtick attribute fixture must parse");
+    let hotel = diagram.nodes.iter().find(|node| node.id == "HOTEL").expect("HOTEL");
+
+    assert_eq!(
+        hotel.compartments[0].entries,
+        ["address: my.type", "geo.accuracy: string [PK] - Precision source"]
     );
 }
 
