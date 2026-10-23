@@ -129,6 +129,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/er-quoted-text-11.16.1-visual-corpus.json"
     ));
+    const ER_ACCESSIBILITY_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-accessibility-11.16.1-corpus.json"
+    ));
+    const ER_ACCESSIBILITY_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-accessibility-11.16.1-visual-corpus.json"
+    ));
     const TIMELINE_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/timeline-11.16.1-corpus.json"
@@ -2134,6 +2142,55 @@ line "Target" [35, 50, 68, 82]"##,
         write_png(&pixels, "/tmp/mermaid_er_quoted_text_e2e.png")
             .expect("ER quoted text PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_accessibility_to_png() {
+        let syntax: Value =
+            serde_json::from_str(ER_ACCESSIBILITY_CORPUS).expect("ER accessibility corpus JSON");
+        let visual: Value = serde_json::from_str(ER_ACCESSIBILITY_VISUAL_CORPUS)
+            .expect("ER accessibility visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("ER accessibility fixtures");
+        let visual_names = visual["fixtures"].as_array().expect("ER accessibility visuals");
+        assert_eq!(fixtures.len(), visual_names.len());
+
+        for (index, fixture) in fixtures.iter().enumerate() {
+            assert_eq!(visual_names[index], fixture["name"]);
+            let diagram = parse_er_diagram(
+                fixture["source"].as_str().expect("ER accessibility source"),
+            )
+            .expect("ER accessibility fixture must parse");
+            let expected_title = diagram.accessibility_title.clone().expect("accessibility title");
+            let expected_description =
+                diagram.accessibility_description.clone().expect("accessibility description");
+            let layout = layout_structural_diagram(&diagram);
+            let shaper = CoreTextShaper;
+            let metrics = CoreTextMetrics;
+            let resolver = CoreTextResolver::new();
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            let metadata = scene.metadata.as_ref().expect("ER accessibility scene metadata");
+            assert_eq!(metadata.get("accessibility.title"), Some(&expected_title));
+            assert_eq!(
+                metadata.get("accessibility.description"),
+                Some(&expected_description)
+            );
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_er_accessibility_{index}_e2e.png");
+            write_png(&pixels, &path).expect("ER accessibility PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
     }
 
     #[test]

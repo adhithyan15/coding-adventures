@@ -116,8 +116,10 @@ The native ER subset accepts quoted entity names and quoted aliases, including
 spaces and Unicode text, through its dedicated source grammar. Quoted
 relationship roles and attribute comments are unquoted into structural semantic
 IR, measured by structural layout, and lowered as backend-neutral shaped text
-before native rendering. ER remains partial while the rest of the pinned
-upstream syntax and visual corpus is incomplete.
+before native rendering. Single-line accessibility titles and single-line or
+braced multiline descriptions survive structural semantic IR and layout, then
+lower to backend-neutral PaintScene metadata. ER remains partial while the rest
+of the pinned upstream syntax and visual corpus is incomplete.
 
 ## Required New Semantic Families
 
