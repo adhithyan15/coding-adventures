@@ -758,6 +758,30 @@ authenticate either adjacent link, advance path-length state, apply name
 constraints, construct or validate a certification path, recognize or
 constrain a trust anchor, check revocation, perform TLS or HTTP, authorize
 OAuth transport, or open a network connection.
+The path-length state can now consume that complete intermediate-certificate
+policy evidence directly. It derives both issuing-CA role evidence and the
+self-issued transition bit from the one retained certificate-bound policy,
+then applies the existing decrement and `pathLenConstraint` tightening rules.
+This prevents a path traversal from silently discarding the intermediate's
+critical-extension recognition, algorithm policy, and explicit-time validity
+checks by re-deriving only a detached role/classification pair. The aggregate
+state still proves only path-length accounting: it does not retain an
+authenticated adjacent link, choose or order certificates, apply name
+constraints, recognize trust, check revocation, perform TLS or HTTP, authorize
+OAuth transport, or open a network connection.
+A bounded authenticated-intermediate binding follow-up now consumes the
+strongest selected RSA SHA-256 issuer-link evidence together with complete
+intermediate-certificate policy. It fails closed unless the authenticated
+link's exact selected candidate issuer is the same decoded certificate object
+retained by the intermediate policy, then returns one distinct non-copyable
+result retaining both proofs. This prevents later traversal from combining an
+authenticated child-to-issuer link with validity, self-issued, algorithm, or
+critical-extension policy for a different intermediate. The result proves
+only that this policy-approved intermediate authenticated one exact child; it
+does not authenticate the intermediate's own issuer link, advance path-length
+state, choose or order certificates, construct or validate a complete path,
+recognize trust, process name constraints or revocation, perform TLS or HTTP,
+authorize OAuth transport, or open a network connection.
 A bounded `x509-certificate-issuer-candidate-selection` path-construction
 prerequisite now scans one caller-bounded pool of decoded candidate
 certificates in caller order. It invokes caller-owned Name policy exactly once

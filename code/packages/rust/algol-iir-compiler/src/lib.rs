@@ -4690,6 +4690,42 @@ impl Compiler {
             .map(|proof| proof.operand)
     }
 
+    /// Evaluate one built-in integer-valued standard function whose operand is
+    /// already a variable-free checked integer reduction. User declarations
+    /// shadow these names and therefore remain runtime calls.
+    fn exact_static_integer_reduction_standard_value(
+        &self,
+        node: &GrammarASTNode,
+    ) -> Option<i64> {
+        if node.rule_name != "proc_call" {
+            return None;
+        }
+        let name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")?
+            .value
+            .clone();
+        let target_name = self.resolve_procedure_identity(&name);
+        if self.proc_sigs.contains_key(&target_name)
+            || !matches!(target_name.as_str(), "abs" | "sign" | "entier")
+        {
+            return None;
+        }
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return None;
+        }
+        let value = exact_static_integer_reduction_value_with(actuals[0], &|candidate| {
+            self.exact_static_integer_reduction_standard_value(candidate)
+        })?;
+        match target_name.as_str() {
+            "abs" => value.checked_abs(),
+            "sign" => Some(value.signum()),
+            "entier" => Some(value),
+            _ => None,
+        }
+    }
+
     /// Recognize an exact-integer transform rooted in one built-in `sign` call
     /// and return its worst-case magnitude. This complements the wider bounded
     /// transform proof above with non-unit integer scaling and positive static
@@ -4770,8 +4806,15 @@ impl Compiler {
                         } else {
                             let value = expr_static_real_arithmetic_value_with(operand, &|_| None)
                                 .or_else(|| {
-                                    exact_static_integer_reduction_value(operand)
-                                        .map(|value| value as f64)
+                                    exact_static_integer_reduction_value_with(
+                                        operand,
+                                        &|candidate| {
+                                            self.exact_static_integer_reduction_standard_value(
+                                                candidate,
+                                            )
+                                        },
+                                    )
+                                    .map(|value| value as f64)
                                 })?;
                             let units = exact_sign_integer_units(value)?;
                             static_magnitude = static_magnitude.checked_add(units)?;
@@ -4814,8 +4857,15 @@ impl Compiler {
                         } else {
                             let value = expr_static_real_arithmetic_value_with(operand, &|_| None)
                                 .or_else(|| {
-                                    exact_static_integer_reduction_value(operand)
-                                        .map(|value| value as f64)
+                                    exact_static_integer_reduction_value_with(
+                                        operand,
+                                        &|candidate| {
+                                            self.exact_static_integer_reduction_standard_value(
+                                                candidate,
+                                            )
+                                        },
+                                    )
+                                    .map(|value| value as f64)
                                 })?;
                             let units = exact_sign_integer_units(value)?;
                             let operator = (index > 0)
@@ -12402,14 +12452,25 @@ fn exact_sign_integer_units(value: f64) -> Option<u64> {
 /// ALGOL's integer `div` or `mod`. The general static-real evaluator
 /// intentionally excludes those operators, so this narrow fallback keeps the
 /// sign-rooted proof exact without broadening runtime-real constant folding.
-fn exact_static_integer_reduction_value(node: &GrammarASTNode) -> Option<i64> {
-    if let Some(value) = expr_static_real_arithmetic_value_with(node, &|_| None) {
+fn exact_static_integer_reduction_value_with<F>(
+    node: &GrammarASTNode,
+    static_call_value: &F,
+) -> Option<i64>
+where
+    F: Fn(&GrammarASTNode) -> Option<i64>,
+{
+    if let Some(value) = static_call_value(node) {
+        return Some(value);
+    }
+    if let Some(value) = expr_static_real_arithmetic_value_with(node, &|candidate| {
+        static_call_value(candidate).map(|value| value as f64)
+    }) {
         return (value.fract() == 0.0
             && value.abs() <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE as f64)
             .then_some(value as i64);
     }
     if let Some(child) = single_parenthesized_child(node) {
-        return exact_static_integer_reduction_value(child);
+        return exact_static_integer_reduction_value_with(child, static_call_value);
     }
 
     let sequence = pieces(node);
@@ -12436,7 +12497,7 @@ fn exact_static_integer_reduction_value(node: &GrammarASTNode) -> Option<i64> {
         let (base, exponents) = operands.split_first()?;
         let (last, prefix) = exponents.split_last()?;
         let exponent_value = |operand: &GrammarASTNode| {
-            let value = exact_static_integer_reduction_value(operand)?;
+            let value = exact_static_integer_reduction_value_with(operand, static_call_value)?;
             (0..=MAX_POW_UNROLL_EXPONENT as i64)
                 .contains(&value)
                 .then_some(value as u32)
@@ -12450,7 +12511,8 @@ fn exact_static_integer_reduction_value(node: &GrammarASTNode) -> Option<i64> {
             }
         }
         let exponent = u32::try_from(exponent).ok()?;
-        let value = exact_static_integer_reduction_value(base)?.checked_pow(exponent)?;
+        let value = exact_static_integer_reduction_value_with(base, static_call_value)?
+            .checked_pow(exponent)?;
         return (value.unsigned_abs() <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE).then_some(value);
     }
 
@@ -12467,7 +12529,7 @@ fn exact_static_integer_reduction_value(node: &GrammarASTNode) -> Option<i64> {
     let Piece::Node(first) = sequence.get(index)? else {
         return None;
     };
-    let first = exact_static_integer_reduction_value(first)?;
+    let first = exact_static_integer_reduction_value_with(first, static_call_value)?;
     let mut value = if negate { first.checked_neg()? } else { first };
     index += 1;
     while index < sequence.len() {
@@ -12477,7 +12539,7 @@ fn exact_static_integer_reduction_value(node: &GrammarASTNode) -> Option<i64> {
         let Piece::Node(rhs) = sequence.get(index + 1)? else {
             return None;
         };
-        let rhs = exact_static_integer_reduction_value(rhs)?;
+        let rhs = exact_static_integer_reduction_value_with(rhs, static_call_value)?;
         value = match operator.as_str() {
             "+" => value.checked_add(rhs)?,
             "-" => value.checked_sub(rhs)?,
@@ -15701,6 +15763,42 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "a zero divisor, dynamic or negative exponent, or oversized powered reduction must remain outside the proof",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_normalized_static_integer_reductions() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(abs((6 div 4) - 3) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(((6 div 4) ^ abs(sign((11 mod 4) - 4))) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(entier(abs(((10 div 3) + (7 mod 4)) ^ (6 div 3))) * ((2 * sign(pick())) + 2)); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a built-in integer normalization of a checked static reduction remains exact around a sign-rooted transform for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_normalized_static_integer_reductions_reject_unproven_forms() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; integer divisor; real result; divisor := 4; result := entier(abs(6 div divisor) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(6 div 0) * sign(pick())); output(result) end",
+            "begin integer procedure abs(x); value x; integer x; abs := x; real procedure pick; pick := -2.25; real result; result := entier(abs(6 div 4) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(abs((9007199254740992 div 1) + 1) * sign(pick())); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "a dynamic or zero divisor, shadowed built-in, or oversized normalized reduction must remain outside the proof",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }

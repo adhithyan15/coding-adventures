@@ -113,6 +113,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/er-styles-11.16.1-visual-corpus.json"
     ));
+    const ER_DEFAULT_CLASS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-default-class-11.16.1-corpus.json"
+    ));
+    const ER_DEFAULT_CLASS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-default-class-11.16.1-visual-corpus.json"
+    ));
     const TIMELINE_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/timeline-11.16.1-corpus.json"
@@ -2038,6 +2046,46 @@ line "Target" [35, 50, 68, 82]"##,
             write_png(&pixels, &path).expect("ER style PNG write failed");
             assert!(pixels.width > 0 && pixels.height > 0);
         }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_default_class_to_png() {
+        let syntax: Value =
+            serde_json::from_str(ER_DEFAULT_CLASS_CORPUS).expect("ER default class corpus JSON");
+        let visual: Value = serde_json::from_str(ER_DEFAULT_CLASS_VISUAL_CORPUS)
+            .expect("ER default class visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+        let diagram = parse_er_diagram(
+            syntax["fixtures"][0]["source"].as_str().expect("ER default class source"),
+        )
+        .expect("ER default class fixture must parse");
+        let layout = layout_structural_diagram(&diagram);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        for expected_fill in ["#fce7f3", "#dbeafe", "#fef3c7"] {
+            assert!(scene.instructions.iter().any(|instruction| matches!(
+                instruction,
+                PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some(expected_fill)
+            )));
+        }
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_er_default_class_e2e.png")
+            .expect("ER default class PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
     }
 
     #[test]
