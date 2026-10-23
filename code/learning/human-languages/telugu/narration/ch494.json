@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 494,
+  "title": "Worry and Unease",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:63cab959e7ac4903",
+  "lessons": [
+    {
+      "id": "TE-C494-digulu",
+      "sequence": 25000,
+      "title": "దిగులు (digulu) — gloom; low spirits; worry",
+      "headword": "దిగులు",
+      "romanization": "digulu",
+      "gloss": "gloom; low spirits; worry",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1911357d36559ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a watchman, then the Telugu for a milkman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దిగులు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దిగులు — digulu — \"gloom; low spirits; worry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అమ్మ దూరంగా ఉంటే నాకు దిగులుగా ఉంటుంది. amma dūraṅgā uṇṭē nāku digulugā uṇṭundi. When mum is far away, I feel low."
+            },
+            {
+              "kind": "speech",
+              "text": "Said with the dative: నాకు దిగులుగా ఉంది, I feel low."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దిగులు (digulu) is native Dravidian: DEDR 3202 lists Telugu digulu, \"fear, alarm\", beside Tamil tikil, \"fright, terror\". In everyday Telugu the fear has softened into a heavy, anxious sadness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "digulu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *digulu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "digulu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *digulu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amma dūraṅgā uṇṭē nāku digulugā uṇṭundi. — When mum is far away, I feel low.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amma dūraṅgā uṇṭē nāku digulugā uṇṭundi.* — When mum is far away, I feel low.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a watchman, then the Telugu for a milkman, then say digulu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a watchman, then the Telugu for a milkman, then say *digulu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దిగులు (digulu) mean? (\"Gloom; low spirits; worry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C494-cintincu",
+      "sequence": 25010,
+      "title": "చింతించు (cintiñcu) — to worry; to regret",
+      "headword": "చింతించు",
+      "romanization": "cintiñcu",
+      "gloss": "to worry; to regret",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a453e848eea30517",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a milkman, then the Telugu for gloom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చింతించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చింతించు — cintiñcu — \"to worry; to regret\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నాన్న డబ్బు గురించి చాలా చింతించాడు. nānna ḍabbu guriñci cālā cintiñcāḍu. Dad worried a lot about money."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): చింతించాను, cintiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "What you worry about takes గురించి. The noun is చింత, worry or care."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చింతించు (cintiñcu) is borrowed from Sanskrit cintayati, \"thinks; cares for\" (CDIAL 4815), and takes the Telugu ending -ఇంచు, which turns a Sanskrit stem into a verb. Thinking too much about a thing becomes worrying about it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cintiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cintiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cintiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cintiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānna ḍabbu guriñci cālā cintiñcāḍu. — Dad worried a lot about money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānna ḍabbu guriñci cālā cintiñcāḍu.* — Dad worried a lot about money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a milkman, then the Telugu for gloom, then say cintiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a milkman, then the Telugu for gloom, then say *cintiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చింతించు (cintiñcu) mean? (\"To worry; to regret\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C494-kalavarapadu",
+      "sequence": 25020,
+      "title": "కలవరపడు (kalavarapaḍu) — to be agitated; to be upset",
+      "headword": "కలవరపడు",
+      "romanization": "kalavarapaḍu",
+      "gloss": "to be agitated; to be upset",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a5210f3b91c62e86",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for gloom, then the Telugu for to worry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కలవరపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కలవరపడు — kalavarapaḍu — \"to be agitated; to be upset\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ వార్త విని అమ్మ కలవరపడింది. ā vārta vini amma kalavarapaḍindi. Hearing that news, mum was upset."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): కలవరపడ్డాను, kalavarapaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is కలవరం, confusion of mind. A noun of feeling + -పడు means to feel it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కలవరపడు (kalavarapaḍu) is native Dravidian: DEDR 1306 lists Telugu kalavaramu, \"confusion, anxiety\", and kalavara-paḍu, \"to be confused\", beside Tamil kalavaram, \"perturbation\". The second part is the native verb paḍu, \"to feel, to suffer\" (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalavarapaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalavarapaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalavarapaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalavarapaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā vārta vini amma kalavarapaḍindi. — Hearing that news, mum was upset.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā vārta vini amma kalavarapaḍindi.* — Hearing that news, mum was upset.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for gloom, then the Telugu for to worry, then say kalavarapaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for gloom, then the Telugu for to worry, then say *kalavarapaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కలవరపడు (kalavarapaḍu) mean? (\"To be agitated; to be upset\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C494-kangarupadu",
+      "sequence": 25030,
+      "title": "కంగారుపడు (kaṅgārupaḍu) — to panic; to get flustered",
+      "headword": "కంగారుపడు",
+      "romanization": "kaṅgārupaḍu",
+      "gloss": "to panic; to get flustered",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ddd1784c9203611e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to worry, then the Telugu for to be agitated."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కంగారుపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కంగారుపడు — kaṅgārupaḍu — \"to panic; to get flustered\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రైలు రాకపోతే అతను కంగారుపడతాడు. railu rākapōtē atanu kaṅgārupaḍatāḍu. If the train does not come, he gets flustered."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): కంగారుపడ్డాను, kaṅgārupaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun కంగారు is fluster or panic: కంగారుగా, in a flurry."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కంగారుపడు (kaṅgārupaḍu) is built from kaṅgāru, \"fluster, panic\", and the native verb paḍu, \"to feel, to suffer\" (DEDR 3853). The origin of kaṅgāru itself is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṅgārupaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṅgārupaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṅgārupaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṅgārupaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "railu rākapōtē atanu kaṅgārupaḍatāḍu. — If the train does not come, he gets flustered.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *railu rākapōtē atanu kaṅgārupaḍatāḍu.* — If the train does not come, he gets flustered.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to worry, then the Telugu for to be agitated, then say kaṅgārupaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to worry, then the Telugu for to be agitated, then say *kaṅgārupaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కంగారుపడు (kaṅgārupaḍu) mean? (\"To panic; to get flustered\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C494-atruta",
+      "sequence": 25040,
+      "title": "ఆత్రుత (ātruta) — eagerness; impatience",
+      "headword": "ఆత్రుత",
+      "romanization": "ātruta",
+      "gloss": "eagerness; impatience",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9a47ac9a347b287",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to be agitated, then the Telugu for to panic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆత్రుత",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆత్రుత — ātruta — \"eagerness; impatience\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఫలితాల కోసం విద్యార్థులు ఆత్రుతగా ఎదురుచూశారు. phalitāla kōsaṁ vidyārthulu ātrutagā edurucūśāru. The students waited eagerly for the results."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly as an adverb: ఆత్రుతగా, eagerly, impatiently."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆత్రుత (ātruta) is usually traced to Sanskrit ātura, \"suffering, troubled in body or mind\" (Monier-Williams), with an abstract ending. The restless feeling became eager impatience."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātruta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātruta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātruta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātruta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phalitāla kōsaṁ vidyārthulu ātrutagā edurucūśāru. — The students waited eagerly for the results.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phalitāla kōsaṁ vidyārthulu ātrutagā edurucūśāru.* — The students waited eagerly for the results.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to be agitated, then the Telugu for to panic, then say ātruta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to be agitated, then the Telugu for to panic, then say *ātruta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆత్రుత (ātruta) mean? (\"Eagerness; impatience\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

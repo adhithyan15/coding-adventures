@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:4eef039ef507e201",
+  "lessonIds": [
+    "TE-C339-sainyam",
+    "TE-C339-sainikudu",
+    "TE-C339-senadhipati",
+    "TE-C339-kavatu",
+    "TE-C339-dandettu"
+  ],
+  "tex": "telugu/book/chapters/ch339-the-army-marches.tex"
+}

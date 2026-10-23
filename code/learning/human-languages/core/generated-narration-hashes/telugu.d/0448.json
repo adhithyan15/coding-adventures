@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:f7fb92b327c2902f",
+  "lessonIds": [
+    "TE-C448-disa",
+    "TE-C448-sucika",
+    "TE-C448-dari-tappu",
+    "TE-C448-malupu-tirugu",
+    "TE-C448-addadari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch448.txt",
+  "json": "telugu/narration/ch448.json",
+  "textHash": "fnv1a64:90cda1e4cc83e7b7",
+  "jsonHash": "fnv1a64:03d01eefcea0b9c7",
+  "findings": []
+}

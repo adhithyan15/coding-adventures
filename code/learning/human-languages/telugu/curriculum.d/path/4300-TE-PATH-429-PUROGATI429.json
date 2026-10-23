@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-429-PUROGATI429",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TE-EXT-429-PUROGATI429"
+  ],
+  "after": []
+}

@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 378,
+  "title": "A Brawl",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b3c7773a49f735ba",
+  "lessons": [
+    {
+      "id": "TE-C378-kotlata",
+      "sequence": 18660,
+      "title": "కొట్లాట (koṭlāṭa) — a brawl; a scuffle",
+      "headword": "కొట్లాట",
+      "romanization": "koṭlāṭa",
+      "gloss": "a brawl; a scuffle",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb03b3d59045ddff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a patrol, then the Telugu for an action."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కొట్లాట",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కొట్లాట — koṭlāṭa — \"a brawl; a scuffle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బజారులో ఇద్దరి మధ్య కొట్లాట జరిగింది. bajārulō iddari madhya koṭlāṭa jarigindi. There was a brawl between two men in the market."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: కొట్లాటలు, koṭlāṭalu."
+            },
+            {
+              "kind": "speech",
+              "text": "From కొట్టు, to hit: a fight with blows."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కొట్లాట (koṭlāṭa) is native Dravidian, built on koṭṭu, \"to beat, strike\" (DEDR 2063)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṭlāṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṭlāṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṭlāṭa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṭlāṭa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bajārulō iddari madhya koṭlāṭa jarigindi. — There was a brawl between two men in the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bajārulō iddari madhya koṭlāṭa jarigindi.* — There was a brawl between two men in the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a patrol, then the Telugu for an action, then say koṭlāṭa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a patrol, then the Telugu for an action, then say *koṭlāṭa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కొట్లాట (koṭlāṭa) mean? (\"A brawl; a scuffle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C378-kalpulu",
+      "sequence": 18670,
+      "title": "కాల్పులు (kālpulu) — gunfire; shooting",
+      "headword": "కాల్పులు",
+      "romanization": "kālpulu",
+      "gloss": "gunfire; shooting",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a04240ebd0d3c31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an action, then the Telugu for a brawl."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కాల్పులు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కాల్పులు — kālpulu — \"gunfire; shooting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రాత్రి అడవిలో కాల్పులు వినిపించాయి. rātri aḍavilō kālpulu vinipiñcāyi. Gunfire was heard in the forest at night."
+            },
+            {
+              "kind": "speech",
+              "text": "A plural noun from కాల్చు, to burn or to fire a gun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కాల్పులు (kālpulu) is native Dravidian, the plural noun of kālcu, \"to burn, set fire to\" (DEDR 1500), the verb also used of firing a gun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālpulu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālpulu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālpulu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālpulu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātri aḍavilō kālpulu vinipiñcāyi. — Gunfire was heard in the forest at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātri aḍavilō kālpulu vinipiñcāyi.* — Gunfire was heard in the forest at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an action, then the Telugu for a brawl, then say kālpulu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an action, then the Telugu for a brawl, then say *kālpulu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కాల్పులు (kālpulu) mean? (\"Gunfire; shooting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C378-gayaparacu",
+      "sequence": 18680,
+      "title": "గాయపరచు (gāyaparacu) — to injure; to wound",
+      "headword": "గాయపరచు",
+      "romanization": "gāyaparacu",
+      "gloss": "to injure; to wound",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4c6a996f91fa787",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a brawl, then the Telugu for gunfire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గాయపరచు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గాయపరచు — gāyaparacu — \"to injure; to wound\"."
+            },
+            {
+              "kind": "speech",
+              "text": "దొంగ కాపలాదారును కత్తితో గాయపరిచాడు. doṅga kāpalādārunu kattitō gāyaparicāḍu. The thief injured the watchman with a knife."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): గాయపరిచాను, gāyaparicānu."
+            },
+            {
+              "kind": "speech",
+              "text": "You know గాయం, a wound; the ending -పరచు turns it into something done to another."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గాయపరచు (gāyaparacu) is built on గాయం, \"a wound\", which goes back to Sanskrit ghāta, \"a blow, a bruise\" (CDIAL 4460), with paracu, which makes a verb of a noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāyaparacu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāyaparacu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāyaparacu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāyaparacu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doṅga kāpalādārunu kattitō gāyaparicāḍu. — The thief injured the watchman with a knife.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doṅga kāpalādārunu kattitō gāyaparicāḍu.* — The thief injured the watchman with a knife.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a brawl, then the Telugu for gunfire, then say gāyaparacu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a brawl, then the Telugu for gunfire, then say *gāyaparacu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గాయపరచు (gāyaparacu) mean? (\"To injure; to wound\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C378-penuguladu",
+      "sequence": 18690,
+      "title": "పెనుగులాడు (penugulāḍu) — to grapple; to wrestle free",
+      "headword": "పెనుగులాడు",
+      "romanization": "penugulāḍu",
+      "gloss": "to grapple; to wrestle free",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1775520f66a0a482",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for gunfire, then the Telugu for to injure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పెనుగులాడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పెనుగులాడు — penugulāḍu — \"to grapple; to wrestle free\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె దొంగతో పెనుగులాడింది. āme doṅgatō penugulāḍindi. She grappled with the thief."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): పెనుగులాడాను, penugulāḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "With whom takes -తో."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పెనుగులాడు (penugulāḍu) is native Dravidian: DEDR 4160 lists Telugu penãgu, \"to be twisted, to struggle, fight\", here with āḍu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "penugulāḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *penugulāḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "penugulāḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *penugulāḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme doṅgatō penugulāḍindi. — She grappled with the thief.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme doṅgatō penugulāḍindi.* — She grappled with the thief.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for gunfire, then the Telugu for to injure, then say penugulāḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for gunfire, then the Telugu for to injure, then say *penugulāḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పెనుగులాడు (penugulāḍu) mean? (\"To grapple; to wrestle free\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C378-gumigudu",
+      "sequence": 18700,
+      "title": "గుమిగూడు (gumigūḍu) — to gather round",
+      "headword": "గుమిగూడు",
+      "romanization": "gumigūḍu",
+      "gloss": "to gather round",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:188955b0371d0734",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to injure, then the Telugu for to grapple."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గుమిగూడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గుమిగూడు — gumigūḍu — \"to gather round\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రమాదం జరిగిన చోట జనం గుమిగూడారు. pramādaṁ jarigina cōṭa janaṁ gumigūḍāru. People gathered where the accident happened."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): గుమిగూడాను, gumigūḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "గుమి, a crowd, and కూడు, to come together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గుమిగూడు (gumigūḍu) is a native compound: gumi, \"a crowd\" (DEDR 1741), and kūḍu, \"to meet, gather\" (DEDR 1882)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gumigūḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gumigūḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gumigūḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gumigūḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pramādaṁ jarigina cōṭa janaṁ gumigūḍāru. — People gathered where the accident happened.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pramādaṁ jarigina cōṭa janaṁ gumigūḍāru.* — People gathered where the accident happened.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to injure, then the Telugu for to grapple, then say gumigūḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to injure, then the Telugu for to grapple, then say *gumigūḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గుమిగూడు (gumigūḍu) mean? (\"To gather round\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C416-grantham",
+    "language": "telugu",
+    "chapter": 416,
+    "sequence": 20760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a71a707c60571604"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:43e115147fc175e9",
+  "lessonIds": [
+    "TE-C440-alasyam",
+    "TE-C440-veci-undu",
+    "TE-C440-samayapalana",
+    "TE-C440-viramam",
+    "TE-C440-tvarapadu"
+  ],
+  "tex": "telugu/book/chapters/ch440-waiting-on-the-platform.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:4be670d0a0785cea",
+  "lessonIds": [
+    "TE-C361-yuddhabhumi",
+    "TE-C361-dalam",
+    "TE-C361-muttadincu",
+    "TE-C361-jayincu",
+    "TE-C361-parajayam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch361.txt",
+  "json": "telugu/narration/ch361.json",
+  "textHash": "fnv1a64:21834f449e10930c",
+  "jsonHash": "fnv1a64:e7d9201373277175",
+  "findings": []
+}

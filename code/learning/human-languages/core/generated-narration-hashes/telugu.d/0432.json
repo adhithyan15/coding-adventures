@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:8a4df621b42c24d8",
+  "lessonIds": [
+    "TE-C432-niti",
+    "TE-C432-adarsam",
+    "TE-C432-pratistha",
+    "TE-C432-visvasaniyata",
+    "TE-C432-avagahana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch432.txt",
+  "json": "telugu/narration/ch432.json",
+  "textHash": "fnv1a64:1c6d6bc4af013e54",
+  "jsonHash": "fnv1a64:b051e565dc3ecbbe",
+  "findings": []
+}

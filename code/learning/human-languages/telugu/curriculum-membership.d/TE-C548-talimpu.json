@@ -1,0 +1,11 @@
+{
+  "id": "TE-C548-talimpu",
+  "pathSegment": "TE-PATH-548-VANTA548",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-548-VANTA548",
+      "order": 4
+    }
+  ]
+}

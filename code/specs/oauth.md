@@ -942,6 +942,44 @@ child-to-intermediate-to-reviewed-root chain for the fixed RSA SHA-256 path;
 it does not search or generalize paths, apply anchor name constraints, check
 revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
 connection.
+A bounded target-policy follow-up now consumes complete validated server
+certificate policy together with that reviewed two-link path. It fails closed
+unless the server-policy certificate and the authenticated path's target child
+refer to the same exact decoded certificate object, then returns distinct
+non-copyable evidence retaining both complete inputs. This prevents callers
+from attaching hostname, validity, purpose, end-entity role, critical-extension,
+and algorithm policy for one certificate to a separately authenticated target,
+including a byte-equal re-decode. The result does not apply the selected
+anchor's name constraints or other anchor policy, search or generalize paths,
+check revocation, perform TLS or HTTP, authorize OAuth transport, or open a
+network connection.
+A bounded anchor-policy follow-up now consumes that complete reviewed two-link
+server-path evidence and applies the selected reviewed snapshot entry's exact
+supported DNS constraints to the exact target certificate already retained by
+the path. Entries without out-of-band name constraints retain the complete path
+without DNS evidence. Constrained entries reuse the same separately bounded,
+repository-owned NameConstraints and Subject Alternative Name decoding as the
+direct-link composition, require every target dNSName to satisfy at least one
+permitted DNS subtree, and retain optional payload-free count evidence. Callers
+cannot substitute another root, target certificate, or SAN collection. This
+does not add excluded or non-DNS constraint forms, other anchor constraints,
+path search or generalized construction, revocation, TLS, HTTP, OAuth transport,
+or network authority.
+A bounded intermediate-constraint follow-up consumes that anchor-policy result
+and inspects only the exact intermediate certificate already retained by the
+authenticated two-link path. An absent NameConstraints extension preserves the
+complete prior proof without new DNS evidence. A present extension must be
+critical, must contain one exact DER NameConstraints SEQUENCE, and must decode
+within caller-owned limits to the repository's supported permitted-DNS-only
+subset; malformed, non-critical, excluded, or non-DNS forms fail closed. The
+same exact target certificate's separately bounded Subject Alternative Name is
+then required, and every dNSName must satisfy at least one permitted subtree.
+Success retains the complete anchor-policy proof plus optional payload-free
+intermediate constraint evidence, so callers cannot substitute an intermediate,
+target, root, or SAN collection. This remains a fixed two-link policy step: it
+does not implement excluded or non-DNS constraint semantics, apply other anchor
+constraints, search or generalize paths, check revocation, perform TLS or HTTP,
+authorize OAuth transport, or grant network authority.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-329-DONGATANAM329",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-329-DONGATANAM329"
+  ],
+  "after": []
+}

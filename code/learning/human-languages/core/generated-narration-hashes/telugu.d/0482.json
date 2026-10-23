@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:50e3bbe3d6bd6725",
+  "lessonIds": [
+    "TE-C482-vadagallu",
+    "TE-C482-mancugadda",
+    "TE-C482-himapatam",
+    "TE-C482-pillagali",
+    "TE-C482-callabadu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch482.txt",
+  "json": "telugu/narration/ch482.json",
+  "textHash": "fnv1a64:56e68ca6f6c2cb20",
+  "jsonHash": "fnv1a64:3f0b64dd07169797",
+  "findings": []
+}

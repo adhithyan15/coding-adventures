@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:7fe7c2a149130ab6",
+  "lessonIds": [
+    "TE-C329-dongatanam",
+    "TE-C329-corabadu",
+    "TE-C329-baddalu-kottu",
+    "TE-C329-ettukupovu",
+    "TE-C329-pasigattu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch329.txt",
+  "json": "telugu/narration/ch329.json",
+  "textHash": "fnv1a64:c595fc9aa3d987e6",
+  "jsonHash": "fnv1a64:6913c7d78aeca372",
+  "findings": []
+}

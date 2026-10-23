@@ -1,0 +1,19 @@
+{
+  "chapter": 544,
+  "title": "Sport",
+  "label": "ch:te-sport",
+  "canDo": "I can talk about sportsmen, rivals, matches, wins and running.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C544-parugu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 544: I can talk about sportsmen, rivals, matches, wins and running.",
+    "assesses": [
+      "TE-LEX-C544-KRIDA544-03",
+      "TE-LEX-C544-KRIDA544-04",
+      "TE-LEX-C544-KRIDA544-05"
+    ]
+  }
+}

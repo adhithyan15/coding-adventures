@@ -1,0 +1,11 @@
+{
+  "id": "TE-S176-letter-uu",
+  "pathSegment": "TE-PATH-320-ASK-THE-WAY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-320-ASK-THE-WAY",
+      "order": 1
+    }
+  ]
+}

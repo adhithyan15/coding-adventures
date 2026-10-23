@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C446-boltapadu",
+    "language": "telugu",
+    "chapter": 446,
+    "sequence": 22440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76b06b1daf61f67d"
+  },
+  "findings": []
+}

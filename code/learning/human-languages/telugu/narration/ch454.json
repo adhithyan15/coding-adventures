@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 454,
+  "title": "Flying Abroad",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:da17b09592f0c040",
+  "lessons": [
+    {
+      "id": "TE-C454-pailatu",
+      "sequence": 22820,
+      "title": "పైలటు (pailaṭu) — a pilot",
+      "headword": "పైలటు",
+      "romanization": "pailaṭu",
+      "gloss": "a pilot",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9143578a0692ed72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to float away, then the Telugu for to be swept away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పైలటు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పైలటు — pailaṭu — \"a pilot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "విమానం దిగే ముందు పైలటు మాతో మాట్లాడాడు. vimānaṁ digē mundu pailaṭu mātō māṭlāḍāḍu. Before the plane landed, the pilot spoke to us."
+            },
+            {
+              "kind": "speech",
+              "text": "Like other English loans it takes -ఉ: పైలటు (pailaṭu). A woman pilot is also పైలటు (pailaṭu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పైలటు (pailaṭu) is a loan from English pilot, with the Telugu final -ఉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pailaṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pailaṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pailaṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pailaṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimānaṁ digē mundu pailaṭu mātō māṭlāḍāḍu. — Before the plane landed, the pilot spoke to us.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimānaṁ digē mundu pailaṭu mātō māṭlāḍāḍu.* — Before the plane landed, the pilot spoke to us.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to float away, then the Telugu for to be swept away, then say pailaṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to float away, then the Telugu for to be swept away, then say *pailaṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పైలటు (pailaṭu) mean? (\"A pilot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C454-antarjatiya",
+      "sequence": 22830,
+      "title": "అంతర్జాతీయ (antarjātīya) — international",
+      "headword": "అంతర్జాతీయ",
+      "romanization": "antarjātīya",
+      "gloss": "international",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3154af9843689c8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to be swept away, then the Telugu for a pilot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అంతర్జాతీయ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అంతర్జాతీయ — antarjātīya — \"international\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా నగరంలో కొత్త అంతర్జాతీయ విమానాశ్రయం ఉంది. mā nagaraṁlō kotta antarjātīya vimānāśrayaṁ undi. There is a new international airport in our city."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective: అంతర్జాతీయ (antarjātīya) విమానం, an international flight. It stands before its noun and does not change."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అంతర్జాతీయ (antarjātīya) is a learned word built from Sanskrit: antar, \"between\", jāti, \"birth, a people, a nation\", and the adjective ending -īya (Monier-Williams): between the nations."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antarjātīya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antarjātīya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antarjātīya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antarjātīya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā nagaraṁlō kotta antarjātīya vimānāśrayaṁ undi. — There is a new international airport in our city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā nagaraṁlō kotta antarjātīya vimānāśrayaṁ undi.* — There is a new international airport in our city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to be swept away, then the Telugu for a pilot, then say antarjātīya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to be swept away, then the Telugu for a pilot, then say *antarjātīya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అంతర్జాతీయ (antarjātīya) mean? (\"International\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C454-svadesam",
+      "sequence": 22840,
+      "title": "స్వదేశం (svadēśaṁ) — one's homeland",
+      "headword": "స్వదేశం",
+      "romanization": "svadēśaṁ",
+      "gloss": "one's homeland",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ef5646faf9a6aeb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a pilot, then the Telugu for international."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: స్వదేశం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్వదేశం — svadēśaṁ — \"one's homeland\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చాలా సంవత్సరాల తరువాత అతను స్వదేశానికి తిరిగి వచ్చాడు. cālā saṁvatsarāla taruvāta atanu svadēśāniki tirigi vaccāḍu. After many years he came back to his homeland."
+            },
+            {
+              "kind": "speech",
+              "text": "స్వ, own, + దేశం, country. Its opposite is విదేశం, abroad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్వదేశం (svadēśaṁ) is borrowed from Sanskrit svadeśa, \"one's own place or country\" (Monier-Williams), from sva, \"own\", and deśa, \"a place, a country\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svadēśaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svadēśaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svadēśaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svadēśaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālā saṁvatsarāla taruvāta atanu svadēśāniki tirigi vaccāḍu. — After many years he came back to his homeland.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālā saṁvatsarāla taruvāta atanu svadēśāniki tirigi vaccāḍu.* — After many years he came back to his homeland.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a pilot, then the Telugu for international, then say svadēśaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a pilot, then the Telugu for international, then say *svadēśaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does స్వదేశం (svadēśaṁ) mean? (\"One's homeland\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C454-ravana",
+      "sequence": 22850,
+      "title": "రవాణా (ravāṇā) — transport",
+      "headword": "రవాణా",
+      "romanization": "ravāṇā",
+      "gloss": "transport",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:031473f1a76efca3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for international, then the Telugu for one's homeland."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: రవాణా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రవాణా — ravāṇā — \"transport\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నగరంలో ప్రజా రవాణా బాగుంది. nagaraṁlō prajā ravāṇā bāgundi. Public transport in the city is good."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రజా రవాణా (ravāṇā), public transport; సరుకు రవాణా (ravāṇā), the carrying of goods."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రవాణా (ravāṇā) is usually traced to Persian ravāna, \"setting out, dispatched\", which came into Telugu through Hindustani; sending goods on their way became transport."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ravāṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ravāṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ravāṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ravāṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagaraṁlō prajā ravāṇā bāgundi. — Public transport in the city is good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagaraṁlō prajā ravāṇā bāgundi.* — Public transport in the city is good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for international, then the Telugu for one's homeland, then say ravāṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for international, then the Telugu for one's homeland, then say *ravāṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does రవాణా (ravāṇā) mean? (\"Transport\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C454-saganampu",
+      "sequence": 22860,
+      "title": "సాగనంపు (sāganampu) — to see off",
+      "headword": "సాగనంపు",
+      "romanization": "sāganampu",
+      "gloss": "to see off",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:165ad55d1ca41b17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for one's homeland, then the Telugu for transport."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సాగనంపు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సాగనంపు — sāganampu — \"to see off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మేము అత్తను విమానాశ్రయంలో సాగనంపాం. mēmu attanu vimānāśrayaṁlō sāganampāṁ. We saw our aunt off at the airport."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): సాగనంపాను, sāganampānu."
+            },
+            {
+              "kind": "speech",
+              "text": "సాగను, to go on, + అంపు, to send: to send someone on their way. Telugu families often go to the station to see a guest off."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సాగనంపు (sāganampu) is native Dravidian: సాగను, from సాగు, \"to go on, to proceed\" (DEDR 2430), and అంపు, \"to send\" (DEDR 329)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāganampu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāganampu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāganampu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāganampu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēmu attanu vimānāśrayaṁlō sāganampāṁ. — We saw our aunt off at the airport.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēmu attanu vimānāśrayaṁlō sāganampāṁ.* — We saw our aunt off at the airport.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for one's homeland, then the Telugu for transport, then say sāganampu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for one's homeland, then the Telugu for transport, then say *sāganampu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సాగనంపు (sāganampu) mean? (\"To see off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

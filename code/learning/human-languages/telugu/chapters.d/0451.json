@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "Old Ways of Getting About",
+  "label": "ch:te-old-ways-of-getting-about",
+  "canDo": "I can say a rickshaw, a bullock cart, a handcart, going on foot and a wayfarer.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C451-batasari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can say a rickshaw, a bullock cart, a handcart, going on foot and a wayfarer.",
+    "assesses": [
+      "TE-LEX-C451-RIKSHA451-03",
+      "TE-LEX-C451-RIKSHA451-04",
+      "TE-LEX-C451-RIKSHA451-05"
+    ]
+  }
+}

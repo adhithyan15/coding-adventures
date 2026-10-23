@@ -1,0 +1,11 @@
+{
+  "id": "TE-C419-minahayimpu",
+  "pathSegment": "TE-PATH-419-KAKAPOTE419",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-419-KAKAPOTE419",
+      "order": 2
+    }
+  ]
+}

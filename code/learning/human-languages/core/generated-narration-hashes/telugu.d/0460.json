@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:16ac1eeaa15ff63c",
+  "lessonIds": [
+    "TE-C460-asaukaryam",
+    "TE-C460-ibbandi",
+    "TE-C460-vakabu-ceyu",
+    "TE-C460-vapasu",
+    "TE-C460-saricusuko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch460.txt",
+  "json": "telugu/narration/ch460.json",
+  "textHash": "fnv1a64:ee5e1eee9788ae5a",
+  "jsonHash": "fnv1a64:92c441949c6f23d0",
+  "findings": []
+}

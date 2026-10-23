@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "Sighs and Letdowns",
+  "label": "ch:te-sighs-and-letdowns",
+  "canDo": "I can say that I sighed, was disappointed or longed for something.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C502-krsincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can say that I sighed, was disappointed or longed for something.",
+    "assesses": [
+      "TE-LEX-C502-NIRASA502-03",
+      "TE-LEX-C502-NIRASA502-04",
+      "TE-LEX-C502-NIRASA502-05"
+    ]
+  }
+}

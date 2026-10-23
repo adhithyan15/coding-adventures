@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-443-VAHANAM443",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TE-EXT-443-VAHANAM443"
+  ],
+  "after": []
+}

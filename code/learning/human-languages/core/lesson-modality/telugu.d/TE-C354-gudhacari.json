@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C354-gudhacari",
+    "language": "telugu",
+    "chapter": 354,
+    "sequence": 17470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a6a6fbeaafdf3d9"
+  },
+  "findings": []
+}

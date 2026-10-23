@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C353-adrsyam",
+    "language": "telugu",
+    "chapter": 353,
+    "sequence": 17380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60f77bd97808056d"
+  },
+  "findings": []
+}

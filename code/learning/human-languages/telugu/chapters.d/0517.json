@@ -1,0 +1,21 @@
+{
+  "chapter": 517,
+  "title": "Symptoms",
+  "label": "ch:te-symptoms",
+  "canDo": "I can describe symptoms such as dizziness, breathlessness and joint pain.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-R517-review-510-517",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can describe symptoms such as dizziness, breathlessness and joint pain.",
+    "assesses": [
+      "TE-LEX-C517-LAKSANAM517-01",
+      "TE-LEX-C517-LAKSANAM517-02",
+      "TE-LEX-C517-LAKSANAM517-03",
+      "TE-LEX-C517-LAKSANAM517-04",
+      "TE-LEX-C517-LAKSANAM517-05"
+    ]
+  }
+}

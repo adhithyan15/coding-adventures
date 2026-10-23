@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:9c39d757d75e5c9b",
+  "lessonIds": [
+    "TE-C536-vanabhojanam",
+    "TE-C536-kalaksepam",
+    "TE-C536-totapani",
+    "TE-C536-allika",
+    "TE-C536-pekata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch536.txt",
+  "json": "telugu/narration/ch536.json",
+  "textHash": "fnv1a64:178b2ddb06e7fc45",
+  "jsonHash": "fnv1a64:07d95ca264620f03",
+  "findings": []
+}

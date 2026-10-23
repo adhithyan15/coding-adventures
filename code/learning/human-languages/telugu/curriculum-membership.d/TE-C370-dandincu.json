@@ -1,0 +1,11 @@
+{
+  "id": "TE-C370-dandincu",
+  "pathSegment": "TE-PATH-370-GATHA370",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-370-GATHA370",
+      "order": 4
+    }
+  ]
+}

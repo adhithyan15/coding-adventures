@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "Giving Reasons",
+  "label": "ch:te-giving-reasons",
+  "canDo": "I can say so, therefore and in view of.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C395-pratipadika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can say so, therefore and in view of.",
+    "assesses": [
+      "TE-LEX-C395-KANUKA395-03",
+      "TE-LEX-C395-KANUKA395-04",
+      "TE-LEX-C395-KANUKA395-05"
+    ]
+  }
+}

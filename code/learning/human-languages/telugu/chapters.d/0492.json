@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Mistakes and Mix-ups",
+  "label": "ch:te-mistakes-and-mix-ups",
+  "canDo": "I can say to be mistaken, to falter, to estimate, a false step and confusion.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C492-gandaragolam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can say to be mistaken, to falter, to estimate, a false step and confusion.",
+    "assesses": [
+      "TE-LEX-C492-PORABADU492-03",
+      "TE-LEX-C492-PORABADU492-04",
+      "TE-LEX-C492-PORABADU492-05"
+    ]
+  }
+}

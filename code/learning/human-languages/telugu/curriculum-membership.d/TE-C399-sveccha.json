@@ -1,0 +1,11 @@
+{
+  "id": "TE-C399-sveccha",
+  "pathSegment": "TE-PATH-399-KARTAVYAM399",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-399-KARTAVYAM399",
+      "order": 1
+    }
+  ]
+}

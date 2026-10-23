@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C372-kathamsam",
+    "language": "telugu",
+    "chapter": 372,
+    "sequence": 18360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c766430da3af6efc"
+  },
+  "findings": []
+}

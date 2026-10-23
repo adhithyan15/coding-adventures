@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C393-hanikaramaina",
+    "language": "telugu",
+    "chapter": 393,
+    "sequence": 19590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d13e6d2ed82dfac"
+  },
+  "findings": []
+}

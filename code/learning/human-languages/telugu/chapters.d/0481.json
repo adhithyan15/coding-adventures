@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Heat and Drought",
+  "label": "ch:te-heat-and-drought",
+  "canDo": "I can say a heatwave, a mirage, a dust storm, to dry up and to crack open.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C481-bitalu-varu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can say a heatwave, a mirage, a dust storm, to dry up and to crack open.",
+    "assesses": [
+      "TE-LEX-C481-VADAGALI481-03",
+      "TE-LEX-C481-VADAGALI481-04",
+      "TE-LEX-C481-VADAGALI481-05"
+    ]
+  }
+}

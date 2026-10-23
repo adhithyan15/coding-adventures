@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:26efb4219784b73e",
+  "lessonIds": [
+    "TE-C348-dopidi",
+    "TE-C348-dadi-ceyu",
+    "TE-C348-lakko",
+    "TE-C348-kapukacu",
+    "TE-C348-maruvesam"
+  ],
+  "tex": "telugu/book/chapters/ch348-robbers-on-the-road.tex"
+}

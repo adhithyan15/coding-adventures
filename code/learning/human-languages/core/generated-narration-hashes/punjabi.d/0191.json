@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:9c2b15dfa9e5c85a",
+  "lessonIds": [
+    "PA-C191-amount-return",
+    "PA-C191-ghatt",
+    "PA-C191-ghatt-review",
+    "PA-C191-paani-ghatt",
+    "PA-C191-samaa-ghatt",
+    "PA-C191-thaan-ghatt",
+    "PA-C191-payoff"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "punjabi/narration/ch191.txt",
+  "json": "punjabi/narration/ch191.json",
+  "textHash": "fnv1a64:b28ba4a3e17d7c61",
+  "jsonHash": "fnv1a64:e2006d670d505d53",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-541-NATAKAM541",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TE-EXT-541-NATAKAM541"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C492-ancana-veyu",
+    "language": "telugu",
+    "chapter": 492,
+    "sequence": 24780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8644258f4c28d4ca"
+  },
+  "findings": []
+}

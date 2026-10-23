@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:d858d2ba199003f9",
+  "lessonIds": [
+    "TE-C344-santapam",
+    "TE-C344-maranam",
+    "TE-C344-tudisvasa",
+    "TE-C344-antimayatra",
+    "TE-C344-antyakriyalu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch344.txt",
+  "json": "telugu/narration/ch344.json",
+  "textHash": "fnv1a64:2f84171106691b3e",
+  "jsonHash": "fnv1a64:026f6ce6ea7363f2",
+  "findings": []
+}

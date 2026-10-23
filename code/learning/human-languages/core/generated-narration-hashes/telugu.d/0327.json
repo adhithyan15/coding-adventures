@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:11e96621a26b757f",
+  "lessonIds": [
+    "TE-C327-okappudu",
+    "TE-C327-raju",
+    "TE-C327-rani",
+    "TE-C327-rajyam",
+    "TE-C327-elu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch327.txt",
+  "json": "telugu/narration/ch327.json",
+  "textHash": "fnv1a64:0e17f68f0a409982",
+  "jsonHash": "fnv1a64:39d1f5785169d77d",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C425-khararu-ceyu",
+  "pathSegment": "TE-PATH-425-NIRNAYAM425",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-425-NIRNAYAM425",
+      "order": 3
+    }
+  ]
+}

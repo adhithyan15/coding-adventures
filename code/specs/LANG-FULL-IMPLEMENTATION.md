@@ -32,6 +32,9 @@ finite variable-free real-arithmetic or exact tracked built-in-result leaves,
 including results over losslessly widened tracked integers, prove the same
 value over plain real bases. Exact variable-free built-in-result leaves may
 also participate; none of these forms requires a standard function in the base.
+The checked sign-rooted integer-reduction proof additionally accepts exact
+straight-line local integer snapshots as leaves while captured globals,
+by-name actuals, dynamic assignments, and reductions beyond `2^53` fail closed.
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
 boolean array through a rank-aware value formal with two non-unit lower bounds.

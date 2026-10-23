@@ -1,0 +1,11 @@
+{
+  "id": "TE-C454-pailatu",
+  "pathSegment": "TE-PATH-454-PAILATU454",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-454-PAILATU454",
+      "order": 0
+    }
+  ]
+}

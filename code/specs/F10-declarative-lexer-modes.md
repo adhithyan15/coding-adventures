@@ -404,6 +404,16 @@ A grammar with no `start_mode:` and no `transitions:`:
 Every existing `TokenGrammar { .. }` literal across all language ports must add the two
 empty defaults; until each grammar adopts a table, behavior is exactly as today.
 
+### Interaction with token-adjacency flags (F11)
+
+[F11](F11-grammar-token-adjacency-predicates.md) has the lexer record, on each
+emitted token, whether trivia (`TOKEN_PRECEDED_BY_SPACE`) and a line terminator
+(`TOKEN_PRECEDED_BY_NEWLINE`) preceded it. Those bits describe what was consumed
+*between* tokens, not which group consumed it, so a `set-mode`, `push` or `pop`
+neither sets nor clears them: the token after a mode switch is flagged from the
+trivia before it exactly as if no switch had happened. While skipping is
+disabled (`disable-skip`) nothing is consumed as trivia, so nothing is flagged.
+
 ## Implementation Order
 
 | Step | What | Commit |

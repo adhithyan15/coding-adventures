@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 547,
+  "title": "Housework",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4378aca88c9cd5f0",
+  "lessons": [
+    {
+      "id": "TE-C547-subhraparacu",
+      "sequence": 27710,
+      "title": "శుభ్రపరచు (śubhraparacu) — to cleanse; to clean",
+      "headword": "శుభ్రపరచు",
+      "romanization": "śubhraparacu",
+      "gloss": "to cleanse; to clean",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ee0b1a03fa4ad0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a small water pot, then the Telugu for a cockroach."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: శుభ్రపరచు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శుభ్రపరచు — śubhraparacu — \"to cleanse; to clean\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పండుగకు ముందు ఇల్లంతా శుభ్రపరిచాము. paṇḍugaku mundu illantā śubhraparicāmu. Before the festival we cleaned the whole house."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): శుభ్రపరిచాను, śubhraparicānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; శుభ్రం చేయు in speech."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శుభ్రపరచు (śubhraparacu) is built from శుభ్రం, \"clean\", from Sanskrit śubhra, \"bright, white\" (CDIAL 12539) and paracu, \"to cause, to make\", as in ఆశ్చర్యపరచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śubhraparacu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śubhraparacu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śubhraparacu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śubhraparacu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇḍugaku mundu illantā śubhraparicāmu. — Before the festival we cleaned the whole house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇḍugaku mundu illantā śubhraparicāmu.* — Before the festival we cleaned the whole house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a small water pot, then the Telugu for a cockroach, then say śubhraparacu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a small water pot, then the Telugu for a cockroach, then say *śubhraparacu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does శుభ్రపరచు (śubhraparacu) mean? (\"To cleanse; to clean\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C547-utuku",
+      "sequence": 27720,
+      "title": "ఉతుకు (utuku) — to wash clothes",
+      "headword": "ఉతుకు",
+      "romanization": "utuku",
+      "gloss": "to wash clothes",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6a9e755fbc31b25",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a cockroach, then the Telugu for to cleanse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఉతుకు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉతుకు — utuku — \"to wash clothes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆదివారం నేను బట్టలు ఉతుకుతాను. ādivāraṁ nēnu baṭṭalu utukutānu. On Sundays I wash the clothes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఉతికాను, utikānu."
+            },
+            {
+              "kind": "speech",
+              "text": "For clothes; కడుగు is for dishes, hands and floors."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉతుకు (utuku) is native Dravidian: DEDR 2667 lists Telugu utuku, \"to wash, as clothes\", with Kolami sutk-."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utuku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utuku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utuku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utuku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādivāraṁ nēnu baṭṭalu utukutānu. — On Sundays I wash the clothes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādivāraṁ nēnu baṭṭalu utukutānu.* — On Sundays I wash the clothes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a cockroach, then the Telugu for to cleanse, then say utuku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a cockroach, then the Telugu for to cleanse, then say *utuku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఉతుకు (utuku) mean? (\"To wash clothes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C547-araveyu",
+      "sequence": 27730,
+      "title": "ఆరవేయు (āravēyu) — to hang to dry; to put out to dry",
+      "headword": "ఆరవేయు",
+      "romanization": "āravēyu",
+      "gloss": "to hang to dry; to put out to dry",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e019d0e3d9968ec5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to cleanse, then the Telugu for to wash clothes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆరవేయు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆరవేయు — āravēyu — \"to hang to dry; to put out to dry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఉతికిన బట్టలను ఎండలో ఆరవేశాను. utikina baṭṭalanu eṇḍalō āravēśānu. I hung the washed clothes out in the sun to dry."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఆరవేశాను, āravēśānu."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆరు, to dry, + వేయు, to put."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆరవేయు (āravēyu) is native Dravidian: DEDR 404 lists Telugu āṟu, \"to cool; to dry, to become dry\"; vēyu, \"to put\", makes it something you do to the clothes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āravēyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āravēyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āravēyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āravēyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utikina baṭṭalanu eṇḍalō āravēśānu. — I hung the washed clothes out in the sun to dry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utikina baṭṭalanu eṇḍalō āravēśānu.* — I hung the washed clothes out in the sun to dry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to cleanse, then the Telugu for to wash clothes, then say āravēyu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to cleanse, then the Telugu for to wash clothes, then say *āravēyu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆరవేయు (āravēyu) mean? (\"To hang to dry; to put out to dry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C547-dulupu",
+      "sequence": 27740,
+      "title": "దులుపు (dulupu) — to shake out; to dust",
+      "headword": "దులుపు",
+      "romanization": "dulupu",
+      "gloss": "to shake out; to dust",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6959ae77efc10c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to wash clothes, then the Telugu for to hang to dry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దులుపు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దులుపు — dulupu — \"to shake out; to dust\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అమ్మ దుప్పట్లు దులిపి ఎండలో వేసింది. amma duppaṭlu dulipi eṇḍalō vēsindi. Mum shook out the blankets and put them in the sun."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): దులిపాను, dulipānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Shaking the dust off cloth or a mat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దులుపు (dulupu) is native Dravidian: DEDR 3359 lists Telugu dulupu, \"to shake so as to remove dust, to shake off\", in the article of Tamil tuḷaṅku, \"to move, to shake\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dulupu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dulupu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dulupu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dulupu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amma duppaṭlu dulipi eṇḍalō vēsindi. — Mum shook out the blankets and put them in the sun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amma duppaṭlu dulipi eṇḍalō vēsindi.* — Mum shook out the blankets and put them in the sun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to wash clothes, then the Telugu for to hang to dry, then say dulupu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to wash clothes, then the Telugu for to hang to dry, then say *dulupu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దులుపు (dulupu) mean? (\"To shake out; to dust\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C547-tagilincu",
+      "sequence": 27750,
+      "title": "తగిలించు (tagiliñcu) — to hang up; to hook on",
+      "headword": "తగిలించు",
+      "romanization": "tagiliñcu",
+      "gloss": "to hang up; to hook on",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c98951d67acd9695",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to hang to dry, then the Telugu for to shake out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తగిలించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తగిలించు — tagiliñcu — \"to hang up; to hook on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను చొక్కాను మేకుకు తగిలించాడు. atanu cokkānu mēkuku tagiliñcāḍu. He hung his shirt on a nail."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): తగిలించాను, tagiliñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "-కి తగిలించు (tagiliñcu), to hang on a peg or a nail."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తగిలించు (tagiliñcu) is native Dravidian: DEDR 3004 lists Telugu tagulu, \"to touch, to catch\", and tagilincu, \"to cause to touch, to catch or to stick\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tagiliñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tagiliñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tagiliñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tagiliñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu cokkānu mēkuku tagiliñcāḍu. — He hung his shirt on a nail.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu cokkānu mēkuku tagiliñcāḍu.* — He hung his shirt on a nail.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to hang to dry, then the Telugu for to shake out, then say tagiliñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to hang to dry, then the Telugu for to shake out, then say *tagiliñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తగిలించు (tagiliñcu) mean? (\"To hang up; to hook on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C544-neggu",
+  "pathSegment": "TE-PATH-544-KRIDA544",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-544-KRIDA544",
+      "order": 3
+    }
+  ]
+}

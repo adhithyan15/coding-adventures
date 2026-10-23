@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:e41b1c1abbfca4a0",
+  "lessonIds": [
+    "TE-C457-vasati",
+    "TE-C457-satram",
+    "TE-C457-risepsanu",
+    "TE-C457-liphtu",
+    "TE-C457-basa-ceyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch457.txt",
+  "json": "telugu/narration/ch457.json",
+  "textHash": "fnv1a64:cfd05cb4538d91b7",
+  "jsonHash": "fnv1a64:990987e9badc93fc",
+  "findings": []
+}

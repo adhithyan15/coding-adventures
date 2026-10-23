@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C362-talavancu",
+    "language": "telugu",
+    "chapter": 362,
+    "sequence": 17860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bae2137e96fc544f"
+  },
+  "findings": []
+}

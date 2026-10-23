@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 504,
+  "title": "Admiration and Praise",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:26f3e33aa73d9b51",
+  "lessons": [
+    {
+      "id": "TE-C504-aradhincu",
+      "sequence": 25510,
+      "title": "ఆరాధించు (ārādhiñcu) — to adore; to worship",
+      "headword": "ఆరాధించు",
+      "romanization": "ārādhiñcu",
+      "gloss": "to adore; to worship",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a12c515fc3444989",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to fondle, then the Telugu for fondness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆరాధించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆరాధించు — ārādhiñcu — \"to adore; to worship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ అమ్మాయి తన అక్కను ఆరాధిస్తుంది. ā ammāyi tana akkanu ārādhistundi. That girl adores her elder sister."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఆరాధించాను, ārādhiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is ఆరాధన, adoration."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆరాధించు (ārādhiñcu) is built on Sanskrit ārādhana, \"worship\" (CDIAL 1316), the noun of ārādhayati, \"to win over\", with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārādhiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārādhiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārādhiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārādhiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā ammāyi tana akkanu ārādhistundi. — That girl adores her elder sister.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā ammāyi tana akkanu ārādhistundi.* — That girl adores her elder sister.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to fondle, then the Telugu for fondness, then say ārādhiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to fondle, then the Telugu for fondness, then say *ārādhiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆరాధించు (ārādhiñcu) mean? (\"To adore; to worship\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C504-abhimanincu",
+      "sequence": 25520,
+      "title": "అభిమానించు (abhimāniñcu) — to admire; to be fond of",
+      "headword": "అభిమానించు",
+      "romanization": "abhimāniñcu",
+      "gloss": "to admire; to be fond of",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6399ac483044b9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for fondness, then the Telugu for to adore."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అభిమానించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అభిమానించు — abhimāniñcu — \"to admire; to be fond of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ డాక్టరును అందరూ అభిమానిస్తారు. ā ḍākṭarunu andarū abhimānistāru. Everyone admires that doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): అభిమానించాను, abhimāniñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb of అభిమానం, regard."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అభిమానించు (abhimāniñcu) is built on అభిమానం, from Sanskrit abhimāna (CDIAL 524), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhimāniñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhimāniñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhimāniñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhimāniñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā ḍākṭarunu andarū abhimānistāru. — Everyone admires that doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā ḍākṭarunu andarū abhimānistāru.* — Everyone admires that doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for fondness, then the Telugu for to adore, then say abhimāniñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for fondness, then the Telugu for to adore, then say *abhimāniñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అభిమానించు (abhimāniñcu) mean? (\"To admire; to be fond of\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C504-abhimani",
+      "sequence": 25530,
+      "title": "అభిమాని (abhimāni) — an admirer; a fan",
+      "headword": "అభిమాని",
+      "romanization": "abhimāni",
+      "gloss": "an admirer; a fan",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ee3a33b8a9bcdd3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to adore, then the Telugu for to admire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అభిమాని",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అభిమాని — abhimāni — \"an admirer; a fan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నా తమ్ముడు ఆ ఆటగాడికి పెద్ద అభిమాని. nā tammuḍu ā āṭagāḍiki pedda abhimāni. My younger brother is a big fan of that player."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: అభిమానులు, abhimānulu."
+            },
+            {
+              "kind": "speech",
+              "text": "-కి అభిమాని (abhimāni), a fan of."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అభిమాని (abhimāni) is borrowed from Sanskrit abhimānin, built on abhimāna (CDIAL 524): one who holds someone in high regard."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhimāni",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhimāni*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhimāni, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhimāni*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nā tammuḍu ā āṭagāḍiki pedda abhimāni. — My younger brother is a big fan of that player.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nā tammuḍu ā āṭagāḍiki pedda abhimāni.* — My younger brother is a big fan of that player.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to adore, then the Telugu for to admire, then say abhimāni again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to adore, then the Telugu for to admire, then say *abhimāni* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అభిమాని (abhimāni) mean? (\"An admirer; a fan\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C504-meccuko",
+      "sequence": 25540,
+      "title": "మెచ్చుకో (meccukō) — to appreciate; to praise",
+      "headword": "మెచ్చుకో",
+      "romanization": "meccukō",
+      "gloss": "to appreciate; to praise",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccc192bc6d1d6d42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to admire, then the Telugu for an admirer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మెచ్చుకో",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మెచ్చుకో — meccukō — \"to appreciate; to praise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నాన్న నా బొమ్మను మెచ్చుకున్నారు. nānna nā bommanu meccukunnāru. Dad praised my picture."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): మెచ్చుకున్నాను, meccukunnānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Warmer than పొగడు, which can be flattery: మెచ్చుకో (meccukō) is honest praise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మెచ్చుకో (meccukō) is native Dravidian: DEDR 4722 lists Telugu meccu, \"to admire, to praise, to approve\", in the article of Tamil maruvu; -కో is the reflexive ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meccukō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meccukō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meccukō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meccukō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānna nā bommanu meccukunnāru. — Dad praised my picture.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānna nā bommanu meccukunnāru.* — Dad praised my picture.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to admire, then the Telugu for an admirer, then say meccukō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to admire, then the Telugu for an admirer, then say *meccukō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మెచ్చుకో (meccukō) mean? (\"To appreciate; to praise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C504-prasamsa",
+      "sequence": 25550,
+      "title": "ప్రశంస (praśaṁsa) — acclaim; praise",
+      "headword": "ప్రశంస",
+      "romanization": "praśaṁsa",
+      "gloss": "acclaim; praise",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6f1edb4ba4a33db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an admirer, then the Telugu for to appreciate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రశంస",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రశంస — praśaṁsa — \"acclaim; praise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ సినిమాకు చాలా ప్రశంసలు వచ్చాయి. ā sinimāku cālā praśaṁsalu vaccāyi. That film won a lot of acclaim."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ప్రశంసలు, praśaṁsalu."
+            },
+            {
+              "kind": "speech",
+              "text": "Often plural: ప్రశంసలు అందుకో, to receive praise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రశంస (praśaṁsa) is borrowed from Sanskrit praśaṁsā, \"praise, commendation, fame\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praśaṁsa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praśaṁsa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praśaṁsa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praśaṁsa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā sinimāku cālā praśaṁsalu vaccāyi. — That film won a lot of acclaim.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā sinimāku cālā praśaṁsalu vaccāyi.* — That film won a lot of acclaim.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an admirer, then the Telugu for to appreciate, then say praśaṁsa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an admirer, then the Telugu for to appreciate, then say *praśaṁsa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రశంస (praśaṁsa) mean? (\"Acclaim; praise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

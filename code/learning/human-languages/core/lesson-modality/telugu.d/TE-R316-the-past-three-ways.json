@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R316-the-past-three-ways",
+    "language": "telugu",
+    "chapter": 316,
+    "sequence": 15230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e0b8d8746778f3f"
+  },
+  "findings": []
+}

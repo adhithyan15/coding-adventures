@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:876f1cf7dc3bdf08",
+  "lessonIds": [
+    "TE-C476-sitosnasthiti",
+    "TE-C476-usnograta",
+    "TE-C476-tema",
+    "TE-C476-ukkapota",
+    "TE-C476-vedekku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch476.txt",
+  "json": "telugu/narration/ch476.json",
+  "textHash": "fnv1a64:5c61077f1bf48a36",
+  "jsonHash": "fnv1a64:ee94ae039bbeef4d",
+  "findings": []
+}

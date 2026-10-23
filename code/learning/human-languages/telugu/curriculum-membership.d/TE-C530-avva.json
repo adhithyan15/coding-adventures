@@ -1,0 +1,11 @@
+{
+  "id": "TE-C530-avva",
+  "pathSegment": "TE-PATH-530-BANDHUVU530",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-530-BANDHUVU530",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:04ee27d05fdf0591",
+  "lessonIds": [
+    "TE-C374-vyakhyanam",
+    "TE-C374-vyakhyata",
+    "TE-C374-srota",
+    "TE-C374-tilakincu",
+    "TE-C374-mukhamukhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch374.txt",
+  "json": "telugu/narration/ch374.json",
+  "textHash": "fnv1a64:cb150a002aae9526",
+  "jsonHash": "fnv1a64:913cb29f179a35a9",
+  "findings": []
+}

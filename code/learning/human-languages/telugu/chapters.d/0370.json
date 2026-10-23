@@ -1,0 +1,19 @@
+{
+  "chapter": 370,
+  "title": "Legends",
+  "label": "ch:te-legends",
+  "canDo": "I can say a legend, a tale, fame, to extol and to chastise.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C370-dandincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can say a legend, a tale, fame, to extol and to chastise.",
+    "assesses": [
+      "TE-LEX-C370-GATHA370-03",
+      "TE-LEX-C370-GATHA370-04",
+      "TE-LEX-C370-GATHA370-05"
+    ]
+  }
+}

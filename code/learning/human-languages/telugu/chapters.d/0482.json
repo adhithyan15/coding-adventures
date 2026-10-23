@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "Cold Weather",
+  "label": "ch:te-cold-weather",
+  "canDo": "I can say hailstones, ice, snowfall, a breeze and to cool down.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C482-callabadu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can say hailstones, ice, snowfall, a breeze and to cool down.",
+    "assesses": [
+      "TE-LEX-C482-HIMAPATAM482-03",
+      "TE-LEX-C482-HIMAPATAM482-04",
+      "TE-LEX-C482-HIMAPATAM482-05"
+    ]
+  }
+}

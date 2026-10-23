@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "Wholesale and Stock",
+  "label": "ch:te-wholesale-and-stock",
+  "canDo": "I can say wholesale, a stock, a storehouse, a shortage and an auction.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C488-velam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can say wholesale, a stock, a storehouse, a shortage and an auction.",
+    "assesses": [
+      "TE-LEX-C488-TOKU488-03",
+      "TE-LEX-C488-TOKU488-04",
+      "TE-LEX-C488-TOKU488-05"
+    ]
+  }
+}

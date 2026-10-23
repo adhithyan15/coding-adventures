@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:6086c92142d1471d",
+  "lessonIds": [
+    "TE-C491-arigipovu",
+    "TE-C491-bujupattu",
+    "TE-C491-velisipovu",
+    "TE-C491-pagilipovu",
+    "TE-C491-ksinincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch491.txt",
+  "json": "telugu/narration/ch491.json",
+  "textHash": "fnv1a64:34476f759941b297",
+  "jsonHash": "fnv1a64:0de7d74ba9dcebd8",
+  "findings": []
+}

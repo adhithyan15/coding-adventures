@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:7748357b9a471065",
+  "lessonIds": [
+    "TE-C425-nirnayam",
+    "TE-C425-tirmanam",
+    "TE-C425-telcu",
+    "TE-C425-khararu-ceyu",
+    "TE-C425-punaralocincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch425.txt",
+  "json": "telugu/narration/ch425.json",
+  "textHash": "fnv1a64:64885c57dcb0be82",
+  "jsonHash": "fnv1a64:8c35da1089e3d689",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C375-nivedincu",
+    "language": "telugu",
+    "chapter": 375,
+    "sequence": 18540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52ab1c8b9c7cc17d"
+  },
+  "findings": []
+}

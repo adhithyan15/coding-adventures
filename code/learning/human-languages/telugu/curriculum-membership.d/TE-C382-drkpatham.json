@@ -1,0 +1,11 @@
+{
+  "id": "TE-C382-drkpatham",
+  "pathSegment": "TE-PATH-382-ALOCANA382",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-382-ALOCANA382",
+      "order": 1
+    }
+  ]
+}

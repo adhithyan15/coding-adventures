@@ -1,9 +1,10 @@
 # x509-name-constraints
 
-`x509-name-constraints` is the first bounded, allocation-free structural
-decoder for the optional NameConstraints bytes retained by the reviewed Web
-PKI root snapshot. Those bytes are the contents of the RFC 5280
-`NameConstraints` SEQUENCE.
+`x509-name-constraints` is a bounded, allocation-free structural decoder for
+RFC 5280 NameConstraints. It accepts either the optional SEQUENCE contents
+retained by the reviewed Web PKI root snapshot or one exact complete DER
+SEQUENCE carried by a certificate extension. The public
+`NAME_CONSTRAINTS_OID` identifies `id-ce-nameConstraints` (`2.5.29.30`).
 
 The current subset accepts one exact `permittedSubtrees [0]` field containing
 one or more dNSName GeneralSubtree sequences. It retains arbitrary non-empty
@@ -23,7 +24,7 @@ allocation-free, caps presented names at 256, validates all constraints before
 matching, and uses strict ASCII label, leading-dot, and complete-leftmost-label
 wildcard rules with case-insensitive label-boundary comparison.
 
-Successful evaluation proves only that supplied strings satisfy the decoded
+Successful decoding or evaluation proves only that supplied strings satisfy the decoded
 permitted DNS subtree set. It does not extract names from a certificate, bind
 the result to exact certificate or selected-anchor evidence, evaluate excluded
 or non-DNS subtrees, construct or validate a path, grant trust, check

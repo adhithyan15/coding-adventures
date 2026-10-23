@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Living Together",
+  "label": "ch:te-living-together",
+  "canDo": "I can talk about violence, harmony, unity and solidarity.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C409-acarincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can talk about violence, harmony, unity and solidarity.",
+    "assesses": [
+      "TE-LEX-C409-AIKYATA409-03",
+      "TE-LEX-C409-AIKYATA409-04",
+      "TE-LEX-C409-AIKYATA409-05"
+    ]
+  }
+}

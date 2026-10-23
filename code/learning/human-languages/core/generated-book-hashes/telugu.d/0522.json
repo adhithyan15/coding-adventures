@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:5747222c3bd63524",
+  "lessonIds": [
+    "TE-C522-vrtti",
+    "TE-C522-hoda",
+    "TE-C522-padavi",
+    "TE-C522-padonnati",
+    "TE-C522-asayam"
+  ],
+  "tex": "telugu/book/chapters/ch522-a-profession.tex"
+}

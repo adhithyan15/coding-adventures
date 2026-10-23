@@ -1,0 +1,11 @@
+{
+  "id": "TE-C496-kungipovu",
+  "pathSegment": "TE-PATH-496-BADHA496",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-496-BADHA496",
+      "order": 2
+    }
+  ]
+}

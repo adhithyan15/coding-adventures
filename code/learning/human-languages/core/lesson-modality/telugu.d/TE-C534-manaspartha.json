@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C534-manaspartha",
+    "language": "telugu",
+    "chapter": 534,
+    "sequence": 27090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91cd5f47b3a15a72"
+  },
+  "findings": []
+}

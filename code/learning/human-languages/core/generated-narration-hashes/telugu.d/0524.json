@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:2dc2d68e2aa63e50",
+  "lessonIds": [
+    "TE-C524-pratibha",
+    "TE-C524-pravinyam",
+    "TE-C524-panitanam",
+    "TE-C524-nerpari",
+    "TE-C524-corava"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch524.txt",
+  "json": "telugu/narration/ch524.json",
+  "textHash": "fnv1a64:dae107144a7dae61",
+  "jsonHash": "fnv1a64:9c25c6f576e2bf28",
+  "findings": []
+}

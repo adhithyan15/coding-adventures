@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 515,
+  "title": "Inside the Body",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4c61af0f9a7aab87",
+  "lessons": [
+    {
+      "id": "TE-C515-medadu",
+      "sequence": 26070,
+      "title": "మెదడు (medaḍu) — the brain",
+      "headword": "మెదడు",
+      "romanization": "medaḍu",
+      "gloss": "the brain",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e124e53a711b920c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to groan, then the Telugu for to faint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మెదడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మెదడు — medaḍu — \"the brain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మెదడు శరీరాన్ని నడిపిస్తుంది. medaḍu śarīrānni naḍipistundi. The brain runs the body."
+            },
+            {
+              "kind": "speech",
+              "text": "Also your wits: మెదడు (medaḍu) వాడు, to use your head."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మెదడు (medaḍu) is native Dravidian: DEDR 5062 lists Telugu medaḍu, \"brain\", with Kannada meduḷ and Kota medl."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "medaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *medaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "medaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *medaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "medaḍu śarīrānni naḍipistundi. — The brain runs the body.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *medaḍu śarīrānni naḍipistundi.* — The brain runs the body.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to groan, then the Telugu for to faint, then say medaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to groan, then the Telugu for to faint, then say *medaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మెదడు (medaḍu) mean? (\"The brain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C515-naram",
+      "sequence": 26080,
+      "title": "నరం (naraṁ) — a nerve; a vein",
+      "headword": "నరం",
+      "romanization": "naraṁ",
+      "gloss": "a nerve; a vein",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:820b548a31c46608",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to faint, then the Telugu for the brain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నరం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నరం — naraṁ — \"a nerve; a vein\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నర్సు నా చేతి నరంలో సూది వేసింది. narsu nā cēti naraṁlō sūdi vēsindi. The nurse put the needle into a vein in my arm."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: నరాలు, narālu."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: నరాలు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నరం (naraṁ) is native Dravidian: DEDR 2903 lists Telugu naramu, \"vein, artery, nerve, tendon\", with Tamil narampu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "narsu nā cēti naraṁlō sūdi vēsindi. — The nurse put the needle into a vein in my arm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *narsu nā cēti naraṁlō sūdi vēsindi.* — The nurse put the needle into a vein in my arm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to faint, then the Telugu for the brain, then say naraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to faint, then the Telugu for the brain, then say *naraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నరం (naraṁ) mean? (\"A nerve; a vein\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C515-kaleyam",
+      "sequence": 26090,
+      "title": "కాలేయం (kālēyaṁ) — the liver",
+      "headword": "కాలేయం",
+      "romanization": "kālēyaṁ",
+      "gloss": "the liver",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db0db230298d4f10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for the brain, then the Telugu for a nerve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కాలేయం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కాలేయం — kālēyaṁ — \"the liver\"."
+            },
+            {
+              "kind": "speech",
+              "text": "డాక్టరు నా కాలేయాన్ని పరీక్షించారు. ḍākṭaru nā kālēyānni parīkṣiñcāru. The doctor examined my liver."
+            },
+            {
+              "kind": "speech",
+              "text": "A -ం noun takes -ా- before an ending: కాలేయానికి, కాలేయాన్ని."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కాలేయం (kālēyaṁ) is borrowed from Sanskrit kāleya, \"the liver\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālēyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālēyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālēyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālēyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākṭaru nā kālēyānni parīkṣiñcāru. — The doctor examined my liver.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākṭaru nā kālēyānni parīkṣiñcāru.* — The doctor examined my liver.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for the brain, then the Telugu for a nerve, then say kālēyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for the brain, then the Telugu for a nerve, then say *kālēyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కాలేయం (kālēyaṁ) mean? (\"The liver\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C515-vennemuka",
+      "sequence": 26100,
+      "title": "వెన్నెముక (vennemuka) — the spine; the backbone",
+      "headword": "వెన్నెముక",
+      "romanization": "vennemuka",
+      "gloss": "the spine; the backbone",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc0d58ae030650c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a nerve, then the Telugu for the liver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వెన్నెముక",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెన్నెముక — vennemuka — \"the spine; the backbone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పడిపోవడంతో తాతయ్య వెన్నెముకకు దెబ్బ తగిలింది. paḍipōvaḍantō tātayya vennemukaku debba tagilindi. Grandpa hurt his spine in a fall."
+            },
+            {
+              "kind": "speech",
+              "text": "వెన్ను, back, + ఎముక, bone. As in English, it also means the mainstay."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెన్నెముక (vennemuka) is native Dravidian: vennu, \"the back\" (DEDR 5488), and emuka, \"bone\", which DEDR 839 lists with Tamil elumpu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vennemuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vennemuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vennemuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vennemuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḍipōvaḍantō tātayya vennemukaku debba tagilindi. — Grandpa hurt his spine in a fall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḍipōvaḍantō tātayya vennemukaku debba tagilindi.* — Grandpa hurt his spine in a fall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a nerve, then the Telugu for the liver, then say vennemuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a nerve, then the Telugu for the liver, then say *vennemuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వెన్నెముక (vennemuka) mean? (\"The spine; the backbone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C515-svasa",
+      "sequence": 26110,
+      "title": "శ్వాస (śvāsa) — breath; breathing",
+      "headword": "శ్వాస",
+      "romanization": "śvāsa",
+      "gloss": "breath; breathing",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f7de43ff217c88d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for the liver, then the Telugu for the spine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: శ్వాస",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శ్వాస — śvāsa — \"breath; breathing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "లోతుగా శ్వాస తీసుకుంటే మనసు ప్రశాంతంగా ఉంటుంది. lōtugā śvāsa tīsukuṇṭē manasu praśāntaṅgā uṇṭundi. If you breathe deeply, the mind is calm."
+            },
+            {
+              "kind": "speech",
+              "text": "శ్వాస (śvāsa) తీసుకో, to take a breath."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శ్వాస (śvāsa) is borrowed from Sanskrit śvāsa, \"breath, breathing\" (CDIAL 12769)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śvāsa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śvāsa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śvāsa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śvāsa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lōtugā śvāsa tīsukuṇṭē manasu praśāntaṅgā uṇṭundi. — If you breathe deeply, the mind is calm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lōtugā śvāsa tīsukuṇṭē manasu praśāntaṅgā uṇṭundi.* — If you breathe deeply, the mind is calm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for the liver, then the Telugu for the spine, then say śvāsa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for the liver, then the Telugu for the spine, then say *śvāsa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does శ్వాస (śvāsa) mean? (\"Breath; breathing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

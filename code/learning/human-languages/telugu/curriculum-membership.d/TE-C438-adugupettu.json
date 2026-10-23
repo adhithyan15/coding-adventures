@@ -1,0 +1,11 @@
+{
+  "id": "TE-C438-adugupettu",
+  "pathSegment": "TE-PATH-438-PRAYANAM438",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-438-PRAYANAM438",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C326-dongilincu",
+  "pathSegment": "TE-PATH-326-SANGHATANA326",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-326-SANGHATANA326",
+      "order": 3
+    }
+  ]
+}

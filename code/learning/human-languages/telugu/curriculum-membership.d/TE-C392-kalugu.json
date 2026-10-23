@@ -1,0 +1,11 @@
+{
+  "id": "TE-C392-kalugu",
+  "pathSegment": "TE-PATH-392-MULAM392",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-392-MULAM392",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C347-kanuka",
+  "pathSegment": "TE-PATH-347-VINDU347",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-347-VINDU347",
+      "order": 1
+    }
+  ]
+}

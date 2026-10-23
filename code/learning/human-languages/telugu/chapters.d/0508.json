@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "Stubborn or Brave",
+  "label": "ch:te-stubborn-or-brave",
+  "canDo": "I can say that someone is cheeky, stubborn, determined, bold or timid.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C508-piriki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can say that someone is cheeky, stubborn, determined, bold or timid.",
+    "assesses": [
+      "TE-LEX-C508-DHAIRYAM508-03",
+      "TE-LEX-C508-DHAIRYAM508-04",
+      "TE-LEX-C508-DHAIRYAM508-05"
+    ]
+  }
+}

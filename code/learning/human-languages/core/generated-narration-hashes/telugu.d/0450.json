@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:3f2b11668025eb6b",
+  "lessonIds": [
+    "TE-C450-parkingu",
+    "TE-C450-nilupu",
+    "TE-C450-ekkincu",
+    "TE-C450-dincu",
+    "TE-C450-digabettu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch450.txt",
+  "json": "telugu/narration/ch450.json",
+  "textHash": "fnv1a64:3eb94e2fe1883dad",
+  "jsonHash": "fnv1a64:78d96648255effcf",
+  "findings": []
+}

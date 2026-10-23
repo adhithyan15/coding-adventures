@@ -1,0 +1,11 @@
+{
+  "id": "TE-C367-puratana",
+  "pathSegment": "TE-PATH-367-TAVVAKALU367",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-367-TAVVAKALU367",
+      "order": 1
+    }
+  ]
+}

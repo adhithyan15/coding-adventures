@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:1b6c1aa19f533eed",
+  "lessonIds": [
+    "TE-C410-seva",
+    "TE-C410-viralam",
+    "TE-C410-svacchanda",
+    "TE-C410-karyakarta",
+    "TE-C410-data"
+  ],
+  "tex": "telugu/book/chapters/ch410-giving-and-serving.tex"
+}

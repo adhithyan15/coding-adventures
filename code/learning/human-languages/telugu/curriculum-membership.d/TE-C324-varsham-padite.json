@@ -1,0 +1,11 @@
+{
+  "id": "TE-C324-varsham-padite",
+  "pathSegment": "TE-PATH-324-IF-REAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-324-IF-REAL",
+      "order": 1
+    }
+  ]
+}

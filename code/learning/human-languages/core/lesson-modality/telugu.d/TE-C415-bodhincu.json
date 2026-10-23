@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C415-bodhincu",
+    "language": "telugu",
+    "chapter": 415,
+    "sequence": 20730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36095e127aa8e52f"
+  },
+  "findings": []
+}

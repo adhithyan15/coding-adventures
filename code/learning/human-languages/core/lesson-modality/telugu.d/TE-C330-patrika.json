@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C330-patrika",
+    "language": "telugu",
+    "chapter": 330,
+    "sequence": 16210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58b91a3e89b902ea"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C408-vivaksa",
+  "pathSegment": "TE-PATH-408-SAMAJAM408",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-408-SAMAJAM408",
+      "order": 4
+    }
+  ]
+}

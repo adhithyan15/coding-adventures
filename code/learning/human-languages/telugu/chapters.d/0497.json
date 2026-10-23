@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "Losing Your Temper",
+  "label": "ch:te-losing-your-temper",
+  "canDo": "I can say that someone got angry, fumed or snapped.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C497-ciraku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can say that someone got angry, fumed or snapped.",
+    "assesses": [
+      "TE-LEX-C497-KOPAM497-03",
+      "TE-LEX-C497-KOPAM497-04",
+      "TE-LEX-C497-KOPAM497-05"
+    ]
+  }
+}

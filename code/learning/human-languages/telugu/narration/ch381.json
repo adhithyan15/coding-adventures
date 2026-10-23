@@ -1,0 +1,948 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 381,
+  "title": "Daring Deeds",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:c6296f17b94ce76f",
+  "lessons": [
+    {
+      "id": "TE-C381-tegincu",
+      "sequence": 18810,
+      "title": "తెగించు (tegiñcu) — to dare; to risk everything",
+      "headword": "తెగించు",
+      "romanization": "tegiñcu",
+      "gloss": "to dare; to risk everything",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a52ed2cf51fe8a70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a dead body, then the Telugu for to haunt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తెగించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తెగించు — tegiñcu — \"to dare; to risk everything\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ పిల్లవాడు తెగించి నదిలోకి దూకాడు. ā pillavāḍu tegiñci nadilōki dūkāḍu. The boy dared to jump into the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): తెగించాను, tegiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Often as తెగించి, daring: తెగించి ముందుకు వెళ్ళు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తెగించు (tegiñcu) is native Dravidian: DEDR 3416 lists Telugu tegu, tegincu, \"to dare, venture\", beside tempu, \"boldness\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tegiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tegiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tegiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tegiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pillavāḍu tegiñci nadilōki dūkāḍu. — The boy dared to jump into the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pillavāḍu tegiñci nadilōki dūkāḍu.* — The boy dared to jump into the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a dead body, then the Telugu for to haunt, then say tegiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a dead body, then the Telugu for to haunt, then say *tegiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తెగించు (tegiñcu) mean? (\"To dare; to risk everything\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C381-apaharincu",
+      "sequence": 18820,
+      "title": "అపహరించు (apahariñcu) — to abduct; to carry off",
+      "headword": "అపహరించు",
+      "romanization": "apahariñcu",
+      "gloss": "to abduct; to carry off",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8436d9ced5afe37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to haunt, then the Telugu for to dare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అపహరించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అపహరించు — apahariñcu — \"to abduct; to carry off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "దొంగలు ఒక వ్యాపారిని అపహరించారు. doṅgalu oka vyāpārini apahariñcāru. The robbers abducted a merchant."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): అపహరించాను, apahariñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word: to kidnap a person, or to steal goods."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అపహరించు (apahariñcu) is built on Sanskrit apaharaṇa, \"taking away, carrying off; stealing\" (Monier-Williams), with the Telugu verb ending -iñcu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apahariñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apahariñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apahariñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apahariñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doṅgalu oka vyāpārini apahariñcāru. — The robbers abducted a merchant.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doṅgalu oka vyāpārini apahariñcāru.* — The robbers abducted a merchant.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to haunt, then the Telugu for to dare, then say apahariñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to haunt, then the Telugu for to dare, then say *apahariñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అపహరించు (apahariñcu) mean? (\"To abduct; to carry off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C381-vicarincu",
+      "sequence": 18830,
+      "title": "విచారించు (vicāriñcu) — to interrogate; to inquire",
+      "headword": "విచారించు",
+      "romanization": "vicāriñcu",
+      "gloss": "to interrogate; to inquire",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0bfca2f47eddaf6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to dare, then the Telugu for to abduct."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: విచారించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విచారించు — vicāriñcu — \"to interrogate; to inquire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పోలీసులు నిందితుడిని గంటల తరబడి విచారించారు. pōlīsulu nindituḍini gaṇṭala tarabaḍi vicāriñcāru. The police questioned the accused for hours."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): విచారించాను, vicāriñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "You know విచారం, sorrow; the verb means to inquire, to look into."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విచారించు (vicāriñcu) is built on Sanskrit vicāra, \"mode of action; pondering\" (CDIAL 11683), with the Telugu verb ending -iñcu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicāriñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicāriñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicāriñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicāriñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsulu nindituḍini gaṇṭala tarabaḍi vicāriñcāru. — The police questioned the accused for hours.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsulu nindituḍini gaṇṭala tarabaḍi vicāriñcāru.* — The police questioned the accused for hours.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to dare, then the Telugu for to abduct, then say vicāriñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to dare, then the Telugu for to abduct, then say *vicāriñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does విచారించు (vicāriñcu) mean? (\"To interrogate; to inquire\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C381-japtu-ceyu",
+      "sequence": 18840,
+      "title": "జప్తు చేయు (japtu cēyu) — to confiscate; to seize",
+      "headword": "జప్తు చేయు",
+      "romanization": "japtu cēyu",
+      "gloss": "to confiscate; to seize",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c90895877c95fe8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to abduct, then the Telugu for to interrogate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: జప్తు చేయు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జప్తు చేయు — japtu cēyu — \"to confiscate; to seize\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పోలీసులు దొంగ సొమ్మును జప్తు చేశారు. pōlīsulu doṅga sommunu japtu cēśāru. The police seized the stolen money."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): జప్తు చేశాను, japtu cēśānu."
+            },
+            {
+              "kind": "speech",
+              "text": "A seizure by law: officials జప్తు చేస్తారు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జప్తు చేయు (japtu cēyu) is a loan from Persian zabt, \"seizure\", with the native verb cēyu, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "japtu cēyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *japtu cēyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "japtu cēyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *japtu cēyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsulu doṅga sommunu japtu cēśāru. — The police seized the stolen money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsulu doṅga sommunu japtu cēśāru.* — The police seized the stolen money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to abduct, then the Telugu for to interrogate, then say japtu cēyu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to abduct, then the Telugu for to interrogate, then say *japtu cēyu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does జప్తు చేయు (japtu cēyu) mean? (\"To confiscate; to seize\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C381-dandayatra",
+      "sequence": 18850,
+      "title": "దండయాత్ర (daṇḍayātra) — an invasion; a military campaign",
+      "headword": "దండయాత్ర",
+      "romanization": "daṇḍayātra",
+      "gloss": "an invasion; a military campaign",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:56a7272910f07f4e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to interrogate, then the Telugu for to confiscate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దండయాత్ర",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దండయాత్ర — daṇḍayātra — \"an invasion; a military campaign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ చక్రవర్తి చాలా దండయాత్రలు చేశాడు. ā cakravarti cālā daṇḍayātralu cēśāḍu. That emperor led many military campaigns."
+            },
+            {
+              "kind": "speech",
+              "text": "దండయాత్ర (daṇḍayātra) చేయు, to invade, to lead a campaign."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దండయాత్ర (daṇḍayātra) is borrowed from Sanskrit daṇḍayātrā, \"a procession; a military expedition\" (Monier-Williams), from daṇḍa, \"a stick, a rod\" (CDIAL 6128), and yātrā, \"a journey\" (CDIAL 10456)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṇḍayātra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṇḍayātra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṇḍayātra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṇḍayātra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā cakravarti cālā daṇḍayātralu cēśāḍu. — That emperor led many military campaigns.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā cakravarti cālā daṇḍayātralu cēśāḍu.* — That emperor led many military campaigns.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to interrogate, then the Telugu for to confiscate, then say daṇḍayātra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to interrogate, then the Telugu for to confiscate, then say *daṇḍayātra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దండయాత్ర (daṇḍayātra) mean? (\"An invasion; a military campaign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R381-review-374-381",
+      "sequence": 18860,
+      "title": "Rebels, legends and the press",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 374-381",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:212eaacaa045c31b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Telugu for a commentary and a commentator."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a commentary, a commentator, a listener, to behold, a face-to-face interview",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a commentary, a commentator, a listener, to behold, a face-to-face interview]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a journalist, printing, a sensation, to submit a report, to respond",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a journalist, printing, a sensation, to submit a report, to respond]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a response, a start, an ending, an episode, by chance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a response, a start, an ending, an episode, by chance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a disaster, a commotion, protection, a patrol, an action",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a disaster, a commotion, protection, a patrol, an action]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a brawl, gunfire, to injure, to grapple, to gather round",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a brawl, gunfire, to injure, to grapple, to gather round]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to throng, to fall down, a victim, to petition, to beg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to throng, to fall down, a victim, to petition, to beg]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ago, before that, from then on, a dead body, to haunt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ago, before that, from then on, a dead body, to haunt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to dare, to abduct, to interrogate, to confiscate, an invasion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to dare, to abduct, to interrogate, to confiscate, an invasion]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A commentary? (వ్యాఖ్యానం, vyākhyānaṁ.) A commentator? (వ్యాఖ్యాత, vyākhyāta.) A listener? (శ్రోత, śrōta.) To behold? (తిలకించు, tilakiñcu.) A face-to-face interview? (ముఖాముఖి, mukhāmukhi.) A journalist? (పాత్రికేయుడు, pātrikēyuḍu.) Printing? (ముద్రణ, mudraṇa.) A sensation? (సంచలనం, sañcalanaṁ.) To submit a report? (నివేదించు, nivēdiñcu.) To respond? (స్పందించు, spandiñcu.) A response? (స్పందన, spandana.) A start? (ప్రారంభం, prārambhaṁ.) An ending? (ముగింపు, mugimpu.) An episode? (ఘట్టం, ghaṭṭaṁ.) By chance? (యాదృచ్ఛికంగా, yādṛcchikaṅgā.) A disaster? (విపత్తు, vipattu.) A commotion? (అలజడి, alajaḍi.) Protection? (రక్షణ, rakṣaṇa.) A patrol? (గస్తీ, gastī.) An action? (చర్య, carya.) A brawl? (కొట్లాట, koṭlāṭa.) Gunfire? (కాల్పులు, kālpulu.) To injure? (గాయపరచు, gāyaparacu.) To grapple? (పెనుగులాడు, penugulāḍu.) To gather round? (గుమిగూడు, gumigūḍu.) To throng? (ఎగబడు, egabaḍu.) To fall down? (పడిపోవు, paḍipōvu.) A victim? (బాధితుడు, bādhituḍu.) To petition? (మొరపెట్టుకో, morapeṭṭukō.) To beg? (వేడుకో, vēḍukō.) Ago? (క్రితం, kritaṁ.) Before that? (అంతకుముందు, antakumundu.) From then on? (అప్పటినుంచి, appaṭinuñci.) A dead body? (మృతదేహం, mṛtadēhaṁ.) To haunt? (వెంటాడు, veṇṭāḍu.) To dare? (తెగించు, tegiñcu.) To abduct? (అపహరించు, apahariñcu.) To interrogate? (విచారించు, vicāriñcu.) To confiscate? (జప్తు చేయు, japtu cēyu.) An invasion? (దండయాత్ర, daṇḍayātra.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R381-review-final-381",
+      "sequence": 18870,
+      "title": "Daring Deeds — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over chapter 381",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed8e7f3cef17530e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Telugu for to dare and to abduct."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to dare, to abduct, to interrogate, to confiscate, an invasion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to dare, to abduct, to interrogate, to confiscate, an invasion]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To dare? (తెగించు, tegiñcu.) To abduct? (అపహరించు, apahariñcu.) To interrogate? (విచారించు, vicāriñcu.) To confiscate? (జప్తు చేయు, japtu cēyu.) An invasion? (దండయాత్ర, daṇḍayātra.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

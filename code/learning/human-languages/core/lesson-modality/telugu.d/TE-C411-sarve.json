@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C411-sarve",
+    "language": "telugu",
+    "chapter": 411,
+    "sequence": 20490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7246e7cb81f571a"
+  },
+  "findings": []
+}

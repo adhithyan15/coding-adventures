@@ -1,0 +1,11 @@
+{
+  "id": "TE-C519-sastracikitsa",
+  "pathSegment": "TE-PATH-519-CIKITSA519",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-519-CIKITSA519",
+      "order": 1
+    }
+  ]
+}

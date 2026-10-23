@@ -1,0 +1,21 @@
+{
+  "chapter": 405,
+  "title": "Money and the Economy",
+  "label": "ch:te-money-and-the-economy",
+  "canDo": "I can talk about the economy, prices, budgets and loans.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-R405-review-398-405",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can talk about the economy, prices, budgets and loans.",
+    "assesses": [
+      "TE-LEX-C405-ARTHIKA405-01",
+      "TE-LEX-C405-ARTHIKA405-02",
+      "TE-LEX-C405-ARTHIKA405-03",
+      "TE-LEX-C405-ARTHIKA405-04",
+      "TE-LEX-C405-ARTHIKA405-05"
+    ]
+  }
+}

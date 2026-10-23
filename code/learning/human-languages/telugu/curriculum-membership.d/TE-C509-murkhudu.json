@@ -1,0 +1,11 @@
+{
+  "id": "TE-C509-murkhudu",
+  "pathSegment": "TE-PATH-509-MANISHI509",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-509-MANISHI509",
+      "order": 2
+    }
+  ]
+}

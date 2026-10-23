@@ -6544,6 +6544,17 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // ALGOL 60 - exact straight-line integer snapshots may participate in a
+    // checked static reduction around a sign-rooted runtime-real transform.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure rightvalue; rightvalue := 3.5; integer factor; real result; factor := 10; result := entier((factor div 3) * ((2 * sign(rightvalue())) + 2)); output(result) end",
+        expect: Expect::Stdout("12"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -25897,6 +25908,32 @@ fn algol_conditional_static_integer_reduction_runtime_real_output_runs_on_every_
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the conditional static integer-reduction program did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_tracked_static_integer_reduction_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier((factor div 3) * ((2 * sign(rightvalue())) + 2))",
+                )
+        })
+        .expect("the tracked static integer-reduction ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the tracked static integer-reduction program did not run"
             );
             continue;
         };

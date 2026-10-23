@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C539-caranam",
+    "language": "telugu",
+    "chapter": 539,
+    "sequence": 27310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f6f899de538c687"
+  },
+  "findings": []
+}

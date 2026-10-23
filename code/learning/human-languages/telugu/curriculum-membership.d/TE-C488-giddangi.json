@@ -1,0 +1,11 @@
+{
+  "id": "TE-C488-giddangi",
+  "pathSegment": "TE-PATH-488-TOKU488",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-488-TOKU488",
+      "order": 2
+    }
+  ]
+}

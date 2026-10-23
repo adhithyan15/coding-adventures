@@ -1,0 +1,11 @@
+{
+  "id": "TE-C524-panitanam",
+  "pathSegment": "TE-PATH-524-PRATIBHA524",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-524-PRATIBHA524",
+      "order": 2
+    }
+  ]
+}

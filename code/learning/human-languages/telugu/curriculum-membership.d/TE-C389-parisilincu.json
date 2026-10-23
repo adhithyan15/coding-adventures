@@ -1,0 +1,11 @@
+{
+  "id": "TE-C389-parisilincu",
+  "pathSegment": "TE-PATH-389-VISLESANA389",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-389-VISLESANA389",
+      "order": 2
+    }
+  ]
+}

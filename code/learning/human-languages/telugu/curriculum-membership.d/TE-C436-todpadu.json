@@ -1,0 +1,11 @@
+{
+  "id": "TE-C436-todpadu",
+  "pathSegment": "TE-PATH-436-PALGONU436",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-436-PALGONU436",
+      "order": 1
+    }
+  ]
+}

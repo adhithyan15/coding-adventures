@@ -1,0 +1,11 @@
+{
+  "id": "TE-C375-sancalanam",
+  "pathSegment": "TE-PATH-375-PATRIKEYUDU375",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-375-PATRIKEYUDU375",
+      "order": 2
+    }
+  ]
+}

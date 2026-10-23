@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:51a1fc308061b4ce",
+  "lessonIds": [
+    "TE-C370-aitihyam",
+    "TE-C370-gatha",
+    "TE-C370-kirti",
+    "TE-C370-koniyadu",
+    "TE-C370-dandincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch370.txt",
+  "json": "telugu/narration/ch370.json",
+  "textHash": "fnv1a64:96b0fdf550e1ef97",
+  "jsonHash": "fnv1a64:75ebdc4d64594434",
+  "findings": []
+}

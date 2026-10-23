@@ -1,0 +1,11 @@
+{
+  "id": "TE-C356-sanmanincu",
+  "pathSegment": "TE-PATH-356-UTSAVAM356",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-356-UTSAVAM356",
+      "order": 1
+    }
+  ]
+}

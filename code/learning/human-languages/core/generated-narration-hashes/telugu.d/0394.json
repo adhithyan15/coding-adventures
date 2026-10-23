@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:4b82d7806a9612a8",
+  "lessonIds": [
+    "TE-C394-vivarana",
+    "TE-C394-spastata",
+    "TE-C394-samarthana",
+    "TE-C394-samarthincu",
+    "TE-C394-khaccitamaina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch394.txt",
+  "json": "telugu/narration/ch394.json",
+  "textHash": "fnv1a64:97f3f374d9cbf79a",
+  "jsonHash": "fnv1a64:19e5b9b50d166b56",
+  "findings": []
+}

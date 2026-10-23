@@ -1,0 +1,11 @@
+{
+  "id": "TE-C427-kudurcu",
+  "pathSegment": "TE-PATH-427-MADHYAVARTI427",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-427-MADHYAVARTI427",
+      "order": 1
+    }
+  ]
+}

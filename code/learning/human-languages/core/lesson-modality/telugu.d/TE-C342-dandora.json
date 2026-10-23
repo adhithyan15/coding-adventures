@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C342-dandora",
+    "language": "telugu",
+    "chapter": 342,
+    "sequence": 16820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe92aae52237bd97"
+  },
+  "findings": []
+}

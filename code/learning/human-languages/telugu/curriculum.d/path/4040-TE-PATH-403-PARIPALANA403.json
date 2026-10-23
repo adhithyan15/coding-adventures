@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-403-PARIPALANA403",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TE-EXT-403-PARIPALANA403"
+  ],
+  "after": []
+}

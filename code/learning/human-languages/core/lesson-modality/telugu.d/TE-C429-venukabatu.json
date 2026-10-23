@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C429-venukabatu",
+    "language": "telugu",
+    "chapter": 429,
+    "sequence": 21420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:add01a7e32594a34"
+  },
+  "findings": []
+}

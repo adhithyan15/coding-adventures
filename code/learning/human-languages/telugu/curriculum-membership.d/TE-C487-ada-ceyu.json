@@ -1,0 +1,11 @@
+{
+  "id": "TE-C487-ada-ceyu",
+  "pathSegment": "TE-PATH-487-KHARCU487",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-487-KHARCU487",
+      "order": 1
+    }
+  ]
+}

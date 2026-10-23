@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 526,
+  "title": "Running a Team",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b272c517e4058d89",
+  "lessons": [
+    {
+      "id": "TE-C526-niyamincu",
+      "sequence": 26640,
+      "title": "నియమించు (niyamiñcu) — to appoint; to assign",
+      "headword": "నియమించు",
+      "romanization": "niyamiñcu",
+      "gloss": "to appoint; to assign",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90a50b0ace12c790",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a wage, then the Telugu for to toil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నియమించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నియమించు — niyamiñcu — \"to appoint; to assign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కంపెనీ కొత్త మేనేజరును నియమించింది. kampenī kotta mēnējarunu niyamiñcindi. The company appointed a new manager."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): నియమించాను, niyamiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "-గా నియమించు (niyamiñcu), to appoint as: ఆమెను మేనేజరుగా నియమించారు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నియమించు (niyamiñcu) is built on Sanskrit niyama, \"restraint; a fixed rule\" (CDIAL 7250), with the Telugu verb ending -ఇంచు: to fix someone in a place."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyamiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyamiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyamiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyamiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampenī kotta mēnējarunu niyamiñcindi. — The company appointed a new manager.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampenī kotta mēnējarunu niyamiñcindi.* — The company appointed a new manager.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a wage, then the Telugu for to toil, then say niyamiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a wage, then the Telugu for to toil, then say *niyamiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నియమించు (niyamiñcu) mean? (\"To appoint; to assign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C526-nirvahincu",
+      "sequence": 26650,
+      "title": "నిర్వహించు (nirvahiñcu) — to manage; to run",
+      "headword": "నిర్వహించు",
+      "romanization": "nirvahiñcu",
+      "gloss": "to manage; to run",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f663f68e82c68ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to toil, then the Telugu for to appoint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిర్వహించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిర్వహించు — nirvahiñcu — \"to manage; to run\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా అక్క ఒక చిన్న దుకాణం నిర్వహిస్తుంది. mā akka oka cinna dukāṇaṁ nirvahistundi. My elder sister runs a small shop."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): నిర్వహించాను, nirvahiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to hold an event: సమావేశం నిర్వహించు (nirvahiñcu), to hold a meeting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిర్వహించు (nirvahiñcu) is built on Sanskrit nirvahaṇa, \"carrying through, completion\" (Monier-Williams), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirvahiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirvahiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirvahiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirvahiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā akka oka cinna dukāṇaṁ nirvahistundi. — My elder sister runs a small shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā akka oka cinna dukāṇaṁ nirvahistundi.* — My elder sister runs a small shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to toil, then the Telugu for to appoint, then say nirvahiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to toil, then the Telugu for to appoint, then say *nirvahiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిర్వహించు (nirvahiñcu) mean? (\"To manage; to run\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C526-paryaveksincu",
+      "sequence": 26660,
+      "title": "పర్యవేక్షించు (paryavēkṣiñcu) — to supervise; to oversee",
+      "headword": "పర్యవేక్షించు",
+      "romanization": "paryavēkṣiñcu",
+      "gloss": "to supervise; to oversee",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c1d4ba1e064d6c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to appoint, then the Telugu for to manage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పర్యవేక్షించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పర్యవేక్షించు — paryavēkṣiñcu — \"to supervise; to oversee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఇంజనీరు పనిని దగ్గరుండి పర్యవేక్షించారు. iñjanīru panini daggaruṇḍi paryavēkṣiñcāru. The engineer oversaw the work in person."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): పర్యవేక్షించాను, paryavēkṣiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is పర్యవేక్షణ, supervision."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పర్యవేక్షించు (paryavēkṣiñcu) is a learned formation built from Sanskrit pari-, \"around\", and avekṣaṇa, \"looking at\" (Monier-Williams), with the Telugu verb ending -ఇంచు: to look all round a task."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paryavēkṣiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paryavēkṣiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paryavēkṣiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paryavēkṣiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iñjanīru panini daggaruṇḍi paryavēkṣiñcāru. — The engineer oversaw the work in person.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iñjanīru panini daggaruṇḍi paryavēkṣiñcāru.* — The engineer oversaw the work in person.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to appoint, then the Telugu for to manage, then say paryavēkṣiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to appoint, then the Telugu for to manage, then say *paryavēkṣiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పర్యవేక్షించు (paryavēkṣiñcu) mean? (\"To supervise; to oversee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C526-sahakarincu",
+      "sequence": 26670,
+      "title": "సహకరించు (sahakariñcu) — to cooperate; to help",
+      "headword": "సహకరించు",
+      "romanization": "sahakariñcu",
+      "gloss": "to cooperate; to help",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7171bbe898248b53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to manage, then the Telugu for to supervise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సహకరించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సహకరించు — sahakariñcu — \"to cooperate; to help\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అందరూ సహకరిస్తే పని త్వరగా అవుతుంది. andarū sahakaristē pani tvaragā avutundi. If everyone cooperates, the work gets done quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): సహకరించాను, sahakariñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "-కి సహకరించు (sahakariñcu), to cooperate with someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సహకరించు (sahakariñcu) is built on Sanskrit sahakāra, \"assistance\" (CDIAL 13299), from saha, \"with\", and kāra, \"doing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahakariñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahakariñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahakariñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahakariñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "andarū sahakaristē pani tvaragā avutundi. — If everyone cooperates, the work gets done quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *andarū sahakaristē pani tvaragā avutundi.* — If everyone cooperates, the work gets done quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to manage, then the Telugu for to supervise, then say sahakariñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to manage, then the Telugu for to supervise, then say *sahakariñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సహకరించు (sahakariñcu) mean? (\"To cooperate; to help\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C526-siksana",
+      "sequence": 26680,
+      "title": "శిక్షణ (śikṣaṇa) — training",
+      "headword": "శిక్షణ",
+      "romanization": "śikṣaṇa",
+      "gloss": "training",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0775134528b9db8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to supervise, then the Telugu for to cooperate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: శిక్షణ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శిక్షణ — śikṣaṇa — \"training\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కొత్త ఉద్యోగులకు ఒక నెల శిక్షణ ఇచ్చారు. kotta udyōgulaku oka nela śikṣaṇa iccāru. The new employees were given a month of training."
+            },
+            {
+              "kind": "speech",
+              "text": "శిక్షణ (śikṣaṇa) ఇచ్చు, to train someone; శిక్షణ (śikṣaṇa) పొందు, to be trained. Not శిక్ష, a punishment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శిక్షణ (śikṣaṇa) is borrowed from Sanskrit śikṣaṇa, \"the act of learning; teaching\" (CDIAL 12429)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikṣaṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikṣaṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikṣaṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikṣaṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kotta udyōgulaku oka nela śikṣaṇa iccāru. — The new employees were given a month of training.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kotta udyōgulaku oka nela śikṣaṇa iccāru.* — The new employees were given a month of training.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to supervise, then the Telugu for to cooperate, then say śikṣaṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to supervise, then the Telugu for to cooperate, then say *śikṣaṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does శిక్షణ (śikṣaṇa) mean? (\"Training\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:0d237f4c9cd3e424",
+  "lessonIds": [
+    "TE-C535-egatali",
+    "TE-C535-vekkirincu",
+    "TE-C535-mandalincu",
+    "TE-C535-niladiyu",
+    "TE-C535-mosagincu"
+  ],
+  "tex": "telugu/book/chapters/ch535-teasing-and-telling-off.tex"
+}

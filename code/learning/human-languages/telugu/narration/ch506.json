@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 506,
+  "title": "Bearing It",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4fb26145268584cb",
+  "lessons": [
+    {
+      "id": "TE-C506-sahincu",
+      "sequence": 25610,
+      "title": "సహించు (sahiñcu) — to tolerate; to put up with",
+      "headword": "సహించు",
+      "romanization": "sahiñcu",
+      "gloss": "to tolerate; to put up with",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e16a4ed9d79feb6a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to stand by, then the Telugu for to console."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సహించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సహించు — sahiñcu — \"to tolerate; to put up with\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతని అబద్ధాలను నేను ఇక సహించను. atani abaddhālanu nēnu ika sahiñcanu. I will not put up with his lies any more."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): సహించాను, sahiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Often in the negative: సహించను, I will not stand for it. The noun సహనం is patience."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సహించు (sahiñcu) is built on Sanskrit sahatē, \"bears, suffers\" (CDIAL 13304), from the root sah, with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atani abaddhālanu nēnu ika sahiñcanu. — I will not put up with his lies any more.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atani abaddhālanu nēnu ika sahiñcanu.* — I will not put up with his lies any more.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to stand by, then the Telugu for to console, then say sahiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to stand by, then the Telugu for to console, then say *sahiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సహించు (sahiñcu) mean? (\"To tolerate; to put up with\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C506-tattuko",
+      "sequence": 25620,
+      "title": "తట్టుకో (taṭṭukō) — to withstand; to cope with",
+      "headword": "తట్టుకో",
+      "romanization": "taṭṭukō",
+      "gloss": "to withstand; to cope with",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:487e5da7a8faf25b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to console, then the Telugu for to tolerate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తట్టుకో",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తట్టుకో — taṭṭukō — \"to withstand; to cope with\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ చలిని ముసలివాళ్ళు తట్టుకోలేరు. ā calini musalivāḷḷu taṭṭukōlēru. Old people cannot withstand that cold."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): తట్టుకున్నాను, taṭṭukunnānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly with -లే-: తట్టుకోలేను, I cannot bear it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తట్టుకో (taṭṭukō) is a Telugu verb ending in the reflexive -కో; the origin of its stem is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭṭukō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭṭukō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭṭukō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭṭukō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā calini musalivāḷḷu taṭṭukōlēru. — Old people cannot withstand that cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā calini musalivāḷḷu taṭṭukōlēru.* — Old people cannot withstand that cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to console, then the Telugu for to tolerate, then say taṭṭukō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to console, then the Telugu for to tolerate, then say *taṭṭukō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తట్టుకో (taṭṭukō) mean? (\"To withstand; to cope with\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C506-nigraham",
+      "sequence": 25630,
+      "title": "నిగ్రహం (nigrahaṁ) — self-restraint; self-control",
+      "headword": "నిగ్రహం",
+      "romanization": "nigrahaṁ",
+      "gloss": "self-restraint; self-control",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3ee5c719e9402c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to tolerate, then the Telugu for to withstand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిగ్రహం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిగ్రహం — nigrahaṁ — \"self-restraint; self-control\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కోపం వచ్చినా ఆమె నిగ్రహంతో మాట్లాడింది. kōpaṁ vaccinā āme nigrahantō māṭlāḍindi. Though she was angry, she spoke with restraint."
+            },
+            {
+              "kind": "speech",
+              "text": "Holding back anger or a craving: నిగ్రహంతో, with restraint. A formal word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిగ్రహం (nigrahaṁ) is borrowed from Sanskrit nigraha, \"restraint; a rebuke\" (CDIAL 7169), from ni-grah, \"to hold down\": holding yourself down."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nigrahaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nigrahaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nigrahaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nigrahaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōpaṁ vaccinā āme nigrahantō māṭlāḍindi. — Though she was angry, she spoke with restraint.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōpaṁ vaccinā āme nigrahantō māṭlāḍindi.* — Though she was angry, she spoke with restraint.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to tolerate, then the Telugu for to withstand, then say nigrahaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to tolerate, then the Telugu for to withstand, then say *nigrahaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిగ్రహం (nigrahaṁ) mean? (\"Self-restraint; self-control\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C506-manassanti",
+      "sequence": 25640,
+      "title": "మనశ్శాంతి (manaśśānti) — peace of mind",
+      "headword": "మనశ్శాంతి",
+      "romanization": "manaśśānti",
+      "gloss": "peace of mind",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00f35c56a40d018c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to withstand, then the Telugu for self-restraint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మనశ్శాంతి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మనశ్శాంతి — manaśśānti — \"peace of mind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పల్లెలో ఉంటే నాకు మనశ్శాంతిగా ఉంటుంది. pallelō uṇṭē nāku manaśśāntigā uṇṭundi. In the village I have peace of mind."
+            },
+            {
+              "kind": "speech",
+              "text": "మనసు, mind, + శాంతి, peace."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మనశ్శాంతి (manaśśānti) is borrowed from Sanskrit: manas, \"mind\", and śānti, \"rest, peace\" (CDIAL 12391); the s of manas becomes ś before ś."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manaśśānti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manaśśānti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manaśśānti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manaśśānti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pallelō uṇṭē nāku manaśśāntigā uṇṭundi. — In the village I have peace of mind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pallelō uṇṭē nāku manaśśāntigā uṇṭundi.* — In the village I have peace of mind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to withstand, then the Telugu for self-restraint, then say manaśśānti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to withstand, then the Telugu for self-restraint, then say *manaśśānti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మనశ్శాంతి (manaśśānti) mean? (\"Peace of mind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C506-upasamanam",
+      "sequence": 25650,
+      "title": "ఉపశమనం (upaśamanaṁ) — relief; respite",
+      "headword": "ఉపశమనం",
+      "romanization": "upaśamanaṁ",
+      "gloss": "relief; respite",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7d0f846b442ce72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for self-restraint, then the Telugu for peace of mind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఉపశమనం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉపశమనం — upaśamanaṁ — \"relief; respite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మందు వేసుకున్నాక నొప్పికి కొంచెం ఉపశమనం దొరికింది. mandu vēsukunnāka noppiki koñceṁ upaśamanaṁ dorikindi. After I took the medicine, the pain eased a little."
+            },
+            {
+              "kind": "speech",
+              "text": "ఉపశమనం (upaśamanaṁ) కలుగు or దొరుకు, relief comes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉపశమనం (upaśamanaṁ) is borrowed from Sanskrit upaśamana, \"calming, appeasing, mitigation\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upaśamanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upaśamanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upaśamanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upaśamanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mandu vēsukunnāka noppiki koñceṁ upaśamanaṁ dorikindi. — After I took the medicine, the pain eased a little.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mandu vēsukunnāka noppiki koñceṁ upaśamanaṁ dorikindi.* — After I took the medicine, the pain eased a little.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for self-restraint, then the Telugu for peace of mind, then say upaśamanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for self-restraint, then the Telugu for peace of mind, then say *upaśamanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఉపశమనం (upaśamanaṁ) mean? (\"Relief; respite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Little by Little",
+  "label": "ch:te-little-by-little",
+  "canDo": "I can say gradually, as time went by, previously, the past and in those days.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C338-appatlo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can say gradually, as time went by, previously, the past and in those days.",
+    "assesses": [
+      "TE-LEX-C338-KRAMANGA338-03",
+      "TE-LEX-C338-KRAMANGA338-04",
+      "TE-LEX-C338-KRAMANGA338-05"
+    ]
+  }
+}

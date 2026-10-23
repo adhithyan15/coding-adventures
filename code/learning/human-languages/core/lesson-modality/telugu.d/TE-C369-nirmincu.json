@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C369-nirmincu",
+    "language": "telugu",
+    "chapter": 369,
+    "sequence": 18240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e0a29e780f8c13c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C397-antekakunda",
+    "language": "telugu",
+    "chapter": 397,
+    "sequence": 19760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99197768e33f8b02"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C380-appatinunci",
+  "pathSegment": "TE-PATH-380-KRITAM380",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-380-KRITAM380",
+      "order": 2
+    }
+  ]
+}

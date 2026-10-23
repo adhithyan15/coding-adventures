@@ -1,0 +1,11 @@
+{
+  "id": "TE-C483-inkipovu",
+  "pathSegment": "TE-PATH-483-AVIRI483",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-483-AVIRI483",
+      "order": 1
+    }
+  ]
+}

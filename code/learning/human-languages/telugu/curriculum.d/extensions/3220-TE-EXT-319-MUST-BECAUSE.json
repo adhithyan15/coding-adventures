@@ -1,0 +1,10 @@
+{
+  "id": "TE-EXT-319-MUST-BECAUSE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what someone must, must not or had better do with -āli, -akūḍadu and -tē mancidi, and explain why with -aḍaṁ valla, endukaṇṭē and kābaṭṭi.",
+  "prerequisites": [
+    "TE-EXT-318-OPINION-SO"
+  ]
+}

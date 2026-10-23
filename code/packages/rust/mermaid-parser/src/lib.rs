@@ -13740,11 +13740,22 @@ fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
     let token = cursor.current().clone();
     if !matches!(
         token_name(&token),
-        "IDENTIFIER" | "NUMBER" | "ATTRIBUTE_KEY" | "MD_PARENT" | "STRING"
+        "IDENTIFIER"
+            | "NUMBER"
+            | "ATTRIBUTE_KEY"
+            | "MD_PARENT"
+            | "STRING"
+            | "ESCAPED_ATTRIBUTE"
+            | "COMMA_ATTRIBUTE_TYPE"
     ) {
         return Err(token_error(&token, "expected ER name"));
     }
-    Ok(cursor.advance().value.clone())
+    let value = cursor.advance().value.clone();
+    Ok(if token_name(&token) == "ESCAPED_ATTRIBUTE" {
+        value.trim_matches('`').to_string()
+    } else {
+        value
+    })
 }
 
 fn consume_er_class_suffix(cursor: &mut TokenCursor) -> Result<Vec<String>, ParseError> {

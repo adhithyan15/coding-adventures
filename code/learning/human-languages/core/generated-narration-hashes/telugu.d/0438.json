@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:b7a6f73ce1ef38ba",
+  "lessonIds": [
+    "TE-C438-prayanikudu",
+    "TE-C438-prayanincu",
+    "TE-C438-gamyam",
+    "TE-C438-margam",
+    "TE-C438-adugupettu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch438.txt",
+  "json": "telugu/narration/ch438.json",
+  "textHash": "fnv1a64:27d75b78f8173a48",
+  "jsonHash": "fnv1a64:1da45a74b5f97460",
+  "findings": []
+}

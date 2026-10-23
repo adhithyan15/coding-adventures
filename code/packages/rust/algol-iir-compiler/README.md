@@ -273,6 +273,9 @@ Built-in `abs`, `sign`, and `entier` may normalize those checked variable-free
 integer reductions before they become a static offset, factor, or exponent.
 User-declared procedures with the same names retain runtime call semantics;
 dynamic inputs, zero divisors, and results beyond `2^53` remain conservative.
+Exact local integer snapshots may also supply leaves of those checked
+reductions. Captured globals, by-name actuals, dynamic assignments, and values
+whose composed reduction exceeds `2^53` remain conservative.
 Positive variable-free whole-number powers may raise the exact sign-rooted
 integer transform within the existing exponent-unroll cap while checked
 exponentiation remains within `2^53`; zero, negative, dynamic, deeper, and

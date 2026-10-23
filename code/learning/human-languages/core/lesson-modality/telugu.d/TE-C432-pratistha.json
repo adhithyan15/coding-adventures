@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C432-pratistha",
+    "language": "telugu",
+    "chapter": 432,
+    "sequence": 21580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a576115228c34556"
+  },
+  "findings": []
+}

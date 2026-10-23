@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C326-paripovu",
+    "language": "telugu",
+    "chapter": 326,
+    "sequence": 16040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0cc279bce06b2dc5"
+  },
+  "findings": []
+}

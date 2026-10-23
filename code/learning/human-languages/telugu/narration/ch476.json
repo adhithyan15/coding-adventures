@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 476,
+  "title": "Talking About the Climate",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:876f1cf7dc3bdf08",
+  "lessons": [
+    {
+      "id": "TE-C476-sitosnasthiti",
+      "sequence": 23940,
+      "title": "శీతోష్ణస్థితి (śītōṣṇasthiti) — the climate",
+      "headword": "శీతోష్ణస్థితి",
+      "romanization": "śītōṣṇasthiti",
+      "gloss": "the climate",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e16f08f2e47f5707",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for irrigation, then the Telugu for a marsh."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: శీతోష్ణస్థితి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శీతోష్ణస్థితి — śītōṣṇasthiti — \"the climate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ ప్రాంతం శీతోష్ణస్థితి వ్యవసాయానికి బాగుంటుంది. ā prāntaṁ śītōṣṇasthiti vyavasāyāniki bāguṇṭundi. The climate of that region is good for farming."
+            },
+            {
+              "kind": "speech",
+              "text": "శీత, cold, + ఉష్ణ, hot, + స్థితి, state: the state of cold and heat. In speech people often say వాతావరణం."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శీతోష్ణస్థితి (śītōṣṇasthiti) is built from three Sanskrit words: śīta, \"cold\" (CDIAL 12485), uṣṇa, \"hot\" (CDIAL 2389), and sthiti, \"a state\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śītōṣṇasthiti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śītōṣṇasthiti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śītōṣṇasthiti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śītōṣṇasthiti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā prāntaṁ śītōṣṇasthiti vyavasāyāniki bāguṇṭundi. — The climate of that region is good for farming.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā prāntaṁ śītōṣṇasthiti vyavasāyāniki bāguṇṭundi.* — The climate of that region is good for farming.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for irrigation, then the Telugu for a marsh, then say śītōṣṇasthiti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for irrigation, then the Telugu for a marsh, then say *śītōṣṇasthiti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does శీతోష్ణస్థితి (śītōṣṇasthiti) mean? (\"The climate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C476-usnograta",
+      "sequence": 23950,
+      "title": "ఉష్ణోగ్రత (uṣṇōgrata) — temperature",
+      "headword": "ఉష్ణోగ్రత",
+      "romanization": "uṣṇōgrata",
+      "gloss": "temperature",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ce28ffe3a46f2cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a marsh, then the Telugu for the climate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఉష్ణోగ్రత",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉష్ణోగ్రత — uṣṇōgrata — \"temperature\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఇవాళ ఉష్ణోగ్రత నలభై డిగ్రీలు దాటింది. ivāḷa uṣṇōgrata nalabhai ḍigrīlu dāṭindi. Today the temperature went above forty degrees."
+            },
+            {
+              "kind": "speech",
+              "text": "ఉష్ణ, heat, + ఉగ్రత, fierceness: how fierce the heat is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉష్ణోగ్రత (uṣṇōgrata) is built from Sanskrit uṣṇa, \"hot, heat\" (CDIAL 2389), and ugratā, \"fierceness\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṣṇōgrata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṣṇōgrata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṣṇōgrata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṣṇōgrata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ivāḷa uṣṇōgrata nalabhai ḍigrīlu dāṭindi. — Today the temperature went above forty degrees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ivāḷa uṣṇōgrata nalabhai ḍigrīlu dāṭindi.* — Today the temperature went above forty degrees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a marsh, then the Telugu for the climate, then say uṣṇōgrata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a marsh, then the Telugu for the climate, then say *uṣṇōgrata* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఉష్ణోగ్రత (uṣṇōgrata) mean? (\"Temperature\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C476-tema",
+      "sequence": 23960,
+      "title": "తేమ (tēma) — humidity; moisture",
+      "headword": "తేమ",
+      "romanization": "tēma",
+      "gloss": "humidity; moisture",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81a727b191b33d54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for the climate, then the Telugu for temperature."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తేమ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తేమ — tēma — \"humidity; moisture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సముద్రం దగ్గర గాలిలో తేమ ఎక్కువ. samudraṁ daggara gālilō tēma ekkuva. Near the sea there is a lot of moisture in the air."
+            },
+            {
+              "kind": "speech",
+              "text": "తేమగా ఉంది, it is damp."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తేమ (tēma) is a Telugu word for damp and moisture whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samudraṁ daggara gālilō tēma ekkuva. — Near the sea there is a lot of moisture in the air.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samudraṁ daggara gālilō tēma ekkuva.* — Near the sea there is a lot of moisture in the air.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for the climate, then the Telugu for temperature, then say tēma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for the climate, then the Telugu for temperature, then say *tēma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తేమ (tēma) mean? (\"Humidity; moisture\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C476-ukkapota",
+      "sequence": 23970,
+      "title": "ఉక్కపోత (ukkapōta) — muggy heat",
+      "headword": "ఉక్కపోత",
+      "romanization": "ukkapōta",
+      "gloss": "muggy heat",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:500433cc76cfe142",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for temperature, then the Telugu for humidity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఉక్కపోత",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉక్కపోత — ukkapōta — \"muggy heat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వర్షం ముందు ఉక్కపోత భరించలేకపోయాం. varṣaṁ mundu ukkapōta bhariñcalēkapōyāṁ. Before the rain we could not bear the muggy heat."
+            },
+            {
+              "kind": "speech",
+              "text": "ఉక్క, closeness of the air, + పోత. The heat that makes you sweat without any breeze."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉక్కపోత (ukkapōta) is a Telugu compound: ఉక్క, \"sultriness, closeness of the weather\" (DEDR 568), native Dravidian, and -పోత, whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukkapōta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukkapōta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukkapōta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukkapōta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varṣaṁ mundu ukkapōta bhariñcalēkapōyāṁ. — Before the rain we could not bear the muggy heat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varṣaṁ mundu ukkapōta bhariñcalēkapōyāṁ.* — Before the rain we could not bear the muggy heat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for temperature, then the Telugu for humidity, then say ukkapōta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for temperature, then the Telugu for humidity, then say *ukkapōta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఉక్కపోత (ukkapōta) mean? (\"Muggy heat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C476-vedekku",
+      "sequence": 23980,
+      "title": "వేడెక్కు (vēḍekku) — to heat up; to grow hot",
+      "headword": "వేడెక్కు",
+      "romanization": "vēḍekku",
+      "gloss": "to heat up; to grow hot",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b874f350ad20acc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for humidity, then the Telugu for muggy heat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వేడెక్కు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వేడెక్కు — vēḍekku — \"to heat up; to grow hot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మధ్యాహ్నానికి గది బాగా వేడెక్కింది. madhyāhnāniki gadi bāgā vēḍekkindi. By midday the room had got very hot."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): వేడెక్కింది, vēḍekkindi."
+            },
+            {
+              "kind": "speech",
+              "text": "వేడి, heat, + ఎక్కు, to climb: heat climbing. Also said of a heated argument. Its subject is a thing, so the past shown is the third person: వేడెక్కింది, it got hot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వేడెక్కు (vēḍekku) is native Dravidian: వేడి, \"heat\" (DEDR 5517), and ఎక్కు, \"to climb, to rise\" (DEDR 766)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēḍekku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēḍekku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēḍekku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēḍekku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhyāhnāniki gadi bāgā vēḍekkindi. — By midday the room had got very hot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhyāhnāniki gadi bāgā vēḍekkindi.* — By midday the room had got very hot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for humidity, then the Telugu for muggy heat, then say vēḍekku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for humidity, then the Telugu for muggy heat, then say *vēḍekku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వేడెక్కు (vēḍekku) mean? (\"To heat up; to grow hot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

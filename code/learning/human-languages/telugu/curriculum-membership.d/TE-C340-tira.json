@@ -1,0 +1,11 @@
+{
+  "id": "TE-C340-tira",
+  "pathSegment": "TE-PATH-340-ANUKOKUNDA340",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-340-ANUKOKUNDA340",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C476-sitosnasthiti",
+    "language": "telugu",
+    "chapter": 476,
+    "sequence": 23940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e16f08f2e47f5707"
+  },
+  "findings": []
+}

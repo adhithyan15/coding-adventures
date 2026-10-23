@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C358-kalaganu",
+    "language": "telugu",
+    "chapter": 358,
+    "sequence": 17670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3c9478a76eb6bf9"
+  },
+  "findings": []
+}

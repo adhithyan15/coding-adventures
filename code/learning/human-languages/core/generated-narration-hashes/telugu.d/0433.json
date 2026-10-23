@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:47d83aebcb2cf116",
+  "lessonIds": [
+    "TE-C433-krsi",
+    "TE-C433-savalu",
+    "TE-C433-vyuham",
+    "TE-C433-adhipatyam",
+    "TE-C433-kolpovu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch433.txt",
+  "json": "telugu/narration/ch433.json",
+  "textHash": "fnv1a64:53c32be28d397826",
+  "jsonHash": "fnv1a64:f02d3169b1b33a4a",
+  "findings": []
+}

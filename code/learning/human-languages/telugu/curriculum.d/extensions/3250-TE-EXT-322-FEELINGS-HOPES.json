@@ -1,0 +1,10 @@
+{
+  "id": "TE-EXT-322-FEELINGS-HOPES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say how I feel and how I felt with nāku … -gā undi and anipiñcindi, and what I would like or dream of with -ālani.",
+  "prerequisites": [
+    "TE-EXT-321-TICKETS-TROUBLE"
+  ]
+}
