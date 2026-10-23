@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-192-A2-LOKAAN-OBLIQUE",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-192-A2-LOKAAN-OBLIQUE"
+  ],
+  "after": []
+}

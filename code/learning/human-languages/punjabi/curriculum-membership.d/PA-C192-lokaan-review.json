@@ -1,0 +1,11 @@
+{
+  "id": "PA-C192-lokaan-review",
+  "pathSegment": "PA-PATH-192-A2-LOKAAN-OBLIQUE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-192-A2-LOKAAN-OBLIQUE",
+      "order": 2
+    }
+  ]
+}
