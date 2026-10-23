@@ -1442,6 +1442,21 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_statement_keywords_inside_attribute_blocks() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nSETTINGS {\n  string direction\n  string classDef\n  string class\n  string style\n}\n",
+        );
+        let names: Vec<&str> = tokens
+            .iter()
+            .filter_map(|token| token.type_name.as_deref())
+            .collect();
+
+        for expected in ["DIRECTION_KW", "CLASSDEF_KW", "CLASS_KW", "STYLE_KW"] {
+            assert!(names.contains(&expected));
+        }
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",

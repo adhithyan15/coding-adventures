@@ -13754,6 +13754,10 @@ fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
             | "MD_PARENT"
             | "STRING"
             | "TITLE_KW"
+            | "DIRECTION_KW"
+            | "CLASSDEF_KW"
+            | "CLASS_KW"
+            | "STYLE_KW"
             | "ESCAPED_ATTRIBUTE"
             | "COMMA_ATTRIBUTE_TYPE"
     ) {
