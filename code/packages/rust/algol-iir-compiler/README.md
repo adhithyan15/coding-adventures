@@ -276,6 +276,9 @@ dynamic inputs, zero divisors, and results beyond `2^53` remain conservative.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.
+Exact integral local real snapshots may supply the same leaves through built-in
+`entier`. Fractional, non-finite, oversized, dynamic, captured, array-backed,
+and by-name real values remain conservative.
 Positive variable-free whole-number powers may raise the exact sign-rooted
 integer transform within the existing exponent-unroll cap while checked
 exponentiation remains within `2^53`; zero, negative, dynamic, deeper, and
