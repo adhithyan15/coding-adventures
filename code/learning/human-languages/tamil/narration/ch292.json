@@ -4,7 +4,7 @@
   "chapter": 292,
   "title": "If It Rains",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:bbac3641032f93c0",
+  "sourceHash": "fnv1a64:ef7e771ef9806a02",
   "lessons": [
     {
       "id": "TA-C292-vantal",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d25bd4e677767d15",
+      "sourceHash": "fnv1a64:7ebd3e6952e1062d",
       "notice": null,
       "blocks": [
         {
@@ -215,7 +215,7 @@
             },
             {
               "kind": "speech",
-              "text": "Build \"if not\" from the to-form: வர becomes வரா- with விட்டால்: வராவிட்டால். So போக becomes போகாவிட்டால், சாப்பிட becomes சாப்பிடாவிட்டால். போய்விடும் (pōyviṭum, \"it will go off\")."
+              "text": "Build \"if not\" from the to-form: வர becomes வரா- with விட்டால்: வராவிட்டால். In the same way போக becomes போகாவிட்டால், சாப்பிட becomes சாப்பிடாவிட்டால். போய்விடும் (pōyviṭum, \"it will go off\")."
             },
             {
               "kind": "speech",

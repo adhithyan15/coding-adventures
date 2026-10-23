@@ -46,7 +46,7 @@ reviews_of: [TA-C79-when-clause, TA-C284-patittukkontirunten, TA-C35-veedu, TA-C
 >
 > *nāṉ vīṭṭukku vanta pōtu ammā camaittukkoṇṭiruntār.* — "When I came home, Mother was cooking."
 
-**வந்த** is the past with **-அ** in place of the person ending: **வந்தேன்** → **வந்த**. Before **போது**, "time", it is "when (someone) came", the same for every person: **அவள் வந்த போது**. So **போன போது**, "when (someone) went". With **-கொண்டிருந்த** it is "while": **நான் சாப்பிட்டுக்கொண்டிருந்த போது** (*nāṉ cāppiṭṭukkoṇṭirunta pōtu*), "while I was eating".
+**வந்த** is the past with **-அ** in place of the person ending: **வந்தேன்** → **வந்த**. Before **போது**, "time", it is "when (someone) came", the same for every person: **அவள் வந்த போது**. "When (someone) went" is **போன போது**. With **-கொண்டிருந்த** it is "while": **நான் சாப்பிட்டுக்கொண்டிருந்த போது** (*nāṉ cāppiṭṭukkoṇṭirunta pōtu*), "while I was eating".
 
 ## You'll want to know: இருந்தது, 'there was'
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-C284-THERE-WAS-01]; assesses=[TA-LEX-UUR-01, TA-LEX-C41-ADJ-02, TA-LEX-C68-SHOP-01, TA-LEX-C41-ADJ-01, TA-LEX-C40-DEIXIS-04, TA-LEX-C94-LOST-01] -->

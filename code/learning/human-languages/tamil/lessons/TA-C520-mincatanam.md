@@ -52,7 +52,7 @@ reviews_of: [TA-C520-calavai-iyantiram]
 
 Plural: மின்சாதனங்கள், *miṉcātaṉaṅkaḷ*.
 
-மின் "electric" + சாதனம் "a device". The plural is மின்சாதனங்கள்.
+மின் "electric" + சாதனம் "a device". Plural: மின்சாதனங்கள்.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

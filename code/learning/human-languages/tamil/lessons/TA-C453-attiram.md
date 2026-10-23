@@ -50,7 +50,7 @@ reviews_of: [TA-C280-virar]
 >
 > He shouted in a rage.
 
-A -அம் noun takes the oblique -அத்து- before an ending: ஆத்திரத்தில், in a rage.
+A -அம் noun takes the oblique -அத்து- before an ending. In a rage: ஆத்திரத்தில்.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 288,
-  "sourceHash": "fnv1a64:8c12661636b3d38e",
+  "sourceHash": "fnv1a64:32e95fd4d4793957",
   "lessonIds": [
     "TA-C288-eppatip-poka-ventum",
     "TA-C288-nerakap-ponkal",
@@ -11,7 +11,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch288.txt",
   "json": "tamil/narration/ch288.json",
-  "textHash": "fnv1a64:03125eb3d9f81d51",
-  "jsonHash": "fnv1a64:27edbf62f48ac3f1",
+  "textHash": "fnv1a64:e4a25ca3edacb357",
+  "jsonHash": "fnv1a64:e6570b7152f8b53b",
   "findings": []
 }

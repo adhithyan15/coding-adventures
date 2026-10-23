@@ -52,7 +52,7 @@ reviews_of: [TA-C454-atircci]
 
 Past (I …): திடுக்கிட்டேன், *tiṭukkiṭṭēṉ*.
 
-Built with இடு "to put", so its past runs like இட்டேன்: திடுக்கிட்டேன்.
+Built with இடு "to put"; its past runs like இட்டேன்: திடுக்கிட்டேன்.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

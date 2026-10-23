@@ -4,7 +4,7 @@
   "chapter": 355,
   "title": "Advice and Proposals",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1544743f7ae8539c",
+  "sourceHash": "fnv1a64:09c5883503193635",
   "lessons": [
     {
       "id": "TA-C355-parinturai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94dc355f8e6589a1",
+      "sourceHash": "fnv1a64:8561156f17b1dd2d",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "The same word is the noun a recommendation: அவருடைய பரிந்துரை (parinturai)."
+              "text": "The same word is also a noun, a recommendation: அவருடைய பரிந்துரை (parinturai)."
             }
           ]
         },

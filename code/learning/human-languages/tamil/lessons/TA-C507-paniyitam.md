@@ -50,7 +50,7 @@ reviews_of: [TA-C506-utaviyalar]
 >
 > My workplace is far from home.
 
-Like any -அம் noun it takes -அத்து- before an ending: பணியிடத்தில், at the workplace.
+Like any -அம் noun it takes -அத்து- before an ending. At the workplace: பணியிடத்தில்.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

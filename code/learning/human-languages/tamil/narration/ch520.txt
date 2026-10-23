@@ -115,7 +115,7 @@ You'll want to know: மின்சாதனம்.
 மின்சாதனம் — miṉcātaṉam — "an electrical appliance".
 புயலின்போது எல்லா மின்சாதனங்களையும் அணைத்தோம். puyaliṉpōtu ellā miṉcātaṉaṅkaḷaiyum aṇaittōm. During the storm we switched off all the electrical appliances.
 Plural: மின்சாதனங்கள், miṉcātaṉaṅkaḷ.
-மின் "electric" + சாதனம் "a device". The plural is மின்சாதனங்கள்.
+மின் "electric" + சாதனம் "a device". Plural: மின்சாதனங்கள்.
 
 The word, taken apart.
 மின்சாதனம் (miṉcātaṉam) joins the native மின் (miṉ), "electric" (DEDR 4876), and சாதனம் (cātaṉam), "a means, a device", from Sanskrit sādhana (CDIAL 13334).

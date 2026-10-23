@@ -4,7 +4,7 @@
   "chapter": 353,
   "title": "Advantages and Drawbacks",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:aab8226e7280222c",
+  "sourceHash": "fnv1a64:855862fbb9b13787",
   "lessons": [
     {
       "id": "TA-C353-catakam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d69854cdfce65a08",
+      "sourceHash": "fnv1a64:9bbd80dc691a352c",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "சாதகமாக, in one's favour: காற்று நமக்குச் சாதகமாக இருக்கிறது, the wind is in our favour."
+              "text": "சாதகமாக, in one's favour. The wind is in our favour: காற்று நமக்குச் சாதகமாக இருக்கிறது."
             }
           ]
         },

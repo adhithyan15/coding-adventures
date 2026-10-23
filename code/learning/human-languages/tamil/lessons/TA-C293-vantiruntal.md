@@ -63,7 +63,7 @@ The ending of **இருப்பேன்** changes for the person, as every f
 >
 > *atu naṉṟāka iruntirukkum.* — "That would have been nice."
 
-The same form also makes a guess about the past: **அவன் வந்திருப்பான்** can mean "he must have come (by now)". The rest of the sentence tells you which.
+The same form also makes a guess about the past. **அவன் வந்திருப்பான்** can mean "he must have come (by now)". The rest of the sentence tells you which.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C293-UNREAL-IF-01, TA-GRAMMAR-C293-WOULD-01, TA-LEX-C125-THINGS125-05, TA-LEX-C48-LEAVE-02] -->

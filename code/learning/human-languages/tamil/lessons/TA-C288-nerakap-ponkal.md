@@ -46,7 +46,7 @@ reviews_of: [TA-C288-eppatip-poka-ventum, TA-C113-neraka, TA-C153-tirumpu, TA-C6
 
 You have said this ending since the early chapters: **சொல்லுங்கள்**, "tell (me)". It is the verb with **-உங்கள்**, the polite way to ask someone to do something: **போ** → **போங்கள்**, **திரும்பு** → **திரும்புங்கள்**, **வா** → **வாருங்கள்**, **பார்** → **பாருங்கள்**. **பக்கம்** (*pakkam*, "side"): **இடது பக்கம்**, "(to) the left side".
 
-Keep it apart from the **-உ** / **-இ** form of the story lessons. **திரும்புங்கள்** asks someone to turn; **திரும்பி** is "having turned", and waits for another verb: **இடது பக்கம் திரும்பி நேராகப் போங்கள்** (*iṭatu pakkam tirumpi nērākap pōṅkaḷ*, "turn left and go straight on").
+Do not mix it up with the **-உ** / **-இ** form of the story lessons. **திரும்புங்கள்** asks someone to turn; **திரும்பி** is "having turned", and waits for another verb: **இடது பக்கம் திரும்பி நேராகப் போங்கள்** (*iṭatu pakkam tirumpi nērākap pōṅkaḷ*, "turn left and go straight on").
 
 ## You'll want to know: landmarks
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-C288-LANDMARK-01]; assesses=[TA-LEX-C114-LOC114-05, TA-LEX-C264-IDAM264-01, TA-LEX-C115-LOC115-02, TA-LEX-C68-SHOP-01, TA-LEX-C105-WORK-04, TA-LEX-C264-IDAM264-02, TA-GRAMMAR-C74-JOIN-01, TA-LEX-C113-LOC113-02, TA-LEX-C114-LOC114-02] -->
@@ -61,7 +61,7 @@ The landmark takes **-க்கு**, then the place word: **கோயிலு�
 >
 > *iraṇṭāvatu teruvil valatu pakkam tirumpuṅkaḷ.* — "Turn right at the second street."
 
-**இரண்டாவது** (*iraṇṭāvatu*, "second"), **இரண்டு** with **-ஆவது**; **தெருவில்** (*teruvil*, "at the street").
+**இரண்டாவது** (*iraṇṭāvatu*, "second") is **இரண்டு** with **-ஆவது**; **தெருவில்** (*teruvil*) is "at the street".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C288-GIVE-WAY-01, TA-GRAMMAR-C288-LANDMARK-01, TA-LEX-C114-LOC114-05, TA-LEX-C115-LOC115-02] -->

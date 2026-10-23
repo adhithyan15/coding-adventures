@@ -4,7 +4,7 @@
   "chapter": 451,
   "title": "At the Shopping Complex",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d10181908deb3559",
+  "sourceHash": "fnv1a64:1665e42c953e0242",
   "lessons": [
     {
       "id": "TA-C451-valakam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3308784874e012f7",
+      "sourceHash": "fnv1a64:08117c9a29ac814b",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "வணிக வளாகம் (vaḷākam) is a shopping complex; பல்கலைக்கழக வளாகம் (vaḷākam), a campus."
+              "text": "வணிக வளாகம் (vaḷākam) is a shopping complex, and பல்கலைக்கழக வளாகம் (vaḷākam) a campus."
             }
           ]
         },

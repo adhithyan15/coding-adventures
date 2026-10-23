@@ -61,7 +61,7 @@ You know the shape from **இருந்தாலும்**, "even so, althoug
 >
 > *nīṅkaḷ cīkkiram varāviṭṭāl, pēruntu pōyviṭum.* — "If you don't come soon, the bus will leave."
 
-Build "if not" from the to-form: **வர** → **வரா-** with **விட்டால்**: **வராவிட்டால்**. So **போக** → **போகாவிட்டால்**, **சாப்பிட** → **சாப்பிடாவிட்டால்**. **போய்விடும்** (*pōyviṭum*, "it will go off").
+Build "if not" from the to-form: **வர** → **வரா-** with **விட்டால்**: **வராவிட்டால்**. In the same way **போக** → **போகாவிட்டால்**, **சாப்பிட** → **சாப்பிடாவிட்டால்**. **போய்விடும்** (*pōyviṭum*, "it will go off").
 
 **இல்லாவிட்டால்**, "otherwise", is the same shape on **இல்லை**: "if it is not (so)".
 

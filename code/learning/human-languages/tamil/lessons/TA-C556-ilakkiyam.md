@@ -50,7 +50,7 @@ reviews_of: [TA-C556-cirukatai]
 >
 > Tamil literature is more than two thousand years old.
 
-A -அம் noun: இலக்கியத்தில். A literary man is an இலக்கியவாதி.
+A -அம் noun: இலக்கியத்தில். An இலக்கியவாதி is a literary man.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

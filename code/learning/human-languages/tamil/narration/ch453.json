@@ -4,7 +4,7 @@
   "chapter": 453,
   "title": "Rage and Irritation",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:35c5aad1024e305a",
+  "sourceHash": "fnv1a64:cfe0fd3a93850560",
   "lessons": [
     {
       "id": "TA-C453-attiram",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fa0d3c84043950c",
+      "sourceHash": "fnv1a64:e4c319abd478ac80",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "A -அம் noun takes the oblique -அத்து- before an ending: ஆத்திரத்தில், in a rage."
+              "text": "A -அம் noun takes the oblique -அத்து- before an ending. In a rage: ஆத்திரத்தில்."
             }
           ]
         },

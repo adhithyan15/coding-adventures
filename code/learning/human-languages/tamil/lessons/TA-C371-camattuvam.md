@@ -50,7 +50,7 @@ reviews_of: [TA-C370-curantu]
 >
 > There must be equality between men and women.
 
-சமம், equal, with the abstract ending -த்துவம், as in முக்கியத்துவம்.
+As in முக்கியத்துவம், the abstract ending -த்துவம் joins சமம், equal.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

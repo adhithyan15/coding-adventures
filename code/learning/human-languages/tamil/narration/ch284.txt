@@ -57,7 +57,7 @@ The first is an event: it happened and it was over. A story also needs what was 
 
 You'll want to know: -கொண்டிருந்தேன், 'I was doing'.
 நேற்று இரவு ஒன்பது மணிக்கு நான் ஒரு புத்தகம் படித்துக்கொண்டிருந்தேன். nēṟṟu iravu oṉpatu maṇikku nāṉ oru puttakam paṭittukkoṇṭiruntēṉ. — "At nine last night I was reading a book."
-It is three short words in one: படித்து, "having read"; கொண்டு, "holding"; இருந்தேன், "I was". The person ending is the ending of இருந்தேன், so it changes the same way: அவன் படித்துக்கொண்டிருந்தான், "he was reading"; அவள் பேசிக்கொண்டிருந்தாள் (pēcikkoṇṭiruntāḷ), "she was talking".
+It is three short words in one: படித்து, "having read", கொண்டு, "holding", and இருந்தேன், "I was". The person ending is the ending of இருந்தேன், so it changes the same way. "He was reading": அவன் படித்துக்கொண்டிருந்தான். "She was talking": அவள் பேசிக்கொண்டிருந்தாள் (pēcikkoṇṭiruntāḷ).
 For "it": மழை பெய்துகொண்டிருந்தது (maḻai peytukoṇṭiruntatu), "it was raining". மழை (maḻai, "rain") பெய் (pey, "falls").
 The first piece ends in -உ or -இ: படித்து, பேசி. Take each one whole for now; the story lessons that follow take it apart.
 
@@ -90,7 +90,7 @@ Say "when you come", with the joining you know. (nīṅkaḷ varum pōtu.) Then 
 
 You'll want to know: -த போது, 'when, back then'.
 நான் வீட்டுக்கு வந்த போது அம்மா சமைத்துக்கொண்டிருந்தார். nāṉ vīṭṭukku vanta pōtu ammā camaittukkoṇṭiruntār. — "When I came home, Mother was cooking."
-வந்த is the past with -அ in place of the person ending: வந்தேன் (vantēṉ) becomes வந்த. Before போது, "time", it is "when (someone) came", the same for every person: அவள் வந்த போது (vanta pōtu). So போன போது, "when (someone) went". With -கொண்டிருந்த it is "while": நான் சாப்பிட்டுக்கொண்டிருந்த போது (nāṉ cāppiṭṭukkoṇṭirunta pōtu), "while I was eating".
+வந்த is the past with -அ in place of the person ending: வந்தேன் (vantēṉ) becomes வந்த. Before போது, "time", it is "when (someone) came", the same for every person: அவள் வந்த போது (vanta pōtu). "When (someone) went" is போன போது. With -கொண்டிருந்த it is "while": நான் சாப்பிட்டுக்கொண்டிருந்த போது (nāṉ cāppiṭṭukkoṇṭirunta pōtu), "while I was eating".
 
 You'll want to know: இருந்தது, 'there was'.
 எங்கள் ஊரில் ஒரு சிறிய கடை இருந்தது. eṅkaḷ ūril oru ciṟiya kaṭai iruntatu. — "There was a small shop in our town."

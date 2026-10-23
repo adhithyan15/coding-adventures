@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 473,
-  "sourceHash": "fnv1a64:875d75d35269f92d",
+  "sourceHash": "fnv1a64:4aff55f6c605470f",
   "lessonIds": [
     "TA-C473-vacikaram",
     "TA-C473-kampiram",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch473.txt",
   "json": "tamil/narration/ch473.json",
-  "textHash": "fnv1a64:9e0646328ea54fd2",
-  "jsonHash": "fnv1a64:1712edcb4471ef66",
+  "textHash": "fnv1a64:8e6645330a5dc9ba",
+  "jsonHash": "fnv1a64:972b16a706b6ef28",
   "findings": []
 }

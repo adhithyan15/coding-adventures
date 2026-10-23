@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 381,
-  "sourceHash": "fnv1a64:3c3e0a74a27eaab5",
+  "sourceHash": "fnv1a64:a99b2bd8b2d88cc7",
   "lessonIds": [
     "TA-C381-tecam",
     "TA-C381-akati",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch381.txt",
   "json": "tamil/narration/ch381.json",
-  "textHash": "fnv1a64:a6b9bd9aee4c8e6d",
-  "jsonHash": "fnv1a64:45cbe3a5f5b760d0",
+  "textHash": "fnv1a64:ec534ce0606361e5",
+  "jsonHash": "fnv1a64:34f169803296dfca",
   "findings": []
 }

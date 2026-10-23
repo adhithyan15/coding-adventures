@@ -52,7 +52,7 @@ reviews_of: [TA-C396-piratipali]
 
 Past (I …): பொருட்படுத்தினேன், *poruṭpaṭuttiṉēṉ*.
 
-Mostly negative: பொருட்படுத்தாமல், regardless of; பொருட்படுத்த வேண்டாம், never mind.
+Mostly negative: regardless of, பொருட்படுத்தாமல்; never mind, பொருட்படுத்த வேண்டாம்.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

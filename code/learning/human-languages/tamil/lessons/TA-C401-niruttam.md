@@ -50,7 +50,7 @@ reviews_of: [TA-C401-natattunar]
 >
 > I will get off at the next stop.
 
-பேருந்து நிறுத்தம் is a bus stop; before a case it becomes நிறுத்தத்தில்.
+பேருந்து நிறுத்தம் is a bus stop. Before a case it becomes நிறுத்தத்தில்.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

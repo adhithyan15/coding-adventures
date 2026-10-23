@@ -43,7 +43,7 @@ reviews_of: [TA-C284-vanta-potu, TA-C285-mazhai-naal, TA-C37-uur, TA-C285-atan-p
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C285-FIRST-THEN-01, TA-GRAMMAR-C285-VERBAL-PARTICIPLE-01, TA-GRAMMAR-C286-SO-RESULT-01, TA-GRAMMAR-C287-REASON-ORDER-01, TA-GRAMMAR-C290-FEELING-DATIVE-01, TA-GRAMMAR-C293-UNREAL-IF-01, TA-GRAMMAR-C293-WOULD-01] -->
 
-A told story is not a list of events. It has a **scene**, with **-கொண்டிருந்தேன்** or **-த போது**. It has **events** in the plain past, kept in order with **முதலில்**, **அதன் பிறகு**, the **-உ** / **-இ** form and **கடைசியில்**. It has at least one **reason**, with **அதனால்**, **-ததால்** or **ஏனென்றால்**, and a **feeling**, with **எனக்கு … வந்தது** or **எனக்கு … -ஆக இருந்தது**.
+A told story is not a list of events. It has a **scene**: **-கொண்டிருந்தேன்** or **-த போது**. It has **events** in the plain past, kept in order with **முதலில்**, **அதன் பிறகு**, the **-உ** / **-இ** form and **கடைசியில்**. It has at least one **reason**, with **அதனால்**, **-ததால்** or **ஏனென்றால்**, and a **feeling**, with **எனக்கு … வந்தது** or **எனக்கு … -ஆக இருந்தது**.
 
 A good one ends by looking at what might have been: **… -இருந்தால், … -இருப்பேன்**.
 

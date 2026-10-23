@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 396,
-  "sourceHash": "fnv1a64:51babe5ba4808b3f",
+  "sourceHash": "fnv1a64:0771456b85d26346",
   "lessonIds": [
     "TA-C396-tuntu",
     "TA-C396-etirvinai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch396.txt",
   "json": "tamil/narration/ch396.json",
-  "textHash": "fnv1a64:0768e1f906722102",
-  "jsonHash": "fnv1a64:0812b86b88522311",
+  "textHash": "fnv1a64:bdc02ed985ecc30c",
+  "jsonHash": "fnv1a64:cb067452b0d4b94b",
   "findings": []
 }

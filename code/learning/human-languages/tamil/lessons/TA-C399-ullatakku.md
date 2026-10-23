@@ -52,7 +52,7 @@ reviews_of: [TA-C399-mulam]
 
 Past (it …): உள்ளடக்கியது, *uḷḷaṭakkiyatu*.
 
-Mostly in this form: X-ஐ உள்ளடக்கியது, it includes X. உள்ளடக்கம், contents.
+Mostly in this form: X-ஐ உள்ளடக்கியது, it includes X. Contents: உள்ளடக்கம்.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

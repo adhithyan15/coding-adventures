@@ -4,7 +4,7 @@
   "chapter": 454,
   "title": "Fear and Shock",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8702a7634f5bcc39",
+  "sourceHash": "fnv1a64:ec5a48aaaa289702",
   "lessons": [
     {
       "id": "TA-C454-tikil",
@@ -445,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:310bb115120563f9",
+      "sourceHash": "fnv1a64:3e0153bc51e809db",
       "notice": null,
       "blocks": [
         {
@@ -484,7 +484,7 @@
             },
             {
               "kind": "speech",
-              "text": "Built with இடு \"to put\", so its past runs like இட்டேன்: திடுக்கிட்டேன்."
+              "text": "Built with இடு \"to put\"; its past runs like இட்டேன்: திடுக்கிட்டேன்."
             }
           ]
         },

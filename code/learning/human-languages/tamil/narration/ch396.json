@@ -4,7 +4,7 @@
   "chapter": 396,
   "title": "Pressure and Response",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:51babe5ba4808b3f",
+  "sourceHash": "fnv1a64:0771456b85d26346",
   "lessons": [
     {
       "id": "TA-C396-tuntu",
@@ -599,7 +599,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bea536262961419",
+      "sourceHash": "fnv1a64:83dee6f749c1e4a5",
       "notice": null,
       "blocks": [
         {
@@ -638,7 +638,7 @@
             },
             {
               "kind": "speech",
-              "text": "Mostly negative: பொருட்படுத்தாமல், regardless of; பொருட்படுத்த வேண்டாம், never mind."
+              "text": "Mostly negative: regardless of, பொருட்படுத்தாமல்; never mind, பொருட்படுத்த வேண்டாம்."
             }
           ]
         },

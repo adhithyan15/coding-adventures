@@ -52,7 +52,7 @@ reviews_of: [TA-C381-cinnam]
 
 Past (I …): ஒன்றிணைத்தேன், *oṉṟiṇaittēṉ*.
 
-Transitive with -ஐ and the past in -த்த-; people unite, ஒன்றிணைந்தார்கள், with -ந்த-.
+Transitive with -ஐ and the past in -த்த-; people unite with -ந்த-: ஒன்றிணைந்தார்கள்.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

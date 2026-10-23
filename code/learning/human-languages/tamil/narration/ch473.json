@@ -4,7 +4,7 @@
   "chapter": 473,
   "title": "Charm and Confidence",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:875d75d35269f92d",
+  "sourceHash": "fnv1a64:4aff55f6c605470f",
   "lessons": [
     {
       "id": "TA-C473-vacikaram",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:583c07cb6c208659",
+      "sourceHash": "fnv1a64:273ab52ebbd4b4f1",
       "notice": null,
       "blocks": [
         {
@@ -338,7 +338,7 @@
             },
             {
               "kind": "speech",
-              "text": "தாராளமாக, generously; also plenty: தாராளமாக இடம் இருக்கிறது, there is plenty of room."
+              "text": "தாராளமாக, generously; also plenty. There is plenty of room: தாராளமாக இடம் இருக்கிறது."
             }
           ]
         },

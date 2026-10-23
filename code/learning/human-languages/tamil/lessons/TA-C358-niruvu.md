@@ -52,7 +52,7 @@ reviews_of: [TA-C358-kolkai]
 
 Past (I …): நிறுவினேன், *niṟuviṉēṉ*.
 
-What is founded takes -ஐ. A fact can be established too: உண்மையை நிறுவு.
+What is founded takes -ஐ; a fact can be established too: உண்மையை நிறுவு.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

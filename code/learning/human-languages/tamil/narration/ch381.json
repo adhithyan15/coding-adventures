@@ -4,7 +4,7 @@
   "chapter": 381,
   "title": "One Nation",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3c3e0a74a27eaab5",
+  "sourceHash": "fnv1a64:a99b2bd8b2d88cc7",
   "lessons": [
     {
       "id": "TA-C381-tecam",
@@ -449,7 +449,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef4d42a3892900be",
+      "sourceHash": "fnv1a64:e72d82b110da031e",
       "notice": null,
       "blocks": [
         {
@@ -488,7 +488,7 @@
             },
             {
               "kind": "speech",
-              "text": "Transitive with -ஐ and the past in -த்த-; people unite, ஒன்றிணைந்தார்கள், with -ந்த-."
+              "text": "Transitive with -ஐ and the past in -த்த-; people unite with -ந்த-: ஒன்றிணைந்தார்கள்."
             }
           ]
         },

@@ -46,7 +46,7 @@ reviews_of: [TA-C284-vanten, TA-C44-book, TA-C33-padi, TA-C73-yesterday]
 >
 > *nēṟṟu iravu oṉpatu maṇikku nāṉ oru puttakam paṭittukkoṇṭiruntēṉ.* — "At nine last night I was reading a book."
 
-It is three short words in one: **படித்து**, "having read"; **கொண்டு**, "holding"; **இருந்தேன்**, "I was". The person ending is the ending of **இருந்தேன்**, so it changes the same way: **அவன்** **படித்துக்கொண்டிருந்தான்**, "he was reading"; **அவள்** **பேசிக்கொண்டிருந்தாள்** (*pēcikkoṇṭiruntāḷ*), "she was talking".
+It is three short words in one: **படித்து**, "having read", **கொண்டு**, "holding", and **இருந்தேன்**, "I was". The person ending is the ending of **இருந்தேன்**, so it changes the same way. "He was reading": **அவன்** **படித்துக்கொண்டிருந்தான்**. "She was talking": **அவள்** **பேசிக்கொண்டிருந்தாள்** (*pēcikkoṇṭiruntāḷ*).
 
 For "it": **மழை பெய்துகொண்டிருந்தது** (*maḻai peytukoṇṭiruntatu*), "it was raining". **மழை** (*maḻai*, "rain") **பெய்** (*pey*, "falls").
 

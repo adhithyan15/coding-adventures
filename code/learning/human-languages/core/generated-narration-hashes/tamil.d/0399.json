@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 399,
-  "sourceHash": "fnv1a64:b8d619cf888819a0",
+  "sourceHash": "fnv1a64:e07cb6758e403b38",
   "lessonIds": [
     "TA-C399-eppatiyum",
     "TA-C399-kututal",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "tamil/narration/ch399.txt",
   "json": "tamil/narration/ch399.json",
-  "textHash": "fnv1a64:65606a5a084ada76",
-  "jsonHash": "fnv1a64:07b9d734a621a46d",
+  "textHash": "fnv1a64:66b57a6151ff8868",
+  "jsonHash": "fnv1a64:73791a1e51b17ccd",
   "findings": []
 }

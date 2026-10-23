@@ -46,7 +46,7 @@ Before the new one: say the Tamil for a story character, then the Tamil for a sh
 You'll want to know: இலக்கியம்.
 இலக்கியம் — ilakkiyam — "literature".
 தமிழ் இலக்கியம் இரண்டாயிரம் ஆண்டுகளுக்கும் மேல் பழமையானது. tamiḻ ilakkiyam iraṇṭāyiram āṇṭukaḷukkum mēl paḻamaiyāṉatu. Tamil literature is more than two thousand years old.
-A -அம் noun: இலக்கியத்தில். A literary man is an இலக்கியவாதி.
+A -அம் noun: இலக்கியத்தில். An இலக்கியவாதி is a literary man.
 
 The word, taken apart.
 இலக்கியம் (ilakkiyam) is usually traced to Sanskrit lakṣya, "a mark, something kept in view" (Monier-Williams), the source of லட்சியம் (laṭciyam) too; Tamil puts இ before the initial ல. How it came to mean literature is not settled.
@@ -80,7 +80,7 @@ Before the new one: say the Tamil for a short story, then the Tamil for literatu
 You'll want to know: கைவினை.
 கைவினை — kaiviṉai — "a craft; handicraft".
 கைவினைப் பொருட்களைப் போட்டிக்கு அனுப்பினால் பரிசு கிடைக்கலாம். kaiviṉaip poruṭkaḷaip pōṭṭikku aṉuppiṉāl paricu kiṭaikkalām. If you send craftwork to the contest, you may win a prize.
-கை "hand" + வினை "work". Craftwork is கைவினைப் பொருட்கள்.
+Craftwork is கைவினைப் பொருட்கள்: கை "hand" + வினை "work".
 
 The word, taken apart.
 கைவினை (kaiviṉai) is a native compound: கை (kai), "a hand", and வினை (viṉai), "action, work" (DEDR 5445).

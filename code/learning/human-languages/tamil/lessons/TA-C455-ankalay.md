@@ -52,7 +52,7 @@ reviews_of: [TA-C455-atankam]
 
 Past (I …): அங்கலாய்த்தேன், *aṅkalāyttēṉ*.
 
-What one frets about takes பற்றி "about": அதைப் பற்றி அங்கலாய்த்தாள்.
+What one frets about takes பற்றி "about", as in அதைப் பற்றி அங்கலாய்த்தாள்.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

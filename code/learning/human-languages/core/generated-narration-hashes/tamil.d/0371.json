@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 371,
-  "sourceHash": "fnv1a64:2487bf85afe628eb",
+  "sourceHash": "fnv1a64:ca3e2261e60c3d77",
   "lessonIds": [
     "TA-C371-camattuvam",
     "TA-C371-pakupatu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch371.txt",
   "json": "tamil/narration/ch371.json",
-  "textHash": "fnv1a64:30bbf557bc9e85e4",
-  "jsonHash": "fnv1a64:cb9c03852c8bba17",
+  "textHash": "fnv1a64:74aa384e1b49fe15",
+  "jsonHash": "fnv1a64:88c18ccff71e0b5d",
   "findings": []
 }

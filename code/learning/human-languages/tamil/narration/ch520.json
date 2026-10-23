@@ -4,7 +4,7 @@
   "chapter": 520,
   "title": "Machines in the Home",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c74b7408fbd205dd",
+  "sourceHash": "fnv1a64:f4a12156e671bd66",
   "lessons": [
     {
       "id": "TA-C520-ceyarkaikkol",
@@ -445,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a865756373edb432",
+      "sourceHash": "fnv1a64:32d1fcc8f062d3c4",
       "notice": null,
       "blocks": [
         {
@@ -484,7 +484,7 @@
             },
             {
               "kind": "speech",
-              "text": "மின் \"electric\" + சாதனம் \"a device\". The plural is மின்சாதனங்கள்."
+              "text": "மின் \"electric\" + சாதனம் \"a device\". Plural: மின்சாதனங்கள்."
             }
           ]
         },

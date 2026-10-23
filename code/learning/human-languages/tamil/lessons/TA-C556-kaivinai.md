@@ -50,7 +50,7 @@ reviews_of: [TA-C556-ilakkiyam]
 >
 > If you send craftwork to the contest, you may win a prize.
 
-கை "hand" + வினை "work". Craftwork is கைவினைப் பொருட்கள்.
+Craftwork is கைவினைப் பொருட்கள்: கை "hand" + வினை "work".
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

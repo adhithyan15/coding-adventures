@@ -4,7 +4,7 @@
   "chapter": 371,
   "title": "Equal Rights",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2487bf85afe628eb",
+  "sourceHash": "fnv1a64:ca3e2261e60c3d77",
   "lessons": [
     {
       "id": "TA-C371-camattuvam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:250ae0f7f60e9a1d",
+      "sourceHash": "fnv1a64:459f8eefc9f754fd",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "சமம், equal, with the abstract ending -த்துவம், as in முக்கியத்துவம்."
+              "text": "As in முக்கியத்துவம், the abstract ending -த்துவம் joins சமம், equal."
             }
           ]
         },

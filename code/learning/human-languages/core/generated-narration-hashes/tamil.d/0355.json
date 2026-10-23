@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 355,
-  "sourceHash": "fnv1a64:1544743f7ae8539c",
+  "sourceHash": "fnv1a64:09c5883503193635",
   "lessonIds": [
     "TA-C355-parinturai",
     "TA-C355-arivurai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch355.txt",
   "json": "tamil/narration/ch355.json",
-  "textHash": "fnv1a64:6a233633e9e0134b",
-  "jsonHash": "fnv1a64:6f7de7ac9645d4fe",
+  "textHash": "fnv1a64:acb32df88bc88750",
+  "jsonHash": "fnv1a64:cb1ac41b6e8751d2",
   "findings": []
 }

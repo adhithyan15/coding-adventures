@@ -46,7 +46,7 @@ Before the new one: say the Tamil for to switch, then the Tamil for a bus conduc
 You'll want to know: நிறுத்தம்.
 நிறுத்தம் — niṟuttam — "a bus stop; a stop".
 அடுத்த நிறுத்தத்தில் நான் இறங்குவேன். aṭutta niṟuttattil nāṉ iṟaṅkuvēṉ. I will get off at the next stop.
-பேருந்து நிறுத்தம் (niṟuttam) is a bus stop; before a case it becomes நிறுத்தத்தில்.
+பேருந்து நிறுத்தம் (niṟuttam) is a bus stop. Before a case it becomes நிறுத்தத்தில்.
 
 The word, taken apart.
 நிறுத்தம் (niṟuttam) is built from நிறுத்து, "to stop" (DEDR 3675, the family of நில், to stand), with the noun ending -am.

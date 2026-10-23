@@ -59,7 +59,7 @@ Add **-தான்**, "exactly, that very", and it points back hard: "that is w
 >
 > *pēruntu varavillai. eṉavē nāṅkaḷ naṭantu pōṉōm.* — "The bus did not come. Therefore we walked."
 
-**எனவே** and **ஆகையால்** (*ākaiyāl*, "therefore") do the job of **அதனால்** in written Tamil: a notice, a letter, the news. They are the formal side of the two Tamils. In talk, **அதனால்** carries the result.
+In written Tamil, **எனவே** and **ஆகையால்** (*ākaiyāl*, "therefore") do the job of **அதனால்**: a notice, a letter, the news. They are the formal side of the two Tamils. In talk, **அதனால்** carries the result.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C286-SO-RESULT-01, TA-GRAMMAR-C286-THEREFORE-01, TA-LEX-C61-FEEL-04] -->

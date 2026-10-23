@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 520,
-  "sourceHash": "fnv1a64:c74b7408fbd205dd",
+  "sourceHash": "fnv1a64:f4a12156e671bd66",
   "lessonIds": [
     "TA-C520-ceyarkaikkol",
     "TA-C520-taniyanki",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch520.txt",
   "json": "tamil/narration/ch520.json",
-  "textHash": "fnv1a64:266008d741973579",
-  "jsonHash": "fnv1a64:d154a1a893330ac2",
+  "textHash": "fnv1a64:978a0f7b50b2cbae",
+  "jsonHash": "fnv1a64:b74fd3b6f6b95c5f",
   "findings": []
 }

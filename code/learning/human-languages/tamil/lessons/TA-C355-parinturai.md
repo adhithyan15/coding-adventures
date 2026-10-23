@@ -52,7 +52,7 @@ reviews_of: [TA-C354-valiyuruttu]
 
 Past (I …): பரிந்துரைத்தேன், *parinturaittēṉ*.
 
-The same word is the noun a recommendation: அவருடைய பரிந்துரை.
+The same word is also a noun, a recommendation: அவருடைய பரிந்துரை.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

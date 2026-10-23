@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 286,
-  "sourceHash": "fnv1a64:7da41ac671580f13",
+  "sourceHash": "fnv1a64:4bfd74fce33ba1d8",
   "lessonIds": [
     "TA-C286-tonrukiratu",
     "TA-C286-enave",
@@ -11,7 +11,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch286.txt",
   "json": "tamil/narration/ch286.json",
-  "textHash": "fnv1a64:6a7228804b870d5c",
-  "jsonHash": "fnv1a64:550809001a993340",
+  "textHash": "fnv1a64:124ede56c1163caa",
+  "jsonHash": "fnv1a64:58122b67c00d4e84",
   "findings": []
 }

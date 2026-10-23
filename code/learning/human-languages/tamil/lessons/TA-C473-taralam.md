@@ -50,7 +50,7 @@ reviews_of: [TA-C473-kampiram]
 >
 > He helped the poor generously.
 
-தாராளமாக, generously; also plenty: தாராளமாக இடம் இருக்கிறது, there is plenty of room.
+தாராளமாக, generously; also plenty. There is plenty of room: தாராளமாக இடம் இருக்கிறது.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

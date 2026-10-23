@@ -4,7 +4,7 @@
   "chapter": 401,
   "title": "On a Crowded Bus",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7c7e1eab119404e0",
+  "sourceHash": "fnv1a64:46f5f1e0a288a965",
   "lessons": [
     {
       "id": "TA-C401-natattunar",
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62f8f23c97adbfde",
+      "sourceHash": "fnv1a64:f59220a9c7a15a92",
       "notice": null,
       "blocks": [
         {
@@ -196,7 +196,7 @@
             },
             {
               "kind": "speech",
-              "text": "பேருந்து நிறுத்தம் (niṟuttam) is a bus stop; before a case it becomes நிறுத்தத்தில்."
+              "text": "பேருந்து நிறுத்தம் (niṟuttam) is a bus stop. Before a case it becomes நிறுத்தத்தில்."
             }
           ]
         },

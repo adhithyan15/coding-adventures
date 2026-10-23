@@ -4,7 +4,7 @@
   "chapter": 293,
   "title": "It Depends and What Would Have Been",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6920be3ed0a7929b",
+  "sourceHash": "fnv1a64:5416e6283e19fea1",
   "lessons": [
     {
       "id": "TA-C293-poruttatu",
@@ -147,7 +147,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d812cd29b0586a94",
+      "sourceHash": "fnv1a64:872b35a8777d788c",
       "notice": null,
       "blocks": [
         {
@@ -209,7 +209,7 @@
             },
             {
               "kind": "speech",
-              "text": "The same form also makes a guess about the past: அவன் வந்திருப்பான் can mean \"he must have come (by now)\". The rest of the sentence tells you which."
+              "text": "The same form also makes a guess about the past. அவன் வந்திருப்பான் can mean \"he must have come (by now)\". The rest of the sentence tells you which."
             }
           ]
         },
@@ -287,7 +287,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:ae1c368e7fa0f9bd",
+      "sourceHash": "fnv1a64:5d6d777c81ced4dd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -334,7 +334,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A told story is not a list of events. It has a scene, with -கொண்டிருந்தேன் or -த போது. It has events in the plain past, kept in order with முதலில், அதன் பிறகு, the -உ / -இ form and கடைசியில். It has at least one reason, with அதனால், -ததால் or ஏனென்றால், and a feeling, with எனக்கு … வந்தது or எனக்கு … -ஆக இருந்தது."
+              "text": "A told story is not a list of events. It has a scene: -கொண்டிருந்தேன் or -த போது. It has events in the plain past, kept in order with முதலில், அதன் பிறகு, the -உ / -இ form and கடைசியில். It has at least one reason, with அதனால், -ததால் or ஏனென்றால், and a feeling, with எனக்கு … வந்தது or எனக்கு … -ஆக இருந்தது."
             },
             {
               "kind": "speech",

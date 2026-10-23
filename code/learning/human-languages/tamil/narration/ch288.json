@@ -4,7 +4,7 @@
   "chapter": 288,
   "title": "Asking the Way",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:8c12661636b3d38e",
+  "sourceHash": "fnv1a64:32e95fd4d4793957",
   "lessons": [
     {
       "id": "TA-C288-eppatip-poka-ventum",
@@ -132,7 +132,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:089ec8b7da3758c6",
+      "sourceHash": "fnv1a64:54e82c9112233c2e",
       "notice": null,
       "blocks": [
         {
@@ -167,7 +167,7 @@
             },
             {
               "kind": "speech",
-              "text": "Keep it apart from the -உ / -இ form of the story lessons. திரும்புங்கள் asks someone to turn; திரும்பி is \"having turned\", and waits for another verb: இடது பக்கம் திரும்பி நேராகப் போங்கள் (iṭatu pakkam tirumpi nērākap pōṅkaḷ, \"turn left and go straight on\")."
+              "text": "Do not mix it up with the -உ / -இ form of the story lessons. திரும்புங்கள் asks someone to turn; திரும்பி is \"having turned\", and waits for another verb: இடது பக்கம் திரும்பி நேராகப் போங்கள் (iṭatu pakkam tirumpi nērākap pōṅkaḷ, \"turn left and go straight on\")."
             }
           ]
         },
@@ -190,7 +190,7 @@
             },
             {
               "kind": "speech",
-              "text": "இரண்டாவது (iraṇṭāvatu, \"second\"), இரண்டு with -ஆவது; தெருவில் (teruvil, \"at the street\")."
+              "text": "இரண்டாவது (iraṇṭāvatu, \"second\") is இரண்டு with -ஆவது; தெருவில் (teruvil) is \"at the street\"."
             }
           ]
         },

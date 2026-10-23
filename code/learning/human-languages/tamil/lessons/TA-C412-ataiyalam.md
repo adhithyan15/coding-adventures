@@ -50,7 +50,7 @@ reviews_of: [TA-C411-muttu]
 >
 > The big temple is the landmark of our street.
 
-அடையாள அட்டை, the identity card, uses its joining form அடையாள.
+அடையாள அட்டை is the identity card; it uses the joining form அடையாள.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

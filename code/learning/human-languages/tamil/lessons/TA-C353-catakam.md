@@ -52,7 +52,7 @@ reviews_of: [TA-C352-pati]
 
 Plural: சாதகங்கள், *cātakaṅkaḷ*.
 
-சாதகமாக, in one's favour: காற்று நமக்குச் சாதகமாக இருக்கிறது, the wind is in our favour.
+சாதகமாக, in one's favour. The wind is in our favour: காற்று நமக்குச் சாதகமாக இருக்கிறது.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

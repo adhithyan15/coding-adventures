@@ -4,7 +4,7 @@
   "chapter": 507,
   "title": "At the Office Desk",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a5e664cb28cd6503",
+  "sourceHash": "fnv1a64:b167a149f84f1d91",
   "lessons": [
     {
       "id": "TA-C507-paniyitam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e599cd986dc891f",
+      "sourceHash": "fnv1a64:d461dff57c1fcdfb",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Like any -அம் noun it takes -அத்து- before an ending: பணியிடத்தில், at the workplace."
+              "text": "Like any -அம் noun it takes -அத்து- before an ending. At the workplace: பணியிடத்தில்."
             }
           ]
         },

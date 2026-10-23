@@ -4,7 +4,7 @@
   "chapter": 284,
   "title": "What Happened and What Was Going On",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:67861f20c7be2809",
+  "sourceHash": "fnv1a64:8900744ca35033ff",
   "lessons": [
     {
       "id": "TA-C284-vanten",
@@ -200,7 +200,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bebfe17a6f955431",
+      "sourceHash": "fnv1a64:84db06a4c3b2b47d",
       "notice": null,
       "blocks": [
         {
@@ -241,7 +241,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is three short words in one: படித்து, \"having read\"; கொண்டு, \"holding\"; இருந்தேன், \"I was\". The person ending is the ending of இருந்தேன், so it changes the same way: அவன் படித்துக்கொண்டிருந்தான், \"he was reading\"; அவள் பேசிக்கொண்டிருந்தாள் (pēcikkoṇṭiruntāḷ), \"she was talking\"."
+              "text": "It is three short words in one: படித்து, \"having read\", கொண்டு, \"holding\", and இருந்தேன், \"I was\". The person ending is the ending of இருந்தேன், so it changes the same way. \"He was reading\": அவன் படித்துக்கொண்டிருந்தான். \"She was talking\": அவள் பேசிக்கொண்டிருந்தாள் (pēcikkoṇṭiruntāḷ)."
             },
             {
               "kind": "speech",
@@ -340,7 +340,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35328607740c6063",
+      "sourceHash": "fnv1a64:187ef5a28f9926e9",
       "notice": null,
       "blocks": [
         {
@@ -381,7 +381,7 @@
             },
             {
               "kind": "speech",
-              "text": "வந்த is the past with -அ in place of the person ending: வந்தேன் (vantēṉ) becomes வந்த. Before போது, \"time\", it is \"when (someone) came\", the same for every person: அவள் வந்த போது (vanta pōtu). So போன போது, \"when (someone) went\". With -கொண்டிருந்த it is \"while\": நான் சாப்பிட்டுக்கொண்டிருந்த போது (nāṉ cāppiṭṭukkoṇṭirunta pōtu), \"while I was eating\"."
+              "text": "வந்த is the past with -அ in place of the person ending: வந்தேன் (vantēṉ) becomes வந்த. Before போது, \"time\", it is \"when (someone) came\", the same for every person: அவள் வந்த போது (vanta pōtu). \"When (someone) went\" is போன போது. With -கொண்டிருந்த it is \"while\": நான் சாப்பிட்டுக்கொண்டிருந்த போது (nāṉ cāppiṭṭukkoṇṭirunta pōtu), \"while I was eating\"."
             }
           ]
         },

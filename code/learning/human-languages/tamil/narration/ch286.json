@@ -4,7 +4,7 @@
   "chapter": 286,
   "title": "What I Think and So",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7da41ac671580f13",
+  "sourceHash": "fnv1a64:4bfd74fce33ba1d8",
   "lessons": [
     {
       "id": "TA-C286-tonrukiratu",
@@ -162,7 +162,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f678a42f734a427",
+      "sourceHash": "fnv1a64:caaef55a3b6ce017",
       "notice": null,
       "blocks": [
         {
@@ -216,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "எனவே (eṉavē) and ஆகையால் (ākaiyāl, \"therefore\") do the job of அதனால் in written Tamil: a notice, a letter, the news. They are the formal side of the two Tamils. In talk, அதனால் carries the result."
+              "text": "In written Tamil, எனவே (eṉavē) and ஆகையால் (ākaiyāl, \"therefore\") do the job of அதனால்: a notice, a letter, the news. They are the formal side of the two Tamils. In talk, அதனால் carries the result."
             }
           ]
         },

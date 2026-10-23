@@ -4,7 +4,7 @@
   "chapter": 455,
   "title": "Worry and Unease",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:414347cfae74b67f",
+  "sourceHash": "fnv1a64:c906533547194521",
   "lessons": [
     {
       "id": "TA-C455-cancalam",
@@ -445,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a240e0535cda2bd8",
+      "sourceHash": "fnv1a64:34ebbf9540522b82",
       "notice": null,
       "blocks": [
         {
@@ -484,7 +484,7 @@
             },
             {
               "kind": "speech",
-              "text": "What one frets about takes பற்றி \"about\": அதைப் பற்றி அங்கலாய்த்தாள்."
+              "text": "What one frets about takes பற்றி \"about\", as in அதைப் பற்றி அங்கலாய்த்தாள்."
             }
           ]
         },

@@ -50,7 +50,7 @@ reviews_of: [TA-C450-nottu]
 >
 > There are many shops in the new shopping complex.
 
-வணிக வளாகம் is a shopping complex; பல்கலைக்கழக வளாகம், a campus.
+வணிக வளாகம் is a shopping complex, and பல்கலைக்கழக வளாகம் a campus.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
