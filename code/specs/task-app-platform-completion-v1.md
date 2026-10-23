@@ -359,6 +359,15 @@ digests, and downloaded metadata hashes match. All six payload jobs and the
 publisher passed. #17999 reconciles these receipts in the README and backlog;
 it does not expand artifact coverage or prepare another release.
 
+### Next fidelity slice — board column width floor (#18030)
+
+Both themes must retain a 260-pixel minimum board-column width when the
+available row is narrower than its columns. Add an explicit `min-width: 260`
+alongside the existing width and non-shrink intent. Verify the package-emitted
+Qt column has both `Layout.preferredWidth: 260` and `Layout.minimumWidth: 260`.
+Keep unsupported `flex-shrink` reporting and the style-drop budget unchanged:
+this is an authored geometry floor, not general native flexbox support.
+
 ### Tier C — reach, stated honestly
 
 14. **iOS: run, don't just compile.** **Done for the CI/runtime claim in #16035,
