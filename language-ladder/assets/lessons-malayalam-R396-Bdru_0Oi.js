@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-R396-review-389-396
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 19450
+chapter: 396
+type: review
+headword: (dialogue)
+gloss: a review of chapters 389-396
+concept_tag: REVIEW
+prerequisites: [ML-C389-grhapravesam, ML-C389-namakaranam, ML-C389-madhuvidhu, ML-C389-tamasamakkuka, ML-C389-kutiyeruka, ML-C390-yatrayayappu, ML-C390-vitavannuka, ML-C390-yatrayakkuka, ML-C390-vitaparayuka, ML-C390-natuvituka, ML-C391-savasamskaram, ML-C391-smasanam, ML-C391-savappetti, ML-C391-dahippikkuka, ML-C391-kuliccituka, ML-C392-anusocanam, ML-C392-adaranjali, ML-C392-caramavarsikam, ML-C392-semitteri, ML-C392-anusocikkuka, ML-C393-anusmaranam, ML-C393-smarakam, ML-C393-pratima, ML-C393-silalikhitam, ML-C393-anusmarikkuka, ML-C394-svattu, ML-C394-avakasi, ML-C394-osyattu, ML-C394-vidhava, ML-C394-paitrkam, ML-C395-purvikan, ML-C395-pingami, ML-C395-acaram, ML-C395-utbhavam, ML-C395-muttassikkatha, ML-C396-puraskaram, ML-C396-bahumati, ML-C396-jetavu, ML-C396-adarikkuka, ML-C396-svantamakkuka]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ML-LEX-C389-GRIHAM389-01, ML-LEX-C389-GRIHAM389-02, ML-LEX-C389-GRIHAM389-03, ML-LEX-C389-GRIHAM389-04, ML-LEX-C389-GRIHAM389-05, ML-LEX-C390-YATRAYAYAPPU390-01, ML-LEX-C390-YATRAYAYAPPU390-02, ML-LEX-C390-YATRAYAYAPPU390-03, ML-LEX-C390-YATRAYAYAPPU390-04, ML-LEX-C390-YATRAYAYAPPU390-05, ML-LEX-C391-SAVAM391-01, ML-LEX-C391-SAVAM391-02, ML-LEX-C391-SAVAM391-03, ML-LEX-C391-SAVAM391-04, ML-LEX-C391-SAVAM391-05, ML-LEX-C392-ANUSOCHANAM392-01, ML-LEX-C392-ANUSOCHANAM392-02, ML-LEX-C392-ANUSOCHANAM392-03, ML-LEX-C392-ANUSOCHANAM392-04, ML-LEX-C392-ANUSOCHANAM392-05, ML-LEX-C393-SMARAKAM393-01, ML-LEX-C393-SMARAKAM393-02, ML-LEX-C393-SMARAKAM393-03, ML-LEX-C393-SMARAKAM393-04, ML-LEX-C393-SMARAKAM393-05, ML-LEX-C394-SVATHTHU394-01, ML-LEX-C394-SVATHTHU394-02, ML-LEX-C394-SVATHTHU394-03, ML-LEX-C394-SVATHTHU394-04, ML-LEX-C394-SVATHTHU394-05, ML-LEX-C395-PURVIKAN395-01, ML-LEX-C395-PURVIKAN395-02, ML-LEX-C395-PURVIKAN395-03, ML-LEX-C395-PURVIKAN395-04, ML-LEX-C395-PURVIKAN395-05, ML-LEX-C396-PURASKARAM396-01, ML-LEX-C396-PURASKARAM396-02, ML-LEX-C396-PURASKARAM396-03, ML-LEX-C396-PURASKARAM396-04, ML-LEX-C396-PURASKARAM396-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ML-LEX-C389-GRIHAM389-01, ML-LEX-C389-GRIHAM389-02, ML-LEX-C389-GRIHAM389-03, ML-LEX-C389-GRIHAM389-04, ML-LEX-C389-GRIHAM389-05, ML-LEX-C390-YATRAYAYAPPU390-01, ML-LEX-C390-YATRAYAYAPPU390-02, ML-LEX-C390-YATRAYAYAPPU390-03, ML-LEX-C390-YATRAYAYAPPU390-04, ML-LEX-C390-YATRAYAYAPPU390-05, ML-LEX-C391-SAVAM391-01, ML-LEX-C391-SAVAM391-02, ML-LEX-C391-SAVAM391-03, ML-LEX-C391-SAVAM391-04, ML-LEX-C391-SAVAM391-05, ML-LEX-C392-ANUSOCHANAM392-01, ML-LEX-C392-ANUSOCHANAM392-02, ML-LEX-C392-ANUSOCHANAM392-03, ML-LEX-C392-ANUSOCHANAM392-04, ML-LEX-C392-ANUSOCHANAM392-05, ML-LEX-C393-SMARAKAM393-01, ML-LEX-C393-SMARAKAM393-02, ML-LEX-C393-SMARAKAM393-03, ML-LEX-C393-SMARAKAM393-04, ML-LEX-C393-SMARAKAM393-05, ML-LEX-C394-SVATHTHU394-01, ML-LEX-C394-SVATHTHU394-02, ML-LEX-C394-SVATHTHU394-03, ML-LEX-C394-SVATHTHU394-04, ML-LEX-C394-SVATHTHU394-05, ML-LEX-C395-PURVIKAN395-01, ML-LEX-C395-PURVIKAN395-02, ML-LEX-C395-PURVIKAN395-03, ML-LEX-C395-PURVIKAN395-04, ML-LEX-C395-PURVIKAN395-05, ML-LEX-C396-PURASKARAM396-01, ML-LEX-C396-PURASKARAM396-02, ML-LEX-C396-PURASKARAM396-03, ML-LEX-C396-PURASKARAM396-04, ML-LEX-C396-PURASKARAM396-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C389-grhapravesam, ML-C389-namakaranam, ML-C389-madhuvidhu, ML-C389-tamasamakkuka, ML-C389-kutiyeruka, ML-C390-yatrayayappu, ML-C390-vitavannuka, ML-C390-yatrayakkuka, ML-C390-vitaparayuka, ML-C390-natuvituka, ML-C391-savasamskaram, ML-C391-smasanam, ML-C391-savappetti, ML-C391-dahippikkuka, ML-C391-kuliccituka, ML-C392-anusocanam, ML-C392-adaranjali, ML-C392-caramavarsikam, ML-C392-semitteri, ML-C392-anusocikkuka, ML-C393-anusmaranam, ML-C393-smarakam, ML-C393-pratima, ML-C393-silalikhitam, ML-C393-anusmarikkuka, ML-C394-svattu, ML-C394-avakasi, ML-C394-osyattu, ML-C394-vidhava, ML-C394-paitrkam, ML-C395-purvikan, ML-C395-pingami, ML-C395-acaram, ML-C395-utbhavam, ML-C395-muttassikkatha, ML-C396-puraskaram, ML-C396-bahumati, ML-C396-jetavu, ML-C396-adarikkuka, ML-C396-svantamakkuka]
+---
+
+# Words from chapters 389–396 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C389-GRIHAM389-01, ML-LEX-C389-GRIHAM389-02] -->
+
+[PAUSE 3s] Say the Malayalam for a housewarming and a naming ceremony.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C389-GRIHAM389-01, ML-LEX-C389-GRIHAM389-02, ML-LEX-C389-GRIHAM389-03, ML-LEX-C389-GRIHAM389-04, ML-LEX-C389-GRIHAM389-05, ML-LEX-C390-YATRAYAYAPPU390-01, ML-LEX-C390-YATRAYAYAPPU390-02, ML-LEX-C390-YATRAYAYAPPU390-03, ML-LEX-C390-YATRAYAYAPPU390-04, ML-LEX-C390-YATRAYAYAPPU390-05, ML-LEX-C391-SAVAM391-01, ML-LEX-C391-SAVAM391-02, ML-LEX-C391-SAVAM391-03, ML-LEX-C391-SAVAM391-04, ML-LEX-C391-SAVAM391-05, ML-LEX-C392-ANUSOCHANAM392-01, ML-LEX-C392-ANUSOCHANAM392-02, ML-LEX-C392-ANUSOCHANAM392-03, ML-LEX-C392-ANUSOCHANAM392-04, ML-LEX-C392-ANUSOCHANAM392-05, ML-LEX-C393-SMARAKAM393-01, ML-LEX-C393-SMARAKAM393-02, ML-LEX-C393-SMARAKAM393-03, ML-LEX-C393-SMARAKAM393-04, ML-LEX-C393-SMARAKAM393-05, ML-LEX-C394-SVATHTHU394-01, ML-LEX-C394-SVATHTHU394-02, ML-LEX-C394-SVATHTHU394-03, ML-LEX-C394-SVATHTHU394-04, ML-LEX-C394-SVATHTHU394-05, ML-LEX-C395-PURVIKAN395-01, ML-LEX-C395-PURVIKAN395-02, ML-LEX-C395-PURVIKAN395-03, ML-LEX-C395-PURVIKAN395-04, ML-LEX-C395-PURVIKAN395-05, ML-LEX-C396-PURASKARAM396-01, ML-LEX-C396-PURASKARAM396-02, ML-LEX-C396-PURASKARAM396-03, ML-LEX-C396-PURASKARAM396-04, ML-LEX-C396-PURASKARAM396-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a housewarming, a naming ceremony, a honeymoon, to settle, to migrate]
+- [YOU SAY: a send-off, to bid farewell, to see off, to say goodbye, to leave one's homeland]
+- [YOU SAY: a funeral, a cremation ground, a coffin, to cremate, to bury]
+- [YOU SAY: condolence, a tribute, a death anniversary, a cemetery, to offer condolences]
+- [YOU SAY: a commemoration, a memorial, a statue, a stone inscription, to commemorate]
+- [YOU SAY: property, an heir, a will, a widow, heritage]
+- [YOU SAY: an ancestor, a successor, a custom, an origin, a grandmother's tale]
+- [YOU SAY: an award, an honour, a winner, to honour, to make one's own]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C389-GRIHAM389-01, ML-LEX-C389-GRIHAM389-02, ML-LEX-C389-GRIHAM389-03, ML-LEX-C389-GRIHAM389-04, ML-LEX-C389-GRIHAM389-05, ML-LEX-C390-YATRAYAYAPPU390-01, ML-LEX-C390-YATRAYAYAPPU390-02, ML-LEX-C390-YATRAYAYAPPU390-03, ML-LEX-C390-YATRAYAYAPPU390-04, ML-LEX-C390-YATRAYAYAPPU390-05, ML-LEX-C391-SAVAM391-01, ML-LEX-C391-SAVAM391-02, ML-LEX-C391-SAVAM391-03, ML-LEX-C391-SAVAM391-04, ML-LEX-C391-SAVAM391-05, ML-LEX-C392-ANUSOCHANAM392-01, ML-LEX-C392-ANUSOCHANAM392-02, ML-LEX-C392-ANUSOCHANAM392-03, ML-LEX-C392-ANUSOCHANAM392-04, ML-LEX-C392-ANUSOCHANAM392-05, ML-LEX-C393-SMARAKAM393-01, ML-LEX-C393-SMARAKAM393-02, ML-LEX-C393-SMARAKAM393-03, ML-LEX-C393-SMARAKAM393-04, ML-LEX-C393-SMARAKAM393-05, ML-LEX-C394-SVATHTHU394-01, ML-LEX-C394-SVATHTHU394-02, ML-LEX-C394-SVATHTHU394-03, ML-LEX-C394-SVATHTHU394-04, ML-LEX-C394-SVATHTHU394-05, ML-LEX-C395-PURVIKAN395-01, ML-LEX-C395-PURVIKAN395-02, ML-LEX-C395-PURVIKAN395-03, ML-LEX-C395-PURVIKAN395-04, ML-LEX-C395-PURVIKAN395-05, ML-LEX-C396-PURASKARAM396-01, ML-LEX-C396-PURASKARAM396-02, ML-LEX-C396-PURASKARAM396-03, ML-LEX-C396-PURASKARAM396-04, ML-LEX-C396-PURASKARAM396-05] -->
+
+[PAUSE 3s] A housewarming? (**ഗൃഹപ്രവേശം**, *gṛhapravēśaṁ*.) A naming ceremony? (**നാമകരണം**, *nāmakaraṇaṁ*.) A honeymoon? (**മധുവിധു**, *madhuvidhu*.) To settle? (**താമസമാക്കുക**, *tāmasamākkuka*.) To migrate? (**കുടിയേറുക**, *kuṭiyēṟuka*.) A send-off? (**യാത്രയയപ്പ്**, *yātrayayappŭ*.) To bid farewell? (**വിടവാങ്ങുക**, *viṭavāṅṅuka*.) To see off? (**യാത്രയാക്കുക**, *yātrayākkuka*.) To say goodbye? (**വിടപറയുക**, *viṭapaṟayuka*.) To leave one's homeland? (**നാടുവിടുക**, *nāṭuviṭuka*.) A funeral? (**ശവസംസ്കാരം**, *śavasaṁskāraṁ*.) A cremation ground? (**ശ്മശാനം**, *śmaśānaṁ*.) A coffin? (**ശവപ്പെട്ടി**, *śavappeṭṭi*.) To cremate? (**ദഹിപ്പിക്കുക**, *dahippikkuka*.) To bury? (**കുഴിച്ചിടുക**, *kuḻicciṭuka*.) Condolence? (**അനുശോചനം**, *anuśōcanaṁ*.) A tribute? (**ആദരാഞ്ജലി**, *ādarāñjali*.) A death anniversary? (**ചരമവാർഷികം**, *caramavārṣikaṁ*.) A cemetery? (**സെമിത്തേരി**, *semittēri*.) To offer condolences? (**അനുശോചിക്കുക**, *anuśōcikkuka*.) A commemoration? (**അനുസ്മരണം**, *anusmaraṇaṁ*.) A memorial? (**സ്മാരകം**, *smārakaṁ*.) A statue? (**പ്രതിമ**, *pratima*.) A stone inscription? (**ശിലാലിഖിതം**, *śilālikhitaṁ*.) To commemorate? (**അനുസ്മരിക്കുക**, *anusmarikkuka*.) Property? (**സ്വത്ത്**, *svattŭ*.) An heir? (**അവകാശി**, *avakāśi*.) A will? (**ഒസ്യത്ത്**, *osyattŭ*.) A widow? (**വിധവ**, *vidhava*.) Heritage? (**പൈതൃകം**, *paitṛkaṁ*.) An ancestor? (**പൂർവികൻ**, *pūrvikan*.) A successor? (**പിൻഗാമി**, *pingāmi*.) A custom? (**ആചാരം**, *ācāraṁ*.) An origin? (**ഉത്ഭവം**, *utbhavaṁ*.) A grandmother's tale? (**മുത്തശ്ശിക്കഥ**, *muttaśśikkatha*.) An award? (**പുരസ്കാരം**, *puraskāraṁ*.) An honour? (**ബഹുമതി**, *bahumati*.) A winner? (**ജേതാവ്**, *jētāvŭ*.) To honour? (**ആദരിക്കുക**, *ādarikkuka*.) To make one's own? (**സ്വന്തമാക്കുക**, *svantamākkuka*.)
+`;export{t};

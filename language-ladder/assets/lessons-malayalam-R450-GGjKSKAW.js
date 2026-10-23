@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-R452-review-445-452
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 22450
+chapter: 452
+type: review
+headword: (dialogue)
+gloss: a review of chapters 445-452
+concept_tag: REVIEW
+prerequisites: [ML-C445-anivaryamaya, ML-C445-nirnnayakamaya, ML-C445-atisthanaparamaya, ML-C445-gurutaramaya, ML-C445-sankirnnamaya, ML-C446-vyaktamaya, ML-C446-potuvaya, ML-C446-phalapradamaya, ML-C446-yuktisahamaya, ML-C446-visvasaniyamaya, ML-C447-netuka, ML-C447-gunanilavaram, ML-C447-parajayappetuka, ML-C447-laksyamituka, ML-C447-karyaksamata, ML-C448-pratisandhi, ML-C448-velluvili, ML-C448-tatassam, ML-C448-visakalanam-ceyyuka, ML-C448-riti, ML-C449-niyantrikkuka, ML-C449-varddhikkuka, ML-C449-varddhippikkuka, ML-C449-uyaruka, ML-C449-uyarttuka, ML-C450-talttuka, ML-C450-urappakkuka, ML-C450-samraksikkuka, ML-C450-meccappetuttuka, ML-C450-avasanippikkuka, ML-C451-itapetuka, ML-C451-nirbandhikkuka, ML-C451-rekhappetuttuka, ML-C451-bhisanippetuttuka, ML-C451-matikkuka, ML-C452-vittuvilca-ceyyuka, ML-C452-ottutirppu, ML-C452-utampati, ML-C452-samipanam, ML-C452-sahakaranam]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ML-LEX-C445-GAURAVAM445-01, ML-LEX-C445-GAURAVAM445-02, ML-LEX-C445-GAURAVAM445-03, ML-LEX-C445-GAURAVAM445-04, ML-LEX-C445-GAURAVAM445-05, ML-LEX-C446-VYAKTAM446-01, ML-LEX-C446-VYAKTAM446-02, ML-LEX-C446-VYAKTAM446-03, ML-LEX-C446-VYAKTAM446-04, ML-LEX-C446-VYAKTAM446-05, ML-LEX-C447-NETTAM447-01, ML-LEX-C447-NETTAM447-02, ML-LEX-C447-NETTAM447-03, ML-LEX-C447-NETTAM447-04, ML-LEX-C447-NETTAM447-05, ML-LEX-C448-PRATISANDHI448-01, ML-LEX-C448-PRATISANDHI448-02, ML-LEX-C448-PRATISANDHI448-03, ML-LEX-C448-PRATISANDHI448-04, ML-LEX-C448-PRATISANDHI448-05, ML-LEX-C449-VARDDHANA449-01, ML-LEX-C449-VARDDHANA449-02, ML-LEX-C449-VARDDHANA449-03, ML-LEX-C449-VARDDHANA449-04, ML-LEX-C449-VARDDHANA449-05, ML-LEX-C450-SAMRAKSANAM450-01, ML-LEX-C450-SAMRAKSANAM450-02, ML-LEX-C450-SAMRAKSANAM450-03, ML-LEX-C450-SAMRAKSANAM450-04, ML-LEX-C450-SAMRAKSANAM450-05, ML-LEX-C451-SAMMARDDAM451-01, ML-LEX-C451-SAMMARDDAM451-02, ML-LEX-C451-SAMMARDDAM451-03, ML-LEX-C451-SAMMARDDAM451-04, ML-LEX-C451-SAMMARDDAM451-05, ML-LEX-C452-SAMADHANAM452-01, ML-LEX-C452-SAMADHANAM452-02, ML-LEX-C452-SAMADHANAM452-03, ML-LEX-C452-SAMADHANAM452-04, ML-LEX-C452-SAMADHANAM452-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ML-LEX-C445-GAURAVAM445-01, ML-LEX-C445-GAURAVAM445-02, ML-LEX-C445-GAURAVAM445-03, ML-LEX-C445-GAURAVAM445-04, ML-LEX-C445-GAURAVAM445-05, ML-LEX-C446-VYAKTAM446-01, ML-LEX-C446-VYAKTAM446-02, ML-LEX-C446-VYAKTAM446-03, ML-LEX-C446-VYAKTAM446-04, ML-LEX-C446-VYAKTAM446-05, ML-LEX-C447-NETTAM447-01, ML-LEX-C447-NETTAM447-02, ML-LEX-C447-NETTAM447-03, ML-LEX-C447-NETTAM447-04, ML-LEX-C447-NETTAM447-05, ML-LEX-C448-PRATISANDHI448-01, ML-LEX-C448-PRATISANDHI448-02, ML-LEX-C448-PRATISANDHI448-03, ML-LEX-C448-PRATISANDHI448-04, ML-LEX-C448-PRATISANDHI448-05, ML-LEX-C449-VARDDHANA449-01, ML-LEX-C449-VARDDHANA449-02, ML-LEX-C449-VARDDHANA449-03, ML-LEX-C449-VARDDHANA449-04, ML-LEX-C449-VARDDHANA449-05, ML-LEX-C450-SAMRAKSANAM450-01, ML-LEX-C450-SAMRAKSANAM450-02, ML-LEX-C450-SAMRAKSANAM450-03, ML-LEX-C450-SAMRAKSANAM450-04, ML-LEX-C450-SAMRAKSANAM450-05, ML-LEX-C451-SAMMARDDAM451-01, ML-LEX-C451-SAMMARDDAM451-02, ML-LEX-C451-SAMMARDDAM451-03, ML-LEX-C451-SAMMARDDAM451-04, ML-LEX-C451-SAMMARDDAM451-05, ML-LEX-C452-SAMADHANAM452-01, ML-LEX-C452-SAMADHANAM452-02, ML-LEX-C452-SAMADHANAM452-03, ML-LEX-C452-SAMADHANAM452-04, ML-LEX-C452-SAMADHANAM452-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C445-anivaryamaya, ML-C445-nirnnayakamaya, ML-C445-atisthanaparamaya, ML-C445-gurutaramaya, ML-C445-sankirnnamaya, ML-C446-vyaktamaya, ML-C446-potuvaya, ML-C446-phalapradamaya, ML-C446-yuktisahamaya, ML-C446-visvasaniyamaya, ML-C447-netuka, ML-C447-gunanilavaram, ML-C447-parajayappetuka, ML-C447-laksyamituka, ML-C447-karyaksamata, ML-C448-pratisandhi, ML-C448-velluvili, ML-C448-tatassam, ML-C448-visakalanam-ceyyuka, ML-C448-riti, ML-C449-niyantrikkuka, ML-C449-varddhikkuka, ML-C449-varddhippikkuka, ML-C449-uyaruka, ML-C449-uyarttuka, ML-C450-talttuka, ML-C450-urappakkuka, ML-C450-samraksikkuka, ML-C450-meccappetuttuka, ML-C450-avasanippikkuka, ML-C451-itapetuka, ML-C451-nirbandhikkuka, ML-C451-rekhappetuttuka, ML-C451-bhisanippetuttuka, ML-C451-matikkuka, ML-C452-vittuvilca-ceyyuka, ML-C452-ottutirppu, ML-C452-utampati, ML-C452-samipanam, ML-C452-sahakaranam]
+---
+
+# Words from chapters 445–452 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C445-GAURAVAM445-01, ML-LEX-C445-GAURAVAM445-02] -->
+
+[PAUSE 3s] Say the Malayalam for inevitable and crucial.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C445-GAURAVAM445-01, ML-LEX-C445-GAURAVAM445-02, ML-LEX-C445-GAURAVAM445-03, ML-LEX-C445-GAURAVAM445-04, ML-LEX-C445-GAURAVAM445-05, ML-LEX-C446-VYAKTAM446-01, ML-LEX-C446-VYAKTAM446-02, ML-LEX-C446-VYAKTAM446-03, ML-LEX-C446-VYAKTAM446-04, ML-LEX-C446-VYAKTAM446-05, ML-LEX-C447-NETTAM447-01, ML-LEX-C447-NETTAM447-02, ML-LEX-C447-NETTAM447-03, ML-LEX-C447-NETTAM447-04, ML-LEX-C447-NETTAM447-05, ML-LEX-C448-PRATISANDHI448-01, ML-LEX-C448-PRATISANDHI448-02, ML-LEX-C448-PRATISANDHI448-03, ML-LEX-C448-PRATISANDHI448-04, ML-LEX-C448-PRATISANDHI448-05, ML-LEX-C449-VARDDHANA449-01, ML-LEX-C449-VARDDHANA449-02, ML-LEX-C449-VARDDHANA449-03, ML-LEX-C449-VARDDHANA449-04, ML-LEX-C449-VARDDHANA449-05, ML-LEX-C450-SAMRAKSANAM450-01, ML-LEX-C450-SAMRAKSANAM450-02, ML-LEX-C450-SAMRAKSANAM450-03, ML-LEX-C450-SAMRAKSANAM450-04, ML-LEX-C450-SAMRAKSANAM450-05, ML-LEX-C451-SAMMARDDAM451-01, ML-LEX-C451-SAMMARDDAM451-02, ML-LEX-C451-SAMMARDDAM451-03, ML-LEX-C451-SAMMARDDAM451-04, ML-LEX-C451-SAMMARDDAM451-05, ML-LEX-C452-SAMADHANAM452-01, ML-LEX-C452-SAMADHANAM452-02, ML-LEX-C452-SAMADHANAM452-03, ML-LEX-C452-SAMADHANAM452-04, ML-LEX-C452-SAMADHANAM452-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: inevitable, crucial, fundamental, serious, complex]
+- [YOU SAY: evident, common, effective, logical, reliable]
+- [YOU SAY: to achieve, quality standard, to be defeated, to aim at, efficiency]
+- [YOU SAY: a crisis, a challenge, an obstacle, to analyse, a method]
+- [YOU SAY: to control, to go up, to increase, to go higher, to lift up]
+- [YOU SAY: to lower, to ensure, to protect, to improve, to wrap up]
+- [YOU SAY: to interfere, to insist, to put on record, to threaten, to hesitate]
+- [YOU SAY: to compromise, a settlement, a treaty, an approach, cooperation]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C445-GAURAVAM445-01, ML-LEX-C445-GAURAVAM445-02, ML-LEX-C445-GAURAVAM445-03, ML-LEX-C445-GAURAVAM445-04, ML-LEX-C445-GAURAVAM445-05, ML-LEX-C446-VYAKTAM446-01, ML-LEX-C446-VYAKTAM446-02, ML-LEX-C446-VYAKTAM446-03, ML-LEX-C446-VYAKTAM446-04, ML-LEX-C446-VYAKTAM446-05, ML-LEX-C447-NETTAM447-01, ML-LEX-C447-NETTAM447-02, ML-LEX-C447-NETTAM447-03, ML-LEX-C447-NETTAM447-04, ML-LEX-C447-NETTAM447-05, ML-LEX-C448-PRATISANDHI448-01, ML-LEX-C448-PRATISANDHI448-02, ML-LEX-C448-PRATISANDHI448-03, ML-LEX-C448-PRATISANDHI448-04, ML-LEX-C448-PRATISANDHI448-05, ML-LEX-C449-VARDDHANA449-01, ML-LEX-C449-VARDDHANA449-02, ML-LEX-C449-VARDDHANA449-03, ML-LEX-C449-VARDDHANA449-04, ML-LEX-C449-VARDDHANA449-05, ML-LEX-C450-SAMRAKSANAM450-01, ML-LEX-C450-SAMRAKSANAM450-02, ML-LEX-C450-SAMRAKSANAM450-03, ML-LEX-C450-SAMRAKSANAM450-04, ML-LEX-C450-SAMRAKSANAM450-05, ML-LEX-C451-SAMMARDDAM451-01, ML-LEX-C451-SAMMARDDAM451-02, ML-LEX-C451-SAMMARDDAM451-03, ML-LEX-C451-SAMMARDDAM451-04, ML-LEX-C451-SAMMARDDAM451-05, ML-LEX-C452-SAMADHANAM452-01, ML-LEX-C452-SAMADHANAM452-02, ML-LEX-C452-SAMADHANAM452-03, ML-LEX-C452-SAMADHANAM452-04, ML-LEX-C452-SAMADHANAM452-05] -->
+
+[PAUSE 3s] Inevitable? (**അനിവാര്യമായ**, *anivāryamāya*.) Crucial? (**നിർണ്ണായകമായ**, *nirṇṇāyakamāya*.) Fundamental? (**അടിസ്ഥാനപരമായ**, *aṭisthānaparamāya*.) Serious? (**ഗുരുതരമായ**, *gurutaramāya*.) Complex? (**സങ്കീർണ്ണമായ**, *saṅkīrṇṇamāya*.) Evident? (**വ്യക്തമായ**, *vyaktamāya*.) Common? (**പൊതുവായ**, *potuvāya*.) Effective? (**ഫലപ്രദമായ**, *phalapradamāya*.) Logical? (**യുക്തിസഹമായ**, *yuktisahamāya*.) Reliable? (**വിശ്വസനീയമായ**, *viśvasanīyamāya*.) To achieve? (**നേടുക**, *nēṭuka*.) Quality standard? (**ഗുണനിലവാരം**, *guṇanilavāraṁ*.) To be defeated? (**പരാജയപ്പെടുക**, *parājayappeṭuka*.) To aim at? (**ലക്ഷ്യമിടുക**, *lakṣyamiṭuka*.) Efficiency? (**കാര്യക്ഷമത**, *kāryakṣamata*.) A crisis? (**പ്രതിസന്ധി**, *pratisandhi*.) A challenge? (**വെല്ലുവിളി**, *velluviḷi*.) An obstacle? (**തടസ്സം**, *taṭassaṁ*.) To analyse? (**വിശകലനം ചെയ്യുക**, *viśakalanaṁ ceyyuka*.) A method? (**രീതി**, *rīti*.) To control? (**നിയന്ത്രിക്കുക**, *niyantrikkuka*.) To go up? (**വർദ്ധിക്കുക**, *varddhikkuka*.) To increase? (**വർദ്ധിപ്പിക്കുക**, *varddhippikkuka*.) To go higher? (**ഉയരുക**, *uyaruka*.) To lift up? (**ഉയർത്തുക**, *uyarttuka*.) To lower? (**താഴ്ത്തുക**, *tāḻttuka*.) To ensure? (**ഉറപ്പാക്കുക**, *uṟappākkuka*.) To protect? (**സംരക്ഷിക്കുക**, *saṁrakṣikkuka*.) To improve? (**മെച്ചപ്പെടുത്തുക**, *meccappeṭuttuka*.) To wrap up? (**അവസാനിപ്പിക്കുക**, *avasānippikkuka*.) To interfere? (**ഇടപെടുക**, *iṭapeṭuka*.) To insist? (**നിർബന്ധിക്കുക**, *nirbandhikkuka*.) To put on record? (**രേഖപ്പെടുത്തുക**, *rēkhappeṭuttuka*.) To threaten? (**ഭീഷണിപ്പെടുത്തുക**, *bhīṣaṇippeṭuttuka*.) To hesitate? (**മടിക്കുക**, *maṭikkuka*.) To compromise? (**വിട്ടുവീഴ്ച ചെയ്യുക**, *viṭṭuvīḻca ceyyuka*.) A settlement? (**ഒത്തുതീർപ്പ്**, *ottutīrppŭ*.) A treaty? (**ഉടമ്പടി**, *uṭampaṭi*.) An approach? (**സമീപനം**, *samīpanaṁ*.) Cooperation? (**സഹകരണം**, *sahakaraṇaṁ*.)
+`;export{t};

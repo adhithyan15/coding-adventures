@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-R356-review-349-356
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 17400
+chapter: 356
+type: review
+headword: (dialogue)
+gloss: a review of chapters 349-356
+concept_tag: REVIEW
+prerequisites: [ML-C349-saksi, ML-C349-yuddham, ML-C349-lekhakan, ML-C349-sambhavikkuka, ML-C349-prakhyapikkuka, ML-C350-talakkettu, ML-C350-patradhipar, ML-C350-patippu, ML-C350-vayanakkaran, ML-C350-accatikkuka, ML-C351-sampresanam, ML-C351-srotavu, ML-C351-ripporttar, ML-C351-citrikarikkuka, ML-C351-sampresanam-ceyyuka, ML-C352-patrasammelanam, ML-C352-prastavana, ML-C352-satyavastha, ML-C352-peruppikkuka, ML-C352-mappu-parayuka, ML-C353-kimvadanti, ML-C353-abhyuham, ML-C353-vyaja, ML-C353-pracarikkuka, ML-C353-pracarippikkuka, ML-C354-prasamgam, ML-C354-madhyamam, ML-C354-prasamgikkuka, ML-C354-kayyatikkuka, ML-C354-paramarsikkuka, ML-C355-patrapravarttakan, ML-C355-aropanam, ML-C355-velippetuttuka, ML-C355-ottukutuka, ML-C355-kuvuka, ML-C356-sambhasanam, ML-C356-vivaranam, ML-C356-drsyam, ML-C356-kettariyuka, ML-C356-ketticcamaykkuka]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ML-LEX-C349-VARTTA349-01, ML-LEX-C349-VARTTA349-02, ML-LEX-C349-VARTTA349-03, ML-LEX-C349-VARTTA349-04, ML-LEX-C349-VARTTA349-05, ML-LEX-C350-PATRAM350-01, ML-LEX-C350-PATRAM350-02, ML-LEX-C350-PATRAM350-03, ML-LEX-C350-PATRAM350-04, ML-LEX-C350-PATRAM350-05, ML-LEX-C351-SAMPREKSHANAM351-01, ML-LEX-C351-SAMPREKSHANAM351-02, ML-LEX-C351-SAMPREKSHANAM351-03, ML-LEX-C351-SAMPREKSHANAM351-04, ML-LEX-C351-SAMPREKSHANAM351-05, ML-LEX-C352-PRESS352-01, ML-LEX-C352-PRESS352-02, ML-LEX-C352-PRESS352-03, ML-LEX-C352-PRESS352-04, ML-LEX-C352-PRESS352-05, ML-LEX-C353-KIMVADANTI353-01, ML-LEX-C353-KIMVADANTI353-02, ML-LEX-C353-KIMVADANTI353-03, ML-LEX-C353-KIMVADANTI353-04, ML-LEX-C353-KIMVADANTI353-05, ML-LEX-C354-PRASAMGAM354-01, ML-LEX-C354-PRASAMGAM354-02, ML-LEX-C354-PRASAMGAM354-03, ML-LEX-C354-PRASAMGAM354-04, ML-LEX-C354-PRASAMGAM354-05, ML-LEX-C355-PATRAPRAVARTTAKAN355-01, ML-LEX-C355-PATRAPRAVARTTAKAN355-02, ML-LEX-C355-PATRAPRAVARTTAKAN355-03, ML-LEX-C355-PATRAPRAVARTTAKAN355-04, ML-LEX-C355-PATRAPRAVARTTAKAN355-05, ML-LEX-C356-VIVARANAM356-01, ML-LEX-C356-VIVARANAM356-02, ML-LEX-C356-VIVARANAM356-03, ML-LEX-C356-VIVARANAM356-04, ML-LEX-C356-VIVARANAM356-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ML-LEX-C349-VARTTA349-01, ML-LEX-C349-VARTTA349-02, ML-LEX-C349-VARTTA349-03, ML-LEX-C349-VARTTA349-04, ML-LEX-C349-VARTTA349-05, ML-LEX-C350-PATRAM350-01, ML-LEX-C350-PATRAM350-02, ML-LEX-C350-PATRAM350-03, ML-LEX-C350-PATRAM350-04, ML-LEX-C350-PATRAM350-05, ML-LEX-C351-SAMPREKSHANAM351-01, ML-LEX-C351-SAMPREKSHANAM351-02, ML-LEX-C351-SAMPREKSHANAM351-03, ML-LEX-C351-SAMPREKSHANAM351-04, ML-LEX-C351-SAMPREKSHANAM351-05, ML-LEX-C352-PRESS352-01, ML-LEX-C352-PRESS352-02, ML-LEX-C352-PRESS352-03, ML-LEX-C352-PRESS352-04, ML-LEX-C352-PRESS352-05, ML-LEX-C353-KIMVADANTI353-01, ML-LEX-C353-KIMVADANTI353-02, ML-LEX-C353-KIMVADANTI353-03, ML-LEX-C353-KIMVADANTI353-04, ML-LEX-C353-KIMVADANTI353-05, ML-LEX-C354-PRASAMGAM354-01, ML-LEX-C354-PRASAMGAM354-02, ML-LEX-C354-PRASAMGAM354-03, ML-LEX-C354-PRASAMGAM354-04, ML-LEX-C354-PRASAMGAM354-05, ML-LEX-C355-PATRAPRAVARTTAKAN355-01, ML-LEX-C355-PATRAPRAVARTTAKAN355-02, ML-LEX-C355-PATRAPRAVARTTAKAN355-03, ML-LEX-C355-PATRAPRAVARTTAKAN355-04, ML-LEX-C355-PATRAPRAVARTTAKAN355-05, ML-LEX-C356-VIVARANAM356-01, ML-LEX-C356-VIVARANAM356-02, ML-LEX-C356-VIVARANAM356-03, ML-LEX-C356-VIVARANAM356-04, ML-LEX-C356-VIVARANAM356-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C349-saksi, ML-C349-yuddham, ML-C349-lekhakan, ML-C349-sambhavikkuka, ML-C349-prakhyapikkuka, ML-C350-talakkettu, ML-C350-patradhipar, ML-C350-patippu, ML-C350-vayanakkaran, ML-C350-accatikkuka, ML-C351-sampresanam, ML-C351-srotavu, ML-C351-ripporttar, ML-C351-citrikarikkuka, ML-C351-sampresanam-ceyyuka, ML-C352-patrasammelanam, ML-C352-prastavana, ML-C352-satyavastha, ML-C352-peruppikkuka, ML-C352-mappu-parayuka, ML-C353-kimvadanti, ML-C353-abhyuham, ML-C353-vyaja, ML-C353-pracarikkuka, ML-C353-pracarippikkuka, ML-C354-prasamgam, ML-C354-madhyamam, ML-C354-prasamgikkuka, ML-C354-kayyatikkuka, ML-C354-paramarsikkuka, ML-C355-patrapravarttakan, ML-C355-aropanam, ML-C355-velippetuttuka, ML-C355-ottukutuka, ML-C355-kuvuka, ML-C356-sambhasanam, ML-C356-vivaranam, ML-C356-drsyam, ML-C356-kettariyuka, ML-C356-ketticcamaykkuka]
+---
+
+# Words for telling what happened
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C349-VARTTA349-01, ML-LEX-C349-VARTTA349-02] -->
+
+[PAUSE 3s] Say the Malayalam for a witness and a war.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C349-VARTTA349-01, ML-LEX-C349-VARTTA349-02, ML-LEX-C349-VARTTA349-03, ML-LEX-C349-VARTTA349-04, ML-LEX-C349-VARTTA349-05, ML-LEX-C350-PATRAM350-01, ML-LEX-C350-PATRAM350-02, ML-LEX-C350-PATRAM350-03, ML-LEX-C350-PATRAM350-04, ML-LEX-C350-PATRAM350-05, ML-LEX-C351-SAMPREKSHANAM351-01, ML-LEX-C351-SAMPREKSHANAM351-02, ML-LEX-C351-SAMPREKSHANAM351-03, ML-LEX-C351-SAMPREKSHANAM351-04, ML-LEX-C351-SAMPREKSHANAM351-05, ML-LEX-C352-PRESS352-01, ML-LEX-C352-PRESS352-02, ML-LEX-C352-PRESS352-03, ML-LEX-C352-PRESS352-04, ML-LEX-C352-PRESS352-05, ML-LEX-C353-KIMVADANTI353-01, ML-LEX-C353-KIMVADANTI353-02, ML-LEX-C353-KIMVADANTI353-03, ML-LEX-C353-KIMVADANTI353-04, ML-LEX-C353-KIMVADANTI353-05, ML-LEX-C354-PRASAMGAM354-01, ML-LEX-C354-PRASAMGAM354-02, ML-LEX-C354-PRASAMGAM354-03, ML-LEX-C354-PRASAMGAM354-04, ML-LEX-C354-PRASAMGAM354-05, ML-LEX-C355-PATRAPRAVARTTAKAN355-01, ML-LEX-C355-PATRAPRAVARTTAKAN355-02, ML-LEX-C355-PATRAPRAVARTTAKAN355-03, ML-LEX-C355-PATRAPRAVARTTAKAN355-04, ML-LEX-C355-PATRAPRAVARTTAKAN355-05, ML-LEX-C356-VIVARANAM356-01, ML-LEX-C356-VIVARANAM356-02, ML-LEX-C356-VIVARANAM356-03, ML-LEX-C356-VIVARANAM356-04, ML-LEX-C356-VIVARANAM356-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a witness, a war, a correspondent, to happen, to announce]
+- [YOU SAY: a headline, an editor, an edition, a reader, to print]
+- [YOU SAY: a broadcast, a listener, a reporter, to depict, to broadcast]
+- [YOU SAY: a press conference, a statement, the real facts, to exaggerate, to say sorry]
+- [YOU SAY: a rumour, speculation, fake, to circulate, to spread around]
+- [YOU SAY: a speech, a medium, to give a speech, to applaud, to mention]
+- [YOU SAY: a journalist, an allegation, to reveal, to gather, to boo]
+- [YOU SAY: a conversation, a description, footage, to learn by hearsay, to fabricate]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C349-VARTTA349-01, ML-LEX-C349-VARTTA349-02, ML-LEX-C349-VARTTA349-03, ML-LEX-C349-VARTTA349-04, ML-LEX-C349-VARTTA349-05, ML-LEX-C350-PATRAM350-01, ML-LEX-C350-PATRAM350-02, ML-LEX-C350-PATRAM350-03, ML-LEX-C350-PATRAM350-04, ML-LEX-C350-PATRAM350-05, ML-LEX-C351-SAMPREKSHANAM351-01, ML-LEX-C351-SAMPREKSHANAM351-02, ML-LEX-C351-SAMPREKSHANAM351-03, ML-LEX-C351-SAMPREKSHANAM351-04, ML-LEX-C351-SAMPREKSHANAM351-05, ML-LEX-C352-PRESS352-01, ML-LEX-C352-PRESS352-02, ML-LEX-C352-PRESS352-03, ML-LEX-C352-PRESS352-04, ML-LEX-C352-PRESS352-05, ML-LEX-C353-KIMVADANTI353-01, ML-LEX-C353-KIMVADANTI353-02, ML-LEX-C353-KIMVADANTI353-03, ML-LEX-C353-KIMVADANTI353-04, ML-LEX-C353-KIMVADANTI353-05, ML-LEX-C354-PRASAMGAM354-01, ML-LEX-C354-PRASAMGAM354-02, ML-LEX-C354-PRASAMGAM354-03, ML-LEX-C354-PRASAMGAM354-04, ML-LEX-C354-PRASAMGAM354-05, ML-LEX-C355-PATRAPRAVARTTAKAN355-01, ML-LEX-C355-PATRAPRAVARTTAKAN355-02, ML-LEX-C355-PATRAPRAVARTTAKAN355-03, ML-LEX-C355-PATRAPRAVARTTAKAN355-04, ML-LEX-C355-PATRAPRAVARTTAKAN355-05, ML-LEX-C356-VIVARANAM356-01, ML-LEX-C356-VIVARANAM356-02, ML-LEX-C356-VIVARANAM356-03, ML-LEX-C356-VIVARANAM356-04, ML-LEX-C356-VIVARANAM356-05] -->
+
+[PAUSE 3s] A witness? (**സാക്ഷി**, *sākṣi*.) A war? (**യുദ്ധം**, *yuddhaṁ*.) A correspondent? (**ലേഖകൻ**, *lēkhakan*.) To happen? (**സംഭവിക്കുക**, *sambhavikkuka*.) To announce? (**പ്രഖ്യാപിക്കുക**, *prakhyāpikkuka*.) A headline? (**തലക്കെട്ട്**, *talakkeṭṭŭ*.) An editor? (**പത്രാധിപർ**, *patrādhipar*.) An edition? (**പതിപ്പ്**, *patippŭ*.) A reader? (**വായനക്കാരൻ**, *vāyanakkāran*.) To print? (**അച്ചടിക്കുക**, *accaṭikkuka*.) A broadcast? (**സംപ്രേഷണം**, *samprēṣaṇaṁ*.) A listener? (**ശ്രോതാവ്**, *śrōtāvŭ*.) A reporter? (**റിപ്പോർട്ടർ**, *ṟippōrṭṭar*.) To depict? (**ചിത്രീകരിക്കുക**, *citrīkarikkuka*.) To broadcast? (**സംപ്രേഷണം ചെയ്യുക**, *samprēṣaṇaṁ ceyyuka*.) A press conference? (**പത്രസമ്മേളനം**, *patrasammēḷanaṁ*.) A statement? (**പ്രസ്താവന**, *prastāvana*.) The real facts? (**സത്യാവസ്ഥ**, *satyāvastha*.) To exaggerate? (**പെരുപ്പിക്കുക**, *peruppikkuka*.) To say sorry? (**മാപ്പ് പറയുക**, *māppŭ paṟayuka*.) A rumour? (**കിംവദന്തി**, *kiṁvadanti*.) Speculation? (**അഭ്യൂഹം**, *abhyūhaṁ*.) Fake? (**വ്യാജ**, *vyāja*.) To circulate? (**പ്രചരിക്കുക**, *pracarikkuka*.) To spread around? (**പ്രചരിപ്പിക്കുക**, *pracarippikkuka*.) A speech? (**പ്രസംഗം**, *prasaṁgaṁ*.) A medium? (**മാധ്യമം**, *mādhyamaṁ*.) To give a speech? (**പ്രസംഗിക്കുക**, *prasaṁgikkuka*.) To applaud? (**കയ്യടിക്കുക**, *kayyaṭikkuka*.) To mention? (**പരാമർശിക്കുക**, *parāmarśikkuka*.) A journalist? (**പത്രപ്രവർത്തകൻ**, *patrapravarttakan*.) An allegation? (**ആരോപണം**, *ārōpaṇaṁ*.) To reveal? (**വെളിപ്പെടുത്തുക**, *veḷippeṭuttuka*.) To gather? (**ഒത്തുകൂടുക**, *ottukūṭuka*.) To boo? (**കൂവുക**, *kūvuka*.) A conversation? (**സംഭാഷണം**, *sambhāṣaṇaṁ*.) A description? (**വിവരണം**, *vivaraṇaṁ*.) Footage? (**ദൃശ്യം**, *dṛśyaṁ*.) To learn by hearsay? (**കേട്ടറിയുക**, *kēṭṭaṟiyuka*.) To fabricate? (**കെട്ടിച്ചമയ്ക്കുക**, *keṭṭiccamaykkuka*.)
+`;export{t};

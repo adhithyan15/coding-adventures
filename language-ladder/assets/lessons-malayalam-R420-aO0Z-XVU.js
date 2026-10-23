@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-R420-review-413-420
+spine_node: SPINE-GIVE-REASONS
+sequence: 20810
+chapter: 420
+type: review
+headword: (dialogue)
+gloss: a review of chapters 413-420
+concept_tag: REVIEW
+prerequisites: [ML-C413-suparsa-ceyyuka, ML-C413-abhiprayappetuka, ML-C413-prasamsikkuka, ML-C413-prerippikkuka, ML-C413-prakatippikkuka, ML-C414-tatvam, ML-C414-dharana, ML-C414-siddhantam, ML-C414-uravitam, ML-C414-satamanam, ML-C415-samuham, ML-C415-potujanam, ML-C415-janasamkhya, ML-C415-samatvam, ML-C415-svatantryam, ML-C416-niti, ML-C416-aniti, ML-C416-anyayamaya, ML-C416-manusyavakasam, ML-C416-vivecanam, ML-C417-cattam, ML-C417-palikkuka, ML-C417-anusarikkuka, ML-C417-niyamaparamaya, ML-C417-niyamaviruddhamaya, ML-C418-siksa, ML-C418-siksikkuka, ML-C418-vilakku, ML-C418-nirodhikkuka, ML-C418-anuvadikkuka, ML-C419-tirannetuppu, ML-C419-vottu, ML-C419-vottar, ML-C419-sthanartthi, ML-C419-balarru, ML-C420-pracaranam, ML-C420-prakatanapatrika, ML-C420-bhuripaksam, ML-C420-nyunapaksam, ML-C420-vijayikkuka]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ML-LEX-C413-UPADESAM413-01, ML-LEX-C413-UPADESAM413-02, ML-LEX-C413-UPADESAM413-03, ML-LEX-C413-UPADESAM413-04, ML-LEX-C413-UPADESAM413-05, ML-LEX-C414-TATVAM414-01, ML-LEX-C414-TATVAM414-02, ML-LEX-C414-TATVAM414-03, ML-LEX-C414-TATVAM414-04, ML-LEX-C414-TATVAM414-05, ML-LEX-C415-SAMUHAM415-01, ML-LEX-C415-SAMUHAM415-02, ML-LEX-C415-SAMUHAM415-03, ML-LEX-C415-SAMUHAM415-04, ML-LEX-C415-SAMUHAM415-05, ML-LEX-C416-NITI416-01, ML-LEX-C416-NITI416-02, ML-LEX-C416-NITI416-03, ML-LEX-C416-NITI416-04, ML-LEX-C416-NITI416-05, ML-LEX-C417-CATTAM417-01, ML-LEX-C417-CATTAM417-02, ML-LEX-C417-CATTAM417-03, ML-LEX-C417-CATTAM417-04, ML-LEX-C417-CATTAM417-05, ML-LEX-C418-SIKSA418-01, ML-LEX-C418-SIKSA418-02, ML-LEX-C418-SIKSA418-03, ML-LEX-C418-SIKSA418-04, ML-LEX-C418-SIKSA418-05, ML-LEX-C419-VOTTU419-01, ML-LEX-C419-VOTTU419-02, ML-LEX-C419-VOTTU419-03, ML-LEX-C419-VOTTU419-04, ML-LEX-C419-VOTTU419-05, ML-LEX-C420-VIJAYAM420-01, ML-LEX-C420-VIJAYAM420-02, ML-LEX-C420-VIJAYAM420-03, ML-LEX-C420-VIJAYAM420-04, ML-LEX-C420-VIJAYAM420-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ML-LEX-C413-UPADESAM413-01, ML-LEX-C413-UPADESAM413-02, ML-LEX-C413-UPADESAM413-03, ML-LEX-C413-UPADESAM413-04, ML-LEX-C413-UPADESAM413-05, ML-LEX-C414-TATVAM414-01, ML-LEX-C414-TATVAM414-02, ML-LEX-C414-TATVAM414-03, ML-LEX-C414-TATVAM414-04, ML-LEX-C414-TATVAM414-05, ML-LEX-C415-SAMUHAM415-01, ML-LEX-C415-SAMUHAM415-02, ML-LEX-C415-SAMUHAM415-03, ML-LEX-C415-SAMUHAM415-04, ML-LEX-C415-SAMUHAM415-05, ML-LEX-C416-NITI416-01, ML-LEX-C416-NITI416-02, ML-LEX-C416-NITI416-03, ML-LEX-C416-NITI416-04, ML-LEX-C416-NITI416-05, ML-LEX-C417-CATTAM417-01, ML-LEX-C417-CATTAM417-02, ML-LEX-C417-CATTAM417-03, ML-LEX-C417-CATTAM417-04, ML-LEX-C417-CATTAM417-05, ML-LEX-C418-SIKSA418-01, ML-LEX-C418-SIKSA418-02, ML-LEX-C418-SIKSA418-03, ML-LEX-C418-SIKSA418-04, ML-LEX-C418-SIKSA418-05, ML-LEX-C419-VOTTU419-01, ML-LEX-C419-VOTTU419-02, ML-LEX-C419-VOTTU419-03, ML-LEX-C419-VOTTU419-04, ML-LEX-C419-VOTTU419-05, ML-LEX-C420-VIJAYAM420-01, ML-LEX-C420-VIJAYAM420-02, ML-LEX-C420-VIJAYAM420-03, ML-LEX-C420-VIJAYAM420-04, ML-LEX-C420-VIJAYAM420-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C413-suparsa-ceyyuka, ML-C413-abhiprayappetuka, ML-C413-prasamsikkuka, ML-C413-prerippikkuka, ML-C413-prakatippikkuka, ML-C414-tatvam, ML-C414-dharana, ML-C414-siddhantam, ML-C414-uravitam, ML-C414-satamanam, ML-C415-samuham, ML-C415-potujanam, ML-C415-janasamkhya, ML-C415-samatvam, ML-C415-svatantryam, ML-C416-niti, ML-C416-aniti, ML-C416-anyayamaya, ML-C416-manusyavakasam, ML-C416-vivecanam, ML-C417-cattam, ML-C417-palikkuka, ML-C417-anusarikkuka, ML-C417-niyamaparamaya, ML-C417-niyamaviruddhamaya, ML-C418-siksa, ML-C418-siksikkuka, ML-C418-vilakku, ML-C418-nirodhikkuka, ML-C418-anuvadikkuka, ML-C419-tirannetuppu, ML-C419-vottu, ML-C419-vottar, ML-C419-sthanartthi, ML-C419-balarru, ML-C420-pracaranam, ML-C420-prakatanapatrika, ML-C420-bhuripaksam, ML-C420-nyunapaksam, ML-C420-vijayikkuka]
+---
+
+# Words from chapters 413–420 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C413-UPADESAM413-01, ML-LEX-C413-UPADESAM413-02] -->
+
+[PAUSE 3s] Say the Malayalam for to recommend and to remark.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C413-UPADESAM413-01, ML-LEX-C413-UPADESAM413-02, ML-LEX-C413-UPADESAM413-03, ML-LEX-C413-UPADESAM413-04, ML-LEX-C413-UPADESAM413-05, ML-LEX-C414-TATVAM414-01, ML-LEX-C414-TATVAM414-02, ML-LEX-C414-TATVAM414-03, ML-LEX-C414-TATVAM414-04, ML-LEX-C414-TATVAM414-05, ML-LEX-C415-SAMUHAM415-01, ML-LEX-C415-SAMUHAM415-02, ML-LEX-C415-SAMUHAM415-03, ML-LEX-C415-SAMUHAM415-04, ML-LEX-C415-SAMUHAM415-05, ML-LEX-C416-NITI416-01, ML-LEX-C416-NITI416-02, ML-LEX-C416-NITI416-03, ML-LEX-C416-NITI416-04, ML-LEX-C416-NITI416-05, ML-LEX-C417-CATTAM417-01, ML-LEX-C417-CATTAM417-02, ML-LEX-C417-CATTAM417-03, ML-LEX-C417-CATTAM417-04, ML-LEX-C417-CATTAM417-05, ML-LEX-C418-SIKSA418-01, ML-LEX-C418-SIKSA418-02, ML-LEX-C418-SIKSA418-03, ML-LEX-C418-SIKSA418-04, ML-LEX-C418-SIKSA418-05, ML-LEX-C419-VOTTU419-01, ML-LEX-C419-VOTTU419-02, ML-LEX-C419-VOTTU419-03, ML-LEX-C419-VOTTU419-04, ML-LEX-C419-VOTTU419-05, ML-LEX-C420-VIJAYAM420-01, ML-LEX-C420-VIJAYAM420-02, ML-LEX-C420-VIJAYAM420-03, ML-LEX-C420-VIJAYAM420-04, ML-LEX-C420-VIJAYAM420-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to recommend, to remark, to commend, to urge, to express]
+- [YOU SAY: a principle, an understanding, a theory, a source, per cent]
+- [YOU SAY: society, the general public, population, equality, freedom]
+- [YOU SAY: justice, injustice, unfair, human rights, discrimination]
+- [YOU SAY: a regulation, to abide by, to obey, legal, illegal]
+- [YOU SAY: punishment, to punish, a ban, to prohibit, to allow]
+- [YOU SAY: an election, a vote, a voter, a candidate, a ballot]
+- [YOU SAY: a campaign, a manifesto, a majority, a minority, to win]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C413-UPADESAM413-01, ML-LEX-C413-UPADESAM413-02, ML-LEX-C413-UPADESAM413-03, ML-LEX-C413-UPADESAM413-04, ML-LEX-C413-UPADESAM413-05, ML-LEX-C414-TATVAM414-01, ML-LEX-C414-TATVAM414-02, ML-LEX-C414-TATVAM414-03, ML-LEX-C414-TATVAM414-04, ML-LEX-C414-TATVAM414-05, ML-LEX-C415-SAMUHAM415-01, ML-LEX-C415-SAMUHAM415-02, ML-LEX-C415-SAMUHAM415-03, ML-LEX-C415-SAMUHAM415-04, ML-LEX-C415-SAMUHAM415-05, ML-LEX-C416-NITI416-01, ML-LEX-C416-NITI416-02, ML-LEX-C416-NITI416-03, ML-LEX-C416-NITI416-04, ML-LEX-C416-NITI416-05, ML-LEX-C417-CATTAM417-01, ML-LEX-C417-CATTAM417-02, ML-LEX-C417-CATTAM417-03, ML-LEX-C417-CATTAM417-04, ML-LEX-C417-CATTAM417-05, ML-LEX-C418-SIKSA418-01, ML-LEX-C418-SIKSA418-02, ML-LEX-C418-SIKSA418-03, ML-LEX-C418-SIKSA418-04, ML-LEX-C418-SIKSA418-05, ML-LEX-C419-VOTTU419-01, ML-LEX-C419-VOTTU419-02, ML-LEX-C419-VOTTU419-03, ML-LEX-C419-VOTTU419-04, ML-LEX-C419-VOTTU419-05, ML-LEX-C420-VIJAYAM420-01, ML-LEX-C420-VIJAYAM420-02, ML-LEX-C420-VIJAYAM420-03, ML-LEX-C420-VIJAYAM420-04, ML-LEX-C420-VIJAYAM420-05] -->
+
+[PAUSE 3s] To recommend? (**ശുപാർശ ചെയ്യുക**, *śupārśa ceyyuka*.) To remark? (**അഭിപ്രായപ്പെടുക**, *abhiprāyappeṭuka*.) To commend? (**പ്രശംസിക്കുക**, *praśaṁsikkuka*.) To urge? (**പ്രേരിപ്പിക്കുക**, *prērippikkuka*.) To express? (**പ്രകടിപ്പിക്കുക**, *prakaṭippikkuka*.) A principle? (**തത്വം**, *tatvaṁ*.) An understanding? (**ധാരണ**, *dhāraṇa*.) A theory? (**സിദ്ധാന്തം**, *siddhāntaṁ*.) A source? (**ഉറവിടം**, *uṟaviṭaṁ*.) Per cent? (**ശതമാനം**, *śatamānaṁ*.) Society? (**സമൂഹം**, *samūhaṁ*.) The general public? (**പൊതുജനം**, *potujanaṁ*.) Population? (**ജനസംഖ്യ**, *janasaṁkhya*.) Equality? (**സമത്വം**, *samatvaṁ*.) Freedom? (**സ്വാതന്ത്ര്യം**, *svātantryaṁ*.) Justice? (**നീതി**, *nīti*.) Injustice? (**അനീതി**, *anīti*.) Unfair? (**അന്യായമായ**, *anyāyamāya*.) Human rights? (**മനുഷ്യാവകാശം**, *manuṣyāvakāśaṁ*.) Discrimination? (**വിവേചനം**, *vivēcanaṁ*.) A regulation? (**ചട്ടം**, *caṭṭaṁ*.) To abide by? (**പാലിക്കുക**, *pālikkuka*.) To obey? (**അനുസരിക്കുക**, *anusarikkuka*.) Legal? (**നിയമപരമായ**, *niyamaparamāya*.) Illegal? (**നിയമവിരുദ്ധമായ**, *niyamaviruddhamāya*.) Punishment? (**ശിക്ഷ**, *śikṣa*.) To punish? (**ശിക്ഷിക്കുക**, *śikṣikkuka*.) A ban? (**വിലക്ക്**, *vilakkŭ*.) To prohibit? (**നിരോധിക്കുക**, *nirōdhikkuka*.) To allow? (**അനുവദിക്കുക**, *anuvadikkuka*.) An election? (**തിരഞ്ഞെടുപ്പ്**, *tiraññeṭuppŭ*.) A vote? (**വോട്ട്**, *vōṭṭŭ*.) A voter? (**വോട്ടർ**, *vōṭṭar*.) A candidate? (**സ്ഥാനാർത്ഥി**, *sthānārtthi*.) A ballot? (**ബാലറ്റ്**, *bālaṟṟŭ*.) A campaign? (**പ്രചാരണം**, *pracāraṇaṁ*.) A manifesto? (**പ്രകടനപത്രിക**, *prakaṭanapatrika*.) A majority? (**ഭൂരിപക്ഷം**, *bhūripakṣaṁ*.) A minority? (**ന്യൂനപക്ഷം**, *nyūnapakṣaṁ*.) To win? (**വിജയിക്കുക**, *vijayikkuka*.)
+`;export{t};

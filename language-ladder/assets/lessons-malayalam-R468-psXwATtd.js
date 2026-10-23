@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-R468-review-461-468
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 23400
+chapter: 468
+type: review
+headword: (dialogue)
+gloss: a review of chapters 461-468
+concept_tag: REVIEW
+prerequisites: [ML-C461-plarrphom, ML-C461-kantaktar, ML-C461-yatrakkuli, ML-C461-kyu, ML-C461-sancarikkuka, ML-C462-risarvesan, ML-C462-berttu, ML-C462-kamparttmenru, ML-C462-bukku-ceyyuka, ML-C462-tikkarretukkuka, ML-C463-terminal, ML-C463-ranve, ML-C463-vimanakkampani, ML-C463-parannuyaruka, ML-C463-troli, ML-C464-kasrramsu, ML-C464-emigresan, ML-C464-cekkposrru, ML-C464-parisodhana, ML-C464-videsi, ML-C465-purappetal, ML-C465-varavu, ML-C465-kalatamasam, ML-C465-kattunilkkuka, ML-C465-otikkayaruka, ML-C466-syuttkesu, ML-C466-cumatu, ML-C466-porttar, ML-C466-klokkrum, ML-C466-valiccukontupokuka, ML-C467-carakku, ML-C467-lori, ML-C467-kayarruka, ML-C467-irakkuka, ML-C467-pakku-ceyyuka, ML-C468-desiyapata, ML-C468-tol, ML-C468-turankam, ML-C468-melppalam, ML-C468-otukkinirttuka]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ML-LEX-C461-YATRA461-01, ML-LEX-C461-YATRA461-02, ML-LEX-C461-YATRA461-03, ML-LEX-C461-YATRA461-04, ML-LEX-C461-YATRA461-05, ML-LEX-C462-BOOKING462-01, ML-LEX-C462-BOOKING462-02, ML-LEX-C462-BOOKING462-03, ML-LEX-C462-BOOKING462-04, ML-LEX-C462-BOOKING462-05, ML-LEX-C463-VIMANAM463-01, ML-LEX-C463-VIMANAM463-02, ML-LEX-C463-VIMANAM463-03, ML-LEX-C463-VIMANAM463-04, ML-LEX-C463-VIMANAM463-05, ML-LEX-C464-ATIRTTI464-01, ML-LEX-C464-ATIRTTI464-02, ML-LEX-C464-ATIRTTI464-03, ML-LEX-C464-ATIRTTI464-04, ML-LEX-C464-ATIRTTI464-05, ML-LEX-C465-VARAVU465-01, ML-LEX-C465-VARAVU465-02, ML-LEX-C465-VARAVU465-03, ML-LEX-C465-VARAVU465-04, ML-LEX-C465-VARAVU465-05, ML-LEX-C466-CUMATU466-01, ML-LEX-C466-CUMATU466-02, ML-LEX-C466-CUMATU466-03, ML-LEX-C466-CUMATU466-04, ML-LEX-C466-CUMATU466-05, ML-LEX-C467-CARAKKU467-01, ML-LEX-C467-CARAKKU467-02, ML-LEX-C467-CARAKKU467-03, ML-LEX-C467-CARAKKU467-04, ML-LEX-C467-CARAKKU467-05, ML-LEX-C468-PATA468-01, ML-LEX-C468-PATA468-02, ML-LEX-C468-PATA468-03, ML-LEX-C468-PATA468-04, ML-LEX-C468-PATA468-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ML-LEX-C461-YATRA461-01, ML-LEX-C461-YATRA461-02, ML-LEX-C461-YATRA461-03, ML-LEX-C461-YATRA461-04, ML-LEX-C461-YATRA461-05, ML-LEX-C462-BOOKING462-01, ML-LEX-C462-BOOKING462-02, ML-LEX-C462-BOOKING462-03, ML-LEX-C462-BOOKING462-04, ML-LEX-C462-BOOKING462-05, ML-LEX-C463-VIMANAM463-01, ML-LEX-C463-VIMANAM463-02, ML-LEX-C463-VIMANAM463-03, ML-LEX-C463-VIMANAM463-04, ML-LEX-C463-VIMANAM463-05, ML-LEX-C464-ATIRTTI464-01, ML-LEX-C464-ATIRTTI464-02, ML-LEX-C464-ATIRTTI464-03, ML-LEX-C464-ATIRTTI464-04, ML-LEX-C464-ATIRTTI464-05, ML-LEX-C465-VARAVU465-01, ML-LEX-C465-VARAVU465-02, ML-LEX-C465-VARAVU465-03, ML-LEX-C465-VARAVU465-04, ML-LEX-C465-VARAVU465-05, ML-LEX-C466-CUMATU466-01, ML-LEX-C466-CUMATU466-02, ML-LEX-C466-CUMATU466-03, ML-LEX-C466-CUMATU466-04, ML-LEX-C466-CUMATU466-05, ML-LEX-C467-CARAKKU467-01, ML-LEX-C467-CARAKKU467-02, ML-LEX-C467-CARAKKU467-03, ML-LEX-C467-CARAKKU467-04, ML-LEX-C467-CARAKKU467-05, ML-LEX-C468-PATA468-01, ML-LEX-C468-PATA468-02, ML-LEX-C468-PATA468-03, ML-LEX-C468-PATA468-04, ML-LEX-C468-PATA468-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C461-plarrphom, ML-C461-kantaktar, ML-C461-yatrakkuli, ML-C461-kyu, ML-C461-sancarikkuka, ML-C462-risarvesan, ML-C462-berttu, ML-C462-kamparttmenru, ML-C462-bukku-ceyyuka, ML-C462-tikkarretukkuka, ML-C463-terminal, ML-C463-ranve, ML-C463-vimanakkampani, ML-C463-parannuyaruka, ML-C463-troli, ML-C464-kasrramsu, ML-C464-emigresan, ML-C464-cekkposrru, ML-C464-parisodhana, ML-C464-videsi, ML-C465-purappetal, ML-C465-varavu, ML-C465-kalatamasam, ML-C465-kattunilkkuka, ML-C465-otikkayaruka, ML-C466-syuttkesu, ML-C466-cumatu, ML-C466-porttar, ML-C466-klokkrum, ML-C466-valiccukontupokuka, ML-C467-carakku, ML-C467-lori, ML-C467-kayarruka, ML-C467-irakkuka, ML-C467-pakku-ceyyuka, ML-C468-desiyapata, ML-C468-tol, ML-C468-turankam, ML-C468-melppalam, ML-C468-otukkinirttuka]
+---
+
+# Words for getting around
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C461-YATRA461-01, ML-LEX-C461-YATRA461-02] -->
+
+[PAUSE 3s] Say the Malayalam for a platform and a bus conductor.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C461-YATRA461-01, ML-LEX-C461-YATRA461-02, ML-LEX-C461-YATRA461-03, ML-LEX-C461-YATRA461-04, ML-LEX-C461-YATRA461-05, ML-LEX-C462-BOOKING462-01, ML-LEX-C462-BOOKING462-02, ML-LEX-C462-BOOKING462-03, ML-LEX-C462-BOOKING462-04, ML-LEX-C462-BOOKING462-05, ML-LEX-C463-VIMANAM463-01, ML-LEX-C463-VIMANAM463-02, ML-LEX-C463-VIMANAM463-03, ML-LEX-C463-VIMANAM463-04, ML-LEX-C463-VIMANAM463-05, ML-LEX-C464-ATIRTTI464-01, ML-LEX-C464-ATIRTTI464-02, ML-LEX-C464-ATIRTTI464-03, ML-LEX-C464-ATIRTTI464-04, ML-LEX-C464-ATIRTTI464-05, ML-LEX-C465-VARAVU465-01, ML-LEX-C465-VARAVU465-02, ML-LEX-C465-VARAVU465-03, ML-LEX-C465-VARAVU465-04, ML-LEX-C465-VARAVU465-05, ML-LEX-C466-CUMATU466-01, ML-LEX-C466-CUMATU466-02, ML-LEX-C466-CUMATU466-03, ML-LEX-C466-CUMATU466-04, ML-LEX-C466-CUMATU466-05, ML-LEX-C467-CARAKKU467-01, ML-LEX-C467-CARAKKU467-02, ML-LEX-C467-CARAKKU467-03, ML-LEX-C467-CARAKKU467-04, ML-LEX-C467-CARAKKU467-05, ML-LEX-C468-PATA468-01, ML-LEX-C468-PATA468-02, ML-LEX-C468-PATA468-03, ML-LEX-C468-PATA468-04, ML-LEX-C468-PATA468-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a platform, a bus conductor, a fare, a queue, to travel]
+- [YOU SAY: a reservation, a berth, a compartment, to make a booking, to buy a ticket]
+- [YOU SAY: a terminal, a runway, an airline, to lift off, a luggage trolley]
+- [YOU SAY: customs, passport control, a checkpost, an inspection, a foreigner]
+- [YOU SAY: departure, arrival, a delay, to wait standing, to run and board]
+- [YOU SAY: a suitcase, a load, a porter, a cloakroom, to drag along]
+- [YOU SAY: goods, a lorry, to put on board, to unload, to pack]
+- [YOU SAY: a national highway, a toll, a tunnel, a flyover, to pull over]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C461-YATRA461-01, ML-LEX-C461-YATRA461-02, ML-LEX-C461-YATRA461-03, ML-LEX-C461-YATRA461-04, ML-LEX-C461-YATRA461-05, ML-LEX-C462-BOOKING462-01, ML-LEX-C462-BOOKING462-02, ML-LEX-C462-BOOKING462-03, ML-LEX-C462-BOOKING462-04, ML-LEX-C462-BOOKING462-05, ML-LEX-C463-VIMANAM463-01, ML-LEX-C463-VIMANAM463-02, ML-LEX-C463-VIMANAM463-03, ML-LEX-C463-VIMANAM463-04, ML-LEX-C463-VIMANAM463-05, ML-LEX-C464-ATIRTTI464-01, ML-LEX-C464-ATIRTTI464-02, ML-LEX-C464-ATIRTTI464-03, ML-LEX-C464-ATIRTTI464-04, ML-LEX-C464-ATIRTTI464-05, ML-LEX-C465-VARAVU465-01, ML-LEX-C465-VARAVU465-02, ML-LEX-C465-VARAVU465-03, ML-LEX-C465-VARAVU465-04, ML-LEX-C465-VARAVU465-05, ML-LEX-C466-CUMATU466-01, ML-LEX-C466-CUMATU466-02, ML-LEX-C466-CUMATU466-03, ML-LEX-C466-CUMATU466-04, ML-LEX-C466-CUMATU466-05, ML-LEX-C467-CARAKKU467-01, ML-LEX-C467-CARAKKU467-02, ML-LEX-C467-CARAKKU467-03, ML-LEX-C467-CARAKKU467-04, ML-LEX-C467-CARAKKU467-05, ML-LEX-C468-PATA468-01, ML-LEX-C468-PATA468-02, ML-LEX-C468-PATA468-03, ML-LEX-C468-PATA468-04, ML-LEX-C468-PATA468-05] -->
+
+[PAUSE 3s] A platform? (**പ്ലാറ്റ്ഫോം**, *plāṟṟphōṁ*.) A bus conductor? (**കണ്ടക്ടർ**, *kaṇṭakṭar*.) A fare? (**യാത്രാക്കൂലി**, *yātrākkūli*.) A queue? (**ക്യൂ**, *kyū*.) To travel? (**സഞ്ചരിക്കുക**, *sañcarikkuka*.) A reservation? (**റിസർവേഷൻ**, *ṟisarvēṣan*.) A berth? (**ബെർത്ത്**, *berttŭ*.) A compartment? (**കമ്പാർട്ട്മെന്റ്**, *kampārṭṭmenṟŭ*.) To make a booking? (**ബുക്ക് ചെയ്യുക**, *bukkŭ ceyyuka*.) To buy a ticket? (**ടിക്കറ്റെടുക്കുക**, *ṭikkaṟṟeṭukkuka*.) A terminal? (**ടെർമിനൽ**, *ṭerminal*.) A runway? (**റൺവേ**, *ṟaṇvē*.) An airline? (**വിമാനക്കമ്പനി**, *vimānakkampani*.) To lift off? (**പറന്നുയരുക**, *paṟannuyaruka*.) A luggage trolley? (**ട്രോളി**, *ṭrōḷi*.) Customs? (**കസ്റ്റംസ്**, *kasṟṟaṁsŭ*.) Passport control? (**എമിഗ്രേഷൻ**, *emigrēṣan*.) A checkpost? (**ചെക്ക്പോസ്റ്റ്**, *cekkpōsṟṟŭ*.) An inspection? (**പരിശോധന**, *pariśōdhana*.) A foreigner? (**വിദേശി**, *vidēśi*.) Departure? (**പുറപ്പെടൽ**, *puṟappeṭal*.) Arrival? (**വരവ്**, *varavŭ*.) A delay? (**കാലതാമസം**, *kālatāmasaṁ*.) To wait standing? (**കാത്തുനിൽക്കുക**, *kāttunilkkuka*.) To run and board? (**ഓടിക്കയറുക**, *ōṭikkayaṟuka*.) A suitcase? (**സ്യൂട്ട്കേസ്**, *syūṭṭkēsŭ*.) A load? (**ചുമട്**, *cumaṭŭ*.) A porter? (**പോർട്ടർ**, *pōrṭṭar*.) A cloakroom? (**ക്ലോക്ക്റൂം**, *klōkkṟūṁ*.) To drag along? (**വലിച്ചുകൊണ്ടുപോകുക**, *valiccukoṇṭupōkuka*.) Goods? (**ചരക്ക്**, *carakkŭ*.) A lorry? (**ലോറി**, *lōṟi*.) To put on board? (**കയറ്റുക**, *kayaṟṟuka*.) To unload? (**ഇറക്കുക**, *iṟakkuka*.) To pack? (**പാക്ക് ചെയ്യുക**, *pākkŭ ceyyuka*.) A national highway? (**ദേശീയപാത**, *dēśīyapāta*.) A toll? (**ടോൾ**, *ṭōḷ*.) A tunnel? (**തുരങ്കം**, *turaṅkaṁ*.) A flyover? (**മേൽപ്പാലം**, *mēlppālaṁ*.) To pull over? (**ഒതുക്കിനിർത്തുക**, *otukkinirttuka*.)
+`;export{t};

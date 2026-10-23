@@ -1,0 +1,106 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-R404-review-397-404
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 19860
+chapter: 404
+type: review
+headword: (dialogue)
+gloss: a review of chapters 397-404
+concept_tag: REVIEW
+prerequisites: [ML-C397-rajavu, ML-C397-rajni, ML-C397-rajakumaran, ML-C397-rajakumari, ML-C397-kottaram, ML-C398-simhasanam, ML-C398-kiritam, ML-C398-pattabhisekam, ML-C398-bharanadhikari, ML-C398-valuka, ML-C399-samrajyam, ML-C399-kotta, ML-C399-sainyam, ML-C399-pattalakkaran, ML-C399-kilatakkuka, ML-C400-satru, ML-C400-yoddhavu, ML-C400-caran, ML-C400-tolppikkuka, ML-C400-kilatannuka, ML-C401-atima, ML-C401-viplavam, ML-C401-adhinivesam, ML-C401-poratuka, ML-C401-ceruttunilkkuka, ML-C402-puranam, ML-C402-kettukatha, ML-C402-natotikkatha, ML-C402-nayakan, ML-C402-gunapatham, ML-C403-pretam, ML-C403-mantrikan, ML-C403-nidhi, ML-C403-sapam, ML-C403-sapikkuka, ML-C404-caritrakaran, ML-C404-puratana, ML-C404-taliyola, ML-C404-lipi, ML-C404-nasippikkuka]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ML-LEX-C397-RAJAVU397-01, ML-LEX-C397-RAJAVU397-02, ML-LEX-C397-RAJAVU397-03, ML-LEX-C397-RAJAVU397-04, ML-LEX-C397-RAJAVU397-05, ML-LEX-C398-SIMHASANAM398-01, ML-LEX-C398-SIMHASANAM398-02, ML-LEX-C398-SIMHASANAM398-03, ML-LEX-C398-SIMHASANAM398-04, ML-LEX-C398-SIMHASANAM398-05, ML-LEX-C399-SAMRAJYAM399-01, ML-LEX-C399-SAMRAJYAM399-02, ML-LEX-C399-SAMRAJYAM399-03, ML-LEX-C399-SAMRAJYAM399-04, ML-LEX-C399-SAMRAJYAM399-05, ML-LEX-C400-SATRU400-01, ML-LEX-C400-SATRU400-02, ML-LEX-C400-SATRU400-03, ML-LEX-C400-SATRU400-04, ML-LEX-C400-SATRU400-05, ML-LEX-C401-VIPLAVAM401-01, ML-LEX-C401-VIPLAVAM401-02, ML-LEX-C401-VIPLAVAM401-03, ML-LEX-C401-VIPLAVAM401-04, ML-LEX-C401-VIPLAVAM401-05, ML-LEX-C402-PURANAM402-01, ML-LEX-C402-PURANAM402-02, ML-LEX-C402-PURANAM402-03, ML-LEX-C402-PURANAM402-04, ML-LEX-C402-PURANAM402-05, ML-LEX-C403-PRETHAM403-01, ML-LEX-C403-PRETHAM403-02, ML-LEX-C403-PRETHAM403-03, ML-LEX-C403-PRETHAM403-04, ML-LEX-C403-PRETHAM403-05, ML-LEX-C404-CHARITHRAM404-01, ML-LEX-C404-CHARITHRAM404-02, ML-LEX-C404-CHARITHRAM404-03, ML-LEX-C404-CHARITHRAM404-04, ML-LEX-C404-CHARITHRAM404-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ML-LEX-C397-RAJAVU397-01, ML-LEX-C397-RAJAVU397-02, ML-LEX-C397-RAJAVU397-03, ML-LEX-C397-RAJAVU397-04, ML-LEX-C397-RAJAVU397-05, ML-LEX-C398-SIMHASANAM398-01, ML-LEX-C398-SIMHASANAM398-02, ML-LEX-C398-SIMHASANAM398-03, ML-LEX-C398-SIMHASANAM398-04, ML-LEX-C398-SIMHASANAM398-05, ML-LEX-C399-SAMRAJYAM399-01, ML-LEX-C399-SAMRAJYAM399-02, ML-LEX-C399-SAMRAJYAM399-03, ML-LEX-C399-SAMRAJYAM399-04, ML-LEX-C399-SAMRAJYAM399-05, ML-LEX-C400-SATRU400-01, ML-LEX-C400-SATRU400-02, ML-LEX-C400-SATRU400-03, ML-LEX-C400-SATRU400-04, ML-LEX-C400-SATRU400-05, ML-LEX-C401-VIPLAVAM401-01, ML-LEX-C401-VIPLAVAM401-02, ML-LEX-C401-VIPLAVAM401-03, ML-LEX-C401-VIPLAVAM401-04, ML-LEX-C401-VIPLAVAM401-05, ML-LEX-C402-PURANAM402-01, ML-LEX-C402-PURANAM402-02, ML-LEX-C402-PURANAM402-03, ML-LEX-C402-PURANAM402-04, ML-LEX-C402-PURANAM402-05, ML-LEX-C403-PRETHAM403-01, ML-LEX-C403-PRETHAM403-02, ML-LEX-C403-PRETHAM403-03, ML-LEX-C403-PRETHAM403-04, ML-LEX-C403-PRETHAM403-05, ML-LEX-C404-CHARITHRAM404-01, ML-LEX-C404-CHARITHRAM404-02, ML-LEX-C404-CHARITHRAM404-03, ML-LEX-C404-CHARITHRAM404-04, ML-LEX-C404-CHARITHRAM404-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C397-rajavu, ML-C397-rajni, ML-C397-rajakumaran, ML-C397-rajakumari, ML-C397-kottaram, ML-C398-simhasanam, ML-C398-kiritam, ML-C398-pattabhisekam, ML-C398-bharanadhikari, ML-C398-valuka, ML-C399-samrajyam, ML-C399-kotta, ML-C399-sainyam, ML-C399-pattalakkaran, ML-C399-kilatakkuka, ML-C400-satru, ML-C400-yoddhavu, ML-C400-caran, ML-C400-tolppikkuka, ML-C400-kilatannuka, ML-C401-atima, ML-C401-viplavam, ML-C401-adhinivesam, ML-C401-poratuka, ML-C401-ceruttunilkkuka, ML-C402-puranam, ML-C402-kettukatha, ML-C402-natotikkatha, ML-C402-nayakan, ML-C402-gunapatham, ML-C403-pretam, ML-C403-mantrikan, ML-C403-nidhi, ML-C403-sapam, ML-C403-sapikkuka, ML-C404-caritrakaran, ML-C404-puratana, ML-C404-taliyola, ML-C404-lipi, ML-C404-nasippikkuka]
+---
+
+# Words for telling what happened, once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C397-RAJAVU397-01, ML-LEX-C397-RAJAVU397-02] -->
+
+[PAUSE 3s] Say the Malayalam for a king and a queen.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C397-RAJAVU397-01, ML-LEX-C397-RAJAVU397-02, ML-LEX-C397-RAJAVU397-03, ML-LEX-C397-RAJAVU397-04, ML-LEX-C397-RAJAVU397-05, ML-LEX-C398-SIMHASANAM398-01, ML-LEX-C398-SIMHASANAM398-02, ML-LEX-C398-SIMHASANAM398-03, ML-LEX-C398-SIMHASANAM398-04, ML-LEX-C398-SIMHASANAM398-05, ML-LEX-C399-SAMRAJYAM399-01, ML-LEX-C399-SAMRAJYAM399-02, ML-LEX-C399-SAMRAJYAM399-03, ML-LEX-C399-SAMRAJYAM399-04, ML-LEX-C399-SAMRAJYAM399-05, ML-LEX-C400-SATRU400-01, ML-LEX-C400-SATRU400-02, ML-LEX-C400-SATRU400-03, ML-LEX-C400-SATRU400-04, ML-LEX-C400-SATRU400-05, ML-LEX-C401-VIPLAVAM401-01, ML-LEX-C401-VIPLAVAM401-02, ML-LEX-C401-VIPLAVAM401-03, ML-LEX-C401-VIPLAVAM401-04, ML-LEX-C401-VIPLAVAM401-05, ML-LEX-C402-PURANAM402-01, ML-LEX-C402-PURANAM402-02, ML-LEX-C402-PURANAM402-03, ML-LEX-C402-PURANAM402-04, ML-LEX-C402-PURANAM402-05, ML-LEX-C403-PRETHAM403-01, ML-LEX-C403-PRETHAM403-02, ML-LEX-C403-PRETHAM403-03, ML-LEX-C403-PRETHAM403-04, ML-LEX-C403-PRETHAM403-05, ML-LEX-C404-CHARITHRAM404-01, ML-LEX-C404-CHARITHRAM404-02, ML-LEX-C404-CHARITHRAM404-03, ML-LEX-C404-CHARITHRAM404-04, ML-LEX-C404-CHARITHRAM404-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a king, a queen, a prince, a princess, a palace]
+- [YOU SAY: a throne, a crown, a coronation, a sovereign, to reign]
+- [YOU SAY: an empire, a fort, an army, a soldier, to conquer]
+- [YOU SAY: an enemy, a warrior, a spy, to beat in battle, to surrender]
+- [YOU SAY: a slave, a revolution, an invasion, to fight, to resist]
+- [YOU SAY: a myth, a fable, a folk tale, a hero, a moral]
+- [YOU SAY: a ghost, a magician, a treasure, a curse, to curse]
+- [YOU SAY: a historian, ancient, a palm-leaf manuscript, a script, to destroy]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C397-RAJAVU397-01, ML-LEX-C397-RAJAVU397-02, ML-LEX-C397-RAJAVU397-03, ML-LEX-C397-RAJAVU397-04, ML-LEX-C397-RAJAVU397-05, ML-LEX-C398-SIMHASANAM398-01, ML-LEX-C398-SIMHASANAM398-02, ML-LEX-C398-SIMHASANAM398-03, ML-LEX-C398-SIMHASANAM398-04, ML-LEX-C398-SIMHASANAM398-05, ML-LEX-C399-SAMRAJYAM399-01, ML-LEX-C399-SAMRAJYAM399-02, ML-LEX-C399-SAMRAJYAM399-03, ML-LEX-C399-SAMRAJYAM399-04, ML-LEX-C399-SAMRAJYAM399-05, ML-LEX-C400-SATRU400-01, ML-LEX-C400-SATRU400-02, ML-LEX-C400-SATRU400-03, ML-LEX-C400-SATRU400-04, ML-LEX-C400-SATRU400-05, ML-LEX-C401-VIPLAVAM401-01, ML-LEX-C401-VIPLAVAM401-02, ML-LEX-C401-VIPLAVAM401-03, ML-LEX-C401-VIPLAVAM401-04, ML-LEX-C401-VIPLAVAM401-05, ML-LEX-C402-PURANAM402-01, ML-LEX-C402-PURANAM402-02, ML-LEX-C402-PURANAM402-03, ML-LEX-C402-PURANAM402-04, ML-LEX-C402-PURANAM402-05, ML-LEX-C403-PRETHAM403-01, ML-LEX-C403-PRETHAM403-02, ML-LEX-C403-PRETHAM403-03, ML-LEX-C403-PRETHAM403-04, ML-LEX-C403-PRETHAM403-05, ML-LEX-C404-CHARITHRAM404-01, ML-LEX-C404-CHARITHRAM404-02, ML-LEX-C404-CHARITHRAM404-03, ML-LEX-C404-CHARITHRAM404-04, ML-LEX-C404-CHARITHRAM404-05] -->
+
+[PAUSE 3s] A king? (**രാജാവ്**, *rājāvŭ*.) A queen? (**രാജ്ഞി**, *rājñi*.) A prince? (**രാജകുമാരൻ**, *rājakumāran*.) A princess? (**രാജകുമാരി**, *rājakumāri*.) A palace? (**കൊട്ടാരം**, *koṭṭāraṁ*.) A throne? (**സിംഹാസനം**, *siṁhāsanaṁ*.) A crown? (**കിരീടം**, *kirīṭaṁ*.) A coronation? (**പട്ടാഭിഷേകം**, *paṭṭābhiṣēkaṁ*.) A sovereign? (**ഭരണാധികാരി**, *bharaṇādhikāri*.) To reign? (**വാഴുക**, *vāḻuka*.) An empire? (**സാമ്രാജ്യം**, *sāmrājyaṁ*.) A fort? (**കോട്ട**, *kōṭṭa*.) An army? (**സൈന്യം**, *sainyaṁ*.) A soldier? (**പട്ടാളക്കാരൻ**, *paṭṭāḷakkāran*.) To conquer? (**കീഴടക്കുക**, *kīḻaṭakkuka*.) An enemy? (**ശത്രു**, *śatru*.) A warrior? (**യോദ്ധാവ്**, *yōddhāvŭ*.) A spy? (**ചാരൻ**, *cāran*.) To beat in battle? (**തോൽപ്പിക്കുക**, *tōlppikkuka*.) To surrender? (**കീഴടങ്ങുക**, *kīḻaṭaṅṅuka*.) A slave? (**അടിമ**, *aṭima*.) A revolution? (**വിപ്ലവം**, *viplavaṁ*.) An invasion? (**അധിനിവേശം**, *adhinivēśaṁ*.) To fight? (**പോരാടുക**, *pōrāṭuka*.) To resist? (**ചെറുത്തുനിൽക്കുക**, *ceṟuttunilkkuka*.) A myth? (**പുരാണം**, *purāṇaṁ*.) A fable? (**കെട്ടുകഥ**, *keṭṭukatha*.) A folk tale? (**നാടോടിക്കഥ**, *nāṭōṭikkatha*.) A hero? (**നായകൻ**, *nāyakan*.) A moral? (**ഗുണപാഠം**, *guṇapāṭhaṁ*.) A ghost? (**പ്രേതം**, *prētaṁ*.) A magician? (**മാന്ത്രികൻ**, *māntrikan*.) A treasure? (**നിധി**, *nidhi*.) A curse? (**ശാപം**, *śāpaṁ*.) To curse? (**ശപിക്കുക**, *śapikkuka*.) A historian? (**ചരിത്രകാരൻ**, *caritrakāran*.) Ancient? (**പുരാതന**, *purātana*.) A palm-leaf manuscript? (**താളിയോല**, *tāḷiyōla*.) A script? (**ലിപി**, *lipi*.) To destroy? (**നശിപ്പിക്കുക**, *naśippikkuka*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-R404-review-final-404
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 19870
+chapter: 404
+type: review
+headword: (dialogue)
+gloss: one more pass over chapter 404
+concept_tag: REVIEW
+prerequisites: [ML-C404-caritrakaran, ML-C404-puratana, ML-C404-taliyola, ML-C404-lipi, ML-C404-nasippikkuka]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ML-LEX-C404-CHARITHRAM404-01, ML-LEX-C404-CHARITHRAM404-02, ML-LEX-C404-CHARITHRAM404-03, ML-LEX-C404-CHARITHRAM404-04, ML-LEX-C404-CHARITHRAM404-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ML-LEX-C404-CHARITHRAM404-01, ML-LEX-C404-CHARITHRAM404-02, ML-LEX-C404-CHARITHRAM404-03, ML-LEX-C404-CHARITHRAM404-04, ML-LEX-C404-CHARITHRAM404-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C404-caritrakaran, ML-C404-puratana, ML-C404-taliyola, ML-C404-lipi, ML-C404-nasippikkuka]
+---
+
+# Old Writings and Ruins — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C404-CHARITHRAM404-01, ML-LEX-C404-CHARITHRAM404-02] -->
+
+[PAUSE 3s] Say the Malayalam for a historian and ancient.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C404-CHARITHRAM404-01, ML-LEX-C404-CHARITHRAM404-02, ML-LEX-C404-CHARITHRAM404-03, ML-LEX-C404-CHARITHRAM404-04, ML-LEX-C404-CHARITHRAM404-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a historian, ancient, a palm-leaf manuscript, a script, to destroy]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C404-CHARITHRAM404-01, ML-LEX-C404-CHARITHRAM404-02, ML-LEX-C404-CHARITHRAM404-03, ML-LEX-C404-CHARITHRAM404-04, ML-LEX-C404-CHARITHRAM404-05] -->
+
+[PAUSE 3s] A historian? (**ചരിത്രകാരൻ**, *caritrakāran*.) Ancient? (**പുരാതന**, *purātana*.) A palm-leaf manuscript? (**താളിയോല**, *tāḷiyōla*.) A script? (**ലിപി**, *lipi*.) To destroy? (**നശിപ്പിക്കുക**, *naśippikkuka*.)
+`;export{t as n,r as t};
