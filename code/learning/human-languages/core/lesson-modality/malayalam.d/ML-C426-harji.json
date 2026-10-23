@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C426-harji",
+    "language": "malayalam",
+    "chapter": 426,
+    "sequence": 21110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:427b0bdf205fd0d7"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:ecd4ebfe4b0c7680",
+  "lessonIds": [
+    "KA-C540-kabaddi",
+    "KA-C540-kusti",
+    "KA-C540-golu",
+    "KA-C540-ode-kick",
+    "KA-C540-guddu"
+  ],
+  "tex": "kannada/book/chapters/ch540-kicks-and-punches.tex"
+}

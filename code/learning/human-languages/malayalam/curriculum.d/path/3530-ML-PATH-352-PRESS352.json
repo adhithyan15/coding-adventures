@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-352-PRESS352",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-352-PRESS352"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C448-indhana",
+    "language": "kannada",
+    "chapter": 448,
+    "sequence": 22770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52e6fd90612ee584"
+  },
+  "findings": []
+}

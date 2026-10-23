@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:6ba0198de961a614",
+  "lessonIds": [
+    "KA-C403-samaja",
+    "KA-C403-svavalambane",
+    "KA-C403-jagrti",
+    "KA-C403-vaividhya",
+    "KA-C403-rupisu"
+  ],
+  "tex": "kannada/book/chapters/ch403-society-and-self-reliance.tex"
+}

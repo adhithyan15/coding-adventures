@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-336-SAINYA336",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "KA-EXT-336-SAINYA336"
+  ],
+  "after": []
+}

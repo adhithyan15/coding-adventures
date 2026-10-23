@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:c4cfe06179d230b2",
+  "lessonIds": [
+    "KA-C425-svikarisu",
+    "KA-C425-tiraskarisu",
+    "KA-C425-pramanikarisu",
+    "KA-C425-urjita",
+    "KA-C425-manyate",
+    "KA-R425-review-419-425"
+  ],
+  "tex": "kannada/book/chapters/ch425-accepting-and-rejecting.tex"
+}

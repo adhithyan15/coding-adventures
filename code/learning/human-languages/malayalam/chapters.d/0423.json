@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "Making Policy",
+  "label": "ch:ml-making-policy",
+  "canDo": "I can say a policy, to implement, to pass a law, to amend and an oath.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C423-satyapratijna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can say a policy, to implement, to pass a law, to amend and an oath.",
+    "assesses": [
+      "ML-LEX-C423-NAYAM423-03",
+      "ML-LEX-C423-NAYAM423-04",
+      "ML-LEX-C423-NAYAM423-05"
+    ]
+  }
+}

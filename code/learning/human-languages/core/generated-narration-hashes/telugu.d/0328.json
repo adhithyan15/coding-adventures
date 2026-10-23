@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:ca1f82a359df4956",
+  "lessonIds": [
+    "TE-C328-toluta",
+    "TE-C328-anantaram",
+    "TE-C328-ettakelaku",
+    "TE-C328-marusati-roju",
+    "TE-C328-gurtucesuko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch328.txt",
+  "json": "telugu/narration/ch328.json",
+  "textHash": "fnv1a64:39fe3295eed97be4",
+  "jsonHash": "fnv1a64:5ef171107496f226",
+  "findings": []
+}

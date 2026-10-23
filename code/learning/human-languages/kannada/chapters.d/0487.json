@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Storms and Disasters",
+  "label": "ch:ka-storms-and-disasters",
+  "canDo": "I can say a cyclone, a whirlwind, to rage, a landslide and a tsunami.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C487-sunami",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can say a cyclone, a whirlwind, to rage, a landslide and a tsunami.",
+    "assesses": [
+      "KA-LEX-C487-CANDAMARUTA487-03",
+      "KA-LEX-C487-CANDAMARUTA487-04",
+      "KA-LEX-C487-CANDAMARUTA487-05"
+    ]
+  }
+}

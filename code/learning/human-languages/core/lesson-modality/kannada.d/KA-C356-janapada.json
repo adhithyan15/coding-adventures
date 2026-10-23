@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C356-janapada",
+    "language": "kannada",
+    "chapter": 356,
+    "sequence": 17900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2f8866b367aab23"
+  },
+  "findings": []
+}

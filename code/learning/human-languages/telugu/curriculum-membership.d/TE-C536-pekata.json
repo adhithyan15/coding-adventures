@@ -1,0 +1,11 @@
+{
+  "id": "TE-C536-pekata",
+  "pathSegment": "TE-PATH-536-VIRAMAM536",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-536-VIRAMAM536",
+      "order": 4
+    }
+  ]
+}

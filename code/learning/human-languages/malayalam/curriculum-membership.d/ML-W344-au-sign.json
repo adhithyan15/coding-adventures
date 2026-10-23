@@ -1,0 +1,11 @@
+{
+  "id": "ML-W344-au-sign",
+  "pathSegment": "ML-PATH-344-TICKETS-TROUBLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-344-TICKETS-TROUBLE",
+      "order": 2
+    }
+  ]
+}

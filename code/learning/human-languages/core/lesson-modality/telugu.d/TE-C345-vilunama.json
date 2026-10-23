@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C345-vilunama",
+    "language": "telugu",
+    "chapter": 345,
+    "sequence": 17010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01732bde87aa153e"
+  },
+  "findings": []
+}

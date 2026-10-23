@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:2b3912c83f6fd555",
+  "lessonIds": [
+    "KA-C356-janapada",
+    "KA-C356-samanta",
+    "KA-C356-samara",
+    "KA-C356-lavani",
+    "KA-C356-niti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch356.txt",
+  "json": "kannada/narration/ch356.json",
+  "textHash": "fnv1a64:6a35f4b75c16226d",
+  "jsonHash": "fnv1a64:bcab18f6a59a55f0",
+  "findings": []
+}

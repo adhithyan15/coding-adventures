@@ -1,0 +1,11 @@
+{
+  "id": "ML-C409-nispaksamaya",
+  "pathSegment": "ML-PATH-409-KURRAM409",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-409-KURRAM409",
+      "order": 3
+    }
+  ]
+}

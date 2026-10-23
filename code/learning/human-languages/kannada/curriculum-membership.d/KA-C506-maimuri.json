@@ -1,0 +1,11 @@
+{
+  "id": "KA-C506-maimuri",
+  "pathSegment": "KA-PATH-506-NIDDE506",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-506-NIDDE506",
+      "order": 3
+    }
+  ]
+}

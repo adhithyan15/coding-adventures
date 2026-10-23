@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R344-at-the-station",
+    "language": "malayalam",
+    "chapter": 344,
+    "sequence": 16390,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:16d17b0f11afd6ee"
+  },
+  "findings": []
+}

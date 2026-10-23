@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:3a9ca378bb9a68ff",
+  "lessonIds": [
+    "TE-C480-muncettu",
+    "TE-C480-pongiporlu",
+    "TE-C480-tegipovu",
+    "TE-C480-kurukupovu",
+    "TE-C480-irukkupovu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch480.txt",
+  "json": "telugu/narration/ch480.json",
+  "textHash": "fnv1a64:32a793358cd86eaf",
+  "jsonHash": "fnv1a64:3ddc266c6a3f64f6",
+  "findings": []
+}

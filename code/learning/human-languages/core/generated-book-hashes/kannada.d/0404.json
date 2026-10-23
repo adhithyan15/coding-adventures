@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:f772cbf97179fc18",
+  "lessonIds": [
+    "KA-C404-sadasya",
+    "KA-C404-dana-madu",
+    "KA-C404-protsahisu",
+    "KA-C404-samyojisu",
+    "KA-C404-sauharda",
+    "KA-R404-review-398-404"
+  ],
+  "tex": "kannada/book/chapters/ch404-helping-out.tex"
+}

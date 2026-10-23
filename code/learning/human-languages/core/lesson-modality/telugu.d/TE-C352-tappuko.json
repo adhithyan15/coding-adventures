@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C352-tappuko",
+    "language": "telugu",
+    "chapter": 352,
+    "sequence": 17370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c57beac3b2324deb"
+  },
+  "findings": []
+}

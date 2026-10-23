@@ -1,0 +1,14 @@
+{
+  "language": "malayalam",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:0adb169259648816",
+  "lessonIds": [
+    "ML-C420-pracaranam",
+    "ML-C420-prakatanapatrika",
+    "ML-C420-bhuripaksam",
+    "ML-C420-nyunapaksam",
+    "ML-C420-vijayikkuka",
+    "ML-R420-review-413-420"
+  ],
+  "tex": "malayalam/book/chapters/ch420-winning-a-seat.tex"
+}

@@ -155,6 +155,23 @@ pieces taught before the whole; and a book you can read straight through.
   (1017 → 1014) instead of above it. Every word is spelled from characters the
   track already used, so never-taught glyphs stayed at zero. In the book,
   Chapters 74–80.
+- **Chapters 326–549 — the B1 vocabulary** ([`lessons/`](./lessons/),
+  `TE-C326-*` to `TE-R549-*`): 1,120 headwords, 388 of them verbs (each shown
+  with its past, *దొంగిలించాను* "I stole"), one word per lesson, practised
+  again in the next two lessons, with a review after every eight chapters.
+  Four tranches, one per B1 node:
+  - 326–381: narrating (news, incidents and the courts, life events, history
+    and stories);
+  - 382–437: reasons and conditions (opinion, society and the law, education);
+  - 438–493: travel (transport, lodging, the town, nature and the weather);
+  - 494–549: experience (feelings, health, work, family, the arts, the home).
+
+  Origins cite DEDR for native Dravidian words and CDIAL or Monier-Williams for
+  Sanskrit ones, name the donor of a loan, and are hedged where no source
+  settles them. Chapters 340–344 revisit the core's new letters ఈ ఓ ఊ ఔ ః
+  through ఈలోగా, ఓటు, ఊరు, ఔషధం and దుఃఖం. With the B1 core (chapters
+  316–325) these chapters take Telugu to 2,560 headwords at or below B1, and
+  Telugu **attains B1** on the level gate.
 
 ---
 

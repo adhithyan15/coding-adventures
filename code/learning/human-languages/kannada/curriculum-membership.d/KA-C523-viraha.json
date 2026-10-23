@@ -1,0 +1,11 @@
+{
+  "id": "KA-C523-viraha",
+  "pathSegment": "KA-PATH-523-SAMSARA523",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-523-SAMSARA523",
+      "order": 3
+    }
+  ]
+}

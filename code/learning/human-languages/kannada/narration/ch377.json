@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 377,
+  "title": "Logic and Objections",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b2a6cd55fce1fcc4",
+  "lessons": [
+    {
+      "id": "KA-C377-tarka",
+      "sequence": 19050,
+      "title": "ತರ್ಕ (tarka) — logic; reasoning",
+      "headword": "ತರ್ಕ",
+      "romanization": "tarka",
+      "gloss": "logic; reasoning",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:378dce3246fdc0ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for importance, then the Kannada for to base on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತರ್ಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತರ್ಕ — tarka — \"logic; reasoning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವನ ತರ್ಕ ನನಗೆ ಸರಿ ಅನಿಸಲಿಲ್ಲ. avana tarka nanage sari anisalilla. His reasoning did not seem right to me."
+            },
+            {
+              "kind": "speech",
+              "text": "ತರ್ಕಬದ್ಧ means reasoned, logical."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತರ್ಕ (tarka) is borrowed from Sanskrit tarka, \"conjecture, reasoning\" (CDIAL 5714)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avana tarka nanage sari anisalilla. — His reasoning did not seem right to me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avana tarka nanage sari anisalilla.* — His reasoning did not seem right to me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for importance, then the Kannada for to base on, then say tarka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for importance, then the Kannada for to base on, then say *tarka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತರ್ಕ (tarka) mean? (\"Logic; reasoning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C377-samarthisu",
+      "sequence": 19060,
+      "title": "ಸಮರ್ಥಿಸು (samarthisu) — to justify; to defend",
+      "headword": "ಸಮರ್ಥಿಸು",
+      "romanization": "samarthisu",
+      "gloss": "to justify; to defend",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8bf05ae2b6e7cfc3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to base on, then the Kannada for logic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಮರ್ಥಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮರ್ಥಿಸು — samarthisu — \"to justify; to defend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವಳು ತನ್ನ ನಿರ್ಧಾರವನ್ನು ಸಮರ್ಥಿಸಿದಳು. avaḷu tanna nirdhāravannu samarthisidaḷu. She defended her decision."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಸಮರ್ಥಿಸಿದೆ, samarthiside."
+            },
+            {
+              "kind": "speech",
+              "text": "What you defend takes -ಅನ್ನು. ಸಮರ್ಥಿಸಿಕೊ, to defend oneself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮರ್ಥಿಸು (samarthisu) is built on Sanskrit samartha, \"fit, able, forcible\" (CDIAL 13189), with the Kannada verb ending -isu: to show that something is fit."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samarthisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samarthisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samarthisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samarthisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷu tanna nirdhāravannu samarthisidaḷu. — She defended her decision.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷu tanna nirdhāravannu samarthisidaḷu.* — She defended her decision.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to base on, then the Kannada for logic, then say samarthisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to base on, then the Kannada for logic, then say *samarthisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಮರ್ಥಿಸು (samarthisu) mean? (\"To justify; to defend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C377-vivada",
+      "sequence": 19070,
+      "title": "ವಿವಾದ (vivāda) — a controversy; a dispute",
+      "headword": "ವಿವಾದ",
+      "romanization": "vivāda",
+      "gloss": "a controversy; a dispute",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47c8d8a7324427a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for logic, then the Kannada for to justify."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಿವಾದ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿವಾದ — vivāda — \"a controversy; a dispute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೊಸ ನಿಯಮದ ಬಗ್ಗೆ ದೊಡ್ಡ ವಿವಾದ ಆಯಿತು. hosa niyamada bagge doḍḍa vivāda āyitu. There was a big controversy about the new rule."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಿವಾದಾತ್ಮಕ, controversial."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿವಾದ (vivāda) is borrowed from Sanskrit vivāda, \"a dispute, a quarrel, a lawsuit\" (Monier-Williams), from vi- \"apart\" and vad \"to speak\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vivāda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vivāda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vivāda, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vivāda*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hosa niyamada bagge doḍḍa vivāda āyitu. — There was a big controversy about the new rule.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hosa niyamada bagge doḍḍa vivāda āyitu.* — There was a big controversy about the new rule.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for logic, then the Kannada for to justify, then say vivāda again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for logic, then the Kannada for to justify, then say *vivāda* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಿವಾದ (vivāda) mean? (\"A controversy; a dispute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C377-aksepisu",
+      "sequence": 19080,
+      "title": "ಆಕ್ಷೇಪಿಸು (ākṣēpisu) — to object",
+      "headword": "ಆಕ್ಷೇಪಿಸು",
+      "romanization": "ākṣēpisu",
+      "gloss": "to object",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70fa6fcd6bb1a684",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to justify, then the Kannada for a controversy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಆಕ್ಷೇಪಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆಕ್ಷೇಪಿಸು — ākṣēpisu — \"to object\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಊರಿನ ಜನರು ಹೊಸ ಕಾರ್ಖಾನೆಗೆ ಆಕ್ಷೇಪಿಸಿದರು. ūrina janaru hosa kārkhānege ākṣēpisidaru. The villagers objected to the new factory."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಆಕ್ಷೇಪಿಸಿದೆ, ākṣēpiside."
+            },
+            {
+              "kind": "speech",
+              "text": "What you object to takes -ಗೆ. ಆಕ್ಷೇಪ, an objection."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆಕ್ಷೇಪಿಸು (ākṣēpisu) is built on Sanskrit ākṣepa, which among other senses means \"an objection\" and \"a reproach\" (Monier-Williams), with the verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākṣēpisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākṣēpisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākṣēpisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākṣēpisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrina janaru hosa kārkhānege ākṣēpisidaru. — The villagers objected to the new factory.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrina janaru hosa kārkhānege ākṣēpisidaru.* — The villagers objected to the new factory.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to justify, then the Kannada for a controversy, then say ākṣēpisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to justify, then the Kannada for a controversy, then say *ākṣēpisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಆಕ್ಷೇಪಿಸು (ākṣēpisu) mean? (\"To object\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C377-samanjasa",
+      "sequence": 19090,
+      "title": "ಸಮಂಜಸ (samañjasa) — reasonable; fitting",
+      "headword": "ಸಮಂಜಸ",
+      "romanization": "samañjasa",
+      "gloss": "reasonable; fitting",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43235f8a6ff9bf47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a controversy, then the Kannada for to object."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಮಂಜಸ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮಂಜಸ — samañjasa — \"reasonable; fitting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವರು ಕೇಳಿದ ಬೆಲೆ ಸಮಂಜಸವಾಗಿತ್ತು. avaru kēḷida bele samañjasavāgittu. The price they asked was reasonable."
+            },
+            {
+              "kind": "speech",
+              "text": "Before a noun: ಸಮಂಜಸವಾದ ಉತ್ತರ, a reasonable answer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮಂಜಸ (samañjasa) is borrowed from Sanskrit samañjasa, \"proper, right, sound\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samañjasa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samañjasa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samañjasa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samañjasa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaru kēḷida bele samañjasavāgittu. — The price they asked was reasonable.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaru kēḷida bele samañjasavāgittu.* — The price they asked was reasonable.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a controversy, then the Kannada for to object, then say samañjasa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a controversy, then the Kannada for to object, then say *samañjasa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಮಂಜಸ (samañjasa) mean? (\"Reasonable; fitting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Rumours in the Town",
+  "label": "ch:ka-rumours-in-the-town",
+  "canDo": "I can say a rumour, to spread far, speculation, the truth and to listen closely.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C338-alisu-listen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can say a rumour, to spread far, speculation, the truth and to listen closely.",
+    "assesses": [
+      "KA-LEX-C338-VADANTI338-03",
+      "KA-LEX-C338-VADANTI338-04",
+      "KA-LEX-C338-VADANTI338-05"
+    ]
+  }
+}

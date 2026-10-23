@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:b6aff8d2becc2b5c",
+  "lessonIds": [
+    "KA-C336-sainya",
+    "KA-C336-senapati",
+    "KA-C336-yodha",
+    "KA-C336-horadu",
+    "KA-C336-himmettu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch336.txt",
+  "json": "kannada/narration/ch336.json",
+  "textHash": "fnv1a64:da1449ee5c6bad84",
+  "jsonHash": "fnv1a64:bd1088c970be108d",
+  "findings": []
+}

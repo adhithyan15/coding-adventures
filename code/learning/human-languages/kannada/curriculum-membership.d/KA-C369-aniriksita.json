@@ -1,0 +1,11 @@
+{
+  "id": "KA-C369-aniriksita",
+  "pathSegment": "KA-PATH-369-ANTHU369",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-369-ANTHU369",
+      "order": 2
+    }
+  ]
+}

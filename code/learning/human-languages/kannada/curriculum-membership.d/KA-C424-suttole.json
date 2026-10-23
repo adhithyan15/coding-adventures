@@ -1,0 +1,11 @@
+{
+  "id": "KA-C424-suttole",
+  "pathSegment": "KA-PATH-424-AVALOKISU424",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-424-AVALOKISU424",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C504-meccuko",
+  "pathSegment": "TE-PATH-504-ABHIMANAM504",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-504-ABHIMANAM504",
+      "order": 3
+    }
+  ]
+}

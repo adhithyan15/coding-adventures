@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Saying Goodbye",
+  "label": "ch:ka-saying-goodbye",
+  "canDo": "I can say a passing away, a funeral, a cremation ground, a tribute and to comfort.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C337-santaisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can say a passing away, a funeral, a cremation ground, a tribute and to comfort.",
+    "assesses": [
+      "KA-LEX-C337-NIDHANA337-03",
+      "KA-LEX-C337-NIDHANA337-04",
+      "KA-LEX-C337-NIDHANA337-05"
+    ]
+  }
+}

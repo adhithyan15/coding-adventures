@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C370-koniyadu",
+    "language": "telugu",
+    "chapter": 370,
+    "sequence": 18280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4600ade3335628fd"
+  },
+  "findings": []
+}

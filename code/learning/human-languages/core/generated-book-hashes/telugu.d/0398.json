@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:d1d99bdd3842b434",
+  "lessonIds": [
+    "TE-C398-cattam",
+    "TE-C398-ullanghincu",
+    "TE-C398-amalu-ceyu",
+    "TE-C398-siksa",
+    "TE-C398-nisedhincu"
+  ],
+  "tex": "telugu/book/chapters/ch398-laws-and-rules.tex"
+}

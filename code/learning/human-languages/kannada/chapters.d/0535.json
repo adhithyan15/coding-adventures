@@ -1,0 +1,19 @@
+{
+  "chapter": 535,
+  "title": "Instruments",
+  "label": "ch:ka-instruments",
+  "canDo": "I can say a musical instrument, a veena, a flute, a violin and to beat a drum.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C535-barisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 535: I can say a musical instrument, a veena, a flute, a violin and to beat a drum.",
+    "assesses": [
+      "KA-LEX-C535-VADYA535-03",
+      "KA-LEX-C535-VADYA535-04",
+      "KA-LEX-C535-VADYA535-05"
+    ]
+  }
+}

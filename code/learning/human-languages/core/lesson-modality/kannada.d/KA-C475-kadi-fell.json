@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C475-kadi-fell",
+    "language": "kannada",
+    "chapter": 475,
+    "sequence": 24180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bef0d494feb045d8"
+  },
+  "findings": []
+}

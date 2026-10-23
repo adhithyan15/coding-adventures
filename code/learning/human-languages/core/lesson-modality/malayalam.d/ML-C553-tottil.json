@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C553-tottil",
+    "language": "malayalam",
+    "chapter": 553,
+    "sequence": 27840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1d40e1dfad15783"
+  },
+  "findings": []
+}

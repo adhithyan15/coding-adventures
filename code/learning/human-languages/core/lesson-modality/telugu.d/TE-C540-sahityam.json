@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C540-sahityam",
+    "language": "telugu",
+    "chapter": 540,
+    "sequence": 27350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a937078ba38d4ff"
+  },
+  "findings": []
+}

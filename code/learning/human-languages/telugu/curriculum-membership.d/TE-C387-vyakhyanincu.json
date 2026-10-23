@@ -1,0 +1,11 @@
+{
+  "id": "TE-C387-vyakhyanincu",
+  "pathSegment": "TE-PATH-387-VIMARSA387",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-387-VIMARSA387",
+      "order": 3
+    }
+  ]
+}

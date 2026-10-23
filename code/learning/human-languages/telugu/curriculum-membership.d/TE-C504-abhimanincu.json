@@ -1,0 +1,11 @@
+{
+  "id": "TE-C504-abhimanincu",
+  "pathSegment": "TE-PATH-504-ABHIMANAM504",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-504-ABHIMANAM504",
+      "order": 1
+    }
+  ]
+}

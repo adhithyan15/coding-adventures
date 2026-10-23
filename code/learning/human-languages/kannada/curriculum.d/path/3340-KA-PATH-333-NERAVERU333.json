@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-333-NERAVERU333",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "KA-EXT-333-NERAVERU333"
+  ],
+  "after": []
+}

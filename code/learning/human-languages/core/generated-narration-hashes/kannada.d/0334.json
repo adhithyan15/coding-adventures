@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:ea1ef6f18b03cc03",
+  "lessonIds": [
+    "KA-C334-bananti",
+    "KA-C334-janana",
+    "KA-C334-namakarana",
+    "KA-C334-simanta",
+    "KA-C334-uttaradhikari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch334.txt",
+  "json": "kannada/narration/ch334.json",
+  "textHash": "fnv1a64:b3685439c8acc0c8",
+  "jsonHash": "fnv1a64:9dce341db64c2dbe",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:16fb4e3e685f3355",
+  "lessonIds": [
+    "TE-C515-medadu",
+    "TE-C515-naram",
+    "TE-C515-kaleyam",
+    "TE-C515-vennemuka",
+    "TE-C515-svasa"
+  ],
+  "tex": "telugu/book/chapters/ch515-inside-the-body.tex"
+}

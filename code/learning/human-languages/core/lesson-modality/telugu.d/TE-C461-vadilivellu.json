@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C461-vadilivellu",
+    "language": "telugu",
+    "chapter": 461,
+    "sequence": 23180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e6edb30567d559d"
+  },
+  "findings": []
+}

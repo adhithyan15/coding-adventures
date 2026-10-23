@@ -1,0 +1,11 @@
+{
+  "id": "KA-C316-tingalinda",
+  "pathSegment": "KA-PATH-316-COMPARE-DURATION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-316-COMPARE-DURATION",
+      "order": 1
+    }
+  ]
+}

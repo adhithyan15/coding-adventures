@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:3f1583b1ac4d43f5",
+  "lessonIds": [
+    "TE-C508-pogaru",
+    "TE-C508-monditanam",
+    "TE-C508-pattudala",
+    "TE-C508-sahasam",
+    "TE-C508-piriki"
+  ],
+  "tex": "telugu/book/chapters/ch508-stubborn-or-brave.tex"
+}

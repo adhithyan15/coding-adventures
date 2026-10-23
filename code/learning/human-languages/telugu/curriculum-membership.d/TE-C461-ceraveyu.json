@@ -1,0 +1,11 @@
+{
+  "id": "TE-C461-ceraveyu",
+  "pathSegment": "TE-PATH-461-SAMANU461",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-461-SAMANU461",
+      "order": 4
+    }
+  ]
+}

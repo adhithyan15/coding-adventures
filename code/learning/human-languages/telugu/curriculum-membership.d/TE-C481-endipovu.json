@@ -1,0 +1,11 @@
+{
+  "id": "TE-C481-endipovu",
+  "pathSegment": "TE-PATH-481-VADAGALI481",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-481-VADAGALI481",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C442-patta",
+    "language": "telugu",
+    "chapter": 442,
+    "sequence": 22200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64e5bf4bca7b324f"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:cea5882574b87930",
+  "lessonIds": [
+    "ML-C364-kallan",
+    "ML-C364-mosanam",
+    "ML-C364-kavarcca",
+    "ML-C364-mostikkuka",
+    "ML-C364-kuttitturakkuka",
+    "ML-R364-review-357-364"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch364.txt",
+  "json": "malayalam/narration/ch364.json",
+  "textHash": "fnv1a64:ee1a1b56ac75bc92",
+  "jsonHash": "fnv1a64:4f33b24b1a8f3d60",
+  "findings": []
+}

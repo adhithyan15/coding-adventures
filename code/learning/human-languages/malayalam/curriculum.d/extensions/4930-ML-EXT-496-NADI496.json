@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-496-NADI496",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a large river, a brook, a water spring, a dam and to dry up.",
+  "prerequisites": []
+}

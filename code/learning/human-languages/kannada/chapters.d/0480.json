@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Rocks, Deserts and Plains",
+  "label": "ch:ka-rocks-deserts-and-plains",
+  "canDo": "I can say a rock, a desert, an open plain, a plateau and to wear away.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C480-save",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can say a rock, a desert, an open plain, a plateau and to wear away.",
+    "assesses": [
+      "KA-LEX-C480-BAYALU480-03",
+      "KA-LEX-C480-BAYALU480-04",
+      "KA-LEX-C480-BAYALU480-05"
+    ]
+  }
+}

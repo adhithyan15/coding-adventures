@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C491-arigipovu",
+    "language": "telugu",
+    "chapter": 491,
+    "sequence": 24710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3d434c7de0aa7ef"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "Success and Failure",
+  "label": "ch:ka-success-and-failure",
+  "canDo": "I can say to fall through, to bear fruit, to come true, a crisis and unavoidable.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C419-anivarya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can say to fall through, to bear fruit, to come true, a crisis and unavoidable.",
+    "assesses": [
+      "KA-LEX-C419-VIPHALA419-03",
+      "KA-LEX-C419-VIPHALA419-04",
+      "KA-LEX-C419-VIPHALA419-05"
+    ]
+  }
+}

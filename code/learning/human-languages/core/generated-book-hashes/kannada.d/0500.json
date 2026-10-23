@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:51e0916d05c7c822",
+  "lessonIds": [
+    "KA-C500-svabhava",
+    "KA-C500-vyaktitva",
+    "KA-C500-nadate",
+    "KA-C500-vartane",
+    "KA-C500-anukarisu"
+  ],
+  "tex": "kannada/book/chapters/ch500-what-someone-is-like.tex"
+}

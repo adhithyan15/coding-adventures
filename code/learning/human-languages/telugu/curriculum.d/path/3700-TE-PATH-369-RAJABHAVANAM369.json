@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-369-RAJABHAVANAM369",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-369-RAJABHAVANAM369"
+  ],
+  "after": []
+}

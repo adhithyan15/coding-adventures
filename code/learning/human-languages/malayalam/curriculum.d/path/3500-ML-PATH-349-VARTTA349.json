@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-349-VARTTA349",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-349-VARTTA349"
+  ],
+  "after": []
+}

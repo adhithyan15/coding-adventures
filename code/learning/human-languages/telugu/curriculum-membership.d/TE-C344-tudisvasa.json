@@ -1,0 +1,11 @@
+{
+  "id": "TE-C344-tudisvasa",
+  "pathSegment": "TE-PATH-344-SANTAPAM344",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-344-SANTAPAM344",
+      "order": 2
+    }
+  ]
+}

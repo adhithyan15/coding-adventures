@@ -1385,6 +1385,78 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_accessibility_metadata() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\naccTitle: Account model\naccDescr {\n  Customers and accounts\n}\n",
+        );
+        let names: Vec<&str> = tokens
+            .iter()
+            .filter_map(|token| token.type_name.as_deref())
+            .collect();
+
+        assert!(names.contains(&"ACC_TITLE"));
+        assert!(names.contains(&"ACC_DESCR_BLOCK"));
+    }
+
+    #[test]
+    fn tokenizes_er_backtick_escaped_attributes() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nHOTEL {\n  `my.type` address\n  string `geo.accuracy` PK\n}\n",
+        );
+        let escaped: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("ESCAPED_ATTRIBUTE"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(escaped, ["`my.type`", "`geo.accuracy`"]);
+    }
+
+    #[test]
+    fn tokenizes_er_comma_separated_attribute_type_parameters() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nBUILDING {\n  public.geometry(point,4326) location\n}\n",
+        );
+        let parameterized: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("COMMA_ATTRIBUTE_TYPE"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(parameterized, ["public.geometry(point,4326)"]);
+    }
+
+    #[test]
+    fn tokenizes_er_split_attribute_blocks_with_title_field() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nBOOK {\n  string title\n}\nBOOK {\n  string author\n}\n",
+        );
+        let names: Vec<&str> = tokens
+            .iter()
+            .filter_map(|token| token.type_name.as_deref())
+            .collect();
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        assert_eq!(values.iter().filter(|value| **value == "{").count(), 2);
+        assert!(names.contains(&"TITLE_KW"));
+    }
+
+    #[test]
+    fn tokenizes_er_statement_keywords_inside_attribute_blocks() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nSETTINGS {\n  string direction\n  string classDef\n  string class\n  string style\n}\n",
+        );
+        let names: Vec<&str> = tokens
+            .iter()
+            .filter_map(|token| token.type_name.as_deref())
+            .collect();
+
+        for expected in ["DIRECTION_KW", "CLASSDEF_KW", "CLASS_KW", "STYLE_KW"] {
+            assert!(names.contains(&expected));
+        }
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",

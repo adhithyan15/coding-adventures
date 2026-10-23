@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-370-MOZHI370",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-370-MOZHI370"
+  ],
+  "after": []
+}

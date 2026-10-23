@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C543-asvadincu",
+    "language": "telugu",
+    "chapter": 543,
+    "sequence": 27540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b3ff90428e4f0b0"
+  },
+  "findings": []
+}

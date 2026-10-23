@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "A Revolt Against the King",
+  "label": "ch:ka-a-revolt-against-the-king",
+  "canDo": "I can say a revolt, a revolution, a slave, to set free and to capture.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C352-vasapadisiko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can say a revolt, a revolution, a slave, to set free and to capture.",
+    "assesses": [
+      "KA-LEX-C352-DANGE352-03",
+      "KA-LEX-C352-DANGE352-04",
+      "KA-LEX-C352-DANGE352-05"
+    ]
+  }
+}

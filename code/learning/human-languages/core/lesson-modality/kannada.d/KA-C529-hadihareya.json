@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C529-hadihareya",
+    "language": "kannada",
+    "chapter": 529,
+    "sequence": 27010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f543f6bcfc785f5"
+  },
+  "findings": []
+}

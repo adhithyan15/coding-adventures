@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "Corruption",
+  "label": "ch:ml-corruption",
+  "canDo": "I can say corruption, a bribe, to exploit, transparent and to investigate.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C430-anvesikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can say corruption, a bribe, to exploit, transparent and to investigate.",
+    "assesses": [
+      "ML-LEX-C430-AZHIMATI430-03",
+      "ML-LEX-C430-AZHIMATI430-04",
+      "ML-LEX-C430-AZHIMATI430-05"
+    ]
+  }
+}

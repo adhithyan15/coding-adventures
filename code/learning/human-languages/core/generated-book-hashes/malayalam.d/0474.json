@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:e37bb1bcf6d00661",
+  "lessonIds": [
+    "ML-C474-nastamakuka",
+    "ML-C474-reyilppalam",
+    "ML-C474-catiyirannuka",
+    "ML-C474-tunninilkkuka",
+    "ML-C474-payuka"
+  ],
+  "tex": "malayalam/book/chapters/ch474-missing-the-train.tex"
+}

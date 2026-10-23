@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C394-samarthana",
+    "language": "telugu",
+    "chapter": 394,
+    "sequence": 19630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7692f70d0c144a44"
+  },
+  "findings": []
+}

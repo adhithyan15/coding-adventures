@@ -1,0 +1,11 @@
+{
+  "id": "TE-C422-uddesincu",
+  "pathSegment": "TE-PATH-422-HAMI422",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-422-HAMI422",
+      "order": 2
+    }
+  ]
+}

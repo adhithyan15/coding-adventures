@@ -1,0 +1,11 @@
+{
+  "id": "KA-C433-talupu",
+  "pathSegment": "KA-PATH-433-RAIL433",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-433-RAIL433",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:186b13ea84608dc9",
+  "lessonIds": [
+    "TE-C337-arestu-ceyu",
+    "TE-C337-pattubadu",
+    "TE-C337-khaidi",
+    "TE-C337-sankellu",
+    "TE-C337-ninditudu"
+  ],
+  "tex": "telugu/book/chapters/ch337-under-arrest.tex"
+}

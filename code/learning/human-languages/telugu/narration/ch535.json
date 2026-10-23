@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 535,
+  "title": "Teasing and Telling Off",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a5a608af79bc0318",
+  "lessons": [
+    {
+      "id": "TE-C535-egatali",
+      "sequence": 27100,
+      "title": "ఎగతాళి (egatāḷi) — mockery; ridicule",
+      "headword": "ఎగతాళి",
+      "romanization": "egatāḷi",
+      "gloss": "mockery; ridicule",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aea33299733eb394",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a compromise, then the Telugu for a rift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఎగతాళి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎగతాళి — egatāḷi — \"mockery; ridicule\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కొత్త అబ్బాయిని తరగతిలో ఎగతాళి చేశారు. kotta abbāyini taragatilō egatāḷi cēśāru. They made fun of the new boy in class."
+            },
+            {
+              "kind": "speech",
+              "text": "ఎగతాళి (egatāḷi) చేయు, to make fun of."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎగతాళి (egatāḷi) is native Dravidian: DEDR 767 lists Telugu egatāḷi, \"a joke, mockery\", and marks Tamil ekattāḷi as taken from Telugu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "egatāḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *egatāḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "egatāḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *egatāḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kotta abbāyini taragatilō egatāḷi cēśāru. — They made fun of the new boy in class.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kotta abbāyini taragatilō egatāḷi cēśāru.* — They made fun of the new boy in class.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a compromise, then the Telugu for a rift, then say egatāḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a compromise, then the Telugu for a rift, then say *egatāḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఎగతాళి (egatāḷi) mean? (\"Mockery; ridicule\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C535-vekkirincu",
+      "sequence": 27110,
+      "title": "వెక్కిరించు (vekkiriñcu) — to mock; to make faces at",
+      "headword": "వెక్కిరించు",
+      "romanization": "vekkiriñcu",
+      "gloss": "to mock; to make faces at",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74d94b6f7f02143a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a rift, then the Telugu for mockery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వెక్కిరించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెక్కిరించు — vekkiriñcu — \"to mock; to make faces at\"."
+            },
+            {
+              "kind": "speech",
+              "text": "తమ్ముడు నాలుక చూపించి నన్ను వెక్కిరించాడు. tammuḍu nāluka cūpiñci nannu vekkiriñcāḍu. My little brother stuck out his tongue and mocked me."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): వెక్కిరించాను, vekkiriñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Mocking with faces or by copying someone's voice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెక్కిరించు (vekkiriñcu) is native Dravidian: DEDR 767 lists Telugu ekkirincu, \"to make faces at, to mock\", in the same article as ఎగతాళి (egatāḷi)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vekkiriñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vekkiriñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vekkiriñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vekkiriñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tammuḍu nāluka cūpiñci nannu vekkiriñcāḍu. — My little brother stuck out his tongue and mocked me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tammuḍu nāluka cūpiñci nannu vekkiriñcāḍu.* — My little brother stuck out his tongue and mocked me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a rift, then the Telugu for mockery, then say vekkiriñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a rift, then the Telugu for mockery, then say *vekkiriñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వెక్కిరించు (vekkiriñcu) mean? (\"To mock; to make faces at\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C535-mandalincu",
+      "sequence": 27120,
+      "title": "మందలించు (mandaliñcu) — to reprimand; to tell off",
+      "headword": "మందలించు",
+      "romanization": "mandaliñcu",
+      "gloss": "to reprimand; to tell off",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9c66b22724e2cdf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for mockery, then the Telugu for to mock."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మందలించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మందలించు — mandaliñcu — \"to reprimand; to tell off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆలస్యంగా వచ్చినందుకు మేనేజరు అతన్ని మందలించారు. ālasyaṅgā vaccinanduku mēnējaru atanni mandaliñcāru. The manager told him off for coming late."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): మందలించాను, mandaliñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Milder than తిట్టు: a firm word of correction."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మందలించు (mandaliñcu) is a Telugu verb for a firm rebuke; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mandaliñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mandaliñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mandaliñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mandaliñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālasyaṅgā vaccinanduku mēnējaru atanni mandaliñcāru. — The manager told him off for coming late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālasyaṅgā vaccinanduku mēnējaru atanni mandaliñcāru.* — The manager told him off for coming late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for mockery, then the Telugu for to mock, then say mandaliñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for mockery, then the Telugu for to mock, then say *mandaliñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మందలించు (mandaliñcu) mean? (\"To reprimand; to tell off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C535-niladiyu",
+      "sequence": 27130,
+      "title": "నిలదీయు (niladīyu) — to call to account; to confront",
+      "headword": "నిలదీయు",
+      "romanization": "niladīyu",
+      "gloss": "to call to account; to confront",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d90858b15cc36c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to mock, then the Telugu for to reprimand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిలదీయు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిలదీయు — niladīyu — \"to call to account; to confront\"."
+            },
+            {
+              "kind": "speech",
+              "text": "డబ్బు గురించి గ్రామస్థులు అధికారిని నిలదీశారు. ḍabbu guriñci grāmasthulu adhikārini niladīśāru. The villagers confronted the official about the money."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): నిలదీశాను, niladīśānu."
+            },
+            {
+              "kind": "speech",
+              "text": "To stop someone and demand an answer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిలదీయు (niladīyu) is a native compound: nilucu, \"to stand, to stop\" (DEDR 3675), and tīyu, \"to draw, to pull\" (DEDR 3407): to pull someone up short."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niladīyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niladīyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niladīyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niladīyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍabbu guriñci grāmasthulu adhikārini niladīśāru. — The villagers confronted the official about the money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍabbu guriñci grāmasthulu adhikārini niladīśāru.* — The villagers confronted the official about the money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to mock, then the Telugu for to reprimand, then say niladīyu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to mock, then the Telugu for to reprimand, then say *niladīyu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిలదీయు (niladīyu) mean? (\"To call to account; to confront\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C535-mosagincu",
+      "sequence": 27140,
+      "title": "మోసగించు (mōsagiñcu) — to deceive; to cheat",
+      "headword": "మోసగించు",
+      "romanization": "mōsagiñcu",
+      "gloss": "to deceive; to cheat",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:768d5caa957b972b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to reprimand, then the Telugu for to call to account."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మోసగించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మోసగించు — mōsagiñcu — \"to deceive; to cheat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ దుకాణదారుడు ముసలివాళ్ళను మోసగించాడు. ā dukāṇadāruḍu musalivāḷḷanu mōsagiñcāḍu. That shopkeeper cheated old people."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): మోసగించాను, mōsagiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is మోసం, deceit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మోసగించు (mōsagiñcu) is built on మోసం, \"deceit\", from Sanskrit moṣa, \"robbery, theft\" (Monier-Williams), with the Telugu verb ending -గించు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mōsagiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mōsagiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mōsagiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mōsagiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā dukāṇadāruḍu musalivāḷḷanu mōsagiñcāḍu. — That shopkeeper cheated old people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā dukāṇadāruḍu musalivāḷḷanu mōsagiñcāḍu.* — That shopkeeper cheated old people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to reprimand, then the Telugu for to call to account, then say mōsagiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to reprimand, then the Telugu for to call to account, then say *mōsagiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మోసగించు (mōsagiñcu) mean? (\"To deceive; to cheat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:30ddeafa0001ca75",
+  "lessonIds": [
+    "TE-C488-toku",
+    "TE-C488-nilva",
+    "TE-C488-giddangi",
+    "TE-C488-korata",
+    "TE-C488-velam"
+  ],
+  "tex": "telugu/book/chapters/ch488-wholesale-and-stock.tex"
+}

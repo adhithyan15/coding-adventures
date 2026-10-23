@@ -1,0 +1,11 @@
+{
+  "id": "KA-C538-pandyavali",
+  "pathSegment": "KA-PATH-538-PADAKA538",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-538-PADAKA538",
+      "order": 3
+    }
+  ]
+}

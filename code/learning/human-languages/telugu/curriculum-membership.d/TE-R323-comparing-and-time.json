@@ -1,0 +1,11 @@
+{
+  "id": "TE-R323-comparing-and-time",
+  "pathSegment": "TE-PATH-323-COMPARE-DURATION",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-323-COMPARE-DURATION",
+      "order": 3
+    }
+  ]
+}

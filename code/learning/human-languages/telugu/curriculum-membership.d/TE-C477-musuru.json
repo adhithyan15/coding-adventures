@@ -1,0 +1,11 @@
+{
+  "id": "TE-C477-musuru",
+  "pathSegment": "TE-PATH-477-RUTUPAVANAM477",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-477-RUTUPAVANAM477",
+      "order": 2
+    }
+  ]
+}

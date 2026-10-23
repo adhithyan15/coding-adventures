@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:eadc80c0be4027bb",
+  "lessonIds": [
+    "ML-C478-vinodasancari",
+    "ML-C478-valikatti",
+    "ML-C478-laksyasthanam",
+    "ML-C478-yatraparipati",
+    "ML-C478-currikkarannuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch478.txt",
+  "json": "malayalam/narration/ch478.json",
+  "textHash": "fnv1a64:1e784e7171df555d",
+  "jsonHash": "fnv1a64:9393cde98a3e77ec",
+  "findings": []
+}

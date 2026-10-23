@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C542-malige",
+    "language": "kannada",
+    "chapter": 542,
+    "sequence": 27670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fe9cc8fa9ff6133"
+  },
+  "findings": []
+}

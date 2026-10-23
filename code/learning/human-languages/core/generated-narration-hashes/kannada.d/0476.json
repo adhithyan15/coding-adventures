@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:2451115a03192358",
+  "lessonIds": [
+    "KA-C476-vanyajivi",
+    "KA-C476-abhayaranya",
+    "KA-C476-paksidhama",
+    "KA-C476-jivavaividhya",
+    "KA-C476-valase-hogu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch476.txt",
+  "json": "kannada/narration/ch476.json",
+  "textHash": "fnv1a64:ec5ee51c1f56e729",
+  "jsonHash": "fnv1a64:942e2d833fe5518c",
+  "findings": []
+}

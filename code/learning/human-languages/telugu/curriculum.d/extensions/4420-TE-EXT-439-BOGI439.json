@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-439-BOGI439",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a reservation, a booking, a berth, a railway coach and a fare.",
+  "prerequisites": []
+}

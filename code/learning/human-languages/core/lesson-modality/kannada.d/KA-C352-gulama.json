@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C352-gulama",
+    "language": "kannada",
+    "chapter": 352,
+    "sequence": 17710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f93f7b804347442f"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C441-manna-madu",
+    "language": "kannada",
+    "chapter": 441,
+    "sequence": 22420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cdf305912bf2a4a"
+  },
+  "findings": []
+}

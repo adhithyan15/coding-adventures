@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "City Works and Supplies",
+  "label": "ch:ka-city-works-and-supplies",
+  "canDo": "I can say to widen, an entrance gate, a power cut, supplies and a telephone.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C470-duravani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can say to widen, an entrance gate, a power cut, supplies and a telephone.",
+    "assesses": [
+      "KA-LEX-C470-KAMAGARI470-03",
+      "KA-LEX-C470-KAMAGARI470-04",
+      "KA-LEX-C470-KAMAGARI470-05"
+    ]
+  }
+}

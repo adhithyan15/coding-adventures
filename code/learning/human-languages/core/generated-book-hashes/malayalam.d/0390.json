@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:2d38594f799b63b2",
+  "lessonIds": [
+    "ML-C390-yatrayayappu",
+    "ML-C390-vitavannuka",
+    "ML-C390-yatrayakkuka",
+    "ML-C390-vitaparayuka",
+    "ML-C390-natuvituka"
+  ],
+  "tex": "malayalam/book/chapters/ch390-farewells.tex"
+}

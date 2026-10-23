@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C364-banisa",
+    "language": "telugu",
+    "chapter": 364,
+    "sequence": 17940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5e09bc94720e7cb"
+  },
+  "findings": []
+}

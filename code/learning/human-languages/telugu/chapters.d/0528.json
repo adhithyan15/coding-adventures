@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Brothers and Sisters",
+  "label": "ch:te-brothers-and-sisters",
+  "canDo": "I can talk about my siblings and my brothers' and husband's family.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C528-vadina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can talk about my siblings and my brothers' and husband's family.",
+    "assesses": [
+      "TE-LEX-C528-TOBUTTUVU528-03",
+      "TE-LEX-C528-TOBUTTUVU528-04",
+      "TE-LEX-C528-TOBUTTUVU528-05"
+    ]
+  }
+}

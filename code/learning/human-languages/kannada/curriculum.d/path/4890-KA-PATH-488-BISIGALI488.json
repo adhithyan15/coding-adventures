@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-488-BISIGALI488",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "KA-EXT-488-BISIGALI488"
+  ],
+  "after": []
+}

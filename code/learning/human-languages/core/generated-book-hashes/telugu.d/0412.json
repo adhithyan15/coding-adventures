@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:b6cb0776d325ab0b",
+  "lessonIds": [
+    "TE-C412-parisodhana",
+    "TE-C412-parisodhincu",
+    "TE-C412-parisodhakudu",
+    "TE-C412-samacaram",
+    "TE-C412-anvesincu"
+  ],
+  "tex": "telugu/book/chapters/ch412-research.tex"
+}

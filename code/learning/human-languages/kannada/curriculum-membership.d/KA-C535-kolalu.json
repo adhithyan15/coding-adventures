@@ -1,0 +1,11 @@
+{
+  "id": "KA-C535-kolalu",
+  "pathSegment": "KA-PATH-535-VADYA535",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-535-VADYA535",
+      "order": 2
+    }
+  ]
+}

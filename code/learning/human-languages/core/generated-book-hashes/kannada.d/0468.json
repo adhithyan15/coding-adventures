@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:9a1477e99c7fdb9b",
+  "lessonIds": [
+    "KA-C468-gatra",
+    "KA-C468-asali",
+    "KA-C468-gunamatta",
+    "KA-C468-khatari",
+    "KA-C468-masu",
+    "KA-R468-review-462-468"
+  ],
+  "tex": "kannada/book/chapters/ch468-size-and-quality.tex"
+}

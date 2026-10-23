@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:390845add5525a1e",
+  "lessonIds": [
+    "ML-C453-vottu-ceyyuka",
+    "ML-C453-pintunaykkuka",
+    "ML-C453-etirppu",
+    "ML-C453-codyam-ceyyuka",
+    "ML-C453-pratikarikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch453.txt",
+  "json": "malayalam/narration/ch453.json",
+  "textHash": "fnv1a64:e9e2f43e489d7dba",
+  "jsonHash": "fnv1a64:2076551d0b2f0517",
+  "findings": []
+}

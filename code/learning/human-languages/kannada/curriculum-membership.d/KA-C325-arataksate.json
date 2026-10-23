@@ -1,0 +1,11 @@
+{
+  "id": "KA-C325-arataksate",
+  "pathSegment": "KA-PATH-325-VIVAHA325",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-325-VIVAHA325",
+      "order": 1
+    }
+  ]
+}

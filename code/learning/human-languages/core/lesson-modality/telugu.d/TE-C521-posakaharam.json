@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C521-posakaharam",
+    "language": "telugu",
+    "chapter": 521,
+    "sequence": 26420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:139952bf52bc18f1"
+  },
+  "findings": []
+}

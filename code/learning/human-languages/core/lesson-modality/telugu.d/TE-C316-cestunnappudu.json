@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C316-cestunnappudu",
+    "language": "telugu",
+    "chapter": 316,
+    "sequence": 15210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fbc5141b33feebd"
+  },
+  "findings": []
+}

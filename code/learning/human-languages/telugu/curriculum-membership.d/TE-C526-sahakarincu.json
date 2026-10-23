@@ -1,0 +1,11 @@
+{
+  "id": "TE-C526-sahakarincu",
+  "pathSegment": "TE-PATH-526-NIRVAHANA526",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-526-NIRVAHANA526",
+      "order": 3
+    }
+  ]
+}

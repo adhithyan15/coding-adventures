@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C523-viraha",
+    "language": "kannada",
+    "chapter": 523,
+    "sequence": 26720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38b3dcf6399c1c9c"
+  },
+  "findings": []
+}

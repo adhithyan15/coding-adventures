@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-488-TOKU488",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TE-EXT-488-TOKU488"
+  ],
+  "after": []
+}

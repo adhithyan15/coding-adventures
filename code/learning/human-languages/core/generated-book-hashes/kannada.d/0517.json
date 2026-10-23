@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:0f9a423f94e762b1",
+  "lessonIds": [
+    "KA-C517-badti",
+    "KA-C517-pragati",
+    "KA-C517-mahatvakankse",
+    "KA-C517-sadhisu",
+    "KA-C517-galisu"
+  ],
+  "tex": "kannada/book/chapters/ch517-getting-ahead.tex"
+}

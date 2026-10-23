@@ -1,0 +1,11 @@
+{
+  "id": "TE-C358-kalaganu",
+  "pathSegment": "TE-PATH-358-JIVITAM358",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-358-JIVITAM358",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 480,
+  "title": "Floodwater",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3a9ca378bb9a68ff",
+  "lessons": [
+    {
+      "id": "TE-C480-muncettu",
+      "sequence": 24150,
+      "title": "ముంచెత్తు (muñcettu) — to inundate; to flood",
+      "headword": "ముంచెత్తు",
+      "romanization": "muñcettu",
+      "gloss": "to inundate; to flood",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:355a82f0dc33eabc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to grow dim, then the Telugu for spray."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ముంచెత్తు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ముంచెత్తు — muñcettu — \"to inundate; to flood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వరద నీరు గ్రామాన్ని ముంచెత్తింది. varada nīru grāmānni muñcettindi. The floodwater inundated the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ముంచెత్తాను, muñcettānu."
+            },
+            {
+              "kind": "speech",
+              "text": "ముంచు, to dip, + ఎత్తు, to lift: to plunge under. Also said of a crowd or of gifts: పూలతో ముంచెత్తారు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ముంచెత్తు (muñcettu) is native Dravidian: ముంచు, \"to plunge, to immerse\" (DEDR 4993), and ఎత్తు, \"to lift, to raise\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muñcettu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muñcettu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muñcettu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muñcettu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varada nīru grāmānni muñcettindi. — The floodwater inundated the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varada nīru grāmānni muñcettindi.* — The floodwater inundated the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to grow dim, then the Telugu for spray, then say muñcettu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to grow dim, then the Telugu for spray, then say *muñcettu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ముంచెత్తు (muñcettu) mean? (\"To inundate; to flood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C480-pongiporlu",
+      "sequence": 24160,
+      "title": "పొంగిపొర్లు (poṅgiporlu) — to overflow",
+      "headword": "పొంగిపొర్లు",
+      "romanization": "poṅgiporlu",
+      "gloss": "to overflow",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc39ce55ee3e2e2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for spray, then the Telugu for to inundate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పొంగిపొర్లు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పొంగిపొర్లు — poṅgiporlu — \"to overflow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "భారీ వర్షాలకు వాగులు పొంగిపొర్లుతున్నాయి. bhārī varṣālaku vāgulu poṅgiporlutunnāyi. With the heavy rains the streams are overflowing."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): పొంగిపొర్లింది, poṅgiporlindi."
+            },
+            {
+              "kind": "speech",
+              "text": "పొంగి, swelling up, + పొర్లు, to roll over: water rising over its banks. Its subject is a thing, so the past shown is the third person: పొంగిపొర్లింది, it overflowed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పొంగిపొర్లు (poṅgiporlu) is native Dravidian: పొంగు, \"to bubble up, to boil over\" (DEDR 4469), and పొర్లు, \"to roll over\", the twin of దొర్లు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṅgiporlu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṅgiporlu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṅgiporlu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṅgiporlu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhārī varṣālaku vāgulu poṅgiporlutunnāyi. — With the heavy rains the streams are overflowing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhārī varṣālaku vāgulu poṅgiporlutunnāyi.* — With the heavy rains the streams are overflowing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for spray, then the Telugu for to inundate, then say poṅgiporlu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for spray, then the Telugu for to inundate, then say *poṅgiporlu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పొంగిపొర్లు (poṅgiporlu) mean? (\"To overflow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C480-tegipovu",
+      "sequence": 24170,
+      "title": "తెగిపోవు (tegipōvu) — to snap; to be cut off",
+      "headword": "తెగిపోవు",
+      "romanization": "tegipōvu",
+      "gloss": "to snap; to be cut off",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b4ecc7b4b5f2dca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to inundate, then the Telugu for to overflow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తెగిపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తెగిపోవు — tegipōvu — \"to snap; to be cut off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వరదలో రోడ్డు తెగిపోయింది. varadalō rōḍḍu tegipōyindi. The road was cut off in the flood."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): తెగిపోయింది, tegipōyindi."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of a rope, a wire, a road or a bond that breaks apart. Its subject is a thing, so the past shown is the third person: తెగిపోయింది, it snapped."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తెగిపోవు (tegipōvu) is a Telugu compound: తెగు, \"to break off, to be cut\", whose origin is not settled, and the native పోవు, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tegipōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tegipōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tegipōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tegipōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varadalō rōḍḍu tegipōyindi. — The road was cut off in the flood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varadalō rōḍḍu tegipōyindi.* — The road was cut off in the flood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to inundate, then the Telugu for to overflow, then say tegipōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to inundate, then the Telugu for to overflow, then say *tegipōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తెగిపోవు (tegipōvu) mean? (\"To snap; to be cut off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C480-kurukupovu",
+      "sequence": 24180,
+      "title": "కూరుకుపోవు (kūrukupōvu) — to get bogged down; to sink in",
+      "headword": "కూరుకుపోవు",
+      "romanization": "kūrukupōvu",
+      "gloss": "to get bogged down; to sink in",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2d8ef9f242463da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to overflow, then the Telugu for to snap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కూరుకుపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కూరుకుపోవు — kūrukupōvu — \"to get bogged down; to sink in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బురదలో లారీ చక్రాలు కూరుకుపోయాయి. buradalō lārī cakrālu kūrukupōyāyi. The lorry wheels sank into the mud."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): కూరుకుపోయాను, kūrukupōyānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of wheels in mud, and of a person stuck in debt or work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కూరుకుపోవు (kūrukupōvu) is a Telugu compound whose first part has an origin that is not settled; the second is the native పోవు, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūrukupōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūrukupōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūrukupōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūrukupōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buradalō lārī cakrālu kūrukupōyāyi. — The lorry wheels sank into the mud.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buradalō lārī cakrālu kūrukupōyāyi.* — The lorry wheels sank into the mud.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to overflow, then the Telugu for to snap, then say kūrukupōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to overflow, then the Telugu for to snap, then say *kūrukupōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కూరుకుపోవు (kūrukupōvu) mean? (\"To get bogged down; to sink in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C480-irukkupovu",
+      "sequence": 24190,
+      "title": "ఇరుక్కుపోవు (irukkupōvu) — to get stuck",
+      "headword": "ఇరుక్కుపోవు",
+      "romanization": "irukkupōvu",
+      "gloss": "to get stuck",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b982eb1e452fc015",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to snap, then the Telugu for to get bogged down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఇరుక్కుపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇరుక్కుపోవు — irukkupōvu — \"to get stuck\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వరదలో చాలా కార్లు ఇరుక్కుపోయాయి. varadalō cālā kārlu irukkupōyāyi. Many cars got stuck in the flood."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఇరుక్కుపోయాను, irukkupōyānu."
+            },
+            {
+              "kind": "speech",
+              "text": "ఇరుకు, narrow, tight, + -కొని + పోవు: caught in a tight place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇరుక్కుపోవు (irukkupōvu) is native Dravidian: DEDR 524 lists Telugu iṟuku, \"to be squeezed, to get stuck in\", here with పోవు, \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irukkupōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irukkupōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irukkupōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irukkupōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varadalō cālā kārlu irukkupōyāyi. — Many cars got stuck in the flood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varadalō cālā kārlu irukkupōyāyi.* — Many cars got stuck in the flood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to snap, then the Telugu for to get bogged down, then say irukkupōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to snap, then the Telugu for to get bogged down, then say *irukkupōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఇరుక్కుపోవు (irukkupōvu) mean? (\"To get stuck\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

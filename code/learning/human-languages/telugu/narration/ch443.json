@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 443,
+  "title": "Wheels and Engines",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a659fd2d78ef6255",
+  "lessons": [
+    {
+      "id": "TE-C443-vahanam",
+      "sequence": 22250,
+      "title": "వాహనం (vāhanaṁ) — a vehicle",
+      "headword": "వాహనం",
+      "romanization": "vāhanaṁ",
+      "gloss": "a vehicle",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01f8cfb17d74463b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to be packed, then the Telugu for to derail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వాహనం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వాహనం — vāhanaṁ — \"a vehicle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ రోడ్డు మీద పెద్ద వాహనాలు వెళ్ళకూడదు. ā rōḍḍu mīda pedda vāhanālu veḷḷakūḍadu. Big vehicles must not go on that road."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: వాహనాలు, vāhanālu."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural వాహనాలు, the -ం noun plural in -ాలు. It covers every vehicle, from a bicycle to a lorry."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వాహనం (vāhanaṁ) is borrowed from Sanskrit vāhana, \"any vehicle or draught animal\", from the root vah, \"to carry\" (CDIAL 11610)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāhanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāhanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāhanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāhanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā rōḍḍu mīda pedda vāhanālu veḷḷakūḍadu. — Big vehicles must not go on that road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā rōḍḍu mīda pedda vāhanālu veḷḷakūḍadu.* — Big vehicles must not go on that road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to be packed, then the Telugu for to derail, then say vāhanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to be packed, then the Telugu for to derail, then say *vāhanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వాహనం (vāhanaṁ) mean? (\"A vehicle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C443-injanu",
+      "sequence": 22260,
+      "title": "ఇంజను (iñjanu) — an engine",
+      "headword": "ఇంజను",
+      "romanization": "iñjanu",
+      "gloss": "an engine",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff2af4e2a11bfefd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to derail, then the Telugu for a vehicle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఇంజను",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇంజను — iñjanu — \"an engine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బస్సు ఇంజను చాలా శబ్దం చేస్తోంది. bassu iñjanu cālā śabdaṁ cēstōndi. The bus engine is making a lot of noise."
+            },
+            {
+              "kind": "speech",
+              "text": "The engine of a train is also its ఇంజను (iñjanu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇంజను (iñjanu) is a loan from English engine, with the Telugu final -ఉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iñjanu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iñjanu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iñjanu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iñjanu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bassu iñjanu cālā śabdaṁ cēstōndi. — The bus engine is making a lot of noise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bassu iñjanu cālā śabdaṁ cēstōndi.* — The bus engine is making a lot of noise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to derail, then the Telugu for a vehicle, then say iñjanu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to derail, then the Telugu for a vehicle, then say *iñjanu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఇంజను (iñjanu) mean? (\"An engine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C443-tairu",
+      "sequence": 22270,
+      "title": "టైరు (ṭairu) — a tyre",
+      "headword": "టైరు",
+      "romanization": "ṭairu",
+      "gloss": "a tyre",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f9570c37a7d0fde",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a vehicle, then the Telugu for an engine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: టైరు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "టైరు — ṭairu — \"a tyre\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కారు టైరులో గాలి తక్కువగా ఉంది. kāru ṭairulō gāli takkuvagā undi. The car tyre is low on air."
+            },
+            {
+              "kind": "speech",
+              "text": "To pump air into it is గాలి కొట్టు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "టైరు (ṭairu) is a loan from English tyre, with the Telugu final -ఉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭairu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭairu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭairu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭairu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāru ṭairulō gāli takkuvagā undi. — The car tyre is low on air.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāru ṭairulō gāli takkuvagā undi.* — The car tyre is low on air.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a vehicle, then the Telugu for an engine, then say ṭairu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a vehicle, then the Telugu for an engine, then say *ṭairu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does టైరు (ṭairu) mean? (\"A tyre\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C443-breku",
+      "sequence": 22280,
+      "title": "బ్రేకు (brēku) — a brake",
+      "headword": "బ్రేకు",
+      "romanization": "brēku",
+      "gloss": "a brake",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a552f2c8bd3cf3c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an engine, then the Telugu for a tyre."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బ్రేకు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బ్రేకు — brēku — \"a brake\"."
+            },
+            {
+              "kind": "speech",
+              "text": "డ్రైవరు వెంటనే బ్రేకు వేశాడు. ḍraivaru veṇṭanē brēku vēśāḍu. The driver braked at once."
+            },
+            {
+              "kind": "speech",
+              "text": "బ్రేకు (brēku) వేయు, to put on the brakes; బ్రేకులు పనిచేయలేదు, the brakes failed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బ్రేకు (brēku) is a loan from English brake, with the Telugu final -ఉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "brēku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *brēku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "brēku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *brēku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍraivaru veṇṭanē brēku vēśāḍu. — The driver braked at once.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍraivaru veṇṭanē brēku vēśāḍu.* — The driver braked at once.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an engine, then the Telugu for a tyre, then say brēku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an engine, then the Telugu for a tyre, then say *brēku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బ్రేకు (brēku) mean? (\"A brake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C443-haranu",
+      "sequence": 22290,
+      "title": "హారను (hāranu) — a horn",
+      "headword": "హారను",
+      "romanization": "hāranu",
+      "gloss": "a horn",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c3a39673f38fbe7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a tyre, then the Telugu for a brake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: హారను",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హారను — hāranu — \"a horn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వెనక ఉన్న కారు హారను కొట్టింది. venaka unna kāru hāranu koṭṭindi. The car behind sounded its horn."
+            },
+            {
+              "kind": "speech",
+              "text": "హారను (hāranu) కొట్టు, to sound the horn: the same కొట్టు as in to hit or to beat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హారను (hāranu) is a loan from English horn, the warning horn of a vehicle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāranu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāranu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāranu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāranu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "venaka unna kāru hāranu koṭṭindi. — The car behind sounded its horn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *venaka unna kāru hāranu koṭṭindi.* — The car behind sounded its horn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a tyre, then the Telugu for a brake, then say hāranu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a tyre, then the Telugu for a brake, then say *hāranu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does హారను (hāranu) mean? (\"A horn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

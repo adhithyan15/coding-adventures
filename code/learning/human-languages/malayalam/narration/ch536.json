@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 536,
+  "title": "Blood Tests and Muscles",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d5c9aa84c1d69cba",
+  "lessons": [
+    {
+      "id": "ML-C536-raktaparisodhana",
+      "sequence": 26970,
+      "title": "രക്തപരിശോധന (raktapariśōdhana) — a blood test",
+      "headword": "രക്തപരിശോധന",
+      "romanization": "raktapariśōdhana",
+      "gloss": "a blood test",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2506bdf17e5ca49e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for rheumatism, then the Malayalam for to throw up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: രക്തപരിശോധന",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രക്തപരിശോധന — raktapariśōdhana — \"a blood test\"."
+            },
+            {
+              "kind": "speech",
+              "text": "രാവിലെ ഒന്നും കഴിക്കാതെ രക്തപരിശോധന നടത്തണം. rāvile onnuṁ kaḻikkāte raktapariśōdhana naṭattaṇaṁ. The blood test has to be done in the morning before eating."
+            },
+            {
+              "kind": "speech",
+              "text": "രക്തം blood + പരിശോധന a check; the verb പരിശോധിക്കുക is already familiar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രക്തപരിശോധന (raktapariśōdhana) is a learned compound built from Sanskrit rakta, \"red; blood\" (CDIAL 10539), and pariśodhana, \"cleaning, purifying\" (Monier-Williams), which Malayalam uses for a check."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raktapariśōdhana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raktapariśōdhana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raktapariśōdhana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raktapariśōdhana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāvile onnuṁ kaḻikkāte raktapariśōdhana naṭattaṇaṁ. — The blood test has to be done in the morning before eating.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāvile onnuṁ kaḻikkāte raktapariśōdhana naṭattaṇaṁ.* — The blood test has to be done in the morning before eating.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for rheumatism, then the Malayalam for to throw up, then say raktapariśōdhana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for rheumatism, then the Malayalam for to throw up, then say *raktapariśōdhana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does രക്തപരിശോധന (raktapariśōdhana) mean? (\"A blood test\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C536-narampu",
+      "sequence": 26980,
+      "title": "ഞരമ്പ് (ñarampŭ) — a vein; a nerve",
+      "headword": "ഞരമ്പ്",
+      "romanization": "ñarampŭ",
+      "gloss": "a vein; a nerve",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8c92d3201fc154c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to throw up, then the Malayalam for a blood test."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഞരമ്പ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഞരമ്പ് — ñarampŭ — \"a vein; a nerve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നഴ്സ് കയ്യിലെ ഞരമ്പിൽ നിന്ന് രക്തം എടുത്തു. naḻsŭ kayyile ñarampil ninnŭ raktaṁ eṭuttu. The nurse took blood from a vein in my arm."
+            },
+            {
+              "kind": "speech",
+              "text": "One word for a vein, a nerve and a sinew."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഞരമ്പ് (ñarampŭ) is native Dravidian: DEDR 2903 gives it as a sinew, a tendon, a nerve and the pulse (DEDR 2903)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñarampŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñarampŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñarampŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñarampŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naḻsŭ kayyile ñarampil ninnŭ raktaṁ eṭuttu. — The nurse took blood from a vein in my arm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naḻsŭ kayyile ñarampil ninnŭ raktaṁ eṭuttu.* — The nurse took blood from a vein in my arm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to throw up, then the Malayalam for a blood test, then say ñarampŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to throw up, then the Malayalam for a blood test, then say *ñarampŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഞരമ്പ് (ñarampŭ) mean? (\"A vein; a nerve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C536-pesi",
+      "sequence": 26990,
+      "title": "പേശി (pēśi) — a muscle",
+      "headword": "പേശി",
+      "romanization": "pēśi",
+      "gloss": "a muscle",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40d4a8ecaed02119",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a blood test, then the Malayalam for a vein."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പേശി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പേശി — pēśi — \"a muscle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വ്യായാമം പേശികൾക്ക് ശക്തി കൊടുക്കും. vyāyāmaṁ pēśikaḷkkŭ śakti koṭukkuṁ. Exercise gives the muscles strength."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: പേശികൾ, pēśikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: പേശികൾ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പേശി (pēśi) is borrowed from Sanskrit peśī, \"a piece of flesh\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēśi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēśi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēśi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēśi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyāyāmaṁ pēśikaḷkkŭ śakti koṭukkuṁ. — Exercise gives the muscles strength.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyāyāmaṁ pēśikaḷkkŭ śakti koṭukkuṁ.* — Exercise gives the muscles strength.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a blood test, then the Malayalam for a vein, then say pēśi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a blood test, then the Malayalam for a vein, then say *pēśi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പേശി (pēśi) mean? (\"A muscle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C536-svasakosam",
+      "sequence": 27000,
+      "title": "ശ്വാസകോശം (śvāsakōśaṁ) — the lungs; a lung",
+      "headword": "ശ്വാസകോശം",
+      "romanization": "śvāsakōśaṁ",
+      "gloss": "the lungs; a lung",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad11d10b26e56a20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a vein, then the Malayalam for a muscle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശ്വാസകോശം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശ്വാസകോശം — śvāsakōśaṁ — \"the lungs; a lung\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പുകവലി ശ്വാസകോശത്തിന് ദോഷമാണ്. pukavali śvāsakōśattinŭ dōṣamāṇŭ. Smoking is bad for the lungs."
+            },
+            {
+              "kind": "speech",
+              "text": "ശ്വാസം breath + കോശം a vessel, a store."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശ്വാസകോശം (śvāsakōśaṁ) is a learned compound built from Sanskrit śvāsa, \"breath\" (CDIAL 12769), and kośa, \"a cask, a vessel\" (Monier-Williams): the store of breath."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śvāsakōśaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śvāsakōśaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śvāsakōśaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śvāsakōśaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pukavali śvāsakōśattinŭ dōṣamāṇŭ. — Smoking is bad for the lungs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pukavali śvāsakōśattinŭ dōṣamāṇŭ.* — Smoking is bad for the lungs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a vein, then the Malayalam for a muscle, then say śvāsakōśaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a vein, then the Malayalam for a muscle, then say *śvāsakōśaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശ്വാസകോശം (śvāsakōśaṁ) mean? (\"The lungs; a lung\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C536-visramikkuka",
+      "sequence": 27010,
+      "title": "വിശ്രമിക്കുക (viśramikkuka) — to take a rest; to rest",
+      "headword": "വിശ്രമിക്കുക",
+      "romanization": "viśramikkuka",
+      "gloss": "to take a rest; to rest",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef7f9f56b202d80e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a muscle, then the Malayalam for the lungs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിശ്രമിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിശ്രമിക്കുക — viśramikkuka — \"to take a rest; to rest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഉച്ചയ്ക്ക് ശേഷം മുത്തച്ഛൻ കുറച്ച് നേരം വിശ്രമിക്കും. uccaykkŭ śēṣaṁ muttacchan kuṟaccŭ nēraṁ viśramikkuṁ. After noon grandfather rests for a while."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വിശ്രമിച്ചു, viśramiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun വിശ്രമം, rest, is already familiar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിശ്രമിക്കുക (viśramikkuka) is built from Sanskrit viśrama, \"rest\" (CDIAL 11947), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśramikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśramikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśramikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśramikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uccaykkŭ śēṣaṁ muttacchan kuṟaccŭ nēraṁ viśramikkuṁ. — After noon grandfather rests for a while.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uccaykkŭ śēṣaṁ muttacchan kuṟaccŭ nēraṁ viśramikkuṁ.* — After noon grandfather rests for a while.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a muscle, then the Malayalam for the lungs, then say viśramikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a muscle, then the Malayalam for the lungs, then say *viśramikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിശ്രമിക്കുക (viśramikkuka) mean? (\"To take a rest; to rest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

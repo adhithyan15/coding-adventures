@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:3d63920f11ee36b9",
+  "lessonIds": [
+    "TE-C364-banisa",
+    "TE-C364-vimukti",
+    "TE-C364-poratam",
+    "TE-C364-tyagam",
+    "TE-C364-virudu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch364.txt",
+  "json": "telugu/narration/ch364.json",
+  "textHash": "fnv1a64:78270ee8c61f8297",
+  "jsonHash": "fnv1a64:00f05f3abdd92de2",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C383-tarkam",
+  "pathSegment": "TE-PATH-383-VADANA383",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-383-VADANA383",
+      "order": 3
+    }
+  ]
+}

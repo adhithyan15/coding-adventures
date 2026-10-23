@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "Rebellion",
+  "label": "ch:te-rebellion",
+  "canDo": "I can say a rebellion, to rise up, to suppress, to incite and independence.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C363-svatantryam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can say a rebellion, to rise up, to suppress, to incite and independence.",
+    "assesses": [
+      "TE-LEX-C363-TIRUGUBATU363-03",
+      "TE-LEX-C363-TIRUGUBATU363-04",
+      "TE-LEX-C363-TIRUGUBATU363-05"
+    ]
+  }
+}

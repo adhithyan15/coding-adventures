@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 509,
+  "title": "What Kind of Person",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:c58a9c33a85ef7c6",
+  "lessons": [
+    {
+      "id": "TE-C509-pirikitanam",
+      "sequence": 25760,
+      "title": "పిరికితనం (pirikitanaṁ) — cowardice",
+      "headword": "పిరికితనం",
+      "romanization": "pirikitanaṁ",
+      "gloss": "cowardice",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9cbf413201b80208",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for daring, then the Telugu for timid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పిరికితనం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పిరికితనం — pirikitanaṁ — \"cowardice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నిజం చెప్పకపోవడం పిరికితనం. nijaṁ ceppakapōvaḍaṁ pirikitanaṁ. Not telling the truth is cowardice."
+            },
+            {
+              "kind": "speech",
+              "text": "పిరికి, timid, + -తనం."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పిరికితనం (pirikitanaṁ) is native Dravidian: piṟiki, \"timid, cowardly\" (DEDR 4200), with -తనం, the ending that makes abstract nouns."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pirikitanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pirikitanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pirikitanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pirikitanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nijaṁ ceppakapōvaḍaṁ pirikitanaṁ. — Not telling the truth is cowardice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nijaṁ ceppakapōvaḍaṁ pirikitanaṁ.* — Not telling the truth is cowardice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for daring, then the Telugu for timid, then say pirikitanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for daring, then the Telugu for timid, then say *pirikitanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పిరికితనం (pirikitanaṁ) mean? (\"Cowardice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C509-amayakudu",
+      "sequence": 25770,
+      "title": "అమాయకుడు (amāyakuḍu) — an innocent man; a naive man",
+      "headword": "అమాయకుడు",
+      "romanization": "amāyakuḍu",
+      "gloss": "an innocent man; a naive man",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:265b034d499fb692",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for timid, then the Telugu for cowardice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అమాయకుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అమాయకుడు — amāyakuḍu — \"an innocent man; a naive man\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ అమాయకుడిని దొంగలు మోసం చేశారు. ā amāyakuḍini doṅgalu mōsaṁ cēśāru. Thieves cheated that naive man."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine: అమాయకురాలు. అమాయకంగా, innocently."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అమాయకుడు (amāyakuḍu) is usually traced to Sanskrit a-, \"not\", and māyā, which CDIAL 10060 glosses as \"illusion\" and \"fraud\", with the Telugu masculine ending -డు: a man without guile."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amāyakuḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amāyakuḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amāyakuḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amāyakuḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā amāyakuḍini doṅgalu mōsaṁ cēśāru. — Thieves cheated that naive man.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā amāyakuḍini doṅgalu mōsaṁ cēśāru.* — Thieves cheated that naive man.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for timid, then the Telugu for cowardice, then say amāyakuḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for timid, then the Telugu for cowardice, then say *amāyakuḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అమాయకుడు (amāyakuḍu) mean? (\"An innocent man; a naive man\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C509-murkhudu",
+      "sequence": 25780,
+      "title": "మూర్ఖుడు (mūrkhuḍu) — a fool; a stubborn fool",
+      "headword": "మూర్ఖుడు",
+      "romanization": "mūrkhuḍu",
+      "gloss": "a fool; a stubborn fool",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09aaf980e099014e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for cowardice, then the Telugu for an innocent man."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మూర్ఖుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మూర్ఖుడు — mūrkhuḍu — \"a fool; a stubborn fool\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ మూర్ఖుడు ఎవరి మాటా వినడు. ā mūrkhuḍu evari māṭā vinaḍu. That fool listens to no one."
+            },
+            {
+              "kind": "speech",
+              "text": "Someone foolish and obstinate. Feminine: మూర్ఖురాలు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మూర్ఖుడు (mūrkhuḍu) is borrowed from Sanskrit mūrkha, \"stupid, foolish; a fool\" (Monier-Williams), with the Telugu masculine ending -డు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūrkhuḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūrkhuḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūrkhuḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūrkhuḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā mūrkhuḍu evari māṭā vinaḍu. — That fool listens to no one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā mūrkhuḍu evari māṭā vinaḍu.* — That fool listens to no one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for cowardice, then the Telugu for an innocent man, then say mūrkhuḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for cowardice, then the Telugu for an innocent man, then say *mūrkhuḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మూర్ఖుడు (mūrkhuḍu) mean? (\"A fool; a stubborn fool\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C509-baddhakam",
+      "sequence": 25790,
+      "title": "బద్ధకం (baddhakaṁ) — laziness; sluggishness",
+      "headword": "బద్ధకం",
+      "romanization": "baddhakaṁ",
+      "gloss": "laziness; sluggishness",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eee8cf5a10515860",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an innocent man, then the Telugu for a fool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బద్ధకం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బద్ధకం — baddhakaṁ — \"laziness; sluggishness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆదివారం ఉదయం లేవడానికి నాకు బద్ధకం. ādivāraṁ udayaṁ lēvaḍāniki nāku baddhakaṁ. On Sunday mornings I feel too lazy to get up."
+            },
+            {
+              "kind": "speech",
+              "text": "నాకు బద్ధకంగా ఉంది, I feel lazy. బద్ధకస్తుడు, a lazy man."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బద్ధకం (baddhakaṁ) is a Telugu word for sluggishness and laziness; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baddhakaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baddhakaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baddhakaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baddhakaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādivāraṁ udayaṁ lēvaḍāniki nāku baddhakaṁ. — On Sunday mornings I feel too lazy to get up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādivāraṁ udayaṁ lēvaḍāniki nāku baddhakaṁ.* — On Sunday mornings I feel too lazy to get up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an innocent man, then the Telugu for a fool, then say baddhakaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an innocent man, then the Telugu for a fool, then say *baddhakaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బద్ధకం (baddhakaṁ) mean? (\"Laziness; sluggishness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C509-husaru",
+      "sequence": 25800,
+      "title": "హుషారు (huṣāru) — high spirits; liveliness",
+      "headword": "హుషారు",
+      "romanization": "huṣāru",
+      "gloss": "high spirits; liveliness",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0030ff37bd5df372",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a fool, then the Telugu for laziness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: హుషారు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హుషారు — huṣāru — \"high spirits; liveliness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పండుగ రోజు పిల్లలు హుషారుగా ఉన్నారు. paṇḍuga rōju pillalu huṣārugā unnāru. On the festival day the children were full of beans."
+            },
+            {
+              "kind": "speech",
+              "text": "హుషారుగా, cheerfully, full of energy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హుషారు (huṣāru) is usually traced to Persian hushyār, \"alert, awake\", which came into Telugu through Hindustani; in Telugu it is the bright energy of someone in good spirits."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huṣāru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huṣāru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huṣāru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huṣāru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇḍuga rōju pillalu huṣārugā unnāru. — On the festival day the children were full of beans.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇḍuga rōju pillalu huṣārugā unnāru.* — On the festival day the children were full of beans.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a fool, then the Telugu for laziness, then say huṣāru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a fool, then the Telugu for laziness, then say *huṣāru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does హుషారు (huṣāru) mean? (\"High spirits; liveliness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R509-review-502-509",
+      "sequence": 25810,
+      "title": "Words from chapters 502–509 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 502-509",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1cc38dba3a833e8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Telugu for to sigh and to be disappointed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sigh, to be disappointed, discouragement, to yearn, to waste away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sigh, to be disappointed, discouragement, to yearn, to waste away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tender love, attachment, warmth, to fondle, fondness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tender love, attachment, warmth, to fondle, fondness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to adore, to admire, an admirer, to appreciate, acclaim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to adore, to admire, an admirer, to appreciate, acclaim]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pity, compassion, to welcome warmly, to stand by, to console",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pity, compassion, to welcome warmly, to stand by, to console]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to tolerate, to withstand, self-restraint, peace of mind, relief",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to tolerate, to withstand, self-restraint, peace of mind, relief]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "temperament, personality, goodness, humility, arrogance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: temperament, personality, goodness, humility, arrogance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "conceit, stubbornness, determination, daring, timid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: conceit, stubbornness, determination, daring, timid]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cowardice, an innocent man, a fool, laziness, high spirits",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cowardice, an innocent man, a fool, laziness, high spirits]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To sigh? (నిట్టూర్చు, niṭṭūrcu.) To be disappointed? (నిరాశపడు, nirāśapaḍu.) Discouragement? (నిరుత్సాహం, nirutsāhaṁ.) To yearn? (తహతహలాడు, tahatahalāḍu.) To waste away? (కృశించు, kṛśiñcu.) Tender love? (అనురాగం, anurāgaṁ.) Attachment? (మమకారం, mamakāraṁ.) Warmth? (ఆప్యాయత, āpyāyata.) To fondle? (లాలించు, lāliñcu.) Fondness? (అభిమానం, abhimānaṁ.) To adore? (ఆరాధించు, ārādhiñcu.) To admire? (అభిమానించు, abhimāniñcu.) An admirer? (అభిమాని, abhimāni.) To appreciate? (మెచ్చుకో, meccukō.) Acclaim? (ప్రశంస, praśaṁsa.) Pity? (జాలి, jāli.) Compassion? (కరుణ, karuṇa.) To welcome warmly? (ఆదరించు, ādariñcu.) To stand by? (ఆదుకో, ādukō.) To console? (సముదాయించు, samudāyiñcu.) To tolerate? (సహించు, sahiñcu.) To withstand? (తట్టుకో, taṭṭukō.) Self-restraint? (నిగ్రహం, nigrahaṁ.) Peace of mind? (మనశ్శాంతి, manaśśānti.) Relief? (ఉపశమనం, upaśamanaṁ.) Temperament? (స్వభావం, svabhāvaṁ.) Personality? (వ్యక్తిత్వం, vyaktitvaṁ.) Goodness? (మంచితనం, mañcitanaṁ.) Humility? (వినయం, vinayaṁ.) Arrogance? (అహంకారం, ahaṅkāraṁ.) Conceit? (పొగరు, pogaru.) Stubbornness? (మొండితనం, moṇḍitanaṁ.) Determination? (పట్టుదల, paṭṭudala.) Daring? (సాహసం, sāhasaṁ.) Timid? (పిరికి, piriki.) Cowardice? (పిరికితనం, pirikitanaṁ.) An innocent man? (అమాయకుడు, amāyakuḍu.) A fool? (మూర్ఖుడు, mūrkhuḍu.) Laziness? (బద్ధకం, baddhakaṁ.) High spirits? (హుషారు, huṣāru.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

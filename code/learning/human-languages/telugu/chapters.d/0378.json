@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "A Brawl",
+  "label": "ch:te-a-brawl",
+  "canDo": "I can say a brawl, gunfire, to injure, to grapple and to gather round.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C378-gumigudu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can say a brawl, gunfire, to injure, to grapple and to gather round.",
+    "assesses": [
+      "TE-LEX-C378-KOTLATA378-03",
+      "TE-LEX-C378-KOTLATA378-04",
+      "TE-LEX-C378-KOTLATA378-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C432-visvasaniyata",
+  "pathSegment": "TE-PATH-432-ADARSAM432",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-432-ADARSAM432",
+      "order": 3
+    }
+  ]
+}

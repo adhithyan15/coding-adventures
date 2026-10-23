@@ -1,0 +1,21 @@
+{
+  "chapter": 373,
+  "title": "Lives in Writing",
+  "label": "ch:te-lives-in-writing",
+  "canDo": "I can say an autobiography, a biography, a proverb, a burrakatha ballad and to make a start.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-R373-review-366-373",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can say an autobiography, a biography, a proverb, a burrakatha ballad and to make a start.",
+    "assesses": [
+      "TE-LEX-C373-ATMAKATHA373-01",
+      "TE-LEX-C373-ATMAKATHA373-02",
+      "TE-LEX-C373-ATMAKATHA373-03",
+      "TE-LEX-C373-ATMAKATHA373-04",
+      "TE-LEX-C373-ATMAKATHA373-05"
+    ]
+  }
+}

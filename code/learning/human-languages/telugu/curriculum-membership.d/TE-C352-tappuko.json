@@ -1,0 +1,11 @@
+{
+  "id": "TE-C352-tappuko",
+  "pathSegment": "TE-PATH-352-VEMBADI352",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-352-VEMBADI352",
+      "order": 4
+    }
+  ]
+}

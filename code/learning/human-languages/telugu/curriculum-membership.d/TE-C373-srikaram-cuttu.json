@@ -1,0 +1,11 @@
+{
+  "id": "TE-C373-srikaram-cuttu",
+  "pathSegment": "TE-PATH-373-ATMAKATHA373",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-373-ATMAKATHA373",
+      "order": 4
+    }
+  ]
+}

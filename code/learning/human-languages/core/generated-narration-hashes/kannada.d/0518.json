@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:9f181af15fdbc751",
+  "lessonIds": [
+    "KA-C518-nemisu",
+    "KA-C518-vaja-madu",
+    "KA-C518-nirudyoga",
+    "KA-C518-nivrtti",
+    "KA-C518-guttige",
+    "KA-R518-review-512-518"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch518.txt",
+  "json": "kannada/narration/ch518.json",
+  "textHash": "fnv1a64:0e7362368fa9ef21",
+  "jsonHash": "fnv1a64:d89511a9f89c4fb5",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C476-ukkapota",
+    "language": "telugu",
+    "chapter": 476,
+    "sequence": 23970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:500433cc76cfe142"
+  },
+  "findings": []
+}

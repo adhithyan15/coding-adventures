@@ -1,0 +1,11 @@
+{
+  "id": "ML-C510-tanukkuka",
+  "pathSegment": "ML-PATH-510-MANJU510",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-510-MANJU510",
+      "order": 3
+    }
+  ]
+}

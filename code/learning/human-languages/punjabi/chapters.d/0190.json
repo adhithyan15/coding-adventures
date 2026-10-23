@@ -1,0 +1,18 @@
+{
+  "chapter": 190,
+  "title": "I Did the Work",
+  "label": "ch:pa-a2-kita-perfective",
+  "canDo": "I can distinguish the familiar infinitive from one bounded masculine-singular completed-action frame.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C190-payoff",
+    "kind": "production",
+    "summary": "Retrieve the infinitive and one masculine-singular completed-action frame through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-FORM-KITA-190"
+    ],
+    "note": "This thirteenth Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

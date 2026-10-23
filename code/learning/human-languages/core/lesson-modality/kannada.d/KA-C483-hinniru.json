@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C483-hinniru",
+    "language": "kannada",
+    "chapter": 483,
+    "sequence": 24590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c4fb116f30836f1"
+  },
+  "findings": []
+}

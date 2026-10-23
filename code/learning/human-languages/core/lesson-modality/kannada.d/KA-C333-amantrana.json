@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C333-amantrana",
+    "language": "kannada",
+    "chapter": 333,
+    "sequence": 16750,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ba4e11c1f7246e38"
+  },
+  "findings": []
+}

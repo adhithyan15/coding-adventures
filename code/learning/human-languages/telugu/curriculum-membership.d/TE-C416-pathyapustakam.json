@@ -1,0 +1,11 @@
+{
+  "id": "TE-C416-pathyapustakam",
+  "pathSegment": "TE-PATH-416-VYASAM416",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-416-VYASAM416",
+      "order": 0
+    }
+  ]
+}

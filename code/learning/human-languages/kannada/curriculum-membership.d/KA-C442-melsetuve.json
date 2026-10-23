@@ -1,0 +1,11 @@
+{
+  "id": "KA-C442-melsetuve",
+  "pathSegment": "KA-PATH-442-HEDDARI442",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-442-HEDDARI442",
+      "order": 2
+    }
+  ]
+}

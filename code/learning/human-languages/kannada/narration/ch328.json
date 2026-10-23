@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 328,
+  "title": "A Robbery at Night",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cb892264b38111f4",
+  "lessons": [
+    {
+      "id": "KA-C328-darode",
+      "sequence": 16460,
+      "title": "ದರೋಡೆ (darōḍe) — a robbery",
+      "headword": "ದರೋಡೆ",
+      "romanization": "darōḍe",
+      "gloss": "a robbery",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7fb746631112215c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for abruptly, then the Kannada for to be startled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ದರೋಡೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದರೋಡೆ — darōḍe — \"a robbery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿನ್ನೆ ರಾತ್ರಿ ಬ್ಯಾಂಕಿನಲ್ಲಿ ದರೋಡೆ ಆಯಿತು. ninne rātri byāṅkinalli darōḍe āyitu. There was a robbery at the bank last night."
+            },
+            {
+              "kind": "speech",
+              "text": "ದರೋಡೆ (darōḍe) is robbery by force, often by a gang."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದರೋಡೆ (darōḍe) is usually traced to Marathi daroḍā, \"a gang robbery\"; the earlier history of the word is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darōḍe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darōḍe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darōḍe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darōḍe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ninne rātri byāṅkinalli darōḍe āyitu. — There was a robbery at the bank last night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ninne rātri byāṅkinalli darōḍe āyitu.* — There was a robbery at the bank last night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for abruptly, then the Kannada for to be startled, then say darōḍe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for abruptly, then the Kannada for to be startled, then say *darōḍe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ದರೋಡೆ (darōḍe) mean? (\"A robbery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C328-docu",
+      "sequence": 16470,
+      "title": "ದೋಚು (dōcu) — to loot; to rob",
+      "headword": "ದೋಚು",
+      "romanization": "dōcu",
+      "gloss": "to loot; to rob",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4f35ca34946c760",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to be startled, then the Kannada for a robbery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ದೋಚು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದೋಚು — dōcu — \"to loot; to rob\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಳ್ಳರು ಅಂಗಡಿಯನ್ನು ದೋಚಿದರು. kaḷḷaru aṅgaḍiyannu dōcidaru. The robbers looted the shop."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ದೋಚಿದೆ, dōcide."
+            },
+            {
+              "kind": "speech",
+              "text": "The place or person robbed takes -ಅನ್ನು: ಮನೆಯನ್ನು ದೋಚು (dōcu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದೋಚು (dōcu) is native Dravidian: DEDR 3541 lists Kannada dōcu, \"to plunder, rob\", beside Telugu dō̃cu, \"to plunder, pillage\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dōcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dōcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dōcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dōcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷḷaru aṅgaḍiyannu dōcidaru. — The robbers looted the shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷḷaru aṅgaḍiyannu dōcidaru.* — The robbers looted the shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to be startled, then the Kannada for a robbery, then say dōcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to be startled, then the Kannada for a robbery, then say *dōcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ದೋಚು (dōcu) mean? (\"To loot; to rob\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C328-esagu",
+      "sequence": 16480,
+      "title": "ಎಸಗು (esagu) — to commit (a crime)",
+      "headword": "ಎಸಗು",
+      "romanization": "esagu",
+      "gloss": "to commit (a crime)",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1ea6f1b947d43ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a robbery, then the Kannada for to loot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಎಸಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಎಸಗು — esagu — \"to commit (a crime)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವನು ಹಣಕ್ಕಾಗಿ ಆ ಅಪರಾಧ ಎಸಗಿದನು. avanu haṇakkāgi ā aparādha esagidanu. He committed that crime for money."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಎಸಗಿದೆ, esagide."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal verb for wrong deeds: ಅಪರಾಧ ಎಸಗು (esagu), ತಪ್ಪು ಎಸಗು (esagu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಎಸಗು (esagu) is native Dravidian: DEDR 471 lists Kannada esagu, \"to engage in, undertake, do, perform\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "esagu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *esagu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "esagu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *esagu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avanu haṇakkāgi ā aparādha esagidanu. — He committed that crime for money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avanu haṇakkāgi ā aparādha esagidanu.* — He committed that crime for money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a robbery, then the Kannada for to loot, then say esagu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a robbery, then the Kannada for to loot, then say *esagu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಎಸಗು (esagu) mean? (\"To commit (a crime)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C328-parariyagu",
+      "sequence": 16490,
+      "title": "ಪರಾರಿಯಾಗು (parāriyāgu) — to abscond; to flee",
+      "headword": "ಪರಾರಿಯಾಗು",
+      "romanization": "parāriyāgu",
+      "gloss": "to abscond; to flee",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e938020ffe66031",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to loot, then the Kannada for to commit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪರಾರಿಯಾಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರಾರಿಯಾಗು — parāriyāgu — \"to abscond; to flee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ದರೋಡೆಯ ನಂತರ ಕಳ್ಳರು ಕಾರಿನಲ್ಲಿ ಪರಾರಿಯಾದರು. darōḍeya nantara kaḷḷaru kārinalli parāriyādaru. After the robbery the robbers fled in a car."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಪರಾರಿಯಾದೆ, parāriyāde."
+            },
+            {
+              "kind": "speech",
+              "text": "A news word for an escape from the police: ಆರೋಪಿ ಪರಾರಿಯಾದನು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರಾರಿಯಾಗು (parāriyāgu) is ಪರಾರಿ, \"on the run\", with āgu \"to become\" (DEDR 333). ಪರಾರಿ is usually traced to Hindustani farārī, \"a fugitive\", from Arabic firār, \"flight\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parāriyāgu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parāriyāgu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parāriyāgu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parāriyāgu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darōḍeya nantara kaḷḷaru kārinalli parāriyādaru. — After the robbery the robbers fled in a car.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darōḍeya nantara kaḷḷaru kārinalli parāriyādaru.* — After the robbery the robbers fled in a car.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to loot, then the Kannada for to commit, then say parāriyāgu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to loot, then the Kannada for to commit, then say *parāriyāgu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪರಾರಿಯಾಗು (parāriyāgu) mean? (\"To abscond; to flee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C328-jadu",
+      "sequence": 16500,
+      "title": "ಜಾಡು (jāḍu) — a track; a trail",
+      "headword": "ಜಾಡು",
+      "romanization": "jāḍu",
+      "gloss": "a track; a trail",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6cb2e5d03289de55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to commit, then the Kannada for to abscond."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಜಾಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜಾಡು — jāḍu — \"a track; a trail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪೊಲೀಸರು ಕಾರಿನ ಜಾಡು ಹಿಡಿದು ಹೋದರು. polīsaru kārina jāḍu hiḍidu hōdaru. The police followed the car's trail."
+            },
+            {
+              "kind": "speech",
+              "text": "ಜಾಡು (jāḍu) ಹಿಡಿ, to follow a trail. Not to be confused with ಜಾಡಿ, a jar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜಾಡು (jāḍu) is native Dravidian: DEDR 2442 lists Kannada jāḍu, \"the mark of a footstep or of a cart wheel, a track, a trace\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polīsaru kārina jāḍu hiḍidu hōdaru. — The police followed the car's trail.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polīsaru kārina jāḍu hiḍidu hōdaru.* — The police followed the car's trail.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to commit, then the Kannada for to abscond, then say jāḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to commit, then the Kannada for to abscond, then say *jāḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಜಾಡು (jāḍu) mean? (\"A track; a trail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

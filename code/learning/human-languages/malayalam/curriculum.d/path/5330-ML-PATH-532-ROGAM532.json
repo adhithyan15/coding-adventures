@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-532-ROGAM532",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ML-EXT-532-ROGAM532"
+  ],
+  "after": []
+}

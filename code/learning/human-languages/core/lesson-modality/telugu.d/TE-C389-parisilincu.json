@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C389-parisilincu",
+    "language": "telugu",
+    "chapter": 389,
+    "sequence": 19370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aed7c85c47586eb7"
+  },
+  "findings": []
+}

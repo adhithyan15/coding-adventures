@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 393,
+  "title": "Running a Country",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ee820645f672ee79",
+  "lessons": [
+    {
+      "id": "KA-C393-samsattu",
+      "sequence": 19870,
+      "title": "ಸಂಸತ್ತು (saṃsattu) — a parliament",
+      "headword": "ಸಂಸತ್ತು",
+      "romanization": "saṃsattu",
+      "gloss": "a parliament",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d13051c28ae3b76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to campaign, then the Kannada for to address a crowd."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಂಸತ್ತು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಸತ್ತು — saṃsattu — \"a parliament\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೊಸ ನಿಯಮದ ಬಗ್ಗೆ ಸಂಸತ್ತಿನಲ್ಲಿ ಚರ್ಚೆ ನಡೆಯಿತು. hosa niyamada bagge saṃsattinalli carce naḍeyitu. There was a debate in parliament on the new rule."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಂಸದ, a member of parliament."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಸತ್ತು (saṃsattu) is borrowed from Sanskrit saṃsad, \"a sitting together, an assembly\" (Monier-Williams), with the Kannada -u after the final consonant."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃsattu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃsattu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃsattu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃsattu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hosa niyamada bagge saṃsattinalli carce naḍeyitu. — There was a debate in parliament on the new rule.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hosa niyamada bagge saṃsattinalli carce naḍeyitu.* — There was a debate in parliament on the new rule.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to campaign, then the Kannada for to address a crowd, then say saṃsattu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to campaign, then the Kannada for to address a crowd, then say *saṃsattu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಂಸತ್ತು (saṃsattu) mean? (\"A parliament\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C393-mantri",
+      "sequence": 19880,
+      "title": "ಮಂತ್ರಿ (mantri) — a minister",
+      "headword": "ಮಂತ್ರಿ",
+      "romanization": "mantri",
+      "gloss": "a minister",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3182adfa0d791be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to address a crowd, then the Kannada for a parliament."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಂತ್ರಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಂತ್ರಿ — mantri — \"a minister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಂತ್ರಿ ನಮ್ಮ ಶಾಲೆಗೆ ಭೇಟಿ ಕೊಟ್ಟರು. mantri namma śālege bhēṭi koṭṭaru. The minister visited our school."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಮಂತ್ರಿಗಳು, mantrigaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "Respectful plural verb: ಮಂತ್ರಿ (mantri) ಬಂದರು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಂತ್ರಿ (mantri) is borrowed from Sanskrit mantrin, \"one who gives counsel\", a king's adviser (CDIAL 9838)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mantri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mantri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mantri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mantri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mantri namma śālege bhēṭi koṭṭaru. — The minister visited our school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mantri namma śālege bhēṭi koṭṭaru.* — The minister visited our school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to address a crowd, then the Kannada for a parliament, then say mantri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to address a crowd, then the Kannada for a parliament, then say *mantri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮಂತ್ರಿ (mantri) mean? (\"A minister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C393-samvidhana",
+      "sequence": 19890,
+      "title": "ಸಂವಿಧಾನ (saṃvidhāna) — a constitution",
+      "headword": "ಸಂವಿಧಾನ",
+      "romanization": "saṃvidhāna",
+      "gloss": "a constitution",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19344bfa9380e225",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a parliament, then the Kannada for a minister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಂವಿಧಾನ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂವಿಧಾನ — saṃvidhāna — \"a constitution\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಂವಿಧಾನ ಎಲ್ಲರಿಗೂ ಸಮಾನ ಹಕ್ಕು ಕೊಡುತ್ತದೆ. saṃvidhāna ellarigū samāna hakku koḍuttade. The constitution gives everyone equal rights."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಂವಿಧಾನಬದ್ಧ, constitutional."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂವಿಧಾನ (saṃvidhāna) is borrowed from Sanskrit saṃvidhāna, \"arrangement, management\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃvidhāna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃvidhāna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃvidhāna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃvidhāna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃvidhāna ellarigū samāna hakku koḍuttade. — The constitution gives everyone equal rights.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃvidhāna ellarigū samāna hakku koḍuttade.* — The constitution gives everyone equal rights.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a parliament, then the Kannada for a minister, then say saṃvidhāna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a parliament, then the Kannada for a minister, then say *saṃvidhāna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಂವಿಧಾನ (saṃvidhāna) mean? (\"A constitution\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C393-prajaprabhutva",
+      "sequence": 19900,
+      "title": "ಪ್ರಜಾಪ್ರಭುತ್ವ (prajāprabhutva) — democracy",
+      "headword": "ಪ್ರಜಾಪ್ರಭುತ್ವ",
+      "romanization": "prajāprabhutva",
+      "gloss": "democracy",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:593a9ba6bec17c96",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a minister, then the Kannada for a constitution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಜಾಪ್ರಭುತ್ವ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಜಾಪ್ರಭುತ್ವ — prajāprabhutva — \"democracy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಜಾಪ್ರಭುತ್ವದಲ್ಲಿ ಜನರೇ ಸರ್ಕಾರ ಆರಿಸುತ್ತಾರೆ. prajāprabhutvadalli janarē sarkāra ārisuttāre. In a democracy the people choose the government."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಜೆ (citizen) + ಪ್ರಭುತ್ವ (rule)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಜಾಪ್ರಭುತ್ವ (prajāprabhutva) is a modern word built from Sanskrit prajā, \"people, subjects\", and prabhutva, \"lordship, rule\" (Monier-Williams): rule by the people."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prajāprabhutva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prajāprabhutva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prajāprabhutva, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prajāprabhutva*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prajāprabhutvadalli janarē sarkāra ārisuttāre. — In a democracy the people choose the government.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prajāprabhutvadalli janarē sarkāra ārisuttāre.* — In a democracy the people choose the government.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a minister, then the Kannada for a constitution, then say prajāprabhutva again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a minister, then the Kannada for a constitution, then say *prajāprabhutva* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಜಾಪ್ರಭುತ್ವ (prajāprabhutva) mean? (\"Democracy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C393-pratinidhisu",
+      "sequence": 19910,
+      "title": "ಪ್ರತಿನಿಧಿಸು (pratinidhisu) — to represent",
+      "headword": "ಪ್ರತಿನಿಧಿಸು",
+      "romanization": "pratinidhisu",
+      "gloss": "to represent",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3765759bbe2cc265",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a constitution, then the Kannada for democracy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರತಿನಿಧಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿನಿಧಿಸು — pratinidhisu — \"to represent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವಳು ರಾಜ್ಯವನ್ನು ಸ್ಪರ್ಧೆಯಲ್ಲಿ ಪ್ರತಿನಿಧಿಸಿದಳು. avaḷu rājyavannu spardheyalli pratinidhisidaḷu. She represented the state in the competition."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಪ್ರತಿನಿಧಿಸಿದೆ, pratinidhiside."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿನಿಧಿ, a representative."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿನಿಧಿಸು (pratinidhisu) is built on Sanskrit pratinidhi, \"a substitute, a representative\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratinidhisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratinidhisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratinidhisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratinidhisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷu rājyavannu spardheyalli pratinidhisidaḷu. — She represented the state in the competition.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷu rājyavannu spardheyalli pratinidhisidaḷu.* — She represented the state in the competition.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a constitution, then the Kannada for democracy, then say pratinidhisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a constitution, then the Kannada for democracy, then say *pratinidhisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರತಿನಿಧಿಸು (pratinidhisu) mean? (\"To represent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

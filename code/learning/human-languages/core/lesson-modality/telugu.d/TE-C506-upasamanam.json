@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C506-upasamanam",
+    "language": "telugu",
+    "chapter": 506,
+    "sequence": 25650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7d0f846b442ce72"
+  },
+  "findings": []
+}

@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 491,
+  "title": "At the Mall",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:eea9134ab4c221d4",
+  "lessons": [
+    {
+      "id": "ML-C491-mal",
+      "sequence": 24530,
+      "title": "മാൾ (māḷ) — a shopping mall",
+      "headword": "മാൾ",
+      "romanization": "māḷ",
+      "gloss": "a shopping mall",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d80bd411affe1f1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to send back, then the Malayalam for to contact."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മാൾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മാൾ — māḷ — \"a shopping mall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞായറാഴ്ച മാളിൽ വലിയ തിരക്കായിരുന്നു. ñāyaṟāḻca māḷil valiya tirakkāyirunnu. The mall was very crowded on Sunday."
+            },
+            {
+              "kind": "speech",
+              "text": "A loan ending in a chillu: മാൾ (māḷ), മാളിൽ, in the mall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മാൾ (māḷ) was borrowed from English mall, a large building full of shops."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñāyaṟāḻca māḷil valiya tirakkāyirunnu. — The mall was very crowded on Sunday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñāyaṟāḻca māḷil valiya tirakkāyirunnu.* — The mall was very crowded on Sunday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to send back, then the Malayalam for to contact, then say māḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to send back, then the Malayalam for to contact, then say *māḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മാൾ (māḷ) mean? (\"A shopping mall\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C491-ophar",
+      "sequence": 24540,
+      "title": "ഓഫർ (ōphar) — a special offer",
+      "headword": "ഓഫർ",
+      "romanization": "ōphar",
+      "gloss": "a special offer",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3789149be329cd4d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to contact, then the Malayalam for a shopping mall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഓഫർ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഓഫർ — ōphar — \"a special offer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ കടയിൽ ഒന്ന് വാങ്ങിയാൽ ഒന്ന് വെറുതെ എന്ന ഓഫർ ഉണ്ട്. ā kaṭayil onnŭ vāṅṅiyāl onnŭ veṟute enna ōphar uṇṭŭ. That shop has an offer: buy one and get one free."
+            },
+            {
+              "kind": "speech",
+              "text": "Shops put up an ഓഫർ (ōphar) board at festival time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഓഫർ (ōphar) was borrowed from English offer, a price cut for a short time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōphar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōphar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōphar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōphar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kaṭayil onnŭ vāṅṅiyāl onnŭ veṟute enna ōphar uṇṭŭ. — That shop has an offer: buy one and get one free.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kaṭayil onnŭ vāṅṅiyāl onnŭ veṟute enna ōphar uṇṭŭ.* — That shop has an offer: buy one and get one free.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to contact, then the Malayalam for a shopping mall, then say ōphar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to contact, then the Malayalam for a shopping mall, then say *ōphar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഓഫർ (ōphar) mean? (\"A special offer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C491-adayavilppana",
+      "sequence": 24550,
+      "title": "ആദായവിൽപ്പന (ādāyavilppana) — a clearance sale",
+      "headword": "ആദായവിൽപ്പന",
+      "romanization": "ādāyavilppana",
+      "gloss": "a clearance sale",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:769b85ff269579ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a shopping mall, then the Malayalam for a special offer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആദായവിൽപ്പന",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആദായവിൽപ്പന — ādāyavilppana — \"a clearance sale\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അടുത്ത മാസം തുണിക്കടകളിൽ ആദായവിൽപ്പന ഉണ്ടാകും. aṭutta māsaṁ tuṇikkaṭakaḷil ādāyavilppana uṇṭākuṁ. Next month the clothes shops will have clearance sales."
+            },
+            {
+              "kind": "speech",
+              "text": "ആദായം, gain, plus വിൽപ്പന, a sale: a sale where the buyer gains."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആദായവിൽപ്പന (ādāyavilppana) is a Malayalam compound built from ആദായം, profit, from Sanskrit ādāya, \"taking\" (Monier-Williams), and the native word വിൽപ്പന, a sale (DEDR 5421)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādāyavilppana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādāyavilppana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādāyavilppana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādāyavilppana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭutta māsaṁ tuṇikkaṭakaḷil ādāyavilppana uṇṭākuṁ. — Next month the clothes shops will have clearance sales.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭutta māsaṁ tuṇikkaṭakaḷil ādāyavilppana uṇṭākuṁ.* — Next month the clothes shops will have clearance sales.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a shopping mall, then the Malayalam for a special offer, then say ādāyavilppana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a shopping mall, then the Malayalam for a special offer, then say *ādāyavilppana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആദായവിൽപ്പന (ādāyavilppana) mean? (\"A clearance sale\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C491-vilppanakkaran",
+      "sequence": 24560,
+      "title": "വിൽപ്പനക്കാരൻ (vilppanakkāran) — a salesman",
+      "headword": "വിൽപ്പനക്കാരൻ",
+      "romanization": "vilppanakkāran",
+      "gloss": "a salesman",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37902e71928009db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a special offer, then the Malayalam for a clearance sale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിൽപ്പനക്കാരൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിൽപ്പനക്കാരൻ — vilppanakkāran — \"a salesman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വിൽപ്പനക്കാരൻ എനിക്ക് പല നിറങ്ങളിലുള്ള ഷർട്ടുകൾ കാണിച്ചു. vilppanakkāran enikkŭ pala niṟaṅṅaḷiluḷḷa ṣarṭṭukaḷ kāṇiccu. The salesman showed me shirts in many colours."
+            },
+            {
+              "kind": "speech",
+              "text": "വിൽപ്പന, a sale, plus -കാരൻ, one who: a വിൽപ്പനക്കാരി is a saleswoman."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിൽപ്പനക്കാരൻ (vilppanakkāran) is native Dravidian, built from വിൽപ്പന, a sale (DEDR 5421), with -കാരൻ, one who does it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilppanakkāran",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilppanakkāran*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilppanakkāran, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilppanakkāran*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilppanakkāran enikkŭ pala niṟaṅṅaḷiluḷḷa ṣarṭṭukaḷ kāṇiccu. — The salesman showed me shirts in many colours.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilppanakkāran enikkŭ pala niṟaṅṅaḷiluḷḷa ṣarṭṭukaḷ kāṇiccu.* — The salesman showed me shirts in many colours.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a special offer, then the Malayalam for a clearance sale, then say vilppanakkāran again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a special offer, then the Malayalam for a clearance sale, then say *vilppanakkāran* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിൽപ്പനക്കാരൻ (vilppanakkāran) mean? (\"A salesman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C491-ittunokkuka",
+      "sequence": 24570,
+      "title": "ഇട്ടുനോക്കുക (iṭṭunōkkuka) — to try on",
+      "headword": "ഇട്ടുനോക്കുക",
+      "romanization": "iṭṭunōkkuka",
+      "gloss": "to try on",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a997707cc106077e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a clearance sale, then the Malayalam for a salesman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഇട്ടുനോക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇട്ടുനോക്കുക — iṭṭunōkkuka — \"to try on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വാങ്ങുന്നതിന് മുൻപ് ഞാൻ ആ ഷർട്ട് ഇട്ടുനോക്കി. vāṅṅunnatinŭ munpŭ ñān ā ṣarṭṭŭ iṭṭunōkki. I tried the shirt on before buying it."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഇട്ടുനോക്കി, iṭṭunōkki."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally to put on and look: ഇട്ട്, having put on, plus നോക്കുക. Any verb plus നോക്കുക means to try doing it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇട്ടുനോക്കുക (iṭṭunōkkuka) is a native Dravidian compound of ഇടുക, to put on (DEDR 442), and നോക്കുക, to look (DEDR 3794)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭṭunōkkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭṭunōkkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭṭunōkkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭṭunōkkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāṅṅunnatinŭ munpŭ ñān ā ṣarṭṭŭ iṭṭunōkki. — I tried the shirt on before buying it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāṅṅunnatinŭ munpŭ ñān ā ṣarṭṭŭ iṭṭunōkki.* — I tried the shirt on before buying it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a clearance sale, then the Malayalam for a salesman, then say iṭṭunōkkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a clearance sale, then the Malayalam for a salesman, then say *iṭṭunōkkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഇട്ടുനോക്കുക (iṭṭunōkkuka) mean? (\"To try on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

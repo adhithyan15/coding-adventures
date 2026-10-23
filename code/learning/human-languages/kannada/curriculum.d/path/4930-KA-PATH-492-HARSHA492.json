@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-492-HARSHA492",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-492-HARSHA492"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:a7c94f66f66034b7",
+  "lessonIds": [
+    "KA-C351-karyacarane",
+    "KA-C351-svayamsevaka",
+    "KA-C351-appalisu",
+    "KA-C351-avarisu",
+    "KA-C351-koccihogu"
+  ],
+  "tex": "kannada/book/chapters/ch351-the-rescue-operation.tex"
+}

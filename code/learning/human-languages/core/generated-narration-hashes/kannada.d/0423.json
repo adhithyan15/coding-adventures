@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:8778aa47d75398ad",
+  "lessonIds": [
+    "KA-C423-hanta",
+    "KA-C423-karya",
+    "KA-C423-tantra",
+    "KA-C423-upaya",
+    "KA-C423-vibhajisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch423.txt",
+  "json": "kannada/narration/ch423.json",
+  "textHash": "fnv1a64:cb4e90200a5b04bb",
+  "jsonHash": "fnv1a64:0ca024709238a8f3",
+  "findings": []
+}

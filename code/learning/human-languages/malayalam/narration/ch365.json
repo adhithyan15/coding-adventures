@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 365,
+  "title": "At the Police Station",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:79b4cdd5531eaa90",
+  "lessons": [
+    {
+      "id": "ML-C365-parati",
+      "sequence": 17820,
+      "title": "പരാതി (parāti) — a complaint",
+      "headword": "പരാതി",
+      "romanization": "parāti",
+      "gloss": "a complaint",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f92212bf2cf5d15a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to steal, then the Malayalam for to break open."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പരാതി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പരാതി — parāti — \"a complaint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അച്ഛൻ പോലീസിൽ ഒരു പരാതി കൊടുത്തു. acchan pōlīsil oru parāti koṭuttu. Father filed a complaint with the police."
+            },
+            {
+              "kind": "speech",
+              "text": "A complaint is given: പരാതി (parāti) കൊടുക്കുക. പരാതിപ്പെടുക is the verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of പരാതി (parāti) is not settled. It is the noun behind പരാതിപ്പെടുക, \"to complain\", and the usual word for a complaint to the police or an office."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parāti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parāti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parāti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parāti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "acchan pōlīsil oru parāti koṭuttu. — Father filed a complaint with the police.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *acchan pōlīsil oru parāti koṭuttu.* — Father filed a complaint with the police.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to steal, then the Malayalam for to break open, then say parāti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to steal, then the Malayalam for to break open, then say *parāti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പരാതി (parāti) mean? (\"A complaint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C365-kurravali",
+      "sequence": 17830,
+      "title": "കുറ്റവാളി (kuṟṟavāḷi) — a criminal; the culprit",
+      "headword": "കുറ്റവാളി",
+      "romanization": "kuṟṟavāḷi",
+      "gloss": "a criminal; the culprit",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:452fe44d06823758",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to break open, then the Malayalam for a complaint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കുറ്റവാളി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുറ്റവാളി — kuṟṟavāḷi — \"a criminal; the culprit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പോലീസ് കുറ്റവാളിയെ കണ്ടെത്തി. pōlīsŭ kuṟṟavāḷiye kaṇṭetti. The police found the culprit."
+            },
+            {
+              "kind": "speech",
+              "text": "കുറ്റം, an offence, + -വാളി, one who has it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുറ്റവാളി (kuṟṟavāḷi) is native Dravidian: കുറ്റം (kuṟṟaṁ), \"a fault, an offence\", which DEDR 1851 sets with a root meaning short, lacking, and the ending -വാളി, \"one who has it\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟṟavāḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟṟavāḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟṟavāḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟṟavāḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsŭ kuṟṟavāḷiye kaṇṭetti. — The police found the culprit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsŭ kuṟṟavāḷiye kaṇṭetti.* — The police found the culprit.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to break open, then the Malayalam for a complaint, then say kuṟṟavāḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to break open, then the Malayalam for a complaint, then say *kuṟṟavāḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കുറ്റവാളി (kuṟṟavāḷi) mean? (\"A criminal; the culprit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C365-anvesanam",
+      "sequence": 17840,
+      "title": "അന്വേഷണം (anvēṣaṇaṁ) — an investigation; an inquiry",
+      "headword": "അന്വേഷണം",
+      "romanization": "anvēṣaṇaṁ",
+      "gloss": "an investigation; an inquiry",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a618616d7d40eb6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a complaint, then the Malayalam for a criminal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അന്വേഷണം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അന്വേഷണം — anvēṣaṇaṁ — \"an investigation; an inquiry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പോലീസ് ആ മോഷണത്തെക്കുറിച്ച് അന്വേഷണം തുടങ്ങി. pōlīsŭ ā mōṣaṇattekkuṟiccŭ anvēṣaṇaṁ tuṭaṅṅi. The police started an investigation into the theft."
+            },
+            {
+              "kind": "speech",
+              "text": "An investigation is held: അന്വേഷണം (anvēṣaṇaṁ) നടത്തുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അന്വേഷണം (anvēṣaṇaṁ) is borrowed from Sanskrit anveṣaṇa, \"seeking for, searching, investigating\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anvēṣaṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anvēṣaṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anvēṣaṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anvēṣaṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsŭ ā mōṣaṇattekkuṟiccŭ anvēṣaṇaṁ tuṭaṅṅi. — The police started an investigation into the theft.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsŭ ā mōṣaṇattekkuṟiccŭ anvēṣaṇaṁ tuṭaṅṅi.* — The police started an investigation into the theft.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a complaint, then the Malayalam for a criminal, then say anvēṣaṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a complaint, then the Malayalam for a criminal, then say *anvēṣaṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അന്വേഷണം (anvēṣaṇaṁ) mean? (\"An investigation; an inquiry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C365-arasrru-ceyyuka",
+      "sequence": 17850,
+      "title": "അറസ്റ്റ് ചെയ്യുക (aṟasṟṟŭ ceyyuka) — to arrest",
+      "headword": "അറസ്റ്റ് ചെയ്യുക",
+      "romanization": "aṟasṟṟŭ ceyyuka",
+      "gloss": "to arrest",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f0804d32392abae0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a criminal, then the Malayalam for an investigation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അറസ്റ്റ് ചെയ്യുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അറസ്റ്റ് ചെയ്യുക — aṟasṟṟŭ ceyyuka — \"to arrest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പോലീസ് കള്ളനെ ഇന്നലെ അറസ്റ്റ് ചെയ്തു. pōlīsŭ kaḷḷane innale aṟasṟṟŭ ceytu. The police arrested the thief yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: അറസ്റ്റ് ചെയ്തു, aṟasṟṟŭ ceytu."
+            },
+            {
+              "kind": "speech",
+              "text": "The person arrested takes -എ: അവനെ അറസ്റ്റ് ചെയ്തു. To be arrested is അറസ്റ്റിലാകുക: അവൻ അറസ്റ്റിലായി, he was arrested."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അറസ്റ്റ് ചെയ്യുക (aṟasṟṟŭ ceyyuka) joins arrest, borrowed from English, and ചെയ്യുക, \"to do\", the verb that turns a borrowed noun into a Malayalam verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṟasṟṟŭ ceyyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṟasṟṟŭ ceyyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṟasṟṟŭ ceyyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṟasṟṟŭ ceyyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsŭ kaḷḷane innale aṟasṟṟŭ ceytu. — The police arrested the thief yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsŭ kaḷḷane innale aṟasṟṟŭ ceytu.* — The police arrested the thief yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a criminal, then the Malayalam for an investigation, then say aṟasṟṟŭ ceyyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a criminal, then the Malayalam for an investigation, then say *aṟasṟṟŭ ceyyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അറസ്റ്റ് ചെയ്യുക (aṟasṟṟŭ ceyyuka) mean? (\"To arrest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C365-piticcetukkuka",
+      "sequence": 17860,
+      "title": "പിടിച്ചെടുക്കുക (piṭicceṭukkuka) — to seize; to confiscate",
+      "headword": "പിടിച്ചെടുക്കുക",
+      "romanization": "piṭicceṭukkuka",
+      "gloss": "to seize; to confiscate",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a9e3dd9f721f29a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an investigation, then the Malayalam for to arrest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പിടിച്ചെടുക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പിടിച്ചെടുക്കുക — piṭicceṭukkuka — \"to seize; to confiscate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പോലീസ് കള്ളന്റെ ബൈക്ക് പിടിച്ചെടുത്തു. pōlīsŭ kaḷḷanṟe baikkŭ piṭicceṭuttu. The police seized the thief's motorbike."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പിടിച്ചെടുത്തു, piṭicceṭuttu."
+            },
+            {
+              "kind": "speech",
+              "text": "പിടിച്ച്, having caught, + എടുക്കുക, to take: to take away by authority."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പിടിച്ചെടുക്കുക (piṭicceṭukkuka) is a native Dravidian compound of പിടിക്കുക (piṭikkuka), \"to catch, to seize\" (DEDR 4148), and എടുക്കുക (eṭukkuka), \"to take up\" (DEDR 851)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṭicceṭukkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṭicceṭukkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṭicceṭukkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṭicceṭukkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsŭ kaḷḷanṟe baikkŭ piṭicceṭuttu. — The police seized the thief's motorbike.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsŭ kaḷḷanṟe baikkŭ piṭicceṭuttu.* — The police seized the thief's motorbike.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an investigation, then the Malayalam for to arrest, then say piṭicceṭukkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an investigation, then the Malayalam for to arrest, then say *piṭicceṭukkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പിടിച്ചെടുക്കുക (piṭicceṭukkuka) mean? (\"To seize; to confiscate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

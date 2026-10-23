@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 402,
+  "title": "Bribes and Secrets",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5316af29c9b954dd",
+  "lessons": [
+    {
+      "id": "KA-C402-bhrastacara",
+      "sequence": 20330,
+      "title": "ಭ್ರಷ್ಟಾಚಾರ (bhraṣṭācāra) — corruption",
+      "headword": "ಭ್ರಷ್ಟಾಚಾರ",
+      "romanization": "bhraṣṭācāra",
+      "gloss": "corruption",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00fbc298a41bbe7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to promote, then the Kannada for to invest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಭ್ರಷ್ಟಾಚಾರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಭ್ರಷ್ಟಾಚಾರ — bhraṣṭācāra — \"corruption\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಭ್ರಷ್ಟಾಚಾರದ ವಿರುದ್ಧ ಜನರು ಬೀದಿಗೆ ಇಳಿದರು. bhraṣṭācārada viruddha janaru bīdige iḷidaru. The people took to the streets against corruption."
+            },
+            {
+              "kind": "speech",
+              "text": "ಭ್ರಷ್ಟ (fallen) + ಆಚಾರ (conduct)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಭ್ರಷ್ಟಾಚಾರ (bhraṣṭācāra) is built from Sanskrit bhraṣṭa, \"fallen\" (CDIAL 9655), and ācāra, \"conduct\" (CDIAL 1071): fallen conduct."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhraṣṭācāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhraṣṭācāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhraṣṭācāra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhraṣṭācāra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhraṣṭācārada viruddha janaru bīdige iḷidaru. — The people took to the streets against corruption.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhraṣṭācārada viruddha janaru bīdige iḷidaru.* — The people took to the streets against corruption.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to promote, then the Kannada for to invest, then say bhraṣṭācāra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to promote, then the Kannada for to invest, then say *bhraṣṭācāra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಭ್ರಷ್ಟಾಚಾರ (bhraṣṭācāra) mean? (\"Corruption\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C402-lanca",
+      "sequence": 20340,
+      "title": "ಲಂಚ (lañca) — a bribe",
+      "headword": "ಲಂಚ",
+      "romanization": "lañca",
+      "gloss": "a bribe",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53c93d561109de0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to invest, then the Kannada for corruption."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಲಂಚ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಲಂಚ — lañca — \"a bribe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಅಧಿಕಾರಿ ಲಂಚ ತೆಗೆದುಕೊಂಡು ಸಿಕ್ಕಿಬಿದ್ದನು. ā adhikāri lañca tegedukoṇḍu sikkibiddanu. That official was caught taking a bribe."
+            },
+            {
+              "kind": "speech",
+              "text": "ಲಂಚ (lañca) ಕೊಡು, to bribe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಲಂಚ (lañca) is borrowed from Sanskrit lañcā, \"a present, a bribe\" (CDIAL 10914)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lañca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lañca*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lañca, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lañca*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā adhikāri lañca tegedukoṇḍu sikkibiddanu. — That official was caught taking a bribe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā adhikāri lañca tegedukoṇḍu sikkibiddanu.* — That official was caught taking a bribe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to invest, then the Kannada for corruption, then say lañca again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to invest, then the Kannada for corruption, then say *lañca* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಲಂಚ (lañca) mean? (\"A bribe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C402-paradarsaka",
+      "sequence": 20350,
+      "title": "ಪಾರದರ್ಶಕ (pāradarśaka) — transparent",
+      "headword": "ಪಾರದರ್ಶಕ",
+      "romanization": "pāradarśaka",
+      "gloss": "transparent",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9bab982c50701424",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for corruption, then the Kannada for a bribe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪಾರದರ್ಶಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಾರದರ್ಶಕ — pāradarśaka — \"transparent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆಡಳಿತ ಪಾರದರ್ಶಕವಾಗಿ ಇರಬೇಕು. āḍaḷita pāradarśakavāgi irabēku. Administration should be transparent."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of glass or water: ಪಾರದರ್ಶಕ (pāradarśaka) ಗಾಜು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಾರದರ್ಶಕ (pāradarśaka) is borrowed from Sanskrit pāradarśaka, \"showing the opposite shore\" (Monier-Williams): you see through to the far side."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāradarśaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāradarśaka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāradarśaka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāradarśaka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āḍaḷita pāradarśakavāgi irabēku. — Administration should be transparent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āḍaḷita pāradarśakavāgi irabēku.* — Administration should be transparent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for corruption, then the Kannada for a bribe, then say pāradarśaka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for corruption, then the Kannada for a bribe, then say *pāradarśaka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪಾರದರ್ಶಕ (pāradarśaka) mean? (\"Transparent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C402-maremacu",
+      "sequence": 20360,
+      "title": "ಮರೆಮಾಚು (maremācu) — to conceal",
+      "headword": "ಮರೆಮಾಚು",
+      "romanization": "maremācu",
+      "gloss": "to conceal",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7db1f3d1fe12bd6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a bribe, then the Kannada for transparent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮರೆಮಾಚು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮರೆಮಾಚು — maremācu — \"to conceal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವನು ತನ್ನ ತಪ್ಪನ್ನು ಮರೆಮಾಚಿದನು. avanu tanna tappannu maremācidanu. He concealed his mistake."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಮರೆಮಾಚಿದೆ, maremācide."
+            },
+            {
+              "kind": "speech",
+              "text": "What you hide takes -ಅನ್ನು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮರೆಮಾಚು (maremācu) is native Kannada, a compound whose first part is maṟe, \"concealment, a cover\" (DEDR 4760); the second part, mācu, is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maremācu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maremācu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maremācu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maremācu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avanu tanna tappannu maremācidanu. — He concealed his mistake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avanu tanna tappannu maremācidanu.* — He concealed his mistake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a bribe, then the Kannada for transparent, then say maremācu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a bribe, then the Kannada for transparent, then say *maremācu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮರೆಮಾಚು (maremācu) mean? (\"To conceal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C402-sipharasu-madu",
+      "sequence": 20370,
+      "title": "ಶಿಫಾರಸು ಮಾಡು (śiphārasu māḍu) — to recommend",
+      "headword": "ಶಿಫಾರಸು ಮಾಡು",
+      "romanization": "śiphārasu māḍu",
+      "gloss": "to recommend",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91af3e68cdc7542c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for transparent, then the Kannada for to conceal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಶಿಫಾರಸು ಮಾಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶಿಫಾರಸು ಮಾಡು — śiphārasu māḍu — \"to recommend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮ್ಯಾನೇಜರ್ ಲಂಚ ಪಡೆದು ಅವನನ್ನು ಕೆಲಸಕ್ಕೆ ಶಿಫಾರಸು ಮಾಡಿದನು. myānējar lañca paḍedu avanannu kelasakke śiphārasu māḍidanu. The manager took a bribe and recommended him for the job."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಶಿಫಾರಸು ಮಾಡಿದೆ, śiphārasu māḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "For what: -ಗೆ. ಶಿಫಾರಸು alone is a recommendation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶಿಫಾರಸು ಮಾಡು (śiphārasu māḍu) is built from śiphārasu, a loan from Hindustani sifāriś, \"a recommendation\", which comes from Persian, with māḍu, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śiphārasu māḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śiphārasu māḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śiphārasu māḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śiphārasu māḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "myānējar lañca paḍedu avanannu kelasakke śiphārasu māḍidanu. — The manager took a bribe and recommended him for the job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *myānējar lañca paḍedu avanannu kelasakke śiphārasu māḍidanu.* — The manager took a bribe and recommended him for the job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for transparent, then the Kannada for to conceal, then say śiphārasu māḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for transparent, then the Kannada for to conceal, then say *śiphārasu māḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಶಿಫಾರಸು ಮಾಡು (śiphārasu māḍu) mean? (\"To recommend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

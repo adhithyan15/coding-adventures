@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 434,
+  "title": "Campus Life",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c24314cc40171c3a",
+  "lessons": [
+    {
+      "id": "ML-C434-pathyapaddhati",
+      "sequence": 21480,
+      "title": "പാഠ്യപദ്ധതി (pāṭhyapaddhati) — a curriculum",
+      "headword": "പാഠ്യപദ്ധതി",
+      "romanization": "pāṭhyapaddhati",
+      "gloss": "a curriculum",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0a241aab3cbd4d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a semester, then the Malayalam for a syllabus."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പാഠ്യപദ്ധതി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പാഠ്യപദ്ധതി — pāṭhyapaddhati — \"a curriculum\"."
+            },
+            {
+              "kind": "speech",
+              "text": "സർക്കാർ പുതിയ പാഠ്യപദ്ധതി കൊണ്ടുവന്നു. sarkkār putiya pāṭhyapaddhati koṇṭuvannu. The government brought in a new curriculum."
+            },
+            {
+              "kind": "speech",
+              "text": "പദ്ധതി alone is a plan or a scheme."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പാഠ്യപദ്ധതി (pāṭhyapaddhati) is a Malayalam compound built from Sanskrit pāṭhya, \"to be recited, to be taught\" (Monier-Williams), and paddhati, \"a way, a path\" (Monier-Williams): the path of what is taught."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhyapaddhati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhyapaddhati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhyapaddhati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhyapaddhati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarkkār putiya pāṭhyapaddhati koṇṭuvannu. — The government brought in a new curriculum.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarkkār putiya pāṭhyapaddhati koṇṭuvannu.* — The government brought in a new curriculum.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a semester, then the Malayalam for a syllabus, then say pāṭhyapaddhati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a semester, then the Malayalam for a syllabus, then say *pāṭhyapaddhati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പാഠ്യപദ്ധതി (pāṭhyapaddhati) mean? (\"A curriculum\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C434-hajar",
+      "sequence": 21490,
+      "title": "ഹാജർ (hājar) — attendance",
+      "headword": "ഹാജർ",
+      "romanization": "hājar",
+      "gloss": "attendance",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f02f72d47457b195",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a syllabus, then the Malayalam for a curriculum."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഹാജർ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഹാജർ — hājar — \"attendance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ക്ലാസിൽ ഇന്ന് ഹാജർ കുറവായിരുന്നു. klāsil innŭ hājar kuṟavāyirunnu. Attendance in class was low today."
+            },
+            {
+              "kind": "speech",
+              "text": "ഹാജരാകുക, to be present, is built on it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഹാജർ (hājar) came from Arabic ḥāḍir, \"present\", and was borrowed from Hindustani hāzir; it is the noun inside ഹാജരാകുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hājar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hājar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hājar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hājar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "klāsil innŭ hājar kuṟavāyirunnu. — Attendance in class was low today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *klāsil innŭ hājar kuṟavāyirunnu.* — Attendance in class was low today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a syllabus, then the Malayalam for a curriculum, then say hājar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a syllabus, then the Malayalam for a curriculum, then say *hājar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഹാജർ (hājar) mean? (\"Attendance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C434-hosrral",
+      "sequence": 21500,
+      "title": "ഹോസ്റ്റൽ (hōsṟṟal) — a hostel",
+      "headword": "ഹോസ്റ്റൽ",
+      "romanization": "hōsṟṟal",
+      "gloss": "a hostel",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5b515d031cee2dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a curriculum, then the Malayalam for attendance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഹോസ്റ്റൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഹോസ്റ്റൽ — hōsṟṟal — \"a hostel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൾ കോളേജ് ഹോസ്റ്റലിൽ താമസിക്കുന്നു. avaḷ kōḷējŭ hōsṟṟalil tāmasikkunnu. She stays in the college hostel."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ഹോസ്റ്റലുകൾ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഹോസ്റ്റൽ (hōsṟṟal) was borrowed from English hostel."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōsṟṟal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōsṟṟal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōsṟṟal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōsṟṟal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ kōḷējŭ hōsṟṟalil tāmasikkunnu. — She stays in the college hostel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ kōḷējŭ hōsṟṟalil tāmasikkunnu.* — She stays in the college hostel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a curriculum, then the Malayalam for attendance, then say hōsṟṟal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a curriculum, then the Malayalam for attendance, then say *hōsṟṟal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഹോസ്റ്റൽ (hōsṟṟal) mean? (\"A hostel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C434-skolarsippu",
+      "sequence": 21510,
+      "title": "സ്കോളർഷിപ്പ് (skōḷarṣippŭ) — a scholarship",
+      "headword": "സ്കോളർഷിപ്പ്",
+      "romanization": "skōḷarṣippŭ",
+      "gloss": "a scholarship",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ed01a5f4a9e7417",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for attendance, then the Malayalam for a hostel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സ്കോളർഷിപ്പ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സ്കോളർഷിപ്പ് — skōḷarṣippŭ — \"a scholarship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നല്ല മാർക്ക് കിട്ടിയതിനാൽ അവന് സ്കോളർഷിപ്പ് കിട്ടി. nalla mārkkŭ kiṭṭiyatināl avanŭ skōḷarṣippŭ kiṭṭi. Because he got good marks, he got a scholarship."
+            },
+            {
+              "kind": "speech",
+              "text": "A scholarship is കിട്ടുക, received."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സ്കോളർഷിപ്പ് (skōḷarṣippŭ) was borrowed from English scholarship."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "skōḷarṣippŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *skōḷarṣippŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "skōḷarṣippŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *skōḷarṣippŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nalla mārkkŭ kiṭṭiyatināl avanŭ skōḷarṣippŭ kiṭṭi. — Because he got good marks, he got a scholarship.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nalla mārkkŭ kiṭṭiyatināl avanŭ skōḷarṣippŭ kiṭṭi.* — Because he got good marks, he got a scholarship.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for attendance, then the Malayalam for a hostel, then say skōḷarṣippŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for attendance, then the Malayalam for a hostel, then say *skōḷarṣippŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സ്കോളർഷിപ്പ് (skōḷarṣippŭ) mean? (\"A scholarship\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C434-pasakuka",
+      "sequence": 21520,
+      "title": "പാസാകുക (pāsākuka) — to pass an exam",
+      "headword": "പാസാകുക",
+      "romanization": "pāsākuka",
+      "gloss": "to pass an exam",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbc40dcf5588369c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a hostel, then the Malayalam for a scholarship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പാസാകുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പാസാകുക — pāsākuka — \"to pass an exam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൾ എല്ലാ വിഷയങ്ങളിലും പാസായി. avaḷ ellā viṣayaṅṅaḷiluṁ pāsāyi. She passed in all subjects."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പാസായി, pāsāyi."
+            },
+            {
+              "kind": "speech",
+              "text": "Its past is പാസായി; the causative പാസാക്കുക was taught a few chapters earlier."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പാസാകുക (pāsākuka) is a Malayalam compound: the first part was borrowed from English pass, and ആകുക, \"to become\", is native Dravidian (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāsākuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāsākuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāsākuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāsākuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ ellā viṣayaṅṅaḷiluṁ pāsāyi. — She passed in all subjects.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ ellā viṣayaṅṅaḷiluṁ pāsāyi.* — She passed in all subjects.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a hostel, then the Malayalam for a scholarship, then say pāsākuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a hostel, then the Malayalam for a scholarship, then say *pāsākuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പാസാകുക (pāsākuka) mean? (\"To pass an exam\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

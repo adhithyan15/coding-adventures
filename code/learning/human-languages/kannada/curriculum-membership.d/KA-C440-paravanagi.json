@@ -1,0 +1,11 @@
+{
+  "id": "KA-C440-paravanagi",
+  "pathSegment": "KA-PATH-440-PARAVANAGI440",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-440-PARAVANAGI440",
+      "order": 0
+    }
+  ]
+}

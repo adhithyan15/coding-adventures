@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "Writing Lives",
+  "label": "ch:ka-writing-lives",
+  "canDo": "I can say a diary, an autobiography, a biography, a preface and the gist.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C364-tirulu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can say a diary, an autobiography, a biography, a preface and the gist.",
+    "assesses": [
+      "KA-LEX-C364-DINACHARI364-03",
+      "KA-LEX-C364-DINACHARI364-04",
+      "KA-LEX-C364-DINACHARI364-05"
+    ]
+  }
+}

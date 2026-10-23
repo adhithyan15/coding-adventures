@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C563-ramgam",
+    "language": "malayalam",
+    "chapter": 563,
+    "sequence": 28360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb311c8d517e5ca4"
+  },
+  "findings": []
+}

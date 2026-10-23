@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-527-POSHANE527",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-527-POSHANE527"
+  ],
+  "after": []
+}

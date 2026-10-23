@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 474,
+  "title": "Missing the Train",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:720356cf0165f566",
+  "lessons": [
+    {
+      "id": "ML-C474-nastamakuka",
+      "sequence": 23660,
+      "title": "നഷ്ടമാകുക (naṣṭamākuka) — to miss; to be lost",
+      "headword": "നഷ്ടമാകുക",
+      "romanization": "naṣṭamākuka",
+      "gloss": "to miss; to be lost",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:617a17b79f79f307",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to shove, then the Malayalam for to rush up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നഷ്ടമാകുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നഷ്ടമാകുക — naṣṭamākuka — \"to miss; to be lost\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അഞ്ച് മിനിറ്റ് വൈകിയതുകൊണ്ട് എനിക്ക് ബസ് നഷ്ടമായി. añcŭ miniṟṟŭ vaikiyatukoṇṭŭ enikkŭ basŭ naṣṭamāyi. Because I was five minutes late, I missed the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: നഷ്ടമായി, naṣṭamāyi."
+            },
+            {
+              "kind": "speech",
+              "text": "The one who misses takes -ക്ക്: എനിക്ക് തീവണ്ടി നഷ്ടമായി, I missed the train. A chance can be lost the same way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നഷ്ടമാകുക (naṣṭamākuka) is a Malayalam verb built from നഷ്ടം, a loss, borrowed from Sanskrit naṣṭa, \"lost, perished\" (CDIAL 7027), and ആകുക, to become."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṣṭamākuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṣṭamākuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṣṭamākuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṣṭamākuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "añcŭ miniṟṟŭ vaikiyatukoṇṭŭ enikkŭ basŭ naṣṭamāyi. — Because I was five minutes late, I missed the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *añcŭ miniṟṟŭ vaikiyatukoṇṭŭ enikkŭ basŭ naṣṭamāyi.* — Because I was five minutes late, I missed the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to shove, then the Malayalam for to rush up, then say naṣṭamākuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to shove, then the Malayalam for to rush up, then say *naṣṭamākuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നഷ്ടമാകുക (naṣṭamākuka) mean? (\"To miss; to be lost\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C474-reyilppalam",
+      "sequence": 23670,
+      "title": "റെയിൽപ്പാളം (ṟeyilppāḷaṁ) — a railway track",
+      "headword": "റെയിൽപ്പാളം",
+      "romanization": "ṟeyilppāḷaṁ",
+      "gloss": "a railway track",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ffb798b7890fa91c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to rush up, then the Malayalam for to miss."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: റെയിൽപ്പാളം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "റെയിൽപ്പാളം — ṟeyilppāḷaṁ — \"a railway track\"."
+            },
+            {
+              "kind": "speech",
+              "text": "റെയിൽപ്പാളം മുറിച്ചുകടക്കുന്നത് അപകടകരമാണ്. ṟeyilppāḷaṁ muṟiccukaṭakkunnatŭ apakaṭakaramāṇŭ. Crossing the railway track is dangerous."
+            },
+            {
+              "kind": "speech",
+              "text": "In speech പാളം alone often means the whole railway track."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "റെയിൽപ്പാളം (ṟeyilppāḷaṁ) is a Malayalam compound built from റെയിൽ, which was borrowed from English rail, and the native word പാളം, a cast metal bar (DEDR 4114)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṟeyilppāḷaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṟeyilppāḷaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṟeyilppāḷaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṟeyilppāḷaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṟeyilppāḷaṁ muṟiccukaṭakkunnatŭ apakaṭakaramāṇŭ. — Crossing the railway track is dangerous.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṟeyilppāḷaṁ muṟiccukaṭakkunnatŭ apakaṭakaramāṇŭ.* — Crossing the railway track is dangerous.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to rush up, then the Malayalam for to miss, then say ṟeyilppāḷaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to rush up, then the Malayalam for to miss, then say *ṟeyilppāḷaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does റെയിൽപ്പാളം (ṟeyilppāḷaṁ) mean? (\"A railway track\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C474-catiyirannuka",
+      "sequence": 23680,
+      "title": "ചാടിയിറങ്ങുക (cāṭiyiṟaṅṅuka) — to jump off",
+      "headword": "ചാടിയിറങ്ങുക",
+      "romanization": "cāṭiyiṟaṅṅuka",
+      "gloss": "to jump off",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c96adaf4425b190",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to miss, then the Malayalam for a railway track."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചാടിയിറങ്ങുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചാടിയിറങ്ങുക — cāṭiyiṟaṅṅuka — \"to jump off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ബസ് നിൽക്കുന്നതിന് മുൻപ് ഒരു കുട്ടി ചാടിയിറങ്ങി. basŭ nilkkunnatinŭ munpŭ oru kuṭṭi cāṭiyiṟaṅṅi. A child jumped off before the bus stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ചാടിയിറങ്ങി, cāṭiyiṟaṅṅi."
+            },
+            {
+              "kind": "speech",
+              "text": "ചാടി, having jumped, plus ഇറങ്ങുക, to get down."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചാടിയിറങ്ങുക (cāṭiyiṟaṅṅuka) is a native Dravidian compound of ചാടുക, to leap (DEDR 2440), and ഇറങ്ങുക, to get down (DEDR 516)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāṭiyiṟaṅṅuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāṭiyiṟaṅṅuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāṭiyiṟaṅṅuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāṭiyiṟaṅṅuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "basŭ nilkkunnatinŭ munpŭ oru kuṭṭi cāṭiyiṟaṅṅi. — A child jumped off before the bus stopped.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *basŭ nilkkunnatinŭ munpŭ oru kuṭṭi cāṭiyiṟaṅṅi.* — A child jumped off before the bus stopped.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to miss, then the Malayalam for a railway track, then say cāṭiyiṟaṅṅuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to miss, then the Malayalam for a railway track, then say *cāṭiyiṟaṅṅuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചാടിയിറങ്ങുക (cāṭiyiṟaṅṅuka) mean? (\"To jump off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C474-tunninilkkuka",
+      "sequence": 23690,
+      "title": "തൂങ്ങിനിൽക്കുക (tūṅṅinilkkuka) — to hang on; to cling",
+      "headword": "തൂങ്ങിനിൽക്കുക",
+      "romanization": "tūṅṅinilkkuka",
+      "gloss": "to hang on; to cling",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50fd7ea421e37826",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a railway track, then the Malayalam for to jump off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തൂങ്ങിനിൽക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തൂങ്ങിനിൽക്കുക — tūṅṅinilkkuka — \"to hang on; to cling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തിരക്കുള്ള ബസിൽ ചില യാത്രക്കാർ വാതിലിൽ തൂങ്ങിനിന്നു. tirakkuḷḷa basil cila yātrakkār vātilil tūṅṅininnu. On the crowded bus some passengers hung on at the door."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: തൂങ്ങിനിന്നു, tūṅṅininnu."
+            },
+            {
+              "kind": "speech",
+              "text": "തൂങ്ങി, hanging, plus നിൽക്കുക, to stay so: to keep hanging on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തൂങ്ങിനിൽക്കുക (tūṅṅinilkkuka) is a native Dravidian compound of തൂങ്ങുക, to hang (DEDR 3376), and നിൽക്കുക, to stand (DEDR 3675)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūṅṅinilkkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūṅṅinilkkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūṅṅinilkkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūṅṅinilkkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tirakkuḷḷa basil cila yātrakkār vātilil tūṅṅininnu. — On the crowded bus some passengers hung on at the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tirakkuḷḷa basil cila yātrakkār vātilil tūṅṅininnu.* — On the crowded bus some passengers hung on at the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a railway track, then the Malayalam for to jump off, then say tūṅṅinilkkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a railway track, then the Malayalam for to jump off, then say *tūṅṅinilkkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തൂങ്ങിനിൽക്കുക (tūṅṅinilkkuka) mean? (\"To hang on; to cling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C474-payuka",
+      "sequence": 23700,
+      "title": "പായുക (pāyuka) — to speed along; to rush",
+      "headword": "പായുക",
+      "romanization": "pāyuka",
+      "gloss": "to speed along; to rush",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07db135cf0dc0381",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to jump off, then the Malayalam for to hang on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പായുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പായുക — pāyuka — \"to speed along; to rush\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആംബുലൻസ് ആശുപത്രിയിലേക്ക് പാഞ്ഞു. āmbulansŭ āśupatriyilēkkŭ pāññu. The ambulance sped to the hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പാഞ്ഞു, pāññu."
+            },
+            {
+              "kind": "speech",
+              "text": "The past is പാഞ്ഞു: a verb in -ആയുക makes its past in -ആഞ്ഞു."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പായുക (pāyuka) is native Dravidian, \"to leap, to rush out\" (DEDR 4087)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmbulansŭ āśupatriyilēkkŭ pāññu. — The ambulance sped to the hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmbulansŭ āśupatriyilēkkŭ pāññu.* — The ambulance sped to the hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to jump off, then the Malayalam for to hang on, then say pāyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to jump off, then the Malayalam for to hang on, then say *pāyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പായുക (pāyuka) mean? (\"To speed along; to rush\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

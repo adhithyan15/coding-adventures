@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C439-sunka",
+    "language": "kannada",
+    "chapter": 439,
+    "sequence": 22320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8259b1a37c2dc863"
+  },
+  "findings": []
+}

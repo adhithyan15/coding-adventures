@@ -1,0 +1,11 @@
+{
+  "id": "TE-C344-antyakriyalu",
+  "pathSegment": "TE-PATH-344-SANTAPAM344",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-344-SANTAPAM344",
+      "order": 4
+    }
+  ]
+}

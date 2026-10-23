@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:8394a3ab20919eba",
+  "lessonIds": [
+    "TE-C478-alpapidanam",
+    "TE-C478-penugali",
+    "TE-C478-sudigali",
+    "TE-C478-galivana",
+    "TE-C478-balahinapadu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch478.txt",
+  "json": "telugu/narration/ch478.json",
+  "textHash": "fnv1a64:56ef758954f7c8db",
+  "jsonHash": "fnv1a64:1028ba6ec6f08d2c",
+  "findings": []
+}

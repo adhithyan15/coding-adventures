@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R365-review-358-365",
+    "language": "telugu",
+    "chapter": 365,
+    "sequence": 18040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3138bd7122f26a75"
+  },
+  "findings": []
+}

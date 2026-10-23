@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "Islands and the Deep Sea",
+  "label": "ch:te-islands-and-the-deep-sea",
+  "canDo": "I can say an isle, a whale, coral, a tidal surge and to roar.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C473-garjincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can say an isle, a whale, coral, a tidal surge and to roar.",
+    "assesses": [
+      "TE-LEX-C473-DVIPAM473-03",
+      "TE-LEX-C473-DVIPAM473-04",
+      "TE-LEX-C473-DVIPAM473-05"
+    ]
+  }
+}

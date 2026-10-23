@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C380-mrtadeham",
+    "language": "telugu",
+    "chapter": 380,
+    "sequence": 18790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a025355c945332d6"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:f12f1dd4238aba84",
+  "lessonIds": [
+    "TE-C328-toluta",
+    "TE-C328-anantaram",
+    "TE-C328-ettakelaku",
+    "TE-C328-marusati-roju",
+    "TE-C328-gurtucesuko"
+  ],
+  "tex": "telugu/book/chapters/ch328-first-then-at-last.tex"
+}

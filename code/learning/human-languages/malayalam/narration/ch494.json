@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 494,
+  "title": "Checking the Bill",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ad90e38eca03973b",
+  "lessons": [
+    {
+      "id": "ML-C494-tiriccetukkuka",
+      "sequence": 24690,
+      "title": "തിരിച്ചെടുക്കുക (tiricceṭukkuka) — to take back",
+      "headword": "തിരിച്ചെടുക്കുക",
+      "romanization": "tiricceṭukkuka",
+      "gloss": "to take back",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48996d24c3a74aef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to test, then the Malayalam for to swap for another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തിരിച്ചെടുക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തിരിച്ചെടുക്കുക — tiricceṭukkuka — \"to take back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കേടായ സാധനം കട തിരിച്ചെടുത്തു. kēṭāya sādhanaṁ kaṭa tiricceṭuttu. The shop took back the faulty item."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: തിരിച്ചെടുത്തു, tiricceṭuttu."
+            },
+            {
+              "kind": "speech",
+              "text": "തിരിച്ച്, back, plus എടുക്കുക, to take."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തിരിച്ചെടുക്കുക (tiricceṭukkuka) is a native Dravidian compound of തിരിച്ച്, back (DEDR 3246), and എടുക്കുക, to take (DEDR 851)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiricceṭukkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiricceṭukkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiricceṭukkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiricceṭukkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēṭāya sādhanaṁ kaṭa tiricceṭuttu. — The shop took back the faulty item.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēṭāya sādhanaṁ kaṭa tiricceṭuttu.* — The shop took back the faulty item.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to test, then the Malayalam for to swap for another, then say tiricceṭukkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to test, then the Malayalam for to swap for another, then say *tiricceṭukkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തിരിച്ചെടുക്കുക (tiricceṭukkuka) mean? (\"To take back\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C494-celavu",
+      "sequence": 24700,
+      "title": "ചെലവ് (celavŭ) — an expense; a cost",
+      "headword": "ചെലവ്",
+      "romanization": "celavŭ",
+      "gloss": "an expense; a cost",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee1bc608fc3a7b0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to swap for another, then the Malayalam for to take back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചെലവ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചെലവ് — celavŭ — \"an expense; a cost\"."
+            },
+            {
+              "kind": "speech",
+              "text": "യാത്രയുടെ ചെലവ് ഞങ്ങൾ പങ്കുവച്ചു. yātrayuṭe celavŭ ñaṅṅaḷ paṅkuvaccu. We shared the cost of the trip."
+            },
+            {
+              "kind": "speech",
+              "text": "You met the verb ചെലവഴിക്കുക, to spend: literally to let the cost go."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചെലവ് (celavŭ) is native Dravidian, from the root ചെൽ, to go or pass: money that goes out (DEDR 2781)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "celavŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *celavŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "celavŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *celavŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātrayuṭe celavŭ ñaṅṅaḷ paṅkuvaccu. — We shared the cost of the trip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātrayuṭe celavŭ ñaṅṅaḷ paṅkuvaccu.* — We shared the cost of the trip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to swap for another, then the Malayalam for to take back, then say celavŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to swap for another, then the Malayalam for to take back, then say *celavŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചെലവ് (celavŭ) mean? (\"An expense; a cost\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C494-ottunokkuka",
+      "sequence": 24710,
+      "title": "ഒത്തുനോക്കുക (ottunōkkuka) — to tally; to check against",
+      "headword": "ഒത്തുനോക്കുക",
+      "romanization": "ottunōkkuka",
+      "gloss": "to tally; to check against",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10152220585c8775",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to take back, then the Malayalam for an expense."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഒത്തുനോക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒത്തുനോക്കുക — ottunōkkuka — \"to tally; to check against\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ ബിൽ സാധനങ്ങളുമായി ഒത്തുനോക്കി. ñān bil sādhanaṅṅaḷumāyi ottunōkki. I checked the bill against the goods."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഒത്തുനോക്കി, ottunōkki."
+            },
+            {
+              "kind": "speech",
+              "text": "ഒത്ത്, matching, plus നോക്കുക, to look. What you compare with takes -ഉമായി."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒത്തുനോക്കുക (ottunōkkuka) is a native Dravidian compound of ഒത്ത്, agreeing or matching (DEDR 924), and നോക്കുക, to look (DEDR 3794)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ottunōkkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ottunōkkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ottunōkkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ottunōkkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñān bil sādhanaṅṅaḷumāyi ottunōkki. — I checked the bill against the goods.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñān bil sādhanaṅṅaḷumāyi ottunōkki.* — I checked the bill against the goods.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to take back, then the Malayalam for an expense, then say ottunōkkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to take back, then the Malayalam for an expense, then say *ottunōkkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഒത്തുനോക്കുക (ottunōkkuka) mean? (\"To tally; to check against\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C494-enninokkuka",
+      "sequence": 24720,
+      "title": "എണ്ണിനോക്കുക (eṇṇinōkkuka) — to count and check",
+      "headword": "എണ്ണിനോക്കുക",
+      "romanization": "eṇṇinōkkuka",
+      "gloss": "to count and check",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e09557723dcb2614",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an expense, then the Malayalam for to tally."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: എണ്ണിനോക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എണ്ണിനോക്കുക — eṇṇinōkkuka — \"to count and check\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കടക്കാരൻ തന്ന ബാക്കി ഞാൻ എണ്ണിനോക്കി. kaṭakkāran tanna bākki ñān eṇṇinōkki. I counted the change the shopkeeper gave me."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: എണ്ണിനോക്കി, eṇṇinōkki."
+            },
+            {
+              "kind": "speech",
+              "text": "എണ്ണി, having counted, plus നോക്കുക: to count to make sure."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എണ്ണിനോക്കുക (eṇṇinōkkuka) is a native Dravidian compound of എണ്ണുക, to count (DEDR 793), and നോക്കുക, to look (DEDR 3794)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṇṇinōkkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṇṇinōkkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṇṇinōkkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṇṇinōkkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭakkāran tanna bākki ñān eṇṇinōkki. — I counted the change the shopkeeper gave me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭakkāran tanna bākki ñān eṇṇinōkki.* — I counted the change the shopkeeper gave me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an expense, then the Malayalam for to tally, then say eṇṇinōkkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an expense, then the Malayalam for to tally, then say *eṇṇinōkkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does എണ്ണിനോക്കുക (eṇṇinōkkuka) mean? (\"To count and check\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C494-virralikkuka",
+      "sequence": 24730,
+      "title": "വിറ്റഴിക്കുക (viṟṟaḻikkuka) — to sell off",
+      "headword": "വിറ്റഴിക്കുക",
+      "romanization": "viṟṟaḻikkuka",
+      "gloss": "to sell off",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2945c8567a6201ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to tally, then the Malayalam for to count and check."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിറ്റഴിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിറ്റഴിക്കുക — viṟṟaḻikkuka — \"to sell off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കടക്കാരൻ പഴയ സാധനങ്ങൾ വില കുറച്ച് വിറ്റഴിച്ചു. kaṭakkāran paḻaya sādhanaṅṅaḷ vila kuṟaccŭ viṟṟaḻiccu. The shopkeeper sold off the old goods cheaply."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വിറ്റഴിച്ചു, viṟṟaḻiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "വിറ്റ്, having sold, plus അഴിക്കുക, to let loose: to sell until nothing is left."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിറ്റഴിക്കുക (viṟṟaḻikkuka) is a native Dravidian compound of വിൽക്കുക, to sell (DEDR 5421), and അഴിക്കുക, to loosen or spend (DEDR 277)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viṟṟaḻikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viṟṟaḻikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viṟṟaḻikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viṟṟaḻikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭakkāran paḻaya sādhanaṅṅaḷ vila kuṟaccŭ viṟṟaḻiccu. — The shopkeeper sold off the old goods cheaply.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭakkāran paḻaya sādhanaṅṅaḷ vila kuṟaccŭ viṟṟaḻiccu.* — The shopkeeper sold off the old goods cheaply.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to tally, then the Malayalam for to count and check, then say viṟṟaḻikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to tally, then the Malayalam for to count and check, then say *viṟṟaḻikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിറ്റഴിക്കുക (viṟṟaḻikkuka) mean? (\"To sell off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

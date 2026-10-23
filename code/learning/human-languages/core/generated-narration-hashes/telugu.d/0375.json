@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:4ed57fde78dfb292",
+  "lessonIds": [
+    "TE-C375-patrikeyudu",
+    "TE-C375-mudrana",
+    "TE-C375-sancalanam",
+    "TE-C375-nivedincu",
+    "TE-C375-spandincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch375.txt",
+  "json": "telugu/narration/ch375.json",
+  "textHash": "fnv1a64:2cba1266f303c7d4",
+  "jsonHash": "fnv1a64:6797bc13e24c6939",
+  "findings": []
+}

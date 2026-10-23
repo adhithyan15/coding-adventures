@@ -3,6 +3,21 @@
 All notable changes to the `conduit` Go package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.1] — 2026-10-23
+
+### Fixed
+
+- **Use-after-free after `Bind`.** `conduit_server_bind` takes ownership of
+  the native app and frees it whether the bind succeeds or fails, but
+  `Application` kept the stale pointer, so a later `Route`/`Before`/`After`/
+  `NotFound`/`OnError`/`Set`/`GetSetting`/`Bind` passed freed memory across
+  the C ABI. `Bind` now clears the pointer, and every method checks a new
+  `live()` guard first: a call on a bound or freed `Application` panics with
+  a clear message instead. The guard runs before any `cgo.Handle` is made, so
+  a refused registration leaks nothing.
+- New test `TestApplicationIsUnusableAfterBind` covers both the successful
+  and the failed bind.
+
 ## [0.1.0] — 2026-06-14
 
 ### Added

@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "Balance and Control",
+  "label": "ch:te-balance-and-control",
+  "canDo": "I can talk about strengthening, weakening, balance and limits.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C430-parimiti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can talk about strengthening, weakening, balance and limits.",
+    "assesses": [
+      "TE-LEX-C430-SAMATULYAM430-03",
+      "TE-LEX-C430-SAMATULYAM430-04",
+      "TE-LEX-C430-SAMATULYAM430-05"
+    ]
+  }
+}

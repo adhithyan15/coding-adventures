@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "The Army Marches",
+  "label": "ch:ka-the-army-marches",
+  "canDo": "I can say an army, a commander, a warrior, to fight and to retreat.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C336-himmettu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can say an army, a commander, a warrior, to fight and to retreat.",
+    "assesses": [
+      "KA-LEX-C336-SAINYA336-03",
+      "KA-LEX-C336-SAINYA336-04",
+      "KA-LEX-C336-SAINYA336-05"
+    ]
+  }
+}

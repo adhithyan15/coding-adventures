@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C469-adalubadalu-madu",
+    "language": "kannada",
+    "chapter": 469,
+    "sequence": 23860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cced1ca5cf4fc30"
+  },
+  "findings": []
+}

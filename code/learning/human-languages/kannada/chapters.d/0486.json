@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Late Rains and Hail",
+  "label": "ch:ka-late-rains-and-hail",
+  "canDo": "I can say the late monsoon, hail, haze, to shroud and snowfall.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C486-himapata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can say the late monsoon, hail, haze, to shroud and snowfall.",
+    "assesses": [
+      "KA-LEX-C486-HINGARU486-03",
+      "KA-LEX-C486-HINGARU486-04",
+      "KA-LEX-C486-HINGARU486-05"
+    ]
+  }
+}

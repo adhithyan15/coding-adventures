@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "On the Highway",
+  "label": "ch:ka-on-the-highway",
+  "canDo": "I can say a highway, a toll, a flyover, a mountain pass and a route.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C442-marga",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can say a highway, a toll, a flyover, a mountain pass and a route.",
+    "assesses": [
+      "KA-LEX-C442-HEDDARI442-03",
+      "KA-LEX-C442-HEDDARI442-04",
+      "KA-LEX-C442-HEDDARI442-05"
+    ]
+  }
+}

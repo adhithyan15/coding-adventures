@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:c58a9c33a85ef7c6",
+  "lessonIds": [
+    "TE-C509-pirikitanam",
+    "TE-C509-amayakudu",
+    "TE-C509-murkhudu",
+    "TE-C509-baddhakam",
+    "TE-C509-husaru",
+    "TE-R509-review-502-509"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch509.txt",
+  "json": "telugu/narration/ch509.json",
+  "textHash": "fnv1a64:894d66f9d4b5b342",
+  "jsonHash": "fnv1a64:9b19c51c05e73515",
+  "findings": []
+}

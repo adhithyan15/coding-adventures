@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C481-karavali",
+    "language": "kannada",
+    "chapter": 481,
+    "sequence": 24460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bbd4d6f22220de1e"
+  },
+  "findings": []
+}

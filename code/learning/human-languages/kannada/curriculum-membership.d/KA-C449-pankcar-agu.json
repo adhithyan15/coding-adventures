@@ -1,0 +1,11 @@
+{
+  "id": "KA-C449-pankcar-agu",
+  "pathSegment": "KA-PATH-449-CAKRA449",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-449-CAKRA449",
+      "order": 3
+    }
+  ]
+}

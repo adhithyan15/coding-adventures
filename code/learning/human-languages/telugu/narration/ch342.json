@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 342,
+  "title": "A Public Meeting",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:15bc85897aee81b8",
+  "lessons": [
+    {
+      "id": "TE-C342-dandora",
+      "sequence": 16820,
+      "title": "దండోరా (daṇḍōrā) — a drum proclamation",
+      "headword": "దండోరా",
+      "romanization": "daṇḍōrā",
+      "gloss": "a drum proclamation",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe92aae52237bd97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a reader, then the Telugu for to certify."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దండోరా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దండోరా — daṇḍōrā — \"a drum proclamation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "గ్రామంలో ఒక దండోరా వినిపించింది. grāmaṁlō oka daṇḍōrā vinipiñcindi. A drum proclamation was heard in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "దండోరా (daṇḍōrā) వేయు, to proclaim with a drum: the old way to spread news through the whole ఊరు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దండోరా (daṇḍōrā) is an old word for news cried with a drum through the streets; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṇḍōrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṇḍōrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṇḍōrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṇḍōrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grāmaṁlō oka daṇḍōrā vinipiñcindi. — A drum proclamation was heard in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grāmaṁlō oka daṇḍōrā vinipiñcindi.* — A drum proclamation was heard in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a reader, then the Telugu for to certify, then say daṇḍōrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a reader, then the Telugu for to certify, then say *daṇḍōrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దండోరా (daṇḍōrā) mean? (\"A drum proclamation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C342-pramukhudu",
+      "sequence": 16830,
+      "title": "ప్రముఖుడు (pramukhuḍu) — a well-known person; a notable",
+      "headword": "ప్రముఖుడు",
+      "romanization": "pramukhuḍu",
+      "gloss": "a well-known person; a notable",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc8e3266d9452130",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to certify, then the Telugu for a drum proclamation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రముఖుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రముఖుడు — pramukhuḍu — \"a well-known person; a notable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ పెళ్ళికి చాలా మంది ప్రముఖులు వచ్చారు. ā peḷḷiki cālā mandi pramukhulu vaccāru. Many well-known people came to that wedding."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ప్రముఖులు, pramukhulu."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రముఖ alone works as an adjective: ప్రముఖ రచయిత, a well-known writer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రముఖుడు (pramukhuḍu) is built on Sanskrit pramukha, \"facing forward; foremost, chief\" (Monier-Williams), with the Telugu ending -uḍu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pramukhuḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pramukhuḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pramukhuḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pramukhuḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā peḷḷiki cālā mandi pramukhulu vaccāru. — Many well-known people came to that wedding.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā peḷḷiki cālā mandi pramukhulu vaccāru.* — Many well-known people came to that wedding.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to certify, then the Telugu for a drum proclamation, then say pramukhuḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to certify, then the Telugu for a drum proclamation, then say *pramukhuḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రముఖుడు (pramukhuḍu) mean? (\"A well-known person; a notable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C342-sabha",
+      "sequence": 16840,
+      "title": "సభ (sabha) — a public meeting; an assembly",
+      "headword": "సభ",
+      "romanization": "sabha",
+      "gloss": "a public meeting; an assembly",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f52cb7544f600f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a drum proclamation, then the Telugu for a well-known person."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సభ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సభ — sabha — \"a public meeting; an assembly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సాయంత్రం గుడి దగ్గర సభ జరిగింది. sāyantraṁ guḍi daggara sabha jarigindi. In the evening a meeting was held near the temple."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: సభలు, sabhalu."
+            },
+            {
+              "kind": "speech",
+              "text": "సభ (sabha) జరిగింది, a meeting took place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సభ (sabha) is borrowed from Sanskrit sabhā, \"an assembly, a hall\" (CDIAL 13167)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāyantraṁ guḍi daggara sabha jarigindi. — In the evening a meeting was held near the temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāyantraṁ guḍi daggara sabha jarigindi.* — In the evening a meeting was held near the temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a drum proclamation, then the Telugu for a well-known person, then say sabha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a drum proclamation, then the Telugu for a well-known person, then say *sabha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సభ (sabha) mean? (\"A public meeting; an assembly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C342-prasangam",
+      "sequence": 16850,
+      "title": "ప్రసంగం (prasaṅgaṁ) — a speech",
+      "headword": "ప్రసంగం",
+      "romanization": "prasaṅgaṁ",
+      "gloss": "a speech",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7aa60597cb253ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a well-known person, then the Telugu for a public meeting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రసంగం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రసంగం — prasaṅgaṁ — \"a speech\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సభలో అతని ప్రసంగం చాలా బాగుంది. sabhalō atani prasaṅgaṁ cālā bāgundi. His speech at the meeting was very good."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ప్రసంగాలు, prasaṅgālu."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రసంగం (prasaṅgaṁ) is borrowed from Sanskrit prasaṅga (Monier-Williams), a word whose first sense is \"attachment, connection\"; in Telugu it means a public talk."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prasaṅgaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prasaṅgaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prasaṅgaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prasaṅgaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabhalō atani prasaṅgaṁ cālā bāgundi. — His speech at the meeting was very good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabhalō atani prasaṅgaṁ cālā bāgundi.* — His speech at the meeting was very good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a well-known person, then the Telugu for a public meeting, then say prasaṅgaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a well-known person, then the Telugu for a public meeting, then say *prasaṅgaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రసంగం (prasaṅgaṁ) mean? (\"A speech\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C342-prasangincu",
+      "sequence": 16860,
+      "title": "ప్రసంగించు (prasaṅgiñcu) — to give a speech",
+      "headword": "ప్రసంగించు",
+      "romanization": "prasaṅgiñcu",
+      "gloss": "to give a speech",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ea8fe9fbf8127ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a public meeting, then the Telugu for a speech."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రసంగించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రసంగించు — prasaṅgiñcu — \"to give a speech\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా మాస్టారు సభలో ప్రసంగించారు. mā māsṭāru sabhalō prasaṅgiñcāru. Our teacher gave a speech at the meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ప్రసంగించాను, prasaṅgiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb of ప్రసంగం (prasaṅgaṁ), made with -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రసంగించు (prasaṅgiñcu) is built on Sanskrit prasaṅga (Monier-Williams), the source of ప్రసంగం (prasaṅgaṁ), a speech, with the Telugu verb ending -iñcu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prasaṅgiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prasaṅgiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prasaṅgiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prasaṅgiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā māsṭāru sabhalō prasaṅgiñcāru. — Our teacher gave a speech at the meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā māsṭāru sabhalō prasaṅgiñcāru.* — Our teacher gave a speech at the meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a public meeting, then the Telugu for a speech, then say prasaṅgiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a public meeting, then the Telugu for a speech, then say *prasaṅgiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రసంగించు (prasaṅgiñcu) mean? (\"To give a speech\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

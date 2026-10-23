@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:ad629991eccba333",
+  "lessonIds": [
+    "TE-C337-arestu-ceyu",
+    "TE-C337-pattubadu",
+    "TE-C337-khaidi",
+    "TE-C337-sankellu",
+    "TE-C337-ninditudu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch337.txt",
+  "json": "telugu/narration/ch337.json",
+  "textHash": "fnv1a64:108e7b7ce7060f3a",
+  "jsonHash": "fnv1a64:a330a5bb4c110d0d",
+  "findings": []
+}

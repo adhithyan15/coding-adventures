@@ -66,7 +66,7 @@ use grammar_tools::token_grammar::{
 
 use crate::token::{
     LexerError, Token, TokenType, string_to_token_type, TOKEN_CONTEXT_KEYWORD,
-    TOKEN_PRECEDED_BY_NEWLINE,
+    TOKEN_PRECEDED_BY_NEWLINE, TOKEN_PRECEDED_BY_SPACE,
 };
 
 // ===========================================================================
@@ -570,7 +570,24 @@ pub struct GrammarLexer<'a> {
     /// never sets this flag — the token *after* a multi-line template is only
     /// "preceded by a newline" if there is an actual line break between them.
     /// Languages with automatic semicolon insertion (JavaScript) rely on this.
+    ///
+    /// F11: a built-in `NEWLINE` token also sets it (for the token after the
+    /// `NEWLINE`), so the answer is the same whether or not the parser keeps
+    /// `NEWLINE` tokens.
     newline_before_next: bool,
+
+    /// Whether *anything* has been consumed without becoming a token since
+    /// the last emitted token: a skip match, built-in whitespace, a built-in
+    /// `NEWLINE`, a suppressed token (F11). Read into the next token's
+    /// [`TOKEN_PRECEDED_BY_SPACE`] flag and then cleared — exactly like
+    /// `newline_before_next`, of which it is a superset.
+    ///
+    /// ```text
+    /// f -1    `-` gets SPACE, `1` gets nothing   → Ruby command argument
+    /// f - 1   `-` and `1` both get SPACE         → subtraction
+    /// f-1     neither gets SPACE                 → subtraction
+    /// ```
+    space_before_next: bool,
 
     /// Per-type bracket nesting depth counters.
     ///
@@ -764,6 +781,7 @@ impl<'a> GrammarLexer<'a> {
             case_insensitive,
             last_emitted_token: None,
             newline_before_next: false,
+            space_before_next: false,
             bracket_depths: BracketDepths::default(),
             template_entry_depths: Vec::new(),
             context_keyword_set,
@@ -785,6 +803,8 @@ impl<'a> GrammarLexer<'a> {
     /// The callback is NOT invoked for:
     /// - Skip pattern matches (they produce no tokens)
     /// - Tokens emitted via `context.emit()` (prevents infinite loops)
+    /// - The built-in NEWLINE token (standard mode). F10 declarative
+    ///   transitions *do* fire on it — `on NEWLINE -> set-mode beg`.
     /// - The EOF token
     pub fn set_on_token(&mut self, callback: Option<OnTokenCallback>) {
         self.on_token = callback;
@@ -981,10 +1001,71 @@ impl<'a> GrammarLexer<'a> {
                 if has_line_terminator {
                     self.newline_before_next = true;
                 }
+                // Any skipped trivia separates the next token from the last.
+                self.space_before_next = true;
                 self.advance_n(char_count);
                 true
             }
             None => false,
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Gap flags (F11): what was consumed between two emitted tokens
+    // -----------------------------------------------------------------------
+    //
+    // Two pending bits ride between tokens. Everything the lexer consumes
+    // without emitting it sets them; the next emitted pattern token takes
+    // them (as `TOKEN_PRECEDED_BY_SPACE` / `TOKEN_PRECEDED_BY_NEWLINE`) and
+    // clears them:
+    //
+    //   consumed as trivia                      space  newline
+    //   --------------------------------------  -----  -------
+    //   skip match without a line terminator      x
+    //   skip match with one (`/* ⏎ */`, `\n`)     x       x
+    //   built-in ' ' / '\t'                       x
+    //   built-in '\r' (a line terminator)         x       x
+    //   built-in NEWLINE token (for the next)     x       x
+    //   suppressed token                          x    if its text has one
+
+    /// Record a character skipped by the built-in whitespace rule (used when
+    /// a grammar has no `skip:` patterns, and always in indentation mode).
+    fn note_builtin_whitespace(&mut self, ch: char) {
+        self.space_before_next = true;
+        if ch == '\r' {
+            self.newline_before_next = true;
+        }
+    }
+
+    /// Record that a built-in `NEWLINE` token (or a newline swallowed inside
+    /// brackets in indentation mode) separates the next token from the last.
+    fn note_builtin_newline(&mut self) {
+        self.space_before_next = true;
+        self.newline_before_next = true;
+    }
+
+    /// Return the pending gap bits as token flags, clearing them.
+    fn take_gap_flags(&mut self) -> u32 {
+        let mut bits = 0;
+        if self.newline_before_next {
+            bits |= TOKEN_PRECEDED_BY_NEWLINE;
+        }
+        if self.space_before_next {
+            bits |= TOKEN_PRECEDED_BY_SPACE;
+        }
+        self.newline_before_next = false;
+        self.space_before_next = false;
+        bits
+    }
+
+    /// A token was matched but suppressed: give its gap back, plus the token
+    /// itself, which is now trivia for whatever is emitted next.
+    fn restore_gap_flags(&mut self, gap_bits: u32, suppressed_text: &str) {
+        self.space_before_next = true;
+        if gap_bits & TOKEN_PRECEDED_BY_NEWLINE != 0
+            || suppressed_text.contains(['\n', '\r', '\u{2028}', '\u{2029}'])
+        {
+            self.newline_before_next = true;
         }
     }
 
@@ -1182,6 +1263,7 @@ impl<'a> GrammarLexer<'a> {
                 // Without skip patterns, use hardcoded behavior: skip
                 // spaces, tabs, carriage returns silently.
                 if ch == ' ' || ch == '\t' || ch == '\r' {
+                    self.note_builtin_whitespace(ch);
                     self.advance();
                     self.finish_range_piece(range_start, LexicalPieceKind::Trivia);
                     continue;
@@ -1189,15 +1271,42 @@ impl<'a> GrammarLexer<'a> {
             }
 
             // --- Newlines ---
+            //
+            // A bare `\n` that survived the skip check above becomes the
+            // engine's built-in NEWLINE token. It is checked *before* any
+            // grammar pattern, so a `.tokens` file cannot intercept it by
+            // declaring its own `NEWLINE = /\n/` — the built-in always wins.
+            //
+            // F10: the built-in NEWLINE is an *emitted* token like any other,
+            // so it participates in the declarative transition table. That is
+            // what lets a grammar say "a new line resets the lexical state":
+            //
+            //     transitions:
+            //       on NEWLINE -> set-mode beg          (Ruby: EXPR_BEG)
+            //       on NEWLINE in str -> pop            (guarded, push/pop)
+            //
+            // Semantics are identical to a declared token: first matching rule
+            // wins, `in MODE` guards apply, and the new mode governs the NEXT
+            // match. Rules only fire when they name `NEWLINE`, and
+            // `apply_transitions` early-returns on an empty table, so grammars
+            // without such a rule are byte-identical to before.
+            //
+            // Deliberately unchanged: NEWLINE is still not handed to the F04
+            // `on_token` callback, does not update `last_emitted_token`
+            // (lookbehind), and does not touch `bracket_depths`. Only the
+            // declarative table sees it.
             if ch == '\n' {
-                tokens.push(Token { cv: None,
+                let newline = Token { cv: None,
                     type_: TokenType::Newline,
                     value: "\\n".to_string(),
                     line: self.line,
                     column: self.column,
                     type_name: None, flags: None,
-                });
+                };
+                self.apply_transitions(&newline);
+                tokens.push(newline);
                 self.advance();
+                self.note_builtin_newline();
                 self.finish_range_piece(range_start, LexicalPieceKind::Token(tokens.len() - 1));
                 continue;
             }
@@ -1300,10 +1409,10 @@ impl<'a> GrammarLexer<'a> {
                 {
                     flag_bits |= TOKEN_CONTEXT_KEYWORD;
                 }
-                if self.newline_before_next {
-                    flag_bits |= TOKEN_PRECEDED_BY_NEWLINE;
-                }
-                self.newline_before_next = false;
+                // - TOKEN_PRECEDED_BY_SPACE (F11): any trivia at all was
+                //   consumed since the previous token. Same read-and-clear.
+                let gap_bits = self.take_gap_flags();
+                flag_bits |= gap_bits;
                 let flags = if flag_bits == 0 { None } else { Some(flag_bits) };
 
                 let token = Token { cv: None,
@@ -1369,6 +1478,19 @@ impl<'a> GrammarLexer<'a> {
                         tokens.push(token);
                     }
 
+                    // F11: if the callback suppressed this token, its gap
+                    // still has to land somewhere. When the callback emits a
+                    // replacement (excel-lexer turns NAME into FUNCTION_NAME
+                    // this way), the first emitted token stands where the
+                    // suppressed one stood, so it inherits the gap. Only when
+                    // nothing replaces it does the suppressed text become
+                    // trivia for the next matched token (below).
+                    let mut unplaced_gap = if main_token_for_trans.is_none() {
+                        Some(gap_bits)
+                    } else {
+                        None
+                    };
+
                     // Process actions in order.
                     for action in ctx.actions {
                         match action {
@@ -1380,7 +1502,13 @@ impl<'a> GrammarLexer<'a> {
                                     self.group_stack.pop();
                                 }
                             }
-                            ContextAction::Emit(emitted_token) => {
+                            ContextAction::Emit(mut emitted_token) => {
+                                if let Some(bits) = unplaced_gap.take() {
+                                    if bits != 0 {
+                                        emitted_token.flags =
+                                            Some(emitted_token.flags.unwrap_or(0) | bits);
+                                    }
+                                }
                                 self.bracket_depths.update(&emitted_token.value);
                                 self.last_emitted_token = Some(emitted_token.clone());
                                 tokens.push(emitted_token);
@@ -1392,6 +1520,13 @@ impl<'a> GrammarLexer<'a> {
                                 self.skip_enabled = enabled;
                             }
                         }
+                    }
+
+                    // F11: a suppressed token that nothing replaced becomes
+                    // trivia for the next matched token — it separates it
+                    // from the previous one — and the gap before it is kept.
+                    if let Some(bits) = unplaced_gap {
+                        self.restore_gap_flags(bits, &matched);
                     }
 
                     // F10: the declarative table is the default; a registered
@@ -1444,6 +1579,7 @@ impl<'a> GrammarLexer<'a> {
         self.group_stack = vec![self.start_mode.clone()];
         self.template_entry_depths.clear();
         self.skip_enabled = true;
+        self.take_gap_flags();
 
         Ok(tokens)
     }
@@ -1489,6 +1625,10 @@ impl<'a> GrammarLexer<'a> {
                         break;
                     }
                 }
+                // F11: indentation is trivia before the line's first token.
+                if spaces > 0 {
+                    self.space_before_next = true;
+                }
 
                 // Check for blank line or comment-only line.
                 let is_blank_or_comment = if self.char_pos >= self.chars.len() {
@@ -1506,6 +1646,9 @@ impl<'a> GrammarLexer<'a> {
                     // Consume the newline if present.
                     if self.char_pos < self.chars.len() {
                         let ch = self.chars[self.char_pos];
+                        if ch == '\n' || ch == '\r' {
+                            self.note_builtin_newline();
+                        }
                         if ch == '\n' {
                             self.advance();
                         } else if ch == '\r' {
@@ -1563,6 +1706,7 @@ impl<'a> GrammarLexer<'a> {
 
             // --- Skip whitespace (not newlines) ---
             if ch == ' ' || ch == '\t' || ch == '\r' {
+                self.note_builtin_whitespace(ch);
                 self.advance();
                 continue;
             }
@@ -1585,6 +1729,9 @@ impl<'a> GrammarLexer<'a> {
                     at_line_start = true;
                 }
                 self.advance();
+                // F11: whether emitted or swallowed inside brackets, the
+                // newline separates the next token from the previous one.
+                self.note_builtin_newline();
                 continue;
             }
 
@@ -1628,13 +1775,15 @@ impl<'a> GrammarLexer<'a> {
                     matched.clone()
                 };
 
+                // F11: the same gap flags as standard mode.
+                let gap_bits = self.take_gap_flags();
                 tokens.push(Token { cv: None,
                     type_: token_type,
                     value: final_value,
                     line: start_line,
                     column: start_col,
                     type_name,
-                    flags: None,
+                    flags: if gap_bits == 0 { None } else { Some(gap_bits) },
                 });
 
                 let char_count = matched.chars().count();
@@ -1682,6 +1831,7 @@ impl<'a> GrammarLexer<'a> {
             column: self.column,
             type_name: None, flags: None,
         });
+        self.take_gap_flags();
 
         Ok(tokens)
     }
@@ -1918,7 +2068,7 @@ impl<'a> GrammarLexer<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use grammar_tools::token_grammar::parse_token_grammar;
+    use grammar_tools::token_grammar::{parse_token_grammar, validate_token_grammar};
 
     // -----------------------------------------------------------------------
     // Helper: build a Python-like grammar for testing
@@ -3352,5 +3502,244 @@ transitions:
         g2.start_mode = Some("div".to_string());
         let toks = GrammarLexer::new("a/b", &g2).tokenize().unwrap();
         assert_eq!(names(&toks), vec!["NAME", "SLASH", "NAME"]);
+    }
+
+    // -----------------------------------------------------------------------
+    // F10: transitions on the engine's built-in NEWLINE token
+    // -----------------------------------------------------------------------
+    //
+    // The built-in NEWLINE is emitted by the engine itself (a bare `\n` that
+    // no skip pattern consumed), not by a grammar pattern. It must still drive
+    // the transition table exactly like a declared token. The motivating case
+    // is Ruby: its lexer state returns to EXPR_BEG at the start of every line,
+    // so `?a` at the start of a line is a character literal even when the
+    // previous line ended in a value (where `?` would be the ternary).
+    //
+    // The miniature below models that with two flat modes:
+    //
+    //   mode      `?a` lexes as        entered by
+    //   ----      -------------        ----------
+    //   beg       CHAR                 start, `;`, NEWLINE
+    //   default   QUESTION NAME        a NAME (a value was just produced)
+
+    fn ruby_like_newline_grammar(extra_rules: &str) -> TokenGrammar {
+        let src = format!(
+            "\
+start_mode: beg
+NAME = /[a-z]+/
+QUESTION = \"?\"
+SEMI = \";\"
+BANG = \"!\"
+group beg:
+  CHAR = /\\?[a-z]/
+group hold:
+  HASH = \"#\"
+transitions:
+{extra_rules}"
+        );
+        let g = parse_token_grammar(&src).unwrap();
+        // The validator must accept `NEWLINE` as a trigger even though no
+        // pattern declares it: it is a built-in emitted token.
+        assert!(
+            validate_token_grammar(&g).is_empty(),
+            "unexpected validation issues: {:?}",
+            validate_token_grammar(&g)
+        );
+        g
+    }
+
+    #[test]
+    fn f10_newline_set_mode_resets_line_start_state() {
+        let g = ruby_like_newline_grammar(
+            "  on NAME -> set-mode default\n  on (SEMI | NEWLINE) -> set-mode beg\n",
+        );
+        // Line 1 ends in a value (`x`), so `?a` after it is QUESTION NAME on
+        // the same line; after the NEWLINE we are back in `beg` and `?a` is
+        // a CHAR. Before the fix, the second `?a` lexed as QUESTION NAME.
+        let toks = GrammarLexer::new("x ?a\n?a", &g).tokenize().unwrap();
+        assert_eq!(
+            names(&toks),
+            vec!["NAME", "QUESTION", "NAME", "NEWLINE", "CHAR"]
+        );
+        // `;` (an ordinary declared token) and NEWLINE behave identically.
+        let toks = GrammarLexer::new("x;?a", &g).tokenize().unwrap();
+        assert_eq!(names(&toks), vec!["NAME", "SEMI", "CHAR"]);
+    }
+
+    #[test]
+    fn f10_newline_in_mode_guard_is_respected() {
+        let g = ruby_like_newline_grammar(
+            "  on NAME -> set-mode default\n  on BANG -> set-mode hold\n  on NEWLINE in default -> set-mode beg\n",
+        );
+        // In `default` the guarded rule fires: next line starts in `beg`.
+        let toks = GrammarLexer::new("x\n?a", &g).tokenize().unwrap();
+        assert_eq!(names(&toks), vec!["NAME", "NEWLINE", "CHAR"]);
+        // In `hold` the guard does not match, so the mode survives the line
+        // break: `?a` is QUESTION NAME (hold inherits default's patterns).
+        let toks = GrammarLexer::new("!\n?a", &g).tokenize().unwrap();
+        assert_eq!(names(&toks), vec!["BANG", "NEWLINE", "QUESTION", "NAME"]);
+    }
+
+    #[test]
+    fn f10_newline_pops_a_pushed_region() {
+        // A line comment as a nested region: `#` pushes `comment`, and the
+        // end of the line pops it. Before the fix the region leaked onto the
+        // next line and `b` lexed as TEXT.
+        let g = parse_token_grammar(
+            "\
+NAME = /[a-z]+/
+HASH = \"#\"
+group comment:
+  TEXT = /[^\\n]+/
+transitions:
+  on HASH -> push comment
+  on NEWLINE in comment -> pop
+",
+        )
+        .unwrap();
+        assert!(validate_token_grammar(&g).is_empty());
+        let toks = GrammarLexer::new("a # hi there\nb", &g).tokenize().unwrap();
+        assert_eq!(names(&toks), vec!["NAME", "HASH", "TEXT", "NEWLINE", "NAME"]);
+        assert_eq!(toks[2].value, "hi there");
+    }
+
+    #[test]
+    fn f10_newline_pushes_a_region() {
+        // NEWLINE can also push: every line after the first starts in an
+        // exclusive `head` region that only accepts a LABEL, which pops back.
+        let g = parse_token_grammar(
+            "\
+NAME = /[a-z]+/
+group head:
+  LABEL = /[a-z]+:/
+transitions:
+  on NEWLINE in default -> push head
+  on LABEL -> pop
+",
+        )
+        .unwrap();
+        let toks = GrammarLexer::new("a\nb: c", &g).tokenize().unwrap();
+        assert_eq!(names(&toks), vec!["NAME", "NEWLINE", "LABEL", "NAME"]);
+        // `head` is exclusive (push target), so a line that does not start
+        // with a label is an error — proof the region really was entered.
+        assert!(GrammarLexer::new("a\nb c", &g).tokenize().is_err());
+    }
+
+    #[test]
+    fn f10_table_without_newline_rule_is_unchanged_across_lines() {
+        // A grammar WITH a transition table but no NEWLINE rule: the mode set
+        // by `a` (div) survives the line break, exactly as before the fix. So
+        // `/b/` on the next line is SLASH NAME SLASH, not a REGEX.
+        let g = parse_token_grammar(
+            "\
+NAME = /[a-z]+/
+REGEX = /\\/[a-z]+\\//
+group div:
+  SLASH = \"/\"
+transitions:
+  on NAME -> set-mode div
+",
+        )
+        .unwrap();
+        let toks = GrammarLexer::new("a\n/b/", &g).tokenize().unwrap();
+        assert_eq!(
+            names(&toks),
+            vec!["NAME", "NEWLINE", "SLASH", "NAME", "SLASH"]
+        );
+    }
+
+    #[test]
+    fn f10_newline_rule_cannot_fire_when_skip_consumes_newlines() {
+        // Lesson `skip-pattern-ordering-affects-newline-emission`: a skip
+        // pattern that eats `\n` means no NEWLINE is ever emitted, so an
+        // `on NEWLINE` rule has nothing to fire on and the mode carries over.
+        let g = parse_token_grammar(
+            "\
+start_mode: beg
+NAME = /[a-z]+/
+QUESTION = \"?\"
+group beg:
+  CHAR = /\\?[a-z]/
+skip:
+  WS = /[ \\t\\n]+/
+transitions:
+  on NAME -> set-mode default
+  on NEWLINE -> set-mode beg
+",
+        )
+        .unwrap();
+        let toks = GrammarLexer::new("x\n?a", &g).tokenize().unwrap();
+        assert_eq!(names(&toks), vec!["NAME", "QUESTION", "NAME"]);
+    }
+
+    #[test]
+    fn f10_newline_emitted_while_skip_disabled_fires_multi_action_rule() {
+        // With skip disabled (by `!`), the newline-eating skip pattern is not
+        // consulted, so the `\n` becomes a built-in NEWLINE — whose rule both
+        // resets the mode AND re-enables skip, in order.
+        let g = parse_token_grammar(
+            "\
+start_mode: beg
+NAME = /[a-z]+/
+QUESTION = \"?\"
+BANG = \"!\"
+group beg:
+  CHAR = /\\?[a-z]/
+skip:
+  WS = /[ \\t\\n]+/
+transitions:
+  on NAME -> set-mode default
+  on BANG -> disable-skip
+  on NEWLINE -> set-mode beg, enable-skip
+",
+        )
+        .unwrap();
+        assert!(validate_token_grammar(&g).is_empty());
+        let toks = GrammarLexer::new("x!\n?a \n ?b", &g).tokenize().unwrap();
+        // After the first NEWLINE, skip is back on: the later ` \n ` is
+        // skipped trivia (no second NEWLINE), and `?b` follows `?a`'s CHAR
+        // in `beg` mode (no NAME switched it to default).
+        assert_eq!(
+            names(&toks),
+            vec!["NAME", "BANG", "NEWLINE", "CHAR", "CHAR"]
+        );
+    }
+
+    #[test]
+    fn f10_newline_transition_runs_alongside_a_callback() {
+        // A registered F04 callback is still not invoked for the built-in
+        // NEWLINE (unchanged), but the declarative table is.
+        use std::cell::RefCell;
+        use std::rc::Rc;
+        let g = ruby_like_newline_grammar(
+            "  on NAME -> set-mode default\n  on NEWLINE -> set-mode beg\n",
+        );
+        let seen: Rc<RefCell<Vec<String>>> = Rc::new(RefCell::new(Vec::new()));
+        let seen_cb = Rc::clone(&seen);
+        let mut lexer = GrammarLexer::new("x\n?a", &g);
+        lexer.set_on_token(Some(Box::new(move |t: &Token, _ctx: &mut LexerContext| {
+            seen_cb
+                .borrow_mut()
+                .push(GrammarLexer::transition_key(t).to_string());
+        })));
+        let toks = lexer.tokenize().unwrap();
+        assert_eq!(names(&toks), vec!["NAME", "NEWLINE", "CHAR"]);
+        assert_eq!(*seen.borrow(), vec!["NAME", "CHAR"]);
+    }
+
+    #[test]
+    fn f10_newline_state_resets_between_tokenize_calls() {
+        // The mode a NEWLINE rule sets must not leak into the next run: the
+        // stack resets to start_mode at EOF, as for any other transition.
+        let g = ruby_like_newline_grammar(
+            // `on SEMI -> set-mode beg` keeps `beg` a flat (inheriting) mode.
+            "  on NAME -> set-mode default\n  on SEMI -> set-mode beg\n  on NEWLINE -> set-mode hold\n",
+        );
+        let mut lexer = GrammarLexer::new("x\n", &g);
+        let toks = lexer.tokenize().unwrap();
+        assert_eq!(names(&toks), vec!["NAME", "NEWLINE"]);
+        // The NEWLINE rule left the lexer in `hold` at EOF; the reset puts the
+        // register back to `beg`, the declared start mode.
+        assert_eq!(lexer.group_stack, vec!["beg".to_string()]);
     }
 }

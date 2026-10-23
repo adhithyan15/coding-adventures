@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Living in the Suburbs",
+  "label": "ch:ka-living-in-the-suburbs",
+  "canDo": "I can say a suburb, to reside, a town council, a streetlight and a drain.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C466-carandi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can say a suburb, to reside, a town council, a streetlight and a drain.",
+    "assesses": [
+      "KA-LEX-C466-UPANAGARA466-03",
+      "KA-LEX-C466-UPANAGARA466-04",
+      "KA-LEX-C466-UPANAGARA466-05"
+    ]
+  }
+}

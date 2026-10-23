@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:097eb18a397dea47",
+  "lessonIds": [
+    "KA-C432-hattikku",
+    "KA-C432-talebagu",
+    "KA-C432-takararu",
+    "KA-C432-adacane",
+    "KA-C432-sukta",
+    "KA-R432-review-426-432",
+    "KA-R432-review-final-432"
+  ],
+  "tex": "kannada/book/chapters/ch432-pressure-and-objections.tex"
+}

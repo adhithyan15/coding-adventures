@@ -1,0 +1,11 @@
+{
+  "id": "ML-C392-adaranjali",
+  "pathSegment": "ML-PATH-392-ANUSOCHANAM392",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-392-ANUSOCHANAM392",
+      "order": 1
+    }
+  ]
+}

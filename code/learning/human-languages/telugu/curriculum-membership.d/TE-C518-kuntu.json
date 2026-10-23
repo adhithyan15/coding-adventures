@@ -1,0 +1,11 @@
+{
+  "id": "TE-C518-kuntu",
+  "pathSegment": "TE-PATH-518-GAYAM518",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-518-GAYAM518",
+      "order": 3
+    }
+  ]
+}

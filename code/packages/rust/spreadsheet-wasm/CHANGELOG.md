@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+**Rebuilt for the lexer's token-adjacency predicates (#17824).** The engine's
+formula lexer depends on the generic `lexer` crate, so that crate's source
+change made `build-wasm.sh --check` report the `.wasm` stale.
+
+**Rebuilt for the lexer's NEWLINE mode transitions (#17822).** The engine's
+formula lexer depends on the generic `lexer` crate, so changing that crate's
+source changed the `.wasm`'s inputs digest and `build-wasm.sh --check` failed.
+`pkg/spreadsheet_engine.wasm`, its `.inputs` stamp and the VisiCalc HTML
+bundle are regenerated; `js/smoke.mjs` and `verify-infinite.mjs` pass.
+
 **The committed `.wasm` is checked against its sources.** `pkg/spreadsheet_engine.wasm`
 had not been rebuilt since 0.14.1 (#7713), so spreadsheet-core fixes such as
 #15541 never reached the VisiCalc web demos that embed it. It is rebuilt now,

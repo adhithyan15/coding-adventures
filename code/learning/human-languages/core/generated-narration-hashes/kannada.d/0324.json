@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:f817193f5e7d5892",
+  "lessonIds": [
+    "KA-C324-agnisamaka",
+    "KA-C324-hottiko",
+    "KA-C324-samayaprajne",
+    "KA-C324-nandisu",
+    "KA-C324-raksisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch324.txt",
+  "json": "kannada/narration/ch324.json",
+  "textHash": "fnv1a64:38f715bc50f19ac9",
+  "jsonHash": "fnv1a64:f443fba86066d23d",
+  "findings": []
+}

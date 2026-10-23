@@ -1,0 +1,11 @@
+{
+  "id": "TE-C447-padacari",
+  "pathSegment": "TE-PATH-447-SIGNALU447",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-447-SIGNALU447",
+      "order": 2
+    }
+  ]
+}

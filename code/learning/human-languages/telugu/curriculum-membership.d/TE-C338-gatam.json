@@ -1,0 +1,11 @@
+{
+  "id": "TE-C338-gatam",
+  "pathSegment": "TE-PATH-338-KRAMANGA338",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-338-KRAMANGA338",
+      "order": 3
+    }
+  ]
+}

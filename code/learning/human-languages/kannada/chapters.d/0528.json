@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Friendship",
+  "label": "ch:ka-friendship",
+  "canDo": "I can say friendship, a bond, companionship, dear and to make up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C528-raji-madiko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can say friendship, a bond, companionship, dear and to make up.",
+    "assesses": [
+      "KA-LEX-C528-SNEHA528-03",
+      "KA-LEX-C528-SNEHA528-04",
+      "KA-LEX-C528-SNEHA528-05"
+    ]
+  }
+}

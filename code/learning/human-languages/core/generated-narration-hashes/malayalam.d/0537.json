@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:a9ae6f18f670b407",
+  "lessonIds": [
+    "ML-C537-talaccoru",
+    "ML-C537-kutal",
+    "ML-C537-kannunir",
+    "ML-C537-kurkkamvalikkuka",
+    "ML-C537-viyarkkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch537.txt",
+  "json": "malayalam/narration/ch537.json",
+  "textHash": "fnv1a64:82105d9b1205d202",
+  "jsonHash": "fnv1a64:99aa3b73e838c5bb",
+  "findings": []
+}

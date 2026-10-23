@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 363,
+  "title": "Rebellion",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a9d2829257a70044",
+  "lessons": [
+    {
+      "id": "TE-C363-tirugubatu",
+      "sequence": 17890,
+      "title": "తిరుగుబాటు (tirugubāṭu) — a rebellion; a revolt",
+      "headword": "తిరుగుబాటు",
+      "romanization": "tirugubāṭu",
+      "gloss": "a rebellion; a revolt",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:016e302cb0044983",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a truce, then the Telugu for an envoy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తిరుగుబాటు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తిరుగుబాటు — tirugubāṭu — \"a rebellion; a revolt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రైతులు రాజు మీద తిరుగుబాటు చేశారు. raitulu rāju mīda tirugubāṭu cēśāru. The farmers rebelled against the king."
+            },
+            {
+              "kind": "speech",
+              "text": "తిరుగుబాటు (tirugubāṭu) చేయు, to rebel; from తిరుగు, to turn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తిరుగుబాటు (tirugubāṭu) is native Dravidian, built on tirugu, \"to turn, turn back\" (DEDR 3246): a turning against."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tirugubāṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tirugubāṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tirugubāṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tirugubāṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raitulu rāju mīda tirugubāṭu cēśāru. — The farmers rebelled against the king.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raitulu rāju mīda tirugubāṭu cēśāru.* — The farmers rebelled against the king.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a truce, then the Telugu for an envoy, then say tirugubāṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a truce, then the Telugu for an envoy, then say *tirugubāṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తిరుగుబాటు (tirugubāṭu) mean? (\"A rebellion; a revolt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C363-tiragabadu",
+      "sequence": 17900,
+      "title": "తిరగబడు (tiragabaḍu) — to rise up; to revolt",
+      "headword": "తిరగబడు",
+      "romanization": "tiragabaḍu",
+      "gloss": "to rise up; to revolt",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12d3450a4fee542a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an envoy, then the Telugu for a rebellion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తిరగబడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తిరగబడు — tiragabaḍu — \"to rise up; to revolt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కష్టాలు భరించలేక రైతులు తిరగబడ్డారు. kaṣṭālu bhariñcalēka raitulu tiragabaḍḍāru. Unable to bear their hardships, the farmers rose up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): తిరగబడ్డాను, tiragabaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Close to తిరుగుబాటు (tirugubāṭu) చేయు; the one opposed takes మీద."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తిరగబడు (tiragabaḍu) is native Dravidian: tirugu, \"to turn\" (DEDR 3246), with the helping verb paḍu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiragabaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiragabaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiragabaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiragabaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṣṭālu bhariñcalēka raitulu tiragabaḍḍāru. — Unable to bear their hardships, the farmers rose up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṣṭālu bhariñcalēka raitulu tiragabaḍḍāru.* — Unable to bear their hardships, the farmers rose up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an envoy, then the Telugu for a rebellion, then say tiragabaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an envoy, then the Telugu for a rebellion, then say *tiragabaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తిరగబడు (tiragabaḍu) mean? (\"To rise up; to revolt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C363-anaciveyu",
+      "sequence": 17910,
+      "title": "అణచివేయు (aṇacivēyu) — to suppress; to crush",
+      "headword": "అణచివేయు",
+      "romanization": "aṇacivēyu",
+      "gloss": "to suppress; to crush",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a85b249f0d7c9041",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a rebellion, then the Telugu for to rise up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అణచివేయు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అణచివేయు — aṇacivēyu — \"to suppress; to crush\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రాజు ఆ తిరుగుబాటును అణచివేశాడు. rāju ā tirugubāṭunu aṇacivēśāḍu. The king crushed that rebellion."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): అణచివేశాను, aṇacivēśānu."
+            },
+            {
+              "kind": "speech",
+              "text": "అణచు, to press down, with వేయు, which makes it final."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అణచివేయు (aṇacivēyu) is native Dravidian: DEDR 112 lists Telugu aṇãcu, \"to suppress, humble, subject\"; here it takes vēyu, \"to throw\", which makes the action complete."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṇacivēyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṇacivēyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṇacivēyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṇacivēyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāju ā tirugubāṭunu aṇacivēśāḍu. — The king crushed that rebellion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāju ā tirugubāṭunu aṇacivēśāḍu.* — The king crushed that rebellion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a rebellion, then the Telugu for to rise up, then say aṇacivēyu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a rebellion, then the Telugu for to rise up, then say *aṇacivēyu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అణచివేయు (aṇacivēyu) mean? (\"To suppress; to crush\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C363-usigolpu",
+      "sequence": 17920,
+      "title": "ఉసిగొల్పు (usigolpu) — to incite; to egg on",
+      "headword": "ఉసిగొల్పు",
+      "romanization": "usigolpu",
+      "gloss": "to incite; to egg on",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:caf4e96927998a36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to rise up, then the Telugu for to suppress."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఉసిగొల్పు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉసిగొల్పు — usigolpu — \"to incite; to egg on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఎవరో ప్రజలను గొడవకు ఉసిగొల్పారు. evarō prajalanu goḍavaku usigolpāru. Someone incited the people to a quarrel."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఉసిగొల్పాను, usigolpānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Whom takes -ను, what to takes -కు: గొడవకు ఉసిగొల్పు (usigolpu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉసిగొల్పు (usigolpu) is a Telugu verb for setting someone on; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "usigolpu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *usigolpu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "usigolpu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *usigolpu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "evarō prajalanu goḍavaku usigolpāru. — Someone incited the people to a quarrel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *evarō prajalanu goḍavaku usigolpāru.* — Someone incited the people to a quarrel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to rise up, then the Telugu for to suppress, then say usigolpu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to rise up, then the Telugu for to suppress, then say *usigolpu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఉసిగొల్పు (usigolpu) mean? (\"To incite; to egg on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C363-svatantryam",
+      "sequence": 17930,
+      "title": "స్వాతంత్ర్యం (svātantryaṁ) — independence; freedom",
+      "headword": "స్వాతంత్ర్యం",
+      "romanization": "svātantryaṁ",
+      "gloss": "independence; freedom",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6155e3a54360ffcd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to suppress, then the Telugu for to incite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: స్వాతంత్ర్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్వాతంత్ర్యం — svātantryaṁ — \"independence; freedom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మన దేశానికి స్వాతంత్ర్యం ఎప్పుడు వచ్చింది? mana dēśāniki svātantryaṁ eppuḍu vaccindi? When did our country gain independence?"
+            },
+            {
+              "kind": "speech",
+              "text": "స్వ, self, and తంత్రం, rule: self-rule."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్వాతంత్ర్యం (svātantryaṁ) is borrowed from Sanskrit svātantrya, \"following one's own will, independence\" (Monier-Williams), from sva-tantra, \"self-ruled\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svātantryaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svātantryaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svātantryaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svātantryaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mana dēśāniki svātantryaṁ eppuḍu vaccindi? — When did our country gain independence?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mana dēśāniki svātantryaṁ eppuḍu vaccindi?* — When did our country gain independence?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to suppress, then the Telugu for to incite, then say svātantryaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to suppress, then the Telugu for to incite, then say *svātantryaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does స్వాతంత్ర్యం (svātantryaṁ) mean? (\"Independence; freedom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

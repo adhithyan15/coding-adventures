@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:aa180b5c9787c6d5",
+  "lessonIds": [
+    "KA-C428-ondomme",
+    "KA-C428-illave",
+    "KA-C428-hegiddaru",
+    "KA-C428-anvaya",
+    "KA-C428-ottare"
+  ],
+  "tex": "kannada/book/chapters/ch428-if-and-otherwise.tex"
+}

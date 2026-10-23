@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:2a6970a4b587bb0b",
+  "lessonIds": [
+    "KA-C384-grahisu",
+    "KA-C384-vyakhyana",
+    "KA-C384-kalpane",
+    "KA-C384-amsa",
+    "KA-C384-laksana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch384.txt",
+  "json": "kannada/narration/ch384.json",
+  "textHash": "fnv1a64:78fff657cba02260",
+  "jsonHash": "fnv1a64:b142b94639f37607",
+  "findings": []
+}

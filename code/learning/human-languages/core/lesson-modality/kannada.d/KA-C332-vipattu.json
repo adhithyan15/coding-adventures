@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C332-vipattu",
+    "language": "kannada",
+    "chapter": 332,
+    "sequence": 16660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4306f3e2a02bd0b0"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C386-akasmika",
+  "pathSegment": "KA-PATH-386-SAMAJAYISHI386",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-386-SAMAJAYISHI386",
+      "order": 2
+    }
+  ]
+}

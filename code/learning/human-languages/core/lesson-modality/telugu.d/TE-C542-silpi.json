@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C542-silpi",
+    "language": "telugu",
+    "chapter": 542,
+    "sequence": 27490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa729a8a20b417c9"
+  },
+  "findings": []
+}

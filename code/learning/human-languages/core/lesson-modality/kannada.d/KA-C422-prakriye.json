@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C422-prakriye",
+    "language": "kannada",
+    "chapter": 422,
+    "sequence": 21400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8baf9e12410a5276"
+  },
+  "findings": []
+}

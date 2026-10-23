@@ -1,0 +1,11 @@
+{
+  "id": "KA-C437-bording-pas",
+  "pathSegment": "KA-PATH-437-VIMANA437",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-437-VIMANA437",
+      "order": 2
+    }
+  ]
+}

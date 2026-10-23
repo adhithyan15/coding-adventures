@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "Numbers That Matter",
+  "label": "ch:ka-numbers-that-matter",
+  "canDo": "I can say a ratio, per cent, to classify, to convert and adequate.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C427-samarpaka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can say a ratio, per cent, to classify, to convert and adequate.",
+    "assesses": [
+      "KA-LEX-C427-ANUPATA427-03",
+      "KA-LEX-C427-ANUPATA427-04",
+      "KA-LEX-C427-ANUPATA427-05"
+    ]
+  }
+}

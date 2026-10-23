@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Embassies and Offices",
+  "label": "ch:ml-embassies-and-offices",
+  "canDo": "I can say an embassy, a department, a branch office, office hours and a working day.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C486-pravrttidinam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can say an embassy, a department, a branch office, office hours and a working day.",
+    "assesses": [
+      "ML-LEX-C486-OPHIS486-03",
+      "ML-LEX-C486-OPHIS486-04",
+      "ML-LEX-C486-OPHIS486-05"
+    ]
+  }
+}

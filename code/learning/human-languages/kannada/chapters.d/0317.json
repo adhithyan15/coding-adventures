@@ -1,0 +1,20 @@
+{
+  "chapter": 317,
+  "title": "If It Rains",
+  "label": "ch:ka-if-it-rains",
+  "canDo": "I can say what will happen if something happens with the -are form (bandare, iddare), add ondu vēḷe for if by chance, and say if not with -adiddare.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-R317-if-and-otherwise",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: say what will happen if, if by chance and if not, with -are and -adiddare.",
+    "assesses": [
+      "KA-GRAMMAR-C317-ARE-CONDITIONAL-01",
+      "KA-GRAMMAR-C317-ONDU-VELE-01",
+      "KA-GRAMMAR-C317-REAL-CONDITION-01",
+      "KA-GRAMMAR-C317-NEGATIVE-CONDITION-01"
+    ]
+  }
+}

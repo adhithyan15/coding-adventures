@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/x509-certificate-path-length-policy",
   "capabilities": [],
-  "justification": "Pure allocation-free path-length state transitions over already validated caller-supplied issuing-CA role evidence and caller-owned self-issued classification, plus an evidence-bound entry point that derives the role check from the exact classified certificate. It performs no filesystem, network, process, environment, clock, credential, key, signing, signature-verification, built-in Name normalization or equality, certificate ordering or linking, trust-root, path construction, name-constraint, revocation, TLS, HTTP, or external-service access."
+  "justification": "Pure allocation-free path-length state transitions over already validated caller-supplied issuing-CA role evidence and caller-owned self-issued classification, plus exact-certificate entry points that derive the role check from classified evidence or consume complete intermediate role, critical-extension, algorithm, self-issued, and validity policy. It performs no filesystem, network, process, environment, clock, credential, key, signing, signature-verification, built-in Name normalization or equality, certificate ordering or linking, trust-root, path construction, name-constraint, revocation, TLS, HTTP, or external-service access."
 }

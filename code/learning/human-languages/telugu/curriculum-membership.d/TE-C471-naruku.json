@@ -1,0 +1,11 @@
+{
+  "id": "TE-C471-naruku",
+  "pathSegment": "TE-PATH-471-PARYAVARANAM471",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-471-PARYAVARANAM471",
+      "order": 2
+    }
+  ]
+}

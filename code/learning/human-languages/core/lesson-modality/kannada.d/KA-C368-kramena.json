@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C368-kramena",
+    "language": "kannada",
+    "chapter": 368,
+    "sequence": 18510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36d80c865caa710d"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C490-bandhappetuka",
+  "pathSegment": "ML-PATH-490-TAPAL490",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-490-TAPAL490",
+      "order": 4
+    }
+  ]
+}

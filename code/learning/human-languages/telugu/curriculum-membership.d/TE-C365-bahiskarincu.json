@@ -1,0 +1,11 @@
+{
+  "id": "TE-C365-bahiskarincu",
+  "pathSegment": "TE-PATH-365-DROHAM365",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-365-DROHAM365",
+      "order": 4
+    }
+  ]
+}

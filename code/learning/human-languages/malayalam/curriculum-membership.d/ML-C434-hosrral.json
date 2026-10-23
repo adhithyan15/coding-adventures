@@ -1,0 +1,11 @@
+{
+  "id": "ML-C434-hosrral",
+  "pathSegment": "ML-PATH-434-HOSTAL434",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-434-HOSTAL434",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C481-tamasakkaran",
+    "language": "malayalam",
+    "chapter": 481,
+    "sequence": 24050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4722151a9ff634e0"
+  },
+  "findings": []
+}

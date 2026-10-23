@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:360698b7c87d7b3c",
+  "lessonIds": [
+    "TE-C459-phalaharam",
+    "TE-C459-bhojanasala",
+    "TE-C459-sadupayam",
+    "TE-C459-antarjalam",
+    "TE-C459-charjaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch459.txt",
+  "json": "telugu/narration/ch459.json",
+  "textHash": "fnv1a64:b902051eec657967",
+  "jsonHash": "fnv1a64:05e057cf4e8d9f95",
+  "findings": []
+}

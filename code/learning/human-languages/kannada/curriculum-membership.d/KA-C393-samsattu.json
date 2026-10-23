@@ -1,0 +1,11 @@
+{
+  "id": "KA-C393-samsattu",
+  "pathSegment": "KA-PATH-393-SAMSATTU393",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-393-SAMSATTU393",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C500-vyaktitva",
+  "pathSegment": "KA-PATH-500-SVABHAVA500",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-500-SVABHAVA500",
+      "order": 1
+    }
+  ]
+}

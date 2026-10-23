@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C383-vadana",
+    "language": "telugu",
+    "chapter": 383,
+    "sequence": 19050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:875b63eaeaaa0200"
+  },
+  "findings": []
+}

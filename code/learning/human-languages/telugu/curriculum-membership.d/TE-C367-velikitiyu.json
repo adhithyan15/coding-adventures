@@ -1,0 +1,11 @@
+{
+  "id": "TE-C367-velikitiyu",
+  "pathSegment": "TE-PATH-367-TAVVAKALU367",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-367-TAVVAKALU367",
+      "order": 4
+    }
+  ]
+}

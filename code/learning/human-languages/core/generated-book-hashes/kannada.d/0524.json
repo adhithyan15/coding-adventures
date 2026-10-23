@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:c4ad58fd5cb4837d",
+  "lessonIds": [
+    "KA-C524-cikkappa",
+    "KA-C524-doddappa",
+    "KA-C524-cikkamma",
+    "KA-C524-doddamma",
+    "KA-C524-sodaraliya"
+  ],
+  "tex": "kannada/book/chapters/ch524-uncles-and-aunts.tex"
+}

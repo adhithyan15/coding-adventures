@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 421,
+  "title": "Supply and Demand",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:14a79abae13cb395",
+  "lessons": [
+    {
+      "id": "KA-C421-bedike",
+      "sequence": 21310,
+      "title": "ಬೇಡಿಕೆ (bēḍike) — a demand",
+      "headword": "ಬೇಡಿಕೆ",
+      "romanization": "bēḍike",
+      "gloss": "a demand",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1298b7a495d9bed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for uncertain, then the Kannada for a calamity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬೇಡಿಕೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೇಡಿಕೆ — bēḍike — \"a demand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಬ್ಬದ ಸಮಯದಲ್ಲಿ ಹೂವಿಗೆ ಬೇಡಿಕೆ ಹೆಚ್ಚು. habbada samayadalli hūvige bēḍike heccu. At festival time flowers are in high demand."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a demand made by people: ಕಾರ್ಮಿಕರ ಬೇಡಿಕೆ (bēḍike)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೇಡಿಕೆ (bēḍike) is native Dravidian, a noun from bēḍu, \"to ask for\", listed with bēḍike in DEDR 5528."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bēḍike",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bēḍike*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bēḍike, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bēḍike*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "habbada samayadalli hūvige bēḍike heccu. — At festival time flowers are in high demand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *habbada samayadalli hūvige bēḍike heccu.* — At festival time flowers are in high demand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for uncertain, then the Kannada for a calamity, then say bēḍike again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for uncertain, then the Kannada for a calamity, then say *bēḍike* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬೇಡಿಕೆ (bēḍike) mean? (\"A demand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C421-puraisu",
+      "sequence": 21320,
+      "title": "ಪೂರೈಸು (pūraisu) — to supply",
+      "headword": "ಪೂರೈಸು",
+      "romanization": "pūraisu",
+      "gloss": "to supply",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5830ba1c0e913898",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a calamity, then the Kannada for a demand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪೂರೈಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪೂರೈಸು — pūraisu — \"to supply\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಹಳ್ಳಿ ನಗರಕ್ಕೆ ಹಾಲು ಪೂರೈಸುತ್ತದೆ. ā haḷḷi nagarakke hālu pūraisuttade. That village supplies milk to the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಪೂರೈಸಿದೆ, pūraiside."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to complete: ಓದು ಪೂರೈಸು (pūraisu), to finish one's studies."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪೂರೈಸು (pūraisu) is built on Sanskrit pūra, \"filling\" (CDIAL 8330), with a Kannada verb ending: to make full."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūraisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūraisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūraisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūraisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā haḷḷi nagarakke hālu pūraisuttade. — That village supplies milk to the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā haḷḷi nagarakke hālu pūraisuttade.* — That village supplies milk to the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a calamity, then the Kannada for a demand, then say pūraisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a calamity, then the Kannada for a demand, then say *pūraisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪೂರೈಸು (pūraisu) mean? (\"To supply\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C421-korate",
+      "sequence": 21330,
+      "title": "ಕೊರತೆ (korate) — a shortage; a lack",
+      "headword": "ಕೊರತೆ",
+      "romanization": "korate",
+      "gloss": "a shortage; a lack",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca27bdebd440ff9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a demand, then the Kannada for to supply."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೊರತೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೊರತೆ — korate — \"a shortage; a lack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೇಸಿಗೆಯಲ್ಲಿ ನೀರಿನ ಕೊರತೆ ಇರುತ್ತದೆ. bēsigeyalli nīrina korate iruttade. In summer there is a shortage of water."
+            },
+            {
+              "kind": "speech",
+              "text": "What is lacking takes -ದ / -ಇನ: ಹಣದ ಕೊರತೆ (korate)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೊರತೆ (korate) is native Dravidian: DEDR 1851, the \"short, small\" family, lists Kannada koṟate, \"a deficiency\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "korate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *korate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "korate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *korate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bēsigeyalli nīrina korate iruttade. — In summer there is a shortage of water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bēsigeyalli nīrina korate iruttade.* — In summer there is a shortage of water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a demand, then the Kannada for to supply, then say korate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a demand, then the Kannada for to supply, then say *korate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೊರತೆ (korate) mean? (\"A shortage; a lack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C421-raphtu",
+      "sequence": 21340,
+      "title": "ರಫ್ತು (raphtu) — export",
+      "headword": "ರಫ್ತು",
+      "romanization": "raphtu",
+      "gloss": "export",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d25350f57b709d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to supply, then the Kannada for a shortage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ರಫ್ತು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರಫ್ತು — raphtu — \"export\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಮ್ಮ ಕಾಫಿ ಬೇರೆ ದೇಶಗಳಿಗೆ ರಫ್ತು ಆಗುತ್ತದೆ. namma kāphi bēre dēśagaḷige raphtu āguttade. Our coffee is exported to other countries."
+            },
+            {
+              "kind": "speech",
+              "text": "ರಫ್ತು (raphtu) ಮಾಡು, to export. ಆಮದು, import."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರಫ್ತು (raphtu) is usually traced to Persian raft, \"gone\", through Hindustani raftanī, \"export\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raphtu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raphtu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raphtu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raphtu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namma kāphi bēre dēśagaḷige raphtu āguttade. — Our coffee is exported to other countries.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namma kāphi bēre dēśagaḷige raphtu āguttade.* — Our coffee is exported to other countries.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to supply, then the Kannada for a shortage, then say raphtu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to supply, then the Kannada for a shortage, then say *raphtu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ರಫ್ತು (raphtu) mean? (\"Export\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C421-hanadubbara",
+      "sequence": 21350,
+      "title": "ಹಣದುಬ್ಬರ (haṇadubbara) — inflation",
+      "headword": "ಹಣದುಬ್ಬರ",
+      "romanization": "haṇadubbara",
+      "gloss": "inflation",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a5bb5d12e6d22541",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a shortage, then the Kannada for export."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹಣದುಬ್ಬರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಣದುಬ್ಬರ — haṇadubbara — \"inflation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಣದುಬ್ಬರದಿಂದ ಎಲ್ಲದರ ಬೆಲೆ ಏರಿತು. haṇadubbaradinda elladara bele ēritu. With inflation the price of everything went up."
+            },
+            {
+              "kind": "speech",
+              "text": "Word by word: money swelling."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಣದುಬ್ಬರ (haṇadubbara) is a modern Kannada word built from haṇa, \"money\", and ubbara, \"a swelling\", from native ubbu, \"to swell\" (DEDR 666)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṇadubbara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṇadubbara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṇadubbara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṇadubbara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṇadubbaradinda elladara bele ēritu. — With inflation the price of everything went up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṇadubbaradinda elladara bele ēritu.* — With inflation the price of everything went up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a shortage, then the Kannada for export, then say haṇadubbara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a shortage, then the Kannada for export, then say *haṇadubbara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹಣದುಬ್ಬರ (haṇadubbara) mean? (\"Inflation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

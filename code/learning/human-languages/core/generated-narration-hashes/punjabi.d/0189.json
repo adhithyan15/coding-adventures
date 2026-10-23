@@ -1,0 +1,22 @@
+{
+  "language": "punjabi",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:bda833280a4d816f",
+  "lessonIds": [
+    "PA-C189-want-return",
+    "PA-C189-chahunde",
+    "PA-C189-chahunde-review",
+    "PA-C189-chahunde-han",
+    "PA-C189-han-review",
+    "PA-C189-chahunde-ho",
+    "PA-C189-frame-contrast",
+    "PA-C189-payoff"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch189.txt",
+  "json": "punjabi/narration/ch189.json",
+  "textHash": "fnv1a64:502c91400ffb81b6",
+  "jsonHash": "fnv1a64:447d891d2e3d1e78",
+  "findings": []
+}

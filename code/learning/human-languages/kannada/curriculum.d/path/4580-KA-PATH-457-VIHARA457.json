@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-457-VIHARA457",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "KA-EXT-457-VIHARA457"
+  ],
+  "after": []
+}

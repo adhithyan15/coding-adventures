@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:17a00dc2c4c943cf",
+  "lessonIds": [
+    "KA-C534-raga",
+    "KA-C534-tala",
+    "KA-C534-svara",
+    "KA-C534-gunugu",
+    "KA-C534-nudisu"
+  ],
+  "tex": "kannada/book/chapters/ch534-music.tex"
+}

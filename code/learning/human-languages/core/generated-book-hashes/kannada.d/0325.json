@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:94e0d08d888d72db",
+  "lessonIds": [
+    "KA-C325-vivaha",
+    "KA-C325-arataksate",
+    "KA-C325-varadaksine",
+    "KA-C325-harasu",
+    "KA-C325-dibbana"
+  ],
+  "tex": "kannada/book/chapters/ch325-a-wedding-is-planned.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:154ddffdece18fd0",
+  "lessonIds": [
+    "KA-C515-kuruda",
+    "KA-C515-kivuda",
+    "KA-C515-muka",
+    "KA-C515-naralu",
+    "KA-C515-nalugu"
+  ],
+  "tex": "kannada/book/chapters/ch515-blindness-deafness-and-pain.tex"
+}

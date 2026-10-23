@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:561ab67b473e2cf5",
+  "lessonIds": [
+    "ML-C476-katattuvallam",
+    "ML-C476-olukku",
+    "ML-C476-culi",
+    "ML-C476-ulayuka",
+    "ML-C476-karaykkatukkuka",
+    "ML-R476-review-469-476"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch476.txt",
+  "json": "malayalam/narration/ch476.json",
+  "textHash": "fnv1a64:1680c740a9a266dd",
+  "jsonHash": "fnv1a64:3058bb4e54573a54",
+  "findings": []
+}

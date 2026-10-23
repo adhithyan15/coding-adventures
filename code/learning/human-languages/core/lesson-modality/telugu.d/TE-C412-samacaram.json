@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C412-samacaram",
+    "language": "telugu",
+    "chapter": 412,
+    "sequence": 20560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f1026b2f24c14b8"
+  },
+  "findings": []
+}

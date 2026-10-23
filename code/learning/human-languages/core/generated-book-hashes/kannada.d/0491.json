@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:9caa1fde7aa1dd5f",
+  "lessonIds": [
+    "KA-C491-koragu",
+    "KA-C491-marugu",
+    "KA-C491-sankata",
+    "KA-C491-visada",
+    "KA-C491-pascattapa"
+  ],
+  "tex": "kannada/book/chapters/ch491-grief-and-regret.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:65af0e1c34c87eac",
+  "lessonIds": [
+    "TE-C455-paryatakudu",
+    "TE-C455-paryatana",
+    "TE-C455-gaidu",
+    "TE-C455-pravesam",
+    "TE-C455-viharayatra"
+  ],
+  "tex": "telugu/book/chapters/ch455-being-a-tourist.tex"
+}

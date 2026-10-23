@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:55ad20514c876f7d",
+  "lessonIds": [
+    "KA-C340-dantakathe",
+    "KA-C340-purana",
+    "KA-C340-daitya",
+    "KA-C340-raksasa",
+    "KA-C340-sapa",
+    "KA-R340-review-334-340"
+  ],
+  "tex": "kannada/book/chapters/ch340-legends-and-demons.tex"
+}

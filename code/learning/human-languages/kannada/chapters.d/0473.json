@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "Our Environment",
+  "label": "ch:ka-our-environment",
+  "canDo": "I can say the environment, pollution, to pollute, soot and carbon.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C473-ingala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can say the environment, pollution, to pollute, soot and carbon.",
+    "assesses": [
+      "KA-LEX-C473-PARISARA473-03",
+      "KA-LEX-C473-PARISARA473-04",
+      "KA-LEX-C473-PARISARA473-05"
+    ]
+  }
+}

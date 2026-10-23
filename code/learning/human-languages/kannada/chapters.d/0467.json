@@ -1,0 +1,19 @@
+{
+  "chapter": 467,
+  "title": "At the Market",
+  "label": "ch:ka-at-the-market",
+  "canDo": "I can say a marketplace, a bazaar, a store, a sale and to buy for oneself.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C467-konduko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can say a marketplace, a bazaar, a store, a sale and to buy for oneself.",
+    "assesses": [
+      "KA-LEX-C467-MARUKATTE467-03",
+      "KA-LEX-C467-MARUKATTE467-04",
+      "KA-LEX-C467-MARUKATTE467-05"
+    ]
+  }
+}

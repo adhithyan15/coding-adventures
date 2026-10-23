@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:7fd89c8c40586add",
+  "lessonIds": [
+    "TE-C383-vadana",
+    "TE-C383-saksyam",
+    "TE-C383-nirupincu",
+    "TE-C383-tarkam",
+    "TE-C383-sahetukamaina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch383.txt",
+  "json": "telugu/narration/ch383.json",
+  "textHash": "fnv1a64:cdcbb07ef1b0c8a7",
+  "jsonHash": "fnv1a64:168bc36e3246a3a7",
+  "findings": []
+}

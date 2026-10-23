@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:5adcced9b978d161",
+  "lessonIds": [
+    "KA-C412-apaya",
+    "KA-C412-munneccarike",
+    "KA-C412-sambhavaniya",
+    "KA-C412-sankasta",
+    "KA-C412-nivarisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch412.txt",
+  "json": "kannada/narration/ch412.json",
+  "textHash": "fnv1a64:706e323a58c49716",
+  "jsonHash": "fnv1a64:b85d288d782d05bd",
+  "findings": []
+}

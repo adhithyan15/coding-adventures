@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C416-manusyavakasam",
+    "language": "malayalam",
+    "chapter": 416,
+    "sequence": 20590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be2cdf3283d09e25"
+  },
+  "findings": []
+}

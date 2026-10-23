@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C321-tirpu",
+    "language": "kannada",
+    "chapter": 321,
+    "sequence": 16130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6df5cae2fdeb5e2"
+  },
+  "findings": []
+}

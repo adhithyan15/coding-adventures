@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-451-RIKSHA451",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a rickshaw, a bullock cart, a handcart, going on foot and a wayfarer.",
+  "prerequisites": []
+}

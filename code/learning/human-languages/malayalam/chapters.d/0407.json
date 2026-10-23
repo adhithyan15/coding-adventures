@@ -1,0 +1,19 @@
+{
+  "chapter": 407,
+  "title": "Proof and Doubt",
+  "label": "ch:ml-proof-and-doubt",
+  "canDo": "I can say to prove, a doubt, to assume, reality and to imply.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C407-artthamakkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can say to prove, a doubt, to assume, reality and to imply.",
+    "assesses": [
+      "ML-LEX-C407-TELIVU407-03",
+      "ML-LEX-C407-TELIVU407-04",
+      "ML-LEX-C407-TELIVU407-05"
+    ]
+  }
+}

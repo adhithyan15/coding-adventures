@@ -1,0 +1,11 @@
+{
+  "id": "TE-C319-nadavadam-valla",
+  "pathSegment": "TE-PATH-319-MUST-BECAUSE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-319-MUST-BECAUSE",
+      "order": 3
+    }
+  ]
+}

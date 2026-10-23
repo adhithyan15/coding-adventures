@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 431,
+  "title": "Standards and Levels",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e4fe74fa03be958e",
+  "lessons": [
+    {
+      "id": "TE-C431-pramanam",
+      "sequence": 21510,
+      "title": "ప్రమాణం (pramāṇaṁ) — a standard; a norm",
+      "headword": "ప్రమాణం",
+      "romanization": "pramāṇaṁ",
+      "gloss": "a standard; a norm",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ea4f83e9842f7a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to control, then the Telugu for a limit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రమాణం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రమాణం — pramāṇaṁ — \"a standard; a norm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ కళాశాలలో విద్యా ప్రమాణాలు ఎక్కువ. ā kaḷāśālalō vidyā pramāṇālu ekkuva. Academic standards are high at that college."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ప్రమాణాలు, pramāṇālu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also an oath: ప్రమాణం (pramāṇaṁ) చేయు, to swear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రమాణం (pramāṇaṁ) is borrowed from Sanskrit pramāṇa, \"measure; a standard, an authority; proof\" (CDIAL 8723)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pramāṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pramāṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pramāṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pramāṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kaḷāśālalō vidyā pramāṇālu ekkuva. — Academic standards are high at that college.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kaḷāśālalō vidyā pramāṇālu ekkuva.* — Academic standards are high at that college.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to control, then the Telugu for a limit, then say pramāṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to control, then the Telugu for a limit, then say *pramāṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రమాణం (pramāṇaṁ) mean? (\"A standard; a norm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C431-sthayi",
+      "sequence": 21520,
+      "title": "స్థాయి (sthāyi) — a level; a standing",
+      "headword": "స్థాయి",
+      "romanization": "sthāyi",
+      "gloss": "a level; a standing",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff4fbb2d7b1bc6e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a limit, then the Telugu for a standard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: స్థాయి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్థాయి — sthāyi — \"a level; a standing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె తెలుగు ఇప్పుడు మంచి స్థాయిలో ఉంది. āme telugu ippuḍu mañci sthāyilō undi. Her Telugu is at a good level now."
+            },
+            {
+              "kind": "speech",
+              "text": "జాతీయ స్థాయిలో, at the national level."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్థాయి (sthāyi) is borrowed from Sanskrit sthāyin, \"standing\", and \"lasting\" (CDIAL 13764), from sthā, \"to stand\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthāyi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthāyi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthāyi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthāyi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme telugu ippuḍu mañci sthāyilō undi. — Her Telugu is at a good level now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme telugu ippuḍu mañci sthāyilō undi.* — Her Telugu is at a good level now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a limit, then the Telugu for a standard, then say sthāyi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a limit, then the Telugu for a standard, then say *sthāyi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does స్థాయి (sthāyi) mean? (\"A level; a standing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C431-dhorani",
+      "sequence": 21530,
+      "title": "ధోరణి (dhōraṇi) — a trend; a tendency",
+      "headword": "ధోరణి",
+      "romanization": "dhōraṇi",
+      "gloss": "a trend; a tendency",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b12ec50df307934",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a standard, then the Telugu for a level."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ధోరణి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ధోరణి — dhōraṇi — \"a trend; a tendency\"."
+            },
+            {
+              "kind": "speech",
+              "text": "యువతలో ఒక కొత్త ధోరణి కనిపిస్తోంది. yuvatalō oka kotta dhōraṇi kanipistōndi. A new trend can be seen among young people."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a person’s manner: అతని ధోరణి (dhōraṇi) నాకు నచ్చలేదు, I did not like his attitude."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ధోరణి (dhōraṇi) may go back to Sanskrit dhoraṇī, \"an uninterrupted series\" (Monier-Williams), but the link is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhōraṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhōraṇi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhōraṇi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhōraṇi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuvatalō oka kotta dhōraṇi kanipistōndi. — A new trend can be seen among young people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuvatalō oka kotta dhōraṇi kanipistōndi.* — A new trend can be seen among young people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a standard, then the Telugu for a level, then say dhōraṇi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a standard, then the Telugu for a level, then say *dhōraṇi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ధోరణి (dhōraṇi) mean? (\"A trend; a tendency\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C431-samarthavantamaina",
+      "sequence": 21540,
+      "title": "సమర్థవంతమైన (samarthavantamaina) — effective; efficient",
+      "headword": "సమర్థవంతమైన",
+      "romanization": "samarthavantamaina",
+      "gloss": "effective; efficient",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1be3c21f9b379cfa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a level, then the Telugu for a trend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సమర్థవంతమైన",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సమర్థవంతమైన — samarthavantamaina — \"effective; efficient\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె సమర్థవంతమైన అధికారి. āme samarthavantamaina adhikāri. She is an efficient officer."
+            },
+            {
+              "kind": "speech",
+              "text": "సమర్థ, capable, + -వంత, having, + -మైన. సమర్థవంతంగా, effectively."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సమర్థవంతమైన (samarthavantamaina) is built on Sanskrit samartha, \"appropriate; capable\" (CDIAL 13189), with -vant, \"having\", and Telugu -మైన for an adjective."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samarthavantamaina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samarthavantamaina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samarthavantamaina, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samarthavantamaina*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme samarthavantamaina adhikāri. — She is an efficient officer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme samarthavantamaina adhikāri.* — She is an efficient officer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a level, then the Telugu for a trend, then say samarthavantamaina again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a level, then the Telugu for a trend, then say *samarthavantamaina* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సమర్థవంతమైన (samarthavantamaina) mean? (\"Effective; efficient\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C431-pariksincu",
+      "sequence": 21550,
+      "title": "పరీక్షించు (parīkṣiñcu) — to test out; to examine",
+      "headword": "పరీక్షించు",
+      "romanization": "parīkṣiñcu",
+      "gloss": "to test out; to examine",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3c217a4e5fce5a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a trend, then the Telugu for effective."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పరీక్షించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పరీక్షించు — parīkṣiñcu — \"to test out; to examine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వైద్యుడు నా కళ్ళను పరీక్షించాడు. vaidyuḍu nā kaḷḷanu parīkṣiñcāḍu. The doctor examined my eyes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): పరీక్షించాను, parīkṣiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb of పరీక్ష, an exam, a test, which you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పరీక్షించు (parīkṣiñcu) is built on Sanskrit parīkṣā, \"inspection, investigation, examination, test\" (Monier-Williams), with the Telugu verb ending -ఇంచు; పరీక్ష is the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parīkṣiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parīkṣiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parīkṣiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parīkṣiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaidyuḍu nā kaḷḷanu parīkṣiñcāḍu. — The doctor examined my eyes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaidyuḍu nā kaḷḷanu parīkṣiñcāḍu.* — The doctor examined my eyes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a trend, then the Telugu for effective, then say parīkṣiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a trend, then the Telugu for effective, then say *parīkṣiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పరీక్షించు (parīkṣiñcu) mean? (\"To test out; to examine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

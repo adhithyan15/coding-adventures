@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:71d6c7ead483052c",
+  "lessonIds": [
+    "TE-C390-vastavam",
+    "TE-C390-siddhantam",
+    "TE-C390-sutram",
+    "TE-C390-prakriya",
+    "TE-C390-nirvacincu"
+  ],
+  "tex": "telugu/book/chapters/ch390-facts-and-theories.tex"
+}

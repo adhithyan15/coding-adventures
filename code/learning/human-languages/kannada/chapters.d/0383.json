@@ -1,0 +1,21 @@
+{
+  "chapter": 383,
+  "title": "Doubts and Judgements",
+  "label": "ch:ka-doubts-and-judgements",
+  "canDo": "I can say a misgiving, to twist, to determine, impossible and to deny.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-R383-review-376-383",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can say a misgiving, to twist, to determine, impossible and to deny.",
+    "assesses": [
+      "KA-LEX-C383-SANDEHA383-01",
+      "KA-LEX-C383-SANDEHA383-02",
+      "KA-LEX-C383-SANDEHA383-03",
+      "KA-LEX-C383-SANDEHA383-04",
+      "KA-LEX-C383-SANDEHA383-05"
+    ]
+  }
+}

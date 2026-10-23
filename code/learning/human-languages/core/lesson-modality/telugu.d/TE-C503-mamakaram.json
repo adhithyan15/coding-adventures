@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C503-mamakaram",
+    "language": "telugu",
+    "chapter": 503,
+    "sequence": 25470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6d9ffa5b13626b9"
+  },
+  "findings": []
+}

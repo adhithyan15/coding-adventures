@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-378-ABHAYAM378",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-378-ABHAYAM378"
+  ],
+  "after": []
+}

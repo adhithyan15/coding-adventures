@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-485-NAGADU485",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TE-EXT-485-NAGADU485"
+  ],
+  "after": []
+}

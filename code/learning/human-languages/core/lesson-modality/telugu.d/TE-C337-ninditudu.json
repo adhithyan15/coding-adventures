@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C337-ninditudu",
+    "language": "telugu",
+    "chapter": 337,
+    "sequence": 16600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:928de3af2c31d541"
+  },
+  "findings": []
+}

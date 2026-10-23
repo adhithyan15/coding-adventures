@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:dd18a0d277e72fb1",
+  "lessonIds": [
+    "TE-C545-abhyasincu",
+    "TE-C545-kasarattu",
+    "TE-C545-guripettu",
+    "TE-C545-toyu",
+    "TE-C545-pandem"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch545.txt",
+  "json": "telugu/narration/ch545.json",
+  "textHash": "fnv1a64:fddd16d21873af00",
+  "jsonHash": "fnv1a64:d09d756486c79bf1",
+  "findings": []
+}

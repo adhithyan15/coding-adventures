@@ -1,0 +1,11 @@
+{
+  "id": "TE-C506-tattuko",
+  "pathSegment": "TE-PATH-506-SAHANAM506",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-506-SAHANAM506",
+      "order": 1
+    }
+  ]
+}

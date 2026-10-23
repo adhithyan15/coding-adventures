@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:7dd596b6914ed714",
+  "lessonIds": [
+    "TE-C431-pramanam",
+    "TE-C431-sthayi",
+    "TE-C431-dhorani",
+    "TE-C431-samarthavantamaina",
+    "TE-C431-pariksincu"
+  ],
+  "tex": "telugu/book/chapters/ch431-standards-and-levels.tex"
+}

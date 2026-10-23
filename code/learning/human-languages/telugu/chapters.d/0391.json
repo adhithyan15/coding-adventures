@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "What Matters Most",
+  "label": "ch:te-what-matters-most",
+  "canDo": "I can say what is important, basic and worth stressing.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C391-prastavincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can say what is important, basic and worth stressing.",
+    "assesses": [
+      "TE-LEX-C391-PRAMUKHYATA391-03",
+      "TE-LEX-C391-PRAMUKHYATA391-04",
+      "TE-LEX-C391-PRAMUKHYATA391-05"
+    ]
+  }
+}

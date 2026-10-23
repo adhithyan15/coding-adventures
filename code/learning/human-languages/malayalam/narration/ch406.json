@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 406,
+  "title": "Agreeing and Disagreeing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7a817565550cc85f",
+  "lessons": [
+    {
+      "id": "ML-C406-viyojikkuka",
+      "sequence": 20050,
+      "title": "വിയോജിക്കുക (viyōjikkuka) — to disagree",
+      "headword": "വിയോജിക്കുക",
+      "romanization": "viyōjikkuka",
+      "gloss": "to disagree",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:400e5c67b349fafa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to admit, then the Malayalam for a conclusion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിയോജിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിയോജിക്കുക — viyōjikkuka — \"to disagree\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ നിങ്ങളോട് വിയോജിക്കുന്നു. ñān niṅṅaḷōṭŭ viyōjikkunnu. I disagree with you."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വിയോജിച്ചു, viyōjiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The person takes -ഓട്: അവനോട് വിയോജിക്കുക (viyōjikkuka). Its opposite is യോജിക്കുക, to agree."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിയോജിക്കുക (viyōjikkuka) is built from Sanskrit viyojana, \"detaching, separation\" (Monier-Williams): the prefix vi-, \"apart\", on the root yuj, \"to join\", the root of യോജിക്കുക. To disagree is to come apart."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viyōjikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viyōjikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viyōjikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viyōjikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñān niṅṅaḷōṭŭ viyōjikkunnu. — I disagree with you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñān niṅṅaḷōṭŭ viyōjikkunnu.* — I disagree with you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to admit, then the Malayalam for a conclusion, then say viyōjikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to admit, then the Malayalam for a conclusion, then say *viyōjikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിയോജിക്കുക (viyōjikkuka) mean? (\"To disagree\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C406-tarkkam",
+      "sequence": 20060,
+      "title": "തർക്കം (tarkkaṁ) — a dispute; a quarrel",
+      "headword": "തർക്കം",
+      "romanization": "tarkkaṁ",
+      "gloss": "a dispute; a quarrel",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:655f0ed583ae5529",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a conclusion, then the Malayalam for to disagree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തർക്കം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തർക്കം — tarkkaṁ — \"a dispute; a quarrel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വീടിന്റെ വിലയെക്കുറിച്ച് അവർ തമ്മിൽ തർക്കം ഉണ്ടായി. vīṭinṟe vilayekkuṟiccŭ avar tammil tarkkaṁ uṇṭāyi. There was a dispute between them about the price of the house."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb തർക്കിക്കുക, to argue, is the same word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തർക്കം (tarkkaṁ) is borrowed from Sanskrit tarka, \"inquiry, conjecture, reasoning\" (CDIAL 5714). In Malayalam the reasoning became the quarrel it can lead to."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarkkaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarkkaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarkkaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarkkaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīṭinṟe vilayekkuṟiccŭ avar tammil tarkkaṁ uṇṭāyi. — There was a dispute between them about the price of the house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīṭinṟe vilayekkuṟiccŭ avar tammil tarkkaṁ uṇṭāyi.* — There was a dispute between them about the price of the house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a conclusion, then the Malayalam for to disagree, then say tarkkaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a conclusion, then the Malayalam for to disagree, then say *tarkkaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തർക്കം (tarkkaṁ) mean? (\"A dispute; a quarrel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C406-samvadam",
+      "sequence": 20070,
+      "title": "സംവാദം (saṁvādaṁ) — a debate",
+      "headword": "സംവാദം",
+      "romanization": "saṁvādaṁ",
+      "gloss": "a debate",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31d0bd6a2062b986",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to disagree, then the Malayalam for a dispute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സംവാദം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംവാദം — saṁvādaṁ — \"a debate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കോളേജിൽ ഇന്നലെ ഒരു സംവാദം നടന്നു. kōḷējil innale oru saṁvādaṁ naṭannu. A debate was held at the college yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "A debate is നടക്കുക, held, or നടത്തുക, organised."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംവാദം (saṁvādaṁ) is borrowed from Sanskrit saṁvāda, \"speaking together, a conversation\" (Monier-Williams): sam-, \"together\", and vāda, \"speech\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁvādaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁvādaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁvādaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁvādaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōḷējil innale oru saṁvādaṁ naṭannu. — A debate was held at the college yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōḷējil innale oru saṁvādaṁ naṭannu.* — A debate was held at the college yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to disagree, then the Malayalam for a dispute, then say saṁvādaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to disagree, then the Malayalam for a dispute, then say *saṁvādaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സംവാദം (saṁvādaṁ) mean? (\"A debate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C406-bodhyappetuttuka",
+      "sequence": 20080,
+      "title": "ബോധ്യപ്പെടുത്തുക (bōdhyappeṭuttuka) — to convince",
+      "headword": "ബോധ്യപ്പെടുത്തുക",
+      "romanization": "bōdhyappeṭuttuka",
+      "gloss": "to convince",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86375ada1771304f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a dispute, then the Malayalam for a debate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ബോധ്യപ്പെടുത്തുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബോധ്യപ്പെടുത്തുക — bōdhyappeṭuttuka — \"to convince\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഒടുവിൽ അവൾ അച്ഛനെ കാര്യം ബോധ്യപ്പെടുത്തി. oṭuvil avaḷ acchane kāryaṁ bōdhyappeṭutti. At last she convinced her father of the matter."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ബോധ്യപ്പെടുത്തി, bōdhyappeṭutti."
+            },
+            {
+              "kind": "speech",
+              "text": "The person convinced takes -നെ, the matter stays unmarked: അച്ഛനെ കാര്യം ബോധ്യപ്പെടുത്തുക (bōdhyappeṭuttuka)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബോധ്യപ്പെടുത്തുക (bōdhyappeṭuttuka) is built from Sanskrit bodhya, \"to be known or understood\" (Monier-Williams), with -പ്പെടുത്തുക, \"to cause to be\", from native പെടുക (DEDR 3853): to make a thing understood."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bōdhyappeṭuttuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bōdhyappeṭuttuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bōdhyappeṭuttuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bōdhyappeṭuttuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṭuvil avaḷ acchane kāryaṁ bōdhyappeṭutti. — At last she convinced her father of the matter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṭuvil avaḷ acchane kāryaṁ bōdhyappeṭutti.* — At last she convinced her father of the matter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a dispute, then the Malayalam for a debate, then say bōdhyappeṭuttuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a dispute, then the Malayalam for a debate, then say *bōdhyappeṭuttuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ബോധ്യപ്പെടുത്തുക (bōdhyappeṭuttuka) mean? (\"To convince\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C406-viksanam",
+      "sequence": 20090,
+      "title": "വീക്ഷണം (vīkṣaṇaṁ) — an outlook; a perspective",
+      "headword": "വീക്ഷണം",
+      "romanization": "vīkṣaṇaṁ",
+      "gloss": "an outlook; a perspective",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8515cf4ef4fea832",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a debate, then the Malayalam for to convince."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വീക്ഷണം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വീക്ഷണം — vīkṣaṇaṁ — \"an outlook; a perspective\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഓരോരുത്തർക്കും ഓരോ വീക്ഷണം ഉണ്ട്. ōrōruttarkkuṁ ōrō vīkṣaṇaṁ uṇṭŭ. Each person has their own outlook."
+            },
+            {
+              "kind": "speech",
+              "text": "From the point of view of is -ന്റെ വീക്ഷണത്തിൽ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വീക്ഷണം (vīkṣaṇaṁ) is borrowed from Sanskrit vīkṣaṇa, \"looking at, seeing, inspection\" (Monier-Williams). An outlook is the way a person looks at things."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīkṣaṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīkṣaṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīkṣaṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīkṣaṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōrōruttarkkuṁ ōrō vīkṣaṇaṁ uṇṭŭ. — Each person has their own outlook.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōrōruttarkkuṁ ōrō vīkṣaṇaṁ uṇṭŭ.* — Each person has their own outlook.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a debate, then the Malayalam for to convince, then say vīkṣaṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a debate, then the Malayalam for to convince, then say *vīkṣaṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വീക്ഷണം (vīkṣaṇaṁ) mean? (\"An outlook; a perspective\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

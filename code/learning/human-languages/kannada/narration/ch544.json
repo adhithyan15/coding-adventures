@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 544,
+  "title": "Power and Water",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:60d0a378bf00e8bb",
+  "lessons": [
+    {
+      "id": "KA-C544-svic",
+      "sequence": 27770,
+      "title": "ಸ್ವಿಚ್ (svic) — a switch",
+      "headword": "ಸ್ವಿಚ್",
+      "romanization": "svic",
+      "gloss": "a switch",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2916c37f0b44c0f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for furniture, then the Kannada for to lean back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸ್ವಿಚ್",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ವಿಚ್ — svic — \"a switch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಾಗಿಲಿನ ಪಕ್ಕದಲ್ಲಿ ದೀಪದ ಸ್ವಿಚ್ ಇದೆ. bāgilina pakkadalli dīpada svic ide. The light switch is beside the door."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸ್ವಿಚ್ (svic) ಹಾಕು, to switch on; ಆನ್ ಮಾಡು is also said."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ವಿಚ್ (svic) is a loan from English switch, written with a final virama as Kannada writes many English loans."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svic",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svic*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svic, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svic*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāgilina pakkadalli dīpada svic ide. — The light switch is beside the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāgilina pakkadalli dīpada svic ide.* — The light switch is beside the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for furniture, then the Kannada for to lean back, then say svic again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for furniture, then the Kannada for to lean back, then say *svic* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸ್ವಿಚ್ (svic) mean? (\"A switch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C544-plag",
+      "sequence": 27780,
+      "title": "ಪ್ಲಗ್ (plag) — a plug",
+      "headword": "ಪ್ಲಗ್",
+      "romanization": "plag",
+      "gloss": "a plug",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a12e55d9ea0236d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to lean back, then the Kannada for a switch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ಲಗ್",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ಲಗ್ — plag — \"a plug\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಫೋನಿನ ಚಾರ್ಜರ್ ಪ್ಲಗ್ ಸಡಿಲವಾಗಿದೆ. phōnina cārjar plag saḍilavāgide. The phone charger's plug is loose."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ಲಗ್ (plag) ಹಾಕು, to plug in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ಲಗ್ (plag) is a loan from English plug."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plag",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plag*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plag, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plag*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phōnina cārjar plag saḍilavāgide. — The phone charger's plug is loose.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phōnina cārjar plag saḍilavāgide.* — The phone charger's plug is loose.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to lean back, then the Kannada for a switch, then say plag again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to lean back, then the Kannada for a switch, then say *plag* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ಲಗ್ (plag) mean? (\"A plug\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C544-silindar",
+      "sequence": 27790,
+      "title": "ಸಿಲಿಂಡರ್ (siliṇḍar) — a gas cylinder",
+      "headword": "ಸಿಲಿಂಡರ್",
+      "romanization": "siliṇḍar",
+      "gloss": "a gas cylinder",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01b7d0ba8ec33c46",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a switch, then the Kannada for a plug."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಿಲಿಂಡರ್",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಿಲಿಂಡರ್ — siliṇḍar — \"a gas cylinder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಡುಗೆಮನೆಯ ಸಿಲಿಂಡರ್ ಖಾಲಿ ಆಯಿತು. aḍugemaneya siliṇḍar khāli āyitu. The kitchen gas cylinder ran out."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗ್ಯಾಸ್ ಸಿಲಿಂಡರ್ (siliṇḍar), the cooking gas cylinder."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಿಲಿಂಡರ್ (siliṇḍar) is a loan from English cylinder."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siliṇḍar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siliṇḍar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siliṇḍar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siliṇḍar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḍugemaneya siliṇḍar khāli āyitu. — The kitchen gas cylinder ran out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḍugemaneya siliṇḍar khāli āyitu.* — The kitchen gas cylinder ran out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a switch, then the Kannada for a plug, then say siliṇḍar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a switch, then the Kannada for a plug, then say *siliṇḍar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಿಲಿಂಡರ್ (siliṇḍar) mean? (\"A gas cylinder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C544-kolave",
+      "sequence": 27800,
+      "title": "ಕೊಳವೆ (koḷave) — a tube; a pipe",
+      "headword": "ಕೊಳವೆ",
+      "romanization": "koḷave",
+      "gloss": "a tube; a pipe",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7922b46d8d579659",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a plug, then the Kannada for a gas cylinder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೊಳವೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೊಳವೆ — koḷave — \"a tube; a pipe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ತೋಟಕ್ಕೆ ನೀರು ಕೊಳವೆಯಲ್ಲಿ ಬರುತ್ತದೆ. tōṭakke nīru koḷaveyalli baruttade. Water comes to the garden through a pipe."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕೊಳವೆ (koḷave) ಬಾವಿ, a borewell. ಕೊಳಲು, the flute, comes from the same old word for a tube."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೊಳವೆ (koḷave) is native Dravidian: DEDR 1818 lists the Kannada word for \"a tube, a blow-pipe\" in the same article as the word for a flute, ಕೊಳಲು."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koḷave",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koḷave*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koḷave, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koḷave*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōṭakke nīru koḷaveyalli baruttade. — Water comes to the garden through a pipe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōṭakke nīru koḷaveyalli baruttade.* — Water comes to the garden through a pipe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a plug, then the Kannada for a gas cylinder, then say koḷave again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a plug, then the Kannada for a gas cylinder, then say *koḷave* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೊಳವೆ (koḷave) mean? (\"A tube; a pipe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C544-tanti",
+      "sequence": 27810,
+      "title": "ತಂತಿ (tanti) — a wire; a string",
+      "headword": "ತಂತಿ",
+      "romanization": "tanti",
+      "gloss": "a wire; a string",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a093398197f9b74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a gas cylinder, then the Kannada for a tube."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತಂತಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಂತಿ — tanti — \"a wire; a string\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಟ್ಟೆ ಒಣಗಿಸಲು ಅಮ್ಮ ತಂತಿ ಕಟ್ಟಿದರು. baṭṭe oṇagisalu amma tanti kaṭṭidaru. Mother tied up a wire to dry the clothes."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a string of the veena, and in older talk a telegram."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಂತಿ (tanti) goes back to Sanskrit tantrī, \"the string of a lute\" (CDIAL 5667)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṭṭe oṇagisalu amma tanti kaṭṭidaru. — Mother tied up a wire to dry the clothes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṭṭe oṇagisalu amma tanti kaṭṭidaru.* — Mother tied up a wire to dry the clothes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a gas cylinder, then the Kannada for a tube, then say tanti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a gas cylinder, then the Kannada for a tube, then say *tanti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತಂತಿ (tanti) mean? (\"A wire; a string\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

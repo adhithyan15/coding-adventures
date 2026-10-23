@@ -1,0 +1,21 @@
+{
+  "chapter": 525,
+  "title": "Making a Living",
+  "label": "ch:te-making-a-living",
+  "canDo": "I can talk about livelihood, earnings, income, wages and hard work.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-R525-review-518-525",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can talk about livelihood, earnings, income, wages and hard work.",
+    "assesses": [
+      "TE-LEX-C525-SAMPADANA525-01",
+      "TE-LEX-C525-SAMPADANA525-02",
+      "TE-LEX-C525-SAMPADANA525-03",
+      "TE-LEX-C525-SAMPADANA525-04",
+      "TE-LEX-C525-SAMPADANA525-05"
+    ]
+  }
+}

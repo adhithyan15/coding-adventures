@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "Kings and Queens",
+  "label": "ch:ml-kings-and-queens",
+  "canDo": "I can say a king, a queen, a prince, a princess and a palace.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C397-kottaram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can say a king, a queen, a prince, a princess and a palace.",
+    "assesses": [
+      "ML-LEX-C397-RAJAVU397-03",
+      "ML-LEX-C397-RAJAVU397-04",
+      "ML-LEX-C397-RAJAVU397-05"
+    ]
+  }
+}

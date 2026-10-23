@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:ad90e38eca03973b",
+  "lessonIds": [
+    "ML-C494-tiriccetukkuka",
+    "ML-C494-celavu",
+    "ML-C494-ottunokkuka",
+    "ML-C494-enninokkuka",
+    "ML-C494-virralikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch494.txt",
+  "json": "malayalam/narration/ch494.json",
+  "textHash": "fnv1a64:c22e178abbb87701",
+  "jsonHash": "fnv1a64:99588f2b341a2ed4",
+  "findings": []
+}

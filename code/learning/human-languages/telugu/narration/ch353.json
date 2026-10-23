@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 353,
+  "title": "Vanished",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:73d8f752b475be56",
+  "lessons": [
+    {
+      "id": "TE-C353-adrsyam",
+      "sequence": 17380,
+      "title": "అదృశ్యం (adṛśyaṁ) — a disappearance; vanished",
+      "headword": "అదృశ్యం",
+      "romanization": "adṛśyaṁ",
+      "gloss": "a disappearance; vanished",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:60f77bd97808056d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to turn in, then the Telugu for to step aside."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అదృశ్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అదృశ్యం — adṛśyaṁ — \"a disappearance; vanished\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ పాప అదృశ్యం అందరినీ భయపెట్టింది. ā pāpa adṛśyaṁ andarinī bhayapeṭṭindi. The child's disappearance frightened everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "అదృశ్యమైంది, has gone missing: the news form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అదృశ్యం (adṛśyaṁ) is borrowed from Sanskrit adṛśya, \"invisible, latent\" (Monier-Williams), from a-, \"not\", and dṛś, \"to see\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adṛśyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adṛśyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adṛśyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adṛśyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pāpa adṛśyaṁ andarinī bhayapeṭṭindi. — The child's disappearance frightened everyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pāpa adṛśyaṁ andarinī bhayapeṭṭindi.* — The child's disappearance frightened everyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to turn in, then the Telugu for to step aside, then say adṛśyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to turn in, then the Telugu for to step aside, then say *adṛśyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అదృశ్యం (adṛśyaṁ) mean? (\"A disappearance; vanished\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C353-mayamavu",
+      "sequence": 17390,
+      "title": "మాయమవు (māyamavu) — to vanish; to disappear",
+      "headword": "మాయమవు",
+      "romanization": "māyamavu",
+      "gloss": "to vanish; to disappear",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f0f559a913f7f9b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to step aside, then the Telugu for a disappearance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మాయమవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మాయమవు — māyamavu — \"to vanish; to disappear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నా సైకిలు రాత్రికి రాత్రే మాయమైంది. nā saikilu rātriki rātrē māyamaindi. My bicycle vanished overnight."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): మాయమయ్యాను, māyamayyānu."
+            },
+            {
+              "kind": "speech",
+              "text": "మాయం, vanished, with అవు, to become."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మాయమవు (māyamavu) is built on Sanskrit māyā, \"supernatural power; illusion\" (CDIAL 10060), with the Telugu verb avu, \"to become\": to go as if by magic."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māyamavu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māyamavu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māyamavu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māyamavu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nā saikilu rātriki rātrē māyamaindi. — My bicycle vanished overnight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nā saikilu rātriki rātrē māyamaindi.* — My bicycle vanished overnight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to step aside, then the Telugu for a disappearance, then say māyamavu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to step aside, then the Telugu for a disappearance, then say *māyamavu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మాయమవు (māyamavu) mean? (\"To vanish; to disappear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C353-kanumarugavu",
+      "sequence": 17400,
+      "title": "కనుమరుగవు (kanumarugavu) — to fade from view",
+      "headword": "కనుమరుగవు",
+      "romanization": "kanumarugavu",
+      "gloss": "to fade from view",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61f4ed45a6fac599",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a disappearance, then the Telugu for to vanish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కనుమరుగవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కనుమరుగవు — kanumarugavu — \"to fade from view\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ పాత ఆచారాలు క్రమంగా కనుమరుగయ్యాయి. ā pāta ācārālu kramaṅgā kanumarugayyāyi. Those old customs gradually faded away."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): కనుమరుగయ్యాను, kanumarugayyānu."
+            },
+            {
+              "kind": "speech",
+              "text": "కను, eye, మరుగు, hiding, and అవు: to go hidden from the eye."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కనుమరుగవు (kanumarugavu) is a native compound: kanu, \"the eye\" (DEDR 1159), maṟugu, \"to be concealed\" (DEDR 4760, beside maṟacu, \"to forget\"), and avu, \"to become\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanumarugavu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanumarugavu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanumarugavu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanumarugavu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pāta ācārālu kramaṅgā kanumarugayyāyi. — Those old customs gradually faded away.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pāta ācārālu kramaṅgā kanumarugayyāyi.* — Those old customs gradually faded away.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a disappearance, then the Telugu for to vanish, then say kanumarugavu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a disappearance, then the Telugu for to vanish, then say *kanumarugavu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కనుమరుగవు (kanumarugavu) mean? (\"To fade from view\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C353-pratyaksamavu",
+      "sequence": 17410,
+      "title": "ప్రత్యక్షమవు (pratyakṣamavu) — to appear suddenly",
+      "headword": "ప్రత్యక్షమవు",
+      "romanization": "pratyakṣamavu",
+      "gloss": "to appear suddenly",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a69c9bc6a7cc4836",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to vanish, then the Telugu for to fade from view."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రత్యక్షమవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రత్యక్షమవు — pratyakṣamavu — \"to appear suddenly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మాయమైన కుక్క మరుసటి రోజు ప్రత్యక్షమైంది. māyamaina kukka marusaṭi rōju pratyakṣamaindi. The dog that had vanished turned up the next day."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ప్రత్యక్షమయ్యాను, pratyakṣamayyānu."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రత్యక్షం, before the eyes, with అవు, to become."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రత్యక్షమవు (pratyakṣamavu) is built on Sanskrit pratyakṣa, \"before the eyes, visible\" (CDIAL 8635), with the Telugu verb avu, \"to become\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratyakṣamavu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratyakṣamavu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratyakṣamavu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratyakṣamavu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māyamaina kukka marusaṭi rōju pratyakṣamaindi. — The dog that had vanished turned up the next day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māyamaina kukka marusaṭi rōju pratyakṣamaindi.* — The dog that had vanished turned up the next day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to vanish, then the Telugu for to fade from view, then say pratyakṣamavu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to vanish, then the Telugu for to fade from view, then say *pratyakṣamavu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రత్యక్షమవు (pratyakṣamavu) mean? (\"To appear suddenly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C353-kanipettu",
+      "sequence": 17420,
+      "title": "కనిపెట్టు (kanipeṭṭu) — to detect; to find out",
+      "headword": "కనిపెట్టు",
+      "romanization": "kanipeṭṭu",
+      "gloss": "to detect; to find out",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7d0c8d48b6a64b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to fade from view, then the Telugu for to appear suddenly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కనిపెట్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కనిపెట్టు — kanipeṭṭu — \"to detect; to find out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పోలీసులు దొంగ ఇల్లు కనిపెట్టారు. pōlīsulu doṅga illu kanipeṭṭāru. The police found out the thief's house."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): కనిపెట్టాను, kanipeṭṭānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to invent: ఆయన కొత్త యంత్రం కనిపెట్టాడు, he invented a new machine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కనిపెట్టు (kanipeṭṭu) is a native compound: kanu, \"to see\" (DEDR 1443), and peṭṭu, \"to put, place\" (DEDR 4390)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanipeṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanipeṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanipeṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanipeṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsulu doṅga illu kanipeṭṭāru. — The police found out the thief's house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsulu doṅga illu kanipeṭṭāru.* — The police found out the thief's house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to fade from view, then the Telugu for to appear suddenly, then say kanipeṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to fade from view, then the Telugu for to appear suddenly, then say *kanipeṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కనిపెట్టు (kanipeṭṭu) mean? (\"To detect; to find out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

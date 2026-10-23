@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C386-akasmika",
+    "language": "kannada",
+    "chapter": 386,
+    "sequence": 19530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:906cb482362d6aff"
+  },
+  "findings": []
+}

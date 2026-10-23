@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:50c98c4a7264c631",
+  "lessonIds": [
+    "ML-C423-nayam",
+    "ML-C423-natappakkuka",
+    "ML-C423-pasakkuka",
+    "ML-C423-bhedagati-ceyyuka",
+    "ML-C423-satyapratijna"
+  ],
+  "tex": "malayalam/book/chapters/ch423-making-policy.tex"
+}

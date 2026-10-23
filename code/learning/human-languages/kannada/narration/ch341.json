@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 341,
+  "title": "Our Family Line",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8b83b1bf707475ed",
+  "lessons": [
+    {
+      "id": "KA-C341-vamsa",
+      "sequence": 17130,
+      "title": "ವಂಶ (vaṃśa) — a lineage; a dynasty",
+      "headword": "ವಂಶ",
+      "romanization": "vaṃśa",
+      "gloss": "a lineage; a dynasty",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0676fe109befd115",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a demon, then the Kannada for a curse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಂಶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಂಶ — vaṃśa — \"a lineage; a dynasty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ವಂಶದ ರಾಜರು ಮುನ್ನೂರು ವರ್ಷ ಆಳಿದರು. ā vaṃśada rājaru munnūru varṣa āḷidaru. The kings of that dynasty ruled for three hundred years."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಂಶವೃಕ್ಷ is a family tree."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಂಶ (vaṃśa) is borrowed from Sanskrit vaṃśa, \"a bamboo cane\", and from its joints, \"a line of descent, a race\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṃśa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṃśa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṃśa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṃśa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā vaṃśada rājaru munnūru varṣa āḷidaru. — The kings of that dynasty ruled for three hundred years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā vaṃśada rājaru munnūru varṣa āḷidaru.* — The kings of that dynasty ruled for three hundred years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a demon, then the Kannada for a curse, then say vaṃśa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a demon, then the Kannada for a curse, then say *vaṃśa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಂಶ (vaṃśa) mean? (\"A lineage; a dynasty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C341-purvaja",
+      "sequence": 17140,
+      "title": "ಪೂರ್ವಜ (pūrvaja) — an ancestor",
+      "headword": "ಪೂರ್ವಜ",
+      "romanization": "pūrvaja",
+      "gloss": "an ancestor",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4abc4cd334cb0b3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a curse, then the Kannada for a lineage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪೂರ್ವಜ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪೂರ್ವಜ — pūrvaja — \"an ancestor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಮ್ಮ ಪೂರ್ವಜರು ಈ ಊರಿಗೆ ಬಂದು ಮನೆ ಕಟ್ಟಿದರು. namma pūrvajaru ī ūrige bandu mane kaṭṭidaru. Our ancestors came to this village and built houses."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಪೂರ್ವಜರು, pūrvajaru."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪೂರ್ವ, before, and ಜ, born: one born before."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪೂರ್ವಜ (pūrvaja) is borrowed from Sanskrit pūrvaja, \"born before, former, ancient\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrvaja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrvaja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrvaja, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrvaja*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namma pūrvajaru ī ūrige bandu mane kaṭṭidaru. — Our ancestors came to this village and built houses.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namma pūrvajaru ī ūrige bandu mane kaṭṭidaru.* — Our ancestors came to this village and built houses.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a curse, then the Kannada for a lineage, then say pūrvaja again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a curse, then the Kannada for a lineage, then say *pūrvaja* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪೂರ್ವಜ (pūrvaja) mean? (\"An ancestor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C341-talemaru",
+      "sequence": 17150,
+      "title": "ತಲೆಮಾರು (talemāru) — a family generation",
+      "headword": "ತಲೆಮಾರು",
+      "romanization": "talemāru",
+      "gloss": "a family generation",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9222edbfd6074da7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a lineage, then the Kannada for an ancestor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತಲೆಮಾರು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಲೆಮಾರು — talemāru — \"a family generation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಮನೆಯಲ್ಲಿ ನಾಲ್ಕು ತಲೆಮಾರಿನವರು ಒಟ್ಟಿಗೆ ಇದ್ದರು. ī maneyalli nālku talemārinavaru oṭṭige iddaru. Four generations lived together in this house."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ತಲೆಮಾರುಗಳು, talemārugaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "Grandparents, parents and children are three ತಲೆಮಾರು (talemāru)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಲೆಮಾರು (talemāru) is built on native tale, \"head, top\" (DEDR 3103); the origin of the second part, -ಮಾರು, is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talemāru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talemāru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talemāru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talemāru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī maneyalli nālku talemārinavaru oṭṭige iddaru. — Four generations lived together in this house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī maneyalli nālku talemārinavaru oṭṭige iddaru.* — Four generations lived together in this house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a lineage, then the Kannada for an ancestor, then say talemāru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a lineage, then the Kannada for an ancestor, then say *talemāru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತಲೆಮಾರು (talemāru) mean? (\"A family generation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C341-manetana",
+      "sequence": 17160,
+      "title": "ಮನೆತನ (manetana) — a family line; a household",
+      "headword": "ಮನೆತನ",
+      "romanization": "manetana",
+      "gloss": "a family line; a household",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f83931f7295a041",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an ancestor, then the Kannada for a family generation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮನೆತನ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮನೆತನ — manetana — \"a family line; a household\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವರದು ಹಳೆಯ ಶ್ರೀಮಂತ ಮನೆತನ. avaradu haḷeya śrīmanta manetana. Theirs is an old wealthy family."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮನೆ, house, with -ತನ, \"-ness\": the house as a family through time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮನೆತನ (manetana) is native Dravidian: DEDR 4776 lists Kannada manetana, \"household, household life\", built on mane, \"a house\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manetana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manetana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manetana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manetana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaradu haḷeya śrīmanta manetana. — Theirs is an old wealthy family.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaradu haḷeya śrīmanta manetana.* — Theirs is an old wealthy family.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an ancestor, then the Kannada for a family generation, then say manetana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an ancestor, then the Kannada for a family generation, then say *manetana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮನೆತನ (manetana) mean? (\"A family line; a household\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C341-arasa",
+      "sequence": 17170,
+      "title": "ಅರಸ (arasa) — a monarch; a king",
+      "headword": "ಅರಸ",
+      "romanization": "arasa",
+      "gloss": "a monarch; a king",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5aecab00d3bd281",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a family generation, then the Kannada for a family line."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅರಸ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅರಸ — arasa — \"a monarch; a king\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಅರಸ ಪ್ರಜೆಗಳಿಗಾಗಿ ಕೆರೆಗಳನ್ನು ಕಟ್ಟಿಸಿದನು. ā arasa prajegaḷigāgi keregaḷannu kaṭṭisidanu. That king had lakes built for his people."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಅರಸರು, arasaru."
+            },
+            {
+              "kind": "speech",
+              "text": "An older Kannada form beside ರಾಜ; ಅರಮನೆ, a palace, is the king's house."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅರಸ (arasa) goes back to Sanskrit rājan, \"a chieftain, a king\" (CDIAL 10679): DEDR 201 lists Kannada arasa, arasu, \"a king, a lord\", and ara-mane, \"a palace\", and derives them from the Sanskrit word. It is an old reshaped loan, beside the learned ರಾಜ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arasa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arasa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arasa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arasa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā arasa prajegaḷigāgi keregaḷannu kaṭṭisidanu. — That king had lakes built for his people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā arasa prajegaḷigāgi keregaḷannu kaṭṭisidanu.* — That king had lakes built for his people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a family generation, then the Kannada for a family line, then say arasa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a family generation, then the Kannada for a family line, then say *arasa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅರಸ (arasa) mean? (\"A monarch; a king\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

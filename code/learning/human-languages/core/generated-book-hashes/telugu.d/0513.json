@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:1dad4ab40bc77a23",
+  "lessonIds": [
+    "TE-C513-vyadhi",
+    "TE-C513-antuvyadhi",
+    "TE-C513-gundepotu",
+    "TE-C513-paksavatam",
+    "TE-C513-ubbasam"
+  ],
+  "tex": "telugu/book/chapters/ch513-diseases.tex"
+}

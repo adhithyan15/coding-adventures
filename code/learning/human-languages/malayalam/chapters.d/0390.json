@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "Farewells",
+  "label": "ch:ml-farewells",
+  "canDo": "I can say a send-off, to bid farewell, to see off, to say goodbye and to leave one's homeland.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C390-natuvituka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can say a send-off, to bid farewell, to see off, to say goodbye and to leave one's homeland.",
+    "assesses": [
+      "ML-LEX-C390-YATRAYAYAPPU390-03",
+      "ML-LEX-C390-YATRAYAYAPPU390-04",
+      "ML-LEX-C390-YATRAYAYAPPU390-05"
+    ]
+  }
+}

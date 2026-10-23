@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 368,
+  "title": "In Court",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3e1be9737feb1680",
+  "lessons": [
+    {
+      "id": "ML-C368-kotati",
+      "sequence": 17970,
+      "title": "കോടതി (kōṭati) — a court of law",
+      "headword": "കോടതി",
+      "romanization": "kōṭati",
+      "gloss": "a court of law",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8acc1dbd7187b179",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to kidnap, then the Malayalam for to keep watch on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കോടതി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കോടതി — kōṭati — \"a court of law\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നാളെ അച്ഛന് കോടതിയിൽ പോകണം. nāḷe acchanŭ kōṭatiyil pōkaṇaṁ. Tomorrow father has to go to court."
+            },
+            {
+              "kind": "speech",
+              "text": "In court is കോടതിയിൽ. A lawyer, വക്കീൽ, argues there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of കോടതി (kōṭati) is not settled. It is the everyday Malayalam word for a court of law, where a വക്കീൽ, a lawyer, works."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōṭati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōṭati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōṭati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōṭati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāḷe acchanŭ kōṭatiyil pōkaṇaṁ. — Tomorrow father has to go to court.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāḷe acchanŭ kōṭatiyil pōkaṇaṁ.* — Tomorrow father has to go to court.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to kidnap, then the Malayalam for to keep watch on, then say kōṭati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to kidnap, then the Malayalam for to keep watch on, then say *kōṭati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കോടതി (kōṭati) mean? (\"A court of law\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C368-kesu",
+      "sequence": 17980,
+      "title": "കേസ് (kēsŭ) — a court case",
+      "headword": "കേസ്",
+      "romanization": "kēsŭ",
+      "gloss": "a court case",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:145a896638136d2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to keep watch on, then the Malayalam for a court of law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കേസ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കേസ് — kēsŭ — \"a court case\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ കേസ് പത്ത് വർഷം നീണ്ടു. ā kēsŭ pattŭ varṣaṁ nīṇṭu. That case dragged on for ten years."
+            },
+            {
+              "kind": "speech",
+              "text": "A case is filed: കേസ് (kēsŭ) കൊടുക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കേസ് (kēsŭ) was borrowed from English case, in its legal sense. Like many English nouns, it ends in a short -ŭ in Malayalam."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēsŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēsŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēsŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēsŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kēsŭ pattŭ varṣaṁ nīṇṭu. — That case dragged on for ten years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kēsŭ pattŭ varṣaṁ nīṇṭu.* — That case dragged on for ten years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to keep watch on, then the Malayalam for a court of law, then say kēsŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to keep watch on, then the Malayalam for a court of law, then say *kēsŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കേസ് (kēsŭ) mean? (\"A court case\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C368-vicarana",
+      "sequence": 17990,
+      "title": "വിചാരണ (vicāraṇa) — a trial",
+      "headword": "വിചാരണ",
+      "romanization": "vicāraṇa",
+      "gloss": "a trial",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:958e7e96658edfdc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a court of law, then the Malayalam for a court case."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിചാരണ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിചാരണ — vicāraṇa — \"a trial\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കേസിന്റെ വിചാരണ അടുത്ത മാസം തുടങ്ങും. kēsinṟe vicāraṇa aṭutta māsaṁ tuṭaṅṅuṁ. The trial of the case will begin next month."
+            },
+            {
+              "kind": "speech",
+              "text": "A court holds it: വിചാരണ (vicāraṇa) നടത്തുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിചാരണ (vicāraṇa) is borrowed from Sanskrit vicāraṇa, \"consideration, reflexion, discussion\" (Monier-Williams): a trial is the court's weighing of a case."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicāraṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicāraṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicāraṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicāraṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēsinṟe vicāraṇa aṭutta māsaṁ tuṭaṅṅuṁ. — The trial of the case will begin next month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēsinṟe vicāraṇa aṭutta māsaṁ tuṭaṅṅuṁ.* — The trial of the case will begin next month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a court of law, then the Malayalam for a court case, then say vicāraṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a court of law, then the Malayalam for a court case, then say *vicāraṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിചാരണ (vicāraṇa) mean? (\"A trial\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C368-nyayadhipan",
+      "sequence": 18000,
+      "title": "ന്യായാധിപൻ (nyāyādhipan) — a judge",
+      "headword": "ന്യായാധിപൻ",
+      "romanization": "nyāyādhipan",
+      "gloss": "a judge",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:421985bf59e856aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a court case, then the Malayalam for a trial."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ന്യായാധിപൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ന്യായാധിപൻ — nyāyādhipan — \"a judge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ന്യായാധിപൻ സാക്ഷിയോട് ചോദ്യങ്ങൾ ചോദിച്ചു. nyāyādhipan sākṣiyōṭŭ cōdyaṅṅaḷ cōdiccu. The judge asked the witness questions."
+            },
+            {
+              "kind": "speech",
+              "text": "The formal word: ന്യായം, justice, + അധിപൻ, a chief."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ന്യായാധിപൻ (nyāyādhipan) is built from Sanskrit nyāya, \"rule, method; a judicial sentence\" (CDIAL 7614), which gave ന്യായം (nyāyaṁ), and adhipa, \"a ruler, a commander\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyāyādhipan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyāyādhipan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyāyādhipan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyāyādhipan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyāyādhipan sākṣiyōṭŭ cōdyaṅṅaḷ cōdiccu. — The judge asked the witness questions.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyāyādhipan sākṣiyōṭŭ cōdyaṅṅaḷ cōdiccu.* — The judge asked the witness questions.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a court case, then the Malayalam for a trial, then say nyāyādhipan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a court case, then the Malayalam for a trial, then say *nyāyādhipan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ന്യായാധിപൻ (nyāyādhipan) mean? (\"A judge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C368-prati",
+      "sequence": 18010,
+      "title": "പ്രതി (prati) — the accused; a defendant",
+      "headword": "പ്രതി",
+      "romanization": "prati",
+      "gloss": "the accused; a defendant",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce3eea48a6a011d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a trial, then the Malayalam for a judge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രതി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രതി — prati — \"the accused; a defendant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പ്രതി കോടതിയിൽ ഒന്നും പറഞ്ഞില്ല. prati kōṭatiyil onnuṁ paṟaññilla. The accused said nothing in court."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a copy of a book or a paper: രണ്ട് പ്രതി (prati), two copies."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രതി (prati) is usually traced to Sanskrit prati, \"towards, against, in opposition to\" (CDIAL 8540): the accused is the one the case stands against."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prati kōṭatiyil onnuṁ paṟaññilla. — The accused said nothing in court.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prati kōṭatiyil onnuṁ paṟaññilla.* — The accused said nothing in court.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a trial, then the Malayalam for a judge, then say prati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a trial, then the Malayalam for a judge, then say *prati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രതി (prati) mean? (\"The accused; a defendant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

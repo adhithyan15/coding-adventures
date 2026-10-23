@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:d9a3d968e1108b88",
+  "lessonIds": [
+    "KA-C379-sammatisu",
+    "KA-C379-bhinnabhipraya",
+    "KA-C379-ommata",
+    "KA-C379-virodhisu",
+    "KA-C379-paraspara"
+  ],
+  "tex": "kannada/book/chapters/ch379-agreeing-and-disagreeing.tex"
+}

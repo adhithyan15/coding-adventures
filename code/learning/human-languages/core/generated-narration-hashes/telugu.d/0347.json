@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:17ac3bc6294e1d5e",
+  "lessonIds": [
+    "TE-C347-vindu",
+    "TE-C347-kanuka",
+    "TE-C347-puspaguccham",
+    "TE-C347-svagatincu",
+    "TE-C347-kalusuko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch347.txt",
+  "json": "telugu/narration/ch347.json",
+  "textHash": "fnv1a64:e174010941270be4",
+  "jsonHash": "fnv1a64:cf9b87642f06b4be",
+  "findings": []
+}

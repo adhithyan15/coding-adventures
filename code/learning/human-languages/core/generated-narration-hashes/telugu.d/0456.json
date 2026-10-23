@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:ec749d30947e808a",
+  "lessonIds": [
+    "TE-C456-sikaru",
+    "TE-C456-viharincu",
+    "TE-C456-drsyam",
+    "TE-C456-sandhya",
+    "TE-C456-majili"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch456.txt",
+  "json": "telugu/narration/ch456.json",
+  "textHash": "fnv1a64:7dafabc5a55fa908",
+  "jsonHash": "fnv1a64:fa91da33653a09e7",
+  "findings": []
+}

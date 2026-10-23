@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 508,
+  "title": "Inside the Body",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:afb1cf5c8e669cf2",
+  "lessons": [
+    {
+      "id": "KA-C508-medulu",
+      "sequence": 25920,
+      "title": "ಮೆದುಳು (meduḷu) — the brain",
+      "headword": "ಮೆದುಳು",
+      "romanization": "meduḷu",
+      "gloss": "the brain",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7dd2d88a194fd573",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for hiccups, then the Kannada for asthma."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೆದುಳು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೆದುಳು — meduḷu — \"the brain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮೆದುಳು ದೇಹದ ಎಲ್ಲಾ ಕೆಲಸಗಳನ್ನು ನಡೆಸುತ್ತದೆ. meduḷu dēhada ellā kelasagaḷannu naḍesuttade. The brain runs all the work of the body."
+            },
+            {
+              "kind": "speech",
+              "text": "Also written ಮಿದುಳು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೆದುಳು (meduḷu) is native Dravidian: DEDR 5062 lists Kannada miduḷ and meduḷ, \"brain, marrow\", beside Telugu medaḍu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meduḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meduḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meduḷu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meduḷu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meduḷu dēhada ellā kelasagaḷannu naḍesuttade. — The brain runs all the work of the body.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meduḷu dēhada ellā kelasagaḷannu naḍesuttade.* — The brain runs all the work of the body.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for hiccups, then the Kannada for asthma, then say meduḷu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for hiccups, then the Kannada for asthma, then say *meduḷu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮೆದುಳು (meduḷu) mean? (\"The brain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C508-svasakosa",
+      "sequence": 25930,
+      "title": "ಶ್ವಾಸಕೋಶ (śvāsakōśa) — a lung",
+      "headword": "ಶ್ವಾಸಕೋಶ",
+      "romanization": "śvāsakōśa",
+      "gloss": "a lung",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:081899a41246a049",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for asthma, then the Kannada for the brain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಶ್ವಾಸಕೋಶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶ್ವಾಸಕೋಶ — śvāsakōśa — \"a lung\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೊಗೆಯಿಂದ ಶ್ವಾಸಕೋಶಕ್ಕೆ ಹಾನಿ ಆಗುತ್ತದೆ. hogeyinda śvāsakōśakke hāni āguttade. Smoke harms the lungs."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಶ್ವಾಸಕೋಶಗಳು, śvāsakōśagaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "ಶ್ವಾಸ, breath + ಕೋಶ, a case: the case that holds the breath."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶ್ವಾಸಕೋಶ (śvāsakōśa) is a learned compound built from Sanskrit śvāsa, \"breath\" (CDIAL 12769), and kośa, \"a case, a sheath\" (CDIAL 3539)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śvāsakōśa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śvāsakōśa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śvāsakōśa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śvāsakōśa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hogeyinda śvāsakōśakke hāni āguttade. — Smoke harms the lungs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hogeyinda śvāsakōśakke hāni āguttade.* — Smoke harms the lungs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for asthma, then the Kannada for the brain, then say śvāsakōśa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for asthma, then the Kannada for the brain, then say *śvāsakōśa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಶ್ವಾಸಕೋಶ (śvāsakōśa) mean? (\"A lung\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C508-mutrapinda",
+      "sequence": 25940,
+      "title": "ಮೂತ್ರಪಿಂಡ (mūtrapiṇḍa) — a kidney",
+      "headword": "ಮೂತ್ರಪಿಂಡ",
+      "romanization": "mūtrapiṇḍa",
+      "gloss": "a kidney",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ad8c0cc969a22e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for the brain, then the Kannada for a lung."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೂತ್ರಪಿಂಡ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೂತ್ರಪಿಂಡ — mūtrapiṇḍa — \"a kidney\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಾಕಷ್ಟು ನೀರು ಕುಡಿದರೆ ಮೂತ್ರಪಿಂಡ ಚೆನ್ನಾಗಿರುತ್ತದೆ. sākaṣṭu nīru kuḍidare mūtrapiṇḍa cennāgiruttade. If you drink enough water, the kidneys stay healthy."
+            },
+            {
+              "kind": "speech",
+              "text": "Doctors and patients also say ಕಿಡ್ನಿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೂತ್ರಪಿಂಡ (mūtrapiṇḍa) is a learned compound built from Sanskrit mūtra, \"urine\" (CDIAL 10234), and piṇḍa, \"a lump, a ball\" (CDIAL 8168)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūtrapiṇḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūtrapiṇḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūtrapiṇḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūtrapiṇḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sākaṣṭu nīru kuḍidare mūtrapiṇḍa cennāgiruttade. — If you drink enough water, the kidneys stay healthy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sākaṣṭu nīru kuḍidare mūtrapiṇḍa cennāgiruttade.* — If you drink enough water, the kidneys stay healthy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for the brain, then the Kannada for a lung, then say mūtrapiṇḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for the brain, then the Kannada for a lung, then say *mūtrapiṇḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮೂತ್ರಪಿಂಡ (mūtrapiṇḍa) mean? (\"A kidney\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C508-karulu",
+      "sequence": 25950,
+      "title": "ಕರುಳು (karuḷu) — the intestine; the gut",
+      "headword": "ಕರುಳು",
+      "romanization": "karuḷu",
+      "gloss": "the intestine; the gut",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6cf01147619ab661",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a lung, then the Kannada for a kidney."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕರುಳು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕರುಳು — karuḷu — \"the intestine; the gut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಸಿವಾದಾಗ ಕರುಳು ಸದ್ದು ಮಾಡುತ್ತದೆ. hasivādāga karuḷu saddu māḍuttade. When you are hungry, the gut rumbles."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the seat of tender feeling: ಕರುಳಿನ ಸಂಬಂಧ, a blood tie."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕರುಳು (karuḷu) is native Dravidian: DEDR 1274 lists Kannada karuḷ, \"an entrail, the bowels; love\", beside Malayalam karaḷ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karuḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karuḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karuḷu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karuḷu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hasivādāga karuḷu saddu māḍuttade. — When you are hungry, the gut rumbles.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hasivādāga karuḷu saddu māḍuttade.* — When you are hungry, the gut rumbles.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a lung, then the Kannada for a kidney, then say karuḷu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a lung, then the Kannada for a kidney, then say *karuḷu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕರುಳು (karuḷu) mean? (\"The intestine; the gut\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C508-snayu",
+      "sequence": 25960,
+      "title": "ಸ್ನಾಯು (snāyu) — a muscle",
+      "headword": "ಸ್ನಾಯು",
+      "romanization": "snāyu",
+      "gloss": "a muscle",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0b6ed87061787cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a kidney, then the Kannada for the intestine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸ್ನಾಯು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ನಾಯು — snāyu — \"a muscle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ವ್ಯಾಯಾಮದಿಂದ ಸ್ನಾಯುಗಳು ಗಟ್ಟಿಯಾಗುತ್ತವೆ. vyāyāmadinda snāyugaḷu gaṭṭiyāguttave. Exercise makes the muscles strong."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಸ್ನಾಯುಗಳು, snāyugaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸ್ನಾಯು (snāyu) ಸೆಳೆತ, a muscle cramp."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ನಾಯು (snāyu) is borrowed whole from Sanskrit snāyu, \"tendon, muscle, sinew\" (CDIAL 13793)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "snāyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *snāyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "snāyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *snāyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyāyāmadinda snāyugaḷu gaṭṭiyāguttave. — Exercise makes the muscles strong.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyāyāmadinda snāyugaḷu gaṭṭiyāguttave.* — Exercise makes the muscles strong.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a kidney, then the Kannada for the intestine, then say snāyu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a kidney, then the Kannada for the intestine, then say *snāyu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸ್ನಾಯು (snāyu) mean? (\"A muscle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

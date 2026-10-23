@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Stubborn and Hard-working",
+  "label": "ch:ml-stubborn-and-hard-working",
+  "canDo": "I can say stubbornness, a hard worker, optimism, sincerity and discipline.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C528-accatakkam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can say stubbornness, a hard worker, optimism, sincerity and discipline.",
+    "assesses": [
+      "ML-LEX-C528-SATHYAM528-03",
+      "ML-LEX-C528-SATHYAM528-04",
+      "ML-LEX-C528-SATHYAM528-05"
+    ]
+  }
+}

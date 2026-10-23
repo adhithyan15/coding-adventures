@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:2a66dd96999f1a01",
+  "lessonIds": [
+    "TE-C534-godavapadu",
+    "TE-C534-tagada",
+    "TE-C534-alugu",
+    "TE-C534-raji",
+    "TE-C534-manaspartha"
+  ],
+  "tex": "telugu/book/chapters/ch534-quarrels.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:17b75aa01c70a127",
+  "lessonIds": [
+    "KA-C478-haddu",
+    "KA-C478-kokkare",
+    "KA-C478-mincuhulu",
+    "KA-C478-edi",
+    "KA-C478-timingila"
+  ],
+  "tex": "kannada/book/chapters/ch478-from-eagles-to-whales.tex"
+}

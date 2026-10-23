@@ -1,0 +1,11 @@
+{
+  "id": "TE-C494-kalavarapadu",
+  "pathSegment": "TE-PATH-494-BHAVAM494",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-494-BHAVAM494",
+      "order": 2
+    }
+  ]
+}

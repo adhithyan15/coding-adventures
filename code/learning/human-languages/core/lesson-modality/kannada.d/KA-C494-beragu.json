@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C494-beragu",
+    "language": "kannada",
+    "chapter": 494,
+    "sequence": 25220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:873ba56a77b67d0e"
+  },
+  "findings": []
+}

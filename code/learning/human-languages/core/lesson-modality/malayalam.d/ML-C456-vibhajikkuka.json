@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C456-vibhajikkuka",
+    "language": "malayalam",
+    "chapter": 456,
+    "sequence": 22650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e0f05d40aad2660"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:ec3d318a62743e09",
+  "lessonIds": [
+    "TE-C330-vilekari",
+    "TE-C330-patrika",
+    "TE-C330-sirsika",
+    "TE-C330-kathanam",
+    "TE-C330-pracurincu"
+  ],
+  "tex": "telugu/book/chapters/ch330-the-reporter.tex"
+}

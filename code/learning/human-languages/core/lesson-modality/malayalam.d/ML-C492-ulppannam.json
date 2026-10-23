@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C492-ulppannam",
+    "language": "malayalam",
+    "chapter": 492,
+    "sequence": 24600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55ca09b3af827d3f"
+  },
+  "findings": []
+}

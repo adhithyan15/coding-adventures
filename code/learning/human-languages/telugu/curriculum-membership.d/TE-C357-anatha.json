@@ -1,0 +1,11 @@
+{
+  "id": "TE-C357-anatha",
+  "pathSegment": "TE-PATH-357-VAMSAM357",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-357-VAMSAM357",
+      "order": 3
+    }
+  ]
+}

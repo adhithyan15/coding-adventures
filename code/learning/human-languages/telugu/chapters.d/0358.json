@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "Making a Life",
+  "label": "ch:te-making-a-life",
+  "canDo": "I can say to live, to settle down, to take shelter, to dream of and luckily.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C358-adrstavasattu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can say to live, to settle down, to take shelter, to dream of and luckily.",
+    "assesses": [
+      "TE-LEX-C358-JIVITAM358-03",
+      "TE-LEX-C358-JIVITAM358-04",
+      "TE-LEX-C358-JIVITAM358-05"
+    ]
+  }
+}

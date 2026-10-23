@@ -1,0 +1,11 @@
+{
+  "id": "KA-C439-sunka",
+  "pathSegment": "KA-PATH-439-GADI439",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-439-GADI439",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:60d0a378bf00e8bb",
+  "lessonIds": [
+    "KA-C544-svic",
+    "KA-C544-plag",
+    "KA-C544-silindar",
+    "KA-C544-kolave",
+    "KA-C544-tanti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch544.txt",
+  "json": "kannada/narration/ch544.json",
+  "textHash": "fnv1a64:c01738c21bda3f8f",
+  "jsonHash": "fnv1a64:cba3efcef7a4ac1e",
+  "findings": []
+}

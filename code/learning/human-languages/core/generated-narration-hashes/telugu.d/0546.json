@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:dd632774efbff90f",
+  "lessonIds": [
+    "TE-C546-curu",
+    "TE-C546-pita",
+    "TE-C546-bavi",
+    "TE-C546-cembu",
+    "TE-C546-boddinka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch546.txt",
+  "json": "telugu/narration/ch546.json",
+  "textHash": "fnv1a64:ebe04f6b63cc556e",
+  "jsonHash": "fnv1a64:bfcae314abfb007d",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:adbdcf991f015091",
+  "lessonIds": [
+    "KA-C322-raja",
+    "KA-C322-rani",
+    "KA-C322-alu-rule",
+    "KA-C322-simhasana",
+    "KA-C322-kirita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch322.txt",
+  "json": "kannada/narration/ch322.json",
+  "textHash": "fnv1a64:1a782a8e3309fc22",
+  "jsonHash": "fnv1a64:365effdd106cba2b",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C431-pariksincu",
+  "pathSegment": "TE-PATH-431-PRAMANAM431",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-431-PRAMANAM431",
+      "order": 4
+    }
+  ]
+}

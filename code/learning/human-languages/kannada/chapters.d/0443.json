@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "City Traffic",
+  "label": "ch:ka-city-traffic",
+  "canDo": "I can say traffic, a traffic signal, a pedestrian, congestion and to control.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C443-niyantrisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can say traffic, a traffic signal, a pedestrian, congestion and to control.",
+    "assesses": [
+      "KA-LEX-C443-SANCHARA443-03",
+      "KA-LEX-C443-SANCHARA443-04",
+      "KA-LEX-C443-SANCHARA443-05"
+    ]
+  }
+}

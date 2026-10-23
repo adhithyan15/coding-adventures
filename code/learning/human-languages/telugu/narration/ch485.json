@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 485,
+  "title": "Paying Up",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:9bc6494f0515024a",
+  "lessons": [
+    {
+      "id": "TE-C485-cellimpu",
+      "sequence": 24400,
+      "title": "చెల్లింపు (cellimpu) — a payment",
+      "headword": "చెల్లింపు",
+      "romanization": "cellimpu",
+      "gloss": "a payment",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3a9a48720212974",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a concession, then the Telugu for to haggle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చెల్లింపు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చెల్లింపు — cellimpu — \"a payment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బిల్లు చెల్లింపు కోసం కౌంటరుకు వెళ్ళాను. billu cellimpu kōsaṁ kauṇṭaruku veḷḷānu. I went to the counter to pay the bill."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun of చెల్లించు, to pay. ఆన్లైన్ చెల్లింపు (cellimpu), an online payment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చెల్లింపు (cellimpu) is native Dravidian, the noun of చెల్లించు, \"to pay\", from చెల్లు, \"to pass, to be current, to be paid\" (DEDR 2781)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cellimpu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cellimpu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cellimpu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cellimpu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "billu cellimpu kōsaṁ kauṇṭaruku veḷḷānu. — I went to the counter to pay the bill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *billu cellimpu kōsaṁ kauṇṭaruku veḷḷānu.* — I went to the counter to pay the bill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a concession, then the Telugu for to haggle, then say cellimpu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a concession, then the Telugu for to haggle, then say *cellimpu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చెల్లింపు (cellimpu) mean? (\"A payment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C485-nagadu",
+      "sequence": 24410,
+      "title": "నగదు (nagadu) — cash",
+      "headword": "నగదు",
+      "romanization": "nagadu",
+      "gloss": "cash",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11d96634258ef3dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to haggle, then the Telugu for a payment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నగదు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నగదు — nagadu — \"cash\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ దుకాణంలో నగదు మాత్రమే తీసుకుంటారు. ā dukāṇaṁlō nagadu mātramē tīsukuṇṭāru. That shop takes cash only."
+            },
+            {
+              "kind": "speech",
+              "text": "నగదు (nagadu) రూపంలో, in cash."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నగదు (nagadu) is a loan from Arabic naqd, \"ready money, cash\", which came into Telugu through Persian and Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagadu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagadu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā dukāṇaṁlō nagadu mātramē tīsukuṇṭāru. — That shop takes cash only.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā dukāṇaṁlō nagadu mātramē tīsukuṇṭāru.* — That shop takes cash only.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to haggle, then the Telugu for a payment, then say nagadu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to haggle, then the Telugu for a payment, then say *nagadu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నగదు (nagadu) mean? (\"Cash\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C485-baki",
+      "sequence": 24420,
+      "title": "బాకీ (bākī) — money owed; a balance due",
+      "headword": "బాకీ",
+      "romanization": "bākī",
+      "gloss": "money owed; a balance due",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbdfbc0884fa8402",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a payment, then the Telugu for cash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బాకీ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బాకీ — bākī — \"money owed; a balance due\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కిరాణా కొట్టుకు ఇంకా వంద రూపాయలు బాకీ ఉన్నాను. kirāṇā koṭṭuku iṅkā vanda rūpāyalu bākī unnānu. I still owe the grocer a hundred rupees."
+            },
+            {
+              "kind": "speech",
+              "text": "బాకీ (bākī) ఉండు, to owe; బాకీ (bākī) తీర్చు, to settle a debt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బాకీ (bākī) is a loan from Arabic bāqī, \"remaining, the balance\", through Persian and Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bākī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bākī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bākī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bākī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kirāṇā koṭṭuku iṅkā vanda rūpāyalu bākī unnānu. — I still owe the grocer a hundred rupees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kirāṇā koṭṭuku iṅkā vanda rūpāyalu bākī unnānu.* — I still owe the grocer a hundred rupees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a payment, then the Telugu for cash, then say bākī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a payment, then the Telugu for cash, then say *bākī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బాకీ (bākī) mean? (\"Money owed; a balance due\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C485-marakam",
+      "sequence": 24430,
+      "title": "మారకం (mārakaṁ) — an exchange rate",
+      "headword": "మారకం",
+      "romanization": "mārakaṁ",
+      "gloss": "an exchange rate",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ab8dac54c62f9d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for cash, then the Telugu for money owed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మారకం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మారకం — mārakaṁ — \"an exchange rate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఇవాళ డాలరు మారకం రేటు పెరిగింది. ivāḷa ḍālaru mārakaṁ rēṭu perigindi. Today the dollar exchange rate went up."
+            },
+            {
+              "kind": "speech",
+              "text": "మారకం (mārakaṁ) రేటు, the exchange rate. మారు, to change, is in the word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మారకం (mārakaṁ) is native Dravidian, built on మారు, \"to change, to be exchanged\" (DEDR 4834)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārakaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārakaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārakaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārakaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ivāḷa ḍālaru mārakaṁ rēṭu perigindi. — Today the dollar exchange rate went up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ivāḷa ḍālaru mārakaṁ rēṭu perigindi.* — Today the dollar exchange rate went up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for cash, then the Telugu for money owed, then say mārakaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for cash, then the Telugu for money owed, then say *mārakaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మారకం (mārakaṁ) mean? (\"An exchange rate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C485-eggottu",
+      "sequence": 24440,
+      "title": "ఎగ్గొట్టు (eggoṭṭu) — to dodge; to skip paying",
+      "headword": "ఎగ్గొట్టు",
+      "romanization": "eggoṭṭu",
+      "gloss": "to dodge; to skip paying",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3dc153ff9635812d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for money owed, then the Telugu for an exchange rate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఎగ్గొట్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎగ్గొట్టు — eggoṭṭu — \"to dodge; to skip paying\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతను అద్దె ఎగ్గొట్టి వెళ్ళిపోయాడు. atanu adde eggoṭṭi veḷḷipōyāḍu. He went off without paying the rent."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఎగ్గొట్టాను, eggoṭṭānu."
+            },
+            {
+              "kind": "speech",
+              "text": "A colloquial word: to dodge a debt, a class or a duty."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎగ్గొట్టు (eggoṭṭu) is a Telugu compound: -గొట్టు, from the native కొట్టు, \"to strike\" (DEDR 2063), and a first part whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eggoṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eggoṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eggoṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eggoṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atanu adde eggoṭṭi veḷḷipōyāḍu. — He went off without paying the rent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atanu adde eggoṭṭi veḷḷipōyāḍu.* — He went off without paying the rent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for money owed, then the Telugu for an exchange rate, then say eggoṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for money owed, then the Telugu for an exchange rate, then say *eggoṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఎగ్గొట్టు (eggoṭṭu) mean? (\"To dodge; to skip paying\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R485-review-478-485",
+      "sequence": 24450,
+      "title": "Words from chapters 478–485 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 478-485",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d4924e5978bc441",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Telugu for a low-pressure area and a gale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a low-pressure area, a gale, a whirlwind, a rainstorm, to lose strength",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a low-pressure area, a gale, a whirlwind, a rainstorm, to lose strength]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a thunderbolt, a torrential rain, to close in, to grow dim, spray",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a thunderbolt, a torrential rain, to close in, to grow dim, spray]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to inundate, to overflow, to snap, to get bogged down, to get stuck",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to inundate, to overflow, to snap, to get bogged down, to get stuck]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a heatwave, a mirage, a dust storm, to dry up, to crack open",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a heatwave, a mirage, a dust storm, to dry up, to crack open]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hailstones, ice, snowfall, a breeze, to cool down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hailstones, ice, snowfall, a breeze, to cool down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to evaporate, to soak in, to blaze, to go out, to put forth leaves",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to evaporate, to soak in, to blaze, to go out, to put forth leaves]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sale, a consumer, quality, a concession, to haggle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sale, a consumer, quality, a concession, to haggle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a payment, cash, money owed, an exchange rate, to dodge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a payment, cash, money owed, an exchange rate, to dodge]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A low-pressure area? (అల్పపీడనం, alpapīḍanaṁ.) A gale? (పెనుగాలి, penugāli.) A whirlwind? (సుడిగాలి, suḍigāli.) A rainstorm? (గాలివాన, gālivāna.) To lose strength? (బలహీనపడు, balahīnapaḍu.) A thunderbolt? (పిడుగు, piḍugu.) A torrential rain? (కుండపోత, kuṇḍapōta.) To close in? (కమ్ము, kammu.) To grow dim? (మసకబారు, masakabāru.) Spray? (తుంపర, tumpara.) To inundate? (ముంచెత్తు, muñcettu.) To overflow? (పొంగిపొర్లు, poṅgiporlu.) To snap? (తెగిపోవు, tegipōvu.) To get bogged down? (కూరుకుపోవు, kūrukupōvu.) To get stuck? (ఇరుక్కుపోవు, irukkupōvu.) A heatwave? (వడగాలి, vaḍagāli.) A mirage? (ఎండమావి, eṇḍamāvi.) A dust storm? (గాలిదుమారం, gālidumāraṁ.) To dry up? (ఎండిపోవు, eṇḍipōvu.) To crack open? (బీటలు వారు, bīṭalu vāru.) Hailstones? (వడగళ్ళు, vaḍagaḷḷu.) Ice? (మంచుగడ్డ, mañcugaḍḍa.) Snowfall? (హిమపాతం, himapātaṁ.) A breeze? (పిల్లగాలి, pillagāli.) To cool down? (చల్లబడు, callabaḍu.) To evaporate? (ఆవిరవు, āviravu.) To soak in? (ఇంకిపోవు, iṅkipōvu.) To blaze? (మండు, maṇḍu.) To go out? (ఆరిపోవు, āripōvu.) To put forth leaves? (చిగురించు, ciguriñcu.) A sale? (అమ్మకం, ammakaṁ.) A consumer? (వినియోగదారుడు, viniyōgadāruḍu.) Quality? (నాణ్యత, nāṇyata.) A concession? (రాయితీ, rāyitī.) To haggle? (బేరమాడు, bēramāḍu.) A payment? (చెల్లింపు, cellimpu.) Cash? (నగదు, nagadu.) Money owed? (బాకీ, bākī.) An exchange rate? (మారకం, mārakaṁ.) To dodge? (ఎగ్గొట్టు, eggoṭṭu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:a74c9dc5ef2f1948",
+  "lessonIds": [
+    "KA-C540-kabaddi",
+    "KA-C540-kusti",
+    "KA-C540-golu",
+    "KA-C540-ode-kick",
+    "KA-C540-guddu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch540.txt",
+  "json": "kannada/narration/ch540.json",
+  "textHash": "fnv1a64:ad0c715874a3e05a",
+  "jsonHash": "fnv1a64:00d2bc5f019e766e",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:916f993f1c078201",
+  "lessonIds": [
+    "TE-C373-atmakatha",
+    "TE-C373-jivitacaritra",
+    "TE-C373-sameta",
+    "TE-C373-burrakatha",
+    "TE-C373-srikaram-cuttu",
+    "TE-R373-review-366-373"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch373.txt",
+  "json": "telugu/narration/ch373.json",
+  "textHash": "fnv1a64:99bc599d2dc8331a",
+  "jsonHash": "fnv1a64:bf2c520fdb35dff7",
+  "findings": []
+}

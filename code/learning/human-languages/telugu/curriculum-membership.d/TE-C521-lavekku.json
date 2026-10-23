@@ -1,0 +1,11 @@
+{
+  "id": "TE-C521-lavekku",
+  "pathSegment": "TE-PATH-521-BALAM521",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-521-BALAM521",
+      "order": 3
+    }
+  ]
+}

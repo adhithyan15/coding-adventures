@@ -1,0 +1,874 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 326,
+  "title": "A Child Goes Missing",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:11a6c073c8602289",
+  "lessons": [
+    {
+      "id": "KA-C326-kaneyagu",
+      "sequence": 16350,
+      "title": "ಕಾಣೆಯಾಗು (kāṇeyāgu) — to go missing",
+      "headword": "ಕಾಣೆಯಾಗು",
+      "romanization": "kāṇeyāgu",
+      "gloss": "to go missing",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fa21e2e0e03d719",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to bless, then the Kannada for a wedding party."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಾಣೆಯಾಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಾಣೆಯಾಗು — kāṇeyāgu — \"to go missing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಒಂದು ವೇಳೆ ಮಗು ಕಾಣೆಯಾದರೆ ಅಪ್ಪ ಅಮ್ಮ ತಕ್ಷಣ ದೂರು ಕೊಡುತ್ತಾರೆ. ondu vēḷe magu kāṇeyādare appa amma takṣaṇa dūru koḍuttāre. If a child goes missing, the parents report it at once."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಕಾಣೆಯಾಯಿತು, kāṇeyāyitu."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಾಣೆ, not to be seen, and ಆಗು, to become."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಾಣೆಯಾಗು (kāṇeyāgu) is a native Dravidian compound: ಕಾಣೆ, \"not seen\", from kāṇ \"to see\" (DEDR 1443), and āgu \"to become\" (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṇeyāgu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṇeyāgu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṇeyāgu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṇeyāgu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ondu vēḷe magu kāṇeyādare appa amma takṣaṇa dūru koḍuttāre. — If a child goes missing, the parents report it at once.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ondu vēḷe magu kāṇeyādare appa amma takṣaṇa dūru koḍuttāre.* — If a child goes missing, the parents report it at once.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to bless, then the Kannada for a wedding party, then say kāṇeyāgu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to bless, then the Kannada for a wedding party, then say *kāṇeyāgu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಾಣೆಯಾಗು (kāṇeyāgu) mean? (\"To go missing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C326-patte-haccu",
+      "sequence": 16360,
+      "title": "ಪತ್ತೆ ಹಚ್ಚು (patte haccu) — to track down; to detect",
+      "headword": "ಪತ್ತೆ ಹಚ್ಚು",
+      "romanization": "patte haccu",
+      "gloss": "to track down; to detect",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7ffff07ca4a7336",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a wedding party, then the Kannada for to go missing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪತ್ತೆ ಹಚ್ಚು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪತ್ತೆ ಹಚ್ಚು — patte haccu — \"to track down; to detect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪೊಲೀಸರು ಎರಡು ದಿನದಲ್ಲಿ ಮಗುವನ್ನು ಪತ್ತೆ ಹಚ್ಚಿದರು. polīsaru eraḍu dinadalli maguvannu patte haccidaru. The police tracked down the child in two days."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಪತ್ತೆ ಹಚ್ಚಿದೆ, patte haccide."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪತ್ತೆ is a trace; ಪತ್ತೆಯಾಗು means to be found."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪತ್ತೆ ಹಚ್ಚು (patte haccu) is a Kannada phrase verb built from ಪತ್ತೆ, \"a trace, a whereabouts\", and ಹಚ್ಚು, \"to apply, to light\". The origin of ಪತ್ತೆ is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patte haccu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patte haccu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patte haccu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patte haccu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polīsaru eraḍu dinadalli maguvannu patte haccidaru. — The police tracked down the child in two days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polīsaru eraḍu dinadalli maguvannu patte haccidaru.* — The police tracked down the child in two days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a wedding party, then the Kannada for to go missing, then say patte haccu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a wedding party, then the Kannada for to go missing, then say *patte haccu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪತ್ತೆ ಹಚ್ಚು (patte haccu) mean? (\"To track down; to detect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C326-kuruhu",
+      "sequence": 16370,
+      "title": "ಕುರುಹು (kuruhu) — a trace; a clue",
+      "headword": "ಕುರುಹು",
+      "romanization": "kuruhu",
+      "gloss": "a trace; a clue",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8fc783d997df8d3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to go missing, then the Kannada for to track down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕುರುಹು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕುರುಹು — kuruhu — \"a trace; a clue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಳ್ಳ ಯಾವ ಕುರುಹೂ ಬಿಡಲಿಲ್ಲ. kaḷḷa yāva kuruhū biḍalilla. The thief left no trace."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕುರುಹು (kuruhu) ಬಿಡು, to leave a trace; ಕುರುಹು (kuruhu) ಸಿಗು, to find a clue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕುರುಹು (kuruhu) is native Dravidian: DEDR 1847 lists Kannada kuṟuhu, \"a mark, a sign, a token\", beside kuṟi, \"a mark, an aim\". The verb ಗುರುತಿಸು belongs to the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuruhu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuruhu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuruhu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuruhu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷḷa yāva kuruhū biḍalilla. — The thief left no trace.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷḷa yāva kuruhū biḍalilla.* — The thief left no trace.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to go missing, then the Kannada for to track down, then say kuruhu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to go missing, then the Kannada for to track down, then say *kuruhu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕುರುಹು (kuruhu) mean? (\"A trace; a clue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C326-apaharisu",
+      "sequence": 16380,
+      "title": "ಅಪಹರಿಸು (apaharisu) — to kidnap; to abduct",
+      "headword": "ಅಪಹರಿಸು",
+      "romanization": "apaharisu",
+      "gloss": "to kidnap; to abduct",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbb32c88cde31f65",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to track down, then the Kannada for a trace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಪಹರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಪಹರಿಸು — apaharisu — \"to kidnap; to abduct\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇಬ್ಬರು ಆ ಹುಡುಗನನ್ನು ಅಪಹರಿಸಿದರು. ibbaru ā huḍuganannu apaharisidaru. Two people kidnapped that boy."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಅಪಹರಿಸಿದೆ, apahariside."
+            },
+            {
+              "kind": "speech",
+              "text": "The person taken takes -ಅನ್ನು. The noun is ಅಪಹರಣ, a kidnapping."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಪಹರಿಸು (apaharisu) is built on Sanskrit apaharaṇa, \"taking away, carrying off, stealing\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apaharisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apaharisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apaharisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apaharisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ibbaru ā huḍuganannu apaharisidaru. — Two people kidnapped that boy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ibbaru ā huḍuganannu apaharisidaru.* — Two people kidnapped that boy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to track down, then the Kannada for a trace, then say apaharisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to track down, then the Kannada for a trace, then say *apaharisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಪಹರಿಸು (apaharisu) mean? (\"To kidnap; to abduct\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C326-otteyalu",
+      "sequence": 16390,
+      "title": "ಒತ್ತೆಯಾಳು (otteyāḷu) — a hostage",
+      "headword": "ಒತ್ತೆಯಾಳು",
+      "romanization": "otteyāḷu",
+      "gloss": "a hostage",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:785634e40ada1ba7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a trace, then the Kannada for to kidnap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಒತ್ತೆಯಾಳು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒತ್ತೆಯಾಳು — otteyāḷu — \"a hostage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಳ್ಳರು ಅಂಗಡಿಯವನನ್ನು ಒತ್ತೆಯಾಳಾಗಿ ಇಟ್ಟುಕೊಂಡರು. kaḷḷaru aṅgaḍiyavanannu otteyāḷāgi iṭṭukoṇḍaru. The robbers kept the shopkeeper as a hostage."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಒತ್ತೆಯಾಳುಗಳು, otteyāḷugaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "ಒತ್ತೆ, a pledge, and ಆಳು, a person: a person held as a pledge."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒತ್ತೆಯಾಳು (otteyāḷu) is a native Dravidian compound: otte, \"a pledge, a pawn\" (DEDR 1020), and āḷ, \"a person, a servant\" (DEDR 399)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otteyāḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otteyāḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otteyāḷu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otteyāḷu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷḷaru aṅgaḍiyavanannu otteyāḷāgi iṭṭukoṇḍaru. — The robbers kept the shopkeeper as a hostage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷḷaru aṅgaḍiyavanannu otteyāḷāgi iṭṭukoṇḍaru.* — The robbers kept the shopkeeper as a hostage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a trace, then the Kannada for to kidnap, then say otteyāḷu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a trace, then the Kannada for to kidnap, then say *otteyāḷu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಒತ್ತೆಯಾಳು (otteyāḷu) mean? (\"A hostage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R326-review-319-326",
+      "sequence": 16400,
+      "title": "Telling what happened",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from A Thief and a War to A Child Goes Missing",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebe5e0d24d6595ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Kannada for a war and a soldier."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a war, a soldier, to invade, a thief, to run away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a war, a soldier, to invade, a thief, to run away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a reporter, to occur, a broadcast, to broadcast, a headline",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a reporter, to occur, a broadcast, to broadcast, a headline]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a court of law, a judge, to accuse, a verdict, a punishment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a court of law, a judge, to accuse, a verdict, a punishment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a king, a queen, to reign, a throne, a crown",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a king, a queen, to reign, a throne, a crown]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a crime, to arrest, a police station, an investigation, to suspect",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a crime, to arrest, a police station, an investigation, to suspect]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a firefighter, to catch fire, presence of mind, to extinguish, to rescue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a firefighter, to catch fire, presence of mind, to extinguish, to rescue]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a marriage, a wedding reception, a dowry, to bless, a wedding party",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a marriage, a wedding reception, a dowry, to bless, a wedding party]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to go missing, to track down, a trace, to kidnap, a hostage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to go missing, to track down, a trace, to kidnap, a hostage]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A war? (ಯುದ್ಧ, yuddha.) A soldier? (ಸೈನಿಕ, sainika.) To invade? (ಆಕ್ರಮಿಸು, ākramisu.) A thief? (ಕಳ್ಳ, kaḷḷa.) To run away? (ಓಡಿಹೋಗು, ōḍihōgu.) A reporter? (ವರದಿಗಾರ, varadigāra.) To occur? (ಸಂಭವಿಸು, sambhavisu.) A broadcast? (ಪ್ರಸಾರ, prasāra.) To broadcast? (ಬಿತ್ತರಿಸು, bittarisu.) A headline? (ಶೀರ್ಷಿಕೆ, śīrṣike.) A court of law? (ನ್ಯಾಯಾಲಯ, nyāyālaya.) A judge? (ನ್ಯಾಯಾಧೀಶ, nyāyādhīśa.) To accuse? (ಆರೋಪಿಸು, ārōpisu.) A verdict? (ತೀರ್ಪು, tīrpu.) A punishment? (ಶಿಕ್ಷೆ, śikṣe.) A king? (ರಾಜ, rāja.) A queen? (ರಾಣಿ, rāṇi.) To reign? (ಆಳು, āḷu.) A throne? (ಸಿಂಹಾಸನ, siṃhāsana.) A crown? (ಕಿರೀಟ, kirīṭa.) A crime? (ಅಪರಾಧ, aparādha.) To arrest? (ಬಂಧಿಸು, bandhisu.) A police station? (ಠಾಣೆ, ṭhāṇe.) An investigation? (ತನಿಖೆ, tanikhe.) To suspect? (ಶಂಕಿಸು, śaṅkisu.) A firefighter? (ಅಗ್ನಿಶಾಮಕ, agniśāmaka.) To catch fire? (ಹೊತ್ತಿಕೊ, hottiko.) Presence of mind? (ಸಮಯಪ್ರಜ್ಞೆ, samayaprajñe.) To extinguish? (ನಂದಿಸು, nandisu.) To rescue? (ರಕ್ಷಿಸು, rakṣisu.) A marriage? (ವಿವಾಹ, vivāha.) A wedding reception? (ಆರತಕ್ಷತೆ, āratakṣate.) A dowry? (ವರದಕ್ಷಿಣೆ, varadakṣiṇe.) To bless? (ಹರಸು, harasu.) A wedding party? (ದಿಬ್ಬಣ, dibbaṇa.) To go missing? (ಕಾಣೆಯಾಗು, kāṇeyāgu.) To track down? (ಪತ್ತೆ ಹಚ್ಚು, patte haccu.) A trace? (ಕುರುಹು, kuruhu.) To kidnap? (ಅಪಹರಿಸು, apaharisu.) A hostage? (ಒತ್ತೆಯಾಳು, otteyāḷu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

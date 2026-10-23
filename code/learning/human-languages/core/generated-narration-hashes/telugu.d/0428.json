@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:1248abf3a4b13b34",
+  "lessonIds": [
+    "TE-C428-nindincu",
+    "TE-C428-avamanincu",
+    "TE-C428-vismarincu",
+    "TE-C428-lopam",
+    "TE-C428-savarincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch428.txt",
+  "json": "telugu/narration/ch428.json",
+  "textHash": "fnv1a64:073a1ec7e7f5b9a1",
+  "jsonHash": "fnv1a64:014ebc469450728c",
+  "findings": []
+}

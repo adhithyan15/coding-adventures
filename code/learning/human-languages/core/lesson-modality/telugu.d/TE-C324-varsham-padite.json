@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C324-varsham-padite",
+    "language": "telugu",
+    "chapter": 324,
+    "sequence": 15600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c02a8265f303b4ed"
+  },
+  "findings": []
+}

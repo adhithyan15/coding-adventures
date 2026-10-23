@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:a895061ed31d3290",
+  "lessonIds": [
+    "KA-C327-astaralli",
+    "KA-C327-hathattagi",
+    "KA-C327-kudale",
+    "KA-C327-ekaeki",
+    "KA-C327-beccibilu"
+  ],
+  "tex": "kannada/book/chapters/ch327-all-of-a-sudden.tex"
+}

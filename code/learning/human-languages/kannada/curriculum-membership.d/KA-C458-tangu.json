@@ -1,0 +1,11 @@
+{
+  "id": "KA-C458-tangu",
+  "pathSegment": "KA-PATH-458-YATRE458",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-458-YATRE458",
+      "order": 4
+    }
+  ]
+}

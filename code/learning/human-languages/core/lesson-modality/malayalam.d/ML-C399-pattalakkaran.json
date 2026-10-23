@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C399-pattalakkaran",
+    "language": "malayalam",
+    "chapter": 399,
+    "sequence": 19590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58a9c3d77be80936"
+  },
+  "findings": []
+}

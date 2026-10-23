@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 556,
+  "sourceHash": "fnv1a64:85cf5a084093eba0",
+  "lessonIds": [
+    "ML-C556-pinakkam",
+    "ML-C556-catikkuka",
+    "ML-C556-vancana",
+    "ML-C556-karutal",
+    "ML-C556-pariganana",
+    "ML-R556-review-549-556"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch556.txt",
+  "json": "malayalam/narration/ch556.json",
+  "textHash": "fnv1a64:5c503e27abafaf9b",
+  "jsonHash": "fnv1a64:ee3ad1331be443e4",
+  "findings": []
+}

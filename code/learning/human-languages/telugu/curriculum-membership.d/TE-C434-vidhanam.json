@@ -1,0 +1,11 @@
+{
+  "id": "TE-C434-vidhanam",
+  "pathSegment": "TE-PATH-434-VYAVASTHA434",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-434-VYAVASTHA434",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:8b742824afb3fe31",
+  "lessonIds": [
+    "TE-C466-caurasta",
+    "TE-C466-udyanavanam",
+    "TE-C466-paccika",
+    "TE-C466-vidhidipam",
+    "TE-C466-parisaralu"
+  ],
+  "tex": "telugu/book/chapters/ch466-around-the-square.tex"
+}

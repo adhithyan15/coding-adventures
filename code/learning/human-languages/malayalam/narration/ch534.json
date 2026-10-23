@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 534,
+  "title": "Heartburn and Sleepless Nights",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3344d292850add5c",
+  "lessons": [
+    {
+      "id": "ML-C534-astma",
+      "sequence": 26870,
+      "title": "ആസ്ത്മ (āstma) — asthma",
+      "headword": "ആസ്ത്മ",
+      "romanization": "āstma",
+      "gloss": "asthma",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf8afafce7f8d154",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to grow weak, then the Malayalam for breathlessness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആസ്ത്മ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആസ്ത്മ — āstma — \"asthma\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തണുപ്പുകാലത്ത് മുത്തശ്ശിക്ക് ആസ്ത്മ കൂടും. taṇuppukālattŭ muttaśśikkŭ āstma kūṭuṁ. In the cold season grandmother's asthma gets worse."
+            },
+            {
+              "kind": "speech",
+              "text": "A long-lasting illness; ശ്വാസംമുട്ട് is the breathlessness it brings."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആസ്ത്മ (āstma) was borrowed from English asthma."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āstma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āstma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āstma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āstma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṇuppukālattŭ muttaśśikkŭ āstma kūṭuṁ. — In the cold season grandmother's asthma gets worse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṇuppukālattŭ muttaśśikkŭ āstma kūṭuṁ.* — In the cold season grandmother's asthma gets worse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to grow weak, then the Malayalam for breathlessness, then say āstma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to grow weak, then the Malayalam for breathlessness, then say *āstma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആസ്ത്മ (āstma) mean? (\"Asthma\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C534-nencericcil",
+      "sequence": 26880,
+      "title": "നെഞ്ചെരിച്ചിൽ (neñcericcil) — heartburn",
+      "headword": "നെഞ്ചെരിച്ചിൽ",
+      "romanization": "neñcericcil",
+      "gloss": "heartburn",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:edb12ba685b20e6b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for breathlessness, then the Malayalam for asthma."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നെഞ്ചെരിച്ചിൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നെഞ്ചെരിച്ചിൽ — neñcericcil — \"heartburn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "എരിവുള്ള ഭക്ഷണം കഴിച്ചാൽ എനിക്ക് നെഞ്ചെരിച്ചിൽ വരും. erivuḷḷa bhakṣaṇaṁ kaḻiccāl enikkŭ neñcericcil varuṁ. If I eat spicy food, I get heartburn."
+            },
+            {
+              "kind": "speech",
+              "text": "നെഞ്ച് chest + എരിച്ചിൽ burning, from എരിയുക, to burn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നെഞ്ചെരിച്ചിൽ (neñcericcil) is native Dravidian, a compound of നെഞ്ച്, \"the chest\" (DEDR 3736), and എരിച്ചിൽ, \"burning, smarting\" (DEDR 811)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neñcericcil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neñcericcil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neñcericcil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neñcericcil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "erivuḷḷa bhakṣaṇaṁ kaḻiccāl enikkŭ neñcericcil varuṁ. — If I eat spicy food, I get heartburn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *erivuḷḷa bhakṣaṇaṁ kaḻiccāl enikkŭ neñcericcil varuṁ.* — If I eat spicy food, I get heartburn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for breathlessness, then the Malayalam for asthma, then say neñcericcil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for breathlessness, then the Malayalam for asthma, then say *neñcericcil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നെഞ്ചെരിച്ചിൽ (neñcericcil) mean? (\"Heartburn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C534-malabandham",
+      "sequence": 26890,
+      "title": "മലബന്ധം (malabandhaṁ) — constipation",
+      "headword": "മലബന്ധം",
+      "romanization": "malabandhaṁ",
+      "gloss": "constipation",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d28299bb79241d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for asthma, then the Malayalam for heartburn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മലബന്ധം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മലബന്ധം — malabandhaṁ — \"constipation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വെള്ളം കുറച്ച് കുടിച്ചാൽ മലബന്ധം ഉണ്ടാകും. veḷḷaṁ kuṟaccŭ kuṭiccāl malabandhaṁ uṇṭākuṁ. Drinking too little water causes constipation."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally a binding of the bowels: മലം, waste, is its first part. A word of the doctor's room."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മലബന്ധം (malabandhaṁ) is a learned compound built from Sanskrit mala, \"dirt, excretion\" (CDIAL 9899), and bandha, \"a bond, a damming\" (CDIAL 9136)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malabandhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malabandhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malabandhaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malabandhaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷaṁ kuṟaccŭ kuṭiccāl malabandhaṁ uṇṭākuṁ. — Drinking too little water causes constipation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷaṁ kuṟaccŭ kuṭiccāl malabandhaṁ uṇṭākuṁ.* — Drinking too little water causes constipation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for asthma, then the Malayalam for heartburn, then say malabandhaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for asthma, then the Malayalam for heartburn, then say *malabandhaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മലബന്ധം (malabandhaṁ) mean? (\"Constipation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C534-urakkamillayma",
+      "sequence": 26900,
+      "title": "ഉറക്കമില്ലായ്മ (uṟakkamillāyma) — insomnia; sleeplessness",
+      "headword": "ഉറക്കമില്ലായ്മ",
+      "romanization": "uṟakkamillāyma",
+      "gloss": "insomnia; sleeplessness",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fcafb2e5b9865d54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for heartburn, then the Malayalam for constipation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉറക്കമില്ലായ്മ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉറക്കമില്ലായ്മ — uṟakkamillāyma — \"insomnia; sleeplessness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പരീക്ഷക്കാലത്ത് അവന് ഉറക്കമില്ലായ്മ ഉണ്ടായിരുന്നു. parīkṣakkālattŭ avanŭ uṟakkamillāyma uṇṭāyirunnu. He suffered from sleeplessness during the exams."
+            },
+            {
+              "kind": "speech",
+              "text": "ഉറക്കം sleep + ഇല്ലായ്മ a lack: -ഇല്ലായ്മ turns ഇല്ല into a noun of lacking."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉറക്കമില്ലായ്മ (uṟakkamillāyma) is native Dravidian, a compound of ഉറക്കം, \"sleep\" (DEDR 707), and ഇല്ലായ്മ, \"not being\", from ഇല്ല (DEDR 2559)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṟakkamillāyma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṟakkamillāyma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṟakkamillāyma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṟakkamillāyma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parīkṣakkālattŭ avanŭ uṟakkamillāyma uṇṭāyirunnu. — He suffered from sleeplessness during the exams.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parīkṣakkālattŭ avanŭ uṟakkamillāyma uṇṭāyirunnu.* — He suffered from sleeplessness during the exams.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for heartburn, then the Malayalam for constipation, then say uṟakkamillāyma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for heartburn, then the Malayalam for constipation, then say *uṟakkamillāyma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉറക്കമില്ലായ്മ (uṟakkamillāyma) mean? (\"Insomnia; sleeplessness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C534-cumaykkuka",
+      "sequence": 26910,
+      "title": "ചുമയ്ക്കുക (cumaykkuka) — to have a cough; to cough",
+      "headword": "ചുമയ്ക്കുക",
+      "romanization": "cumaykkuka",
+      "gloss": "to have a cough; to cough",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd36e37585270825",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for constipation, then the Malayalam for insomnia."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചുമയ്ക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചുമയ്ക്കുക — cumaykkuka — \"to have a cough; to cough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "രാത്രി മുഴുവൻ കുട്ടി ചുമച്ചു. rātri muḻuvan kuṭṭi cumaccu. The child coughed all night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ചുമച്ചു, cumaccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun ചുമ, a cough, is already familiar. The past is ചുമച്ചു."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചുമയ്ക്കുക (cumaykkuka) is native Dravidian, the verb beside ചുമ, \"a cough\" (DEDR 1964)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cumaykkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cumaykkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cumaykkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cumaykkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātri muḻuvan kuṭṭi cumaccu. — The child coughed all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātri muḻuvan kuṭṭi cumaccu.* — The child coughed all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for constipation, then the Malayalam for insomnia, then say cumaykkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for constipation, then the Malayalam for insomnia, then say *cumaykkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചുമയ്ക്കുക (cumaykkuka) mean? (\"To have a cough; to cough\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

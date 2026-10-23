@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C499-kattupottu",
+    "language": "malayalam",
+    "chapter": 499,
+    "sequence": 24980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:765c215e6094ec06"
+  },
+  "findings": []
+}

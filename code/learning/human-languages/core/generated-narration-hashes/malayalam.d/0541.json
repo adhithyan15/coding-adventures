@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:4a29e909b44f4088",
+  "lessonIds": [
+    "ML-C541-samikkuka",
+    "ML-C541-vasalakuka",
+    "ML-C541-pakaruka",
+    "ML-C541-upavasikkuka",
+    "ML-C541-dahikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch541.txt",
+  "json": "malayalam/narration/ch541.json",
+  "textHash": "fnv1a64:1fec64928cb4641d",
+  "jsonHash": "fnv1a64:df6fbc2dbcdd2002",
+  "findings": []
+}

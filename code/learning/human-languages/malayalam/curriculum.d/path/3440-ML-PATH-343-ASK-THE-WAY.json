@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-343-ASK-THE-WAY",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ML-EXT-343-ASK-THE-WAY"
+  ],
+  "after": []
+}

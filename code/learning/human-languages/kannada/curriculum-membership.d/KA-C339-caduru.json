@@ -1,0 +1,11 @@
+{
+  "id": "KA-C339-caduru",
+  "pathSegment": "KA-PATH-339-GALABHE339",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-339-GALABHE339",
+      "order": 3
+    }
+  ]
+}

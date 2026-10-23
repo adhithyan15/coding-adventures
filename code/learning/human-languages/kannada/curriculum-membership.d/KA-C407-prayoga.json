@@ -1,0 +1,11 @@
+{
+  "id": "KA-C407-prayoga",
+  "pathSegment": "KA-PATH-407-SAMSHODHANE407",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-407-SAMSHODHANE407",
+      "order": 1
+    }
+  ]
+}

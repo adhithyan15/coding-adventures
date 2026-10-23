@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:c6bd06553ca0809b",
+  "lessonIds": [
+    "TE-C422-hami",
+    "TE-C422-neravercu",
+    "TE-C422-uddesincu",
+    "TE-C422-sankalpam",
+    "TE-C422-niscayincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch422.txt",
+  "json": "telugu/narration/ch422.json",
+  "textHash": "fnv1a64:d77e9a4e73638921",
+  "jsonHash": "fnv1a64:3b2b296f8a57830b",
+  "findings": []
+}

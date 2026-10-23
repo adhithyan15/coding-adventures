@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C495-pidakala",
+    "language": "telugu",
+    "chapter": 495,
+    "sequence": 25080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d57d918b9082a678"
+  },
+  "findings": []
+}

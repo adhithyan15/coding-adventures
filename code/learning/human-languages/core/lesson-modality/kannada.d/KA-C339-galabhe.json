@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C339-galabhe",
+    "language": "kannada",
+    "chapter": 339,
+    "sequence": 17020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c55d4539bcf206f1"
+  },
+  "findings": []
+}

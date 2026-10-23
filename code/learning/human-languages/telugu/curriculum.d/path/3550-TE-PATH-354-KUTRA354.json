@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-354-KUTRA354",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-354-KUTRA354"
+  ],
+  "after": []
+}

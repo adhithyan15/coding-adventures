@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "Along the Coast",
+  "label": "ch:ml-along-the-coast",
+  "canDo": "I can say the coastal region, an estuary, high tide, low tide and a sea surge.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C497-katalakramanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can say the coastal region, an estuary, high tide, low tide and a sea surge.",
+    "assesses": [
+      "ML-LEX-C497-TIRAM497-03",
+      "ML-LEX-C497-TIRAM497-04",
+      "ML-LEX-C497-TIRAM497-05"
+    ]
+  }
+}

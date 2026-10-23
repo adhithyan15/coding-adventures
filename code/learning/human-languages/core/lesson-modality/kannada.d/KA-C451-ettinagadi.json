@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C451-ettinagadi",
+    "language": "kannada",
+    "chapter": 451,
+    "sequence": 22960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8e628f6dc8e379a"
+  },
+  "findings": []
+}

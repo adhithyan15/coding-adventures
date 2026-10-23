@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:5c8e03f2d7efb43d",
+  "lessonIds": [
+    "ML-C425-pratisedham",
+    "ML-C425-pratisedhikkuka",
+    "ML-C425-samaram",
+    "ML-C425-harttal",
+    "ML-C425-jatha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch425.txt",
+  "json": "malayalam/narration/ch425.json",
+  "textHash": "fnv1a64:ea9fc55963acd46a",
+  "jsonHash": "fnv1a64:354cb242b453ce8b",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:680c1844a8613e1b",
+  "lessonIds": [
+    "TE-C416-pathyapustakam",
+    "TE-C416-vyasam",
+    "TE-C416-grantham",
+    "TE-C416-pathyamsam",
+    "TE-C416-samiksincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch416.txt",
+  "json": "telugu/narration/ch416.json",
+  "textHash": "fnv1a64:65b0ee6be75f4ae1",
+  "jsonHash": "fnv1a64:0d1627ad842cc6a6",
+  "findings": []
+}

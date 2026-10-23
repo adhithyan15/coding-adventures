@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:c1eb375418b05701",
+  "lessonIds": [
+    "KA-C473-parisara",
+    "KA-C473-malinya",
+    "KA-C473-kalusitagolisu",
+    "KA-C473-masi",
+    "KA-C473-ingala"
+  ],
+  "tex": "kannada/book/chapters/ch473-our-environment.tex"
+}

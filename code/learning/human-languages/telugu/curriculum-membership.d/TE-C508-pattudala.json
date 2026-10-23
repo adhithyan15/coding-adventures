@@ -1,0 +1,11 @@
+{
+  "id": "TE-C508-pattudala",
+  "pathSegment": "TE-PATH-508-DHAIRYAM508",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-508-DHAIRYAM508",
+      "order": 2
+    }
+  ]
+}

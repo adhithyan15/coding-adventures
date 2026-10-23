@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:08f38bb237225589",
+  "lessonIds": [
+    "KA-C461-atithigrha",
+    "KA-C461-hastel",
+    "KA-C461-thevani",
+    "KA-C461-lakar",
+    "KA-C461-marupavati",
+    "KA-R461-review-455-461"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch461.txt",
+  "json": "kannada/narration/ch461.json",
+  "textHash": "fnv1a64:1301f1c062268d57",
+  "jsonHash": "fnv1a64:57be2cc1621bef9e",
+  "findings": []
+}

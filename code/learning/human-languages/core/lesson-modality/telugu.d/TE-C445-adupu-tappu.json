@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C445-adupu-tappu",
+    "language": "telugu",
+    "chapter": 445,
+    "sequence": 22390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7b4916454118338"
+  },
+  "findings": []
+}

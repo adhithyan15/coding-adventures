@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:b26491f52392d7b7",
+  "lessonIds": [
+    "KA-C333-neraverisu",
+    "KA-C333-samarambha",
+    "KA-C333-arpisu",
+    "KA-C333-erpadisu",
+    "KA-C333-amantrana",
+    "KA-R333-review-327-333"
+  ],
+  "tex": "kannada/book/chapters/ch333-rites-and-ceremonies.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C327-rani",
+  "pathSegment": "TE-PATH-327-RAJYAM327",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-327-RAJYAM327",
+      "order": 2
+    }
+  ]
+}

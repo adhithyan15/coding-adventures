@@ -1,0 +1,19 @@
+{
+  "chapter": 437,
+  "title": "At the Airport",
+  "label": "ch:ka-at-the-airport",
+  "canDo": "I can say an airport, a terminal, a boarding pass, to scan and a pilot.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C437-pailat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can say an airport, a terminal, a boarding pass, to scan and a pilot.",
+    "assesses": [
+      "KA-LEX-C437-VIMANA437-03",
+      "KA-LEX-C437-VIMANA437-04",
+      "KA-LEX-C437-VIMANA437-05"
+    ]
+  }
+}

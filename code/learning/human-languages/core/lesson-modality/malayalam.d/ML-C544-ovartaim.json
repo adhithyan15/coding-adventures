@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C544-ovartaim",
+    "language": "malayalam",
+    "chapter": 544,
+    "sequence": 27380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c16128ab5e8682b9"
+  },
+  "findings": []
+}

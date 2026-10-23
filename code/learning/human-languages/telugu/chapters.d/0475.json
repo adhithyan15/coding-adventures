@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "Rivers and Dams",
+  "label": "ch:te-rivers-and-dams",
+  "canDo": "I can say a confluence, a dam, a reservoir, irrigation and a marsh.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C475-cittadi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can say a confluence, a dam, a reservoir, irrigation and a marsh.",
+    "assesses": [
+      "TE-LEX-C475-ANAKATTA475-03",
+      "TE-LEX-C475-ANAKATTA475-04",
+      "TE-LEX-C475-ANAKATTA475-05"
+    ]
+  }
+}

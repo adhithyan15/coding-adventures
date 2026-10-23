@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:a41a90e09f7d85c8",
+  "lessonIds": [
+    "TE-C414-prophesaru",
+    "TE-C414-upanyasam",
+    "TE-C414-pattabhadrudu",
+    "TE-C414-upakaravetanam",
+    "TE-C414-prasnincu"
+  ],
+  "tex": "telugu/book/chapters/ch414-at-university.tex"
+}

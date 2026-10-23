@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:2e44c791cb6afb3e",
+  "lessonIds": [
+    "TE-C356-utsavam",
+    "TE-C356-sanmanincu",
+    "TE-C356-grhapravesam",
+    "TE-C356-vidkolu",
+    "TE-C356-dattata"
+  ],
+  "tex": "telugu/book/chapters/ch356-celebrations.tex"
+}

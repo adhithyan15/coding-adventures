@@ -1,0 +1,11 @@
+{
+  "id": "KA-C379-bhinnabhipraya",
+  "pathSegment": "KA-PATH-379-OMMATA379",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-379-OMMATA379",
+      "order": 1
+    }
+  ]
+}

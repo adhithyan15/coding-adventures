@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C523-sahayakudu",
+    "language": "telugu",
+    "chapter": 523,
+    "sequence": 26510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0852f777fe10bfe5"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:7d14c90fa33ae411",
+  "lessonIds": [
+    "KA-C332-vipattu",
+    "KA-C332-siluku",
+    "KA-C332-badukuli",
+    "KA-C332-santrasta",
+    "KA-C332-munsucane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch332.txt",
+  "json": "kannada/narration/ch332.json",
+  "textHash": "fnv1a64:d3b887e149e00073",
+  "jsonHash": "fnv1a64:8306df52ba0c6e24",
+  "findings": []
+}

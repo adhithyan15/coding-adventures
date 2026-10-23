@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:4378aca88c9cd5f0",
+  "lessonIds": [
+    "TE-C547-subhraparacu",
+    "TE-C547-utuku",
+    "TE-C547-araveyu",
+    "TE-C547-dulupu",
+    "TE-C547-tagilincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch547.txt",
+  "json": "telugu/narration/ch547.json",
+  "textHash": "fnv1a64:fb1e9317065f5433",
+  "jsonHash": "fnv1a64:ba3a2d3892cfdc3b",
+  "findings": []
+}

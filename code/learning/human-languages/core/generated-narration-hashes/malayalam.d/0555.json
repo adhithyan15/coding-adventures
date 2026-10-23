@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 555,
+  "sourceHash": "fnv1a64:5fa9f64b79f75d99",
+  "lessonIds": [
+    "ML-C555-tarattu",
+    "ML-C555-kuttukutumbam",
+    "ML-C555-anukutumbam",
+    "ML-C555-verpiriyuka",
+    "ML-C555-inannuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch555.txt",
+  "json": "malayalam/narration/ch555.json",
+  "textHash": "fnv1a64:6f2788a497bc9afe",
+  "jsonHash": "fnv1a64:a53411e6d42d48f4",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C473-ingala",
+  "pathSegment": "KA-PATH-473-PARISARA473",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-473-PARISARA473",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C441-desiya",
+  "pathSegment": "KA-PATH-441-SHULKA441",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-441-SHULKA441",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C361-muttadincu",
+  "pathSegment": "TE-PATH-361-YUDDHABHUMI361",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-361-YUDDHABHUMI361",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-419-VIPHALA419",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "KA-EXT-419-VIPHALA419"
+  ],
+  "after": []
+}

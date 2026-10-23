@@ -1,0 +1,11 @@
+{
+  "id": "KA-C417-baki",
+  "pathSegment": "KA-PATH-417-KANTU417",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-417-KANTU417",
+      "order": 1
+    }
+  ]
+}

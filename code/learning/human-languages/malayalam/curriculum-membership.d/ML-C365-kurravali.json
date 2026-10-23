@@ -1,0 +1,11 @@
+{
+  "id": "ML-C365-kurravali",
+  "pathSegment": "ML-PATH-365-POLICE365",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-365-POLICE365",
+      "order": 1
+    }
+  ]
+}

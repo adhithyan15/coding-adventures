@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 327,
+  "title": "All of a Sudden",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fd0275ab7f9da513",
+  "lessons": [
+    {
+      "id": "KA-C327-astaralli",
+      "sequence": 16410,
+      "title": "ಅಷ್ಟರಲ್ಲಿ (aṣṭaralli) — meanwhile; by then",
+      "headword": "ಅಷ್ಟರಲ್ಲಿ",
+      "romanization": "aṣṭaralli",
+      "gloss": "meanwhile; by then",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc752e0ab721c1c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to kidnap, then the Kannada for a hostage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಷ್ಟರಲ್ಲಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಷ್ಟರಲ್ಲಿ — aṣṭaralli — \"meanwhile; by then\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಬಾಗಿಲು ತೆರೆದೆ. ಅಷ್ಟರಲ್ಲಿ ಕಳ್ಳ ಓಡಿಹೋಗಿದ್ದನು. nānu bāgilu terede. aṣṭaralli kaḷḷa ōḍihōgiddanu. I opened the door. By then the thief had run away."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಷ್ಟು, that much, with -ಅಲ್ಲಿ, in: \"within that much time\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಷ್ಟರಲ್ಲಿ (aṣṭaralli) is native Dravidian: aṣṭu, \"that much\", is built on the pointing base a-, \"that, yonder\" (DEDR 1), with the ending -alli, \"in\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṣṭaralli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṣṭaralli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṣṭaralli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṣṭaralli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānu bāgilu terede. aṣṭaralli kaḷḷa ōḍihōgiddanu. — I opened the door. By then the thief had run away.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānu bāgilu terede. aṣṭaralli kaḷḷa ōḍihōgiddanu.* — I opened the door. By then the thief had run away.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to kidnap, then the Kannada for a hostage, then say aṣṭaralli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to kidnap, then the Kannada for a hostage, then say *aṣṭaralli* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಷ್ಟರಲ್ಲಿ (aṣṭaralli) mean? (\"Meanwhile; by then\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C327-hathattagi",
+      "sequence": 16420,
+      "title": "ಹಠಾತ್ತಾಗಿ (haṭhāttāgi) — all of a sudden",
+      "headword": "ಹಠಾತ್ತಾಗಿ",
+      "romanization": "haṭhāttāgi",
+      "gloss": "all of a sudden",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6734feedc7a9a7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a hostage, then the Kannada for meanwhile."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹಠಾತ್ತಾಗಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಠಾತ್ತಾಗಿ — haṭhāttāgi — \"all of a sudden\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಠಾತ್ತಾಗಿ ದೀಪ ಆರಿಹೋಯಿತು. haṭhāttāgi dīpa ārihōyitu. All of a sudden the light went out."
+            },
+            {
+              "kind": "speech",
+              "text": "A more bookish partner of ಇದ್ದಕ್ಕಿದ್ದಂತೆ. ಹಠಾತ್ ಸಾವು is a sudden death."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಠಾತ್ತಾಗಿ (haṭhāttāgi) is built on Sanskrit haṭhāt, \"by force\", the ablative of haṭha, \"violence, force\" (Monier-Williams), with the Kannada adverb ending -āgi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṭhāttāgi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṭhāttāgi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṭhāttāgi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṭhāttāgi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṭhāttāgi dīpa ārihōyitu. — All of a sudden the light went out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṭhāttāgi dīpa ārihōyitu.* — All of a sudden the light went out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a hostage, then the Kannada for meanwhile, then say haṭhāttāgi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a hostage, then the Kannada for meanwhile, then say *haṭhāttāgi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹಠಾತ್ತಾಗಿ (haṭhāttāgi) mean? (\"All of a sudden\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C327-kudale",
+      "sequence": 16430,
+      "title": "ಕೂಡಲೇ (kūḍalē) — at once; immediately",
+      "headword": "ಕೂಡಲೇ",
+      "romanization": "kūḍalē",
+      "gloss": "at once; immediately",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e26d0d1edb16be31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for meanwhile, then the Kannada for all of a sudden."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೂಡಲೇ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೂಡಲೇ — kūḍalē — \"at once; immediately\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸುದ್ದಿ ಕೇಳಿದ ಕೂಡಲೇ ಅಜ್ಜ ಆಸ್ಪತ್ರೆಗೆ ಹೊರಟರು. suddi kēḷida kūḍalē ajja āspatrege horaṭaru. As soon as he heard the news, Grandfather set off for the hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "After a past form it means \"as soon as\": ಕೇಳಿದ ಕೂಡಲೇ (kūḍalē), as soon as (he) heard."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೂಡಲೇ (kūḍalē) is built on the native Dravidian verb kūḍu, \"to join, to meet\" (DEDR 1882), with the emphatic ending -ē; how it came to mean \"at once\" is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūḍalē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūḍalē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūḍalē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūḍalē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suddi kēḷida kūḍalē ajja āspatrege horaṭaru. — As soon as he heard the news, Grandfather set off for the hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suddi kēḷida kūḍalē ajja āspatrege horaṭaru.* — As soon as he heard the news, Grandfather set off for the hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for meanwhile, then the Kannada for all of a sudden, then say kūḍalē again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for meanwhile, then the Kannada for all of a sudden, then say *kūḍalē* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೂಡಲೇ (kūḍalē) mean? (\"At once; immediately\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C327-ekaeki",
+      "sequence": 16440,
+      "title": "ಏಕಾಏಕಿ (ēkāēki) — abruptly; all at once",
+      "headword": "ಏಕಾಏಕಿ",
+      "romanization": "ēkāēki",
+      "gloss": "abruptly; all at once",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5aaa98d3907858b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for all of a sudden, then the Kannada for at once."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಏಕಾಏಕಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಏಕಾಏಕಿ — ēkāēki — \"abruptly; all at once\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಏಕಾಏಕಿ ಬಸ್ ನಿಂತಿತು. ēkāēki bas nintitu. All at once the bus stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "Of something sudden and without warning: ಏಕಾಏಕಿ (ēkāēki) ನಿರ್ಧಾರ, an abrupt decision."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಏಕಾಏಕಿ (ēkāēki) is usually traced to Hindustani ekāek, \"suddenly, all at once\"; its earlier history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēkāēki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēkāēki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēkāēki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēkāēki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēkāēki bas nintitu. — All at once the bus stopped.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēkāēki bas nintitu.* — All at once the bus stopped.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for all of a sudden, then the Kannada for at once, then say ēkāēki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for all of a sudden, then the Kannada for at once, then say *ēkāēki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಏಕಾಏಕಿ (ēkāēki) mean? (\"Abruptly; all at once\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C327-beccibilu",
+      "sequence": 16450,
+      "title": "ಬೆಚ್ಚಿಬೀಳು (beccibīḷu) — to be startled",
+      "headword": "ಬೆಚ್ಚಿಬೀಳು",
+      "romanization": "beccibīḷu",
+      "gloss": "to be startled",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1e858423c6735df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for at once, then the Kannada for abruptly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬೆಚ್ಚಿಬೀಳು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೆಚ್ಚಿಬೀಳು — beccibīḷu — \"to be startled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗುಡುಗು ಕೇಳಿ ನಾನು ಬೆಚ್ಚಿಬಿದ್ದೆ. guḍugu kēḷi nānu beccibidde. I was startled when I heard the thunder."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಬೆಚ್ಚಿಬಿದ್ದೆ, beccibidde."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೆಚ್ಚಿ, startled, and ಬೀಳು, to fall: to jump with fright. The past is ಬಿದ್ದೆ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೆಚ್ಚಿಬೀಳು (beccibīḷu) is a native Dravidian compound: beccu, \"to be startled, alarmed\" (DEDR 5489), and bīḷ, \"to fall\" (DEDR 5430)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beccibīḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beccibīḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beccibīḷu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beccibīḷu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guḍugu kēḷi nānu beccibidde. — I was startled when I heard the thunder.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guḍugu kēḷi nānu beccibidde.* — I was startled when I heard the thunder.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for at once, then the Kannada for abruptly, then say beccibīḷu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for at once, then the Kannada for abruptly, then say *beccibīḷu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬೆಚ್ಚಿಬೀಳು (beccibīḷu) mean? (\"To be startled\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

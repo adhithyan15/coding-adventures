@@ -1,0 +1,19 @@
+{
+  "chapter": 432,
+  "title": "Ideals and Standing",
+  "label": "ch:te-ideals-and-standing",
+  "canDo": "I can talk about ethics, ideals, reputation and trust.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C432-avagahana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can talk about ethics, ideals, reputation and trust.",
+    "assesses": [
+      "TE-LEX-C432-ADARSAM432-03",
+      "TE-LEX-C432-ADARSAM432-04",
+      "TE-LEX-C432-ADARSAM432-05"
+    ]
+  }
+}

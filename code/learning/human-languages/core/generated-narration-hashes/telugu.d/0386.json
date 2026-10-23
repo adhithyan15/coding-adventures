@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:10483197edfb7390",
+  "lessonIds": [
+    "TE-C386-vibhedincu",
+    "TE-C386-abhyantaram",
+    "TE-C386-aksepincu",
+    "TE-C386-vyatirekata",
+    "TE-C386-tiraskarincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch386.txt",
+  "json": "telugu/narration/ch386.json",
+  "textHash": "fnv1a64:afa85cf7e5ce6bb3",
+  "jsonHash": "fnv1a64:3c77e6159f3b65d9",
+  "findings": []
+}

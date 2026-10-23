@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "Swords, Arrows and Armour",
+  "label": "ch:ka-swords-arrows-and-armour",
+  "canDo": "I can say a sword, an arrow, armour, a charioteer and to fall in battle.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C349-madi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can say a sword, an arrow, armour, a charioteer and to fall in battle.",
+    "assesses": [
+      "KA-LEX-C349-KHADGA349-03",
+      "KA-LEX-C349-KHADGA349-04",
+      "KA-LEX-C349-KHADGA349-05"
+    ]
+  }
+}

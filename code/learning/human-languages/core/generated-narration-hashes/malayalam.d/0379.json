@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:e1c4464573fa2cbb",
+  "lessonIds": [
+    "ML-C379-alkkuttam",
+    "ML-C379-itikkuka",
+    "ML-C379-kuttimuttuka",
+    "ML-C379-mariyuka",
+    "ML-C379-tattiviluka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch379.txt",
+  "json": "malayalam/narration/ch379.json",
+  "textHash": "fnv1a64:bd43a5c422b5d9a3",
+  "jsonHash": "fnv1a64:88f2d3cf01096188",
+  "findings": []
+}

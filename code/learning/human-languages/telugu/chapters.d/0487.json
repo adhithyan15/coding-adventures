@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Spending and Saving",
+  "label": "ch:te-spending-and-saving",
+  "canDo": "I can say to spend money, to save money, demand, to be available and to sell out.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C487-ammudupovu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can say to spend money, to save money, demand, to be available and to sell out.",
+    "assesses": [
+      "TE-LEX-C487-KHARCU487-03",
+      "TE-LEX-C487-KHARCU487-04",
+      "TE-LEX-C487-KHARCU487-05"
+    ]
+  }
+}

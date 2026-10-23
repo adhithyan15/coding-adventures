@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:c9f8b96115f29589",
+  "lessonIds": [
+    "TE-C439-rijarvesanu",
+    "TE-C439-bukingu",
+    "TE-C439-bertu",
+    "TE-C439-bogi",
+    "TE-C439-kirayi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch439.txt",
+  "json": "telugu/narration/ch439.json",
+  "textHash": "fnv1a64:1769d3fb7b66fb21",
+  "jsonHash": "fnv1a64:69d0d05e6e6ae1d9",
+  "findings": []
+}

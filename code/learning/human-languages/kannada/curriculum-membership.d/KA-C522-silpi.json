@@ -1,0 +1,11 @@
+{
+  "id": "KA-C522-silpi",
+  "pathSegment": "KA-PATH-522-KASUBU522",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-522-KASUBU522",
+      "order": 3
+    }
+  ]
+}

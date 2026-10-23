@@ -1,0 +1,11 @@
+{
+  "id": "TE-C400-mejariti",
+  "pathSegment": "TE-PATH-400-ENNIKA400",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-400-ENNIKA400",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C333-jada",
+  "pathSegment": "TE-PATH-333-KESU333",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-333-KESU333",
+      "order": 3
+    }
+  ]
+}

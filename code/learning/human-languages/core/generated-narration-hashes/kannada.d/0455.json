@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:cda0d5bb55faa96a",
+  "lessonIds": [
+    "KA-C455-pravasodyama",
+    "KA-C455-gamyasthana",
+    "KA-C455-buk-madu",
+    "KA-C455-margadarsi",
+    "KA-C455-preksaniya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch455.txt",
+  "json": "kannada/narration/ch455.json",
+  "textHash": "fnv1a64:474334b14534f760",
+  "jsonHash": "fnv1a64:5d86b876a21f0275",
+  "findings": []
+}

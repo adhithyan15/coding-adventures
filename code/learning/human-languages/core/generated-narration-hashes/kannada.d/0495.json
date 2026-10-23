@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:04753e6a65ddee08",
+  "lessonIds": [
+    "KA-C495-muddisu",
+    "KA-C495-muttidu",
+    "KA-C495-vatsalya",
+    "KA-C495-mamate",
+    "KA-C495-kalaji"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch495.txt",
+  "json": "kannada/narration/ch495.json",
+  "textHash": "fnv1a64:a9b820995c4a3e4c",
+  "jsonHash": "fnv1a64:b712a2890b1d0d2b",
+  "findings": []
+}

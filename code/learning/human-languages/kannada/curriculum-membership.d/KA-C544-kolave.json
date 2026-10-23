@@ -1,0 +1,11 @@
+{
+  "id": "KA-C544-kolave",
+  "pathSegment": "KA-PATH-544-VIDYUT544",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-544-VIDYUT544",
+      "order": 3
+    }
+  ]
+}

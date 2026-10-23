@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C403-jagrti",
+    "language": "kannada",
+    "chapter": 403,
+    "sequence": 20400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84e942c7e3387e6a"
+  },
+  "findings": []
+}

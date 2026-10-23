@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-430-SAMATULYAM430",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TE-EXT-430-SAMATULYAM430"
+  ],
+  "after": []
+}

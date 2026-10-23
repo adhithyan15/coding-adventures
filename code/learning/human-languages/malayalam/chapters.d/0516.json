@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Blocked Roads",
+  "label": "ch:ml-blocked-roads",
+  "canDo": "I can say a pothole, dust, to get blocked, to block and to be obstructed.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-R516-review-final-516",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can say a pothole, dust, to get blocked, to block and to be obstructed.",
+    "assesses": [
+      "ML-LEX-C516-TATASSAM516-03",
+      "ML-LEX-C516-TATASSAM516-04",
+      "ML-LEX-C516-TATASSAM516-05"
+    ]
+  }
+}

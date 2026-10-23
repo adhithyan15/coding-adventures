@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R532-review-525-532",
+    "language": "malayalam",
+    "chapter": 532,
+    "sequence": 26810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30b61d15d9430c80"
+  },
+  "findings": []
+}

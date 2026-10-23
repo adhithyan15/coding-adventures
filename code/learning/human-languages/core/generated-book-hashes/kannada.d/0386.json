@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:f34c02b1c58ced01",
+  "lessonIds": [
+    "KA-C386-samajayisi",
+    "KA-C386-sabubu",
+    "KA-C386-akasmika",
+    "KA-C386-bimbisu",
+    "KA-C386-hone"
+  ],
+  "tex": "kannada/book/chapters/ch386-excuses-and-explanations.tex"
+}

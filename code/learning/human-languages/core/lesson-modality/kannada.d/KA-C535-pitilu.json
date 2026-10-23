@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C535-pitilu",
+    "language": "kannada",
+    "chapter": 535,
+    "sequence": 27340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07d1c43eb944db6f"
+  },
+  "findings": []
+}

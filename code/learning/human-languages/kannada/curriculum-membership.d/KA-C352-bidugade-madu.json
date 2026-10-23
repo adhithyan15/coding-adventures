@@ -1,0 +1,11 @@
+{
+  "id": "KA-C352-bidugade-madu",
+  "pathSegment": "KA-PATH-352-DANGE352",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-352-DANGE352",
+      "order": 3
+    }
+  ]
+}

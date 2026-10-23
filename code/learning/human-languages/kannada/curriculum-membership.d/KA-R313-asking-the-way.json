@@ -1,0 +1,11 @@
+{
+  "id": "KA-R313-asking-the-way",
+  "pathSegment": "KA-PATH-313-ASK-THE-WAY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-313-ASK-THE-WAY",
+      "order": 2
+    }
+  ]
+}

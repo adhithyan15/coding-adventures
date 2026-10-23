@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:f1b2e33c448dcc60",
+  "lessonIds": [
+    "KA-C471-gaddala",
+    "KA-C471-jamayisu",
+    "KA-C471-dittisu",
+    "KA-C471-jaggu",
+    "KA-C471-tuluku"
+  ],
+  "tex": "kannada/book/chapters/ch471-crowds-and-noise.tex"
+}

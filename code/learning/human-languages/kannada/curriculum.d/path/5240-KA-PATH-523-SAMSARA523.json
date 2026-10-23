@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-523-SAMSARA523",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-523-SAMSARA523"
+  ],
+  "after": []
+}

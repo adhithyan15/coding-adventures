@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 568,
+  "sourceHash": "fnv1a64:a3939394e363559d",
+  "lessonIds": [
+    "ML-C568-kayikataram",
+    "ML-C568-parisilakan",
+    "ML-C568-gol",
+    "ML-C568-raphari",
+    "ML-C568-matsarikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch568.txt",
+  "json": "malayalam/narration/ch568.json",
+  "textHash": "fnv1a64:ceea47f1539bdfd1",
+  "jsonHash": "fnv1a64:7c307ecf3d084000",
+  "findings": []
+}

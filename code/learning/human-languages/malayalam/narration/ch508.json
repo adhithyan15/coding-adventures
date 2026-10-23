@@ -1,0 +1,870 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 508,
+  "title": "Getting Wet",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3e32e00aa29de39f",
+  "lessons": [
+    {
+      "id": "ML-C508-caruka-drizzle",
+      "sequence": 25400,
+      "title": "ചാറുക (cāṟuka) — to drizzle",
+      "headword": "ചാറുക",
+      "romanization": "cāṟuka",
+      "gloss": "to drizzle",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a101c354cbcb119e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to stop raining, then the Malayalam for a light drizzle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചാറുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചാറുക — cāṟuka — \"to drizzle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പുറത്ത് മഴ ചാറുന്നു. puṟattŭ maḻa cāṟunnu. It is drizzling outside."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ചാറി, cāṟi."
+            },
+            {
+              "kind": "speech",
+              "text": "The subject is the rain: മഴ ചാറുന്നു, the rain drizzles."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചാറുക (cāṟuka) is native Dravidian, \"to run off; to drizzle\" (DEDR 2482)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāṟuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāṟuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāṟuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāṟuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṟattŭ maḻa cāṟunnu. — It is drizzling outside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṟattŭ maḻa cāṟunnu.* — It is drizzling outside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to stop raining, then the Malayalam for a light drizzle, then say cāṟuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to stop raining, then the Malayalam for a light drizzle, then say *cāṟuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചാറുക (cāṟuka) mean? (\"To drizzle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C508-pemari",
+      "sequence": 25410,
+      "title": "പേമാരി (pēmāri) — a downpour; torrential rain",
+      "headword": "പേമാരി",
+      "romanization": "pēmāri",
+      "gloss": "a downpour; torrential rain",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b1fdab4e8157c8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a light drizzle, then the Malayalam for to drizzle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പേമാരി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പേമാരി — pēmāri — \"a downpour; torrential rain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "രാത്രി മുഴുവൻ പേമാരി ആയിരുന്നു. rātri muḻuvan pēmāri āyirunnu. There was torrential rain all night."
+            },
+            {
+              "kind": "speech",
+              "text": "Stronger than മഴ: the rain of a storm."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പേമാരി (pēmāri) is a Malayalam word for heavy rain whose second part is മാരി, heavy rain (DEDR 4819, which compares Sanskrit māri, rain); the origin of the first part is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēmāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēmāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēmāri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēmāri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātri muḻuvan pēmāri āyirunnu. — There was torrential rain all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātri muḻuvan pēmāri āyirunnu.* — There was torrential rain all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a light drizzle, then the Malayalam for to drizzle, then say pēmāri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a light drizzle, then the Malayalam for to drizzle, then say *pēmāri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പേമാരി (pēmāri) mean? (\"A downpour; torrential rain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C508-nanayuka",
+      "sequence": 25420,
+      "title": "നനയുക (nanayuka) — to get wet",
+      "headword": "നനയുക",
+      "romanization": "nanayuka",
+      "gloss": "to get wet",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:663b89aecb99ed09",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to drizzle, then the Malayalam for a downpour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നനയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നനയുക — nanayuka — \"to get wet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കുട ഇല്ലാത്തതുകൊണ്ട് ഞാൻ നനഞ്ഞു. kuṭa illāttatukoṇṭŭ ñān nanaññu. Because I had no umbrella, I got wet."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: നനഞ്ഞു, nanaññu."
+            },
+            {
+              "kind": "speech",
+              "text": "The person who gets wet is the subject: ഞാൻ നനഞ്ഞു, I got wet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നനയുക (nanayuka) is native Dravidian, \"to become wet, to be soaked\" (DEDR 3630)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanayuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanayuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanayuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanayuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭa illāttatukoṇṭŭ ñān nanaññu. — Because I had no umbrella, I got wet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭa illāttatukoṇṭŭ ñān nanaññu.* — Because I had no umbrella, I got wet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to drizzle, then the Malayalam for a downpour, then say nanayuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to drizzle, then the Malayalam for a downpour, then say *nanayuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നനയുക (nanayuka) mean? (\"To get wet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C508-malakkottu",
+      "sequence": 25430,
+      "title": "മഴക്കോട്ട് (maḻakkōṭṭŭ) — a raincoat",
+      "headword": "മഴക്കോട്ട്",
+      "romanization": "maḻakkōṭṭŭ",
+      "gloss": "a raincoat",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48f07b573ce9971a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a downpour, then the Malayalam for to get wet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മഴക്കോട്ട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മഴക്കോട്ട് — maḻakkōṭṭŭ — \"a raincoat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൻ മഴക്കോട്ട് ഇട്ട് ബൈക്കിൽ പോയി. avan maḻakkōṭṭŭ iṭṭŭ baikkil pōyi. He put on a raincoat and went on his motorbike."
+            },
+            {
+              "kind": "speech",
+              "text": "മഴ, rain, plus English coat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മഴക്കോട്ട് (maḻakkōṭṭŭ) is a Malayalam compound built from the native മഴ, rain (DEDR 4753), and കോട്ട്, which was borrowed from English coat."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻakkōṭṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻakkōṭṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻakkōṭṭŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻakkōṭṭŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan maḻakkōṭṭŭ iṭṭŭ baikkil pōyi. — He put on a raincoat and went on his motorbike.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan maḻakkōṭṭŭ iṭṭŭ baikkil pōyi.* — He put on a raincoat and went on his motorbike.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a downpour, then the Malayalam for to get wet, then say maḻakkōṭṭŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a downpour, then the Malayalam for to get wet, then say *maḻakkōṭṭŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മഴക്കോട്ട് (maḻakkōṭṭŭ) mean? (\"A raincoat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C508-unakkuka",
+      "sequence": 25440,
+      "title": "ഉണക്കുക (uṇakkuka) — to dry out; to hang out to dry",
+      "headword": "ഉണക്കുക",
+      "romanization": "uṇakkuka",
+      "gloss": "to dry out; to hang out to dry",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b170396b2d989a87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to get wet, then the Malayalam for a raincoat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉണക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉണക്കുക — uṇakkuka — \"to dry out; to hang out to dry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വെയിൽ വന്നപ്പോൾ അമ്മ തുണികൾ ഉണക്കി. veyil vannappōḷ amma tuṇikaḷ uṇakki. When the sun came out, mother dried the clothes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഉണക്കി, uṇakki."
+            },
+            {
+              "kind": "speech",
+              "text": "The transitive partner of ഉണങ്ങുക, to become dry."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉണക്കുക (uṇakkuka) is native Dravidian, \"to put to dry, to air\" (DEDR 601)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṇakkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṇakkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṇakkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṇakkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veyil vannappōḷ amma tuṇikaḷ uṇakki. — When the sun came out, mother dried the clothes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veyil vannappōḷ amma tuṇikaḷ uṇakki.* — When the sun came out, mother dried the clothes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to get wet, then the Malayalam for a raincoat, then say uṇakkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to get wet, then the Malayalam for a raincoat, then say *uṇakkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉണക്കുക (uṇakkuka) mean? (\"To dry out; to hang out to dry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R508-review-501-508",
+      "sequence": 25450,
+      "title": "Words from chapters 501–508 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 501-508",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25c0e57269efcfd0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for a zoo and a public garden."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a zoo, a public garden, a whale, an entry fee, to drift in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a zoo, a public garden, a whale, an entry fee, to drift in]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a plantation, greenery, to sprout, to fall off, to cut down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a plantation, greenery, to sprout, to fall off, to cut down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the environment, surroundings, pollution, to pollute, sewage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the environment, surroundings, pollution, to pollute, sewage]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "litter, to throw away, to pile up, to be ruined, to reuse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: litter, to throw away, to pile up, to be ruined, to reuse]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "energy, a shortage, groundwater, global warming, a rain pit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: energy, a shortage, groundwater, global warming, a rain pit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sunrise, sunset, the horizon, the atmosphere, rain clouds",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sunrise, sunset, the horizon, the atmosphere, rain clouds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the monsoon, the southwest monsoon, the northeast monsoon, to stop raining, a light drizzle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the monsoon, the southwest monsoon, the northeast monsoon, to stop raining, a light drizzle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to drizzle, a downpour, to get wet, a raincoat, to dry out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to drizzle, a downpour, to get wet, a raincoat, to dry out]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A zoo? (മൃഗശാല, mṛgaśāla.) A public garden? (ഉദ്യാനം, udyānaṁ.) A whale? (തിമിംഗലം, timiṁgalaṁ.) An entry fee? (പ്രവേശനഫീസ്, pravēśanaphīsŭ.) To drift in? (ഒഴുകിയെത്തുക, oḻukiyettuka.) A plantation? (തോട്ടം, tōṭṭaṁ.) Greenery? (പച്ചപ്പ്, paccappŭ.) To sprout? (തളിർക്കുക, taḷirkkuka.) To fall off? (കൊഴിയുക, koḻiyuka.) To cut down? (വെട്ടിമാറ്റുക, veṭṭimāṟṟuka.) The environment? (പരിസ്ഥിതി, paristhiti.) Surroundings? (പരിസരം, parisaraṁ.) Pollution? (മലിനീകരണം, malinīkaraṇaṁ.) To pollute? (മലിനമാക്കുക, malinamākkuka.) Sewage? (മലിനജലം, malinajalaṁ.) Litter? (ചവറ്, cavaṟŭ.) To throw away? (വലിച്ചെറിയുക, valicceṟiyuka.) To pile up? (കുമിഞ്ഞുകൂടുക, kumiññukūṭuka.) To be ruined? (നശിക്കുക, naśikkuka.) To reuse? (പുനരുപയോഗിക്കുക, punarupayōgikkuka.) Energy? (ഊർജ്ജം, ūrjjaṁ.) A shortage? (ക്ഷാമം, kṣāmaṁ.) Groundwater? (ഭൂഗർഭജലം, bhūgarbhajalaṁ.) Global warming? (ആഗോളതാപനം, āgōḷatāpanaṁ.) A rain pit? (മഴക്കുഴി, maḻakkuḻi.) Sunrise? (സൂര്യോദയം, sūryōdayaṁ.) Sunset? (സൂര്യാസ്തമയം, sūryāstamayaṁ.) The horizon? (ചക്രവാളം, cakravāḷaṁ.) The atmosphere? (അന്തരീക്ഷം, antarīkṣaṁ.) Rain clouds? (മഴക്കാർ, maḻakkār.) The monsoon? (മൺസൂൺ, maṇsūṇ.) The southwest monsoon? (കാലവർഷം, kālavarṣaṁ.) The northeast monsoon? (തുലാവർഷം, tulāvarṣaṁ.) To stop raining? (തോരുക, tōruka.) A light drizzle? (ചാറ്റൽമഴ, cāṟṟalmaḻa.) To drizzle? (ചാറുക, cāṟuka.) A downpour? (പേമാരി, pēmāri.) To get wet? (നനയുക, nanayuka.) A raincoat? (മഴക്കോട്ട്, maḻakkōṭṭŭ.) To dry out? (ഉണക്കുക, uṇakkuka.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

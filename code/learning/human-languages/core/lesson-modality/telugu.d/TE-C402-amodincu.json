@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C402-amodincu",
+    "language": "telugu",
+    "chapter": 402,
+    "sequence": 20060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:501acd50f97b5722"
+  },
+  "findings": []
+}

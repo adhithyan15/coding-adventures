@@ -1,0 +1,18 @@
+{
+  "language": "telugu",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:0868dae7fced182f",
+  "lessonIds": [
+    "TE-C318-anipincu",
+    "TE-C318-anukuntunnanu",
+    "TE-C318-kabatti",
+    "TE-R318-opinion-and-result"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "telugu/narration/ch318.txt",
+  "json": "telugu/narration/ch318.json",
+  "textHash": "fnv1a64:4f56944db54c1a2e",
+  "jsonHash": "fnv1a64:8e705b2e6adcaf33",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C400-viniyogisu",
+    "language": "kannada",
+    "chapter": 400,
+    "sequence": 20260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54d0e6324275f0a3"
+  },
+  "findings": []
+}

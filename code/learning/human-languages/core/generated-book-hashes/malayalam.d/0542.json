@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:be13f532cd7bfc54",
+  "lessonIds": [
+    "ML-C542-tolil",
+    "ML-C542-udyogam",
+    "ML-C542-sthanakkayarram",
+    "ML-C542-vetanam",
+    "ML-C542-sthanamoliyuka"
+  ],
+  "tex": "malayalam/book/chapters/ch542-jobs-and-promotions.tex"
+}

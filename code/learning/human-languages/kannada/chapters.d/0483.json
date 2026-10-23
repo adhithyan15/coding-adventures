@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Dams and Groundwater",
+  "label": "ch:ka-dams-and-groundwater",
+  "canDo": "I can say a reservoir, a dam, backwater, groundwater and to evaporate.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C483-aviyagu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can say a reservoir, a dam, backwater, groundwater and to evaporate.",
+    "assesses": [
+      "KA-LEX-C483-JALASHAYA483-03",
+      "KA-LEX-C483-JALASHAYA483-04",
+      "KA-LEX-C483-JALASHAYA483-05"
+    ]
+  }
+}

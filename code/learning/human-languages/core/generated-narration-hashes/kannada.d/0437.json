@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:979fe7415e056b8d",
+  "lessonIds": [
+    "KA-C437-erport",
+    "KA-C437-tarminal",
+    "KA-C437-bording-pas",
+    "KA-C437-skyan-madu",
+    "KA-C437-pailat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch437.txt",
+  "json": "kannada/narration/ch437.json",
+  "textHash": "fnv1a64:a83b50ff9f6cdf6d",
+  "jsonHash": "fnv1a64:ed86f89182837d31",
+  "findings": []
+}

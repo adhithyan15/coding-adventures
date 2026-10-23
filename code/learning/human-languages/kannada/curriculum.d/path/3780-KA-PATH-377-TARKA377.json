@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-377-TARKA377",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "KA-EXT-377-TARKA377"
+  ],
+  "after": []
+}

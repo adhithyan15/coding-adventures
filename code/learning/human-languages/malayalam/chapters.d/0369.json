@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "The Verdict",
+  "label": "ch:ml-the-verdict",
+  "canDo": "I can say a verdict, the guilty one, bail, an innocent person and to pass sentence.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C369-vidhikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can say a verdict, the guilty one, bail, an innocent person and to pass sentence.",
+    "assesses": [
+      "ML-LEX-C369-VIDHI369-03",
+      "ML-LEX-C369-VIDHI369-04",
+      "ML-LEX-C369-VIDHI369-05"
+    ]
+  }
+}

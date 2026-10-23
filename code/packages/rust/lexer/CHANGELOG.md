@@ -2,6 +2,79 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased] — F11: tokens record the gap before them (LANG84 E6)
+
+`GrammarLexer` now records, on every token it matches from a `.tokens`
+pattern, whether anything was consumed between it and the previous emitted
+token, and whether that gap held a line terminator. The `.grammar` adjacency
+predicates (`@space_before`, `@no_newline_before`, …) read these bits. See
+`code/specs/F11-grammar-token-adjacency-predicates.md`.
+
+- **New flag `TOKEN_PRECEDED_BY_SPACE = 4`**, set after a skip-pattern match,
+  the built-in whitespace skip (` `, `\t`, `\r`), a built-in `NEWLINE` token,
+  a newline swallowed inside brackets in indentation mode, or a token
+  suppressed by an F04 callback. `f -1` flags `-` but not `1`; `f-1` flags
+  neither.
+- **`TOKEN_PRECEDED_BY_NEWLINE` is now also set** on the token after a
+  built-in `NEWLINE` token (so the answer does not depend on whether the
+  parser keeps `NEWLINE` tokens), after a lone `\r`, after a suppressed token
+  containing a line break, and in indentation mode (which previously left
+  every token's `flags` as `None`). Skip matches containing a line terminator
+  (including multi-line comments) set it as before.
+- Token types, values, lines and columns are unchanged. `NEWLINE`, `INDENT`,
+  `DEDENT`, `EOF` and layout virtual tokens keep `flags: None`.
+- `flags` is now usually `Some(..)`. Code that tests bits with
+  `flags.unwrap_or(0) & BIT` is unaffected; whole-token comparisons against
+  `flags: None` fixtures need the new bit. The JavaScript ASI pass, the only
+  previous reader of the newline flag, skips newlines as whitespace and is
+  unaffected (javascript-parser: 263 tests pass).
+- A token suppressed by an F04 callback that emits a replacement in its place
+  (excel-lexer's `NAME` → `FUNCTION_NAME`) hands its gap to the first emitted
+  token (OR'd into that token's own flags) and is not trivia for the next
+  token, so `SUM(1)` leaves `(` unflagged. Only a suppression with nothing
+  emitted becomes trivia. (Security review: the first version flagged `(`.)
+- F10 mode switches and skip toggles need no special handling: the bits
+  describe what was consumed, whichever group consumed it.
+- New `tests/adjacency_flags.rs` (15 tests): skip patterns, multi-line
+  comments, newlines inside tokens, built-in whitespace and `NEWLINE`, lone
+  `\r`, F10 modes, `disable-skip`, indentation mode, callback suppression,
+  context keywords, and unchanged values and positions.
+
+## [0.8.0] — 2026-10-20 — F10 transitions fire on the built-in NEWLINE token
+
+`GrammarLexer::tokenize_standard` now passes its built-in `NEWLINE` token (a
+bare `\n` that no skip pattern consumed) to `apply_transitions`, exactly as it
+does for tokens matched from `.tokens` patterns. Previously it emitted the
+`NEWLINE` and `continue`d, so a rule such as `on NEWLINE -> set-mode beg`
+parsed and validated but never fired, and the next line started in whatever
+mode the previous line ended in. Found by LANG84 Ruby R0: Ruby's lexer returns
+to EXPR_BEG at every line start, so `?a` / `:sym` at the start of a line after
+a line ending in a value lexed differently from the real Ruby lexer.
+
+- **Identical semantics to declared tokens:** first matching rule wins,
+  `in MODE` guards apply, and `set-mode` / `push` / `pop` / `enable-skip` /
+  `disable-skip` all work; the new mode governs the next match.
+- **Byte-identical for existing grammars:** a rule fires only if it names
+  `NEWLINE`, and `apply_transitions` still early-returns on an empty table.
+  Audit: only `cobol.tokens` and `es2025.tokens` in `code/grammars` declare
+  `transitions:`; neither names `NEWLINE` nor aliases a pattern to it, and both
+  skip `\n` as whitespace, so they never emit a `NEWLINE` at all.
+- **Deliberately unchanged:** the built-in `NEWLINE` is still not passed to an
+  F04 `on_token` callback, does not update `last_emitted_token`, and does not
+  touch bracket depths. Indentation and layout modes are unaffected
+  (transitions remain a no-op there). `set_on_token` docs now say so.
+- Nine new tests (`f10_newline_*`, `f10_table_without_newline_rule_*`): set-mode
+  reset, `in MODE` guard, NEWLINE popping and pushing a region, a table without
+  a NEWLINE rule keeping the mode across lines, a newline-eating skip pattern
+  suppressing the rule, a NEWLINE emitted while skip is disabled firing a
+  multi-action rule, coexistence with a callback, and reset to `start_mode`.
+  141 lexer tests pass.
+- F10 spec amended (Rules, interpreter semantics, testing); LANG84 R0 note
+  updated. The Python, Ruby, TypeScript, Go, Elixir and Lua lexer ports still
+  skip the table for `NEWLINE` (parity follow-up).
+- The two mosaic `Cargo.lock` files that record this path dependency's
+  version are updated to 0.8.0.
+
 ## [Unreleased] — 2026-10-07 — CV04a exact lexical range capture
 
 - Add repository-owned read-only source-bound snapshots and Token/Trivia/EOF

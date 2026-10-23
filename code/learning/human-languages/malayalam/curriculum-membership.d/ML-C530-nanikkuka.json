@@ -1,0 +1,11 @@
+{
+  "id": "ML-C530-nanikkuka",
+  "pathSegment": "ML-PATH-530-USHAR530",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-530-USHAR530",
+      "order": 4
+    }
+  ]
+}

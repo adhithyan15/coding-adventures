@@ -1,0 +1,11 @@
+{
+  "id": "TE-C448-malupu-tirugu",
+  "pathSegment": "TE-PATH-448-DISA448",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-448-DISA448",
+      "order": 3
+    }
+  ]
+}

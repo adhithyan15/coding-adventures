@@ -1,0 +1,21 @@
+{
+  "chapter": 357,
+  "title": "Generations",
+  "label": "ch:te-generations",
+  "canDo": "I can say a lineage, a generation, ancestors, an orphan and to survive.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-R357-review-350-357",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can say a lineage, a generation, ancestors, an orphan and to survive.",
+    "assesses": [
+      "TE-LEX-C357-VAMSAM357-01",
+      "TE-LEX-C357-VAMSAM357-02",
+      "TE-LEX-C357-VAMSAM357-03",
+      "TE-LEX-C357-VAMSAM357-04",
+      "TE-LEX-C357-VAMSAM357-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:a288fa85c79383bb",
+  "lessonIds": [
+    "KA-C368-kramena",
+    "KA-C368-taruvaya",
+    "KA-C368-sarani",
+    "KA-C368-ghatta",
+    "KA-C368-jarugu",
+    "KA-R368-review-362-368"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch368.txt",
+  "json": "kannada/narration/ch368.json",
+  "textHash": "fnv1a64:7d51673ba597d576",
+  "jsonHash": "fnv1a64:77a5b8a0bb261d0b",
+  "findings": []
+}
