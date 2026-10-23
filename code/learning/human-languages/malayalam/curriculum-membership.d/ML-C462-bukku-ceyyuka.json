@@ -1,0 +1,11 @@
+{
+  "id": "ML-C462-bukku-ceyyuka",
+  "pathSegment": "ML-PATH-462-BOOKING462",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-462-BOOKING462",
+      "order": 3
+    }
+  ]
+}

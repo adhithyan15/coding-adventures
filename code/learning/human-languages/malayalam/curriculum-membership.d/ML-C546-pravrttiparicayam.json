@@ -1,0 +1,11 @@
+{
+  "id": "ML-C546-pravrttiparicayam",
+  "pathSegment": "ML-PATH-546-VYAVASAYAM546",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-546-VYAVASAYAM546",
+      "order": 3
+    }
+  ]
+}

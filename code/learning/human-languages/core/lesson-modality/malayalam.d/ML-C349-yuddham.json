@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C349-yuddham",
+    "language": "malayalam",
+    "chapter": 349,
+    "sequence": 17010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b16f9b4812075e0"
+  },
+  "findings": []
+}

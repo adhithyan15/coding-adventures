@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:81d1246628e16aee",
+  "lessonIds": [
+    "ML-C443-badhikkuka",
+    "ML-C443-svadhinikkuka",
+    "ML-C443-badal",
+    "ML-C443-paridhi",
+    "ML-C443-samayaparidhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch443.txt",
+  "json": "malayalam/narration/ch443.json",
+  "textHash": "fnv1a64:7d9c24613efa0e97",
+  "jsonHash": "fnv1a64:e3bd042fe061b909",
+  "findings": []
+}

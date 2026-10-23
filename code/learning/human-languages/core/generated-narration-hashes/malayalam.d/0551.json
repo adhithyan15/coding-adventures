@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 551,
+  "sourceHash": "fnv1a64:eac09e08b1ecb8de",
+  "lessonIds": [
+    "ML-C551-elppikkuka",
+    "ML-C551-erretukkuka",
+    "ML-C551-kaivarikkuka",
+    "ML-C551-paniyetukkuka",
+    "ML-C551-adhvanikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch551.txt",
+  "json": "malayalam/narration/ch551.json",
+  "textHash": "fnv1a64:868d0b6bc8a188c3",
+  "jsonHash": "fnv1a64:26d942934a24f89e",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:1d7274cfb3962d5d",
+  "lessonIds": [
+    "ML-C425-pratisedham",
+    "ML-C425-pratisedhikkuka",
+    "ML-C425-samaram",
+    "ML-C425-harttal",
+    "ML-C425-jatha"
+  ],
+  "tex": "malayalam/book/chapters/ch425-protest.tex"
+}

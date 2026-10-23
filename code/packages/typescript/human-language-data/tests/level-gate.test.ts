@@ -366,6 +366,11 @@ describe("the gate that would have caught the A2 claim", () => {
     // the future, comparison, idhā and law, realizing all five B1 nodes, plus
     // letter lessons for ؤ and ئ) and chapters 293-552 (1,300 headwords, 507
     // verbs).
+    // Malayalam followed as the tenth, with chapters 339-348 (the B1 core: narrating with
+    // the past and -ഉമായിരുന്നു, reasons with കൊണ്ട് and കാരണം, travel, comparison
+    // with -ഏക്കാൾ, and the conditional -ആൽ / എങ്കിൽ, realizing all five B1 nodes,
+    // plus letter lessons for ഈ ഐ ഔ ഋ ഡ ഘ ൗ ഃ) and chapters 349-572 (1,120
+    // headwords).
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

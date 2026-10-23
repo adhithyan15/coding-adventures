@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C516-atayuka",
+    "language": "malayalam",
+    "chapter": 516,
+    "sequence": 25830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72c4b367254e7bd1"
+  },
+  "findings": []
+}

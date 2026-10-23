@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 539,
+  "title": "Dozing, Panting and Eating Well",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:981b12f0502baf7e",
+  "lessons": [
+    {
+      "id": "ML-C539-mayannuka",
+      "sequence": 27120,
+      "title": "മയങ്ങുക (mayaṅṅuka) — to doze off; to drowse",
+      "headword": "മയങ്ങുക",
+      "romanization": "mayaṅṅuka",
+      "gloss": "to doze off; to drowse",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a8af387fc7fcad5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to hurt, then the Malayalam for to pass out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മയങ്ങുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മയങ്ങുക — mayaṅṅuka — \"to doze off; to drowse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഊണ് കഴിഞ്ഞ് മുത്തശ്ശി കസേരയിൽ ഇരുന്ന് മയങ്ങി. ūṇŭ kaḻiññŭ muttaśśi kasērayil irunnŭ mayaṅṅi. After lunch grandmother dozed off in her chair."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: മയങ്ങി, mayaṅṅi."
+            },
+            {
+              "kind": "speech",
+              "text": "A light sleep; the noun is മയക്കം, drowsiness, as after a meal or a medicine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മയങ്ങുക (mayaṅṅuka) is native Dravidian: DEDR 4706 gives it as to be drowsy or giddy, with മയക്കം, drowsiness (DEDR 4706)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mayaṅṅuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mayaṅṅuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mayaṅṅuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mayaṅṅuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūṇŭ kaḻiññŭ muttaśśi kasērayil irunnŭ mayaṅṅi. — After lunch grandmother dozed off in her chair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūṇŭ kaḻiññŭ muttaśśi kasērayil irunnŭ mayaṅṅi.* — After lunch grandmother dozed off in her chair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to hurt, then the Malayalam for to pass out, then say mayaṅṅuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to hurt, then the Malayalam for to pass out, then say *mayaṅṅuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മയങ്ങുക (mayaṅṅuka) mean? (\"To doze off; to drowse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C539-kitaykkuka",
+      "sequence": 27130,
+      "title": "കിതയ്ക്കുക (kitaykkuka) — to pant; to gasp",
+      "headword": "കിതയ്ക്കുക",
+      "romanization": "kitaykkuka",
+      "gloss": "to pant; to gasp",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18eaa58d64ec19ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to pass out, then the Malayalam for to doze off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കിതയ്ക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കിതയ്ക്കുക — kitaykkuka — \"to pant; to gasp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പടി കയറി വന്ന മുത്തച്ഛൻ കിതച്ചു. paṭi kayaṟi vanna muttacchan kitaccu. Grandfather was panting after climbing the steps."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കിതച്ചു, kitaccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The past is കിതച്ചു; the noun is കിതപ്പ്."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കിതയ്ക്കുക (kitaykkuka) looks native, but DEDR has no entry that clearly holds it, so its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitaykkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitaykkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitaykkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitaykkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭi kayaṟi vanna muttacchan kitaccu. — Grandfather was panting after climbing the steps.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭi kayaṟi vanna muttacchan kitaccu.* — Grandfather was panting after climbing the steps.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to pass out, then the Malayalam for to doze off, then say kitaykkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to pass out, then the Malayalam for to doze off, then say *kitaykkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കിതയ്ക്കുക (kitaykkuka) mean? (\"To pant; to gasp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C539-niruka",
+      "sequence": 27140,
+      "title": "നീറുക (nīṟuka) — to smart; to sting",
+      "headword": "നീറുക",
+      "romanization": "nīṟuka",
+      "gloss": "to smart; to sting",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9e216491268bc51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to doze off, then the Malayalam for to pant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നീറുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നീറുക — nīṟuka — \"to smart; to sting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മുറിവിൽ മരുന്ന് വച്ചപ്പോൾ നീറി. muṟivil marunnŭ vaccappōḷ nīṟi. It stung when the medicine went on the wound."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: നീറി, nīṟi."
+            },
+            {
+              "kind": "speech",
+              "text": "The sting of a cut or of smoke in the eyes; a grief can also നീറുക (nīṟuka) inside."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നീറുക (nīṟuka) is native Dravidian: DEDR 3693 lists it with words for burning to ashes and for a grief that burns (DEDR 3693)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīṟuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīṟuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīṟuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīṟuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṟivil marunnŭ vaccappōḷ nīṟi. — It stung when the medicine went on the wound.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṟivil marunnŭ vaccappōḷ nīṟi.* — It stung when the medicine went on the wound.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to doze off, then the Malayalam for to pant, then say nīṟuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to doze off, then the Malayalam for to pant, then say *nīṟuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നീറുക (nīṟuka) mean? (\"To smart; to sting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C539-bhaksanakramam",
+      "sequence": 27150,
+      "title": "ഭക്ഷണക്രമം (bhakṣaṇakramaṁ) — a diet; eating habits",
+      "headword": "ഭക്ഷണക്രമം",
+      "romanization": "bhakṣaṇakramaṁ",
+      "gloss": "a diet; eating habits",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc4e4fbc4bd53f2c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to pant, then the Malayalam for to smart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഭക്ഷണക്രമം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഭക്ഷണക്രമം — bhakṣaṇakramaṁ — \"a diet; eating habits\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വൈദ്യൻ പറഞ്ഞതുപോലെ ഞാൻ ഭക്ഷണക്രമം മാറ്റി. vaidyan paṟaññatupōle ñān bhakṣaṇakramaṁ māṟṟi. I changed my diet as the doctor said."
+            },
+            {
+              "kind": "speech",
+              "text": "ഭക്ഷണം food + ക്രമം order, an arrangement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഭക്ഷണക്രമം (bhakṣaṇakramaṁ) is a learned compound built from ഭക്ഷണം, from Sanskrit bhakṣaṇa, \"eating\" (Monier-Williams), and krama, \"a step, a series, an order\" (CDIAL 3577)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhakṣaṇakramaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhakṣaṇakramaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhakṣaṇakramaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhakṣaṇakramaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaidyan paṟaññatupōle ñān bhakṣaṇakramaṁ māṟṟi. — I changed my diet as the doctor said.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaidyan paṟaññatupōle ñān bhakṣaṇakramaṁ māṟṟi.* — I changed my diet as the doctor said.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to pant, then the Malayalam for to smart, then say bhakṣaṇakramaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to pant, then the Malayalam for to smart, then say *bhakṣaṇakramaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഭക്ഷണക്രമം (bhakṣaṇakramaṁ) mean? (\"A diet; eating habits\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C539-posakaharam",
+      "sequence": 27160,
+      "title": "പോഷകാഹാരം (pōṣakāhāraṁ) — nutritious food; nutrition",
+      "headword": "പോഷകാഹാരം",
+      "romanization": "pōṣakāhāraṁ",
+      "gloss": "nutritious food; nutrition",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca5de7680e30eb39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to smart, then the Malayalam for a diet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പോഷകാഹാരം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പോഷകാഹാരം — pōṣakāhāraṁ — \"nutritious food; nutrition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കുട്ടികൾക്ക് പോഷകാഹാരം കിട്ടണം. kuṭṭikaḷkkŭ pōṣakāhāraṁ kiṭṭaṇaṁ. Children must get nutritious food."
+            },
+            {
+              "kind": "speech",
+              "text": "പോഷകം nourishing + ആഹാരം food, joined into one long ആ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പോഷകാഹാരം (pōṣakāhāraṁ) is a learned compound built from Sanskrit poṣaka, \"nourishing\" (Monier-Williams), and āhāra, \"taking food, food\" (CDIAL 1544)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōṣakāhāraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōṣakāhāraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōṣakāhāraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōṣakāhāraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭṭikaḷkkŭ pōṣakāhāraṁ kiṭṭaṇaṁ. — Children must get nutritious food.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭṭikaḷkkŭ pōṣakāhāraṁ kiṭṭaṇaṁ.* — Children must get nutritious food.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to smart, then the Malayalam for a diet, then say pōṣakāhāraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to smart, then the Malayalam for a diet, then say *pōṣakāhāraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പോഷകാഹാരം (pōṣakāhāraṁ) mean? (\"Nutritious food; nutrition\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C501-olukiyettuka",
+  "pathSegment": "ML-PATH-501-MRGASALA501",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-501-MRGASALA501",
+      "order": 4
+    }
+  ]
+}

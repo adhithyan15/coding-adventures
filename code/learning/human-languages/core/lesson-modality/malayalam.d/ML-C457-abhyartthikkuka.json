@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C457-abhyartthikkuka",
+    "language": "malayalam",
+    "chapter": 457,
+    "sequence": 22660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9c2dfce15e45dde"
+  },
+  "findings": []
+}

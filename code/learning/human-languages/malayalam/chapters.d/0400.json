@@ -1,0 +1,19 @@
+{
+  "chapter": 400,
+  "title": "Enemies and Spies",
+  "label": "ch:ml-enemies-and-spies",
+  "canDo": "I can say an enemy, a warrior, a spy, to beat in battle and to surrender.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C400-kilatannuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can say an enemy, a warrior, a spy, to beat in battle and to surrender.",
+    "assesses": [
+      "ML-LEX-C400-SATRU400-03",
+      "ML-LEX-C400-SATRU400-04",
+      "ML-LEX-C400-SATRU400-05"
+    ]
+  }
+}

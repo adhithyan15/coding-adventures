@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:171de041feaedbd7",
+  "lessonIds": [
+    "ML-C514-varalcca",
+    "ML-C514-vintukiruka",
+    "ML-C514-kariyuka",
+    "ML-C514-murinnupokuka",
+    "ML-C514-nilaykkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch514.txt",
+  "json": "malayalam/narration/ch514.json",
+  "textHash": "fnv1a64:d3efc1e477495ee1",
+  "jsonHash": "fnv1a64:caebc55e575f2ee9",
+  "findings": []
+}

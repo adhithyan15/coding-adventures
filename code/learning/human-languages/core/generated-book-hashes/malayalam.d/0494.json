@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:6205651b5dd6253d",
+  "lessonIds": [
+    "ML-C494-tiriccetukkuka",
+    "ML-C494-celavu",
+    "ML-C494-ottunokkuka",
+    "ML-C494-enninokkuka",
+    "ML-C494-virralikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch494-checking-the-bill.tex"
+}

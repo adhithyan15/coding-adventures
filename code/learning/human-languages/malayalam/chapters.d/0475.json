@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "Ships and Boats",
+  "label": "ch:ml-ships-and-boats",
+  "canDo": "I can say a ship, a sailor, a jetty, a country boat and an oar.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C475-tula",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can say a ship, a sailor, a jetty, a country boat and an oar.",
+    "assesses": [
+      "ML-LEX-C475-KAPPAL475-03",
+      "ML-LEX-C475-KAPPAL475-04",
+      "ML-LEX-C475-KAPPAL475-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:9773ca7901539a43",
+  "lessonIds": [
+    "ML-C427-daridryam",
+    "ML-C427-daridran",
+    "ML-C427-pattini",
+    "ML-C427-ceri",
+    "ML-C427-saksarata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch427.txt",
+  "json": "malayalam/narration/ch427.json",
+  "textHash": "fnv1a64:132aef0b77a1a94f",
+  "jsonHash": "fnv1a64:faa32ebc3435c03e",
+  "findings": []
+}

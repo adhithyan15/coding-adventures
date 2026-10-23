@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-356-VIVARANAM356",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-356-VIVARANAM356"
+  ],
+  "after": []
+}

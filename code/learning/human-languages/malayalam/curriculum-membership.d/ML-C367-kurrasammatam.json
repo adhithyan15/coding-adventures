@@ -1,0 +1,11 @@
+{
+  "id": "ML-C367-kurrasammatam",
+  "pathSegment": "ML-PATH-367-KURRAM367",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-367-KURRAM367",
+      "order": 1
+    }
+  ]
+}

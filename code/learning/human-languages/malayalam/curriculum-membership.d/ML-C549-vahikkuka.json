@@ -1,0 +1,11 @@
+{
+  "id": "ML-C549-vahikkuka",
+  "pathSegment": "ML-PATH-549-PUROGATI549",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-549-PUROGATI549",
+      "order": 4
+    }
+  ]
+}

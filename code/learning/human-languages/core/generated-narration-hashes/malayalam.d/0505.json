@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:58fb8c6aa49edd67",
+  "lessonIds": [
+    "ML-C505-urjjam",
+    "ML-C505-ksamam",
+    "ML-C505-bhugarbhajalam",
+    "ML-C505-agolatapanam",
+    "ML-C505-malakkuli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch505.txt",
+  "json": "malayalam/narration/ch505.json",
+  "textHash": "fnv1a64:6db3e4804e07582c",
+  "jsonHash": "fnv1a64:215a300819437ab0",
+  "findings": []
+}

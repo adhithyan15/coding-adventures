@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:d4d883948ba41a4b",
+  "lessonIds": [
+    "ML-C469-natappata",
+    "ML-C469-valiyoram",
+    "ML-C469-cuntupalaka",
+    "ML-C469-valimaruka",
+    "ML-C469-muriccukatakkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch469.txt",
+  "json": "malayalam/narration/ch469.json",
+  "textHash": "fnv1a64:37c50cf5445bd1e0",
+  "jsonHash": "fnv1a64:b69b0f1d5db262e2",
+  "findings": []
+}

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 444,
+  "title": "Duties and Exemptions",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:96ab5fe54e6c9480",
+  "lessons": [
+    {
+      "id": "ML-C444-ilavu",
+      "sequence": 21990,
+      "title": "ഇളവ് (iḷavŭ) — a concession; an exemption",
+      "headword": "ഇളവ്",
+      "romanization": "iḷavŭ",
+      "gloss": "a concession; an exemption",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6edd52d6f18ead4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a limit, then the Malayalam for a deadline."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഇളവ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇളവ് — iḷavŭ — \"a concession; an exemption\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പാവപ്പെട്ട കുട്ടികൾക്ക് ഫീസിൽ ഇളവ് ഉണ്ട്. pāvappeṭṭa kuṭṭikaḷkkŭ phīsil iḷavŭ uṇṭŭ. Poor children have a concession on the fee."
+            },
+            {
+              "kind": "speech",
+              "text": "On something: -ഇൽ ഇളവ് (iḷavŭ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇളവ് (iḷavŭ) is native Dravidian: DEDR 510 lists Malayalam iḷavu, \"leave, holiday, rest\", beside iḷekkuka, \"to slacken, to remit\". A concession slackens a rule."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḷavŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḷavŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḷavŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḷavŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāvappeṭṭa kuṭṭikaḷkkŭ phīsil iḷavŭ uṇṭŭ. — Poor children have a concession on the fee.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāvappeṭṭa kuṭṭikaḷkkŭ phīsil iḷavŭ uṇṭŭ.* — Poor children have a concession on the fee.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a limit, then the Malayalam for a deadline, then say iḷavŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a limit, then the Malayalam for a deadline, then say *iḷavŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഇളവ് (iḷavŭ) mean? (\"A concession; an exemption\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C444-anumati",
+      "sequence": 22000,
+      "title": "അനുമതി (anumati) — official permission; consent",
+      "headword": "അനുമതി",
+      "romanization": "anumati",
+      "gloss": "official permission; consent",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b74cc7fb8fcb8821",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a deadline, then the Malayalam for a concession."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അനുമതി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അനുമതി — anumati — \"official permission; consent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "യോഗം നടത്താൻ പോലീസ് അനുമതി നൽകി. yōgaṁ naṭattān pōlīsŭ anumati nalki. The police gave permission to hold the meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word beside the everyday അനുവാദം."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അനുമതി (anumati) is borrowed from Sanskrit anumati, \"assent, permission, approval\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anumati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anumati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anumati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anumati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōgaṁ naṭattān pōlīsŭ anumati nalki. — The police gave permission to hold the meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōgaṁ naṭattān pōlīsŭ anumati nalki.* — The police gave permission to hold the meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a deadline, then the Malayalam for a concession, then say anumati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a deadline, then the Malayalam for a concession, then say *anumati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അനുമതി (anumati) mean? (\"Official permission; consent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C444-badhyata",
+      "sequence": 22010,
+      "title": "ബാധ്യത (bādhyata) — a liability; an obligation",
+      "headword": "ബാധ്യത",
+      "romanization": "bādhyata",
+      "gloss": "a liability; an obligation",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:681ee74e52dc1bd4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a concession, then the Malayalam for official permission."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ബാധ്യത",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബാധ്യത — bādhyata — \"a liability; an obligation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കടം വീട്ടാനുള്ള ബാധ്യത മകനാണ്. kaṭaṁ vīṭṭānuḷḷa bādhyata makanāṇŭ. The obligation to repay the debt is the son's."
+            },
+            {
+              "kind": "speech",
+              "text": "A debt is a ബാധ്യത (bādhyata) in the sense of a liability."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബാധ്യത (bādhyata) is built from Sanskrit bādhya, \"to be pressed hard, to be harassed\" (Monier-Williams), with the abstract ending -ത: what presses on a person."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bādhyata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bādhyata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bādhyata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bādhyata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭaṁ vīṭṭānuḷḷa bādhyata makanāṇŭ. — The obligation to repay the debt is the son's.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭaṁ vīṭṭānuḷḷa bādhyata makanāṇŭ.* — The obligation to repay the debt is the son's.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a concession, then the Malayalam for official permission, then say bādhyata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a concession, then the Malayalam for official permission, then say *bādhyata* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ബാധ്യത (bādhyata) mean? (\"A liability; an obligation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C444-prakaram",
+      "sequence": 22020,
+      "title": "പ്രകാരം (prakāraṁ) — as per; in the way of",
+      "headword": "പ്രകാരം",
+      "romanization": "prakāraṁ",
+      "gloss": "as per; in the way of",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1a7bba1edf40190",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for official permission, then the Malayalam for a liability."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രകാരം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രകാരം — prakāraṁ — \"as per; in the way of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കരാർ പ്രകാരം കമ്പനി പണം തിരിച്ചു നൽകണം. karār prakāraṁ kampani paṇaṁ tiriccu nalkaṇaṁ. As per the contract, the company must pay the money back."
+            },
+            {
+              "kind": "speech",
+              "text": "It follows the noun: കരാർ പ്രകാരം (prakāraṁ), as per the contract. A formal partner of അനുസരിച്ച്."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രകാരം (prakāraṁ) is borrowed from Sanskrit prakāra, \"a sort, a manner\" (CDIAL 8435): in the manner of."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakāraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakāraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakāraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakāraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karār prakāraṁ kampani paṇaṁ tiriccu nalkaṇaṁ. — As per the contract, the company must pay the money back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karār prakāraṁ kampani paṇaṁ tiriccu nalkaṇaṁ.* — As per the contract, the company must pay the money back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for official permission, then the Malayalam for a liability, then say prakāraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for official permission, then the Malayalam for a liability, then say *prakāraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രകാരം (prakāraṁ) mean? (\"As per; in the way of\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C444-panku",
+      "sequence": 22030,
+      "title": "പങ്ക് (paṅkŭ) — a role; a share",
+      "headword": "പങ്ക്",
+      "romanization": "paṅkŭ",
+      "gloss": "a role; a share",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c12305985b6368b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a liability, then the Malayalam for as per."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പങ്ക്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പങ്ക് — paṅkŭ — \"a role; a share\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ വിജയത്തിൽ അവളുടെ പങ്ക് വലുതാണ്. ā vijayattil avaḷuṭe paṅkŭ valutāṇŭ. Her role in that victory is big."
+            },
+            {
+              "kind": "speech",
+              "text": "To share is പങ്കുവെക്കുക; to take part, പങ്കെടുക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പങ്ക് (paṅkŭ) is native Dravidian, from the verb root paku, \"to divide\" (DEDR 3808). A role is one's share of the work, and പങ്കെടുക്കുക, to take part, is to take one's share."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṅkŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṅkŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṅkŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṅkŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā vijayattil avaḷuṭe paṅkŭ valutāṇŭ. — Her role in that victory is big.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā vijayattil avaḷuṭe paṅkŭ valutāṇŭ.* — Her role in that victory is big.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a liability, then the Malayalam for as per, then say paṅkŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a liability, then the Malayalam for as per, then say *paṅkŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പങ്ക് (paṅkŭ) mean? (\"A role; a share\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R444-review-437-444",
+      "sequence": 22040,
+      "title": "Words from chapters 437–444 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 437-444",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14674d561ce897af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for formal mathematics and economics."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "formal mathematics, economics, philosophy, knowledge, studies",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: formal mathematics, economics, philosophy, knowledge, studies]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to grasp, to memorise, to give training, to interpret, to define",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to grasp, to memorise, to give training, to interpret, to define]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to quote, to summarise, to conclude, a reference, an author",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to quote, to summarise, to conclude, a reference, an author]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a condition, a stipulation, a proviso, if not, or else",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a condition, a stipulation, a proviso, if not, or else]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "possible, impossible, to make possible, in that case, most probably",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: possible, impossible, to make possible, in that case, most probably]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a risk, a precaution, to predict, to estimate, a consequence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a risk, a precaution, to predict, to estimate, a consequence]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to affect, to influence, an alternative, a limit, a deadline",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to affect, to influence, an alternative, a limit, a deadline]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a concession, official permission, a liability, as per, a role",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a concession, official permission, a liability, as per, a role]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Formal mathematics? (ഗണിതം, gaṇitaṁ.) Economics? (സാമ്പത്തികശാസ്ത്രം, sāmpattikaśāstraṁ.) Philosophy? (തത്വശാസ്ത്രം, tatvaśāstraṁ.) Knowledge? (വിജ്ഞാനം, vijñānaṁ.) Studies? (പഠനം, paṭhanaṁ.) To grasp? (ഗ്രഹിക്കുക, grahikkuka.) To memorise? (ഹൃദിസ്ഥമാക്കുക, hṛdisthamākkuka.) To give training? (പരിശീലിപ്പിക്കുക, pariśīlippikkuka.) To interpret? (വ്യാഖ്യാനിക്കുക, vyākhyānikkuka.) To define? (നിർവചിക്കുക, nirvacikkuka.) To quote? (ഉദ്ധരിക്കുക, uddharikkuka.) To summarise? (സംഗ്രഹിക്കുക, saṁgrahikkuka.) To conclude? (ഉപസംഹരിക്കുക, upasaṁharikkuka.) A reference? (അവലംബം, avalambaṁ.) An author? (ഗ്രന്ഥകാരൻ, granthakāran.) A condition? (വ്യവസ്ഥ, vyavastha.) A stipulation? (നിബന്ധന, nibandhana.) A proviso? (ഉപാധി, upādhi.) If not? (ഇല്ലാത്തപക്ഷം, illāttapakṣaṁ.) Or else? (അല്ലാത്തപക്ഷം, allāttapakṣaṁ.) Possible? (സാധ്യമായ, sādhyamāya.) Impossible? (അസാധ്യമായ, asādhyamāya.) To make possible? (സാധ്യമാക്കുക, sādhyamākkuka.) In that case? (അങ്ങനെയെങ്കിൽ, aṅṅaneyeṅkil.) Most probably? (മിക്കവാറും, mikkavāṟuṁ.) A risk? (അപകടസാധ്യത, apakaṭasādhyata.) A precaution? (മുൻകരുതൽ, munkarutal.) To predict? (പ്രവചിക്കുക, pravacikkuka.) To estimate? (കണക്കാക്കുക, kaṇakkākkuka.) A consequence? (അനന്തരഫലം, anantaraphalaṁ.) To affect? (ബാധിക്കുക, bādhikkuka.) To influence? (സ്വാധീനിക്കുക, svādhīnikkuka.) An alternative? (ബദൽ, badal.) A limit? (പരിധി, paridhi.) A deadline? (സമയപരിധി, samayaparidhi.) A concession? (ഇളവ്, iḷavŭ.) Official permission? (അനുമതി, anumati.) A liability? (ബാധ്യത, bādhyata.) As per? (പ്രകാരം, prakāraṁ.) A role? (പങ്ക്, paṅkŭ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

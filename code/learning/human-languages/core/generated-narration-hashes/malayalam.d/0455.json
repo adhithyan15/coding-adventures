@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:df1a5b4e17d6d197",
+  "lessonIds": [
+    "ML-C455-ormmippikkuka",
+    "ML-C455-bahumanikkuka",
+    "ML-C455-tulyamaya",
+    "ML-C455-dharmmikamaya",
+    "ML-C455-upadravikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch455.txt",
+  "json": "malayalam/narration/ch455.json",
+  "textHash": "fnv1a64:8c58f542f775bd4e",
+  "jsonHash": "fnv1a64:50910cb99cbfbaac",
+  "findings": []
+}

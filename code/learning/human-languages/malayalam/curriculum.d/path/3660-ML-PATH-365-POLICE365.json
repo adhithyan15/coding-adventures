@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-365-POLICE365",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-365-POLICE365"
+  ],
+  "after": []
+}

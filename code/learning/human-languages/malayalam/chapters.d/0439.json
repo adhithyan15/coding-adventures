@@ -1,0 +1,19 @@
+{
+  "chapter": 439,
+  "title": "Quoting and Summing Up",
+  "label": "ch:ml-quoting-and-summing-up",
+  "canDo": "I can say to quote, to summarise, to conclude, a reference and an author.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C439-granthakaran",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can say to quote, to summarise, to conclude, a reference and an author.",
+    "assesses": [
+      "ML-LEX-C439-GRANTHAM439-03",
+      "ML-LEX-C439-GRANTHAM439-04",
+      "ML-LEX-C439-GRANTHAM439-05"
+    ]
+  }
+}

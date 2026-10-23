@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:714e78dc4eff7166",
+  "lessonIds": [
+    "ML-C490-tapalppetti",
+    "ML-C490-koriyar",
+    "ML-C490-kaipparruka",
+    "ML-C490-tiriccayaykkuka",
+    "ML-C490-bandhappetuka"
+  ],
+  "tex": "malayalam/book/chapters/ch490-post-and-parcels.tex"
+}

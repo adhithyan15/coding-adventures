@@ -1,0 +1,11 @@
+{
+  "id": "ML-C501-timimgalam",
+  "pathSegment": "ML-PATH-501-MRGASALA501",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-501-MRGASALA501",
+      "order": 2
+    }
+  ]
+}

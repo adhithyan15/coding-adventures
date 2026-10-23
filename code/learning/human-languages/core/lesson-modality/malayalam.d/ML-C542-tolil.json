@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C542-tolil",
+    "language": "malayalam",
+    "chapter": 542,
+    "sequence": 27280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22816025760f95c7"
+  },
+  "findings": []
+}

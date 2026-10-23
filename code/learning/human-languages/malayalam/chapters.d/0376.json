@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "Lives Lost and Saved",
+  "label": "ch:ml-lives-lost-and-saved",
+  "canDo": "I can say a victim, life, a dead body, to get hurt and to drown.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C376-munnimarikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can say a victim, life, a dead body, to get hurt and to drown.",
+    "assesses": [
+      "ML-LEX-C376-JEEVAN376-03",
+      "ML-LEX-C376-JEEVAN376-04",
+      "ML-LEX-C376-JEEVAN376-05"
+    ]
+  }
+}

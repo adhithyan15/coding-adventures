@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 513,
+  "title": "After the Storm",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4e9a47edc4591b1c",
+  "lessons": [
+    {
+      "id": "ML-C513-kyampu",
+      "sequence": 25660,
+      "title": "ക്യാമ്പ് (kyāmpŭ) — a relief camp; a camp",
+      "headword": "ക്യാമ്പ്",
+      "romanization": "kyāmpŭ",
+      "gloss": "a relief camp; a camp",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76da23a8a29630c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to go under, then the Malayalam for to divert."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ക്യാമ്പ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്യാമ്പ് — kyāmpŭ — \"a relief camp; a camp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വെള്ളപ്പൊക്കത്തിൽ ആയിരം പേർ ക്യാമ്പിൽ താമസിച്ചു. veḷḷappokkattil āyiraṁ pēr kyāmpil tāmasiccu. In the flood a thousand people stayed in the relief camp."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ക്യാമ്പുകൾ, kyāmpukaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Schools often become ക്യാമ്പുകൾ during a flood."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്യാമ്പ് (kyāmpŭ) was borrowed from English camp, a place of tents or shelters."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyāmpŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyāmpŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyāmpŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyāmpŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷappokkattil āyiraṁ pēr kyāmpil tāmasiccu. — In the flood a thousand people stayed in the relief camp.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷappokkattil āyiraṁ pēr kyāmpil tāmasiccu.* — In the flood a thousand people stayed in the relief camp.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to go under, then the Malayalam for to divert, then say kyāmpŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to go under, then the Malayalam for to divert, then say *kyāmpŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ക്യാമ്പ് (kyāmpŭ) mean? (\"A relief camp; a camp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C513-duritasvasam",
+      "sequence": 25670,
+      "title": "ദുരിതാശ്വാസം (duritāśvāsaṁ) — disaster relief",
+      "headword": "ദുരിതാശ്വാസം",
+      "romanization": "duritāśvāsaṁ",
+      "gloss": "disaster relief",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d93eee8b376740e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to divert, then the Malayalam for a relief camp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ദുരിതാശ്വാസം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദുരിതാശ്വാസം — duritāśvāsaṁ — \"disaster relief\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നാട്ടുകാർ ദുരിതാശ്വാസത്തിനായി പണം നൽകി. nāṭṭukār duritāśvāsattināyi paṇaṁ nalki. The local people gave money for disaster relief."
+            },
+            {
+              "kind": "speech",
+              "text": "ദുരിതം, distress, plus ആശ്വാസം, relief."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദുരിതാശ്വാസം (duritāśvāsaṁ) is a Malayalam compound built from two Sanskrit words, durita, \"difficulty, distress\" (Monier-Williams), and āśvāsa, \"breathing freely\" (CDIAL 1471)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duritāśvāsaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duritāśvāsaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duritāśvāsaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duritāśvāsaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭṭukār duritāśvāsattināyi paṇaṁ nalki. — The local people gave money for disaster relief.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭṭukār duritāśvāsattināyi paṇaṁ nalki.* — The local people gave money for disaster relief.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to divert, then the Malayalam for a relief camp, then say duritāśvāsaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to divert, then the Malayalam for a relief camp, then say *duritāśvāsaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ദുരിതാശ്വാസം (duritāśvāsaṁ) mean? (\"Disaster relief\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C513-itiyuka",
+      "sequence": 25680,
+      "title": "ഇടിയുക (iṭiyuka) — to cave in; to crumble",
+      "headword": "ഇടിയുക",
+      "romanization": "iṭiyuka",
+      "gloss": "to cave in; to crumble",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51fe6b6aa38d0ea3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a relief camp, then the Malayalam for disaster relief."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഇടിയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇടിയുക — iṭiyuka — \"to cave in; to crumble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കനത്ത മഴയിൽ വഴിയുടെ ഒരു ഭാഗം ഇടിഞ്ഞു. kanatta maḻayil vaḻiyuṭe oru bhāgaṁ iṭiññu. In the heavy rain part of the road caved in."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഇടിഞ്ഞു, iṭiññu."
+            },
+            {
+              "kind": "speech",
+              "text": "For earth, walls and banks: മണ്ണ് ഇടിഞ്ഞു, the earth gave way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇടിയുക (iṭiyuka) is native Dravidian, \"to crumble, to fall to pieces\" (DEDR 432)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭiyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭiyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭiyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭiyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanatta maḻayil vaḻiyuṭe oru bhāgaṁ iṭiññu. — In the heavy rain part of the road caved in.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanatta maḻayil vaḻiyuṭe oru bhāgaṁ iṭiññu.* — In the heavy rain part of the road caved in.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a relief camp, then the Malayalam for disaster relief, then say iṭiyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a relief camp, then the Malayalam for disaster relief, then say *iṭiyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഇടിയുക (iṭiyuka) mean? (\"To cave in; to crumble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C513-katapulakuka",
+      "sequence": 25690,
+      "title": "കടപുഴകുക (kaṭapuḻakuka) — to be uprooted",
+      "headword": "കടപുഴകുക",
+      "romanization": "kaṭapuḻakuka",
+      "gloss": "to be uprooted",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84bc895e0dd4f7a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for disaster relief, then the Malayalam for to cave in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കടപുഴകുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കടപുഴകുക — kaṭapuḻakuka — \"to be uprooted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കാറ്റിൽ വഴിയോരത്തെ ഒരു വലിയ മരം കടപുഴകി. kāṟṟil vaḻiyōratte oru valiya maraṁ kaṭapuḻaki. In the wind a big tree by the roadside was uprooted."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കടപുഴകി, kaṭapuḻaki."
+            },
+            {
+              "kind": "speech",
+              "text": "Only for trees torn out by the roots: മരം കടപുഴകി, the tree came down roots and all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കടപുഴകുക (kaṭapuḻakuka) is a Malayalam verb for a tree torn up by the roots; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭapuḻakuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭapuḻakuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭapuḻakuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭapuḻakuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṟṟil vaḻiyōratte oru valiya maraṁ kaṭapuḻaki. — In the wind a big tree by the roadside was uprooted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṟṟil vaḻiyōratte oru valiya maraṁ kaṭapuḻaki.* — In the wind a big tree by the roadside was uprooted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for disaster relief, then the Malayalam for to cave in, then say kaṭapuḻakuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for disaster relief, then the Malayalam for to cave in, then say *kaṭapuḻakuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കടപുഴകുക (kaṭapuḻakuka) mean? (\"To be uprooted\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C513-valayuka",
+      "sequence": 25700,
+      "title": "വലയുക (valayuka) — to be in distress; to be put to hardship",
+      "headword": "വലയുക",
+      "romanization": "valayuka",
+      "gloss": "to be in distress; to be put to hardship",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c5240df79f7b879",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to cave in, then the Malayalam for to be uprooted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വലയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വലയുക — valayuka — \"to be in distress; to be put to hardship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ബസ് ഇല്ലാതെ യാത്രക്കാർ വലഞ്ഞു. basŭ illāte yātrakkār valaññu. With no bus, the passengers were stranded and suffered."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വലഞ്ഞു, valaññu."
+            },
+            {
+              "kind": "speech",
+              "text": "Common in the news: യാത്രക്കാർ വലഞ്ഞു, the passengers had a hard time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വലയുക (valayuka) is native Dravidian, \"to be straitened, pressed, distressed\" (DEDR 5281)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valayuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valayuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valayuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valayuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "basŭ illāte yātrakkār valaññu. — With no bus, the passengers were stranded and suffered.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *basŭ illāte yātrakkār valaññu.* — With no bus, the passengers were stranded and suffered.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to cave in, then the Malayalam for to be uprooted, then say valayuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to cave in, then the Malayalam for to be uprooted, then say *valayuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വലയുക (valayuka) mean? (\"To be in distress; to be put to hardship\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

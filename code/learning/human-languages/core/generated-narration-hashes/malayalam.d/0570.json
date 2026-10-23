@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 570,
+  "sourceHash": "fnv1a64:820997dfc4470f8d",
+  "lessonIds": [
+    "ML-C570-pharniccar",
+    "ML-C570-balkkani",
+    "ML-C570-vatakakkaran",
+    "ML-C570-alakkuka-laundry",
+    "ML-C570-minukkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch570.txt",
+  "json": "malayalam/narration/ch570.json",
+  "textHash": "fnv1a64:a21d82f548cbb7ba",
+  "jsonHash": "fnv1a64:0d18840623ac4cfa",
+  "findings": []
+}

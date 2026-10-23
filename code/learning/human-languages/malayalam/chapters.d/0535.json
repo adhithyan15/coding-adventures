@@ -1,0 +1,19 @@
+{
+  "chapter": 535,
+  "title": "Aches That Linger",
+  "label": "ch:ml-aches-that-linger",
+  "canDo": "I can say cancer, a limp, a migraine, rheumatism and to throw up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C535-charddikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 535: I can say cancer, a limp, a migraine, rheumatism and to throw up.",
+    "assesses": [
+      "ML-LEX-C535-VATAM535-03",
+      "ML-LEX-C535-VATAM535-04",
+      "ML-LEX-C535-VATAM535-05"
+    ]
+  }
+}

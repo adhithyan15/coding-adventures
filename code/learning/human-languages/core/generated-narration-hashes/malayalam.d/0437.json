@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:d994d5a5086ad028",
+  "lessonIds": [
+    "ML-C437-ganitam",
+    "ML-C437-sampattikasastram",
+    "ML-C437-tatvasastram",
+    "ML-C437-vijnanam",
+    "ML-C437-pathanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch437.txt",
+  "json": "malayalam/narration/ch437.json",
+  "textHash": "fnv1a64:894af878891b4e43",
+  "jsonHash": "fnv1a64:ed1a4fa0ef06ade9",
+  "findings": []
+}

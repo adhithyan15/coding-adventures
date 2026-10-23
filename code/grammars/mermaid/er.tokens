@@ -9,6 +9,9 @@ skip:
 
 NEWLINE             = /\r?\n/
 HEADER              = "erDiagram"
+ACC_DESCR_BLOCK     = /accDescr[ \t]*\{[^}]*\}/
+ACC_TITLE           = /accTitle[ \t]*:[^#\r\n;]*/
+ACC_DESCR           = /accDescr[ \t]*:[^#\r\n;]*/
 DIRECTION_KW        = "direction"
 TITLE_KW            = "title"
 CLASSDEF_KW         = "classDef"

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:68588c552772badb",
+  "lessonIds": [
+    "ML-C422-niyamasabha",
+    "ML-C422-amgam",
+    "ML-C422-pratinidhi",
+    "ML-C422-pratinidhikarikkuka",
+    "ML-C422-pratipaksam"
+  ],
+  "tex": "malayalam/book/chapters/ch422-the-assembly.tex"
+}

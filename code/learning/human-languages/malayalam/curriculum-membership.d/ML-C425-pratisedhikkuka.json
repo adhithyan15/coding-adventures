@@ -1,0 +1,11 @@
+{
+  "id": "ML-C425-pratisedhikkuka",
+  "pathSegment": "ML-PATH-425-SAMARAM425",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-425-SAMARAM425",
+      "order": 1
+    }
+  ]
+}

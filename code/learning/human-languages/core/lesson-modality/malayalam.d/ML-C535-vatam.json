@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C535-vatam",
+    "language": "malayalam",
+    "chapter": 535,
+    "sequence": 26950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3eadb67f86e66890"
+  },
+  "findings": []
+}

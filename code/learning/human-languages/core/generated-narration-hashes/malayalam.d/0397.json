@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:e421c416863aaaf4",
+  "lessonIds": [
+    "ML-C397-rajavu",
+    "ML-C397-rajni",
+    "ML-C397-rajakumaran",
+    "ML-C397-rajakumari",
+    "ML-C397-kottaram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch397.txt",
+  "json": "malayalam/narration/ch397.json",
+  "textHash": "fnv1a64:fc58480cda71ea11",
+  "jsonHash": "fnv1a64:c6d8ba03d2459131",
+  "findings": []
+}

@@ -1,8 +1,8 @@
 # x509-rsa-sha256-reviewed-server-link
 
 This zero-external-production-dependency crate closes one evidence-mixing gap
-between target-server certificate policy and one authenticated issuer link that
-terminates at a reviewed Mozilla root.
+between target-server certificate policy and authenticated RSA SHA-256 evidence
+that terminates at a reviewed Mozilla root.
 
 `bind_x509_rsa_sha256_reviewed_server_link` consumes:
 
@@ -16,6 +16,19 @@ The binder succeeds only when both non-copyable inputs retain the same decoded
 child certificate object. Equal bytes decoded independently are insufficient.
 The distinct non-copyable result retains both complete inputs for later path
 policy.
+
+`bind_x509_rsa_sha256_reviewed_intermediate_server_path` instead consumes:
+
+- `ValidatedX509ServerCertificatePolicy`, retaining the same complete target
+  policy as the direct-link composition; and
+- `BoundX509RsaSha256ReviewedIntermediatePath`, retaining authenticated
+  target-to-intermediate and intermediate-to-reviewed-root links, complete
+  intermediate policy, advanced path-length state, and exact root selection.
+
+It succeeds only when the server-policy certificate and the child authenticated
+by the first path step are the same decoded object. Equal bytes decoded
+independently are insufficient. Its distinct non-copyable result retains both
+complete inputs and does not discard the path-length transition.
 
 `validate_x509_rsa_sha256_reviewed_server_anchor_policy` then consumes that
 complete direct-link evidence and checks the selected snapshot entry itself.
@@ -31,18 +44,23 @@ collection.
 ## Boundary
 
 This is exact-object evidence composition plus deliberately narrow direct-link
-anchor DNS policy, not complete certificate-path or TLS validation. It supports
-only the repository's bounded permitted-dNSName constraint subset. It does not
-apply excluded, directory-name, IP, or other constraint forms; path-length or
-other anchor constraints; multi-hop construction; revocation; TLS; HTTP; OAuth
-transport; or network effects.
+anchor DNS policy, not complete certificate-path or TLS validation. The
+two-link target binding does not yet apply the selected root's anchor policy;
+the existing DNS-policy composition remains direct-link only. That composition
+supports only the repository's bounded permitted-dNSName constraint subset.
+The crate does not apply excluded, directory-name, IP, or other constraint
+forms; other anchor constraints; path search or generalized construction;
+revocation; TLS; HTTP; OAuth transport; or network effects.
 `webpki-roots` remains reviewed public data only; no external executable TLS,
 X.509, or cryptographic implementation is linked here.
 
-The focused unit tests cover the security-sensitive exact-object predicate,
+The focused unit and integration tests cover the security-sensitive
+exact-object predicate, the public two-link target binding with a static public
+Let's Encrypt precertificate, R13 intermediate, and reviewed ISRG Root X1, the
+byte-equal separately decoded target rejection, complete-input getters,
 unconstrained and constrained policy branches, exact reviewed `.tr` bytes,
 all-target-DNS matching, DNS-absent SANs, malformed inputs, independent decoder
-budgets, and payload-free failures. The upstream evidence types intentionally
-expose no forging constructors, and the repository has no direct reviewed-root-
-signed end-entity fixture, so this package does not weaken those types with a
-test-only construction path.
+budgets, and payload-free failures. The static integration fixtures record
+their public sources and SHA-256 digests; tests perform no network effects. The
+upstream evidence types intentionally expose no forging constructors, so this
+package does not weaken those types with a test-only construction path.

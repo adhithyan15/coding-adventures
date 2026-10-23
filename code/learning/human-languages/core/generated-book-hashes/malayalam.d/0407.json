@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:9563e0c9e91607f3",
+  "lessonIds": [
+    "ML-C407-teliyikkuka",
+    "ML-C407-samsayam",
+    "ML-C407-anumanikkuka",
+    "ML-C407-yathartthyam",
+    "ML-C407-artthamakkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch407-proof-and-doubt.tex"
+}

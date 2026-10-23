@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-461-YATRA461",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ML-EXT-461-YATRA461"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C393-pratima",
+    "language": "malayalam",
+    "chapter": 393,
+    "sequence": 19270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6cf8efba3a088d64"
+  },
+  "findings": []
+}

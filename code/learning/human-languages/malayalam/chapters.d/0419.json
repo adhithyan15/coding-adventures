@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "Election Day",
+  "label": "ch:ml-election-day",
+  "canDo": "I can say an election, a vote, a voter, a candidate and a ballot.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C419-balarru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can say an election, a vote, a voter, a candidate and a ballot.",
+    "assesses": [
+      "ML-LEX-C419-VOTTU419-03",
+      "ML-LEX-C419-VOTTU419-04",
+      "ML-LEX-C419-VOTTU419-05"
+    ]
+  }
+}

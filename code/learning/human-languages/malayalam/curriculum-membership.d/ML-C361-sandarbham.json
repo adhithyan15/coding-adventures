@@ -1,0 +1,11 @@
+{
+  "id": "ML-C361-sandarbham",
+  "pathSegment": "ML-PATH-361-YUGAM361",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-361-YUGAM361",
+      "order": 2
+    }
+  ]
+}

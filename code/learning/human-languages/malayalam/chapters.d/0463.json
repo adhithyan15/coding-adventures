@@ -1,0 +1,19 @@
+{
+  "chapter": 463,
+  "title": "Taking Off",
+  "label": "ch:ml-taking-off",
+  "canDo": "I can say a terminal, a runway, an airline, to lift off and a luggage trolley.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C463-troli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can say a terminal, a runway, an airline, to lift off and a luggage trolley.",
+    "assesses": [
+      "ML-LEX-C463-VIMANAM463-03",
+      "ML-LEX-C463-VIMANAM463-04",
+      "ML-LEX-C463-VIMANAM463-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "Prison",
+  "label": "ch:ml-prison",
+  "canDo": "I can say a jail, imprisonment, a prisoner, to release and to free.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C371-mocippikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can say a jail, imprisonment, a prisoner, to release and to free.",
+    "assesses": [
+      "ML-LEX-C371-JAIL371-03",
+      "ML-LEX-C371-JAIL371-04",
+      "ML-LEX-C371-JAIL371-05"
+    ]
+  }
+}

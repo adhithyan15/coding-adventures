@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:ef032cd0dd348581",
+  "lessonIds": [
+    "ML-C464-kasrramsu",
+    "ML-C464-emigresan",
+    "ML-C464-cekkposrru",
+    "ML-C464-parisodhana",
+    "ML-C464-videsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch464.txt",
+  "json": "malayalam/narration/ch464.json",
+  "textHash": "fnv1a64:1257a1ebe44db569",
+  "jsonHash": "fnv1a64:df8083272892ce6d",
+  "findings": []
+}

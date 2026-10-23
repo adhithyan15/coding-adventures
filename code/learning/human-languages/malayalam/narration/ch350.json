@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 350,
+  "title": "Headlines and Editions",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:14011f82e169590f",
+  "lessons": [
+    {
+      "id": "ML-C350-talakkettu",
+      "sequence": 17050,
+      "title": "തലക്കെട്ട് (talakkeṭṭŭ) — a headline; a title",
+      "headword": "തലക്കെട്ട്",
+      "romanization": "talakkeṭṭŭ",
+      "gloss": "a headline; a title",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9eebffa41e23371b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to happen, then the Malayalam for to announce."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തലക്കെട്ട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തലക്കെട്ട് — talakkeṭṭŭ — \"a headline; a title\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പത്രത്തിലെ വലിയ തലക്കെട്ട് ഞാൻ വായിച്ചു. patrattile valiya talakkeṭṭŭ ñān vāyiccu. I read the big headline in the newspaper."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally a head-band: the line tied across the top of a story or a chapter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തലക്കെട്ട് (talakkeṭṭŭ) is a native Dravidian compound of തല (tala), \"head\" (DEDR 3103), and കെട്ട് (keṭṭŭ), \"a tying, a band\", the noun of കെട്ടുക, \"to tie\" (DEDR 1147)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talakkeṭṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talakkeṭṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talakkeṭṭŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talakkeṭṭŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrattile valiya talakkeṭṭŭ ñān vāyiccu. — I read the big headline in the newspaper.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrattile valiya talakkeṭṭŭ ñān vāyiccu.* — I read the big headline in the newspaper.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to happen, then the Malayalam for to announce, then say talakkeṭṭŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to happen, then the Malayalam for to announce, then say *talakkeṭṭŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തലക്കെട്ട് (talakkeṭṭŭ) mean? (\"A headline; a title\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C350-patradhipar",
+      "sequence": 17060,
+      "title": "പത്രാധിപർ (patrādhipar) — an editor",
+      "headword": "പത്രാധിപർ",
+      "romanization": "patrādhipar",
+      "gloss": "an editor",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aecbcc6d3fb8265b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to announce, then the Malayalam for a headline."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പത്രാധിപർ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പത്രാധിപർ — patrādhipar — \"an editor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പത്രാധിപർ ലേഖകന്റെ റിപ്പോർട്ട് വായിച്ചു. patrādhipar lēkhakanṟe ṟippōrṭṭŭ vāyiccu. The editor read the correspondent's report."
+            },
+            {
+              "kind": "speech",
+              "text": "The -ർ ending marks respect, so one editor is പത്രാധിപർ (patrādhipar); the plainer പത്രാധിപൻ is heard too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പത്രാധിപർ (patrādhipar) is built from two Sanskrit words: patra, \"a leaf, a written sheet\", which gave പത്രം (patraṁ), \"a newspaper\", and adhipa, \"a ruler, a commander\" (Monier-Williams). The editor is the chief of the paper."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrādhipar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrādhipar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrādhipar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrādhipar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrādhipar lēkhakanṟe ṟippōrṭṭŭ vāyiccu. — The editor read the correspondent's report.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrādhipar lēkhakanṟe ṟippōrṭṭŭ vāyiccu.* — The editor read the correspondent's report.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to announce, then the Malayalam for a headline, then say patrādhipar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to announce, then the Malayalam for a headline, then say *patrādhipar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പത്രാധിപർ (patrādhipar) mean? (\"An editor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C350-patippu",
+      "sequence": 17070,
+      "title": "പതിപ്പ് (patippŭ) — an edition; an issue",
+      "headword": "പതിപ്പ്",
+      "romanization": "patippŭ",
+      "gloss": "an edition; an issue",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a423c00d8eb53727",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a headline, then the Malayalam for an editor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പതിപ്പ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പതിപ്പ് — patippŭ — \"an edition; an issue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ പുസ്തകത്തിന്റെ പുതിയ പതിപ്പ് ഇന്നലെ വന്നു. ā pustakattinṟe putiya patippŭ innale vannu. A new edition of that book came out yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "Also one issue of a paper or a magazine: ഇന്നത്തെ പതിപ്പ് (patippŭ), today's issue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പതിപ്പ് (patippŭ) is native Dravidian, a noun built on പതിക്കുക (patikkuka), \"to imprint, to stamp\" (DEDR 3911), with the noun ending -പ്പ്. An edition is one pressing of the type."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patippŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patippŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patippŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patippŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pustakattinṟe putiya patippŭ innale vannu. — A new edition of that book came out yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pustakattinṟe putiya patippŭ innale vannu.* — A new edition of that book came out yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a headline, then the Malayalam for an editor, then say patippŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a headline, then the Malayalam for an editor, then say *patippŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പതിപ്പ് (patippŭ) mean? (\"An edition; an issue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C350-vayanakkaran",
+      "sequence": 17080,
+      "title": "വായനക്കാരൻ (vāyanakkāran) — a reader",
+      "headword": "വായനക്കാരൻ",
+      "romanization": "vāyanakkāran",
+      "gloss": "a reader",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:310760581af84a88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an editor, then the Malayalam for an edition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വായനക്കാരൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വായനക്കാരൻ — vāyanakkāran — \"a reader\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ മാസികയ്ക്ക് ഒരുപാട് വായനക്കാർ ഉണ്ട്. ā māsikaykkŭ orupāṭŭ vāyanakkār uṇṭŭ. That magazine has a lot of readers."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: വായനക്കാർ, vāyanakkār."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman reader is വായനക്കാരി. The -ക്കാരൻ ending makes a person from an activity, as in കച്ചവടക്കാരൻ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വായനക്കാരൻ (vāyanakkāran) is a Malayalam compound of വായന (vāyana), \"reading\", the noun of വായിക്കുക, \"to read\", and the ending -ക്കാരൻ, \"one who does it\". The verb is usually traced to Sanskrit vāc, \"speech\": reading was first reading aloud."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāyanakkāran",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāyanakkāran*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāyanakkāran, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāyanakkāran*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā māsikaykkŭ orupāṭŭ vāyanakkār uṇṭŭ. — That magazine has a lot of readers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā māsikaykkŭ orupāṭŭ vāyanakkār uṇṭŭ.* — That magazine has a lot of readers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an editor, then the Malayalam for an edition, then say vāyanakkāran again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an editor, then the Malayalam for an edition, then say *vāyanakkāran* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വായനക്കാരൻ (vāyanakkāran) mean? (\"A reader\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C350-accatikkuka",
+      "sequence": 17090,
+      "title": "അച്ചടിക്കുക (accaṭikkuka) — to print",
+      "headword": "അച്ചടിക്കുക",
+      "romanization": "accaṭikkuka",
+      "gloss": "to print",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:749d3bbcd355f330",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an edition, then the Malayalam for a reader."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അച്ചടിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അച്ചടിക്കുക — accaṭikkuka — \"to print\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവർ രാത്രി മുഴുവൻ പത്രം അച്ചടിച്ചു. avar rātri muḻuvan patraṁ accaṭiccu. They printed the newspaper all night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: അച്ചടിച്ചു, accaṭiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is അച്ചടി, printing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അച്ചടിക്കുക (accaṭikkuka) is a native Dravidian compound of അച്ച് (accŭ), \"a mould, a type\" (DEDR 47), and അടിക്കുക (aṭikkuka), \"to strike, to stamp\" (DEDR 77): to print is to strike paper with type."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "accaṭikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *accaṭikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "accaṭikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *accaṭikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar rātri muḻuvan patraṁ accaṭiccu. — They printed the newspaper all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar rātri muḻuvan patraṁ accaṭiccu.* — They printed the newspaper all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an edition, then the Malayalam for a reader, then say accaṭikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an edition, then the Malayalam for a reader, then say *accaṭikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അച്ചടിക്കുക (accaṭikkuka) mean? (\"To print\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

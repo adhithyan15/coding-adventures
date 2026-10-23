@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C380-kulappam",
+    "language": "malayalam",
+    "chapter": 380,
+    "sequence": 18590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a7c03f95368c8806"
+  },
+  "findings": []
+}

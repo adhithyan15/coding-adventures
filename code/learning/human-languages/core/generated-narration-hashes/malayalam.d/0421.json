@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:ca100556490bbf01",
+  "lessonIds": [
+    "ML-C421-bharanam",
+    "ML-C421-bharikkuka",
+    "ML-C421-mantri",
+    "ML-C421-mukhyamantri",
+    "ML-C421-gavarnar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch421.txt",
+  "json": "malayalam/narration/ch421.json",
+  "textHash": "fnv1a64:9a8869727947ceba",
+  "jsonHash": "fnv1a64:50e99e40393b9551",
+  "findings": []
+}

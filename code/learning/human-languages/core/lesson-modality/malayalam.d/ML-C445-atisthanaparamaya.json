@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C445-atisthanaparamaya",
+    "language": "malayalam",
+    "chapter": 445,
+    "sequence": 22070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e962d86985a274f1"
+  },
+  "findings": []
+}

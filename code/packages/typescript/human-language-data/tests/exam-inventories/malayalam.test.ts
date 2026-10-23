@@ -144,9 +144,18 @@ describe("the committed Malayalam A1 inventory", () => {
     // 1685 -> 1686: ML-C13-checkpoint, chapter 13's closing checkpoint. Its
     // headword is "(practice)" and its body shows only തല and രണ്ട്, glyphs the
     // track already owns, so `shown` and the overlap hold at 69.
-    expect(lessons).toHaveLength(1686);
-    expect(shown.size).toBe(69);
-    expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(69);
+    // 1686 -> 1735: the B1 core, chapters 339-348 (49 lessons). `shown` and
+    // the directly-owned overlap both rise 69 -> 77, and `open` stays empty:
+    // the core adds eight glyphs no headword held before (ഈ ഐ ഔ ഡ ൗ ഃ ഋ ഘ),
+    // each first in the headword of an anchoring word lesson (ഈയിടെ, ഐക്യം,
+    // ഔദ്യോഗികമായ, റോഡ്, സൗകര്യം, ദുഃഖം, ഋതു, ആഘോഷം) and then as the
+    // headword of its own letter lesson straight after it.
+    // 1735 -> 2887: the B1 vocabulary, chapters 349-572 (1,120 headwords and 32
+    // reviews). Its headwords use only glyphs the track already owns, so `shown`
+    // and the overlap hold at 77.
+    expect(lessons).toHaveLength(2887);
+    expect(shown.size).toBe(77);
+    expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(77);
     expect(open).toEqual([]);
 
     const point = inventory.points.find((candidate) => candidate.id === "ML-A1-SCR-12");

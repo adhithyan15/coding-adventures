@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:cba32c7d8c8d2ab7",
+  "lessonIds": [
+    "ML-C341-vicarikkuka",
+    "ML-C341-ennu-karutunnu",
+    "ML-C341-aikyam",
+    "ML-W341-ai",
+    "ML-C341-atukondu",
+    "ML-R341-opinion-and-result"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "malayalam/narration/ch341.txt",
+  "json": "malayalam/narration/ch341.json",
+  "textHash": "fnv1a64:5a443e444bd06a3c",
+  "jsonHash": "fnv1a64:c6edba40f25ff792",
+  "findings": []
+}

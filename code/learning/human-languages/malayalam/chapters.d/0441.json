@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "Possible or Not",
+  "label": "ch:ml-possible-or-not",
+  "canDo": "I can say possible, impossible, to make possible, in that case and most probably.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C441-mikkavarum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can say possible, impossible, to make possible, in that case and most probably.",
+    "assesses": [
+      "ML-LEX-C441-SADHYAM441-03",
+      "ML-LEX-C441-SADHYAM441-04",
+      "ML-LEX-C441-SADHYAM441-05"
+    ]
+  }
+}

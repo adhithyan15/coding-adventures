@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C419-vottar",
+    "language": "malayalam",
+    "chapter": 419,
+    "sequence": 20730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd038497c60dc76b"
+  },
+  "findings": []
+}

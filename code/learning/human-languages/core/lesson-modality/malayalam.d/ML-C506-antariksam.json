@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C506-antariksam",
+    "language": "malayalam",
+    "chapter": 506,
+    "sequence": 25330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2da5c4fdd6a7a57b"
+  },
+  "findings": []
+}

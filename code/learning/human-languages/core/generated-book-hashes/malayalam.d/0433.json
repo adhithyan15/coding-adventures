@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:c0ee3a93f70af39e",
+  "lessonIds": [
+    "ML-C433-pravesanam",
+    "ML-C433-pravesanapariksa",
+    "ML-C433-kolsu",
+    "ML-C433-semasrrar",
+    "ML-C433-silabasu"
+  ],
+  "tex": "malayalam/book/chapters/ch433-getting-in.tex"
+}

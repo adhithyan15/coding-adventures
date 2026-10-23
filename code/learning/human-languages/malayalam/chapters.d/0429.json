@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "Welfare",
+  "label": "ch:ml-welfare",
+  "canDo": "I can say welfare, a ration, financial aid, a benefit and to distribute.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C429-vitaranam-ceyyuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can say welfare, a ration, financial aid, a benefit and to distribute.",
+    "assesses": [
+      "ML-LEX-C429-KSEMAM429-03",
+      "ML-LEX-C429-KSEMAM429-04",
+      "ML-LEX-C429-KSEMAM429-05"
+    ]
+  }
+}

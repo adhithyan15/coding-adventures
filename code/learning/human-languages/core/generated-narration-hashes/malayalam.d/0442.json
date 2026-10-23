@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:26edfdc1952b5356",
+  "lessonIds": [
+    "ML-C442-apakatasadhyata",
+    "ML-C442-munkarutal",
+    "ML-C442-pravacikkuka",
+    "ML-C442-kanakkakkuka",
+    "ML-C442-anantaraphalam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch442.txt",
+  "json": "malayalam/narration/ch442.json",
+  "textHash": "fnv1a64:33034b8158ba5da4",
+  "jsonHash": "fnv1a64:ec84f7c8cbc0d050",
+  "findings": []
+}

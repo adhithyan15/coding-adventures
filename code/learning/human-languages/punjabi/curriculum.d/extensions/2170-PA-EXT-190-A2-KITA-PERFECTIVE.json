@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-190-A2-KITA-PERFECTIVE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can distinguish the familiar infinitive from one bounded masculine-singular completed-action frame.",
+  "prerequisites": [
+    "PA-EXT-189-A2-WANT-PLURAL"
+  ]
+}

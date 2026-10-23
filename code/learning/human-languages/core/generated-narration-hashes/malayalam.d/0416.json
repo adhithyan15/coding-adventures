@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:c44a550399fbcf06",
+  "lessonIds": [
+    "ML-C416-niti",
+    "ML-C416-aniti",
+    "ML-C416-anyayamaya",
+    "ML-C416-manusyavakasam",
+    "ML-C416-vivecanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch416.txt",
+  "json": "malayalam/narration/ch416.json",
+  "textHash": "fnv1a64:877a63bd4af6a9a9",
+  "jsonHash": "fnv1a64:14d9a677e9afb1ae",
+  "findings": []
+}

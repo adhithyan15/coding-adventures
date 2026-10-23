@@ -1,0 +1,11 @@
+{
+  "id": "ML-C444-anumati",
+  "pathSegment": "ML-PATH-444-KATAMA444",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-444-KATAMA444",
+      "order": 1
+    }
+  ]
+}

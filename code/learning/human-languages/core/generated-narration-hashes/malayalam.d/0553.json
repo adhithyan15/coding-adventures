@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 553,
+  "sourceHash": "fnv1a64:694c826af3d70615",
+  "lessonIds": [
+    "ML-C553-tottil",
+    "ML-C553-dattetukkuka",
+    "ML-C553-rantanamma",
+    "ML-C553-kutappirappu",
+    "ML-C553-sahodaran"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch553.txt",
+  "json": "malayalam/narration/ch553.json",
+  "textHash": "fnv1a64:5a4c1a41c6b84de6",
+  "jsonHash": "fnv1a64:a42d2863bacb66e7",
+  "findings": []
+}

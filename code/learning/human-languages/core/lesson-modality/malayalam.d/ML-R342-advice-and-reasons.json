@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R342-advice-and-reasons",
+    "language": "malayalam",
+    "chapter": 342,
+    "sequence": 16300,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5f49c2fa907b17ce"
+  },
+  "findings": []
+}

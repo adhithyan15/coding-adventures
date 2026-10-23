@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-350-PATRAM350",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a headline, an editor, an edition, a reader and to print.",
+  "prerequisites": []
+}

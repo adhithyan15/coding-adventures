@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C415-svatantryam",
+    "language": "malayalam",
+    "chapter": 415,
+    "sequence": 20550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:addf65c276a213a6"
+  },
+  "findings": []
+}

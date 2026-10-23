@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:6b2da0ea4e0e63bf",
+  "lessonIds": [
+    "ML-C439-uddharikkuka",
+    "ML-C439-samgrahikkuka",
+    "ML-C439-upasamharikkuka",
+    "ML-C439-avalambam",
+    "ML-C439-granthakaran"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch439.txt",
+  "json": "malayalam/narration/ch439.json",
+  "textHash": "fnv1a64:34ae8070716584c9",
+  "jsonHash": "fnv1a64:e9f7427747e80de0",
+  "findings": []
+}

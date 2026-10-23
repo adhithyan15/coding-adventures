@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Using Resources",
+  "label": "ch:ml-using-resources",
+  "canDo": "I can say to make use of, to spend, to waste, a loan and to donate.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C458-sambhavana-ceyyuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can say to make use of, to spend, to waste, a loan and to donate.",
+    "assesses": [
+      "ML-LEX-C458-VAYPA458-03",
+      "ML-LEX-C458-VAYPA458-04",
+      "ML-LEX-C458-VAYPA458-05"
+    ]
+  }
+}
