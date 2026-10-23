@@ -89,7 +89,7 @@ it("adds a slow Punjabi A2 ghatt quantity prerequisite without mock credit", () 
   expect(learnerCopy).toContain("ਥਾਂ ਘੱਟ ਹੈ");
   expect(learnerCopy).toMatch(/little.*less.*not much|little.*not much/is);
   expect(learnerCopy).toMatch(
-    /Turner lists Punjabi.*diminished.*reconstructed.*decreases, is wanting/is,
+    /Turner groups Punjabi.*diminished.*Prakrit.*is ruined.*reconstructed.*decreases, is wanting/is,
   );
   expect(learnerCopy).not.toContain("ਵੱਧ");
   expect(learnerCopy).toMatch(/fourteenth prerequisite tranche|does not unblock.*mock 1/is);

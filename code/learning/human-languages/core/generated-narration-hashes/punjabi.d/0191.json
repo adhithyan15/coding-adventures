@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 191,
-  "sourceHash": "fnv1a64:2f64cb442a01b1f3",
+  "sourceHash": "fnv1a64:9c2b15dfa9e5c85a",
   "lessonIds": [
     "PA-C191-amount-return",
     "PA-C191-ghatt",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "punjabi/narration/ch191.txt",
   "json": "punjabi/narration/ch191.json",
-  "textHash": "fnv1a64:c0269c1a8ba5e0f8",
-  "jsonHash": "fnv1a64:0c1b7d08accd7ed3",
+  "textHash": "fnv1a64:b28ba4a3e17d7c61",
+  "jsonHash": "fnv1a64:e2006d670d505d53",
   "findings": []
 }

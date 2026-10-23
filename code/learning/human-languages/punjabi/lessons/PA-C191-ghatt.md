@@ -50,9 +50,9 @@ next lesson retrieves this one form before it enters a complete sentence.
 ## Across the family
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-GHATT-191] -->
 
-Turner lists Punjabi *ghaṭṭ*, “diminished,” under reconstructed *ghaṭṭati*,
-“decreases, is wanting.” The old idea and the modern quantity meaning stay
-close. Source: [Turner, CDIAL 4415](https://dsal.uchicago.edu/cgi-bin/app/soas_query.py?qs=%2Agha%E1%B9%AD%E1%B9%ADati&searchhws=yes).
+Turner groups Punjabi *ghaṭṭ*, “diminished,” with Prakrit *ghaṭṭaï*, “is
+ruined,” under reconstructed *ghaṭṭati*, “decreases, is wanting.” The old idea
+and the modern quantity meaning stay close. Source: [Turner, CDIAL 4415](https://dsal.uchicago.edu/cgi-bin/app/soas_query.py?qs=%2Agha%E1%B9%AD%E1%B9%ADati&searchhws=yes).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-GHATT-191] -->
