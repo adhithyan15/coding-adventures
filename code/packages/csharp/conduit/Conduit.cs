@@ -289,7 +289,7 @@ internal static unsafe class Trampolines
             var fn = (HandlerFunc)GCHandle.FromIntPtr(ctx).Target!;
             return fn(new Request(req)).ToNative();
         }
-        catch (HaltException h) { return h.Response.ToNative(); }
+        catch (HaltException h) { return HaltToNative(h, IntPtr.Zero); }
         catch (Exception ex)
         {
             ReportError(ex);  // log server-side
@@ -316,7 +316,7 @@ internal static unsafe class Trampolines
             var result = fn(new Request(req));
             return result is null ? IntPtr.Zero : result.ToNative();
         }
-        catch (HaltException h) { return h.Response.ToNative(); }
+        catch (HaltException h) { return HaltToNative(h, IntPtr.Zero); }
         catch (Exception ex)
         {
             // On a before-filter exception, log it and continue (return NULL = continue).
@@ -341,24 +341,47 @@ internal static unsafe class Trampolines
         try
         {
             // Read the native response into a managed object, then release it.
+            // Clear `current` once freed so the catch blocks below free it only
+            // if it is still ours: a hook that throws must not free it twice.
             var currentResp = Response.FromNative(current);
             Native.conduit_response_free(current);
+            current = IntPtr.Zero;
 
             var fn = (AfterFunc)GCHandle.FromIntPtr(ctx).Target!;
             return fn(new Request(req), currentResp).ToNative();
         }
         catch (HaltException h)
         {
-            Native.conduit_response_free(current);
-            return h.Response.ToNative();
+            if (current != IntPtr.Zero) Native.conduit_response_free(current);
+            // After-hooks must return a valid response (NULL is UB here).
+            var halted = HaltToNative(h, IntPtr.Zero);
+            return halted != IntPtr.Zero ? halted : Response.Text("Internal Server Error", 500).ToNative();
         }
         catch (Exception ex)
         {
-            Native.conduit_response_free(current);
+            if (current != IntPtr.Zero) Native.conduit_response_free(current);
             ReportError(ex);
             // After-hooks must return a valid response (NULL is UB here).
             try { return Response.Json("{\"error\":\"internal server error\"}", 500).ToNative(); }
             catch { return Response.Text("Internal Server Error", 500).ToNative(); }
+        }
+    }
+
+    // ── Halt responses ────────────────────────────────────────────────────────
+    //
+    // A halt carries a caller-built Response, and marshalling it can throw
+    // (an out-of-range status, say). An exception escaping an
+    // [UnmanagedCallersOnly] method terminates the process, so a halt that
+    // cannot be marshalled becomes a safe 500 instead, then `fallback`.
+
+    private static IntPtr HaltToNative(HaltException h, IntPtr fallback)
+    {
+        try { return h.Response.ToNative(); }
+        catch (Exception ex)
+        {
+            ReportError(ex);
+            try { return Response.Json("{\"error\":\"internal server error\"}", 500).ToNative(); }
+            catch { return fallback; }
         }
     }
 
@@ -658,10 +681,8 @@ public sealed class Application : IDisposable
     private IntPtr _app;
     private bool   _consumed;
 
-    // List of GCHandle roots we have allocated. Even though Rust will call
-    // ctx_free for each when the server is freed, we keep a copy here so that
-    // Dispose() can clean up handles in the case where Bind() never succeeded.
-    private readonly List<GCHandle> _handles = new();
+    // The GCHandle roots we allocate are not tracked here: each one is handed
+    // to Rust with CtxFree, and Rust frees it exactly once (see Dispose).
 
     public Application() => _app = Native.conduit_app_new();
 
@@ -701,7 +722,6 @@ public sealed class Application : IDisposable
     {
         CheckAlive();
         var handle = GCHandle.Alloc(handler);
-        _handles.Add(handle);
         Native.conduit_app_add_route(
             _app, method, pattern,
             Trampolines.Handler, GCHandle.ToIntPtr(handle), Trampolines.CtxFree);
@@ -720,7 +740,6 @@ public sealed class Application : IDisposable
         // Store the BeforeFunc delegate directly in the GCHandle (no wrapper needed).
         // BeforeFn casts GCHandle.Target directly to BeforeFunc.
         var handle = GCHandle.Alloc(filter);
-        _handles.Add(handle);
         Native.conduit_app_add_before(
             _app,
             Trampolines.BeforeHandler, GCHandle.ToIntPtr(handle), Trampolines.CtxFree);
@@ -732,7 +751,6 @@ public sealed class Application : IDisposable
     {
         CheckAlive();
         var handle = GCHandle.Alloc(hook);
-        _handles.Add(handle);
         Native.conduit_app_add_after(
             _app,
             Trampolines.After, GCHandle.ToIntPtr(handle), Trampolines.CtxFree);
@@ -744,7 +762,6 @@ public sealed class Application : IDisposable
     {
         CheckAlive();
         var handle = GCHandle.Alloc(handler);
-        _handles.Add(handle);
         Native.conduit_app_set_not_found(
             _app,
             Trampolines.Handler, GCHandle.ToIntPtr(handle), Trampolines.CtxFree);
@@ -756,7 +773,6 @@ public sealed class Application : IDisposable
     {
         CheckAlive();
         var handle = GCHandle.Alloc(handler);
-        _handles.Add(handle);
         Native.conduit_app_set_error_handler(
             _app,
             Trampolines.Handler, GCHandle.ToIntPtr(handle), Trampolines.CtxFree);
@@ -803,14 +819,18 @@ public sealed class Application : IDisposable
             _app = IntPtr.Zero;
         }
 
-        // Free any handles we still hold. Rust calls ctx_free for routes that
-        // were registered on a bound server, but if Bind() never succeeded these
-        // handles would leak without this cleanup.
-        foreach (var h in _handles)
-        {
-            if (h.IsAllocated) { try { h.Free(); } catch { /* ignore */ } }
-        }
-        _handles.Clear();
+        // Never Free() the registered GCHandles here: Rust owns them. Every
+        // conduit_app_add_* call hands the handle to Rust together with
+        // CtxFree, and Rust calls CtxFree exactly once per handle when the
+        // callback is dropped — by conduit_app_free above, or by
+        // conduit_server_bind, which consumes the app on success *and* on
+        // failure. Freeing our copies again (the old loop here) was a double
+        // free: `GCHandle` is a struct, so our copy still reported
+        // IsAllocated after Rust's CtxFree, and .NET's Free() does not detect
+        // a second free. The slot went back to the handle table twice, two
+        // later GCHandle.Alloc calls got the same slot, and a trampoline
+        // then dispatched to the wrong delegate — wrong HTTP statuses, an
+        // InvalidCastException in AfterFn, or a crashed test host.
     }
 
     private void CheckAlive()
