@@ -1,0 +1,19 @@
+{
+  "chapter": 547,
+  "title": "Pilots, Plumbers and Scientists",
+  "label": "ch:ml-pilots-plumbers-and-scientists",
+  "canDo": "I can say a pilot, a dentist, an architect, an electrician and a plumber.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C547-plambar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 547: I can say a pilot, a dentist, an architect, an electrician and a plumber.",
+    "assesses": [
+      "ML-LEX-C547-PROFESSION547-03",
+      "ML-LEX-C547-PROFESSION547-04",
+      "ML-LEX-C547-PROFESSION547-05"
+    ]
+  }
+}

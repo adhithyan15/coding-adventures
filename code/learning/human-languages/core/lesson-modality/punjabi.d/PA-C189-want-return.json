@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C189-want-return",
+    "language": "punjabi",
+    "chapter": 189,
+    "sequence": 10180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:155562b2e57fa1f7"
+  },
+  "findings": []
+}

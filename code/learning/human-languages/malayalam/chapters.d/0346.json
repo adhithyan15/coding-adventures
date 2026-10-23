@@ -1,0 +1,25 @@
+{
+  "chapter": 346,
+  "title": "Bigger, Best, and How Long",
+  "label": "ch:ml-bigger-best-and-how-long",
+  "canDo": "I can compare two things with -ekkāḷ, name the best with ēṟṟavuṁ, and say how long something has gone on or lasted.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-R346-comparing-and-time",
+    "kind": "production",
+    "summary": "Complete ML-R346-comparing-and-time: than with -ekkāḷ, most with ēṟṟavuṁ, for N years now with -āyi, since with mutal, and the new letter ഋ.",
+    "assesses": [
+      "ML-LEX-C346-RTU-01",
+      "ML-SCRIPT-C346-VOCALIC-R-01",
+      "ML-GRAMMAR-C346-EKKAL-01",
+      "ML-GRAMMAR-C346-ETTAVUM-01",
+      "ML-GRAMMAR-C346-SPAN-AAYI-01",
+      "ML-GRAMMAR-C346-SINCE-MUTAL-01",
+      "ML-GRAMMAR-C345-FELT-01",
+      "ML-GRAMMAR-C345-AAN-AGRAHAM-01",
+      "ML-GRAMMAR-C345-ENNANU-AGRAHAM-01"
+    ]
+  }
+}

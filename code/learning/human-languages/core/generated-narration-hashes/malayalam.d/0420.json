@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:762eef467584515a",
+  "lessonIds": [
+    "ML-C420-pracaranam",
+    "ML-C420-prakatanapatrika",
+    "ML-C420-bhuripaksam",
+    "ML-C420-nyunapaksam",
+    "ML-C420-vijayikkuka",
+    "ML-R420-review-413-420"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch420.txt",
+  "json": "malayalam/narration/ch420.json",
+  "textHash": "fnv1a64:760049c2ddfada90",
+  "jsonHash": "fnv1a64:d4c1afbeec3829d4",
+  "findings": []
+}

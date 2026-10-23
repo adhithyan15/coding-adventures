@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:d5e6506fad27b39a",
+  "lessonIds": [
+    "ML-C394-svattu",
+    "ML-C394-avakasi",
+    "ML-C394-osyattu",
+    "ML-C394-vidhava",
+    "ML-C394-paitrkam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch394.txt",
+  "json": "malayalam/narration/ch394.json",
+  "textHash": "fnv1a64:e14e6c6317bb290f",
+  "jsonHash": "fnv1a64:363c1f96c55d7260",
+  "findings": []
+}

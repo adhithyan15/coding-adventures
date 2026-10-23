@@ -1,0 +1,11 @@
+{
+  "id": "ML-C372-parrikkuka",
+  "pathSegment": "ML-PATH-372-THATTIPPU372",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-372-THATTIPPU372",
+      "order": 3
+    }
+  ]
+}

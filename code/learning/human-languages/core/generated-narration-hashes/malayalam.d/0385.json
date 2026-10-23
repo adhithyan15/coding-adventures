@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:e7fa1e72e118cd96",
+  "lessonIds": [
+    "ML-C385-vivaham",
+    "ML-C385-vivahaniscayam",
+    "ML-C385-tali",
+    "ML-C385-ksanakkattu",
+    "ML-C385-vivaham-kalikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch385.txt",
+  "json": "malayalam/narration/ch385.json",
+  "textHash": "fnv1a64:b32a9191fc8b9e78",
+  "jsonHash": "fnv1a64:9c762fe20bd24a2a",
+  "findings": []
+}

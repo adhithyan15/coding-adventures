@@ -1,0 +1,19 @@
+{
+  "chapter": 557,
+  "title": "Support and Scolding",
+  "label": "ch:ml-support-and-scolding",
+  "canDo": "I can say to hand-feed, to scold, to pamper, to cuddle and a get-together.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C557-ottuceral",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 557: I can say to hand-feed, to scold, to pamper, to cuddle and a get-together.",
+    "assesses": [
+      "ML-LEX-C557-PINTUNA557-03",
+      "ML-LEX-C557-PINTUNA557-04",
+      "ML-LEX-C557-PINTUNA557-05"
+    ]
+  }
+}

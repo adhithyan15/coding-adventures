@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C514-nilaykkuka",
+    "language": "malayalam",
+    "chapter": 514,
+    "sequence": 25750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:987a5eb13c40f4d9"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C437-tatvasastram",
+    "language": "malayalam",
+    "chapter": 437,
+    "sequence": 21660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc7b5fb446ee8382"
+  },
+  "findings": []
+}

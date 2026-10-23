@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:418c82ade8e0bc45",
+  "lessonIds": [
+    "ML-C371-jayil",
+    "ML-C371-tatavu",
+    "ML-C371-tatavukaran",
+    "ML-C371-vittayaykkuka",
+    "ML-C371-mocippikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch371-prison.tex"
+}

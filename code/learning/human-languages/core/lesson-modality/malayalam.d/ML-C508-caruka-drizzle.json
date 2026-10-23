@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C508-caruka-drizzle",
+    "language": "malayalam",
+    "chapter": 508,
+    "sequence": 25400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a101c354cbcb119e"
+  },
+  "findings": []
+}

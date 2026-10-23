@@ -1,0 +1,11 @@
+{
+  "id": "ML-C477-kanal",
+  "pathSegment": "ML-PATH-477-KATAVU477",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-477-KATAVU477",
+      "order": 2
+    }
+  ]
+}

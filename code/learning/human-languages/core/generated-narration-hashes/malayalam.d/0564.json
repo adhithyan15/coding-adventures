@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 564,
+  "sourceHash": "fnv1a64:2a7fcebfdaa229c3",
+  "lessonIds": [
+    "ML-C564-alapikkuka",
+    "ML-C564-racikkuka",
+    "ML-C564-avatarippikkuka",
+    "ML-C564-mittuka",
+    "ML-C564-abhyasikkuka",
+    "ML-R564-review-557-564"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch564.txt",
+  "json": "malayalam/narration/ch564.json",
+  "textHash": "fnv1a64:e2717d4025f54af8",
+  "jsonHash": "fnv1a64:76f1da3b19fcb15b",
+  "findings": []
+}

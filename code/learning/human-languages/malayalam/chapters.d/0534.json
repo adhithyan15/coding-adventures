@@ -1,0 +1,19 @@
+{
+  "chapter": 534,
+  "title": "Heartburn and Sleepless Nights",
+  "label": "ch:ml-heartburn-and-sleepless-nights",
+  "canDo": "I can say asthma, heartburn, constipation, insomnia and to have a cough.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C534-cumaykkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 534: I can say asthma, heartburn, constipation, insomnia and to have a cough.",
+    "assesses": [
+      "ML-LEX-C534-NENCU534-03",
+      "ML-LEX-C534-NENCU534-04",
+      "ML-LEX-C534-NENCU534-05"
+    ]
+  }
+}

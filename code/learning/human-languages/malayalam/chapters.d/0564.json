@@ -1,0 +1,19 @@
+{
+  "chapter": 564,
+  "title": "Composing and Performing",
+  "label": "ch:ml-composing-and-performing",
+  "canDo": "I can say to render a song, to compose, to stage, to strum and to train in.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-R564-review-557-564",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 564: I can say to render a song, to compose, to stage, to strum and to train in.",
+    "assesses": [
+      "ML-LEX-C564-RACANA564-03",
+      "ML-LEX-C564-RACANA564-04",
+      "ML-LEX-C564-RACANA564-05"
+    ]
+  }
+}

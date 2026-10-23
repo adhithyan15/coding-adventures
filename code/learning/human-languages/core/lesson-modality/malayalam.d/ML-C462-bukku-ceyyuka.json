@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C462-bukku-ceyyuka",
+    "language": "malayalam",
+    "chapter": 462,
+    "sequence": 23080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d84500d08f47992"
+  },
+  "findings": []
+}

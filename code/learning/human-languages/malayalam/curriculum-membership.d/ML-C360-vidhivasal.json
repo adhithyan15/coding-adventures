@@ -1,0 +1,11 @@
+{
+  "id": "ML-C360-vidhivasal",
+  "pathSegment": "ML-PATH-360-YADRCCHIKAM360",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-360-YADRCCHIKAM360",
+      "order": 4
+    }
+  ]
+}

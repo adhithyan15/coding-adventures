@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-547-PROFESSION547",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a pilot, a dentist, an architect, an electrician and a plumber.",
+  "prerequisites": []
+}

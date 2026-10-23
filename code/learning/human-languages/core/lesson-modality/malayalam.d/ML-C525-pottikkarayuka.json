@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C525-pottikkarayuka",
+    "language": "malayalam",
+    "chapter": 525,
+    "sequence": 26420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35f3eea231be81a8"
+  },
+  "findings": []
+}

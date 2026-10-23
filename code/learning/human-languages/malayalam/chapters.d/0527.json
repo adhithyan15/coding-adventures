@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "Kind and Stingy",
+  "label": "ch:ml-kind-and-stingy",
+  "canDo": "I can say kind-hearted, patient by nature, a miser, generous and a loyal person.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C527-visvastan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can say kind-hearted, patient by nature, a miser, generous and a loyal person.",
+    "assesses": [
+      "ML-LEX-C527-SVABHAVAM527-03",
+      "ML-LEX-C527-SVABHAVAM527-04",
+      "ML-LEX-C527-SVABHAVAM527-05"
+    ]
+  }
+}

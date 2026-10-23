@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C554-nattun",
+    "language": "malayalam",
+    "chapter": 554,
+    "sequence": 27920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1c1147a75acb760"
+  },
+  "findings": []
+}

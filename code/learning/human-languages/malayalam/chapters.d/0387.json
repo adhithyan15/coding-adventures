@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "The Feast and the Ceremony",
+  "label": "ch:ml-the-feast-and-the-ceremony",
+  "canDo": "I can say a banquet, a house guest, a ceremony, to put on finery and to make ready.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C387-orukkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can say a banquet, a house guest, a ceremony, to put on finery and to make ready.",
+    "assesses": [
+      "ML-LEX-C387-SALKKARAM387-03",
+      "ML-LEX-C387-SALKKARAM387-04",
+      "ML-LEX-C387-SALKKARAM387-05"
+    ]
+  }
+}

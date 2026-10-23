@@ -1,0 +1,11 @@
+{
+  "id": "ML-C409-aropikkuka",
+  "pathSegment": "ML-PATH-409-KURRAM409",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-409-KURRAM409",
+      "order": 2
+    }
+  ]
+}

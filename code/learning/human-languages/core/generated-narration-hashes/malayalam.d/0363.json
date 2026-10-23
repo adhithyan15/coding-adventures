@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:c11717574bf9091a",
+  "lessonIds": [
+    "ML-C363-jvala",
+    "ML-C363-nasanastam",
+    "ML-C363-alikkattuka",
+    "ML-C363-pottitterikkuka",
+    "ML-C363-takaruka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch363.txt",
+  "json": "malayalam/narration/ch363.json",
+  "textHash": "fnv1a64:15e7e09fefc681df",
+  "jsonHash": "fnv1a64:06c4f5604f4e80eb",
+  "findings": []
+}

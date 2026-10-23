@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:f6f98fbd67dbf71c",
+  "lessonIds": [
+    "ML-C402-puranam",
+    "ML-C402-kettukatha",
+    "ML-C402-natotikkatha",
+    "ML-C402-nayakan",
+    "ML-C402-gunapatham"
+  ],
+  "tex": "malayalam/book/chapters/ch402-myths-fables-and-heroes.tex"
+}

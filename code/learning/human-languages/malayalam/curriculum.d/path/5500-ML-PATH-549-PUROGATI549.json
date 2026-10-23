@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-549-PUROGATI549",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ML-EXT-549-PUROGATI549"
+  ],
+  "after": []
+}

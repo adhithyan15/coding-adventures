@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:720356cf0165f566",
+  "lessonIds": [
+    "ML-C474-nastamakuka",
+    "ML-C474-reyilppalam",
+    "ML-C474-catiyirannuka",
+    "ML-C474-tunninilkkuka",
+    "ML-C474-payuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch474.txt",
+  "json": "malayalam/narration/ch474.json",
+  "textHash": "fnv1a64:87f2baefe033eac2",
+  "jsonHash": "fnv1a64:81f028732f769671",
+  "findings": []
+}

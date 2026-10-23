@@ -2,7 +2,7 @@
 name = "x509-rsa-sha256-reviewed-anchor-link"
 version = "0.1.0"
 edition = "2021"
-description = "Exact evidence binding for one RSA SHA-256 issuer link and reviewed root anchor"
+description = "Exact RSA SHA-256 issuer-link and reviewed-root evidence binding"
 
 [dependencies]
 x509-rsa-sha256-issuer-link = { path = "../x509-rsa-sha256-issuer-link" }
@@ -13,5 +13,8 @@ der-asn1 = { path = "../der-asn1" }
 rsa-public-operation = { path = "../rsa-public-operation" }
 x509-certificate = { path = "../x509-certificate" }
 x509-certificate-issuer-candidate-selection = { path = "../x509-certificate-issuer-candidate-selection" }
+x509-certificate-path-length-policy = { path = "../x509-certificate-path-length-policy" }
 x509-certificate-policy = { path = "../x509-certificate-policy" }
+x509-intermediate-certificate-policy = { path = "../x509-intermediate-certificate-policy" }
 x509-rsa-public-key = { path = "../x509-rsa-public-key" }
+x509-time = { path = "../x509-time" }

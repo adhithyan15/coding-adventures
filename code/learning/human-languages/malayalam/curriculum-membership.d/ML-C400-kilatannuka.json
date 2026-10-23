@@ -1,0 +1,11 @@
+{
+  "id": "ML-C400-kilatannuka",
+  "pathSegment": "ML-PATH-400-SATRU400",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-400-SATRU400",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,940 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 460,
+  "title": "Near and Far",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:0d51b5fc83af1d81",
+  "lessons": [
+    {
+      "id": "ML-C460-antarastra",
+      "sequence": 22810,
+      "title": "അന്താരാഷ്ട്ര (antārāṣṭra) — international",
+      "headword": "അന്താരാഷ്ട്ര",
+      "romanization": "antārāṣṭra",
+      "gloss": "international",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46c9ca6408ce4a03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for local, then the Malayalam for national."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അന്താരാഷ്ട്ര",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അന്താരാഷ്ട്ര — antārāṣṭra — \"international\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നഗരത്തിൽ ഒരു അന്താരാഷ്ട്ര സമ്മേളനം നടന്നു. nagarattil oru antārāṣṭra sammēḷanaṁ naṭannu. An international conference was held in the city."
+            },
+            {
+              "kind": "speech",
+              "text": "It stands before a noun: അന്താരാഷ്ട്ര (antārāṣṭra) വിമാനത്താവളം, an international airport."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അന്താരാഷ്ട്ര (antārāṣṭra) is a modern word built from Sanskrit antar, \"between, within\" (CDIAL 356), and rāṣṭra, \"a kingdom, a country\" (CDIAL 10721): between countries."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antārāṣṭra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antārāṣṭra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antārāṣṭra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antārāṣṭra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagarattil oru antārāṣṭra sammēḷanaṁ naṭannu. — An international conference was held in the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagarattil oru antārāṣṭra sammēḷanaṁ naṭannu.* — An international conference was held in the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for local, then the Malayalam for national, then say antārāṣṭra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for local, then the Malayalam for national, then say *antārāṣṭra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അന്താരാഷ്ട്ര (antārāṣṭra) mean? (\"International\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C460-agola",
+      "sequence": 22820,
+      "title": "ആഗോള (āgōḷa) — global",
+      "headword": "ആഗോള",
+      "romanization": "āgōḷa",
+      "gloss": "global",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2b550ac584cfec9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for national, then the Malayalam for international."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആഗോള",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആഗോള — āgōḷa — \"global\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആഗോള വിപണിയിൽ എണ്ണയുടെ വില കുറഞ്ഞു. āgōḷa vipaṇiyil eṇṇayuṭe vila kuṟaññu. The price of oil fell on the global market."
+            },
+            {
+              "kind": "speech",
+              "text": "It stands before a noun: ആഗോള (āgōḷa) പ്രശ്നം, a global problem."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആഗോള (āgōḷa) is a modern learned word built from Sanskrit ā-, \"up to, all round\", and gola, \"a ball, a globe\" (Monier-Williams): to do with the whole globe."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgōḷa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgōḷa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgōḷa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgōḷa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgōḷa vipaṇiyil eṇṇayuṭe vila kuṟaññu. — The price of oil fell on the global market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgōḷa vipaṇiyil eṇṇayuṭe vila kuṟaññu.* — The price of oil fell on the global market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for national, then the Malayalam for international, then say āgōḷa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for national, then the Malayalam for international, then say *āgōḷa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആഗോള (āgōḷa) mean? (\"Global\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C460-prayogikamaya",
+      "sequence": 22830,
+      "title": "പ്രായോഗികമായ (prāyōgikamāya) — practical",
+      "headword": "പ്രായോഗികമായ",
+      "romanization": "prāyōgikamāya",
+      "gloss": "practical",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4d3ffa06a3c98ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for international, then the Malayalam for global."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രായോഗികമായ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രായോഗികമായ — prāyōgikamāya — \"practical\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവളുടെ ആശയം വളരെ പ്രായോഗികമായിരുന്നു. avaḷuṭe āśayaṁ vaḷare prāyōgikamāyirunnu. Her idea was very practical."
+            },
+            {
+              "kind": "speech",
+              "text": "In practice is പ്രായോഗികമായി."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രായോഗികമായ (prāyōgikamāya) is built from Sanskrit prāyogika, \"applied, used, applicable\" (Monier-Williams), from prayoga, \"use\", with the adjective ending -ആയ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prāyōgikamāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prāyōgikamāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prāyōgikamāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prāyōgikamāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷuṭe āśayaṁ vaḷare prāyōgikamāyirunnu. — Her idea was very practical.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷuṭe āśayaṁ vaḷare prāyōgikamāyirunnu.* — Her idea was very practical.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for international, then the Malayalam for global, then say prāyōgikamāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for international, then the Malayalam for global, then say *prāyōgikamāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രായോഗികമായ (prāyōgikamāya) mean? (\"Practical\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C460-uddesikkuka",
+      "sequence": 22840,
+      "title": "ഉദ്ദേശിക്കുക (uddēśikkuka) — to intend; to mean",
+      "headword": "ഉദ്ദേശിക്കുക",
+      "romanization": "uddēśikkuka",
+      "gloss": "to intend; to mean",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9d5e512a4301c8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for global, then the Malayalam for practical."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉദ്ദേശിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉദ്ദേശിക്കുക — uddēśikkuka — \"to intend; to mean\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ നിന്നെ വേദനിപ്പിക്കാൻ ഉദ്ദേശിച്ചില്ല. ñān ninne vēdanippikkān uddēśiccilla. I did not mean to hurt you."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഉദ്ദേശിച്ചു, uddēśiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "What is meant takes -ആൻ. ഉദ്ദേശ്യം, a purpose, is the same family."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉദ്ദേശിക്കുക (uddēśikkuka) is built from Sanskrit uddeśa, \"pointing to, direction, aim\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uddēśikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uddēśikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uddēśikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uddēśikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñān ninne vēdanippikkān uddēśiccilla. — I did not mean to hurt you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñān ninne vēdanippikkān uddēśiccilla.* — I did not mean to hurt you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for global, then the Malayalam for practical, then say uddēśikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for global, then the Malayalam for practical, then say *uddēśikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉദ്ദേശിക്കുക (uddēśikkuka) mean? (\"To intend; to mean\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C460-vyatyasappetuka",
+      "sequence": 22850,
+      "title": "വ്യത്യാസപ്പെടുക (vyatyāsappeṭuka) — to vary; to differ",
+      "headword": "വ്യത്യാസപ്പെടുക",
+      "romanization": "vyatyāsappeṭuka",
+      "gloss": "to vary; to differ",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fcf0ead1421a09a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for practical, then the Malayalam for to intend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വ്യത്യാസപ്പെടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വ്യത്യാസപ്പെടുക — vyatyāsappeṭuka — \"to vary; to differ\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഓരോ ജില്ലയിലും വില വ്യത്യാസപ്പെടുന്നു. ōrō jillayiluṁ vila vyatyāsappeṭunnu. Prices vary from district to district."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വ്യത്യാസപ്പെട്ടു, vyatyāsappeṭṭu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is വ്യത്യാസം, a difference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വ്യത്യാസപ്പെടുക (vyatyāsappeṭuka) is built from Sanskrit vyatyāsa, \"exchange; change, inversion\" (Monier-Williams), with -പ്പെടുക from native പെടുക (DEDR 3853): to be changed about."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyatyāsappeṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyatyāsappeṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyatyāsappeṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyatyāsappeṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōrō jillayiluṁ vila vyatyāsappeṭunnu. — Prices vary from district to district.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōrō jillayiluṁ vila vyatyāsappeṭunnu.* — Prices vary from district to district.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for practical, then the Malayalam for to intend, then say vyatyāsappeṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for practical, then the Malayalam for to intend, then say *vyatyāsappeṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വ്യത്യാസപ്പെടുക (vyatyāsappeṭuka) mean? (\"To vary; to differ\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R460-review-453-460",
+      "sequence": 22860,
+      "title": "Words for saying what happens if",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 453-460",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79562a466c8e17a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for to vote and to stand by."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to vote, to stand by, an objection, to question, to respond",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to vote, to stand by, an objection, to question, to respond]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to bring up, to defend, to uphold, to be convinced, to confirm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to bring up, to defend, to uphold, to be convinced, to confirm]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to remind, to look up to, equal, ethical, to harm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to remind, to look up to, equal, ethical, to harm]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to include, to hold, to separate, to sort, to divide",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to include, to hold, to separate, to sort, to divide]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to appeal, to set in order, to carry out, to establish, to maintain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to appeal, to set in order, to carry out, to establish, to maintain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to make use of, to allocate funds, to waste, a loan, to donate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to make use of, to allocate funds, to waste, a loan, to donate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to impose, to collect dues, to manufacture, local, national",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to impose, to collect dues, to manufacture, local, national]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "international, global, practical, to intend, to vary",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: international, global, practical, to intend, to vary]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To vote? (വോട്ട് ചെയ്യുക, vōṭṭŭ ceyyuka.) To stand by? (പിന്തുണയ്ക്കുക, pintuṇaykkuka.) An objection? (എതിർപ്പ്, etirppŭ.) To question? (ചോദ്യം ചെയ്യുക, cōdyaṁ ceyyuka.) To respond? (പ്രതികരിക്കുക, pratikarikkuka.) To bring up? (ഉന്നയിക്കുക, unnayikkuka.) To defend? (പ്രതിരോധിക്കുക, pratirōdhikkuka.) To uphold? (ശരിവെക്കുക, śarivekkuka.) To be convinced? (ബോധ്യപ്പെടുക, bōdhyappeṭuka.) To confirm? (സ്ഥിരീകരിക്കുക, sthirīkarikkuka.) To remind? (ഓർമ്മിപ്പിക്കുക, ōrmmippikkuka.) To look up to? (ബഹുമാനിക്കുക, bahumānikkuka.) Equal? (തുല്യമായ, tulyamāya.) Ethical? (ധാർമ്മികമായ, dhārmmikamāya.) To harm? (ഉപദ്രവിക്കുക, upadravikkuka.) To include? (ഉൾപ്പെടുത്തുക, uḷppeṭuttuka.) To hold? (ഉൾക്കൊള്ളുക, uḷkkoḷḷuka.) To separate? (വേർതിരിക്കുക, vērtirikkuka.) To sort? (തരംതിരിക്കുക, taraṁtirikkuka.) To divide? (വിഭജിക്കുക, vibhajikkuka.) To appeal? (അഭ്യർത്ഥിക്കുക, abhyartthikkuka.) To set in order? (ക്രമീകരിക്കുക, kramīkarikkuka.) To carry out? (നിർവഹിക്കുക, nirvahikkuka.) To establish? (സ്ഥാപിക്കുക, sthāpikkuka.) To maintain? (നിലനിർത്തുക, nilanirttuka.) To make use of? (ഉപയോഗപ്പെടുത്തുക, upayōgappeṭuttuka.) To allocate funds? (വിനിയോഗിക്കുക, viniyōgikkuka.) To waste? (പാഴാക്കുക, pāḻākkuka.) A loan? (വായ്പ, vāypa.) To donate? (സംഭാവന ചെയ്യുക, sambhāvana ceyyuka.) To impose? (ചുമത്തുക, cumattuka.) To collect dues? (പിരിക്കുക, pirikkuka.) To manufacture? (ഉത്പാദിപ്പിക്കുക, utpādippikkuka.) Local? (പ്രാദേശിക, prādēśika.) National? (ദേശീയ, dēśīya.) International? (അന്താരാഷ്ട്ര, antārāṣṭra.) Global? (ആഗോള, āgōḷa.) Practical? (പ്രായോഗികമായ, prāyōgikamāya.) To intend? (ഉദ്ദേശിക്കുക, uddēśikkuka.) To vary? (വ്യത്യാസപ്പെടുക, vyatyāsappeṭuka.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R460-review-final-460",
+      "sequence": 22870,
+      "title": "Near and Far — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over chapter 460",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a07651366052650",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for international and global."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "international, global, practical, to intend, to vary",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: international, global, practical, to intend, to vary]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "International? (അന്താരാഷ്ട്ര, antārāṣṭra.) Global? (ആഗോള, āgōḷa.) Practical? (പ്രായോഗികമായ, prāyōgikamāya.) To intend? (ഉദ്ദേശിക്കുക, uddēśikkuka.) To vary? (വ്യത്യാസപ്പെടുക, vyatyāsappeṭuka.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

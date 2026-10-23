@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-560-SILPAM560",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ML-EXT-560-SILPAM560"
+  ],
+  "after": []
+}

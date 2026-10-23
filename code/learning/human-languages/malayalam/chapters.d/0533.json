@@ -1,0 +1,19 @@
+{
+  "chapter": 533,
+  "title": "Vaccines and Prescriptions",
+  "label": "ch:ml-vaccines-and-prescriptions",
+  "canDo": "I can say a vaccine, immunity, a prescription, to grow weak and breathlessness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C533-svasammuttu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can say a vaccine, immunity, a prescription, to grow weak and breathlessness.",
+    "assesses": [
+      "ML-LEX-C533-VAKSIN533-03",
+      "ML-LEX-C533-VAKSIN533-04",
+      "ML-LEX-C533-VAKSIN533-05"
+    ]
+  }
+}

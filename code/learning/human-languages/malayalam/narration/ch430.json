@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 430,
+  "title": "Corruption",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:88c2267ebfa446eb",
+  "lessons": [
+    {
+      "id": "ML-C430-alimati",
+      "sequence": 21280,
+      "title": "അഴിമതി (aḻimati) — corruption",
+      "headword": "അഴിമതി",
+      "romanization": "aḻimati",
+      "gloss": "corruption",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b158f6f288a14127",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a benefit, then the Malayalam for to distribute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അഴിമതി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അഴിമതി — aḻimati — \"corruption\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ ഓഫീസിൽ വലിയ അഴിമതി നടന്നു. ā ōphīsil valiya aḻimati naṭannu. There was large-scale corruption in that office."
+            },
+            {
+              "kind": "speech",
+              "text": "Corruption is നടക്കുക, carried on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അഴിമതി (aḻimati) is a Malayalam word whose origin is not settled; DEDR has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḻimati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḻimati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḻimati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḻimati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā ōphīsil valiya aḻimati naṭannu. — There was large-scale corruption in that office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā ōphīsil valiya aḻimati naṭannu.* — There was large-scale corruption in that office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a benefit, then the Malayalam for to distribute, then say aḻimati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a benefit, then the Malayalam for to distribute, then say *aḻimati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അഴിമതി (aḻimati) mean? (\"Corruption\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C430-kaikkuli",
+      "sequence": 21290,
+      "title": "കൈക്കൂലി (kaikkūli) — a bribe",
+      "headword": "കൈക്കൂലി",
+      "romanization": "kaikkūli",
+      "gloss": "a bribe",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1147898ec825eb35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to distribute, then the Malayalam for corruption."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കൈക്കൂലി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൈക്കൂലി — kaikkūli — \"a bribe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ ഉദ്യോഗസ്ഥൻ കൈക്കൂലി വാങ്ങി. ā udyōgasthan kaikkūli vāṅṅi. That official took a bribe."
+            },
+            {
+              "kind": "speech",
+              "text": "To take a bribe is കൈക്കൂലി (kaikkūli) വാങ്ങുക; to give one, കൈക്കൂലി (kaikkūli) കൊടുക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൈക്കൂലി (kaikkūli) is a native Malayalam compound: കൈ, \"hand\" (DEDR 2023), and കൂലി, \"wages\" (DEDR 1905). DEDR 1905 lists kai-kkūli itself with the sense \"bribe\": pay slipped into the hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaikkūli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaikkūli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaikkūli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaikkūli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā udyōgasthan kaikkūli vāṅṅi. — That official took a bribe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā udyōgasthan kaikkūli vāṅṅi.* — That official took a bribe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to distribute, then the Malayalam for corruption, then say kaikkūli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to distribute, then the Malayalam for corruption, then say *kaikkūli* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കൈക്കൂലി (kaikkūli) mean? (\"A bribe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C430-cusanam-ceyyuka",
+      "sequence": 21300,
+      "title": "ചൂഷണം ചെയ്യുക (cūṣaṇaṁ ceyyuka) — to exploit",
+      "headword": "ചൂഷണം ചെയ്യുക",
+      "romanization": "cūṣaṇaṁ ceyyuka",
+      "gloss": "to exploit",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d242381dc4b960ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for corruption, then the Malayalam for a bribe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചൂഷണം ചെയ്യുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചൂഷണം ചെയ്യുക — cūṣaṇaṁ ceyyuka — \"to exploit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ കമ്പനി തൊഴിലാളികളെ ചൂഷണം ചെയ്തു. ā kampani toḻilāḷikaḷe cūṣaṇaṁ ceytu. That company exploited its workers."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ചൂഷണം ചെയ്തു, cūṣaṇaṁ ceytu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun ചൂഷണം is exploitation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചൂഷണം ചെയ്യുക (cūṣaṇaṁ ceyyuka) is a phrase verb built on Sanskrit cūṣaṇa, \"sucking\" (CDIAL 4897), with ചെയ്യുക, \"to do\". To exploit is to suck a person dry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūṣaṇaṁ ceyyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūṣaṇaṁ ceyyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūṣaṇaṁ ceyyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūṣaṇaṁ ceyyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kampani toḻilāḷikaḷe cūṣaṇaṁ ceytu. — That company exploited its workers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kampani toḻilāḷikaḷe cūṣaṇaṁ ceytu.* — That company exploited its workers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for corruption, then the Malayalam for a bribe, then say cūṣaṇaṁ ceyyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for corruption, then the Malayalam for a bribe, then say *cūṣaṇaṁ ceyyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചൂഷണം ചെയ്യുക (cūṣaṇaṁ ceyyuka) mean? (\"To exploit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C430-sutaryamaya",
+      "sequence": 21310,
+      "title": "സുതാര്യമായ (sutāryamāya) — transparent",
+      "headword": "സുതാര്യമായ",
+      "romanization": "sutāryamāya",
+      "gloss": "transparent",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9ced334395d7105",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a bribe, then the Malayalam for to exploit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സുതാര്യമായ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സുതാര്യമായ — sutāryamāya — \"transparent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഭരണം സുതാര്യമായിരിക്കണം. bharaṇaṁ sutāryamāyirikkaṇaṁ. Administration must be transparent."
+            },
+            {
+              "kind": "speech",
+              "text": "It is said of glass and of honest government alike."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സുതാര്യമായ (sutāryamāya) is a modern learned Malayalam word whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sutāryamāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sutāryamāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sutāryamāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sutāryamāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharaṇaṁ sutāryamāyirikkaṇaṁ. — Administration must be transparent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharaṇaṁ sutāryamāyirikkaṇaṁ.* — Administration must be transparent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a bribe, then the Malayalam for to exploit, then say sutāryamāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a bribe, then the Malayalam for to exploit, then say *sutāryamāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സുതാര്യമായ (sutāryamāya) mean? (\"Transparent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C430-anvesikkuka",
+      "sequence": 21320,
+      "title": "അന്വേഷിക്കുക (anvēṣikkuka) — to investigate; to inquire",
+      "headword": "അന്വേഷിക്കുക",
+      "romanization": "anvēṣikkuka",
+      "gloss": "to investigate; to inquire",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0807ba6540abe40b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to exploit, then the Malayalam for transparent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അന്വേഷിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അന്വേഷിക്കുക — anvēṣikkuka — \"to investigate; to inquire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പോലീസ് ആ സംഭവം അന്വേഷിക്കുന്നു. pōlīsŭ ā sambhavaṁ anvēṣikkunnu. The police are investigating that incident."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: അന്വേഷിച്ചു, anvēṣiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to look for, to ask after: അവൻ നിന്നെ അന്വേഷിച്ചു, he asked after you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അന്വേഷിക്കുക (anvēṣikkuka) is built from Sanskrit anv-eṣaṇa, \"seeking after, searching\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anvēṣikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anvēṣikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anvēṣikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anvēṣikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsŭ ā sambhavaṁ anvēṣikkunnu. — The police are investigating that incident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsŭ ā sambhavaṁ anvēṣikkunnu.* — The police are investigating that incident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to exploit, then the Malayalam for transparent, then say anvēṣikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to exploit, then the Malayalam for transparent, then say *anvēṣikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അന്വേഷിക്കുക (anvēṣikkuka) mean? (\"To investigate; to inquire\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

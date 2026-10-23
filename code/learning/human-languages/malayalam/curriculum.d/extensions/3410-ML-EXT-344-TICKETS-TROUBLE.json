@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-344-TICKETS-TROUBLE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can buy a ticket and ask about times and seats, and report a missed bus, a late train or a lost bag and ask for help.",
+  "prerequisites": []
+}

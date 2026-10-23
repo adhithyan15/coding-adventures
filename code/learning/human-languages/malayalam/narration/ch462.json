@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 462,
+  "title": "Booking a Berth",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2411d2379608a208",
+  "lessons": [
+    {
+      "id": "ML-C462-risarvesan",
+      "sequence": 23050,
+      "title": "റിസർവേഷൻ (ṟisarvēṣan) — a reservation",
+      "headword": "റിസർവേഷൻ",
+      "romanization": "ṟisarvēṣan",
+      "gloss": "a reservation",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efdecb740a0bdfc4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a queue, then the Malayalam for to travel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: റിസർവേഷൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "റിസർവേഷൻ — ṟisarvēṣan — \"a reservation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "റിസർവേഷൻ ഇല്ലെങ്കിൽ സീറ്റ് കിട്ടില്ല. ṟisarvēṣan illeṅkil sīṟṟŭ kiṭṭilla. If you have no reservation, you won't get a seat."
+            },
+            {
+              "kind": "speech",
+              "text": "A reserved seat on a train is a റിസർവേഷൻ (ṟisarvēṣan) സീറ്റ്."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "റിസർവേഷൻ (ṟisarvēṣan) was borrowed from English reservation, a seat or room kept for someone in advance."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṟisarvēṣan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṟisarvēṣan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṟisarvēṣan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṟisarvēṣan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṟisarvēṣan illeṅkil sīṟṟŭ kiṭṭilla. — If you have no reservation, you won't get a seat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṟisarvēṣan illeṅkil sīṟṟŭ kiṭṭilla.* — If you have no reservation, you won't get a seat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a queue, then the Malayalam for to travel, then say ṟisarvēṣan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a queue, then the Malayalam for to travel, then say *ṟisarvēṣan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does റിസർവേഷൻ (ṟisarvēṣan) mean? (\"A reservation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C462-berttu",
+      "sequence": 23060,
+      "title": "ബെർത്ത് (berttŭ) — a berth",
+      "headword": "ബെർത്ത്",
+      "romanization": "berttŭ",
+      "gloss": "a berth",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:158f0d674b2a6a6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to travel, then the Malayalam for a reservation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ബെർത്ത്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബെർത്ത് — berttŭ — \"a berth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "എനിക്ക് മുകളിലെ ബെർത്ത് ആണ് കിട്ടിയത്. enikkŭ mukaḷile berttŭ āṇŭ kiṭṭiyatŭ. It was the upper berth that I got."
+            },
+            {
+              "kind": "speech",
+              "text": "The lower berth is താഴത്തെ ബെർത്ത് (berttŭ); the one in the middle is നടുവിലെ ബെർത്ത് (berttŭ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബെർത്ത് (berttŭ) was borrowed from English berth, a bed on a train or a ship."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "berttŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *berttŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "berttŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *berttŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enikkŭ mukaḷile berttŭ āṇŭ kiṭṭiyatŭ. — It was the upper berth that I got.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enikkŭ mukaḷile berttŭ āṇŭ kiṭṭiyatŭ.* — It was the upper berth that I got.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to travel, then the Malayalam for a reservation, then say berttŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to travel, then the Malayalam for a reservation, then say *berttŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ബെർത്ത് (berttŭ) mean? (\"A berth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C462-kamparttmenru",
+      "sequence": 23070,
+      "title": "കമ്പാർട്ട്മെന്റ് (kampārṭṭmenṟŭ) — a compartment",
+      "headword": "കമ്പാർട്ട്മെന്റ്",
+      "romanization": "kampārṭṭmenṟŭ",
+      "gloss": "a compartment",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b31aefdf66af2c47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a reservation, then the Malayalam for a berth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കമ്പാർട്ട്മെന്റ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കമ്പാർട്ട്മെന്റ് — kampārṭṭmenṟŭ — \"a compartment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞങ്ങളുടെ കമ്പാർട്ട്മെന്റിൽ നല്ല തിരക്കായിരുന്നു. ñaṅṅaḷuṭe kampārṭṭmenṟil nalla tirakkāyirunnu. Our compartment was very crowded."
+            },
+            {
+              "kind": "speech",
+              "text": "A train is a row of compartments; a sleeper compartment is a സ്ലീപ്പർ കമ്പാർട്ട്മെന്റ് (kampārṭṭmenṟŭ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കമ്പാർട്ട്മെന്റ് (kampārṭṭmenṟŭ) was borrowed from English compartment, one of the sections of a railway carriage."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampārṭṭmenṟŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampārṭṭmenṟŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampārṭṭmenṟŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampārṭṭmenṟŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñaṅṅaḷuṭe kampārṭṭmenṟil nalla tirakkāyirunnu. — Our compartment was very crowded.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñaṅṅaḷuṭe kampārṭṭmenṟil nalla tirakkāyirunnu.* — Our compartment was very crowded.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a reservation, then the Malayalam for a berth, then say kampārṭṭmenṟŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a reservation, then the Malayalam for a berth, then say *kampārṭṭmenṟŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കമ്പാർട്ട്മെന്റ് (kampārṭṭmenṟŭ) mean? (\"A compartment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C462-bukku-ceyyuka",
+      "sequence": 23080,
+      "title": "ബുക്ക് ചെയ്യുക (bukkŭ ceyyuka) — to make a booking; to book",
+      "headword": "ബുക്ക് ചെയ്യുക",
+      "romanization": "bukkŭ ceyyuka",
+      "gloss": "to make a booking; to book",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d84500d08f47992",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a berth, then the Malayalam for a compartment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ബുക്ക് ചെയ്യുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബുക്ക് ചെയ്യുക — bukkŭ ceyyuka — \"to make a booking; to book\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അച്ഛൻ ഓൺലൈനായി രണ്ട് ടിക്കറ്റ് ബുക്ക് ചെയ്തു. acchan ōṇlaināyi raṇṭŭ ṭikkaṟṟŭ bukkŭ ceytu. Father booked two tickets online."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ബുക്ക് ചെയ്തു, bukkŭ ceytu."
+            },
+            {
+              "kind": "speech",
+              "text": "English book plus ചെയ്യുക, to do. Malayalam makes many new verbs this way, as in പാർക്ക് ചെയ്യുക, to park."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബുക്ക് ചെയ്യുക (bukkŭ ceyyuka) is a Malayalam verb phrase built from ബുക്ക്, which was borrowed from English book, \"to reserve\", and the native verb ചെയ്യുക, to do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bukkŭ ceyyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bukkŭ ceyyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bukkŭ ceyyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bukkŭ ceyyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "acchan ōṇlaināyi raṇṭŭ ṭikkaṟṟŭ bukkŭ ceytu. — Father booked two tickets online.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *acchan ōṇlaināyi raṇṭŭ ṭikkaṟṟŭ bukkŭ ceytu.* — Father booked two tickets online.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a berth, then the Malayalam for a compartment, then say bukkŭ ceyyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a berth, then the Malayalam for a compartment, then say *bukkŭ ceyyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ബുക്ക് ചെയ്യുക (bukkŭ ceyyuka) mean? (\"To make a booking; to book\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C462-tikkarretukkuka",
+      "sequence": 23090,
+      "title": "ടിക്കറ്റെടുക്കുക (ṭikkaṟṟeṭukkuka) — to buy a ticket",
+      "headword": "ടിക്കറ്റെടുക്കുക",
+      "romanization": "ṭikkaṟṟeṭukkuka",
+      "gloss": "to buy a ticket",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13b825a1039c15b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a compartment, then the Malayalam for to make a booking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ടിക്കറ്റെടുക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ടിക്കറ്റെടുക്കുക — ṭikkaṟṟeṭukkuka — \"to buy a ticket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ സ്റ്റേഷനിൽ പോയി ടിക്കറ്റെടുത്തു. ñān sṟṟēṣanil pōyi ṭikkaṟṟeṭuttu. I went to the station and bought a ticket."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ടിക്കറ്റെടുത്തു, ṭikkaṟṟeṭuttu."
+            },
+            {
+              "kind": "speech",
+              "text": "ടിക്കറ്റ് plus എടുക്കുക, to take: in Malayalam you take a ticket. The two words often run together in writing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ടിക്കറ്റെടുക്കുക (ṭikkaṟṟeṭukkuka) is a Malayalam compound verb built from ടിക്കറ്റ്, which was borrowed from English ticket, and the native verb എടുക്കുക, to take (DEDR 851)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭikkaṟṟeṭukkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭikkaṟṟeṭukkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭikkaṟṟeṭukkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭikkaṟṟeṭukkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñān sṟṟēṣanil pōyi ṭikkaṟṟeṭuttu. — I went to the station and bought a ticket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñān sṟṟēṣanil pōyi ṭikkaṟṟeṭuttu.* — I went to the station and bought a ticket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a compartment, then the Malayalam for to make a booking, then say ṭikkaṟṟeṭukkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a compartment, then the Malayalam for to make a booking, then say *ṭikkaṟṟeṭukkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ടിക്കറ്റെടുക്കുക (ṭikkaṟṟeṭukkuka) mean? (\"To buy a ticket\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 381,
+  "title": "In the Dark",
+  "label": "ch:ml-in-the-dark",
+  "canDo": "I can say darkness, a sound, silence, to whisper and to disappear.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C381-apratyaksamakuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can say darkness, a sound, silence, to whisper and to disappear.",
+    "assesses": [
+      "ML-LEX-C381-IRUTTU381-03",
+      "ML-LEX-C381-IRUTTU381-04",
+      "ML-LEX-C381-IRUTTU381-05"
+    ]
+  }
+}

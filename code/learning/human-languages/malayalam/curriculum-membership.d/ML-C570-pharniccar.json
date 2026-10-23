@@ -1,0 +1,11 @@
+{
+  "id": "ML-C570-pharniccar",
+  "pathSegment": "ML-PATH-570-VITTUPAKARANAM570",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ML-EXT-570-VITTUPAKARANAM570",
+      "order": 0
+    }
+  ]
+}

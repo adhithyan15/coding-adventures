@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C436-kantupitittam",
+    "language": "malayalam",
+    "chapter": 436,
+    "sequence": 21610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2d9291e748ee2bd"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C454-unnayikkuka",
+    "language": "malayalam",
+    "chapter": 454,
+    "sequence": 22510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63f3462c04dd5aad"
+  },
+  "findings": []
+}

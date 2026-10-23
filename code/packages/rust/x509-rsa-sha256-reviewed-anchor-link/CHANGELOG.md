@@ -12,3 +12,15 @@
   successful self-signature verification and exact reviewed-snapshot binding.
 - Added a distinct-object rejection test proving that byte-equal certificates
   cannot mix independently produced evidence.
+- Added a non-copyable two-link composition that joins one authenticated
+  child-to-intermediate path-length transition to one authenticated
+  intermediate-to-reviewed-root link only when both retain the identical
+  decoded intermediate object.
+- Added success and byte-equal distinct-object rejection coverage for the
+  reviewed intermediate path composition.
+
+### Security
+
+- The two-link composition retains both adjacent-link proofs and the advanced
+  path-length state, but grants no target policy, anchor-constraint, general
+  path, revocation, TLS, HTTP, OAuth transport, or network authority.

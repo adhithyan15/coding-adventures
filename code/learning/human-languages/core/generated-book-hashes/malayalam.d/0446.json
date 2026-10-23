@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:223c6cfd08abd079",
+  "lessonIds": [
+    "ML-C446-vyaktamaya",
+    "ML-C446-potuvaya",
+    "ML-C446-phalapradamaya",
+    "ML-C446-yuktisahamaya",
+    "ML-C446-visvasaniyamaya"
+  ],
+  "tex": "malayalam/book/chapters/ch446-clear-and-reliable.tex"
+}

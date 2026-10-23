@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:b59510b317e1dedc",
+  "lessonIds": [
+    "ML-C439-uddharikkuka",
+    "ML-C439-samgrahikkuka",
+    "ML-C439-upasamharikkuka",
+    "ML-C439-avalambam",
+    "ML-C439-granthakaran"
+  ],
+  "tex": "malayalam/book/chapters/ch439-quoting-and-summing-up.tex"
+}

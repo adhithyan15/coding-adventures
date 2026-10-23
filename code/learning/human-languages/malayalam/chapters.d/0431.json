@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "Development",
+  "label": "ch:ml-development",
+  "canDo": "I can say development, to develop, to modernise, to progress and a system.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C431-sampradayam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can say development, to develop, to modernise, to progress and a system.",
+    "assesses": [
+      "ML-LEX-C431-VIKASANAM431-03",
+      "ML-LEX-C431-VIKASANAM431-04",
+      "ML-LEX-C431-VIKASANAM431-05"
+    ]
+  }
+}

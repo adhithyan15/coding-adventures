@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "Punishment and Permission",
+  "label": "ch:ml-punishment-and-permission",
+  "canDo": "I can say punishment, to punish, a ban, to prohibit and to allow.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C418-anuvadikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can say punishment, to punish, a ban, to prohibit and to allow.",
+    "assesses": [
+      "ML-LEX-C418-SIKSA418-03",
+      "ML-LEX-C418-SIKSA418-04",
+      "ML-LEX-C418-SIKSA418-05"
+    ]
+  }
+}

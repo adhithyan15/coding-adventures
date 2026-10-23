@@ -1,0 +1,11 @@
+{
+  "id": "ML-R345-feelings-and-hopes",
+  "pathSegment": "ML-PATH-345-FEELINGS-HOPES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-345-FEELINGS-HOPES",
+      "order": 4
+    }
+  ]
+}

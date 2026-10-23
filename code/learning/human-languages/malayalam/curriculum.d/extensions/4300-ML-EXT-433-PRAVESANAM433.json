@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-433-PRAVESANAM433",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say admission, an entrance exam, a course, a semester and a syllabus.",
+  "prerequisites": []
+}

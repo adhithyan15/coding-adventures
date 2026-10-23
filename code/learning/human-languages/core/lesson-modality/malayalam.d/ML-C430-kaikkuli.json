@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C430-kaikkuli",
+    "language": "malayalam",
+    "chapter": 430,
+    "sequence": 21290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1147898ec825eb35"
+  },
+  "findings": []
+}

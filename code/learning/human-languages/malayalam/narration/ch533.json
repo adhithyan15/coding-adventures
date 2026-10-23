@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 533,
+  "title": "Vaccines and Prescriptions",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8ea1a4c512954105",
+  "lessons": [
+    {
+      "id": "ML-C533-vaksin",
+      "sequence": 26820,
+      "title": "വാക്സിൻ (vāksin) — a vaccine",
+      "headword": "വാക്സിൻ",
+      "romanization": "vāksin",
+      "gloss": "a vaccine",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f5c8bc9c8175c12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a diagnosis, then the Malayalam for to treat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വാക്സിൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വാക്സിൻ — vāksin — \"a vaccine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കുഞ്ഞിന് ഇന്ന് ഒരു വാക്സിൻ എടുത്തു. kuññinŭ innŭ oru vāksin eṭuttu. The baby had a vaccine today."
+            },
+            {
+              "kind": "speech",
+              "text": "A vaccine is given as a കുത്തിവയ്പ്പ്, an injection."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വാക്സിൻ (vāksin) was borrowed from English vaccine."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāksin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāksin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāksin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāksin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuññinŭ innŭ oru vāksin eṭuttu. — The baby had a vaccine today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuññinŭ innŭ oru vāksin eṭuttu.* — The baby had a vaccine today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a diagnosis, then the Malayalam for to treat, then say vāksin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a diagnosis, then the Malayalam for to treat, then say *vāksin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വാക്സിൻ (vāksin) mean? (\"A vaccine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C533-pratirodhasesi",
+      "sequence": 26830,
+      "title": "പ്രതിരോധശേഷി (pratirōdhaśēṣi) — immunity",
+      "headword": "പ്രതിരോധശേഷി",
+      "romanization": "pratirōdhaśēṣi",
+      "gloss": "immunity",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6cc74c91978cd8d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to treat, then the Malayalam for a vaccine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രതിരോധശേഷി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രതിരോധശേഷി — pratirōdhaśēṣi — \"immunity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നല്ല ഭക്ഷണം പ്രതിരോധശേഷി കൂട്ടും. nalla bhakṣaṇaṁ pratirōdhaśēṣi kūṭṭuṁ. Good food builds up immunity."
+            },
+            {
+              "kind": "speech",
+              "text": "പ്രതിരോധം resistance + ശേഷി strength, capacity."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രതിരോധശേഷി (pratirōdhaśēṣi) is a learned compound built from Sanskrit pratirodha, \"opposition, obstruction\" (Monier-Williams), and ശേഷി, \"capacity\", whose own origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratirōdhaśēṣi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratirōdhaśēṣi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratirōdhaśēṣi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratirōdhaśēṣi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nalla bhakṣaṇaṁ pratirōdhaśēṣi kūṭṭuṁ. — Good food builds up immunity.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nalla bhakṣaṇaṁ pratirōdhaśēṣi kūṭṭuṁ.* — Good food builds up immunity.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to treat, then the Malayalam for a vaccine, then say pratirōdhaśēṣi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to treat, then the Malayalam for a vaccine, then say *pratirōdhaśēṣi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രതിരോധശേഷി (pratirōdhaśēṣi) mean? (\"Immunity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C533-kurippati",
+      "sequence": 26840,
+      "title": "കുറിപ്പടി (kuṟippaṭi) — a prescription",
+      "headword": "കുറിപ്പടി",
+      "romanization": "kuṟippaṭi",
+      "gloss": "a prescription",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:645cc8765f64417d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a vaccine, then the Malayalam for immunity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കുറിപ്പടി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുറിപ്പടി — kuṟippaṭi — \"a prescription\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വൈദ്യൻ എഴുതിയ കുറിപ്പടിയുമായി ഞാൻ മരുന്നുകടയിൽ പോയി. vaidyan eḻutiya kuṟippaṭiyumāyi ñān marunnukaṭayil pōyi. I went to the pharmacy with the doctor's prescription."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on കുറിപ്പ്, a note, the word already familiar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുറിപ്പടി (kuṟippaṭi) is built on കുറിപ്പ്, \"a note\", a native word (DEDR 1847); how the ending -അടി joined it is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟippaṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟippaṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟippaṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟippaṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaidyan eḻutiya kuṟippaṭiyumāyi ñān marunnukaṭayil pōyi. — I went to the pharmacy with the doctor's prescription.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaidyan eḻutiya kuṟippaṭiyumāyi ñān marunnukaṭayil pōyi.* — I went to the pharmacy with the doctor's prescription.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a vaccine, then the Malayalam for immunity, then say kuṟippaṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a vaccine, then the Malayalam for immunity, then say *kuṟippaṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കുറിപ്പടി (kuṟippaṭi) mean? (\"A prescription\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C533-talaruka",
+      "sequence": 26850,
+      "title": "തളരുക (taḷaruka) — to grow weak; to tire out",
+      "headword": "തളരുക",
+      "romanization": "taḷaruka",
+      "gloss": "to grow weak; to tire out",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e02191ea1e85130d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for immunity, then the Malayalam for a prescription."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തളരുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തളരുക — taḷaruka — \"to grow weak; to tire out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഒരുപാട് നടന്ന് ഞാൻ തളർന്നു. orupāṭŭ naṭannŭ ñān taḷarnnu. I was worn out after walking so much."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: തളർന്നു, taḷarnnu."
+            },
+            {
+              "kind": "speech",
+              "text": "The past is തളർന്നു. The noun is തളർച്ച, exhaustion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തളരുക (taḷaruka) is native Dravidian: DEDR 3127 gives the Malayalam verb as to relax, slacken and grow faint (DEDR 3127)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḷaruka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḷaruka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḷaruka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḷaruka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "orupāṭŭ naṭannŭ ñān taḷarnnu. — I was worn out after walking so much.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *orupāṭŭ naṭannŭ ñān taḷarnnu.* — I was worn out after walking so much.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for immunity, then the Malayalam for a prescription, then say taḷaruka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for immunity, then the Malayalam for a prescription, then say *taḷaruka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തളരുക (taḷaruka) mean? (\"To grow weak; to tire out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C533-svasammuttu",
+      "sequence": 26860,
+      "title": "ശ്വാസംമുട്ട് (śvāsaṁmuṭṭŭ) — breathlessness; wheezing",
+      "headword": "ശ്വാസംമുട്ട്",
+      "romanization": "śvāsaṁmuṭṭŭ",
+      "gloss": "breathlessness; wheezing",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a8eae0ec2671e77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a prescription, then the Malayalam for to grow weak."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശ്വാസംമുട്ട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശ്വാസംമുട്ട് — śvāsaṁmuṭṭŭ — \"breathlessness; wheezing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പുക കാരണം അവന് ശ്വാസംമുട്ട് ഉണ്ടായി. puka kāraṇaṁ avanŭ śvāsaṁmuṭṭŭ uṇṭāyi. The smoke made him breathless."
+            },
+            {
+              "kind": "speech",
+              "text": "ശ്വാസം breath + മുട്ട് a blockage."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശ്വാസംമുട്ട് (śvāsaṁmuṭṭŭ) is a Malayalam compound built from ശ്വാസം, from Sanskrit śvāsa, \"breath\" (CDIAL 12769), and മുട്ട്, \"a stoppage\", which is native (DEDR 4933)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śvāsaṁmuṭṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śvāsaṁmuṭṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śvāsaṁmuṭṭŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śvāsaṁmuṭṭŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puka kāraṇaṁ avanŭ śvāsaṁmuṭṭŭ uṇṭāyi. — The smoke made him breathless.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puka kāraṇaṁ avanŭ śvāsaṁmuṭṭŭ uṇṭāyi.* — The smoke made him breathless.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a prescription, then the Malayalam for to grow weak, then say śvāsaṁmuṭṭŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a prescription, then the Malayalam for to grow weak, then say *śvāsaṁmuṭṭŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശ്വാസംമുട്ട് (śvāsaṁmuṭṭŭ) mean? (\"Breathlessness; wheezing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C506-cakravalam",
+  "pathSegment": "ML-PATH-506-AKASAM506",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-506-AKASAM506",
+      "order": 2
+    }
+  ]
+}

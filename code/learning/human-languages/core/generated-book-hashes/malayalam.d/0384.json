@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:f53a396a104dbbbe",
+  "lessonIds": [
+    "ML-C384-jananam",
+    "ML-C384-maranam",
+    "ML-C384-caramam",
+    "ML-C384-atmakatha",
+    "ML-C384-jivacaritram"
+  ],
+  "tex": "malayalam/book/chapters/ch384-births-deaths-and-life-stories.tex"
+}

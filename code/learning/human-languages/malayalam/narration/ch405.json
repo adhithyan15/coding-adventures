@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 405,
+  "title": "Arguing a Point",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:27b8368ef72ab34d",
+  "lessons": [
+    {
+      "id": "ML-C405-vadikkuka",
+      "sequence": 20000,
+      "title": "വാദിക്കുക (vādikkuka) — to plead a case; to argue",
+      "headword": "വാദിക്കുക",
+      "romanization": "vādikkuka",
+      "gloss": "to plead a case; to argue",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1bc1c43322f4c228",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a principal, then the Malayalam for tuition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വാദിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വാദിക്കുക — vādikkuka — \"to plead a case; to argue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൾ പുതിയ നിയമത്തിന് എതിരെ വാദിച്ചു. avaḷ putiya niyamattinŭ etire vādiccu. She argued against the new law."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വാദിച്ചു, vādiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "For a cause: -ക്ക് വേണ്ടി വാദിക്കുക (vādikkuka); against it: -ന് എതിരെ വാദിക്കുക (vādikkuka)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വാദിക്കുക (vādikkuka) is built from Sanskrit vāda, \"speech\" (CDIAL 11507), from the root vad, \"to speak\", with the Malayalam verb ending -ിക്കുക. To argue is to keep speaking for one side."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vādikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vādikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vādikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vādikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ putiya niyamattinŭ etire vādiccu. — She argued against the new law.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ putiya niyamattinŭ etire vādiccu.* — She argued against the new law.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a principal, then the Malayalam for tuition, then say vādikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a principal, then the Malayalam for tuition, then say *vādikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വാദിക്കുക (vādikkuka) mean? (\"To plead a case; to argue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C405-yukti",
+      "sequence": 20010,
+      "title": "യുക്തി (yukti) — logic; reasoning",
+      "headword": "യുക്തി",
+      "romanization": "yukti",
+      "gloss": "logic; reasoning",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c3895d82bb1fdc1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for tuition, then the Malayalam for to plead a case."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: യുക്തി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "യുക്തി — yukti — \"logic; reasoning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവന്റെ വാദത്തിൽ ഒരു യുക്തിയും ഇല്ല. avanṟe vādattil oru yuktiyuṁ illa. There is no logic at all in his argument."
+            },
+            {
+              "kind": "speech",
+              "text": "A bookish word for good sense in an argument."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "യുക്തി (yukti) is borrowed from Sanskrit yukti, first \"union, joining\" and \"application\", and later \"reasoning, argument\" (CDIAL 10480; Monier-Williams). It comes from the root yuj, \"to join\", the root of യോജിക്കുക: reasoning joins one thought to the next."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yukti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yukti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yukti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yukti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avanṟe vādattil oru yuktiyuṁ illa. — There is no logic at all in his argument.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avanṟe vādattil oru yuktiyuṁ illa.* — There is no logic at all in his argument.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for tuition, then the Malayalam for to plead a case, then say yukti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for tuition, then the Malayalam for to plead a case, then say *yukti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does യുക്തി (yukti) mean? (\"Logic; reasoning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C405-vastuta",
+      "sequence": 20020,
+      "title": "വസ്തുത (vastuta) — a fact",
+      "headword": "വസ്തുത",
+      "romanization": "vastuta",
+      "gloss": "a fact",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13e101f22cdeacbd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to plead a case, then the Malayalam for logic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വസ്തുത",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വസ്തുത — vastuta — \"a fact\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇത് ഒരു വസ്തുതയാണ്, അഭിപ്രായമല്ല. itŭ oru vastutayāṇŭ, abhiprāyamalla. This is a fact, not an opinion."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: വസ്തുതകൾ, vastutakaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: വസ്തുതകൾ, the facts of a case."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വസ്തുത (vastuta) is built on Sanskrit vastu, \"a thing that exists; an affair\" (CDIAL 11449), with the abstract ending -ത; Sanskrit itself has vastutā (Monier-Williams). A fact is what a thing really is."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vastuta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vastuta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vastuta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vastuta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itŭ oru vastutayāṇŭ, abhiprāyamalla. — This is a fact, not an opinion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itŭ oru vastutayāṇŭ, abhiprāyamalla.* — This is a fact, not an opinion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to plead a case, then the Malayalam for logic, then say vastuta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to plead a case, then the Malayalam for logic, then say *vastuta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വസ്തുത (vastuta) mean? (\"A fact\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C405-sammatikkuka",
+      "sequence": 20030,
+      "title": "സമ്മതിക്കുക (sammatikkuka) — to admit; to agree",
+      "headword": "സമ്മതിക്കുക",
+      "romanization": "sammatikkuka",
+      "gloss": "to admit; to agree",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc1d54ec452e692b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for logic, then the Malayalam for a fact."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സമ്മതിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സമ്മതിക്കുക — sammatikkuka — \"to admit; to agree\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഒടുവിൽ അവൻ തന്റെ തെറ്റ് സമ്മതിച്ചു. oṭuvil avan tanṟe teṟṟŭ sammaticcu. At last he admitted his mistake."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: സമ്മതിച്ചു, sammaticcu."
+            },
+            {
+              "kind": "speech",
+              "text": "It also means to give consent: അച്ഛൻ സമ്മതിച്ചു, Father agreed. The noun is സമ്മതം, consent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സമ്മതിക്കുക (sammatikkuka) is built from Sanskrit saṁmata, \"agreed, approved\" (CDIAL 12973), with the Malayalam verb ending -ിക്കുക. It is the verb of സമ്മതം, consent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sammatikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sammatikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sammatikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sammatikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṭuvil avan tanṟe teṟṟŭ sammaticcu. — At last he admitted his mistake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṭuvil avan tanṟe teṟṟŭ sammaticcu.* — At last he admitted his mistake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for logic, then the Malayalam for a fact, then say sammatikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for logic, then the Malayalam for a fact, then say *sammatikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സമ്മതിക്കുക (sammatikkuka) mean? (\"To admit; to agree\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C405-nigamanam",
+      "sequence": 20040,
+      "title": "നിഗമനം (nigamanaṁ) — a conclusion",
+      "headword": "നിഗമനം",
+      "romanization": "nigamanaṁ",
+      "gloss": "a conclusion",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c5dee7ae65a3705",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a fact, then the Malayalam for to admit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നിഗമനം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിഗമനം — nigamanaṁ — \"a conclusion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "എല്ലാം കേട്ട ശേഷം അവർ ഒരു നിഗമനത്തിൽ എത്തി. ellāṁ kēṭṭa śēṣaṁ avar oru nigamanattil etti. After hearing everything, they reached a conclusion."
+            },
+            {
+              "kind": "speech",
+              "text": "To reach a conclusion is നിഗമനത്തിൽ എത്തുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിഗമനം (nigamanaṁ) is borrowed from Sanskrit nigamana, which in the old books of logic names the summing up of an argument, its conclusion (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nigamanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nigamanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nigamanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nigamanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellāṁ kēṭṭa śēṣaṁ avar oru nigamanattil etti. — After hearing everything, they reached a conclusion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellāṁ kēṭṭa śēṣaṁ avar oru nigamanattil etti.* — After hearing everything, they reached a conclusion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a fact, then the Malayalam for to admit, then say nigamanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a fact, then the Malayalam for to admit, then say *nigamanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നിഗമനം (nigamanaṁ) mean? (\"A conclusion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

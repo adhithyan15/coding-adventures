@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:931b20243b68610a",
+  "lessonIds": [
+    "ML-C456-ulppetuttuka",
+    "ML-C456-ulkkolluka",
+    "ML-C456-vertirikkuka",
+    "ML-C456-taramtirikkuka",
+    "ML-C456-vibhajikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch456.txt",
+  "json": "malayalam/narration/ch456.json",
+  "textHash": "fnv1a64:f62f39d79d97d74d",
+  "jsonHash": "fnv1a64:cc59d188e609001b",
+  "findings": []
+}

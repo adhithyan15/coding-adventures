@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:8395a9ebdf7d6bdf",
+  "lessonIds": [
+    "ML-C524-apamanam",
+    "ML-C524-urrunokkuka",
+    "ML-C524-kurrabodham",
+    "ML-C524-ascaryappetuka",
+    "ML-C524-vevalati",
+    "ML-R524-review-517-524"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch524.txt",
+  "json": "malayalam/narration/ch524.json",
+  "textHash": "fnv1a64:f60be35813ba50b5",
+  "jsonHash": "fnv1a64:dbbf21d1bcb678e5",
+  "findings": []
+}

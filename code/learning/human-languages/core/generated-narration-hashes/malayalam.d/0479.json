@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:8bd6fba2b79fdc76",
+  "lessonIds": [
+    "ML-C479-alayuka",
+    "ML-C479-tannuka",
+    "ML-C479-sahayatrikan",
+    "ML-C479-itattavalam",
+    "ML-C479-pinnituka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch479.txt",
+  "json": "malayalam/narration/ch479.json",
+  "textHash": "fnv1a64:63c4f0770fac1ed0",
+  "jsonHash": "fnv1a64:33bad1aac9daa02a",
+  "findings": []
+}

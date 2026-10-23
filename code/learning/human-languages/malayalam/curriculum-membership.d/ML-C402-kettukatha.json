@@ -1,0 +1,11 @@
+{
+  "id": "ML-C402-kettukatha",
+  "pathSegment": "ML-PATH-402-PURANAM402",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-402-PURANAM402",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-533-VAKSIN533",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ML-EXT-533-VAKSIN533"
+  ],
+  "after": []
+}

@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 443,
+  "title": "Effects and Limits",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:81d1246628e16aee",
+  "lessons": [
+    {
+      "id": "ML-C443-badhikkuka",
+      "sequence": 21940,
+      "title": "ബാധിക്കുക (bādhikkuka) — to affect",
+      "headword": "ബാധിക്കുക",
+      "romanization": "bādhikkuka",
+      "gloss": "to affect",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fb22603fdaa37d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to estimate, then the Malayalam for a consequence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ബാധിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബാധിക്കുക — bādhikkuka — \"to affect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പനി ഗ്രാമത്തിലെ പല കുട്ടികളെയും ബാധിച്ചു. pani grāmattile pala kuṭṭikaḷeyuṁ bādhiccu. The fever affected many children in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ബാധിച്ചു, bādhiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "What is affected takes -നെ. Usually something bad: an illness, a flood, a price rise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബാധിക്കുക (bādhikkuka) is built from the Sanskrit root bādh, \"to press hard, to harass\", whose noun bādha is \"affliction, hurt, damage\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bādhikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bādhikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bādhikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bādhikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pani grāmattile pala kuṭṭikaḷeyuṁ bādhiccu. — The fever affected many children in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pani grāmattile pala kuṭṭikaḷeyuṁ bādhiccu.* — The fever affected many children in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to estimate, then the Malayalam for a consequence, then say bādhikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to estimate, then the Malayalam for a consequence, then say *bādhikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ബാധിക്കുക (bādhikkuka) mean? (\"To affect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C443-svadhinikkuka",
+      "sequence": 21950,
+      "title": "സ്വാധീനിക്കുക (svādhīnikkuka) — to influence",
+      "headword": "സ്വാധീനിക്കുക",
+      "romanization": "svādhīnikkuka",
+      "gloss": "to influence",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9497bdcb9cbb787",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a consequence, then the Malayalam for to affect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സ്വാധീനിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സ്വാധീനിക്കുക — svādhīnikkuka — \"to influence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അമ്മയുടെ വാക്കുകൾ അവന്റെ തീരുമാനത്തെ സ്വാധീനിച്ചു. ammayuṭe vākkukaḷ avanṟe tīrumānatte svādhīniccu. Mother's words influenced his decision."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: സ്വാധീനിച്ചു, svādhīniccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is സ്വാധീനം, influence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സ്വാധീനിക്കുക (svādhīnikkuka) is built from Sanskrit svādhīna, \"dependent on oneself, under one's own control\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക: to bring a thing under one's sway."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svādhīnikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svādhīnikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svādhīnikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svādhīnikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ammayuṭe vākkukaḷ avanṟe tīrumānatte svādhīniccu. — Mother's words influenced his decision.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ammayuṭe vākkukaḷ avanṟe tīrumānatte svādhīniccu.* — Mother's words influenced his decision.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a consequence, then the Malayalam for to affect, then say svādhīnikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a consequence, then the Malayalam for to affect, then say *svādhīnikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സ്വാധീനിക്കുക (svādhīnikkuka) mean? (\"To influence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C443-badal",
+      "sequence": 21960,
+      "title": "ബദൽ (badal) — an alternative; a substitute",
+      "headword": "ബദൽ",
+      "romanization": "badal",
+      "gloss": "an alternative; a substitute",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03c96b863a0bc563",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to affect, then the Malayalam for to influence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ബദൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബദൽ — badal — \"an alternative; a substitute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ പദ്ധതിക്ക് ഒരു ബദൽ കണ്ടെത്തണം. ā paddhatikkŭ oru badal kaṇṭettaṇaṁ. An alternative to that plan must be found."
+            },
+            {
+              "kind": "speech",
+              "text": "As an adjective it comes first: ബദൽ (badal) വഴി, an alternative route."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബദൽ (badal) is usually traced to Hindustani badal, from Arabic badal, \"a substitute, an exchange\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā paddhatikkŭ oru badal kaṇṭettaṇaṁ. — An alternative to that plan must be found.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā paddhatikkŭ oru badal kaṇṭettaṇaṁ.* — An alternative to that plan must be found.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to affect, then the Malayalam for to influence, then say badal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to affect, then the Malayalam for to influence, then say *badal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ബദൽ (badal) mean? (\"An alternative; a substitute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C443-paridhi",
+      "sequence": 21970,
+      "title": "പരിധി (paridhi) — a limit",
+      "headword": "പരിധി",
+      "romanization": "paridhi",
+      "gloss": "a limit",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d98df0c1e0aa09e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to influence, then the Malayalam for an alternative."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പരിധി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പരിധി — paridhi — \"a limit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "എല്ലാത്തിനും ഒരു പരിധി ഉണ്ട്. ellāttinuṁ oru paridhi uṇṭŭ. Everything has a limit."
+            },
+            {
+              "kind": "speech",
+              "text": "Within the limit: പരിധിക്കുള്ളിൽ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പരിധി (paridhi) is borrowed from Sanskrit paridhi, \"an enclosure, a fence, a wall\" (Monier-Williams): a limit is the fence round a thing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paridhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paridhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paridhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paridhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellāttinuṁ oru paridhi uṇṭŭ. — Everything has a limit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellāttinuṁ oru paridhi uṇṭŭ.* — Everything has a limit.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to influence, then the Malayalam for an alternative, then say paridhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to influence, then the Malayalam for an alternative, then say *paridhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പരിധി (paridhi) mean? (\"A limit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C443-samayaparidhi",
+      "sequence": 21980,
+      "title": "സമയപരിധി (samayaparidhi) — a deadline; a time limit",
+      "headword": "സമയപരിധി",
+      "romanization": "samayaparidhi",
+      "gloss": "a deadline; a time limit",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ddb2f46b5aee9560",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an alternative, then the Malayalam for a limit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സമയപരിധി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സമയപരിധി — samayaparidhi — \"a deadline; a time limit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അപേക്ഷ നൽകാനുള്ള സമയപരിധി നാളെ തീരും. apēkṣa nalkānuḷḷa samayaparidhi nāḷe tīruṁ. The deadline for applying ends tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "സമയം, time, and പരിധി (paridhi), a limit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സമയപരിധി (samayaparidhi) is a Malayalam compound built from Sanskrit samaya, \"a meeting; an appointed time\" (CDIAL 13185), and paridhi, \"an enclosure\" (Monier-Williams): the fence round a stretch of time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samayaparidhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samayaparidhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samayaparidhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samayaparidhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apēkṣa nalkānuḷḷa samayaparidhi nāḷe tīruṁ. — The deadline for applying ends tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apēkṣa nalkānuḷḷa samayaparidhi nāḷe tīruṁ.* — The deadline for applying ends tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an alternative, then the Malayalam for a limit, then say samayaparidhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an alternative, then the Malayalam for a limit, then say *samayaparidhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സമയപരിധി (samayaparidhi) mean? (\"A deadline; a time limit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

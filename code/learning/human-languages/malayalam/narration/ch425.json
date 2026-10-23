@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 425,
+  "title": "Protest",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5c8e03f2d7efb43d",
+  "lessons": [
+    {
+      "id": "ML-C425-pratisedham",
+      "sequence": 21020,
+      "title": "പ്രതിഷേധം (pratiṣēdhaṁ) — a protest",
+      "headword": "പ്രതിഷേധം",
+      "romanization": "pratiṣēdhaṁ",
+      "gloss": "a protest",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06ee92a9b1d67763",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for authority, then the Malayalam for a leader."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രതിഷേധം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രതിഷേധം — pratiṣēdhaṁ — \"a protest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വില കൂടിയതിനെതിരെ നഗരത്തിൽ പ്രതിഷേധം നടന്നു. vila kūṭiyatinetire nagarattil pratiṣēdhaṁ naṭannu. There was a protest in the city against the price rise."
+            },
+            {
+              "kind": "speech",
+              "text": "Against something: -ന് എതിരെ പ്രതിഷേധം (pratiṣēdhaṁ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രതിഷേധം (pratiṣēdhaṁ) is borrowed from Sanskrit pratiṣedha, \"keeping back, warding off, prohibition\" (Monier-Williams). A protest pushes back against a decision."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiṣēdhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiṣēdhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiṣēdhaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiṣēdhaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vila kūṭiyatinetire nagarattil pratiṣēdhaṁ naṭannu. — There was a protest in the city against the price rise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vila kūṭiyatinetire nagarattil pratiṣēdhaṁ naṭannu.* — There was a protest in the city against the price rise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for authority, then the Malayalam for a leader, then say pratiṣēdhaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for authority, then the Malayalam for a leader, then say *pratiṣēdhaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രതിഷേധം (pratiṣēdhaṁ) mean? (\"A protest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C425-pratisedhikkuka",
+      "sequence": 21030,
+      "title": "പ്രതിഷേധിക്കുക (pratiṣēdhikkuka) — to protest",
+      "headword": "പ്രതിഷേധിക്കുക",
+      "romanization": "pratiṣēdhikkuka",
+      "gloss": "to protest",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00a777999aed23e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a leader, then the Malayalam for a protest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രതിഷേധിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രതിഷേധിക്കുക — pratiṣēdhikkuka — \"to protest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഫീസ് കൂട്ടിയതിൽ വിദ്യാർത്ഥികൾ പ്രതിഷേധിച്ചു. phīsŭ kūṭṭiyatil vidyārtthikaḷ pratiṣēdhiccu. The students protested against the fee increase."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പ്രതിഷേധിച്ചു, pratiṣēdhiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The cause takes -ഇൽ: ഫീസ് കൂട്ടിയതിൽ, over raising the fee."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രതിഷേധിക്കുക (pratiṣēdhikkuka) is built from Sanskrit pratiṣedha (Monier-Williams), with the Malayalam verb ending -ിക്കുക. It is the verb of പ്രതിഷേധം (pratiṣēdhaṁ)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiṣēdhikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiṣēdhikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiṣēdhikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiṣēdhikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phīsŭ kūṭṭiyatil vidyārtthikaḷ pratiṣēdhiccu. — The students protested against the fee increase.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phīsŭ kūṭṭiyatil vidyārtthikaḷ pratiṣēdhiccu.* — The students protested against the fee increase.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a leader, then the Malayalam for a protest, then say pratiṣēdhikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a leader, then the Malayalam for a protest, then say *pratiṣēdhikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രതിഷേധിക്കുക (pratiṣēdhikkuka) mean? (\"To protest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C425-samaram",
+      "sequence": 21040,
+      "title": "സമരം (samaraṁ) — a strike; a struggle",
+      "headword": "സമരം",
+      "romanization": "samaraṁ",
+      "gloss": "a strike; a struggle",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:afb9f78dd8b33043",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a protest, then the Malayalam for to protest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സമരം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സമരം — samaraṁ — \"a strike; a struggle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തൊഴിലാളികൾ ഇന്ന് മുതൽ സമരം തുടങ്ങി. toḻilāḷikaḷ innŭ mutal samaraṁ tuṭaṅṅi. The workers began a strike from today."
+            },
+            {
+              "kind": "speech",
+              "text": "To strike is സമരം (samaraṁ) ചെയ്യുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സമരം (samaraṁ) is borrowed from Sanskrit samara, \"a coming together; a hostile encounter, a struggle\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samaraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samaraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samaraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samaraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḻilāḷikaḷ innŭ mutal samaraṁ tuṭaṅṅi. — The workers began a strike from today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḻilāḷikaḷ innŭ mutal samaraṁ tuṭaṅṅi.* — The workers began a strike from today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a protest, then the Malayalam for to protest, then say samaraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a protest, then the Malayalam for to protest, then say *samaraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സമരം (samaraṁ) mean? (\"A strike; a struggle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C425-harttal",
+      "sequence": 21050,
+      "title": "ഹർത്താൽ (harttāl) — a general strike",
+      "headword": "ഹർത്താൽ",
+      "romanization": "harttāl",
+      "gloss": "a general strike",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b729c876a2dd6814",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to protest, then the Malayalam for a strike."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഹർത്താൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഹർത്താൽ — harttāl — \"a general strike\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഹർത്താൽ കാരണം കടകൾ എല്ലാം അടഞ്ഞുകിടന്നു. harttāl kāraṇaṁ kaṭakaḷ ellāṁ aṭaññukiṭannu. Because of the general strike, all the shops stayed shut."
+            },
+            {
+              "kind": "speech",
+              "text": "On a ഹർത്താൽ (harttāl) day, shops close and buses stop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഹർത്താൽ (harttāl) was borrowed from Hindustani haṛtāl, \"closing shops in mourning or protest\", which CDIAL lists under Sanskrit haṭṭa, \"a market\" (CDIAL 13944)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harttāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *harttāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harttāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *harttāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harttāl kāraṇaṁ kaṭakaḷ ellāṁ aṭaññukiṭannu. — Because of the general strike, all the shops stayed shut.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *harttāl kāraṇaṁ kaṭakaḷ ellāṁ aṭaññukiṭannu.* — Because of the general strike, all the shops stayed shut.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to protest, then the Malayalam for a strike, then say harttāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to protest, then the Malayalam for a strike, then say *harttāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഹർത്താൽ (harttāl) mean? (\"A general strike\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C425-jatha",
+      "sequence": 21060,
+      "title": "ജാഥ (jātha) — a march; a procession",
+      "headword": "ജാഥ",
+      "romanization": "jātha",
+      "gloss": "a march; a procession",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f59a51e26376b7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a strike, then the Malayalam for a general strike."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ജാഥ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ജാഥ — jātha — \"a march; a procession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കുട്ടികൾ ഗ്രാമത്തിലൂടെ ഒരു ജാഥ നടത്തി. kuṭṭikaḷ grāmattilūṭe oru jātha naṭatti. The children held a march through the village."
+            },
+            {
+              "kind": "speech",
+              "text": "A march is നടത്തുക, organised."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ജാഥ (jātha) is usually traced to Hindustani jathā, \"a band, a group of people\"; its history before that is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jātha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jātha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jātha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jātha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭṭikaḷ grāmattilūṭe oru jātha naṭatti. — The children held a march through the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭṭikaḷ grāmattilūṭe oru jātha naṭatti.* — The children held a march through the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a strike, then the Malayalam for a general strike, then say jātha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a strike, then the Malayalam for a general strike, then say *jātha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ജാഥ (jātha) mean? (\"A march; a procession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

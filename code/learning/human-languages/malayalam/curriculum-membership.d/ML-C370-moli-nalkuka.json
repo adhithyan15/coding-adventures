@@ -1,0 +1,11 @@
+{
+  "id": "ML-C370-moli-nalkuka",
+  "pathSegment": "ML-PATH-370-MOZHI370",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-370-MOZHI370",
+      "order": 3
+    }
+  ]
+}

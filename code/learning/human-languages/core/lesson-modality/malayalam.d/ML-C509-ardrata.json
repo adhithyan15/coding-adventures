@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C509-ardrata",
+    "language": "malayalam",
+    "chapter": 509,
+    "sequence": 25470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e73327a069f9abf3"
+  },
+  "findings": []
+}

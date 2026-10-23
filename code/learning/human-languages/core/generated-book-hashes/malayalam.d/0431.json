@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:6273213a5bcec629",
+  "lessonIds": [
+    "ML-C431-vikasanam",
+    "ML-C431-vikasippikkuka",
+    "ML-C431-navikarikkuka",
+    "ML-C431-purogamikkuka",
+    "ML-C431-sampradayam"
+  ],
+  "tex": "malayalam/book/chapters/ch431-development.tex"
+}

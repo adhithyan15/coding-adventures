@@ -1340,6 +1340,11 @@ backend immediately) come before the enabler-dependent items.
   conservative.
   Additional built-in `entier` calls may wrap that already integral bounded
   result; an unrestricted runtime `entier` operand remains conservative.
+  A checked static integer reduction may contain a conditional whose selector
+  does not call a procedure when both branches independently reduce to the
+  same exact integer. The selector still executes at runtime; unequal,
+  dynamic, invalid, or oversized branch reductions and procedure-calling
+  selectors remain conservative.
   Built-in `sqrt` may also map an `abs`-normalized bounded result to exact `0`
   or `1` before `entier`; an unnormalized or unrestricted operand remains
   conservative. Additional built-in `sqrt` calls may wrap that nonnegative
@@ -1496,6 +1501,10 @@ backend immediately) come before the enabler-dependent items.
   exponent is nonnegative, the exponent chain stays within the existing unroll
   cap, and the powered result remains within `2^53`. Dynamic or negative
   exponents, deeper chains, and overflowing powers remain conservative.
+  Built-in `abs`, `sign`, and `entier` may normalize those checked
+  variable-free integer reductions before they become a static offset, factor,
+  or exponent. User-declared procedures with those names, dynamic inputs, zero
+  divisors, and results beyond `2^53` remain conservative.
   Positive variable-free whole-number powers may raise that exact sign-rooted
   integer transform within the existing exponent-unroll cap when checked
   exponentiation keeps its worst-case magnitude within `2^53`; zero, negative,

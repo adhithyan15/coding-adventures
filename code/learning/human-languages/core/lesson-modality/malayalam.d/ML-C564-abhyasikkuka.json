@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C564-abhyasikkuka",
+    "language": "malayalam",
+    "chapter": 564,
+    "sequence": 28440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86939505ecbe71a0"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:97facd251cdc5feb",
+  "lessonIds": [
+    "ML-C440-vyavastha",
+    "ML-C440-nibandhana",
+    "ML-C440-upadhi",
+    "ML-C440-illattapaksam",
+    "ML-C440-allattapaksam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch440.txt",
+  "json": "malayalam/narration/ch440.json",
+  "textHash": "fnv1a64:7efa8107580d450d",
+  "jsonHash": "fnv1a64:aa65a2a6c55d84fb",
+  "findings": []
+}

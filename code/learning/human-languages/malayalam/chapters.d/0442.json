@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "Risks",
+  "label": "ch:ml-risks",
+  "canDo": "I can say a risk, a precaution, to predict, to estimate and a consequence.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C442-anantaraphalam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can say a risk, a precaution, to predict, to estimate and a consequence.",
+    "assesses": [
+      "ML-LEX-C442-APAKATAM442-03",
+      "ML-LEX-C442-APAKATAM442-04",
+      "ML-LEX-C442-APAKATAM442-05"
+    ]
+  }
+}

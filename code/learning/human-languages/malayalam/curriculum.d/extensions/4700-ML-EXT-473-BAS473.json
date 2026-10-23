@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-473-BAS473",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a bus stop, to wave down, to drop off, to shove and to rush up.",
+  "prerequisites": []
+}
