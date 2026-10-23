@@ -980,6 +980,24 @@ target, root, or SAN collection. This remains a fixed two-link policy step: it
 does not implement excluded or non-DNS constraint semantics, apply other anchor
 constraints, search or generalize paths, check revocation, perform TLS or HTTP,
 authorize OAuth transport, or grant network authority.
+A bounded excluded-DNS follow-up extends the repository-owned complete
+NameConstraints parser and shared evaluator without widening the reviewed-root
+snapshot format. A certificate extension may carry a non-empty
+`permittedSubtrees [0]` field, a non-empty `excludedSubtrees [1]` field, or both
+in schema order; the supported GeneralSubtree form remains dNSName with absent
+minimum and maximum. The snapshot-contents decoder remains restricted to its
+reviewed permitted-DNS-only input. Evaluation validates every retained
+permitted and excluded subtree before examining a presented name, rejects a
+name matching any excluded subtree, and, when permitted subtrees are present,
+still requires a match in that set. The exact direct and two-link anchor-policy
+consumers use the shared evaluator, while the exact intermediate-policy
+consumer now accepts and enforces supported critical excluded-DNS constraints
+instead of rejecting their field solely by tag. Empty fields, duplicates,
+reversed order, distance fields, non-DNS GeneralName choices, malformed DER,
+and caller-limit exhaustion continue to fail closed with redacted categories.
+This remains fixed-path DNS policy only: it does not implement other name
+forms, generalized path construction or validation, revocation, TLS, HTTP,
+OAuth transport, or network authority.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
