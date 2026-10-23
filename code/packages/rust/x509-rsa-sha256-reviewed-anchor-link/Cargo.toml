@@ -2,7 +2,7 @@
 name = "x509-rsa-sha256-reviewed-anchor-link"
 version = "0.1.0"
 edition = "2021"
-description = "Exact evidence binding for one RSA SHA-256 issuer link and reviewed root anchor"
+description = "Exact RSA SHA-256 issuer-link and reviewed-root evidence binding"
 
 [dependencies]
 x509-rsa-sha256-issuer-link = { path = "../x509-rsa-sha256-issuer-link" }

@@ -18,8 +18,7 @@ use x509_rsa_sha256_issuer_link::{
 };
 use x509_rsa_sha256_reviewed_anchor_link::{
     bind_x509_rsa_sha256_authenticated_intermediate_path_to_reviewed_anchor,
-    bind_x509_rsa_sha256_issuer_link_to_reviewed_anchor,
-    X509RsaSha256ReviewedAnchorLinkErrorKind,
+    bind_x509_rsa_sha256_issuer_link_to_reviewed_anchor, X509RsaSha256ReviewedAnchorLinkErrorKind,
     X509RsaSha256ReviewedIntermediatePathErrorKind,
 };
 use x509_time::{decode_x509_time, X509Time};
