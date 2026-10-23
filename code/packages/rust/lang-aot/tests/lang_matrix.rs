@@ -218,6 +218,22 @@ macro_rules! perl_case {
     };
 }
 
+/// The source of one `rb-int-puts` corpus case, read at compile time, so a
+/// Ruby row on a class representative runs exactly the bytes the corpus holds.
+macro_rules! ruby_case {
+    ($name:literal) => {
+        include_str!(concat!("../../../../grammars/ruby/corpus/rb-int-puts/", $name, ".rb"))
+    };
+}
+
+/// The source of one `py-int-print` corpus case, read at compile time, so a
+/// Python row on a class representative runs exactly the bytes the corpus holds.
+macro_rules! python_case {
+    ($name:literal) => {
+        include_str!(concat!("../../../../grammars/python/corpus/py-int-print/", $name, ".py"))
+    };
+}
+
 /// Every executable column, for rows that run on all of them.
 const EVERY_COLUMN: &[Backend] = &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam];
 
@@ -6514,6 +6530,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(if choose() then (abs((6 div 4) - 3) * sign(left)) else (entier(abs(((10 div 3) + (7 mod 4)) ^ (6 div 3))) * ((2 * sign(right)) + 2))); output(result) end",
         expect: Expect::Stdout("144"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
@@ -9341,6 +9359,26 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Ruby, ext: "rb", src: "puts(4)\nputs((7 - 7) * 3, 10 / (5 - 5))\n", expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.3.6"), case: Some("rb-int-puts/div_zero_nested") },
     // An empty program (one blank line) prints nothing and exits 0.
     Prog { lang: Language::Ruby, ext: "rb", src: "\n", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.3.6"), case: Some("rb-int-puts/empty_program") },
+    // 3.3.5 — representative of the one IIR-identity class `ruby-iir-compiler`'s
+    // release sweep finds (3.3.5, 3.3.6, 3.3.7: `code/grammars/ruby/release_classes.csv`).
+    // It is the class's first release in `releases.csv` order, so it, not the
+    // default, is the release whose rows `release_inventory.py check --matrix`
+    // credits to 3.3.7 (LANG84 phase 5b slice 2). Same cases and expectations as
+    // the 3.3.6 rows above, each source read from its corpus file.
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("add_and_precedence"), expect: Expect::Stdout("3\n5\n9\n5"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/add_and_precedence") },
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("floor_division_signs"), expect: Expect::Stdout("3\n-4\n-4\n3"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/floor_division_signs") },
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("floor_modulo_signs"), expect: Expect::Stdout("1\n2\n-2\n-1"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/floor_modulo_signs") },
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("unary_minus"), expect: Expect::Stdout("5\n7\n-24"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/unary_minus") },
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("literal_forms"), expect: Expect::Stdout("3000000\n3\n0"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/literal_forms") },
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("call_forms"), expect: Expect::Stdout("1\n2\n3\n4\n5\n\n6\n7"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/call_forms") },
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("layout"), expect: Expect::Stdout("3\n3\n4\n-1"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/layout") },
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("i64_bounds"), expect: Expect::Stdout("9223372036854775807\n-9223372036854775808\n0\n-9223372036854775808\n4611307862899360000"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/i64_bounds") },
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("min_mod_minus_one"), expect: Expect::Stdout("1\n0\n0\n6"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/min_mod_minus_one") },
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("div_zero_after_output"), expect: Expect::StdoutThenTrap("1", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/div_zero_after_output") },
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("mod_zero"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/mod_zero") },
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("div_zero_in_second_argument"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/div_zero_in_second_argument") },
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("div_zero_nested"), expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/div_zero_nested") },
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("empty_program"), expect: Expect::Stdout(""), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/empty_program") },
     // FLOW-MATIC — unified-matrix baseline (VM-020). A file-qualified field is
     // initialised to zero, moved through the frontend's scalar-field path, and
     // rendered by WRITE-ITEM through the shared recursive integer printer plus
@@ -10978,6 +11016,49 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Python, ext: "py", src: "print(-(-9223372036854775807 - 1))\n", expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.13.16"), case: Some("py-int-print/overflow_neg_min") },
     // `MIN // -1` is folded to `-MIN`, which traps `Trap.Overflow` (CPython: 2^63).
     Prog { lang: Language::Python, ext: "py", src: "print(0)\nprint((-9223372036854775807 - 1) // -1)\n", expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.13.16"), case: Some("py-int-print/overflow_min_floordiv_minus_one") },
+    // 3.0a1 — representative (and only member) of the IIR-identity class that
+    // refuses `int_underscores` (`int_underscores.reject@3.0a1`: PEP 515's `_`
+    // separators arrived in 3.6), so it has every other case (LANG84 phase 7b
+    // slice 2, `code/grammars/python/release_classes.csv`).
+    Prog { lang: Language::Python, ext: "py", src: python_case!("precedence"), expect: Expect::Stdout("3\n5\n9\n5"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/precedence") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("floor_div_signs"), expect: Expect::Stdout("3\n-4\n-4\n3"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/floor_div_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("mod_signs"), expect: Expect::Stdout("1\n2\n-2\n-1"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/mod_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("unary"), expect: Expect::Stdout("5\n7\n-24\n7\n-3"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/unary") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("print_forms"), expect: Expect::Stdout("1\n\n2\n3\n4"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/print_forms") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("layout"), expect: Expect::Stdout("3\n3\n-1"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/layout") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("i64_bounds"), expect: Expect::Stdout("9223372036854775807\n-9223372036854775808\n4611307862899360000\n-9223372036854775808"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/i64_bounds") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("minus_one_divisor"), expect: Expect::Stdout("-7\n0\n-9223372036854775807\n0"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/minus_one_divisor") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("div_zero_after_output"), expect: Expect::StdoutThenTrap("1", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/div_zero_after_output") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("mod_zero"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/mod_zero") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("div_zero_computed"), expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/div_zero_computed") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("zero_divisor_inside_argument"), expect: Expect::StdoutThenTrap("2", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/zero_divisor_inside_argument") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_add"), expect: Expect::StdoutThenTrap("1", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/overflow_add") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_sub"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/overflow_sub") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_mul"), expect: Expect::StdoutThenTrap("5", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/overflow_mul") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_neg_min"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/overflow_neg_min") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_min_floordiv_minus_one"), expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/overflow_min_floordiv_minus_one") },
+    // 3.12.3 — representative of the class of the four releases that accept the
+    // whole corpus (3.12.3, 3.13.16, 3.11.17, 3.16.0a1). It is the class's first
+    // release in `releases.csv` order (date order), so its rows, not the default's,
+    // stand for 3.11.17 and 3.16.0a1 in `release_inventory.py check --matrix`.
+    Prog { lang: Language::Python, ext: "py", src: python_case!("precedence"), expect: Expect::Stdout("3\n5\n9\n5"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/precedence") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("floor_div_signs"), expect: Expect::Stdout("3\n-4\n-4\n3"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/floor_div_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("mod_signs"), expect: Expect::Stdout("1\n2\n-2\n-1"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/mod_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("unary"), expect: Expect::Stdout("5\n7\n-24\n7\n-3"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/unary") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("int_underscores"), expect: Expect::Stdout("3000000\n0"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/int_underscores") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("print_forms"), expect: Expect::Stdout("1\n\n2\n3\n4"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/print_forms") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("layout"), expect: Expect::Stdout("3\n3\n-1"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/layout") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("i64_bounds"), expect: Expect::Stdout("9223372036854775807\n-9223372036854775808\n4611307862899360000\n-9223372036854775808"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/i64_bounds") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("minus_one_divisor"), expect: Expect::Stdout("-7\n0\n-9223372036854775807\n0"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/minus_one_divisor") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("div_zero_after_output"), expect: Expect::StdoutThenTrap("1", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/div_zero_after_output") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("mod_zero"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/mod_zero") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("div_zero_computed"), expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/div_zero_computed") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("zero_divisor_inside_argument"), expect: Expect::StdoutThenTrap("2", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/zero_divisor_inside_argument") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_add"), expect: Expect::StdoutThenTrap("1", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_add") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_sub"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_sub") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_mul"), expect: Expect::StdoutThenTrap("5", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_mul") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_neg_min"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_neg_min") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_min_floordiv_minus_one"), expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_min_floordiv_minus_one") },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -13526,7 +13607,7 @@ fn non_algol_matrix_every_proven_cell_agrees() {
 }
 
 // ---------------------------------------------------------------------------
-// LANG84 phase 5a — Ruby on every backend (= LANG83 PR2)
+// LANG84 phases 5a and 5b — Ruby on every backend (= LANG83 PR2), per release class
 // ---------------------------------------------------------------------------
 
 fn ruby_rows() -> Vec<&'static Prog> {
@@ -13692,8 +13773,9 @@ fn ruby_rows_agree_with_the_host_ruby_oracle() {
 fn ruby_rows_pass_the_lang83_check_on_all_nine_backends() {
     let mut floor_ops = 0;
     for program in ruby_rows() {
-        let module = lang_aot::compile_source_to_iir(Language::Ruby, program.src, "c7")
-            .unwrap_or_else(|e| panic!("{:?}: {e}", program.src));
+        let module = lang_aot::compile_source_to_iir_at(Language::Ruby, program.release, program.src, "c7")
+            .unwrap_or_else(|e| panic!("{:?} {:?}: {e}", program.release, program.case));
+        assert_eq!(module.release.as_deref(), program.release, "{:?}", program.case);
         for instr in module.functions.iter().flat_map(|f| &f.instructions) {
             match interpreter_ir::op_registry::registry_name(instr) {
                 Some(name) => {
@@ -13714,6 +13796,71 @@ fn ruby_rows_pass_the_lang83_check_on_all_nine_backends() {
         }
     }
     assert!(floor_ops > 0, "the rows must exercise the LANG83 floor ops");
+}
+
+/// The shared half of `ruby_rows_run_their_corpus_case` and
+/// `python_rows_run_their_corpus_case` (LANG84 phases 5b and 7b slice 2; Perl's
+/// own test differs only in its `.expect` format). Every row names a release
+/// and a `<subset>/<name>` case, runs exactly that case's source and expects
+/// exactly its `.expect` (stdout, then any `trap:` kind), and the rows are
+/// precisely the boundary set of the language's release sweep: every case each
+/// IIR-identity class representative accepts (read from
+/// `code/grammars/<dir>/release_classes.csv`), plus every case on the default
+/// release. No row is missing, none is extra, none is repeated. This is the
+/// Rust-side mirror of `release_inventory.py check --matrix`.
+fn lang84_rows_run_their_corpus_case(rows: &[&Prog], dir: &str, subset: &str, ext: &str, default: &str) {
+    let grammars = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars").join(dir);
+    let corpus = grammars.join("corpus").join(subset);
+    let mut ran = std::collections::BTreeSet::new();
+    for program in rows {
+        let (Some(release), Some(case)) = (program.release, program.case) else {
+            panic!("a {dir} row names its release and case: {:?}", program.src);
+        };
+        let name = case.strip_prefix(&format!("{subset}/")).unwrap_or_else(|| panic!("{case}"));
+        let source = std::fs::read_to_string(corpus.join(format!("{name}.{ext}"))).unwrap();
+        assert_eq!(program.src, source, "{case}@{release}: the row runs the corpus source");
+        let expect = std::fs::read_to_string(corpus.join(format!("{name}.expect"))).unwrap();
+        let (stdout, trap) = match expect.rfind("trap:") {
+            Some(at) => (expect[..at].trim(), Some(expect[at + 5..].trim())),
+            None => (expect.trim(), None),
+        };
+        match (&program.expect, trap) {
+            (Expect::Stdout(want), None) => assert_eq!(*want, stdout, "{case}@{release}"),
+            (Expect::StdoutThenTrap(want, kind), Some(trap)) => {
+                assert_eq!((*want, *kind), (stdout, trap), "{case}@{release}")
+            }
+            (other, _) => panic!("{case}@{release}: {other:?} disagrees with the corpus {expect:?}"),
+        }
+        assert!(ran.insert((release.to_string(), name.to_string())), "{case}@{release} twice");
+    }
+    // release_classes.csv lists each case's releases in inventory order, so
+    // the first release seen with a class is that class's representative.
+    let classes = std::fs::read_to_string(grammars.join("release_classes.csv")).unwrap();
+    let mut expected = std::collections::BTreeSet::new();
+    let mut seen = std::collections::BTreeSet::new();
+    for line in classes.lines().skip(1) {
+        let [row_subset, case, release, class] = line.split(',').collect::<Vec<_>>()[..] else {
+            panic!("{dir}/release_classes.csv: {line}");
+        };
+        assert_eq!(row_subset, subset);
+        if class == "rejected" {
+            continue;
+        }
+        if seen.insert((case.to_string(), class.to_string())) || release == default {
+            expected.insert((release.to_string(), case.to_string()));
+        }
+    }
+    assert!(!expected.is_empty(), "{dir}/release_classes.csv has no accepted cell");
+    assert_eq!(ran, expected, "{dir} rows vs the release sweep's boundary set");
+}
+
+/// LANG84 5b slice 2: the Ruby rows are the `rb-int-puts` corpus on the
+/// default release (3.3.6) and on the one IIR-identity class's representative
+/// (3.3.5, the first claiming row of `releases.csv`), exactly as
+/// `ruby-iir-compiler`'s release sweep records them.
+#[test]
+fn ruby_rows_run_their_corpus_case() {
+    lang84_rows_run_their_corpus_case(&ruby_rows(), "ruby", "rb-int-puts", "rb", "3.3.6");
 }
 
 /// The capstone: every `(program, backend)` cell the campaign has **proven** runs
@@ -14098,17 +14245,21 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::MacroOct, 15, 120),
         (Language::FlowMatic, 8, 64),
         // Ruby: LANG84 phase 5a's thirteen rb-int-puts rows (four of them
-        // StdoutThenTrap) plus 4c's empty_program row, all eight columns.
-        (Language::Ruby, 14, 112),
+        // StdoutThenTrap) plus 4c's empty_program row on the default 3.3.6,
+        // and 5b slice 2's same fourteen cases on the IIR-identity class
+        // representative 3.3.5, all eight columns.
+        (Language::Ruby, 28, 224),
         (Language::Cobol60, 59, 472),
         // Perl: the `pl-int-print` corpus on the three IIR-identity class
         // representatives (LANG84 4c): 12 cases on 5.38.0, 11 on 1.000 and 10
         // on 5.003_26, all eight columns.
         (Language::Perl, 33, 264),
-        // Python: LANG84 phase 7a's eighteen py-int-print rows (nine of them
-        // StdoutThenTrap: four Trap.DivZero, five Trap.Overflow), all eight
-        // columns.
-        (Language::Python, 18, 144),
+        // Python: LANG84 phase 7a's eighteen py-int-print rows on the default
+        // 3.13.16 (nine of them StdoutThenTrap: four Trap.DivZero, five
+        // Trap.Overflow), plus 7b slice 2's rows on the two IIR-identity class
+        // representatives: 17 on 3.0a1 (no int_underscores) and 18 on 3.12.3,
+        // all eight columns.
+        (Language::Python, 53, 424),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -27867,7 +28018,7 @@ fn perl_rows_run_their_corpus_case() {
 }
 
 // ---------------------------------------------------------------------------
-// LANG84 phase 7a — Python `py-int-print` on every backend
+// LANG84 phases 7a and 7b — Python `py-int-print` on every backend, per release class
 // ---------------------------------------------------------------------------
 
 fn python_rows() -> Vec<&'static Prog> {
@@ -27928,8 +28079,10 @@ fn python_rows_run_on_every_available_backend() {
 
 /// The rows are the corpus: each source is a `.py` case verbatim and each
 /// expectation its `.expect`, and every accepted case that applies to the
-/// default release is a row, so the matrix cannot drift from what the
-/// frontend's own stage-I test (and the oracle) checked.
+/// default release is a row on that release, so the matrix cannot drift from
+/// what the frontend's own stage-I test (and the oracle) checked. (The rows on
+/// the other class representatives are checked against the release sweep by
+/// `python_rows_run_their_corpus_case`.)
 #[test]
 fn python_rows_are_py_int_print_corpus_cases() {
     let dir = python_corpus_dir();
@@ -27963,11 +28116,13 @@ fn python_rows_are_py_int_print_corpus_cases() {
             (other, _) => panic!("{:?}: {other:?} disagrees with the corpus {expect:?}", program.src),
         }
     }
-    // The other direction: no accepted case is left out of the matrix.
+    // The other direction: no accepted case is left out of the default
+    // release's rows (3.13.16 refuses none of them).
+    let default_rows: Vec<_> = rows.iter().filter(|p| p.release == Some("3.13.16")).collect();
     for (name, source, _) in &cases {
-        assert!(rows.iter().any(|p| p.src == source), "corpus case {name} has no matrix row");
+        assert!(default_rows.iter().any(|p| p.src == source), "corpus case {name} has no 3.13.16 matrix row");
     }
-    assert_eq!(rows.len(), cases.len());
+    assert_eq!(default_rows.len(), cases.len());
 }
 
 /// The oracle: host CPython 3.13 must print each row's stdout. For a
@@ -28027,8 +28182,9 @@ fn python_rows_agree_with_the_host_python_oracle() {
 fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
     let mut checked_ops = 0;
     for program in python_rows() {
-        let module = lang_aot::compile_source_to_iir(Language::Python, program.src, "c7")
-            .unwrap_or_else(|e| panic!("{:?}: {e}", program.src));
+        let module = lang_aot::compile_source_to_iir_at(Language::Python, program.release, program.src, "c7")
+            .unwrap_or_else(|e| panic!("{:?} {:?}: {e}", program.release, program.case));
+        assert_eq!(module.release.as_deref(), program.release, "{:?}", program.case);
         for instr in module.functions.iter().flat_map(|f| &f.instructions) {
             match interpreter_ir::op_registry::registry_name(instr) {
                 Some(name) => {
@@ -28058,4 +28214,13 @@ fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
         }
     }
     assert!(checked_ops > 0, "the rows must exercise the LANG83 checked and floor ops");
+}
+
+/// LANG84 7b slice 2: the Python rows are the `py-int-print` corpus on the
+/// default release (3.13.16) and on each IIR-identity class representative
+/// (3.0a1, which refuses `int_underscores`, and 3.12.3), exactly as
+/// `python-iir-compiler`'s release sweep records them.
+#[test]
+fn python_rows_run_their_corpus_case() {
+    lang84_rows_run_their_corpus_case(&python_rows(), "python", "py-int-print", "py", "3.13.16");
 }
