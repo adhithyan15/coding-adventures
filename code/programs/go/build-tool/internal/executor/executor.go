@@ -1018,11 +1018,10 @@ func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, 
 			keys["global:rustup-targets"] = true
 		}
 
-		if pkg.Language == "lua" &&
-			(strings.Contains(command, "luarocks make") || strings.Contains(command, "luarocks remove")) {
+		if luarocksTreeWriteRe.MatchString(command) {
 			// LuaRocks uses a shared rocks tree under HOME on every platform.
 			// Concurrent writes race for that tree lock and can leave packages
-			// observing partially-installed local dependencies. Serialise Lua
+			// observing partially-installed local dependencies. Serialise
 			// BUILDs that mutate the tree so sibling rock installs stay stable.
 			keys["global:luarocks-tree"] = true
 		}
@@ -1098,6 +1097,28 @@ var rubyGemInstallRe = regexp.MustCompile(`(^|[\s;&|(])(bundle|gem)\s+install(\s
 // drives opam (a scaffold fixture, say) is serialized with the OCaml ones,
 // while a path or name merely containing "opam" is not.
 var opamCommandRe = regexp.MustCompile(`(^|[\s;&|(])opam(\s|$)`)
+
+// luarocksTreeWriteRe matches the LuaRocks subcommands that write the shared
+// rocks tree: `make`, `remove`, and `install`. LuaRocks takes an exclusive
+// lock on the tree for each of them, so two at once fail outright:
+//
+//	Error: command 'install' requires exclusive write access to
+//	/home/runner/.luarocks - try --force-lock to overwrite the lock
+//
+// `install` was once missing here. `lua/tcp_client` runs
+// `luarocks install luasocket --local`, ran unserialized beside another
+// package's `luarocks make`, and failed a full-build shard with exactly that
+// error. Read-only subcommands (`show`, `path`) do not take the lock and do
+// not need serializing.
+//
+// A missed match costs a red shard while an extra one only serializes a
+// build, so the pattern leans towards matching. The program name may follow
+// any non-word character, which covers paths (`/usr/bin/luarocks`), quotes
+// (`sh -c "luarocks make x"`), command substitution (`$(luarocks make)`) and
+// shell operators. It may be `luarocks.bat` or `luarocks.exe`, and flags may
+// precede the subcommand (`luarocks --local make`). `\b` ends the subcommand,
+// so `make;`, `make)` and `make"` match while `makefile` does not.
+var luarocksTreeWriteRe = regexp.MustCompile(`(^|[^A-Za-z0-9_.-])luarocks(\.bat|\.exe)?(\s+-{1,2}\S+)*\s+(make|remove|install)\b`)
 
 func isGradleCommand(command string) bool {
 	trimmed := strings.TrimSpace(command)
