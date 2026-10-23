@@ -23,6 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the strongest consuming composition, which also requires
   certificate-bound data-driven algorithm-policy evidence for that same issuer
   and retains all three proofs without treating the profile as verifier routing.
+- Added an authenticated-intermediate binding that retains the strongest
+  selected issuer link and complete intermediate policy only when both refer to
+  the identical decoded issuer object.
 
 ### Security
 
@@ -38,3 +41,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Full-policy composition rejects role or algorithm evidence for another
   certificate before RSA parsing or signature verification; encoded key-size
   policy remains distinct from RSA modulus-strength validation.
+- Authenticated-intermediate composition rejects byte-equal policy evidence
+  from a separately decoded issuer and grants no path-length, parent-link,
+  complete-path, trust, revocation, TLS, HTTP, or network authority.

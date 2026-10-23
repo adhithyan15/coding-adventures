@@ -45,10 +45,23 @@ algorithm profile. The profile remains caller policy data: it neither routes to
 nor enables this crate's fixed verifier, and its encoded public-key size does
 not replace the separate RSA modulus-strength policy.
 
+The authenticated-intermediate binding additionally consumes one complete
+`ValidatedX509IntermediateCertificatePolicy`. It requires that policy and the
+strongest authenticated link to retain the identical selected issuer object,
+then returns a distinct non-copyable result retaining both. Byte-equal but
+separately decoded issuers are rejected, so later traversal cannot combine an
+authenticated link with critical-extension, algorithm, self-issued, or
+validity policy for another certificate object. This proves only that the
+policy-approved intermediate authenticated the retained child; it does not
+authenticate the intermediate's own issuer or advance path-length state.
+
 Critical-extension recognition remains caller-owned and is not semantic
-validation of recognized extensions outside the role gate. The stronger result
-therefore still grants no complete path, constraint, trust, time, identity,
-revocation, TLS, HTTP, OAuth transport, or network authority.
+validation of recognized extensions outside the role gate. The
+role-and-algorithm result alone grants no time authority, while the
+authenticated-intermediate result retains only the complete policy's validity
+classification at its explicit observation. Neither result grants a complete
+path, constraint, trust, identity, revocation, TLS, HTTP, OAuth transport, or
+network authority.
 
 ## Validation
 

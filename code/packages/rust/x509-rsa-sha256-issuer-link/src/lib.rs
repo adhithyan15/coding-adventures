@@ -9,11 +9,13 @@
 //! The narrow result binds the exact child and candidate issuer. Stronger
 //! entry points additionally retain caller-owned critical-extension and
 //! issuing-CA role-policy evidence, then certificate-bound data-driven
-//! algorithm-profile evidence, for that exact selected issuer. Recognition is
-//! not semantic validation of other critical extensions, and an algorithm
-//! profile neither chooses nor enables this crate's fixed verifier. No result
-//! establishes validity, path length, name constraints, revocation, trust
-//! anchors, path construction, TLS, HTTP, or network effects.
+//! algorithm-profile evidence, for that exact selected issuer. A final binding
+//! can retain complete intermediate policy, including validity at one explicit
+//! observation, for the identical issuer object. Recognition is not semantic
+//! validation of other critical extensions, and an algorithm profile neither
+//! chooses nor enables this crate's fixed verifier. No result establishes path
+//! length, name constraints, revocation, trust anchors, path construction,
+//! TLS, HTTP, or network effects.
 
 #![deny(unsafe_code)]
 
@@ -27,6 +29,7 @@ use x509_certificate_policy::{
     ValidatedCertificateAlgorithmPolicy, ValidatedCertificateRolePolicy,
     X509CertificateIssuerLinkErrorKind, X509CertificateRole, X509CertificateRoleErrorKind,
 };
+use x509_intermediate_certificate_policy::ValidatedX509IntermediateCertificatePolicy;
 use x509_name::X509Name;
 use x509_rsa_pkcs1_v1_5_sha256_signature::{
     verify_x509_rsa_pkcs1_v1_5_sha256_signature, X509RsaSha256SignatureErrorKind,
@@ -187,6 +190,41 @@ impl fmt::Display for X509RsaSha256IssuerPolicyLinkError {
 
 impl std::error::Error for X509RsaSha256IssuerPolicyLinkError {}
 
+/// Stable authenticated-intermediate binding failures with no certificate bytes.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaSha256IntermediateIssuerPolicyLinkErrorKind {
+    /// The complete intermediate policy is not for the authenticated issuer.
+    EvidenceMismatch,
+}
+
+/// A redacted failure while binding an authenticated link to intermediate policy.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaSha256IntermediateIssuerPolicyLinkError {
+    kind: X509RsaSha256IntermediateIssuerPolicyLinkErrorKind,
+}
+
+impl X509RsaSha256IntermediateIssuerPolicyLinkError {
+    const fn new(kind: X509RsaSha256IntermediateIssuerPolicyLinkErrorKind) -> Self {
+        Self { kind }
+    }
+
+    pub const fn kind(self) -> X509RsaSha256IntermediateIssuerPolicyLinkErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaSha256IntermediateIssuerPolicyLinkError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA SHA-256 intermediate issuer policy-link error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaSha256IntermediateIssuerPolicyLinkError {}
+
 /// Non-copyable evidence for one exact child-to-candidate-issuer link.
 ///
 /// This evidence proves only the directed Name-policy result, issuing-CA role,
@@ -336,6 +374,62 @@ impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
 impl fmt::Debug for VerifiedX509RsaSha256IssuerPolicyLink<'_, '_, '_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("VerifiedX509RsaSha256IssuerPolicyLink")
+    }
+}
+
+/// Non-copyable evidence binding one authenticated link to complete issuer policy.
+///
+/// The retained intermediate policy applies critical-extension recognition,
+/// issuing-CA role, data-driven algorithm, self-issued classification, and
+/// explicit-time validity policy to the exact candidate issuer that verified
+/// the retained child's signature. This does not authenticate the
+/// intermediate certificate's own issuer, advance path-length state, or
+/// establish a complete or trusted certification path.
+pub struct VerifiedX509RsaSha256IntermediateIssuerPolicyLink<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+> {
+    issuer_policy_link: VerifiedX509RsaSha256IssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    intermediate_policy:
+        ValidatedX509IntermediateCertificatePolicy<'issuer_certificate, 'issuer_encoded>,
+}
+
+impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
+    VerifiedX509RsaSha256IntermediateIssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >
+{
+    pub const fn issuer_policy_link(
+        &self,
+    ) -> &VerifiedX509RsaSha256IssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    > {
+        &self.issuer_policy_link
+    }
+
+    pub const fn intermediate_policy(
+        &self,
+    ) -> &ValidatedX509IntermediateCertificatePolicy<'issuer_certificate, 'issuer_encoded> {
+        &self.intermediate_policy
+    }
+}
+
+impl fmt::Debug for VerifiedX509RsaSha256IntermediateIssuerPolicyLink<'_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("VerifiedX509RsaSha256IntermediateIssuerPolicyLink")
     }
 }
 
@@ -524,6 +618,55 @@ pub fn verify_selected_x509_rsa_sha256_issuer_link_with_policies<
     Ok(VerifiedX509RsaSha256IssuerPolicyLink {
         role_policy_link,
         issuer_algorithm_policy,
+    })
+}
+
+/// Bind one authenticated selected issuer to its complete intermediate policy.
+///
+/// Object identity is checked before either proof is retained. Byte-equal
+/// certificates decoded into separate objects are intentionally distinct: a
+/// path traversal must not apply self-issued, validity, algorithm, or
+/// critical-extension policy from one object to a link authenticated with
+/// another. Success retains both inputs but grants no additional path, trust,
+/// revocation, transport, or network authority.
+pub fn bind_x509_rsa_sha256_intermediate_issuer_policy_link<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    issuer_policy_link: VerifiedX509RsaSha256IssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    intermediate_policy: ValidatedX509IntermediateCertificatePolicy<
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+) -> Result<
+    VerifiedX509RsaSha256IntermediateIssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    X509RsaSha256IntermediateIssuerPolicyLinkError,
+> {
+    let candidate_issuer = issuer_policy_link
+        .role_policy_link()
+        .verified_link()
+        .candidate_issuer();
+    if !std::ptr::eq(candidate_issuer, intermediate_policy.certificate()) {
+        return Err(X509RsaSha256IntermediateIssuerPolicyLinkError::new(
+            X509RsaSha256IntermediateIssuerPolicyLinkErrorKind::EvidenceMismatch,
+        ));
+    }
+
+    Ok(VerifiedX509RsaSha256IntermediateIssuerPolicyLink {
+        issuer_policy_link,
+        intermediate_policy,
     })
 }
 
