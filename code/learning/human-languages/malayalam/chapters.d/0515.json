@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Damage and Hardship",
+  "label": "ch:ml-damage-and-hardship",
+  "canDo": "I can say breakage, compensation, a hardship, to get tangled and to grope for.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C515-tappuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can say breakage, compensation, a hardship, to get tangled and to grope for.",
+    "assesses": [
+      "ML-LEX-C515-KETU515-03",
+      "ML-LEX-C515-KETU515-04",
+      "ML-LEX-C515-KETU515-05"
+    ]
+  }
+}

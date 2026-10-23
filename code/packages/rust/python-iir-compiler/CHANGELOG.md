@@ -8,6 +8,40 @@
   the trivia between tokens and names no token. The exhaustive `match`
   stopped compiling when grammar-tools gained the variant.
 
+## Unreleased — LANG84 phase 7b, slice 2: the release sweep
+
+### Added
+- `tests/release_sweep.rs`: compiles every positive `py-int-print` case
+  under every release whose `iir_status` claims it (3.0a1, 3.12.3, 3.13.16,
+  3.11.17, 3.16.0a1, inventory order), digests each module's
+  `interpreter_ir::serialise` bytes (SHA-256; the `release` field is not on
+  the wire), classes each release by its whole outcome vector, and compares
+  the result with the committed `code/grammars/python/release_classes.csv`
+  (`subset,case,release,class`, 90 rows). A cell is `rejected` only where a
+  `.reject@<release>` override says so and the compile error has its
+  category (`int_underscores` on 3.0a1); any other refusal fails. Two
+  classes: 3.0a1 alone (`e6a72b170747738e`), and 3.12.3, 3.13.16, 3.11.17,
+  3.16.0a1 (`5afb074f1e9583ba`, representative 3.12.3). Every release that
+  accepts a case lowers it to the same IIR. `PYTHON_RELEASE_SWEEP_WRITE=1`
+  rewrites the CSV; that run fails on purpose and refuses
+  `CI`/`GITHUB_ACTIONS`. Tests:
+  `the_sweep_covers_every_claiming_release_in_inventory_order`,
+  `release_classes_csv_matches_the_sweep`,
+  `every_accepting_release_lowers_a_case_to_the_same_iir`,
+  `the_boundary_releases_are_the_class_representatives`.
+- Dev-dependency `coding_adventures_sha256` for the class digests.
+
+### Changed
+- The inventory and corpus readers moved from `tests/release_subsets.rs` to
+  `tests/common/mod.rs`, shared with the sweep. They now fail on an override
+  other than `.reject@<release>` (an `.expect@<x>` would otherwise be
+  ignored).
+- `the_default_release_claims_py_int_print_on_the_backends` no longer
+  requires the default to be the only `backend_status` claim. It requires
+  the default to claim B, and the releases claiming B to be exactly the
+  releases claiming I. `releases.csv` now claims B for all five releases,
+  because `lang-aot`'s matrix runs the corpus on each class representative.
+
 ## Unreleased — LANG84 phase 7b, slice 1: release recorded and selectable through lang-aot
 
 ### Added

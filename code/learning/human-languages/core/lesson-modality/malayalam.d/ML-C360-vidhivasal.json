@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C360-vidhivasal",
+    "language": "malayalam",
+    "chapter": 360,
+    "sequence": 17600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39055f66a926bb2a"
+  },
+  "findings": []
+}

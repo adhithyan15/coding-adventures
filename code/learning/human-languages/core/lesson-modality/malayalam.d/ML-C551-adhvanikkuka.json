@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C551-adhvanikkuka",
+    "language": "malayalam",
+    "chapter": 551,
+    "sequence": 27780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7b8eace9a0f0195"
+  },
+  "findings": []
+}

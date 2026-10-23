@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:3785ffcf1c733132",
+  "lessonIds": [
+    "ML-C544-ovartaim",
+    "ML-C544-samrambham",
+    "ML-C544-samrambhakan",
+    "ML-C544-siphrru",
+    "ML-C544-mutannuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch544.txt",
+  "json": "malayalam/narration/ch544.json",
+  "textHash": "fnv1a64:b3c0692e1b73ea55",
+  "jsonHash": "fnv1a64:aca0bbfce4a9c90b",
+  "findings": []
+}

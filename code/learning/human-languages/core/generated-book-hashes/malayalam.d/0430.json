@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:608d7dafe5518c83",
+  "lessonIds": [
+    "ML-C430-alimati",
+    "ML-C430-kaikkuli",
+    "ML-C430-cusanam-ceyyuka",
+    "ML-C430-sutaryamaya",
+    "ML-C430-anvesikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch430-corruption.tex"
+}

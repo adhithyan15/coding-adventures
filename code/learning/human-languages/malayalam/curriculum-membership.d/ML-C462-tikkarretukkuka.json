@@ -1,0 +1,11 @@
+{
+  "id": "ML-C462-tikkarretukkuka",
+  "pathSegment": "ML-PATH-462-BOOKING462",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-462-BOOKING462",
+      "order": 4
+    }
+  ]
+}

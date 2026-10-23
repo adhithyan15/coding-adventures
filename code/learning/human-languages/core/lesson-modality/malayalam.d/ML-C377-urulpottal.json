@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C377-urulpottal",
+    "language": "malayalam",
+    "chapter": 377,
+    "sequence": 18440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:caf8bad6d8568ecb"
+  },
+  "findings": []
+}

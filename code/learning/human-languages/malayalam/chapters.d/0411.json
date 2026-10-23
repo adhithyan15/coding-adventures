@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "Because and Therefore",
+  "label": "ch:ml-because-and-therefore",
+  "canDo": "I can say therefore, hence, because of, actually and in reality.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C411-vastavattil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can say therefore, hence, because of, actually and in reality.",
+    "assesses": [
+      "ML-LEX-C411-KARANAM411-03",
+      "ML-LEX-C411-KARANAM411-04",
+      "ML-LEX-C411-KARANAM411-05"
+    ]
+  }
+}

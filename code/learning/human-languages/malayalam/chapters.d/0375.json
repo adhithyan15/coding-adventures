@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "Rescue",
+  "label": "ch:ml-rescue",
+  "canDo": "I can say a rescuer, a volunteer, to rescue, to escape and to get stuck.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C375-kutunnuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can say a rescuer, a volunteer, to rescue, to escape and to get stuck.",
+    "assesses": [
+      "ML-LEX-C375-RAKSHA375-03",
+      "ML-LEX-C375-RAKSHA375-04",
+      "ML-LEX-C375-RAKSHA375-05"
+    ]
+  }
+}

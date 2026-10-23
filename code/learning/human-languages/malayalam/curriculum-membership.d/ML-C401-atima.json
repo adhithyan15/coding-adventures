@@ -1,0 +1,11 @@
+{
+  "id": "ML-C401-atima",
+  "pathSegment": "ML-PATH-401-VIPLAVAM401",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ML-EXT-401-VIPLAVAM401",
+      "order": 0
+    }
+  ]
+}

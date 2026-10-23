@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C415-samatvam",
+    "language": "malayalam",
+    "chapter": 415,
+    "sequence": 20540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c734f5c39c8f0195"
+  },
+  "findings": []
+}

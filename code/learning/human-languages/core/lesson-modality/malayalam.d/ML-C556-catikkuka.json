@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C556-catikkuka",
+    "language": "malayalam",
+    "chapter": 556,
+    "sequence": 28000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dba49d6b3d6b180f"
+  },
+  "findings": []
+}

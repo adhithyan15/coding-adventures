@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:40d0784830eaf77e",
+  "lessonIds": [
+    "ML-C463-terminal",
+    "ML-C463-ranve",
+    "ML-C463-vimanakkampani",
+    "ML-C463-parannuyaruka",
+    "ML-C463-troli"
+  ],
+  "tex": "malayalam/book/chapters/ch463-taking-off.tex"
+}

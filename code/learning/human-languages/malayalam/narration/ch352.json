@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 352,
+  "title": "A Press Conference",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:df91e3ef78072a8c",
+  "lessons": [
+    {
+      "id": "ML-C352-patrasammelanam",
+      "sequence": 17150,
+      "title": "പത്രസമ്മേളനം (patrasammēḷanaṁ) — a press conference",
+      "headword": "പത്രസമ്മേളനം",
+      "romanization": "patrasammēḷanaṁ",
+      "gloss": "a press conference",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33314380348b0f0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to depict, then the Malayalam for to broadcast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പത്രസമ്മേളനം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പത്രസമ്മേളനം — patrasammēḷanaṁ — \"a press conference\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മാനേജർ ഇന്ന് ഒരു പത്രസമ്മേളനം നടത്തി. mānējar innŭ oru patrasammēḷanaṁ naṭatti. The manager held a press conference today."
+            },
+            {
+              "kind": "speech",
+              "text": "A press conference is held: പത്രസമ്മേളനം (patrasammēḷanaṁ) നടത്തുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പത്രസമ്മേളനം (patrasammēḷanaṁ) is built from പത്രം (patraṁ), \"a newspaper\", and Sanskrit sammelana, \"a meeting together, a union\" (Monier-Williams): a meeting called for the papers."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrasammēḷanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrasammēḷanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrasammēḷanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrasammēḷanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānējar innŭ oru patrasammēḷanaṁ naṭatti. — The manager held a press conference today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānējar innŭ oru patrasammēḷanaṁ naṭatti.* — The manager held a press conference today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to depict, then the Malayalam for to broadcast, then say patrasammēḷanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to depict, then the Malayalam for to broadcast, then say *patrasammēḷanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പത്രസമ്മേളനം (patrasammēḷanaṁ) mean? (\"A press conference\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C352-prastavana",
+      "sequence": 17160,
+      "title": "പ്രസ്താവന (prastāvana) — a statement",
+      "headword": "പ്രസ്താവന",
+      "romanization": "prastāvana",
+      "gloss": "a statement",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:310d1b73a93e518c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to broadcast, then the Malayalam for a press conference."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രസ്താവന",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രസ്താവന — prastāvana — \"a statement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പോലീസ് അപകടത്തെക്കുറിച്ച് ഒരു പ്രസ്താവന ഇറക്കി. pōlīsŭ apakaṭattekkuṟiccŭ oru prastāvana iṟakki. The police issued a statement about the accident."
+            },
+            {
+              "kind": "speech",
+              "text": "The formal word for what someone sets out in public, usually in writing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രസ്താവന (prastāvana) is borrowed from Sanskrit prastāvanā, \"a sounding forth; an introduction, a preface\" (Monier-Williams). In Malayalam it came to mean what someone sets forth in public."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prastāvana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prastāvana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prastāvana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prastāvana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsŭ apakaṭattekkuṟiccŭ oru prastāvana iṟakki. — The police issued a statement about the accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsŭ apakaṭattekkuṟiccŭ oru prastāvana iṟakki.* — The police issued a statement about the accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to broadcast, then the Malayalam for a press conference, then say prastāvana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to broadcast, then the Malayalam for a press conference, then say *prastāvana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രസ്താവന (prastāvana) mean? (\"A statement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C352-satyavastha",
+      "sequence": 17170,
+      "title": "സത്യാവസ്ഥ (satyāvastha) — the real facts; the actual truth",
+      "headword": "സത്യാവസ്ഥ",
+      "romanization": "satyāvastha",
+      "gloss": "the real facts; the actual truth",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0bc2cbe2635306bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a press conference, then the Malayalam for a statement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സത്യാവസ്ഥ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സത്യാവസ്ഥ — satyāvastha — \"the real facts; the actual truth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ലേഖകൻ സംഭവത്തിന്റെ സത്യാവസ്ഥ കണ്ടെത്തി. lēkhakan sambhavattinṟe satyāvastha kaṇṭetti. The correspondent found out the real facts of the incident."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally the state of the truth: സത്യം, truth, + അവസ്ഥ, a state."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സത്യാവസ്ഥ (satyāvastha) is built from two Sanskrit words: satya, \"true; the truth\" (CDIAL 13112), and avasthā, \"a state, a condition\" (CDIAL 872). It names how things really stand, as against what people say."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "satyāvastha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *satyāvastha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "satyāvastha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *satyāvastha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lēkhakan sambhavattinṟe satyāvastha kaṇṭetti. — The correspondent found out the real facts of the incident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lēkhakan sambhavattinṟe satyāvastha kaṇṭetti.* — The correspondent found out the real facts of the incident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a press conference, then the Malayalam for a statement, then say satyāvastha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a press conference, then the Malayalam for a statement, then say *satyāvastha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സത്യാവസ്ഥ (satyāvastha) mean? (\"The real facts; the actual truth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C352-peruppikkuka",
+      "sequence": 17180,
+      "title": "പെരുപ്പിക്കുക (peruppikkuka) — to exaggerate",
+      "headword": "പെരുപ്പിക്കുക",
+      "romanization": "peruppikkuka",
+      "gloss": "to exaggerate",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad5c96ef96a80102",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a statement, then the Malayalam for the real facts."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പെരുപ്പിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പെരുപ്പിക്കുക — peruppikkuka — \"to exaggerate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൻ എപ്പോഴും കഥകൾ പെരുപ്പിച്ച് പറയും. avan eppōḻuṁ kathakaḷ peruppiccŭ paṟayuṁ. He always makes his stories bigger than they were."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പെരുപ്പിച്ചു, peruppiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Often with പറയുക: പെരുപ്പിച്ച് പറയുക, to tell with exaggeration."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പെരുപ്പിക്കുക (peruppikkuka) is native Dravidian, a causative built on പെരു (peru), \"great, large\" (DEDR 4411): to exaggerate is to make a thing bigger than it was."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peruppikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peruppikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peruppikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peruppikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan eppōḻuṁ kathakaḷ peruppiccŭ paṟayuṁ. — He always makes his stories bigger than they were.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan eppōḻuṁ kathakaḷ peruppiccŭ paṟayuṁ.* — He always makes his stories bigger than they were.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a statement, then the Malayalam for the real facts, then say peruppikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a statement, then the Malayalam for the real facts, then say *peruppikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പെരുപ്പിക്കുക (peruppikkuka) mean? (\"To exaggerate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C352-mappu-parayuka",
+      "sequence": 17190,
+      "title": "മാപ്പ് പറയുക (māppŭ paṟayuka) — to say sorry; to apologise",
+      "headword": "മാപ്പ് പറയുക",
+      "romanization": "māppŭ paṟayuka",
+      "gloss": "to say sorry; to apologise",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71bd1e107690e6ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for the real facts, then the Malayalam for to exaggerate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മാപ്പ് പറയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മാപ്പ് പറയുക — māppŭ paṟayuka — \"to say sorry; to apologise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തെറ്റിന് അവൻ എല്ലാവരോടും മാപ്പ് പറഞ്ഞു. teṟṟinŭ avan ellāvarōṭuṁ māppŭ paṟaññu. He apologised to everyone for the mistake."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: മാപ്പ് പറഞ്ഞു, māppŭ paṟaññu."
+            },
+            {
+              "kind": "speech",
+              "text": "The person takes -ഓട്: അവളോട് മാപ്പ് പറഞ്ഞു, apologised to her. മാപ്പ് alone is pardon."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മാപ്പ് പറയുക (māppŭ paṟayuka) joins മാപ്പ് (māppŭ), \"pardon\", and the native verb പറയുക, \"to say\" (DEDR 4031): to apologise is to say pardon. മാപ്പ് is usually traced to Hindustani māf, \"forgiven\", a word of Arabic origin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māppŭ paṟayuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māppŭ paṟayuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māppŭ paṟayuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māppŭ paṟayuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teṟṟinŭ avan ellāvarōṭuṁ māppŭ paṟaññu. — He apologised to everyone for the mistake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teṟṟinŭ avan ellāvarōṭuṁ māppŭ paṟaññu.* — He apologised to everyone for the mistake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for the real facts, then the Malayalam for to exaggerate, then say māppŭ paṟayuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for the real facts, then the Malayalam for to exaggerate, then say *māppŭ paṟayuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മാപ്പ് പറയുക (māppŭ paṟayuka) mean? (\"To say sorry; to apologise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 365,
+  "title": "At the Police Station",
+  "label": "ch:ml-at-the-police-station",
+  "canDo": "I can say a complaint, a criminal, an investigation, to arrest and to seize.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C365-piticcetukkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can say a complaint, a criminal, an investigation, to arrest and to seize.",
+    "assesses": [
+      "ML-LEX-C365-POLICE365-03",
+      "ML-LEX-C365-POLICE365-04",
+      "ML-LEX-C365-POLICE365-05"
+    ]
+  }
+}

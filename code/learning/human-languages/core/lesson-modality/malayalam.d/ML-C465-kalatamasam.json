@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C465-kalatamasam",
+    "language": "malayalam",
+    "chapter": 465,
+    "sequence": 23220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63ab3e260034c890"
+  },
+  "findings": []
+}

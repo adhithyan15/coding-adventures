@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 455,
+  "title": "Respect and Fairness",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:df1a5b4e17d6d197",
+  "lessons": [
+    {
+      "id": "ML-C455-ormmippikkuka",
+      "sequence": 22560,
+      "title": "ഓർമ്മിപ്പിക്കുക (ōrmmippikkuka) — to remind",
+      "headword": "ഓർമ്മിപ്പിക്കുക",
+      "romanization": "ōrmmippikkuka",
+      "gloss": "to remind",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5dc6bab6422e1fd6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to be convinced, then the Malayalam for to confirm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഓർമ്മിപ്പിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഓർമ്മിപ്പിക്കുക — ōrmmippikkuka — \"to remind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഫീസ് അടയ്ക്കാൻ അമ്മ എന്നെ ഓർമ്മിപ്പിച്ചു. phīsŭ aṭaykkān amma enne ōrmmippiccu. Mother reminded me to pay the fee."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഓർമ്മിപ്പിച്ചു, ōrmmippiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The causative of ഓർമ്മിക്കുക, to remember: to make someone remember."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഓർമ്മിപ്പിക്കുക (ōrmmippikkuka) is native Dravidian, the causative of ഓർമ്മിക്കുക, \"to remember\", on ഓർമ്മ, \"memory\" (DEDR 1059). DEDR also lists ōrpikkuka, \"to remind\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōrmmippikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōrmmippikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōrmmippikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōrmmippikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phīsŭ aṭaykkān amma enne ōrmmippiccu. — Mother reminded me to pay the fee.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phīsŭ aṭaykkān amma enne ōrmmippiccu.* — Mother reminded me to pay the fee.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to be convinced, then the Malayalam for to confirm, then say ōrmmippikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to be convinced, then the Malayalam for to confirm, then say *ōrmmippikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഓർമ്മിപ്പിക്കുക (ōrmmippikkuka) mean? (\"To remind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C455-bahumanikkuka",
+      "sequence": 22570,
+      "title": "ബഹുമാനിക്കുക (bahumānikkuka) — to look up to; to respect",
+      "headword": "ബഹുമാനിക്കുക",
+      "romanization": "bahumānikkuka",
+      "gloss": "to look up to; to respect",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3d601c567943bc4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to confirm, then the Malayalam for to remind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ബഹുമാനിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബഹുമാനിക്കുക — bahumānikkuka — \"to look up to; to respect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കുട്ടികൾ ആ അധ്യാപകനെ വളരെ ബഹുമാനിക്കുന്നു. kuṭṭikaḷ ā adhyāpakane vaḷare bahumānikkunnu. The children respect that teacher very much."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ബഹുമാനിച്ചു, bahumāniccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is ബഹുമാനം, respect."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബഹുമാനിക്കുക (bahumānikkuka) is built from Sanskrit bahumāna, \"high esteem\" (CDIAL 9192), bahu, \"much\", and māna, \"regard\", with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahumānikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahumānikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahumānikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahumānikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭṭikaḷ ā adhyāpakane vaḷare bahumānikkunnu. — The children respect that teacher very much.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭṭikaḷ ā adhyāpakane vaḷare bahumānikkunnu.* — The children respect that teacher very much.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to confirm, then the Malayalam for to remind, then say bahumānikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to confirm, then the Malayalam for to remind, then say *bahumānikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ബഹുമാനിക്കുക (bahumānikkuka) mean? (\"To look up to; to respect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C455-tulyamaya",
+      "sequence": 22580,
+      "title": "തുല്യമായ (tulyamāya) — equal",
+      "headword": "തുല്യമായ",
+      "romanization": "tulyamāya",
+      "gloss": "equal",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:009d6b72e1dc722d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to remind, then the Malayalam for to look up to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തുല്യമായ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തുല്യമായ — tulyamāya — \"equal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "എല്ലാവർക്കും തുല്യമായ അവസരം വേണം. ellāvarkkuṁ tulyamāya avasaraṁ vēṇaṁ. Everyone needs an equal chance."
+            },
+            {
+              "kind": "speech",
+              "text": "The adverb is തുല്യമായി, equally."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തുല്യമായ (tulyamāya) is built from Sanskrit tulya, \"equal to, like\" (CDIAL 5888), from the root tul, \"to weigh\", with the adjective ending -ആയ: of equal weight."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tulyamāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tulyamāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tulyamāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tulyamāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellāvarkkuṁ tulyamāya avasaraṁ vēṇaṁ. — Everyone needs an equal chance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellāvarkkuṁ tulyamāya avasaraṁ vēṇaṁ.* — Everyone needs an equal chance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to remind, then the Malayalam for to look up to, then say tulyamāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to remind, then the Malayalam for to look up to, then say *tulyamāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തുല്യമായ (tulyamāya) mean? (\"Equal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C455-dharmmikamaya",
+      "sequence": 22590,
+      "title": "ധാർമ്മികമായ (dhārmmikamāya) — ethical; moral",
+      "headword": "ധാർമ്മികമായ",
+      "romanization": "dhārmmikamāya",
+      "gloss": "ethical; moral",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5410614b577f08ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to look up to, then the Malayalam for equal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ധാർമ്മികമായ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ധാർമ്മികമായ — dhārmmikamāya — \"ethical; moral\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അത് ധാർമ്മികമായ ഒരു തീരുമാനമായിരുന്നില്ല. atŭ dhārmmikamāya oru tīrumānamāyirunnilla. That was not a moral decision."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is ധാർമ്മികത, morality."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ധാർമ്മികമായ (dhārmmikamāya) is built from Sanskrit dhārmika, \"righteous\" (CDIAL 6798), made from dharma, \"right conduct\", with the adjective ending -ആയ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhārmmikamāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhārmmikamāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhārmmikamāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhārmmikamāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atŭ dhārmmikamāya oru tīrumānamāyirunnilla. — That was not a moral decision.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atŭ dhārmmikamāya oru tīrumānamāyirunnilla.* — That was not a moral decision.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to look up to, then the Malayalam for equal, then say dhārmmikamāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to look up to, then the Malayalam for equal, then say *dhārmmikamāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ധാർമ്മികമായ (dhārmmikamāya) mean? (\"Ethical; moral\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C455-upadravikkuka",
+      "sequence": 22600,
+      "title": "ഉപദ്രവിക്കുക (upadravikkuka) — to harm; to harass",
+      "headword": "ഉപദ്രവിക്കുക",
+      "romanization": "upadravikkuka",
+      "gloss": "to harm; to harass",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:198218cc6915bb0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for equal, then the Malayalam for ethical."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉപദ്രവിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉപദ്രവിക്കുക — upadravikkuka — \"to harm; to harass\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ നായ ആരെയും ഉപദ്രവിക്കില്ല. ā nāya āreyuṁ upadravikkilla. That dog will not harm anyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഉപദ്രവിച്ചു, upadraviccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is ഉപദ്രവം, harm, trouble."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉപദ്രവിക്കുക (upadravikkuka) is built from Sanskrit upadrava, \"calamity, violence\" (CDIAL 2180), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upadravikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upadravikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upadravikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upadravikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā nāya āreyuṁ upadravikkilla. — That dog will not harm anyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā nāya āreyuṁ upadravikkilla.* — That dog will not harm anyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for equal, then the Malayalam for ethical, then say upadravikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for equal, then the Malayalam for ethical, then say *upadravikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉപദ്രവിക്കുക (upadravikkuka) mean? (\"To harm; to harass\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

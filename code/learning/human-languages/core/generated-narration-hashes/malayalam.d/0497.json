@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:b0f0170401424e93",
+  "lessonIds": [
+    "ML-C497-tiradesam",
+    "ML-C497-alimukham",
+    "ML-C497-veliyerram",
+    "ML-C497-veliyirakkam",
+    "ML-C497-katalakramanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch497.txt",
+  "json": "malayalam/narration/ch497.json",
+  "textHash": "fnv1a64:8c98131652220022",
+  "jsonHash": "fnv1a64:fbebdf8093afe05e",
+  "findings": []
+}

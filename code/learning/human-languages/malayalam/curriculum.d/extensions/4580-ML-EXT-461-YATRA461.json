@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-461-YATRA461",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a platform, a bus conductor, a fare, a queue and to travel.",
+  "prerequisites": []
+}

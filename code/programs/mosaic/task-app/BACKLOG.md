@@ -69,9 +69,15 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Current bounded item: #17913 — preserve Qt Text widths.** Both authored
-themes emit calendar heading fill and timeline widths, with 78 drops instead
-of 81. Native payload CI remains required before merge.
+**Current bounded item: [#17950](https://github.com/adhithyan15/coding-adventures/issues/17950)
+— prepare, publish, and audit `task-app-v0.5.9`.** P0 lifecycle gates are
+complete. Qt Text widths shipped in #17915 with native payload CI passing;
+both themes now measure 78 drops instead of 81. Prioritize the compatible
+release checkpoint under #13543 before further fidelity work. Include the
+authoritative Web Component input/focus and web theme-token changes, require
+every existing payload validation, and publish only after preparation merges.
+Audit immutable provenance, assets, and checksums before closing #17950.
+Artifact coverage is unchanged; signing remains blocked in #13977.
 
 **Published checkpoint: [#17682](https://github.com/adhithyan15/coding-adventures/issues/17682)
 — publish and audit `task-app-v0.5.8`.** The P0 native lifecycle gates and the

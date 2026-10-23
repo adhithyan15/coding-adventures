@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-392-ANUSOCHANAM392",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-392-ANUSOCHANAM392"
+  ],
+  "after": []
+}

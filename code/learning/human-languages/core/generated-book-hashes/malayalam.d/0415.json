@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:5d53965987eb3151",
+  "lessonIds": [
+    "ML-C415-samuham",
+    "ML-C415-potujanam",
+    "ML-C415-janasamkhya",
+    "ML-C415-samatvam",
+    "ML-C415-svatantryam"
+  ],
+  "tex": "malayalam/book/chapters/ch415-society.tex"
+}

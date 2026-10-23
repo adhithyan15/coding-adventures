@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:47ea66839539fd4c",
+  "lessonIds": [
+    "ML-C371-jayil",
+    "ML-C371-tatavu",
+    "ML-C371-tatavukaran",
+    "ML-C371-vittayaykkuka",
+    "ML-C371-mocippikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch371.txt",
+  "json": "malayalam/narration/ch371.json",
+  "textHash": "fnv1a64:c563b75a80591676",
+  "jsonHash": "fnv1a64:030890850ce79d54",
+  "findings": []
+}

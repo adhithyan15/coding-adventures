@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C388-anugrahikkuka",
+    "language": "malayalam",
+    "chapter": 388,
+    "sequence": 19000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83d2fb76f56825e4"
+  },
+  "findings": []
+}

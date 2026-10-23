@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:9796809e78ef314d",
+  "lessonIds": [
+    "ML-C511-pravacanam",
+    "ML-C511-jagrata",
+    "ML-C511-usnataramgam",
+    "ML-C511-culalikkarru",
+    "ML-C511-pottiviluka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch511.txt",
+  "json": "malayalam/narration/ch511.json",
+  "textHash": "fnv1a64:8bc76b44ca4fd7e3",
+  "jsonHash": "fnv1a64:20990f38c362ee28",
+  "findings": []
+}

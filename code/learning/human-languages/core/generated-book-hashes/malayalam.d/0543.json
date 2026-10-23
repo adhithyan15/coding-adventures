@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:decfdde8be16c5ea",
+  "lessonIds": [
+    "ML-C543-bonasu",
+    "ML-C543-apeksikkuka",
+    "ML-C543-jolikketukkuka",
+    "ML-C543-piriccuvituka",
+    "ML-C543-tolilutama"
+  ],
+  "tex": "malayalam/book/chapters/ch543-hired-and-fired.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-W348-gha",
+  "pathSegment": "ML-PATH-348-WOULD-DEPENDS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-348-WOULD-DEPENDS",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C418-siksikkuka",
+  "pathSegment": "ML-PATH-418-SIKSA418",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-418-SIKSA418",
+      "order": 1
+    }
+  ]
+}

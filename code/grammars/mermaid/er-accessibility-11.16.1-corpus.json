@@ -1,0 +1,15 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER accessibility metadata vertical slice",
+  "fixtures": [
+    {
+      "name": "single-line-accessibility",
+      "source": "erDiagram\naccTitle: Account model\naccDescr: Customer accounts\nCUSTOMER ||--o{ ACCOUNT : owns"
+    },
+    {
+      "name": "multiline-accessibility-description",
+      "source": "erDiagram\naccTitle: Order model\naccDescr {\n  Customers place orders.\n  Orders contain items.\n}\nCUSTOMER ||--o{ ORDER : places"
+    }
+  ]
+}

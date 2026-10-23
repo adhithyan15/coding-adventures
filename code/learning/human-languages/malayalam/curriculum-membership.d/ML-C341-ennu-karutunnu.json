@@ -1,0 +1,11 @@
+{
+  "id": "ML-C341-ennu-karutunnu",
+  "pathSegment": "ML-PATH-341-OPINION-SO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-341-OPINION-SO",
+      "order": 1
+    }
+  ]
+}

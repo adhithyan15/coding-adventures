@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:32e2fbdc4348bd01",
+  "lessonIds": [
+    "ML-C521-samtrpti",
+    "ML-C521-visadam",
+    "ML-C521-puncirikkuka",
+    "ML-C521-grhaturatvam",
+    "ML-C521-netuvirppituka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch521.txt",
+  "json": "malayalam/narration/ch521.json",
+  "textHash": "fnv1a64:9f8f02027eb03620",
+  "jsonHash": "fnv1a64:7060667bca3a519c",
+  "findings": []
+}

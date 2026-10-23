@@ -1,0 +1,11 @@
+{
+  "id": "ML-C523-paka",
+  "pathSegment": "ML-PATH-523-PAKA523",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-523-PAKA523",
+      "order": 1
+    }
+  ]
+}

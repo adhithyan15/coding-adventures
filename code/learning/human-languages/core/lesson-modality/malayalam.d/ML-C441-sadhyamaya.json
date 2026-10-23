@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C441-sadhyamaya",
+    "language": "malayalam",
+    "chapter": 441,
+    "sequence": 21840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7cd537bfcb24f51e"
+  },
+  "findings": []
+}

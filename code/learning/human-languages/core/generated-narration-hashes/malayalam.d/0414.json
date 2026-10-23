@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:2e5cc7b3f048e047",
+  "lessonIds": [
+    "ML-C414-tatvam",
+    "ML-C414-dharana",
+    "ML-C414-siddhantam",
+    "ML-C414-uravitam",
+    "ML-C414-satamanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch414.txt",
+  "json": "malayalam/narration/ch414.json",
+  "textHash": "fnv1a64:4f6dc30418260643",
+  "jsonHash": "fnv1a64:0636580fff1ac88a",
+  "findings": []
+}

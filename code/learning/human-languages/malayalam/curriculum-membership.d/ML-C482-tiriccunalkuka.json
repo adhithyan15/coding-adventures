@@ -1,0 +1,11 @@
+{
+  "id": "ML-C482-tiriccunalkuka",
+  "pathSegment": "ML-PATH-482-VATAKA482",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-482-VATAKA482",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:bd2473fbb8492d3a",
+  "lessonIds": [
+    "ML-C459-cumattuka",
+    "ML-C459-pirikkuka",
+    "ML-C459-utpadippikkuka",
+    "ML-C459-pradesika",
+    "ML-C459-desiya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch459.txt",
+  "json": "malayalam/narration/ch459.json",
+  "textHash": "fnv1a64:b6108ab0b69a2bef",
+  "jsonHash": "fnv1a64:067fc5421acf329e",
+  "findings": []
+}

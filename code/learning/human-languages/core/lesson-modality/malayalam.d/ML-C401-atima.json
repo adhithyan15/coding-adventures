@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C401-atima",
+    "language": "malayalam",
+    "chapter": 401,
+    "sequence": 19660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e36ce1deeba1fccf"
+  },
+  "findings": []
+}

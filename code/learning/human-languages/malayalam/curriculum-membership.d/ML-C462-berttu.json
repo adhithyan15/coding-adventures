@@ -1,0 +1,11 @@
+{
+  "id": "ML-C462-berttu",
+  "pathSegment": "ML-PATH-462-BOOKING462",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-462-BOOKING462",
+      "order": 1
+    }
+  ]
+}

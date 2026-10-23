@@ -1,0 +1,11 @@
+{
+  "id": "ML-C488-pakarppu",
+  "pathSegment": "ML-PATH-488-REKHA488",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-488-REKHA488",
+      "order": 1
+    }
+  ]
+}

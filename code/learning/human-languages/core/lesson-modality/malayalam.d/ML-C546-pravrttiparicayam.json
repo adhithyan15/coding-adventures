@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C546-pravrttiparicayam",
+    "language": "malayalam",
+    "chapter": 546,
+    "sequence": 27510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e815b8bdd1ac83d2"
+  },
+  "findings": []
+}

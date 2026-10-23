@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:ba44eb993659492c",
+  "lessonIds": [
+    "ML-C502-tottam",
+    "ML-C502-paccappu",
+    "ML-C502-talirkkuka",
+    "ML-C502-koliyuka",
+    "ML-C502-vettimarruka"
+  ],
+  "tex": "malayalam/book/chapters/ch502-plantations-and-trees.tex"
+}

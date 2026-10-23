@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-556-VANCANA556",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ML-EXT-556-VANCANA556"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C394-avakasi",
+    "language": "malayalam",
+    "chapter": 394,
+    "sequence": 19310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75ef0014a4d3a498"
+  },
+  "findings": []
+}

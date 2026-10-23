@@ -1,0 +1,19 @@
+{
+  "chapter": 447,
+  "title": "Aims and Standards",
+  "label": "ch:ml-aims-and-standards",
+  "canDo": "I can say to achieve, a quality standard, to fail, to aim at and efficiency.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C447-karyaksamata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can say to achieve, a quality standard, to fail, to aim at and efficiency.",
+    "assesses": [
+      "ML-LEX-C447-NETTAM447-03",
+      "ML-LEX-C447-NETTAM447-04",
+      "ML-LEX-C447-NETTAM447-05"
+    ]
+  }
+}

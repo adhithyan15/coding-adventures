@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:ddb534121c8151db",
+  "lessonIds": [
+    "ML-C443-badhikkuka",
+    "ML-C443-svadhinikkuka",
+    "ML-C443-badal",
+    "ML-C443-paridhi",
+    "ML-C443-samayaparidhi"
+  ],
+  "tex": "malayalam/book/chapters/ch443-effects-and-limits.tex"
+}

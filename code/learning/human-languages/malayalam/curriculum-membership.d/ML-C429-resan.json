@@ -1,0 +1,11 @@
+{
+  "id": "ML-C429-resan",
+  "pathSegment": "ML-PATH-429-KSEMAM429",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-429-KSEMAM429",
+      "order": 1
+    }
+  ]
+}

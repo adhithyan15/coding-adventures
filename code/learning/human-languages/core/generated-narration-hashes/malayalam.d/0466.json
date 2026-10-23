@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:7ff0e2fb5e746cf1",
+  "lessonIds": [
+    "ML-C466-syuttkesu",
+    "ML-C466-cumatu",
+    "ML-C466-porttar",
+    "ML-C466-klokkrum",
+    "ML-C466-valiccukontupokuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch466.txt",
+  "json": "malayalam/narration/ch466.json",
+  "textHash": "fnv1a64:fbb5940454f72693",
+  "jsonHash": "fnv1a64:57684009df3bef09",
+  "findings": []
+}

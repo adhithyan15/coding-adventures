@@ -1,0 +1,11 @@
+{
+  "id": "PA-C188-milna-milde-contrast",
+  "pathSegment": "PA-PATH-188-A2-MEETING-FAMILY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-188-A2-MEETING-FAMILY",
+      "order": 4
+    }
+  ]
+}

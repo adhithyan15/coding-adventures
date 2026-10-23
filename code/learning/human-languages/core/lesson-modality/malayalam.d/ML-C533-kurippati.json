@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C533-kurippati",
+    "language": "malayalam",
+    "chapter": 533,
+    "sequence": 26840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:645cc8765f64417d"
+  },
+  "findings": []
+}

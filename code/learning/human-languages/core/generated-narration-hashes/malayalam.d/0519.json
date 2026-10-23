@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:8935553fa3818065",
+  "lessonIds": [
+    "ML-C519-utkantha",
+    "ML-C519-atmabhimanam",
+    "ML-C519-amparakkuka",
+    "ML-C519-vatsalyam",
+    "ML-C519-murumurukkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch519.txt",
+  "json": "malayalam/narration/ch519.json",
+  "textHash": "fnv1a64:72e3b15a8ab27261",
+  "jsonHash": "fnv1a64:90016c455a75cf31",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C522-aksama",
+    "language": "malayalam",
+    "chapter": 522,
+    "sequence": 26260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a4e4b6b63932e98"
+  },
+  "findings": []
+}

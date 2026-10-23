@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 551,
+  "sourceHash": "fnv1a64:5d0a5991cdb2121c",
+  "lessonIds": [
+    "ML-C551-elppikkuka",
+    "ML-C551-erretukkuka",
+    "ML-C551-kaivarikkuka",
+    "ML-C551-paniyetukkuka",
+    "ML-C551-adhvanikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch551-taking-on-the-work.tex"
+}

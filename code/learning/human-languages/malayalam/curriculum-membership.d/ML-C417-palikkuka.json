@@ -1,0 +1,11 @@
+{
+  "id": "ML-C417-palikkuka",
+  "pathSegment": "ML-PATH-417-CATTAM417",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-417-CATTAM417",
+      "order": 1
+    }
+  ]
+}

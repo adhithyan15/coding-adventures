@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-371-JAIL371",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a jail, imprisonment, a prisoner, to release and to free.",
+  "prerequisites": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:834190a5c831b1be",
+  "lessonIds": [
+    "ML-C380-alarcca",
+    "ML-C380-kulappam",
+    "ML-C380-nilavili",
+    "ML-C380-nilavilikkuka",
+    "ML-C380-pintiriyuka",
+    "ML-R380-review-373-380"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch380.txt",
+  "json": "malayalam/narration/ch380.json",
+  "textHash": "fnv1a64:f63bd0b32e5afe7b",
+  "jsonHash": "fnv1a64:96dac4057f6235f0",
+  "findings": []
+}

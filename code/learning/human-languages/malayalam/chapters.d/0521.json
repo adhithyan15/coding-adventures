@@ -1,0 +1,19 @@
+{
+  "chapter": 521,
+  "title": "Smiles and Sighs",
+  "label": "ch:ml-smiles-and-sighs",
+  "canDo": "I can say satisfaction, melancholy, to smile, nostalgia and to sigh.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C521-netuvirppituka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 521: I can say satisfaction, melancholy, to smile, nostalgia and to sigh.",
+    "assesses": [
+      "ML-LEX-C521-VISHADAM521-03",
+      "ML-LEX-C521-VISHADAM521-04",
+      "ML-LEX-C521-VISHADAM521-05"
+    ]
+  }
+}

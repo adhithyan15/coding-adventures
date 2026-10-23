@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "Birds",
+  "label": "ch:ml-birds",
+  "canDo": "I can say a hornbill, a woodpecker, migration, to roost and to build a nest.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-R500-review-493-500",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can say a hornbill, a woodpecker, migration, to roost and to build a nest.",
+    "assesses": [
+      "ML-LEX-C500-PAKSI500-03",
+      "ML-LEX-C500-PAKSI500-04",
+      "ML-LEX-C500-PAKSI500-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:7f0dda7630ec2efb",
+  "lessonIds": [
+    "ML-C486-embasi",
+    "ML-C486-vakuppu",
+    "ML-C486-sakha",
+    "ML-C486-pravrttisamayam",
+    "ML-C486-pravrttidinam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch486.txt",
+  "json": "malayalam/narration/ch486.json",
+  "textHash": "fnv1a64:12fa6b7089c75573",
+  "jsonHash": "fnv1a64:ad4b4bbe70e2d96d",
+  "findings": []
+}

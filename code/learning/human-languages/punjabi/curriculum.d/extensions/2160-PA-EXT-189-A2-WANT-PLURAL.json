@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-189-A2-WANT-PLURAL",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can recognise and use the shared plural or respectful want form in a familiar statement and question.",
+  "prerequisites": [
+    "PA-EXT-188-A2-MEETING-FAMILY"
+  ]
+}

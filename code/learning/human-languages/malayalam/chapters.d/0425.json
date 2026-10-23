@@ -1,0 +1,19 @@
+{
+  "chapter": 425,
+  "title": "Protest",
+  "label": "ch:ml-protest",
+  "canDo": "I can say a protest, to protest, a strike, a general strike and a march.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C425-jatha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can say a protest, to protest, a strike, a general strike and a march.",
+    "assesses": [
+      "ML-LEX-C425-SAMARAM425-03",
+      "ML-LEX-C425-SAMARAM425-04",
+      "ML-LEX-C425-SAMARAM425-05"
+    ]
+  }
+}

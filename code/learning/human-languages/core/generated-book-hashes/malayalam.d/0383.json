@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:b59ad5471edcfe50",
+  "lessonIds": [
+    "ML-C383-rahasyam",
+    "ML-C383-pratyaksappetuka",
+    "ML-C383-marayuka",
+    "ML-C383-kantupitikkuka",
+    "ML-C383-kantetukkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch383-a-secret-found-out.tex"
+}

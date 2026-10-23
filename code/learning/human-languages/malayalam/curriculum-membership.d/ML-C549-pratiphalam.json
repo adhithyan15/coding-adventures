@@ -1,0 +1,11 @@
+{
+  "id": "ML-C549-pratiphalam",
+  "pathSegment": "ML-PATH-549-PUROGATI549",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-549-PUROGATI549",
+      "order": 1
+    }
+  ]
+}

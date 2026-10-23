@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:981b12f0502baf7e",
+  "lessonIds": [
+    "ML-C539-mayannuka",
+    "ML-C539-kitaykkuka",
+    "ML-C539-niruka",
+    "ML-C539-bhaksanakramam",
+    "ML-C539-posakaharam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch539.txt",
+  "json": "malayalam/narration/ch539.json",
+  "textHash": "fnv1a64:7a1c2a44533113c2",
+  "jsonHash": "fnv1a64:4f6593333fea227f",
+  "findings": []
+}

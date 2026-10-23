@@ -1,0 +1,11 @@
+{
+  "id": "ML-C538-vilceyar",
+  "pathSegment": "ML-PATH-538-PARIKKU538",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-538-PARIKKU538",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 569,
+  "sourceHash": "fnv1a64:fece908712fdb525",
+  "lessonIds": [
+    "ML-C569-campyan",
+    "ML-C569-etirali",
+    "ML-C569-turnamenru",
+    "ML-C569-munneruka",
+    "ML-C569-pinnilakuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch569.txt",
+  "json": "malayalam/narration/ch569.json",
+  "textHash": "fnv1a64:be259926d392ca97",
+  "jsonHash": "fnv1a64:bd484e7ab9b5be23",
+  "findings": []
+}

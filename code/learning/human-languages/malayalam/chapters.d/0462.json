@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "Booking a Berth",
+  "label": "ch:ml-booking-a-berth",
+  "canDo": "I can say a reservation, a berth, a compartment, to make a booking and to buy a ticket.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C462-tikkarretukkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can say a reservation, a berth, a compartment, to make a booking and to buy a ticket.",
+    "assesses": [
+      "ML-LEX-C462-BOOKING462-03",
+      "ML-LEX-C462-BOOKING462-04",
+      "ML-LEX-C462-BOOKING462-05"
+    ]
+  }
+}

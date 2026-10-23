@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-391-SAVAM391",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-391-SAVAM391"
+  ],
+  "after": []
+}

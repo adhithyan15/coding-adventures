@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C519-murumurukkuka",
+    "language": "malayalam",
+    "chapter": 519,
+    "sequence": 26140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ced91d588a55118d"
+  },
+  "findings": []
+}

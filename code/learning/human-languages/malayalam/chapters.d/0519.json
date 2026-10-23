@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "Worry and Relief",
+  "label": "ch:ml-worry-and-relief",
+  "canDo": "I can say anxiety, self-respect, to be astonished, tender affection and to grumble.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C519-murumurukkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can say anxiety, self-respect, to be astonished, tender affection and to grumble.",
+    "assesses": [
+      "ML-LEX-C519-SAMADHANAM519-03",
+      "ML-LEX-C519-SAMADHANAM519-04",
+      "ML-LEX-C519-SAMADHANAM519-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C528-subhaptivisvasam",
+    "language": "malayalam",
+    "chapter": 528,
+    "sequence": 26580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7e519195912cf93"
+  },
+  "findings": []
+}

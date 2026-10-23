@@ -1,0 +1,11 @@
+{
+  "id": "ML-C473-irakkivituka",
+  "pathSegment": "ML-PATH-473-BAS473",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-473-BAS473",
+      "order": 2
+    }
+  ]
+}

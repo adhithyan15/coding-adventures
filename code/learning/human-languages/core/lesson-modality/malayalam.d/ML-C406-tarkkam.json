@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C406-tarkkam",
+    "language": "malayalam",
+    "chapter": 406,
+    "sequence": 20060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:655f0ed583ae5529"
+  },
+  "findings": []
+}

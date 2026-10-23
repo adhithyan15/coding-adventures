@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:8727ef628ef63635",
+  "lessonIds": [
+    "ML-C432-gavesanam",
+    "ML-C432-gavesakan",
+    "ML-C432-prabandham",
+    "ML-C432-prophasar",
+    "ML-C432-prabhasanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch432.txt",
+  "json": "malayalam/narration/ch432.json",
+  "textHash": "fnv1a64:4e44b52e567ea3f6",
+  "jsonHash": "fnv1a64:e7f871be00a47e71",
+  "findings": []
+}

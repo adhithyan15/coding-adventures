@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Blame and Denial",
+  "label": "ch:ml-blame-and-denial",
+  "canDo": "I can say to deny, to claim, to allege, impartial and an explanation.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C409-visadikaranam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can say to deny, to claim, to allege, impartial and an explanation.",
+    "assesses": [
+      "ML-LEX-C409-KURRAM409-03",
+      "ML-LEX-C409-KURRAM409-04",
+      "ML-LEX-C409-KURRAM409-05"
+    ]
+  }
+}

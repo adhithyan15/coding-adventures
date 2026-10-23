@@ -1,0 +1,11 @@
+{
+  "id": "ML-C354-madhyamam",
+  "pathSegment": "ML-PATH-354-PRASAMGAM354",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-354-PRASAMGAM354",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C372-parrikkuka",
+    "language": "malayalam",
+    "chapter": 372,
+    "sequence": 18200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:215aff9530134f2a"
+  },
+  "findings": []
+}

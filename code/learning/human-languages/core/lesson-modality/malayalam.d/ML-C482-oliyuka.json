@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C482-oliyuka",
+    "language": "malayalam",
+    "chapter": 482,
+    "sequence": 24090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3dba75c950fba4f6"
+  },
+  "findings": []
+}

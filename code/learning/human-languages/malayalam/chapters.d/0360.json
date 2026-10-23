@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "By Chance or on Purpose",
+  "label": "ch:ml-by-chance-or-on-purpose",
+  "canDo": "I can say by chance, on purpose, a blunder, luck and as fate willed.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C360-vidhivasal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can say by chance, on purpose, a blunder, luck and as fate willed.",
+    "assesses": [
+      "ML-LEX-C360-YADRCCHIKAM360-03",
+      "ML-LEX-C360-YADRCCHIKAM360-04",
+      "ML-LEX-C360-YADRCCHIKAM360-05"
+    ]
+  }
+}

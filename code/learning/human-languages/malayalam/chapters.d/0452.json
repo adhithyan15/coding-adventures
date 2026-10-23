@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "Making Peace",
+  "label": "ch:ml-making-peace",
+  "canDo": "I can say to compromise, a settlement, a treaty, an approach and cooperation.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-R452-review-445-452",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can say to compromise, a settlement, a treaty, an approach and cooperation.",
+    "assesses": [
+      "ML-LEX-C452-SAMADHANAM452-03",
+      "ML-LEX-C452-SAMADHANAM452-04",
+      "ML-LEX-C452-SAMADHANAM452-05"
+    ]
+  }
+}

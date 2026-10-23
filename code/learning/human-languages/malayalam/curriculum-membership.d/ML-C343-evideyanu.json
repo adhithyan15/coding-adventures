@@ -1,0 +1,11 @@
+{
+  "id": "ML-C343-evideyanu",
+  "pathSegment": "ML-PATH-343-ASK-THE-WAY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-343-ASK-THE-WAY",
+      "order": 2
+    }
+  ]
+}
