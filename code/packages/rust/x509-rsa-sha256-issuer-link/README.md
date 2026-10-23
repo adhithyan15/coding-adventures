@@ -55,6 +55,15 @@ validity policy for another certificate object. This proves only that the
 policy-approved intermediate authenticated the retained child; it does not
 authenticate the intermediate's own issuer or advance path-length state.
 
+The authenticated path-length composition consumes that complete proof and one
+`X509CertificatePathLengthState`. It derives the transition only from the
+retained intermediate policy, then returns distinct non-copyable evidence that
+retains both the authenticated intermediate and the advanced state. This
+prevents cross-certificate policy substitution and prevents this composition
+boundary from silently discarding the adjacent-link proof. It covers one
+caller-ordered step only and does not authenticate the intermediate's parent,
+prove adjacency to another step, construct a path, or establish trust.
+
 Critical-extension recognition remains caller-owned and is not semantic
 validation of recognized extensions outside the role gate. The
 role-and-algorithm result alone grants no time authority, while the
