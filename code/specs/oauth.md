@@ -782,6 +782,20 @@ does not authenticate the intermediate's own issuer link, advance path-length
 state, choose or order certificates, construct or validate a complete path,
 recognize trust, process name constraints or revocation, perform TLS or HTTP,
 authorize OAuth transport, or open a network connection.
+A bounded authenticated path-length follow-up now consumes that complete
+authenticated-intermediate proof together with one path-length state. It
+derives the transition's issuing-CA role, caller-policy self-issued bit, and
+decoded `pathLenConstraint` only from the exact intermediate policy retained
+by the authenticated link, then returns a distinct non-copyable result that
+retains both the authenticated intermediate and the advanced state. This
+prevents callers from presenting one authenticated intermediate while
+advancing path-length state with policy for another certificate, or from
+silently discarding the adjacent-link proof at this composition boundary. The
+result covers one caller-ordered transition only: it does not authenticate the
+intermediate's own issuer, prove adjacency to another step, choose or order
+certificates, construct or validate a complete path, recognize trust, process
+name constraints or revocation, perform TLS or HTTP, authorize OAuth
+transport, or open a network connection.
 A bounded `x509-certificate-issuer-candidate-selection` path-construction
 prerequisite now scans one caller-bounded pool of decoded candidate
 certificates in caller order. It invokes caller-owned Name policy exactly once
