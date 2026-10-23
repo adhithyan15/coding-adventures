@@ -49,10 +49,20 @@ distinct non-copyable result keeps the whole target-to-intermediate-to-root
 proof, including intermediate policy and path-length state, plus the optional
 payload-free DNS count evidence.
 
+`validate_x509_rsa_sha256_reviewed_intermediate_server_name_constraints_policy`
+then consumes that complete anchor-policy result. It locates NameConstraints
+only on the exact intermediate retained by the authenticated path. An absent
+extension preserves the prior proof without new DNS evidence. A present
+extension must be critical and must be one exact DER NameConstraints SEQUENCE
+inside the repository's permitted-dNSName-only subset. The policy re-decodes
+Subject Alternative Name from the exact retained target, applies every
+permitted subtree to every target dNSName, and retains the complete prior proof
+plus optional payload-free intermediate DNS evidence.
+
 ## Boundary
 
 This is exact-object evidence composition plus deliberately narrow selected-
-anchor DNS policy for direct and exactly one-intermediate RSA SHA-256 paths,
+anchor and intermediate DNS policy for direct and exactly one-intermediate RSA SHA-256 paths,
 not complete certificate-path or TLS validation. These compositions support
 only the repository's bounded permitted-dNSName constraint subset.
 The crate does not apply excluded, directory-name, IP, or other constraint
@@ -64,10 +74,11 @@ X.509, or cryptographic implementation is linked here.
 The focused unit and integration tests cover the security-sensitive
 exact-object predicate, the public two-link target binding with a static public
 Let's Encrypt precertificate, R13 intermediate, and reviewed ISRG Root X1, the
-two-link anchor-policy retention, byte-equal separately decoded target
+two-link anchor-policy and intermediate-policy retention, byte-equal separately decoded target
 rejection, complete-input getters,
 unconstrained and constrained policy branches, exact reviewed `.tr` bytes,
-all-target-DNS matching, DNS-absent SANs, malformed inputs, independent decoder
+all-target-DNS matching, DNS-absent SANs, criticality, unsupported excluded and
+non-DNS forms, malformed inputs, independent decoder
 budgets, and payload-free failures. The static integration fixtures record
 their public sources and SHA-256 digests; tests perform no network effects. The
 upstream evidence types intentionally expose no forging constructors, so this

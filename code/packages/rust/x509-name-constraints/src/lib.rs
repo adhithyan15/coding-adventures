@@ -15,6 +15,9 @@ const SEQUENCE_TAG: u32 = 16;
 const PERMITTED_SUBTREES_TAG: u32 = 0;
 const DNS_NAME_TAG: u32 = 2;
 
+/// RFC 5280 id-ce-nameConstraints (2.5.29.30).
+pub const NAME_CONSTRAINTS_OID: &[u64] = &[2, 5, 29, 30];
+
 /// Maximum DNS GeneralSubtree values retained from one constraints value.
 pub const MAX_DNS_SUBTREES: usize = 256;
 /// Maximum presented DNS names evaluated against one constraints value.
@@ -361,6 +364,50 @@ pub fn decode_name_constraints_contents<'a>(
     let root = decoder
         .decode_exact(encoded_contents)
         .map_err(NameConstraintsError::structure)?;
+    decode_name_constraints_element(decoder, root, 0)
+}
+
+/// Decode one exact DER-encoded RFC 5280 `NameConstraints` SEQUENCE.
+///
+/// Certificate extension values contain this complete SEQUENCE rather than
+/// only the sequence contents retained by reviewed trust-anchor snapshots.
+pub fn decode_name_constraints<'a>(
+    decoder: &mut Asn1Decoder,
+    encoded: &'a [u8],
+) -> Result<NameConstraints<'a>, NameConstraintsError> {
+    let root = decoder
+        .decode_exact(encoded)
+        .map_err(NameConstraintsError::structure)?;
+    let value_offset = root.header().len();
+    let value_length = root.value().len();
+    let mut fields = decoder
+        .sequence(root)
+        .map_err(NameConstraintsError::structure)?;
+    let field_offset = child_offset(value_offset, value_length, fields.remaining().len());
+    let field = fields
+        .read(decoder)
+        .map_err(|error| NameConstraintsError::child_structure(error, value_offset, field_offset))?
+        .ok_or_else(|| {
+            NameConstraintsError::new(
+                NameConstraintsErrorKind::UnsupportedTopLevelField,
+                value_offset,
+            )
+        })?;
+    if !fields.remaining().is_empty() {
+        return Err(NameConstraintsError::new(
+            NameConstraintsErrorKind::UnsupportedTopLevelField,
+            child_offset(value_offset, value_length, fields.remaining().len()),
+        ));
+    }
+    fields.finish().map_err(NameConstraintsError::structure)?;
+    decode_name_constraints_element(decoder, field, field_offset)
+}
+
+fn decode_name_constraints_element<'a>(
+    decoder: &mut Asn1Decoder,
+    root: Asn1Element<'a>,
+    root_offset: usize,
+) -> Result<NameConstraints<'a>, NameConstraintsError> {
     if !is_exact_tag(
         root.tag(),
         TagClass::ContextSpecific,
@@ -369,15 +416,15 @@ pub fn decode_name_constraints_contents<'a>(
     ) {
         return Err(NameConstraintsError::new(
             NameConstraintsErrorKind::UnsupportedTopLevelField,
-            0,
+            root_offset,
         ));
     }
 
-    let value_offset = root.header().len();
+    let value_offset = root_offset + root.header().len();
     let value_length = root.value().len();
     let mut subtrees = decoder
         .implicit_constructed(root, PERMITTED_SUBTREES_TAG)
-        .map_err(NameConstraintsError::structure)?;
+        .map_err(|error| NameConstraintsError::element_structure(error, root_offset))?;
     if subtrees.remaining().is_empty() {
         return Err(NameConstraintsError::new(
             NameConstraintsErrorKind::EmptyPermittedSubtrees,

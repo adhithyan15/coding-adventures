@@ -1,6 +1,7 @@
 use der_asn1::{Asn1Decoder, Asn1ErrorKind, Asn1Limits};
 use x509_name_constraints::{
-    decode_name_constraints_contents, NameConstraintsErrorKind, MAX_DNS_SUBTREES,
+    decode_name_constraints, decode_name_constraints_contents, NameConstraintsErrorKind,
+    MAX_DNS_SUBTREES, NAME_CONSTRAINTS_OID,
 };
 
 fn der_length(length: usize) -> Vec<u8> {
@@ -49,6 +50,45 @@ fn decode(
 ) -> Result<x509_name_constraints::NameConstraints<'_>, x509_name_constraints::NameConstraintsError>
 {
     decode_with_limits(encoded, Asn1Limits::default())
+}
+
+fn decode_der_with_limits(
+    encoded: &[u8],
+    limits: Asn1Limits,
+) -> Result<x509_name_constraints::NameConstraints<'_>, x509_name_constraints::NameConstraintsError>
+{
+    let mut decoder = Asn1Decoder::new(limits);
+    decode_name_constraints(&mut decoder, encoded)
+}
+
+#[test]
+fn decodes_one_exact_name_constraints_sequence() {
+    let encoded = element(0x30, &permitted(&[general_subtree(b".tr", &[])]));
+    let constraints = decode_der_with_limits(&encoded, Asn1Limits::default()).unwrap();
+
+    assert_eq!(NAME_CONSTRAINTS_OID, &[2, 5, 29, 30]);
+    assert_eq!(constraints.permitted_dns_subtrees(), &[".tr"]);
+}
+
+#[test]
+fn full_der_decoder_rejects_contents_trailing_bytes_and_tight_limits() {
+    let contents = permitted(&[general_subtree(b".tr", &[])]);
+    let trailing = [element(0x30, &contents), vec![0x05, 0]].concat();
+    let exhausted = Asn1Limits {
+        max_total_elements: 0,
+        ..Default::default()
+    };
+
+    for error in [
+        decode_der_with_limits(&contents, Asn1Limits::default()).unwrap_err(),
+        decode_der_with_limits(&trailing, Asn1Limits::default()).unwrap_err(),
+        decode_der_with_limits(&element(0x30, &contents), exhausted).unwrap_err(),
+    ] {
+        assert!(matches!(
+            error.kind(),
+            NameConstraintsErrorKind::Structure(_)
+        ));
+    }
 }
 
 #[test]
