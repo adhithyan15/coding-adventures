@@ -4,7 +4,7 @@
   "chapter": 279,
   "title": "Telling It in Order",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:be57f110cab83bb0",
+  "sourceHash": "fnv1a64:25ab455ef23189e6",
   "lessons": [
     {
       "id": "MR-C279-tyanantar",
@@ -591,7 +591,7 @@
       "modalityReasons": [
         "reading-type"
       ],
-      "sourceHash": "fnv1a64:ade3cb4b101cc61c",
+      "sourceHash": "fnv1a64:89c0aa6402b843dc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -684,7 +684,7 @@
             },
             {
               "kind": "speech",
-              "text": "The scene is वाचत होतो, करत होती and पडत होता; the habit is यायचो. आईने … सांगितली and आम्ही भाकरी खाल्ली follow the thing: a story, a bhakri. Every other verb is an event."
+              "text": "The scene is वाचत होतो, करत होती and पडत होता; the habit is यायचो. आईने … सांगितली and आम्ही भाकरी खाल्ली follow the thing: a story, a bhakri. The plain होते, होती and होता describe; every other past verb is an event."
             }
           ]
         },

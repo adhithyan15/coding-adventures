@@ -4,7 +4,7 @@
   "chapter": 280,
   "title": "What I Think, and So",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:8d8f1e08c76b300d",
+  "sourceHash": "fnv1a64:2a223466698b4a40",
   "lessons": [
     {
       "id": "MR-C280-mala-vatte",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36a1d8cd58264854",
+      "sourceHash": "fnv1a64:247254120348c276",
       "notice": null,
       "blocks": [
         {
@@ -45,7 +45,7 @@
             },
             {
               "kind": "speech",
-              "text": "Put the two together and you have an opinion."
+              "text": "With की you said malā vāṭtaṁ kī cahā āhe, \"I think there is tea\". Put a judgment after की instead of a fact, and you have an opinion."
             }
           ]
         },
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8cd094ff4c06987f",
+      "sourceHash": "fnv1a64:a16a8180b7b9334f",
       "notice": null,
       "blocks": [
         {
@@ -205,7 +205,7 @@
             },
             {
               "kind": "speech",
-              "text": "म्हणून (mhaṇūn) is built like करून: the -ऊन form of म्हणणे, \"to say\"."
+              "text": "म्हणून (mhaṇūn) is built like करून: the -ऊन form of म्हणणे, \"to say\". Its past has two shapes: तो म्हणाला (to mhaṇālā), \"he said\", following the speaker, and त्याने म्हटलं (tyāne mhaṭlaṁ), with -ने."
             }
           ]
         },

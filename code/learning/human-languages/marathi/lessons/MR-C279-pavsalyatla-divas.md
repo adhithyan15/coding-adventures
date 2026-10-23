@@ -16,7 +16,7 @@ prerequisites: [MR-C278-vacat-hoto, MR-C278-jayco, MR-C279-rtu, MR-C127-pavsala,
 sounds: []
 roots: []
 duration:
-  max_seconds: 285
+  max_seconds: 292
 requires:
   knowledge: [MR-GRAMMAR-C278-ONGOING-PAST-01, MR-GRAMMAR-C278-HABITUAL-PAST-01, MR-LEX-C279-RTU-01, MR-LEX-C127-TIME127-02, MR-LEX-C115-TOWN115-04, MR-LEX-C114-TOWN114-01, MR-LEX-C113-TOWN113-04, MR-LEX-C113-TOWN113-05, MR-LEX-C154-ACT154-02, MR-LEX-VACHNE, MR-LEX-C171-VEL171-05, MR-LEX-C96-NATURE96-03, MR-LEX-C107-ADJ107-02, MR-LEX-C153-QUAL153-05, MR-GRAMMAR-LYAAVAR, MR-LEX-C96-NATURE96-05, MR-LEX-C234-GUN234-04, MR-LEX-ITHE, MR-LEX-C74-HEALTH74-03, MR-LEX-C130-LOC130-01, MR-LEX-C120-WORLD120-05, MR-LEX-SANGNE, MR-LEX-BHAKARI, MR-LEX-C171-VEL171-03, MR-LEX-C111-TIME111-01, MR-LEX-CHANGLA, MR-LEX-DIVAS, MR-SCRIPT-VOCALIC-R-01, MR-GRAMMAR-C276-PAST-PERSON-01, MR-GRAMMAR-C276-PAST-STEMS-01, MR-GRAMMAR-C276-ERGATIVE-NE-01, MR-GRAMMAR-C276-OBJECT-AGREEMENT-01, MR-GRAMMAR-C276-WAS-01, MR-GRAMMAR-C278-ASTANA-01, MR-GRAMMAR-C279-FIRST-THEN-01, MR-GRAMMAR-C279-CONJUNCTIVE-01, MR-GRAMMAR-C279-SAME-DOER-01, MR-POSTP-NE-INSTR, MR-GRAMMAR-C278-SCENE-EVENT-01]
 introduces:
@@ -62,7 +62,7 @@ reviews_of: [MR-C278-vacat-hoto, MR-C278-jayco, MR-C279-rtu, MR-C127-pavsala]
 
 [PAUSE 2s] New forms: **गेल्या वर्षी** (*gelyā varṣī*, "last year"), the "gone" year; **घरी** (*gharī*, "home"); **बसने** (*basne*, "by bus"), with the **-ने** of a tool; and **पाऊस आला**, "rain came", which is how Marathi says a downpour began.
 
-[PAUSE 2s] The scene is **वाचत होतो**, **करत होती** and **पडत होता**; the habit is **यायचो**. **आईने … सांगितली** and **आम्ही भाकरी खाल्ली** follow the thing: a story, a bhakri. Every other verb is an event.
+[PAUSE 2s] The scene is **वाचत होतो**, **करत होती** and **पडत होता**; the habit is **यायचो**. **आईने … सांगितली** and **आम्ही भाकरी खाल्ली** follow the thing: a story, a bhakri. The plain **होते**, **होती** and **होता** describe; every other past verb is an event.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SKILL-C279-READ-STORY-01, MR-GRAMMAR-C278-ONGOING-PAST-01, MR-GRAMMAR-C278-HABITUAL-PAST-01, MR-LEX-C279-RTU-01] -->

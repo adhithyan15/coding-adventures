@@ -15,7 +15,7 @@ concept_tag: MR-FEEL284-RAG
 prerequisites: [MR-C252-ragavne, MR-C283-haravli]
 sounds: []
 roots: [sanskrit-raga]
-etymology_hook: "rāg ← Sanskrit rāga 'colour, redness; passion' (CDIAL 10673, 10674); the sense 'anger' is Marathi's own"
+etymology_hook: "rāg ← Sanskrit rāga 'passion', a tatsama (CDIAL 10674); in Marathi the passion became anger"
 duration:
   max_seconds: 225
 requires:
@@ -52,7 +52,7 @@ reviews_of: [MR-C252-ragavne, MR-C283-haravli]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**राग** (*rāg*) comes from Sanskrit *rāga*, which CDIAL lists as "colour, redness" (CDIAL 10673) and "passion, love" (CDIAL 10674). Marathi uses it for anger; how the sense moved there is not settled. The same Sanskrit word gives the *rāga* of Indian music.
+**राग** (*rāg*) is a tatsama: Sanskrit *rāga*, "passion, love" (CDIAL 10674); CDIAL lists no Marathi form. Marathi, like Bengali, uses it for anger; how the sense moved there is not settled. Sanskrit *rāga* also names a melody, the *rāga* of Indian music (Monier-Williams).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C284-RAG-01, MR-LEX-C252-ACT252-02] -->

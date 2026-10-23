@@ -4,7 +4,7 @@
   "chapter": 285,
   "title": "Bigger, Biggest, and How Long",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2164041697dc0712",
+  "sourceHash": "fnv1a64:534bce679dc91208",
   "lessons": [
     {
       "id": "MR-C285-peksha",
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe3fc03c733f99b0",
+      "sourceHash": "fnv1a64:899b99227e3eefc6",
       "notice": null,
       "blocks": [
         {
@@ -207,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "-पासून … -पर्यंत frames a finished stretch. -भर, as in दिवसभर, fills it: दिवसभर पाऊस पडत होता (divasbhar pāūs paḍat hotā), \"it rained all day\". A bare number of hours needs no ending: मी दोन तास वाचत होतो (mī don tās vācat hoto)."
+              "text": "-पासून … -पर्यंत frames a stretch with two ends. -भर, as in दिवसभर, fills it: दिवसभर पाऊस पडत होता (divasbhar pāūs paḍat hotā), \"it rained all day\". A bare number of hours needs no ending: मी दोन तास वाचत होतो (mī don tās vācat hoto)."
             }
           ]
         },
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:198778b04a65886f",
+      "sourceHash": "fnv1a64:f8aedd7a748505eb",
       "notice": null,
       "blocks": [
         {
@@ -346,11 +346,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "Which season do you like most? I like the monsoon most.",
+              "instruction": "I like the monsoon season most, with ऋतू.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: Which season do you like most? I like the monsoon most.]"
+              "source": "[YOU SAY: I like the monsoon season most, with **ऋतू**.]"
             },
             {
               "kind": "prompt",

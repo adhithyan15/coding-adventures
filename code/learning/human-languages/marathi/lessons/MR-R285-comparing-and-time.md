@@ -41,7 +41,7 @@ reviews_of: [MR-C284-rag-ala, MR-C284-vhaycha-ahe, MR-C283-tikit-dya, MR-W281-le
 
 [PAUSE 2s each]
 - [YOU SAY: In my opinion the train is better than the bus.]
-- [YOU SAY: Which season do you like most? I like the monsoon most.]
+- [YOU SAY: I like the monsoon season most, with **ऋतू**.]
 - [YOU SAY: I have lived in Pune for three years.]
 - [YOU SAY: Yesterday it rained all day. I read from morning until evening.]
 - [YOU SAY: how long you have been learning Marathi, with **-पासून**]

@@ -53,7 +53,7 @@ Marathi keeps the present: the living still goes on. **-पासून** goes o
 >
 > *mī sakāḷpāsūn sandhyākāḷparyant kām kelaṁ.* — "I worked from morning until evening."
 
-**-पासून … -पर्यंत** frames a finished stretch. **-भर**, as in **दिवसभर**, fills it: **दिवसभर पाऊस पडत होता** (*divasbhar pāūs paḍat hotā*), "it rained all day". A bare number of hours needs no ending: **मी दोन तास वाचत होतो** (*mī don tās vācat hoto*).
+**-पासून … -पर्यंत** frames a stretch with two ends. **-भर**, as in **दिवसभर**, fills it: **दिवसभर पाऊस पडत होता** (*divasbhar pāūs paḍat hotā*), "it rained all day". A bare number of hours needs no ending: **मी दोन तास वाचत होतो** (*mī don tās vācat hoto*).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-C285-PASUN-SPAN-01, MR-GRAMMAR-C285-FROM-UNTIL-01] -->

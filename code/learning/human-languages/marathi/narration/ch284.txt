@@ -15,7 +15,7 @@ You'll want to know: राग.
 रागावणे, "to get angry", is built on this noun. Anger is something that comes to you: "to me anger came".
 
 The word, taken apart.
-राग (rāg) comes from Sanskrit rāga, which CDIAL lists as "colour, redness" (CDIAL 10673) and "passion, love" (CDIAL 10674). Marathi uses it for anger; how the sense moved there is not settled. The same Sanskrit word gives the rāga of Indian music.
+राग (rāg) is a tatsama: Sanskrit rāga, "passion, love" (CDIAL 10674); CDIAL lists no Marathi form. Marathi, like Bengali, uses it for anger; how the sense moved there is not settled. Sanskrit rāga also names a melody, the rāga of Indian music (Monier-Williams).
 
 Guided Practice.
 [pause 1 second]

@@ -46,7 +46,7 @@ reviews_of: [MR-C34-kaaran, MR-C278-vacat-hoto, MR-C05-rahne, MR-C99-paus]
 
 **कारण** gives the reason **after** the event; **म्हणून** gives the result **after** the reason. Same two facts, opposite order: **मी घरी राहिलो, कारण पाऊस पडत होता** (*mī gharī rāhilo, kāraṇ pāūs paḍat hotā*).
 
-**म्हणून** is built like **करून**: the **-ऊन** form of **म्हणणे**, "to say".
+**म्हणून** is built like **करून**: the **-ऊन** form of **म्हणणे**, "to say". Its past has two shapes: **तो म्हणाला** (*to mhaṇālā*), "he said", following the speaker, and **त्याने म्हटलं** (*tyāne mhaṭlaṁ*), with **-ने**.
 
 ## You'll want to know: त्यामुळे, 'because of that'
 <!-- hl-knowledge: introduces=[MR-GRAMMAR-C280-TYAMULE-01]; assesses=[MR-LEX-C99-NATURE99-01, MR-GRAMMAR-C276-WAS-01, MR-GRAMMAR-NEGATE-NAHI] -->

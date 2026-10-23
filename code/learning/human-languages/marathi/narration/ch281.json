@@ -4,7 +4,7 @@
   "chapter": 281,
   "title": "Must, Must Not, and Because",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ea7c024ad73bc8e9",
+  "sourceHash": "fnv1a64:86d8b3ba3d640d41",
   "lessons": [
     {
       "id": "MR-C281-jayla-pahije",
@@ -431,7 +431,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:479b19fb91dc6de6",
+      "sourceHash": "fnv1a64:ffc58932908793f6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -531,7 +531,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter hides inside ज्ञ? (ञ, ña.) Which word did it come from? (ज्ञान, jñān, said dnyān.)"
+              "text": "Which letter hides inside ज्ञ? (ञ, ña.) Which word holds it? (ज्ञान, jñān, said dnyān.)"
             },
             {
               "kind": "activity",

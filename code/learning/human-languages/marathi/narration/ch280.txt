@@ -9,7 +9,7 @@ Warm-up.
 [pause 2 seconds]
 Say "I feel fine", with the verb that puts you in the dative. (malā baraṁ vāṭtaṁ.) Then "Meera says that Marathi is easy". (mīrā mhaṇte kī marāṭhī sopaṁ āhe.)
 [pause 1 second]
-Put the two together and you have an opinion.
+With की you said malā vāṭtaṁ kī cahā āhe, "I think there is tea". Put a judgment after की instead of a fact, and you have an opinion.
 
 You'll want to know: मला वाटतं की …
 मला वाटतं की उद्या पाऊस पडेल. malā vāṭtaṁ kī udyā pāūs paḍel. — "I think it will rain tomorrow."
@@ -45,7 +45,7 @@ Say "because", the word that answers का. (kāraṇ.) Then "it was raining". 
 You'll want to know: म्हणून, 'so'.
 पाऊस पडत होता, म्हणून मी घरी राहिलो. pāūs paḍat hotā, mhaṇūn mī gharī rāhilo. — "It was raining, so I stayed at home."
 कारण gives the reason after the event; म्हणून (mhaṇūn) gives the result after the reason. Same two facts, opposite order: मी घरी राहिलो, कारण पाऊस पडत होता (mī gharī rāhilo, kāraṇ pāūs paḍat hotā).
-म्हणून (mhaṇūn) is built like करून: the -ऊन form of म्हणणे, "to say".
+म्हणून (mhaṇūn) is built like करून: the -ऊन form of म्हणणे, "to say". Its past has two shapes: तो म्हणाला (to mhaṇālā), "he said", following the speaker, and त्याने म्हटलं (tyāne mhaṭlaṁ), with -ने.
 
 You'll want to know: त्यामुळे, 'because of that'.
 काल खूप पाऊस होता, त्यामुळे आम्ही बाहेर गेलो नाही. kāl khūp pāūs hotā, tyāmuḷe āmhī bāher gelo nāhī. — "Yesterday there was a lot of rain, so we didn't go out."

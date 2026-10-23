@@ -4,7 +4,7 @@
   "chapter": 286,
   "title": "If, and Otherwise",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:8c7ba1023aabd5eb",
+  "sourceHash": "fnv1a64:3c13a9ac93eb5ff7",
   "lessons": [
     {
       "id": "MR-C286-jar-tar",
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:065b0915713155c0",
+      "sourceHash": "fnv1a64:714281696940890a",
       "notice": null,
       "blocks": [
         {
@@ -254,19 +254,19 @@
               "scored": true,
               "spoken": true,
               "id": "MR-C286-padlyas-r1",
-              "prompt": "Tell someone to leave early, otherwise they will miss the train.",
+              "prompt": "Say with -lyās that should it rain, we will stay at home; then tell someone to leave early, otherwise they will miss the train.",
               "assesses": [
                 "MR-GRAMMAR-C286-LYAS-01",
                 "MR-GRAMMAR-C286-NAHITAR-01"
               ],
-              "responseSeconds": 24,
+              "responseSeconds": 30,
               "acceptedResponses": [
-                "lavkar nighā, nāhītar gāḍī cukel",
-                "लवकर निघा, नाहीतर गाडी चुकेल."
+                "pāūs paḍalyās āmhī gharī rāhū; lavkar nighā, nāhītar gāḍī cukel",
+                "पाऊस पडल्यास आम्ही घरी राहू. लवकर निघा, नाहीतर गाडी चुकेल."
               ],
               "feedback": {
-                "correct": "nāhītar: if not, then.",
-                "incorrect": "nāhī + tar, then the future cukel."
+                "correct": "-lyās holds the whole if; nāhītar: if not, then.",
+                "incorrect": "paḍ-lyās for should it rain; nāhī + tar, then the future cukel."
               }
             }
           ]

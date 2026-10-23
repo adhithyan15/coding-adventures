@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 280,
-  "sourceHash": "fnv1a64:8d8f1e08c76b300d",
+  "sourceHash": "fnv1a64:2a223466698b4a40",
   "lessonIds": [
     "MR-C280-mala-vatte",
     "MR-C280-mhanun",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "marathi/narration/ch280.txt",
   "json": "marathi/narration/ch280.json",
-  "textHash": "fnv1a64:25bd92c44966f61b",
-  "jsonHash": "fnv1a64:05e0b44a3088cf6c",
+  "textHash": "fnv1a64:5942b8a4b7768b78",
+  "jsonHash": "fnv1a64:37ca0f70405946c9",
   "findings": []
 }

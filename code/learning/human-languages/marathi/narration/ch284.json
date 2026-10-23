@@ -4,7 +4,7 @@
   "chapter": 284,
   "title": "Feelings and Hopes",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:6fcce57030e339ef",
+  "sourceHash": "fnv1a64:7dbc7da189d6bded",
   "lessons": [
     {
       "id": "MR-C284-rag",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0da77241e89b2507",
+      "sourceHash": "fnv1a64:29bfc94d25f7a7e0",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "राग (rāg) comes from Sanskrit rāga, which CDIAL lists as \"colour, redness\" (CDIAL 10673) and \"passion, love\" (CDIAL 10674). Marathi uses it for anger; how the sense moved there is not settled. The same Sanskrit word gives the rāga of Indian music."
+              "text": "राग (rāg) is a tatsama: Sanskrit rāga, \"passion, love\" (CDIAL 10674); CDIAL lists no Marathi form. Marathi, like Bengali, uses it for anger; how the sense moved there is not settled. Sanskrit rāga also names a melody, the rāga of Indian music (Monier-Williams)."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 286,
-  "sourceHash": "fnv1a64:8c7ba1023aabd5eb",
+  "sourceHash": "fnv1a64:3c13a9ac93eb5ff7",
   "lessonIds": [
     "MR-C286-jar-tar",
     "MR-C286-padlyas",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "marathi/narration/ch286.txt",
   "json": "marathi/narration/ch286.json",
-  "textHash": "fnv1a64:d79019b31458ab63",
-  "jsonHash": "fnv1a64:ea031bbedcbf2fce",
+  "textHash": "fnv1a64:12c5e60c7813badb",
+  "jsonHash": "fnv1a64:00245db6f66a995b",
   "findings": []
 }

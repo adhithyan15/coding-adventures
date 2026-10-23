@@ -63,4 +63,4 @@ Keep **ञ** in front of you for this first pass.
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-NYA-01, MR-SCRIPT-JA-01, MR-SCRIPT-VIRAMA-01, MR-LEX-C281-JNAN-01] -->
 <!-- hl-activity: {"id": "MR-W281-letter-nya-r1", "kind": "text", "assesses": ["MR-SCRIPT-NYA-01", "MR-SCRIPT-JA-01"], "prompt": "With no model, write ña, then the word for knowledge.", "answer": "ञ; ज्ञान", "accepted": [], "feedback": {"correct": "ñ on its own, and inside jñ.", "incorrect": "Reopen ञ, repair the first stroke that differs, then write it again from memory."}, "response_seconds": 25} -->
 
-[PAUSE 2s] Which letter hides inside **ज्ञ**? (**ञ**, *ña*.) Which word did it come from? (**ज्ञान**, *jñān*, said *dnyān*.)
+[PAUSE 2s] Which letter hides inside **ज्ञ**? (**ञ**, *ña*.) Which word holds it? (**ज्ञान**, *jñān*, said *dnyān*.)

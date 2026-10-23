@@ -63,9 +63,9 @@ A verb with an object, such as eating, reading or doing, changes the past. The d
 - **मी पुस्तक** **वाचलं** (*vāclaṁ*) — I read a book (neuter)
 - **तिने चित्रपट** **पाहिला** (*pāhilā*) — she watched a film
 
-The verb has stopped listening to the eater. After **तू** it adds **-स**: **तू पुस्तक वाचलंस** (*tū pustak vāclaṁs*); after **तुम्ही**, **-त**: **तुम्ही काय केलंत?** (*tumhī kāy kelant?*), "What did you do?"
+After **तू** the verb adds **-स**: **तू पुस्तक वाचलंस** (*tū pustak vāclaṁs*); after **तुम्ही**, **-त**: **तुम्ही काय केलंत?** (*tumhī kāy kelant?*), "What did you do?"
 
-Pasts to learn: **केलं**, **खाल्लं**, **घेतलं** (*ghetlaṁ*), **दिलं** (*dilaṁ*), **सांगितलं** (*sāṅgitlaṁ*). With no object, **-ं**: **त्याने सांगितलं** (*tyāne sāṅgitlaṁ*), "he said so". Formal print writes this **-ं** as **-े** (**केले**). A few verbs with an object still follow the doer: **मी मराठी शिकलो** (*mī marāṭhī śiklo*).
+Pasts to learn: **केलं**, **खाल्लं**, **घेतलं** (*ghetlaṁ*), **दिलं** (*dilaṁ*), **सांगितलं** (*sāṅgitlaṁ*), and from **पिणे**, **प्यायलं** (*pyāylaṁ*). With no object, **-ं**: **त्याने सांगितलं** (*tyāne sāṅgitlaṁ*), "he said so". Formal print writes this **-ं** as **-े** (**केले**). A few verbs with an object still follow the doer: **मी मराठी शिकलो** (*mī marāṭhī śiklo*).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-C276-ERGATIVE-NE-01, MR-GRAMMAR-C276-OBJECT-AGREEMENT-01, MR-LEX-C120-WORLD120-03, MR-LEX-KARNE] -->

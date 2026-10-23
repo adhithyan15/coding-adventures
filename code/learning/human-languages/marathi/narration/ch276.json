@@ -4,7 +4,7 @@
   "chapter": 276,
   "title": "What Happened, Who Did It, What There Was",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:80ecc37f2d96ea7b",
+  "sourceHash": "fnv1a64:778fc2545df2fa79",
   "lessons": [
     {
       "id": "MR-C276-gelo",
@@ -216,7 +216,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd9a35df9e9b4c60",
+      "sourceHash": "fnv1a64:02b237ba155e8cae",
       "notice": null,
       "blocks": [
         {
@@ -292,11 +292,11 @@
             },
             {
               "kind": "speech",
-              "text": "The verb has stopped listening to the eater. After तू it adds -स: तू पुस्तक वाचलंस (tū pustak vāclaṁs); after तुम्ही, -त: तुम्ही काय केलंत? (tumhī kāy kelant?), \"What did you do?\""
+              "text": "After तू the verb adds -स: तू पुस्तक वाचलंस (tū pustak vāclaṁs); after तुम्ही, -त: तुम्ही काय केलंत? (tumhī kāy kelant?), \"What did you do?\""
             },
             {
               "kind": "speech",
-              "text": "Pasts to learn: केलं, खाल्लं, घेतलं (ghetlaṁ), दिलं (dilaṁ), सांगितलं (sāṅgitlaṁ). With no object, -ं: त्याने सांगितलं (tyāne sāṅgitlaṁ), \"he said so\". Formal print writes this -ं as -े (केले). A few verbs with an object still follow the doer: मी मराठी शिकलो (mī marāṭhī śiklo)."
+              "text": "Pasts to learn: केलं, खाल्लं, घेतलं (ghetlaṁ), दिलं (dilaṁ), सांगितलं (sāṅgitlaṁ), and from पिणे, प्यायलं (pyāylaṁ). With no object, -ं: त्याने सांगितलं (tyāne sāṅgitlaṁ), \"he said so\". Formal print writes this -ं as -े (केले). A few verbs with an object still follow the doer: मी मराठी शिकलो (mī marāṭhī śiklo)."
             }
           ]
         },

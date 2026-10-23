@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 279,
-  "sourceHash": "fnv1a64:be57f110cab83bb0",
+  "sourceHash": "fnv1a64:25ab455ef23189e6",
   "lessonIds": [
     "MR-C279-tyanantar",
     "MR-C279-karun",
@@ -14,7 +14,7 @@
   "drivablePrefix": 3,
   "text": "marathi/narration/ch279.txt",
   "json": "marathi/narration/ch279.json",
-  "textHash": "fnv1a64:1137a55eefb40e4a",
-  "jsonHash": "fnv1a64:3b3aeb3fbda8f02c",
+  "textHash": "fnv1a64:af346260c2305628",
+  "jsonHash": "fnv1a64:57b03ff4ffe6612d",
   "findings": []
 }

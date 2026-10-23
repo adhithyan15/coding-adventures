@@ -37,7 +37,7 @@ reviews_of: [MR-C23-vatne, MR-C35-kii, MR-C277-jain, MR-C99-paus]
 
 [PAUSE 2s] Say "I feel fine", with the verb that puts you in the dative. (*malā baraṁ vāṭtaṁ*.) Then "Meera says that Marathi is easy". (*mīrā mhaṇte kī marāṭhī sopaṁ āhe*.)
 
-[PAUSE 1s] Put the two together and you have an opinion.
+[PAUSE 1s] With **की** you said *malā vāṭtaṁ kī cahā āhe*, "I think there is tea". Put a judgment after **की** instead of a fact, and you have an opinion.
 
 ## You'll want to know: मला वाटतं की …
 <!-- hl-knowledge: introduces=[MR-GRAMMAR-C280-VATTE-KI-01]; assesses=[MR-GRAMMAR-DATIVE-FEELING, MR-GRAMMAR-C277-FUTURE-PERSON-01, MR-LEX-C99-NATURE99-01] -->

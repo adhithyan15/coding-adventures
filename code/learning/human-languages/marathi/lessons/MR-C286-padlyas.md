@@ -57,7 +57,7 @@ The **-ल्-** of **-ल्यावर**, with **-ल्यास**: **पड
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-C286-LYAS-01, MR-GRAMMAR-C286-NAHITAR-01, MR-GRAMMAR-C286-JAR-TAR-01] -->
-<!-- hl-activity: {"id": "MR-C286-padlyas-r1", "kind": "text", "assesses": ["MR-GRAMMAR-C286-LYAS-01", "MR-GRAMMAR-C286-NAHITAR-01"], "prompt": "Tell someone to leave early, otherwise they will miss the train.", "answer": "lavkar nighā, nāhītar gāḍī cukel", "accepted": ["लवकर निघा, नाहीतर गाडी चुकेल."], "feedback": {"correct": "nāhītar: if not, then.", "incorrect": "nāhī + tar, then the future cukel."}, "response_seconds": 24} -->
+<!-- hl-activity: {"id": "MR-C286-padlyas-r1", "kind": "text", "assesses": ["MR-GRAMMAR-C286-LYAS-01", "MR-GRAMMAR-C286-NAHITAR-01"], "prompt": "Say with -lyās that should it rain, we will stay at home; then tell someone to leave early, otherwise they will miss the train.", "answer": "pāūs paḍalyās āmhī gharī rāhū; lavkar nighā, nāhītar gāḍī cukel", "accepted": ["पाऊस पडल्यास आम्ही घरी राहू. लवकर निघा, नाहीतर गाडी चुकेल."], "feedback": {"correct": "-lyās holds the whole if; nāhītar: if not, then.", "incorrect": "paḍ-lyās for should it rain; nāhī + tar, then the future cukel."}, "response_seconds": 30} -->
 
 [PAUSE 1s]
 - [YOU SAY: "Should it rain, we will stay at home" — *pāūs paḍalyās āmhī gharī rāhū*]
