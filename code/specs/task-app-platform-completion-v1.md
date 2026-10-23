@@ -362,15 +362,17 @@ it does not expand artifact coverage or prepare another release.
 ### Next fidelity slice — board column width floor (#18030)
 
 Both themes must retain a 260-pixel minimum board-column width when the
-available row is narrower than its columns. Add an explicit `min-width: 260`
-alongside the existing width and non-shrink intent. Verify the package-emitted
-Qt column has both `Layout.preferredWidth: 260` and `Layout.minimumWidth: 260`.
-The single-container `For` delegate must also carry that minimum: attached
-layout constraints on its inner Rectangle do not constrain the outer Item.
-Forward only finite nonnegative scalar width floors with no state override;
-multi-child and other geometry remain outside this slice.
-Keep unsupported `flex-shrink` reporting and the style-drop budget unchanged:
-this is an authored geometry floor, not general native flexbox support.
+available row is narrower than its columns. Qt's single-container `For`
+delegate must derive that floor from the existing scalar width paired with
+exact `flex-shrink: 0`; the inner column keeps its preferred width. Reject
+state overrides, multi-child bodies, invalid widths, and other shrink factors.
+Keep the unsupported flex-shrink diagnostic and style-drop budget unchanged:
+this narrow delegate repair does not claim general native flexbox support.
+
+Release validation found that an authored cross-backend `min-width` creates
+an additional unsupported SwiftUI declaration. Do not raise the ratchet or
+broaden this slice into SwiftUI: preserve the existing authored styles and
+derive the Qt wrapper floor from their existing non-shrink intent instead.
 
 ### Tier C — reach, stated honestly
 
