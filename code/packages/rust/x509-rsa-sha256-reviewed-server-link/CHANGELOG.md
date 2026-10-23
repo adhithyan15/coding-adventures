@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.0 - 2026-10-23
+
+### Added
+
+- Bound complete target-server certificate policy to the exact authenticated
+  target child retained by a reviewed two-link RSA SHA-256 path.
+- Added a distinct non-copyable success type that retains the server policy,
+  both authenticated links, complete intermediate policy, advanced path-length
+  state, and reviewed-root selection.
+- Added a public-API contract test without introducing a forging constructor
+  for upstream evidence, while preserving payload-free mismatch failures.
+
 ## 0.3.0 - 2026-10-22
 
 ### Added
