@@ -3873,7 +3873,13 @@ jobs:
         with:
           flutter-version: '3.44.0'
           channel: stable
+          # SDK cache yes, pub cache no -- same reason as the Flutter step in
+          # `mosaic-linux-runtime` above (#18003): the action keys its pub
+          # cache on a workspace-wide `hashFiles('**/pubspec.lock')`, which on
+          # macOS overran its 120 s limit both at setup and in the post step
+          # (#17972). #18003 fixed only that copy; this is the `build` job's.
           cache: true
+          pub-cache: false
 
       - name: Enable Flutter native assets
         # macOS too when the SwiftUI lane runs: Flutter on iOS (UI89 §7.7 step 3)
