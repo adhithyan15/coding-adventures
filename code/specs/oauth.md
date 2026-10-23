@@ -965,6 +965,21 @@ cannot substitute another root, target certificate, or SAN collection. This
 does not add excluded or non-DNS constraint forms, other anchor constraints,
 path search or generalized construction, revocation, TLS, HTTP, OAuth transport,
 or network authority.
+A bounded intermediate-constraint follow-up consumes that anchor-policy result
+and inspects only the exact intermediate certificate already retained by the
+authenticated two-link path. An absent NameConstraints extension preserves the
+complete prior proof without new DNS evidence. A present extension must be
+critical, must contain one exact DER NameConstraints SEQUENCE, and must decode
+within caller-owned limits to the repository's supported permitted-DNS-only
+subset; malformed, non-critical, excluded, or non-DNS forms fail closed. The
+same exact target certificate's separately bounded Subject Alternative Name is
+then required, and every dNSName must satisfy at least one permitted subtree.
+Success retains the complete anchor-policy proof plus optional payload-free
+intermediate constraint evidence, so callers cannot substitute an intermediate,
+target, root, or SAN collection. This remains a fixed two-link policy step: it
+does not implement excluded or non-DNS constraint semantics, apply other anchor
+constraints, search or generalize paths, check revocation, perform TLS or HTTP,
+authorize OAuth transport, or grant network authority.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
