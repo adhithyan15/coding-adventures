@@ -624,4 +624,31 @@ mod tests {
             X509RsaSha256ReviewedServerLinkErrorKind::InvalidTargetSubjectAlternativeName(_)
         ));
     }
+
+    #[test]
+    fn reviewed_intermediate_server_path_api_retains_both_complete_inputs() {
+        type ServerPolicy = ValidatedX509ServerCertificatePolicy<'static, 'static>;
+        type ReviewedIntermediatePath =
+            x509_rsa_sha256_reviewed_anchor_link::BoundX509RsaSha256ReviewedIntermediatePath<
+                'static, 'static, 'static, 'static, 'static, 'static, 'static, 'static,
+            >;
+        type ReviewedIntermediateServerPath =
+            BoundX509RsaSha256ReviewedIntermediateServerPath<
+                'static, 'static, 'static, 'static, 'static, 'static, 'static, 'static, 'static,
+            >;
+
+        let _binder: fn(
+            ServerPolicy,
+            ReviewedIntermediatePath,
+        ) -> Result<
+            ReviewedIntermediateServerPath,
+            X509RsaSha256ReviewedServerLinkError,
+        > = bind_x509_rsa_sha256_reviewed_intermediate_server_path;
+
+        fn inspect(evidence: &ReviewedIntermediateServerPath) {
+            let _: &ServerPolicy = evidence.server_policy();
+            let _: &ReviewedIntermediatePath = evidence.reviewed_intermediate_path();
+        }
+        let _inspector: fn(&ReviewedIntermediateServerPath) = inspect;
+    }
 }
