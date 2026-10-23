@@ -1,0 +1,106 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TE-R437-review-430-437
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 21860
+chapter: 437
+type: review
+headword: (dialogue)
+gloss: a review of chapters 430-437
+concept_tag: REVIEW
+prerequisites: [TE-C430-balaparacu, TE-C430-balahinaparacu, TE-C430-samatulyam, TE-C430-niyantrincu, TE-C430-parimiti, TE-C431-pramanam, TE-C431-sthayi, TE-C431-dhorani, TE-C431-samarthavantamaina, TE-C431-pariksincu, TE-C432-niti, TE-C432-adarsam, TE-C432-pratistha, TE-C432-visvasaniyata, TE-C432-avagahana, TE-C433-krsi, TE-C433-savalu, TE-C433-vyuham, TE-C433-adhipatyam, TE-C433-kolpovu, TE-C434-vyavastha, TE-C434-vidhanam, TE-C434-sthiti, TE-C434-sandarbham, TE-C434-erpadu, TE-C435-medhavi, TE-C435-panditudu, TE-C435-tatvasastram, TE-C435-samskarta, TE-C435-prerepincu, TE-C436-palgonu, TE-C436-todpadu, TE-C436-kudagattu, TE-C436-akarsincu, TE-C436-vibhajincu, TE-C437-sanklistamaina, TE-C437-saralamaina, TE-C437-aspastamaina, TE-C437-tivramaina, TE-C437-nirdharincu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-LEX-C430-SAMATULYAM430-01, TE-LEX-C430-SAMATULYAM430-02, TE-LEX-C430-SAMATULYAM430-03, TE-LEX-C430-SAMATULYAM430-04, TE-LEX-C430-SAMATULYAM430-05, TE-LEX-C431-PRAMANAM431-01, TE-LEX-C431-PRAMANAM431-02, TE-LEX-C431-PRAMANAM431-03, TE-LEX-C431-PRAMANAM431-04, TE-LEX-C431-PRAMANAM431-05, TE-LEX-C432-ADARSAM432-01, TE-LEX-C432-ADARSAM432-02, TE-LEX-C432-ADARSAM432-03, TE-LEX-C432-ADARSAM432-04, TE-LEX-C432-ADARSAM432-05, TE-LEX-C433-VYUHAM433-01, TE-LEX-C433-VYUHAM433-02, TE-LEX-C433-VYUHAM433-03, TE-LEX-C433-VYUHAM433-04, TE-LEX-C433-VYUHAM433-05, TE-LEX-C434-VYAVASTHA434-01, TE-LEX-C434-VYAVASTHA434-02, TE-LEX-C434-VYAVASTHA434-03, TE-LEX-C434-VYAVASTHA434-04, TE-LEX-C434-VYAVASTHA434-05, TE-LEX-C435-MEDHAVI435-01, TE-LEX-C435-MEDHAVI435-02, TE-LEX-C435-MEDHAVI435-03, TE-LEX-C435-MEDHAVI435-04, TE-LEX-C435-MEDHAVI435-05, TE-LEX-C436-PALGONU436-01, TE-LEX-C436-PALGONU436-02, TE-LEX-C436-PALGONU436-03, TE-LEX-C436-PALGONU436-04, TE-LEX-C436-PALGONU436-05, TE-LEX-C437-SANKLISTAM437-01, TE-LEX-C437-SANKLISTAM437-02, TE-LEX-C437-SANKLISTAM437-03, TE-LEX-C437-SANKLISTAM437-04, TE-LEX-C437-SANKLISTAM437-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TE-LEX-C430-SAMATULYAM430-01, TE-LEX-C430-SAMATULYAM430-02, TE-LEX-C430-SAMATULYAM430-03, TE-LEX-C430-SAMATULYAM430-04, TE-LEX-C430-SAMATULYAM430-05, TE-LEX-C431-PRAMANAM431-01, TE-LEX-C431-PRAMANAM431-02, TE-LEX-C431-PRAMANAM431-03, TE-LEX-C431-PRAMANAM431-04, TE-LEX-C431-PRAMANAM431-05, TE-LEX-C432-ADARSAM432-01, TE-LEX-C432-ADARSAM432-02, TE-LEX-C432-ADARSAM432-03, TE-LEX-C432-ADARSAM432-04, TE-LEX-C432-ADARSAM432-05, TE-LEX-C433-VYUHAM433-01, TE-LEX-C433-VYUHAM433-02, TE-LEX-C433-VYUHAM433-03, TE-LEX-C433-VYUHAM433-04, TE-LEX-C433-VYUHAM433-05, TE-LEX-C434-VYAVASTHA434-01, TE-LEX-C434-VYAVASTHA434-02, TE-LEX-C434-VYAVASTHA434-03, TE-LEX-C434-VYAVASTHA434-04, TE-LEX-C434-VYAVASTHA434-05, TE-LEX-C435-MEDHAVI435-01, TE-LEX-C435-MEDHAVI435-02, TE-LEX-C435-MEDHAVI435-03, TE-LEX-C435-MEDHAVI435-04, TE-LEX-C435-MEDHAVI435-05, TE-LEX-C436-PALGONU436-01, TE-LEX-C436-PALGONU436-02, TE-LEX-C436-PALGONU436-03, TE-LEX-C436-PALGONU436-04, TE-LEX-C436-PALGONU436-05, TE-LEX-C437-SANKLISTAM437-01, TE-LEX-C437-SANKLISTAM437-02, TE-LEX-C437-SANKLISTAM437-03, TE-LEX-C437-SANKLISTAM437-04, TE-LEX-C437-SANKLISTAM437-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C430-balaparacu, TE-C430-balahinaparacu, TE-C430-samatulyam, TE-C430-niyantrincu, TE-C430-parimiti, TE-C431-pramanam, TE-C431-sthayi, TE-C431-dhorani, TE-C431-samarthavantamaina, TE-C431-pariksincu, TE-C432-niti, TE-C432-adarsam, TE-C432-pratistha, TE-C432-visvasaniyata, TE-C432-avagahana, TE-C433-krsi, TE-C433-savalu, TE-C433-vyuham, TE-C433-adhipatyam, TE-C433-kolpovu, TE-C434-vyavastha, TE-C434-vidhanam, TE-C434-sthiti, TE-C434-sandarbham, TE-C434-erpadu, TE-C435-medhavi, TE-C435-panditudu, TE-C435-tatvasastram, TE-C435-samskarta, TE-C435-prerepincu, TE-C436-palgonu, TE-C436-todpadu, TE-C436-kudagattu, TE-C436-akarsincu, TE-C436-vibhajincu, TE-C437-sanklistamaina, TE-C437-saralamaina, TE-C437-aspastamaina, TE-C437-tivramaina, TE-C437-nirdharincu]
+---
+
+# Rules, risks and conditions
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C430-SAMATULYAM430-01, TE-LEX-C430-SAMATULYAM430-02] -->
+
+[PAUSE 3s] Say the Telugu for to strengthen and to weaken.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C430-SAMATULYAM430-01, TE-LEX-C430-SAMATULYAM430-02, TE-LEX-C430-SAMATULYAM430-03, TE-LEX-C430-SAMATULYAM430-04, TE-LEX-C430-SAMATULYAM430-05, TE-LEX-C431-PRAMANAM431-01, TE-LEX-C431-PRAMANAM431-02, TE-LEX-C431-PRAMANAM431-03, TE-LEX-C431-PRAMANAM431-04, TE-LEX-C431-PRAMANAM431-05, TE-LEX-C432-ADARSAM432-01, TE-LEX-C432-ADARSAM432-02, TE-LEX-C432-ADARSAM432-03, TE-LEX-C432-ADARSAM432-04, TE-LEX-C432-ADARSAM432-05, TE-LEX-C433-VYUHAM433-01, TE-LEX-C433-VYUHAM433-02, TE-LEX-C433-VYUHAM433-03, TE-LEX-C433-VYUHAM433-04, TE-LEX-C433-VYUHAM433-05, TE-LEX-C434-VYAVASTHA434-01, TE-LEX-C434-VYAVASTHA434-02, TE-LEX-C434-VYAVASTHA434-03, TE-LEX-C434-VYAVASTHA434-04, TE-LEX-C434-VYAVASTHA434-05, TE-LEX-C435-MEDHAVI435-01, TE-LEX-C435-MEDHAVI435-02, TE-LEX-C435-MEDHAVI435-03, TE-LEX-C435-MEDHAVI435-04, TE-LEX-C435-MEDHAVI435-05, TE-LEX-C436-PALGONU436-01, TE-LEX-C436-PALGONU436-02, TE-LEX-C436-PALGONU436-03, TE-LEX-C436-PALGONU436-04, TE-LEX-C436-PALGONU436-05, TE-LEX-C437-SANKLISTAM437-01, TE-LEX-C437-SANKLISTAM437-02, TE-LEX-C437-SANKLISTAM437-03, TE-LEX-C437-SANKLISTAM437-04, TE-LEX-C437-SANKLISTAM437-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to strengthen, to weaken, balance, to control, a limit]
+- [YOU SAY: a standard, a level, a trend, effective, to test out]
+- [YOU SAY: ethics, an ideal, prestige, credibility, awareness]
+- [YOU SAY: endeavour, a challenge, a strategy, dominance, to be deprived of]
+- [YOU SAY: a system, a policy, a state of affairs, an occasion, to be formed]
+- [YOU SAY: an intellectual, a scholar, philosophy, a reformer, to inspire]
+- [YOU SAY: to take part, to contribute, to rally, to attract, to divide]
+- [YOU SAY: complicated, uncomplicated, vague, serious, to confirm]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C430-SAMATULYAM430-01, TE-LEX-C430-SAMATULYAM430-02, TE-LEX-C430-SAMATULYAM430-03, TE-LEX-C430-SAMATULYAM430-04, TE-LEX-C430-SAMATULYAM430-05, TE-LEX-C431-PRAMANAM431-01, TE-LEX-C431-PRAMANAM431-02, TE-LEX-C431-PRAMANAM431-03, TE-LEX-C431-PRAMANAM431-04, TE-LEX-C431-PRAMANAM431-05, TE-LEX-C432-ADARSAM432-01, TE-LEX-C432-ADARSAM432-02, TE-LEX-C432-ADARSAM432-03, TE-LEX-C432-ADARSAM432-04, TE-LEX-C432-ADARSAM432-05, TE-LEX-C433-VYUHAM433-01, TE-LEX-C433-VYUHAM433-02, TE-LEX-C433-VYUHAM433-03, TE-LEX-C433-VYUHAM433-04, TE-LEX-C433-VYUHAM433-05, TE-LEX-C434-VYAVASTHA434-01, TE-LEX-C434-VYAVASTHA434-02, TE-LEX-C434-VYAVASTHA434-03, TE-LEX-C434-VYAVASTHA434-04, TE-LEX-C434-VYAVASTHA434-05, TE-LEX-C435-MEDHAVI435-01, TE-LEX-C435-MEDHAVI435-02, TE-LEX-C435-MEDHAVI435-03, TE-LEX-C435-MEDHAVI435-04, TE-LEX-C435-MEDHAVI435-05, TE-LEX-C436-PALGONU436-01, TE-LEX-C436-PALGONU436-02, TE-LEX-C436-PALGONU436-03, TE-LEX-C436-PALGONU436-04, TE-LEX-C436-PALGONU436-05, TE-LEX-C437-SANKLISTAM437-01, TE-LEX-C437-SANKLISTAM437-02, TE-LEX-C437-SANKLISTAM437-03, TE-LEX-C437-SANKLISTAM437-04, TE-LEX-C437-SANKLISTAM437-05] -->
+
+[PAUSE 3s] To strengthen? (**బలపరచు**, *balaparacu*.) To weaken? (**బలహీనపరచు**, *balahīnaparacu*.) Balance? (**సమతుల్యం**, *samatulyaṁ*.) To control? (**నియంత్రించు**, *niyantriñcu*.) A limit? (**పరిమితి**, *parimiti*.) A standard? (**ప్రమాణం**, *pramāṇaṁ*.) A level? (**స్థాయి**, *sthāyi*.) A trend? (**ధోరణి**, *dhōraṇi*.) Effective? (**సమర్థవంతమైన**, *samarthavantamaina*.) To test out? (**పరీక్షించు**, *parīkṣiñcu*.) Ethics? (**నీతి**, *nīti*.) An ideal? (**ఆదర్శం**, *ādarśaṁ*.) Prestige? (**ప్రతిష్ఠ**, *pratiṣṭha*.) Credibility? (**విశ్వసనీయత**, *viśvasanīyata*.) Awareness? (**అవగాహన**, *avagāhana*.) Endeavour? (**కృషి**, *kṛṣi*.) A challenge? (**సవాలు**, *savālu*.) A strategy? (**వ్యూహం**, *vyūhaṁ*.) Dominance? (**ఆధిపత్యం**, *ādhipatyaṁ*.) To be deprived of? (**కోల్పోవు**, *kōlpōvu*.) A system? (**వ్యవస్థ**, *vyavastha*.) A policy? (**విధానం**, *vidhānaṁ*.) A state of affairs? (**స్థితి**, *sthiti*.) An occasion? (**సందర్భం**, *sandarbhaṁ*.) To be formed? (**ఏర్పడు**, *ērpaḍu*.) An intellectual? (**మేధావి**, *mēdhāvi*.) A scholar? (**పండితుడు**, *paṇḍituḍu*.) Philosophy? (**తత్వశాస్త్రం**, *tatvaśāstraṁ*.) A reformer? (**సంస్కర్త**, *saṁskarta*.) To inspire? (**ప్రేరేపించు**, *prērēpiñcu*.) To take part? (**పాల్గొను**, *pālgonu*.) To contribute? (**తోడ్పడు**, *tōḍpaḍu*.) To rally? (**కూడగట్టు**, *kūḍagaṭṭu*.) To attract? (**ఆకర్షించు**, *ākarṣiñcu*.) To divide? (**విభజించు**, *vibhajiñcu*.) Complicated? (**సంక్లిష్టమైన**, *saṅkliṣṭamaina*.) Uncomplicated? (**సరళమైన**, *saraḷamaina*.) Vague? (**అస్పష్టమైన**, *aspaṣṭamaina*.) Serious? (**తీవ్రమైన**, *tīvramaina*.) To confirm? (**నిర్ధారించు**, *nirdhāriñcu*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TE-R437-review-final-437
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 21870
+chapter: 437
+type: review
+headword: (dialogue)
+gloss: one more pass over chapter 437
+concept_tag: REVIEW
+prerequisites: [TE-C437-sanklistamaina, TE-C437-saralamaina, TE-C437-aspastamaina, TE-C437-tivramaina, TE-C437-nirdharincu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-LEX-C437-SANKLISTAM437-01, TE-LEX-C437-SANKLISTAM437-02, TE-LEX-C437-SANKLISTAM437-03, TE-LEX-C437-SANKLISTAM437-04, TE-LEX-C437-SANKLISTAM437-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TE-LEX-C437-SANKLISTAM437-01, TE-LEX-C437-SANKLISTAM437-02, TE-LEX-C437-SANKLISTAM437-03, TE-LEX-C437-SANKLISTAM437-04, TE-LEX-C437-SANKLISTAM437-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C437-sanklistamaina, TE-C437-saralamaina, TE-C437-aspastamaina, TE-C437-tivramaina, TE-C437-nirdharincu]
+---
+
+# Hard or Plain — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C437-SANKLISTAM437-01, TE-LEX-C437-SANKLISTAM437-02] -->
+
+[PAUSE 3s] Say the Telugu for complicated and uncomplicated.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C437-SANKLISTAM437-01, TE-LEX-C437-SANKLISTAM437-02, TE-LEX-C437-SANKLISTAM437-03, TE-LEX-C437-SANKLISTAM437-04, TE-LEX-C437-SANKLISTAM437-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: complicated, uncomplicated, vague, serious, to confirm]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C437-SANKLISTAM437-01, TE-LEX-C437-SANKLISTAM437-02, TE-LEX-C437-SANKLISTAM437-03, TE-LEX-C437-SANKLISTAM437-04, TE-LEX-C437-SANKLISTAM437-05] -->
+
+[PAUSE 3s] Complicated? (**సంక్లిష్టమైన**, *saṅkliṣṭamaina*.) Uncomplicated? (**సరళమైన**, *saraḷamaina*.) Vague? (**అస్పష్టమైన**, *aspaṣṭamaina*.) Serious? (**తీవ్రమైన**, *tīvramaina*.) To confirm? (**నిర్ధారించు**, *nirdhāriñcu*.)
+`;export{t as n,r as t};

@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TE-R413-review-406-413
+spine_node: SPINE-GIVE-REASONS
+sequence: 20630
+chapter: 413
+type: review
+headword: (dialogue)
+gloss: a review of chapters 406-413
+concept_tag: REVIEW
+prerequisites: [TE-C406-aviniti, TE-C406-lancam, TE-C406-paradarsakata, TE-C406-aropana, TE-C406-aropincu, TE-C407-nirasana, TE-C407-udyamam, TE-C407-khandincu, TE-C407-dimandu, TE-C407-samskarana, TE-C408-samajam, TE-C408-samajika, TE-C408-sangham, TE-C408-sabhyudu, TE-C408-vivaksa, TE-C409-himsa, TE-C409-samarasyam, TE-C409-aikyata, TE-C409-sanghibhavam, TE-C409-acarincu, TE-C410-seva, TE-C410-viralam, TE-C410-svacchanda, TE-C410-karyakarta, TE-C410-data, TE-C411-janaganana, TE-C411-sarve, TE-C411-ganankalu, TE-C411-prajabhiprayam, TE-C411-satam, TE-C412-parisodhana, TE-C412-parisodhincu, TE-C412-parisodhakudu, TE-C412-samacaram, TE-C412-anvesincu, TE-C413-sastram, TE-C413-sastravetta, TE-C413-prayogam, TE-C413-prayogasala, TE-C413-aviskarincu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-LEX-C406-AVINITI406-01, TE-LEX-C406-AVINITI406-02, TE-LEX-C406-AVINITI406-03, TE-LEX-C406-AVINITI406-04, TE-LEX-C406-AVINITI406-05, TE-LEX-C407-NIRASANA407-01, TE-LEX-C407-NIRASANA407-02, TE-LEX-C407-NIRASANA407-03, TE-LEX-C407-NIRASANA407-04, TE-LEX-C407-NIRASANA407-05, TE-LEX-C408-SAMAJAM408-01, TE-LEX-C408-SAMAJAM408-02, TE-LEX-C408-SAMAJAM408-03, TE-LEX-C408-SAMAJAM408-04, TE-LEX-C408-SAMAJAM408-05, TE-LEX-C409-AIKYATA409-01, TE-LEX-C409-AIKYATA409-02, TE-LEX-C409-AIKYATA409-03, TE-LEX-C409-AIKYATA409-04, TE-LEX-C409-AIKYATA409-05, TE-LEX-C410-SEVA410-01, TE-LEX-C410-SEVA410-02, TE-LEX-C410-SEVA410-03, TE-LEX-C410-SEVA410-04, TE-LEX-C410-SEVA410-05, TE-LEX-C411-SATAM411-01, TE-LEX-C411-SATAM411-02, TE-LEX-C411-SATAM411-03, TE-LEX-C411-SATAM411-04, TE-LEX-C411-SATAM411-05, TE-LEX-C412-PARISODHANA412-01, TE-LEX-C412-PARISODHANA412-02, TE-LEX-C412-PARISODHANA412-03, TE-LEX-C412-PARISODHANA412-04, TE-LEX-C412-PARISODHANA412-05, TE-LEX-C413-SASTRAM413-01, TE-LEX-C413-SASTRAM413-02, TE-LEX-C413-SASTRAM413-03, TE-LEX-C413-SASTRAM413-04, TE-LEX-C413-SASTRAM413-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TE-LEX-C406-AVINITI406-01, TE-LEX-C406-AVINITI406-02, TE-LEX-C406-AVINITI406-03, TE-LEX-C406-AVINITI406-04, TE-LEX-C406-AVINITI406-05, TE-LEX-C407-NIRASANA407-01, TE-LEX-C407-NIRASANA407-02, TE-LEX-C407-NIRASANA407-03, TE-LEX-C407-NIRASANA407-04, TE-LEX-C407-NIRASANA407-05, TE-LEX-C408-SAMAJAM408-01, TE-LEX-C408-SAMAJAM408-02, TE-LEX-C408-SAMAJAM408-03, TE-LEX-C408-SAMAJAM408-04, TE-LEX-C408-SAMAJAM408-05, TE-LEX-C409-AIKYATA409-01, TE-LEX-C409-AIKYATA409-02, TE-LEX-C409-AIKYATA409-03, TE-LEX-C409-AIKYATA409-04, TE-LEX-C409-AIKYATA409-05, TE-LEX-C410-SEVA410-01, TE-LEX-C410-SEVA410-02, TE-LEX-C410-SEVA410-03, TE-LEX-C410-SEVA410-04, TE-LEX-C410-SEVA410-05, TE-LEX-C411-SATAM411-01, TE-LEX-C411-SATAM411-02, TE-LEX-C411-SATAM411-03, TE-LEX-C411-SATAM411-04, TE-LEX-C411-SATAM411-05, TE-LEX-C412-PARISODHANA412-01, TE-LEX-C412-PARISODHANA412-02, TE-LEX-C412-PARISODHANA412-03, TE-LEX-C412-PARISODHANA412-04, TE-LEX-C412-PARISODHANA412-05, TE-LEX-C413-SASTRAM413-01, TE-LEX-C413-SASTRAM413-02, TE-LEX-C413-SASTRAM413-03, TE-LEX-C413-SASTRAM413-04, TE-LEX-C413-SASTRAM413-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C406-aviniti, TE-C406-lancam, TE-C406-paradarsakata, TE-C406-aropana, TE-C406-aropincu, TE-C407-nirasana, TE-C407-udyamam, TE-C407-khandincu, TE-C407-dimandu, TE-C407-samskarana, TE-C408-samajam, TE-C408-samajika, TE-C408-sangham, TE-C408-sabhyudu, TE-C408-vivaksa, TE-C409-himsa, TE-C409-samarasyam, TE-C409-aikyata, TE-C409-sanghibhavam, TE-C409-acarincu, TE-C410-seva, TE-C410-viralam, TE-C410-svacchanda, TE-C410-karyakarta, TE-C410-data, TE-C411-janaganana, TE-C411-sarve, TE-C411-ganankalu, TE-C411-prajabhiprayam, TE-C411-satam, TE-C412-parisodhana, TE-C412-parisodhincu, TE-C412-parisodhakudu, TE-C412-samacaram, TE-C412-anvesincu, TE-C413-sastram, TE-C413-sastravetta, TE-C413-prayogam, TE-C413-prayogasala, TE-C413-aviskarincu]
+---
+
+# Words from chapters 406–413 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C406-AVINITI406-01, TE-LEX-C406-AVINITI406-02] -->
+
+[PAUSE 3s] Say the Telugu for corruption and a bribe.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C406-AVINITI406-01, TE-LEX-C406-AVINITI406-02, TE-LEX-C406-AVINITI406-03, TE-LEX-C406-AVINITI406-04, TE-LEX-C406-AVINITI406-05, TE-LEX-C407-NIRASANA407-01, TE-LEX-C407-NIRASANA407-02, TE-LEX-C407-NIRASANA407-03, TE-LEX-C407-NIRASANA407-04, TE-LEX-C407-NIRASANA407-05, TE-LEX-C408-SAMAJAM408-01, TE-LEX-C408-SAMAJAM408-02, TE-LEX-C408-SAMAJAM408-03, TE-LEX-C408-SAMAJAM408-04, TE-LEX-C408-SAMAJAM408-05, TE-LEX-C409-AIKYATA409-01, TE-LEX-C409-AIKYATA409-02, TE-LEX-C409-AIKYATA409-03, TE-LEX-C409-AIKYATA409-04, TE-LEX-C409-AIKYATA409-05, TE-LEX-C410-SEVA410-01, TE-LEX-C410-SEVA410-02, TE-LEX-C410-SEVA410-03, TE-LEX-C410-SEVA410-04, TE-LEX-C410-SEVA410-05, TE-LEX-C411-SATAM411-01, TE-LEX-C411-SATAM411-02, TE-LEX-C411-SATAM411-03, TE-LEX-C411-SATAM411-04, TE-LEX-C411-SATAM411-05, TE-LEX-C412-PARISODHANA412-01, TE-LEX-C412-PARISODHANA412-02, TE-LEX-C412-PARISODHANA412-03, TE-LEX-C412-PARISODHANA412-04, TE-LEX-C412-PARISODHANA412-05, TE-LEX-C413-SASTRAM413-01, TE-LEX-C413-SASTRAM413-02, TE-LEX-C413-SASTRAM413-03, TE-LEX-C413-SASTRAM413-04, TE-LEX-C413-SASTRAM413-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: corruption, a bribe, transparency, an allegation, to allege]
+- [YOU SAY: a protest, a movement, to condemn, a claim, a reform]
+- [YOU SAY: society, social, an association, a member, discrimination]
+- [YOU SAY: violence, harmony, unity, solidarity, to put into practice]
+- [YOU SAY: service, a donation, voluntary, an activist, a donor]
+- [YOU SAY: a census, a survey, statistics, public opinion, a percentage]
+- [YOU SAY: research, to research, a researcher, information, to explore]
+- [YOU SAY: a branch of learning, a scientist, an experiment, a laboratory, to invent]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C406-AVINITI406-01, TE-LEX-C406-AVINITI406-02, TE-LEX-C406-AVINITI406-03, TE-LEX-C406-AVINITI406-04, TE-LEX-C406-AVINITI406-05, TE-LEX-C407-NIRASANA407-01, TE-LEX-C407-NIRASANA407-02, TE-LEX-C407-NIRASANA407-03, TE-LEX-C407-NIRASANA407-04, TE-LEX-C407-NIRASANA407-05, TE-LEX-C408-SAMAJAM408-01, TE-LEX-C408-SAMAJAM408-02, TE-LEX-C408-SAMAJAM408-03, TE-LEX-C408-SAMAJAM408-04, TE-LEX-C408-SAMAJAM408-05, TE-LEX-C409-AIKYATA409-01, TE-LEX-C409-AIKYATA409-02, TE-LEX-C409-AIKYATA409-03, TE-LEX-C409-AIKYATA409-04, TE-LEX-C409-AIKYATA409-05, TE-LEX-C410-SEVA410-01, TE-LEX-C410-SEVA410-02, TE-LEX-C410-SEVA410-03, TE-LEX-C410-SEVA410-04, TE-LEX-C410-SEVA410-05, TE-LEX-C411-SATAM411-01, TE-LEX-C411-SATAM411-02, TE-LEX-C411-SATAM411-03, TE-LEX-C411-SATAM411-04, TE-LEX-C411-SATAM411-05, TE-LEX-C412-PARISODHANA412-01, TE-LEX-C412-PARISODHANA412-02, TE-LEX-C412-PARISODHANA412-03, TE-LEX-C412-PARISODHANA412-04, TE-LEX-C412-PARISODHANA412-05, TE-LEX-C413-SASTRAM413-01, TE-LEX-C413-SASTRAM413-02, TE-LEX-C413-SASTRAM413-03, TE-LEX-C413-SASTRAM413-04, TE-LEX-C413-SASTRAM413-05] -->
+
+[PAUSE 3s] Corruption? (**అవినీతి**, *avinīti*.) A bribe? (**లంచం**, *lañcaṁ*.) Transparency? (**పారదర్శకత**, *pāradarśakata*.) An allegation? (**ఆరోపణ**, *ārōpaṇa*.) To allege? (**ఆరోపించు**, *ārōpiñcu*.) A protest? (**నిరసన**, *nirasana*.) A movement? (**ఉద్యమం**, *udyamaṁ*.) To condemn? (**ఖండించు**, *khaṇḍiñcu*.) A claim? (**డిమాండు**, *ḍimāṇḍu*.) A reform? (**సంస్కరణ**, *saṁskaraṇa*.) Society? (**సమాజం**, *samājaṁ*.) Social? (**సామాజిక**, *sāmājika*.) An association? (**సంఘం**, *saṅghaṁ*.) A member? (**సభ్యుడు**, *sabhyuḍu*.) Discrimination? (**వివక్ష**, *vivakṣa*.) Violence? (**హింస**, *hiṁsa*.) Harmony? (**సామరస్యం**, *sāmarasyaṁ*.) Unity? (**ఐక్యత**, *aikyata*.) Solidarity? (**సంఘీభావం**, *saṅghībhāvaṁ*.) To put into practice? (**ఆచరించు**, *ācariñcu*.) Service? (**సేవ**, *sēva*.) A donation? (**విరాళం**, *virāḷaṁ*.) Voluntary? (**స్వచ్ఛంద**, *svacchanda*.) An activist? (**కార్యకర్త**, *kāryakarta*.) A donor? (**దాత**, *dāta*.) A census? (**జనగణన**, *janagaṇana*.) A survey? (**సర్వే**, *sarvē*.) Statistics? (**గణాంకాలు**, *gaṇāṅkālu*.) Public opinion? (**ప్రజాభిప్రాయం**, *prajābhiprāyaṁ*.) A percentage? (**శాతం**, *śātaṁ*.) Research? (**పరిశోధన**, *pariśōdhana*.) To research? (**పరిశోధించు**, *pariśōdhiñcu*.) A researcher? (**పరిశోధకుడు**, *pariśōdhakuḍu*.) Information? (**సమాచారం**, *samācāraṁ*.) To explore? (**అన్వేషించు**, *anvēṣiñcu*.) A branch of learning? (**శాస్త్రం**, *śāstraṁ*.) A scientist? (**శాస్త్రవేత్త**, *śāstravētta*.) An experiment? (**ప్రయోగం**, *prayōgaṁ*.) A laboratory? (**ప్రయోగశాల**, *prayōgaśāla*.) To invent? (**ఆవిష్కరించు**, *āviṣkariñcu*.)
+`;export{t};

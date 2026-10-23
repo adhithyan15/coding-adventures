@@ -1,0 +1,106 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TE-R549-review-542-549
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 27860
+chapter: 549
+type: review
+headword: (dialogue)
+gloss: a review of chapters 542-549
+concept_tag: REVIEW
+prerequisites: [TE-C542-citralekhanam, TE-C542-citrincu, TE-C542-silpam, TE-C542-silpi, TE-C542-kalakhandam, TE-C543-kaceri, TE-C543-cappatlu, TE-C543-abhinandincu, TE-C543-asvadincu, TE-C543-kolatam, TE-C544-kridakarudu, TE-C544-pratyarthi, TE-C544-talapadu, TE-C544-neggu, TE-C544-parugu, TE-C545-abhyasincu, TE-C545-kasarattu, TE-C545-guripettu, TE-C545-toyu, TE-C545-pandem, TE-C546-curu, TE-C546-pita, TE-C546-bavi, TE-C546-cembu, TE-C546-boddinka, TE-C547-subhraparacu, TE-C547-utuku, TE-C547-araveyu, TE-C547-dulupu, TE-C547-tagilincu, TE-C548-kacu, TE-C548-madcu, TE-C548-tarugu, TE-C548-jallincu, TE-C548-talimpu, TE-C549-amarcu, TE-C549-paracu, TE-C549-veligincu, TE-C549-ciluku, TE-C549-alasipovu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-LEX-C542-SILPAM542-01, TE-LEX-C542-SILPAM542-02, TE-LEX-C542-SILPAM542-03, TE-LEX-C542-SILPAM542-04, TE-LEX-C542-SILPAM542-05, TE-LEX-C543-KACERI543-01, TE-LEX-C543-KACERI543-02, TE-LEX-C543-KACERI543-03, TE-LEX-C543-KACERI543-04, TE-LEX-C543-KACERI543-05, TE-LEX-C544-KRIDA544-01, TE-LEX-C544-KRIDA544-02, TE-LEX-C544-KRIDA544-03, TE-LEX-C544-KRIDA544-04, TE-LEX-C544-KRIDA544-05, TE-LEX-C545-SADHANA545-01, TE-LEX-C545-SADHANA545-02, TE-LEX-C545-SADHANA545-03, TE-LEX-C545-SADHANA545-04, TE-LEX-C545-SADHANA545-05, TE-LEX-C546-INTLO546-01, TE-LEX-C546-INTLO546-02, TE-LEX-C546-INTLO546-03, TE-LEX-C546-INTLO546-04, TE-LEX-C546-INTLO546-05, TE-LEX-C547-INTIPANI547-01, TE-LEX-C547-INTIPANI547-02, TE-LEX-C547-INTIPANI547-03, TE-LEX-C547-INTIPANI547-04, TE-LEX-C547-INTIPANI547-05, TE-LEX-C548-VANTA548-01, TE-LEX-C548-VANTA548-02, TE-LEX-C548-VANTA548-03, TE-LEX-C548-VANTA548-04, TE-LEX-C548-VANTA548-05, TE-LEX-C549-GRHAM549-01, TE-LEX-C549-GRHAM549-02, TE-LEX-C549-GRHAM549-03, TE-LEX-C549-GRHAM549-04, TE-LEX-C549-GRHAM549-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TE-LEX-C542-SILPAM542-01, TE-LEX-C542-SILPAM542-02, TE-LEX-C542-SILPAM542-03, TE-LEX-C542-SILPAM542-04, TE-LEX-C542-SILPAM542-05, TE-LEX-C543-KACERI543-01, TE-LEX-C543-KACERI543-02, TE-LEX-C543-KACERI543-03, TE-LEX-C543-KACERI543-04, TE-LEX-C543-KACERI543-05, TE-LEX-C544-KRIDA544-01, TE-LEX-C544-KRIDA544-02, TE-LEX-C544-KRIDA544-03, TE-LEX-C544-KRIDA544-04, TE-LEX-C544-KRIDA544-05, TE-LEX-C545-SADHANA545-01, TE-LEX-C545-SADHANA545-02, TE-LEX-C545-SADHANA545-03, TE-LEX-C545-SADHANA545-04, TE-LEX-C545-SADHANA545-05, TE-LEX-C546-INTLO546-01, TE-LEX-C546-INTLO546-02, TE-LEX-C546-INTLO546-03, TE-LEX-C546-INTLO546-04, TE-LEX-C546-INTLO546-05, TE-LEX-C547-INTIPANI547-01, TE-LEX-C547-INTIPANI547-02, TE-LEX-C547-INTIPANI547-03, TE-LEX-C547-INTIPANI547-04, TE-LEX-C547-INTIPANI547-05, TE-LEX-C548-VANTA548-01, TE-LEX-C548-VANTA548-02, TE-LEX-C548-VANTA548-03, TE-LEX-C548-VANTA548-04, TE-LEX-C548-VANTA548-05, TE-LEX-C549-GRHAM549-01, TE-LEX-C549-GRHAM549-02, TE-LEX-C549-GRHAM549-03, TE-LEX-C549-GRHAM549-04, TE-LEX-C549-GRHAM549-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C542-citralekhanam, TE-C542-citrincu, TE-C542-silpam, TE-C542-silpi, TE-C542-kalakhandam, TE-C543-kaceri, TE-C543-cappatlu, TE-C543-abhinandincu, TE-C543-asvadincu, TE-C543-kolatam, TE-C544-kridakarudu, TE-C544-pratyarthi, TE-C544-talapadu, TE-C544-neggu, TE-C544-parugu, TE-C545-abhyasincu, TE-C545-kasarattu, TE-C545-guripettu, TE-C545-toyu, TE-C545-pandem, TE-C546-curu, TE-C546-pita, TE-C546-bavi, TE-C546-cembu, TE-C546-boddinka, TE-C547-subhraparacu, TE-C547-utuku, TE-C547-araveyu, TE-C547-dulupu, TE-C547-tagilincu, TE-C548-kacu, TE-C548-madcu, TE-C548-tarugu, TE-C548-jallincu, TE-C548-talimpu, TE-C549-amarcu, TE-C549-paracu, TE-C549-veligincu, TE-C549-ciluku, TE-C549-alasipovu]
+---
+
+# Making a home, again
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C542-SILPAM542-01, TE-LEX-C542-SILPAM542-02] -->
+
+[PAUSE 3s] Say the Telugu for the art of painting and to portray.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C542-SILPAM542-01, TE-LEX-C542-SILPAM542-02, TE-LEX-C542-SILPAM542-03, TE-LEX-C542-SILPAM542-04, TE-LEX-C542-SILPAM542-05, TE-LEX-C543-KACERI543-01, TE-LEX-C543-KACERI543-02, TE-LEX-C543-KACERI543-03, TE-LEX-C543-KACERI543-04, TE-LEX-C543-KACERI543-05, TE-LEX-C544-KRIDA544-01, TE-LEX-C544-KRIDA544-02, TE-LEX-C544-KRIDA544-03, TE-LEX-C544-KRIDA544-04, TE-LEX-C544-KRIDA544-05, TE-LEX-C545-SADHANA545-01, TE-LEX-C545-SADHANA545-02, TE-LEX-C545-SADHANA545-03, TE-LEX-C545-SADHANA545-04, TE-LEX-C545-SADHANA545-05, TE-LEX-C546-INTLO546-01, TE-LEX-C546-INTLO546-02, TE-LEX-C546-INTLO546-03, TE-LEX-C546-INTLO546-04, TE-LEX-C546-INTLO546-05, TE-LEX-C547-INTIPANI547-01, TE-LEX-C547-INTIPANI547-02, TE-LEX-C547-INTIPANI547-03, TE-LEX-C547-INTIPANI547-04, TE-LEX-C547-INTIPANI547-05, TE-LEX-C548-VANTA548-01, TE-LEX-C548-VANTA548-02, TE-LEX-C548-VANTA548-03, TE-LEX-C548-VANTA548-04, TE-LEX-C548-VANTA548-05, TE-LEX-C549-GRHAM549-01, TE-LEX-C549-GRHAM549-02, TE-LEX-C549-GRHAM549-03, TE-LEX-C549-GRHAM549-04, TE-LEX-C549-GRHAM549-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: the art of painting, to portray, a sculpture, a sculptor, a masterpiece]
+- [YOU SAY: a concert, applause, to congratulate, to savour, a stick dance]
+- [YOU SAY: a sportsman, an opponent, to clash, to prevail, running]
+- [YOU SAY: to study closely, a workout, to aim, to shove, a bet]
+- [YOU SAY: the eaves, a low wooden stool, a dug well, a small water pot, a cockroach]
+- [YOU SAY: to cleanse, to wash clothes, to hang to dry, to shake out, to hang up]
+- [YOU SAY: to boil milk, to scorch, to chop, to sift, tempering]
+- [YOU SAY: to set up, to spread out, to kindle, to churn, to get tired]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C542-SILPAM542-01, TE-LEX-C542-SILPAM542-02, TE-LEX-C542-SILPAM542-03, TE-LEX-C542-SILPAM542-04, TE-LEX-C542-SILPAM542-05, TE-LEX-C543-KACERI543-01, TE-LEX-C543-KACERI543-02, TE-LEX-C543-KACERI543-03, TE-LEX-C543-KACERI543-04, TE-LEX-C543-KACERI543-05, TE-LEX-C544-KRIDA544-01, TE-LEX-C544-KRIDA544-02, TE-LEX-C544-KRIDA544-03, TE-LEX-C544-KRIDA544-04, TE-LEX-C544-KRIDA544-05, TE-LEX-C545-SADHANA545-01, TE-LEX-C545-SADHANA545-02, TE-LEX-C545-SADHANA545-03, TE-LEX-C545-SADHANA545-04, TE-LEX-C545-SADHANA545-05, TE-LEX-C546-INTLO546-01, TE-LEX-C546-INTLO546-02, TE-LEX-C546-INTLO546-03, TE-LEX-C546-INTLO546-04, TE-LEX-C546-INTLO546-05, TE-LEX-C547-INTIPANI547-01, TE-LEX-C547-INTIPANI547-02, TE-LEX-C547-INTIPANI547-03, TE-LEX-C547-INTIPANI547-04, TE-LEX-C547-INTIPANI547-05, TE-LEX-C548-VANTA548-01, TE-LEX-C548-VANTA548-02, TE-LEX-C548-VANTA548-03, TE-LEX-C548-VANTA548-04, TE-LEX-C548-VANTA548-05, TE-LEX-C549-GRHAM549-01, TE-LEX-C549-GRHAM549-02, TE-LEX-C549-GRHAM549-03, TE-LEX-C549-GRHAM549-04, TE-LEX-C549-GRHAM549-05] -->
+
+[PAUSE 3s] The art of painting? (**చిత్రలేఖనం**, *citralēkhanaṁ*.) To portray? (**చిత్రించు**, *citriñcu*.) A sculpture? (**శిల్పం**, *śilpaṁ*.) A sculptor? (**శిల్పి**, *śilpi*.) A masterpiece? (**కళాఖండం**, *kaḷākhaṇḍaṁ*.) A concert? (**కచేరీ**, *kacērī*.) Applause? (**చప్పట్లు**, *cappaṭlu*.) To congratulate? (**అభినందించు**, *abhinandiñcu*.) To savour? (**ఆస్వాదించు**, *āsvādiñcu*.) A stick dance? (**కోలాటం**, *kōlāṭaṁ*.) A sportsman? (**క్రీడాకారుడు**, *krīḍākāruḍu*.) An opponent? (**ప్రత్యర్థి**, *pratyarthi*.) To clash? (**తలపడు**, *talapaḍu*.) To prevail? (**నెగ్గు**, *neggu*.) Running? (**పరుగు**, *parugu*.) To study closely? (**అభ్యసించు**, *abhyasiñcu*.) A workout? (**కసరత్తు**, *kasarattu*.) To aim? (**గురిపెట్టు**, *guripeṭṭu*.) To shove? (**తోయు**, *tōyu*.) A bet? (**పందెం**, *pandeṁ*.) The eaves? (**చూరు**, *cūru*.) A low wooden stool? (**పీట**, *pīṭa*.) A dug well? (**బావి**, *bāvi*.) A small water pot? (**చెంబు**, *cembu*.) A cockroach? (**బొద్దింక**, *boddiṅka*.) To cleanse? (**శుభ్రపరచు**, *śubhraparacu*.) To wash clothes? (**ఉతుకు**, *utuku*.) To hang to dry? (**ఆరవేయు**, *āravēyu*.) To shake out? (**దులుపు**, *dulupu*.) To hang up? (**తగిలించు**, *tagiliñcu*.) To boil milk? (**కాచు**, *kācu*.) To scorch? (**మాడ్చు**, *māḍcu*.) To chop? (**తరుగు**, *tarugu*.) To sift? (**జల్లించు**, *jalliñcu*.) Tempering? (**తాలింపు**, *tālimpu*.) To set up? (**అమర్చు**, *amarcu*.) To spread out? (**పరచు**, *paracu*.) To kindle? (**వెలిగించు**, *veligiñcu*.) To churn? (**చిలుకు**, *ciluku*.) To get tired? (**అలసిపోవు**, *alasipōvu*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TE-R549-review-final-549
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 27870
+chapter: 549
+type: review
+headword: (dialogue)
+gloss: one more pass over chapter 549
+concept_tag: REVIEW
+prerequisites: [TE-C549-amarcu, TE-C549-paracu, TE-C549-veligincu, TE-C549-ciluku, TE-C549-alasipovu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-LEX-C549-GRHAM549-01, TE-LEX-C549-GRHAM549-02, TE-LEX-C549-GRHAM549-03, TE-LEX-C549-GRHAM549-04, TE-LEX-C549-GRHAM549-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TE-LEX-C549-GRHAM549-01, TE-LEX-C549-GRHAM549-02, TE-LEX-C549-GRHAM549-03, TE-LEX-C549-GRHAM549-04, TE-LEX-C549-GRHAM549-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C549-amarcu, TE-C549-paracu, TE-C549-veligincu, TE-C549-ciluku, TE-C549-alasipovu]
+---
+
+# Making a Home — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C549-GRHAM549-01, TE-LEX-C549-GRHAM549-02] -->
+
+[PAUSE 3s] Say the Telugu for to set up and to spread out.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C549-GRHAM549-01, TE-LEX-C549-GRHAM549-02, TE-LEX-C549-GRHAM549-03, TE-LEX-C549-GRHAM549-04, TE-LEX-C549-GRHAM549-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to set up, to spread out, to kindle, to churn, to get tired]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C549-GRHAM549-01, TE-LEX-C549-GRHAM549-02, TE-LEX-C549-GRHAM549-03, TE-LEX-C549-GRHAM549-04, TE-LEX-C549-GRHAM549-05] -->
+
+[PAUSE 3s] To set up? (**అమర్చు**, *amarcu*.) To spread out? (**పరచు**, *paracu*.) To kindle? (**వెలిగించు**, *veligiñcu*.) To churn? (**చిలుకు**, *ciluku*.) To get tired? (**అలసిపోవు**, *alasipōvu*.)
+`;export{t as n,r as t};

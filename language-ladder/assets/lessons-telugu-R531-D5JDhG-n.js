@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TE-R533-review-526-533
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 27040
+chapter: 533
+type: review
+headword: (dialogue)
+gloss: a review of chapters 526-533
+concept_tag: REVIEW
+prerequisites: [TE-C526-niyamincu, TE-C526-nirvahincu, TE-C526-paryaveksincu, TE-C526-sahakarincu, TE-C526-siksana, TE-C527-sadhincu, TE-C527-ranincu, TE-C527-viphalamavu, TE-C527-rajinama, TE-C527-maneyu, TE-C528-tobuttuvu, TE-C528-annadammulu, TE-C528-maridi, TE-C528-adapaducu, TE-C528-vadina, TE-C529-menamama, TE-C529-menatta, TE-C529-peddananna, TE-C529-peddamma, TE-C529-menakodalu, TE-C530-viyyankudu, TE-C530-muttata, TE-C530-menalludu, TE-C530-cuttam, TE-C530-avva, TE-C531-bidda, TE-C531-sisuvu, TE-C531-santanam, TE-C531-varasudu, TE-C531-jolapata, TE-C532-pempakam, TE-C532-garabam, TE-C532-posincu, TE-C532-bujjagincu, TE-C532-maram, TE-C533-kapuram, TE-C533-samsaram, TE-C533-grhini, TE-C533-atithyam, TE-C533-muccatincu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-LEX-C526-NIRVAHANA526-01, TE-LEX-C526-NIRVAHANA526-02, TE-LEX-C526-NIRVAHANA526-03, TE-LEX-C526-NIRVAHANA526-04, TE-LEX-C526-NIRVAHANA526-05, TE-LEX-C527-VIJAYAM527-01, TE-LEX-C527-VIJAYAM527-02, TE-LEX-C527-VIJAYAM527-03, TE-LEX-C527-VIJAYAM527-04, TE-LEX-C527-VIJAYAM527-05, TE-LEX-C528-TOBUTTUVU528-01, TE-LEX-C528-TOBUTTUVU528-02, TE-LEX-C528-TOBUTTUVU528-03, TE-LEX-C528-TOBUTTUVU528-04, TE-LEX-C528-TOBUTTUVU528-05, TE-LEX-C529-MENAMAMA529-01, TE-LEX-C529-MENAMAMA529-02, TE-LEX-C529-MENAMAMA529-03, TE-LEX-C529-MENAMAMA529-04, TE-LEX-C529-MENAMAMA529-05, TE-LEX-C530-BANDHUVU530-01, TE-LEX-C530-BANDHUVU530-02, TE-LEX-C530-BANDHUVU530-03, TE-LEX-C530-BANDHUVU530-04, TE-LEX-C530-BANDHUVU530-05, TE-LEX-C531-SANTANAM531-01, TE-LEX-C531-SANTANAM531-02, TE-LEX-C531-SANTANAM531-03, TE-LEX-C531-SANTANAM531-04, TE-LEX-C531-SANTANAM531-05, TE-LEX-C532-PENPAKAM532-01, TE-LEX-C532-PENPAKAM532-02, TE-LEX-C532-PENPAKAM532-03, TE-LEX-C532-PENPAKAM532-04, TE-LEX-C532-PENPAKAM532-05, TE-LEX-C533-SAMSARAM533-01, TE-LEX-C533-SAMSARAM533-02, TE-LEX-C533-SAMSARAM533-03, TE-LEX-C533-SAMSARAM533-04, TE-LEX-C533-SAMSARAM533-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TE-LEX-C526-NIRVAHANA526-01, TE-LEX-C526-NIRVAHANA526-02, TE-LEX-C526-NIRVAHANA526-03, TE-LEX-C526-NIRVAHANA526-04, TE-LEX-C526-NIRVAHANA526-05, TE-LEX-C527-VIJAYAM527-01, TE-LEX-C527-VIJAYAM527-02, TE-LEX-C527-VIJAYAM527-03, TE-LEX-C527-VIJAYAM527-04, TE-LEX-C527-VIJAYAM527-05, TE-LEX-C528-TOBUTTUVU528-01, TE-LEX-C528-TOBUTTUVU528-02, TE-LEX-C528-TOBUTTUVU528-03, TE-LEX-C528-TOBUTTUVU528-04, TE-LEX-C528-TOBUTTUVU528-05, TE-LEX-C529-MENAMAMA529-01, TE-LEX-C529-MENAMAMA529-02, TE-LEX-C529-MENAMAMA529-03, TE-LEX-C529-MENAMAMA529-04, TE-LEX-C529-MENAMAMA529-05, TE-LEX-C530-BANDHUVU530-01, TE-LEX-C530-BANDHUVU530-02, TE-LEX-C530-BANDHUVU530-03, TE-LEX-C530-BANDHUVU530-04, TE-LEX-C530-BANDHUVU530-05, TE-LEX-C531-SANTANAM531-01, TE-LEX-C531-SANTANAM531-02, TE-LEX-C531-SANTANAM531-03, TE-LEX-C531-SANTANAM531-04, TE-LEX-C531-SANTANAM531-05, TE-LEX-C532-PENPAKAM532-01, TE-LEX-C532-PENPAKAM532-02, TE-LEX-C532-PENPAKAM532-03, TE-LEX-C532-PENPAKAM532-04, TE-LEX-C532-PENPAKAM532-05, TE-LEX-C533-SAMSARAM533-01, TE-LEX-C533-SAMSARAM533-02, TE-LEX-C533-SAMSARAM533-03, TE-LEX-C533-SAMSARAM533-04, TE-LEX-C533-SAMSARAM533-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C526-niyamincu, TE-C526-nirvahincu, TE-C526-paryaveksincu, TE-C526-sahakarincu, TE-C526-siksana, TE-C527-sadhincu, TE-C527-ranincu, TE-C527-viphalamavu, TE-C527-rajinama, TE-C527-maneyu, TE-C528-tobuttuvu, TE-C528-annadammulu, TE-C528-maridi, TE-C528-adapaducu, TE-C528-vadina, TE-C529-menamama, TE-C529-menatta, TE-C529-peddananna, TE-C529-peddamma, TE-C529-menakodalu, TE-C530-viyyankudu, TE-C530-muttata, TE-C530-menalludu, TE-C530-cuttam, TE-C530-avva, TE-C531-bidda, TE-C531-sisuvu, TE-C531-santanam, TE-C531-varasudu, TE-C531-jolapata, TE-C532-pempakam, TE-C532-garabam, TE-C532-posincu, TE-C532-bujjagincu, TE-C532-maram, TE-C533-kapuram, TE-C533-samsaram, TE-C533-grhini, TE-C533-atithyam, TE-C533-muccatincu]
+---
+
+# Words from chapters 526–533 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C526-NIRVAHANA526-01, TE-LEX-C526-NIRVAHANA526-02] -->
+
+[PAUSE 3s] Say the Telugu for to appoint and to manage.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C526-NIRVAHANA526-01, TE-LEX-C526-NIRVAHANA526-02, TE-LEX-C526-NIRVAHANA526-03, TE-LEX-C526-NIRVAHANA526-04, TE-LEX-C526-NIRVAHANA526-05, TE-LEX-C527-VIJAYAM527-01, TE-LEX-C527-VIJAYAM527-02, TE-LEX-C527-VIJAYAM527-03, TE-LEX-C527-VIJAYAM527-04, TE-LEX-C527-VIJAYAM527-05, TE-LEX-C528-TOBUTTUVU528-01, TE-LEX-C528-TOBUTTUVU528-02, TE-LEX-C528-TOBUTTUVU528-03, TE-LEX-C528-TOBUTTUVU528-04, TE-LEX-C528-TOBUTTUVU528-05, TE-LEX-C529-MENAMAMA529-01, TE-LEX-C529-MENAMAMA529-02, TE-LEX-C529-MENAMAMA529-03, TE-LEX-C529-MENAMAMA529-04, TE-LEX-C529-MENAMAMA529-05, TE-LEX-C530-BANDHUVU530-01, TE-LEX-C530-BANDHUVU530-02, TE-LEX-C530-BANDHUVU530-03, TE-LEX-C530-BANDHUVU530-04, TE-LEX-C530-BANDHUVU530-05, TE-LEX-C531-SANTANAM531-01, TE-LEX-C531-SANTANAM531-02, TE-LEX-C531-SANTANAM531-03, TE-LEX-C531-SANTANAM531-04, TE-LEX-C531-SANTANAM531-05, TE-LEX-C532-PENPAKAM532-01, TE-LEX-C532-PENPAKAM532-02, TE-LEX-C532-PENPAKAM532-03, TE-LEX-C532-PENPAKAM532-04, TE-LEX-C532-PENPAKAM532-05, TE-LEX-C533-SAMSARAM533-01, TE-LEX-C533-SAMSARAM533-02, TE-LEX-C533-SAMSARAM533-03, TE-LEX-C533-SAMSARAM533-04, TE-LEX-C533-SAMSARAM533-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to appoint, to manage, to supervise, to cooperate, training]
+- [YOU SAY: to achieve, to excel, to fail, a resignation, to quit]
+- [YOU SAY: a sibling, brothers, a husband's younger brother, a husband's sister, an elder brother's wife]
+- [YOU SAY: a maternal uncle, a paternal aunt, a father's elder brother, a mother's elder sister, a niece]
+- [YOU SAY: a co-father-in-law, a great-grandfather, a nephew, a kinsman, a granny]
+- [YOU SAY: an infant, a newborn, offspring, an heir, a lullaby]
+- [YOU SAY: upbringing, pampering, to support, to coax, a tantrum]
+- [YOU SAY: married life, family life, a homemaker, hospitality, to chat]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C526-NIRVAHANA526-01, TE-LEX-C526-NIRVAHANA526-02, TE-LEX-C526-NIRVAHANA526-03, TE-LEX-C526-NIRVAHANA526-04, TE-LEX-C526-NIRVAHANA526-05, TE-LEX-C527-VIJAYAM527-01, TE-LEX-C527-VIJAYAM527-02, TE-LEX-C527-VIJAYAM527-03, TE-LEX-C527-VIJAYAM527-04, TE-LEX-C527-VIJAYAM527-05, TE-LEX-C528-TOBUTTUVU528-01, TE-LEX-C528-TOBUTTUVU528-02, TE-LEX-C528-TOBUTTUVU528-03, TE-LEX-C528-TOBUTTUVU528-04, TE-LEX-C528-TOBUTTUVU528-05, TE-LEX-C529-MENAMAMA529-01, TE-LEX-C529-MENAMAMA529-02, TE-LEX-C529-MENAMAMA529-03, TE-LEX-C529-MENAMAMA529-04, TE-LEX-C529-MENAMAMA529-05, TE-LEX-C530-BANDHUVU530-01, TE-LEX-C530-BANDHUVU530-02, TE-LEX-C530-BANDHUVU530-03, TE-LEX-C530-BANDHUVU530-04, TE-LEX-C530-BANDHUVU530-05, TE-LEX-C531-SANTANAM531-01, TE-LEX-C531-SANTANAM531-02, TE-LEX-C531-SANTANAM531-03, TE-LEX-C531-SANTANAM531-04, TE-LEX-C531-SANTANAM531-05, TE-LEX-C532-PENPAKAM532-01, TE-LEX-C532-PENPAKAM532-02, TE-LEX-C532-PENPAKAM532-03, TE-LEX-C532-PENPAKAM532-04, TE-LEX-C532-PENPAKAM532-05, TE-LEX-C533-SAMSARAM533-01, TE-LEX-C533-SAMSARAM533-02, TE-LEX-C533-SAMSARAM533-03, TE-LEX-C533-SAMSARAM533-04, TE-LEX-C533-SAMSARAM533-05] -->
+
+[PAUSE 3s] To appoint? (**నియమించు**, *niyamiñcu*.) To manage? (**నిర్వహించు**, *nirvahiñcu*.) To supervise? (**పర్యవేక్షించు**, *paryavēkṣiñcu*.) To cooperate? (**సహకరించు**, *sahakariñcu*.) Training? (**శిక్షణ**, *śikṣaṇa*.) To achieve? (**సాధించు**, *sādhiñcu*.) To excel? (**రాణించు**, *rāṇiñcu*.) To fail? (**విఫలమవు**, *viphalamavu*.) A resignation? (**రాజీనామా**, *rājīnāmā*.) To quit? (**మానేయు**, *mānēyu*.) A sibling? (**తోబుట్టువు**, *tōbuṭṭuvu*.) Brothers? (**అన్నదమ్ములు**, *annadammulu*.) A husband's younger brother? (**మరిది**, *maridi*.) A husband's sister? (**ఆడపడుచు**, *āḍapaḍucu*.) An elder brother's wife? (**వదిన**, *vadina*.) A maternal uncle? (**మేనమామ**, *mēnamāma*.) A paternal aunt? (**మేనత్త**, *mēnatta*.) A father's elder brother? (**పెద్దనాన్న**, *peddanānna*.) A mother's elder sister? (**పెద్దమ్మ**, *peddamma*.) A niece? (**మేనకోడలు**, *mēnakōḍalu*.) A co-father-in-law? (**వియ్యంకుడు**, *viyyaṅkuḍu*.) A great-grandfather? (**ముత్తాత**, *muttāta*.) A nephew? (**మేనల్లుడు**, *mēnalluḍu*.) A kinsman? (**చుట్టం**, *cuṭṭaṁ*.) A granny? (**అవ్వ**, *avva*.) An infant? (**బిడ్డ**, *biḍḍa*.) A newborn? (**శిశువు**, *śiśuvu*.) Offspring? (**సంతానం**, *santānaṁ*.) An heir? (**వారసుడు**, *vārasuḍu*.) A lullaby? (**జోలపాట**, *jōlapāṭa*.) Upbringing? (**పెంపకం**, *pempakaṁ*.) Pampering? (**గారాబం**, *gārābaṁ*.) To support? (**పోషించు**, *pōṣiñcu*.) To coax? (**బుజ్జగించు**, *bujjagiñcu*.) A tantrum? (**మారాం**, *mārāṁ*.) Married life? (**కాపురం**, *kāpuraṁ*.) Family life? (**సంసారం**, *saṁsāraṁ*.) A homemaker? (**గృహిణి**, *gṛhiṇi*.) Hospitality? (**ఆతిథ్యం**, *ātithyaṁ*.) To chat? (**ముచ్చటించు**, *muccaṭiñcu*.)
+`;export{t};

@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TE-R525-review-518-525
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 26630
+chapter: 525
+type: review
+headword: (dialogue)
+gloss: a review of chapters 518-525
+concept_tag: REVIEW
+prerequisites: [TE-C518-gayapadu, TE-C518-boppi, TE-C518-tulu, TE-C518-kuntu, TE-C518-raktasravam, TE-C519-cikitsa, TE-C519-sastracikitsa, TE-C519-mattumandu, TE-C519-patti, TE-C519-paramarsincu, TE-C520-kudutapadu, TE-C520-balapadu, TE-C520-naligipovu, TE-C520-cidu, TE-C520-punjuko, TE-C521-balahinata, TE-C521-nirasincu, TE-C521-cikkipovu, TE-C521-lavekku, TE-C521-posakaharam, TE-C522-vrtti, TE-C522-hoda, TE-C522-padavi, TE-C522-padonnati, TE-C522-asayam, TE-C523-karmikudu, TE-C523-nipunudu, TE-C523-salahadaru, TE-C523-sahayakudu, TE-C523-guttedaru, TE-C524-pratibha, TE-C524-pravinyam, TE-C524-panitanam, TE-C524-nerpari, TE-C524-corava, TE-C525-upadhi, TE-C525-sampadana, TE-C525-adayam, TE-C525-vetanam, TE-C525-sramincu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-LEX-C518-GAYAM518-01, TE-LEX-C518-GAYAM518-02, TE-LEX-C518-GAYAM518-03, TE-LEX-C518-GAYAM518-04, TE-LEX-C518-GAYAM518-05, TE-LEX-C519-CIKITSA519-01, TE-LEX-C519-CIKITSA519-02, TE-LEX-C519-CIKITSA519-03, TE-LEX-C519-CIKITSA519-04, TE-LEX-C519-CIKITSA519-05, TE-LEX-C520-KOLUKO520-01, TE-LEX-C520-KOLUKO520-02, TE-LEX-C520-KOLUKO520-03, TE-LEX-C520-KOLUKO520-04, TE-LEX-C520-KOLUKO520-05, TE-LEX-C521-BALAM521-01, TE-LEX-C521-BALAM521-02, TE-LEX-C521-BALAM521-03, TE-LEX-C521-BALAM521-04, TE-LEX-C521-BALAM521-05, TE-LEX-C522-VRTTI522-01, TE-LEX-C522-VRTTI522-02, TE-LEX-C522-VRTTI522-03, TE-LEX-C522-VRTTI522-04, TE-LEX-C522-VRTTI522-05, TE-LEX-C523-PANIVARU523-01, TE-LEX-C523-PANIVARU523-02, TE-LEX-C523-PANIVARU523-03, TE-LEX-C523-PANIVARU523-04, TE-LEX-C523-PANIVARU523-05, TE-LEX-C524-PRATIBHA524-01, TE-LEX-C524-PRATIBHA524-02, TE-LEX-C524-PRATIBHA524-03, TE-LEX-C524-PRATIBHA524-04, TE-LEX-C524-PRATIBHA524-05, TE-LEX-C525-SAMPADANA525-01, TE-LEX-C525-SAMPADANA525-02, TE-LEX-C525-SAMPADANA525-03, TE-LEX-C525-SAMPADANA525-04, TE-LEX-C525-SAMPADANA525-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TE-LEX-C518-GAYAM518-01, TE-LEX-C518-GAYAM518-02, TE-LEX-C518-GAYAM518-03, TE-LEX-C518-GAYAM518-04, TE-LEX-C518-GAYAM518-05, TE-LEX-C519-CIKITSA519-01, TE-LEX-C519-CIKITSA519-02, TE-LEX-C519-CIKITSA519-03, TE-LEX-C519-CIKITSA519-04, TE-LEX-C519-CIKITSA519-05, TE-LEX-C520-KOLUKO520-01, TE-LEX-C520-KOLUKO520-02, TE-LEX-C520-KOLUKO520-03, TE-LEX-C520-KOLUKO520-04, TE-LEX-C520-KOLUKO520-05, TE-LEX-C521-BALAM521-01, TE-LEX-C521-BALAM521-02, TE-LEX-C521-BALAM521-03, TE-LEX-C521-BALAM521-04, TE-LEX-C521-BALAM521-05, TE-LEX-C522-VRTTI522-01, TE-LEX-C522-VRTTI522-02, TE-LEX-C522-VRTTI522-03, TE-LEX-C522-VRTTI522-04, TE-LEX-C522-VRTTI522-05, TE-LEX-C523-PANIVARU523-01, TE-LEX-C523-PANIVARU523-02, TE-LEX-C523-PANIVARU523-03, TE-LEX-C523-PANIVARU523-04, TE-LEX-C523-PANIVARU523-05, TE-LEX-C524-PRATIBHA524-01, TE-LEX-C524-PRATIBHA524-02, TE-LEX-C524-PRATIBHA524-03, TE-LEX-C524-PRATIBHA524-04, TE-LEX-C524-PRATIBHA524-05, TE-LEX-C525-SAMPADANA525-01, TE-LEX-C525-SAMPADANA525-02, TE-LEX-C525-SAMPADANA525-03, TE-LEX-C525-SAMPADANA525-04, TE-LEX-C525-SAMPADANA525-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C518-gayapadu, TE-C518-boppi, TE-C518-tulu, TE-C518-kuntu, TE-C518-raktasravam, TE-C519-cikitsa, TE-C519-sastracikitsa, TE-C519-mattumandu, TE-C519-patti, TE-C519-paramarsincu, TE-C520-kudutapadu, TE-C520-balapadu, TE-C520-naligipovu, TE-C520-cidu, TE-C520-punjuko, TE-C521-balahinata, TE-C521-nirasincu, TE-C521-cikkipovu, TE-C521-lavekku, TE-C521-posakaharam, TE-C522-vrtti, TE-C522-hoda, TE-C522-padavi, TE-C522-padonnati, TE-C522-asayam, TE-C523-karmikudu, TE-C523-nipunudu, TE-C523-salahadaru, TE-C523-sahayakudu, TE-C523-guttedaru, TE-C524-pratibha, TE-C524-pravinyam, TE-C524-panitanam, TE-C524-nerpari, TE-C524-corava, TE-C525-upadhi, TE-C525-sampadana, TE-C525-adayam, TE-C525-vetanam, TE-C525-sramincu]
+---
+
+# Words from chapters 518–525 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C518-GAYAM518-01, TE-LEX-C518-GAYAM518-02] -->
+
+[PAUSE 3s] Say the Telugu for to get hurt and a bump.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C518-GAYAM518-01, TE-LEX-C518-GAYAM518-02, TE-LEX-C518-GAYAM518-03, TE-LEX-C518-GAYAM518-04, TE-LEX-C518-GAYAM518-05, TE-LEX-C519-CIKITSA519-01, TE-LEX-C519-CIKITSA519-02, TE-LEX-C519-CIKITSA519-03, TE-LEX-C519-CIKITSA519-04, TE-LEX-C519-CIKITSA519-05, TE-LEX-C520-KOLUKO520-01, TE-LEX-C520-KOLUKO520-02, TE-LEX-C520-KOLUKO520-03, TE-LEX-C520-KOLUKO520-04, TE-LEX-C520-KOLUKO520-05, TE-LEX-C521-BALAM521-01, TE-LEX-C521-BALAM521-02, TE-LEX-C521-BALAM521-03, TE-LEX-C521-BALAM521-04, TE-LEX-C521-BALAM521-05, TE-LEX-C522-VRTTI522-01, TE-LEX-C522-VRTTI522-02, TE-LEX-C522-VRTTI522-03, TE-LEX-C522-VRTTI522-04, TE-LEX-C522-VRTTI522-05, TE-LEX-C523-PANIVARU523-01, TE-LEX-C523-PANIVARU523-02, TE-LEX-C523-PANIVARU523-03, TE-LEX-C523-PANIVARU523-04, TE-LEX-C523-PANIVARU523-05, TE-LEX-C524-PRATIBHA524-01, TE-LEX-C524-PRATIBHA524-02, TE-LEX-C524-PRATIBHA524-03, TE-LEX-C524-PRATIBHA524-04, TE-LEX-C524-PRATIBHA524-05, TE-LEX-C525-SAMPADANA525-01, TE-LEX-C525-SAMPADANA525-02, TE-LEX-C525-SAMPADANA525-03, TE-LEX-C525-SAMPADANA525-04, TE-LEX-C525-SAMPADANA525-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to get hurt, a bump, to stagger, to limp, bleeding]
+- [YOU SAY: treatment, surgery, an anaesthetic, a bandage, to visit the sick]
+- [YOU SAY: to steady, to grow strong, to be worn out, to blow one's nose, to pick up]
+- [YOU SAY: frailty, to grow weak, to grow thin, to put on weight, nutrition]
+- [YOU SAY: a profession, status, a position, a promotion, an ambition]
+- [YOU SAY: a worker, an expert, an adviser, an assistant, a contractor]
+- [YOU SAY: talent, proficiency, workmanship, a skilled person, initiative]
+- [YOU SAY: a livelihood, earnings, income, a wage, to toil]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C518-GAYAM518-01, TE-LEX-C518-GAYAM518-02, TE-LEX-C518-GAYAM518-03, TE-LEX-C518-GAYAM518-04, TE-LEX-C518-GAYAM518-05, TE-LEX-C519-CIKITSA519-01, TE-LEX-C519-CIKITSA519-02, TE-LEX-C519-CIKITSA519-03, TE-LEX-C519-CIKITSA519-04, TE-LEX-C519-CIKITSA519-05, TE-LEX-C520-KOLUKO520-01, TE-LEX-C520-KOLUKO520-02, TE-LEX-C520-KOLUKO520-03, TE-LEX-C520-KOLUKO520-04, TE-LEX-C520-KOLUKO520-05, TE-LEX-C521-BALAM521-01, TE-LEX-C521-BALAM521-02, TE-LEX-C521-BALAM521-03, TE-LEX-C521-BALAM521-04, TE-LEX-C521-BALAM521-05, TE-LEX-C522-VRTTI522-01, TE-LEX-C522-VRTTI522-02, TE-LEX-C522-VRTTI522-03, TE-LEX-C522-VRTTI522-04, TE-LEX-C522-VRTTI522-05, TE-LEX-C523-PANIVARU523-01, TE-LEX-C523-PANIVARU523-02, TE-LEX-C523-PANIVARU523-03, TE-LEX-C523-PANIVARU523-04, TE-LEX-C523-PANIVARU523-05, TE-LEX-C524-PRATIBHA524-01, TE-LEX-C524-PRATIBHA524-02, TE-LEX-C524-PRATIBHA524-03, TE-LEX-C524-PRATIBHA524-04, TE-LEX-C524-PRATIBHA524-05, TE-LEX-C525-SAMPADANA525-01, TE-LEX-C525-SAMPADANA525-02, TE-LEX-C525-SAMPADANA525-03, TE-LEX-C525-SAMPADANA525-04, TE-LEX-C525-SAMPADANA525-05] -->
+
+[PAUSE 3s] To get hurt? (**గాయపడు**, *gāyapaḍu*.) A bump? (**బొప్పి**, *boppi*.) To stagger? (**తూలు**, *tūlu*.) To limp? (**కుంటు**, *kuṇṭu*.) Bleeding? (**రక్తస్రావం**, *raktasrāvaṁ*.) Treatment? (**చికిత్స**, *cikitsa*.) Surgery? (**శస్త్రచికిత్స**, *śastracikitsa*.) An anaesthetic? (**మత్తుమందు**, *mattumandu*.) A bandage? (**పట్టీ**, *paṭṭī*.) To visit the sick? (**పరామర్శించు**, *parāmarśiñcu*.) To steady? (**కుదుటపడు**, *kuduṭapaḍu*.) To grow strong? (**బలపడు**, *balapaḍu*.) To be worn out? (**నలిగిపోవు**, *naligipōvu*.) To blow one's nose? (**చీదు**, *cīdu*.) To pick up? (**పుంజుకో**, *puñjukō*.) Frailty? (**బలహీనత**, *balahīnata*.) To grow weak? (**నీరసించు**, *nīrasiñcu*.) To grow thin? (**చిక్కిపోవు**, *cikkipōvu*.) To put on weight? (**లావెక్కు**, *lāvekku*.) Nutrition? (**పోషకాహారం**, *pōṣakāhāraṁ*.) A profession? (**వృత్తి**, *vṛtti*.) Status? (**హోదా**, *hōdā*.) A position? (**పదవి**, *padavi*.) A promotion? (**పదోన్నతి**, *padōnnati*.) An ambition? (**ఆశయం**, *āśayaṁ*.) A worker? (**కార్మికుడు**, *kārmikuḍu*.) An expert? (**నిపుణుడు**, *nipuṇuḍu*.) An adviser? (**సలహాదారు**, *salahādāru*.) An assistant? (**సహాయకుడు**, *sahāyakuḍu*.) A contractor? (**గుత్తేదారు**, *guttēdāru*.) Talent? (**ప్రతిభ**, *pratibha*.) Proficiency? (**ప్రావీణ్యం**, *prāvīṇyaṁ*.) Workmanship? (**పనితనం**, *panitanaṁ*.) A skilled person? (**నేర్పరి**, *nērpari*.) Initiative? (**చొరవ**, *corava*.) A livelihood? (**ఉపాధి**, *upādhi*.) Earnings? (**సంపాదన**, *sampādana*.) Income? (**ఆదాయం**, *ādāyaṁ*.) A wage? (**వేతనం**, *vētanaṁ*.) To toil? (**శ్రమించు**, *śramiñcu*.)
+`;export{t};

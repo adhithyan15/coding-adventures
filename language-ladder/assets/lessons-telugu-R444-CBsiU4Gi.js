@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TE-R445-review-438-445
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 22400
+chapter: 445
+type: review
+headword: (dialogue)
+gloss: a review of chapters 438-445
+concept_tag: REVIEW
+prerequisites: [TE-C438-prayanikudu, TE-C438-prayanincu, TE-C438-gamyam, TE-C438-margam, TE-C438-adugupettu, TE-C439-rijarvesanu, TE-C439-bukingu, TE-C439-bertu, TE-C439-bogi, TE-C439-kirayi, TE-C440-alasyam, TE-C440-veci-undu, TE-C440-samayapalana, TE-C440-viramam, TE-C440-tvarapadu, TE-C441-pasportu, TE-C441-gurtimpu, TE-C441-sunkam, TE-C441-bhadrata, TE-C441-dhruvapatram, TE-C442-patta, TE-C442-metro, TE-C442-rakapokalu, TE-C442-kikkirisipovu, TE-C442-pattalu-tappu, TE-C443-vahanam, TE-C443-injanu, TE-C443-tairu, TE-C443-breku, TE-C443-haranu, TE-C444-indhanam, TE-C444-cedipovu, TE-C444-morayincu, TE-C444-pankcaru, TE-C444-marammatu-ceyu, TE-C445-rahadari, TE-C445-lari, TE-C445-dusukupovu, TE-C445-nemmadincu, TE-C445-adupu-tappu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-LEX-C438-PRAYANAM438-01, TE-LEX-C438-PRAYANAM438-02, TE-LEX-C438-PRAYANAM438-03, TE-LEX-C438-PRAYANAM438-04, TE-LEX-C438-PRAYANAM438-05, TE-LEX-C439-BOGI439-01, TE-LEX-C439-BOGI439-02, TE-LEX-C439-BOGI439-03, TE-LEX-C439-BOGI439-04, TE-LEX-C439-BOGI439-05, TE-LEX-C440-ALASYAM440-01, TE-LEX-C440-ALASYAM440-02, TE-LEX-C440-ALASYAM440-03, TE-LEX-C440-ALASYAM440-04, TE-LEX-C440-ALASYAM440-05, TE-LEX-C441-PASPORTU441-01, TE-LEX-C441-PASPORTU441-02, TE-LEX-C441-PASPORTU441-03, TE-LEX-C441-PASPORTU441-04, TE-LEX-C441-PASPORTU441-05, TE-LEX-C442-PATTA442-01, TE-LEX-C442-PATTA442-02, TE-LEX-C442-PATTA442-03, TE-LEX-C442-PATTA442-04, TE-LEX-C442-PATTA442-05, TE-LEX-C443-VAHANAM443-01, TE-LEX-C443-VAHANAM443-02, TE-LEX-C443-VAHANAM443-03, TE-LEX-C443-VAHANAM443-04, TE-LEX-C443-VAHANAM443-05, TE-LEX-C444-INDHANAM444-01, TE-LEX-C444-INDHANAM444-02, TE-LEX-C444-INDHANAM444-03, TE-LEX-C444-INDHANAM444-04, TE-LEX-C444-INDHANAM444-05, TE-LEX-C445-RAHADARI445-01, TE-LEX-C445-RAHADARI445-02, TE-LEX-C445-RAHADARI445-03, TE-LEX-C445-RAHADARI445-04, TE-LEX-C445-RAHADARI445-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TE-LEX-C438-PRAYANAM438-01, TE-LEX-C438-PRAYANAM438-02, TE-LEX-C438-PRAYANAM438-03, TE-LEX-C438-PRAYANAM438-04, TE-LEX-C438-PRAYANAM438-05, TE-LEX-C439-BOGI439-01, TE-LEX-C439-BOGI439-02, TE-LEX-C439-BOGI439-03, TE-LEX-C439-BOGI439-04, TE-LEX-C439-BOGI439-05, TE-LEX-C440-ALASYAM440-01, TE-LEX-C440-ALASYAM440-02, TE-LEX-C440-ALASYAM440-03, TE-LEX-C440-ALASYAM440-04, TE-LEX-C440-ALASYAM440-05, TE-LEX-C441-PASPORTU441-01, TE-LEX-C441-PASPORTU441-02, TE-LEX-C441-PASPORTU441-03, TE-LEX-C441-PASPORTU441-04, TE-LEX-C441-PASPORTU441-05, TE-LEX-C442-PATTA442-01, TE-LEX-C442-PATTA442-02, TE-LEX-C442-PATTA442-03, TE-LEX-C442-PATTA442-04, TE-LEX-C442-PATTA442-05, TE-LEX-C443-VAHANAM443-01, TE-LEX-C443-VAHANAM443-02, TE-LEX-C443-VAHANAM443-03, TE-LEX-C443-VAHANAM443-04, TE-LEX-C443-VAHANAM443-05, TE-LEX-C444-INDHANAM444-01, TE-LEX-C444-INDHANAM444-02, TE-LEX-C444-INDHANAM444-03, TE-LEX-C444-INDHANAM444-04, TE-LEX-C444-INDHANAM444-05, TE-LEX-C445-RAHADARI445-01, TE-LEX-C445-RAHADARI445-02, TE-LEX-C445-RAHADARI445-03, TE-LEX-C445-RAHADARI445-04, TE-LEX-C445-RAHADARI445-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C438-prayanikudu, TE-C438-prayanincu, TE-C438-gamyam, TE-C438-margam, TE-C438-adugupettu, TE-C439-rijarvesanu, TE-C439-bukingu, TE-C439-bertu, TE-C439-bogi, TE-C439-kirayi, TE-C440-alasyam, TE-C440-veci-undu, TE-C440-samayapalana, TE-C440-viramam, TE-C440-tvarapadu, TE-C441-pasportu, TE-C441-gurtimpu, TE-C441-sunkam, TE-C441-bhadrata, TE-C441-dhruvapatram, TE-C442-patta, TE-C442-metro, TE-C442-rakapokalu, TE-C442-kikkirisipovu, TE-C442-pattalu-tappu, TE-C443-vahanam, TE-C443-injanu, TE-C443-tairu, TE-C443-breku, TE-C443-haranu, TE-C444-indhanam, TE-C444-cedipovu, TE-C444-morayincu, TE-C444-pankcaru, TE-C444-marammatu-ceyu, TE-C445-rahadari, TE-C445-lari, TE-C445-dusukupovu, TE-C445-nemmadincu, TE-C445-adupu-tappu]
+---
+
+# Getting around, first steps
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C438-PRAYANAM438-01, TE-LEX-C438-PRAYANAM438-02] -->
+
+[PAUSE 3s] Say the Telugu for a passenger and to travel.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C438-PRAYANAM438-01, TE-LEX-C438-PRAYANAM438-02, TE-LEX-C438-PRAYANAM438-03, TE-LEX-C438-PRAYANAM438-04, TE-LEX-C438-PRAYANAM438-05, TE-LEX-C439-BOGI439-01, TE-LEX-C439-BOGI439-02, TE-LEX-C439-BOGI439-03, TE-LEX-C439-BOGI439-04, TE-LEX-C439-BOGI439-05, TE-LEX-C440-ALASYAM440-01, TE-LEX-C440-ALASYAM440-02, TE-LEX-C440-ALASYAM440-03, TE-LEX-C440-ALASYAM440-04, TE-LEX-C440-ALASYAM440-05, TE-LEX-C441-PASPORTU441-01, TE-LEX-C441-PASPORTU441-02, TE-LEX-C441-PASPORTU441-03, TE-LEX-C441-PASPORTU441-04, TE-LEX-C441-PASPORTU441-05, TE-LEX-C442-PATTA442-01, TE-LEX-C442-PATTA442-02, TE-LEX-C442-PATTA442-03, TE-LEX-C442-PATTA442-04, TE-LEX-C442-PATTA442-05, TE-LEX-C443-VAHANAM443-01, TE-LEX-C443-VAHANAM443-02, TE-LEX-C443-VAHANAM443-03, TE-LEX-C443-VAHANAM443-04, TE-LEX-C443-VAHANAM443-05, TE-LEX-C444-INDHANAM444-01, TE-LEX-C444-INDHANAM444-02, TE-LEX-C444-INDHANAM444-03, TE-LEX-C444-INDHANAM444-04, TE-LEX-C444-INDHANAM444-05, TE-LEX-C445-RAHADARI445-01, TE-LEX-C445-RAHADARI445-02, TE-LEX-C445-RAHADARI445-03, TE-LEX-C445-RAHADARI445-04, TE-LEX-C445-RAHADARI445-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a passenger, to travel, a destination, a route, to set foot in]
+- [YOU SAY: a reservation, a booking, a sleeper berth, a railway coach, a fare]
+- [YOU SAY: a delay, to wait, punctuality, an interval, to hurry up]
+- [YOU SAY: a passport, identification, a customs duty, security, a certificate]
+- [YOU SAY: a rail, the metro, comings and goings, to be packed, to derail]
+- [YOU SAY: a vehicle, an engine, a tyre, a brake, a horn]
+- [YOU SAY: fuel, to break down, to refuse to start, a puncture, to mend]
+- [YOU SAY: a highway, a lorry, to shoot ahead, to slow down, to lose control]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C438-PRAYANAM438-01, TE-LEX-C438-PRAYANAM438-02, TE-LEX-C438-PRAYANAM438-03, TE-LEX-C438-PRAYANAM438-04, TE-LEX-C438-PRAYANAM438-05, TE-LEX-C439-BOGI439-01, TE-LEX-C439-BOGI439-02, TE-LEX-C439-BOGI439-03, TE-LEX-C439-BOGI439-04, TE-LEX-C439-BOGI439-05, TE-LEX-C440-ALASYAM440-01, TE-LEX-C440-ALASYAM440-02, TE-LEX-C440-ALASYAM440-03, TE-LEX-C440-ALASYAM440-04, TE-LEX-C440-ALASYAM440-05, TE-LEX-C441-PASPORTU441-01, TE-LEX-C441-PASPORTU441-02, TE-LEX-C441-PASPORTU441-03, TE-LEX-C441-PASPORTU441-04, TE-LEX-C441-PASPORTU441-05, TE-LEX-C442-PATTA442-01, TE-LEX-C442-PATTA442-02, TE-LEX-C442-PATTA442-03, TE-LEX-C442-PATTA442-04, TE-LEX-C442-PATTA442-05, TE-LEX-C443-VAHANAM443-01, TE-LEX-C443-VAHANAM443-02, TE-LEX-C443-VAHANAM443-03, TE-LEX-C443-VAHANAM443-04, TE-LEX-C443-VAHANAM443-05, TE-LEX-C444-INDHANAM444-01, TE-LEX-C444-INDHANAM444-02, TE-LEX-C444-INDHANAM444-03, TE-LEX-C444-INDHANAM444-04, TE-LEX-C444-INDHANAM444-05, TE-LEX-C445-RAHADARI445-01, TE-LEX-C445-RAHADARI445-02, TE-LEX-C445-RAHADARI445-03, TE-LEX-C445-RAHADARI445-04, TE-LEX-C445-RAHADARI445-05] -->
+
+[PAUSE 3s] A passenger? (**ప్రయాణికుడు**, *prayāṇikuḍu*.) To travel? (**ప్రయాణించు**, *prayāṇiñcu*.) A destination? (**గమ్యం**, *gamyaṁ*.) A route? (**మార్గం**, *mārgaṁ*.) To set foot in? (**అడుగుపెట్టు**, *aḍugupeṭṭu*.) A reservation? (**రిజర్వేషను**, *rijarvēṣanu*.) A booking? (**బుకింగు**, *bukiṅgu*.) A sleeper berth? (**బెర్తు**, *bertu*.) A railway coach? (**బోగీ**, *bōgī*.) A fare? (**కిరాయి**, *kirāyi*.) A delay? (**ఆలస్యం**, *ālasyaṁ*.) To wait? (**వేచి ఉండు**, *vēci uṇḍu*.) Punctuality? (**సమయపాలన**, *samayapālana*.) An interval? (**విరామం**, *virāmaṁ*.) To hurry up? (**త్వరపడు**, *tvarapaḍu*.) A passport? (**పాస్పోర్టు**, *pāspōrṭu*.) Identification? (**గుర్తింపు**, *gurtimpu*.) A customs duty? (**సుంకం**, *suṅkaṁ*.) Security? (**భద్రత**, *bhadrata*.) A certificate? (**ధ్రువపత్రం**, *dhruvapatraṁ*.) A rail? (**పట్టా**, *paṭṭā*.) The metro? (**మెట్రో**, *meṭrō*.) Comings and goings? (**రాకపోకలు**, *rākapōkalu*.) To be packed? (**కిక్కిరిసిపోవు**, *kikkirisipōvu*.) To derail? (**పట్టాలు తప్పు**, *paṭṭālu tappu*.) A vehicle? (**వాహనం**, *vāhanaṁ*.) An engine? (**ఇంజను**, *iñjanu*.) A tyre? (**టైరు**, *ṭairu*.) A brake? (**బ్రేకు**, *brēku*.) A horn? (**హారను**, *hāranu*.) Fuel? (**ఇంధనం**, *indhanaṁ*.) To break down? (**చెడిపోవు**, *ceḍipōvu*.) To refuse to start? (**మొరాయించు**, *morāyiñcu*.) A puncture? (**పంక్చరు**, *paṅkcaru*.) To mend? (**మరమ్మతు చేయు**, *marammatu cēyu*.) A highway? (**రహదారి**, *rahadāri*.) A lorry? (**లారీ**, *lārī*.) To shoot ahead? (**దూసుకుపోవు**, *dūsukupōvu*.) To slow down? (**నెమ్మదించు**, *nemmadiñcu*.) To lose control? (**అదుపు తప్పు**, *adupu tappu*.)
+`;export{t};

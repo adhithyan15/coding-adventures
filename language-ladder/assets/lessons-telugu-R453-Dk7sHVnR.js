@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TE-R453-review-446-453
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 22810
+chapter: 453
+type: review
+headword: (dialogue)
+gloss: a review of chapters 446-453
+concept_tag: REVIEW
+prerequisites: [TE-C446-egududigudu, TE-C446-kudupu, TE-C446-tappincu, TE-C446-boltapadu, TE-C446-sottapadu, TE-C447-signalu, TE-C447-laisensu, TE-C447-padacari, TE-C447-kalibata, TE-C447-atikramincu, TE-C448-disa, TE-C448-sucika, TE-C448-dari-tappu, TE-C448-malupu-tirugu, TE-C448-addadari, TE-C449-addanki, TE-C449-mallimpu, TE-C449-nilicipovu, TE-C449-stambhincu, TE-C449-musukupovu, TE-C450-parkingu, TE-C450-nilupu, TE-C450-ekkincu, TE-C450-dincu, TE-C450-digabettu, TE-C451-riksa, TE-C451-edlabandi, TE-C451-topudubandi, TE-C451-kalinadaka, TE-C451-batasari, TE-C452-revu, TE-C452-nauka, TE-C452-navikudu, TE-C452-langaru, TE-C452-dipastambham, TE-C453-oddu, TE-C453-vagu, TE-C453-teppa, TE-C453-telipovu, TE-C453-kottukupovu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-LEX-C446-KUDUPU446-01, TE-LEX-C446-KUDUPU446-02, TE-LEX-C446-KUDUPU446-03, TE-LEX-C446-KUDUPU446-04, TE-LEX-C446-KUDUPU446-05, TE-LEX-C447-SIGNALU447-01, TE-LEX-C447-SIGNALU447-02, TE-LEX-C447-SIGNALU447-03, TE-LEX-C447-SIGNALU447-04, TE-LEX-C447-SIGNALU447-05, TE-LEX-C448-DISA448-01, TE-LEX-C448-DISA448-02, TE-LEX-C448-DISA448-03, TE-LEX-C448-DISA448-04, TE-LEX-C448-DISA448-05, TE-LEX-C449-ADDANKI449-01, TE-LEX-C449-ADDANKI449-02, TE-LEX-C449-ADDANKI449-03, TE-LEX-C449-ADDANKI449-04, TE-LEX-C449-ADDANKI449-05, TE-LEX-C450-PARKINGU450-01, TE-LEX-C450-PARKINGU450-02, TE-LEX-C450-PARKINGU450-03, TE-LEX-C450-PARKINGU450-04, TE-LEX-C450-PARKINGU450-05, TE-LEX-C451-RIKSHA451-01, TE-LEX-C451-RIKSHA451-02, TE-LEX-C451-RIKSHA451-03, TE-LEX-C451-RIKSHA451-04, TE-LEX-C451-RIKSHA451-05, TE-LEX-C452-NAUKA452-01, TE-LEX-C452-NAUKA452-02, TE-LEX-C452-NAUKA452-03, TE-LEX-C452-NAUKA452-04, TE-LEX-C452-NAUKA452-05, TE-LEX-C453-TEPPA453-01, TE-LEX-C453-TEPPA453-02, TE-LEX-C453-TEPPA453-03, TE-LEX-C453-TEPPA453-04, TE-LEX-C453-TEPPA453-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TE-LEX-C446-KUDUPU446-01, TE-LEX-C446-KUDUPU446-02, TE-LEX-C446-KUDUPU446-03, TE-LEX-C446-KUDUPU446-04, TE-LEX-C446-KUDUPU446-05, TE-LEX-C447-SIGNALU447-01, TE-LEX-C447-SIGNALU447-02, TE-LEX-C447-SIGNALU447-03, TE-LEX-C447-SIGNALU447-04, TE-LEX-C447-SIGNALU447-05, TE-LEX-C448-DISA448-01, TE-LEX-C448-DISA448-02, TE-LEX-C448-DISA448-03, TE-LEX-C448-DISA448-04, TE-LEX-C448-DISA448-05, TE-LEX-C449-ADDANKI449-01, TE-LEX-C449-ADDANKI449-02, TE-LEX-C449-ADDANKI449-03, TE-LEX-C449-ADDANKI449-04, TE-LEX-C449-ADDANKI449-05, TE-LEX-C450-PARKINGU450-01, TE-LEX-C450-PARKINGU450-02, TE-LEX-C450-PARKINGU450-03, TE-LEX-C450-PARKINGU450-04, TE-LEX-C450-PARKINGU450-05, TE-LEX-C451-RIKSHA451-01, TE-LEX-C451-RIKSHA451-02, TE-LEX-C451-RIKSHA451-03, TE-LEX-C451-RIKSHA451-04, TE-LEX-C451-RIKSHA451-05, TE-LEX-C452-NAUKA452-01, TE-LEX-C452-NAUKA452-02, TE-LEX-C452-NAUKA452-03, TE-LEX-C452-NAUKA452-04, TE-LEX-C452-NAUKA452-05, TE-LEX-C453-TEPPA453-01, TE-LEX-C453-TEPPA453-02, TE-LEX-C453-TEPPA453-03, TE-LEX-C453-TEPPA453-04, TE-LEX-C453-TEPPA453-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C446-egududigudu, TE-C446-kudupu, TE-C446-tappincu, TE-C446-boltapadu, TE-C446-sottapadu, TE-C447-signalu, TE-C447-laisensu, TE-C447-padacari, TE-C447-kalibata, TE-C447-atikramincu, TE-C448-disa, TE-C448-sucika, TE-C448-dari-tappu, TE-C448-malupu-tirugu, TE-C448-addadari, TE-C449-addanki, TE-C449-mallimpu, TE-C449-nilicipovu, TE-C449-stambhincu, TE-C449-musukupovu, TE-C450-parkingu, TE-C450-nilupu, TE-C450-ekkincu, TE-C450-dincu, TE-C450-digabettu, TE-C451-riksa, TE-C451-edlabandi, TE-C451-topudubandi, TE-C451-kalinadaka, TE-C451-batasari, TE-C452-revu, TE-C452-nauka, TE-C452-navikudu, TE-C452-langaru, TE-C452-dipastambham, TE-C453-oddu, TE-C453-vagu, TE-C453-teppa, TE-C453-telipovu, TE-C453-kottukupovu]
+---
+
+# Words from chapters 446–453 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C446-KUDUPU446-01, TE-LEX-C446-KUDUPU446-02] -->
+
+[PAUSE 3s] Say the Telugu for bumpy and a jolt.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C446-KUDUPU446-01, TE-LEX-C446-KUDUPU446-02, TE-LEX-C446-KUDUPU446-03, TE-LEX-C446-KUDUPU446-04, TE-LEX-C446-KUDUPU446-05, TE-LEX-C447-SIGNALU447-01, TE-LEX-C447-SIGNALU447-02, TE-LEX-C447-SIGNALU447-03, TE-LEX-C447-SIGNALU447-04, TE-LEX-C447-SIGNALU447-05, TE-LEX-C448-DISA448-01, TE-LEX-C448-DISA448-02, TE-LEX-C448-DISA448-03, TE-LEX-C448-DISA448-04, TE-LEX-C448-DISA448-05, TE-LEX-C449-ADDANKI449-01, TE-LEX-C449-ADDANKI449-02, TE-LEX-C449-ADDANKI449-03, TE-LEX-C449-ADDANKI449-04, TE-LEX-C449-ADDANKI449-05, TE-LEX-C450-PARKINGU450-01, TE-LEX-C450-PARKINGU450-02, TE-LEX-C450-PARKINGU450-03, TE-LEX-C450-PARKINGU450-04, TE-LEX-C450-PARKINGU450-05, TE-LEX-C451-RIKSHA451-01, TE-LEX-C451-RIKSHA451-02, TE-LEX-C451-RIKSHA451-03, TE-LEX-C451-RIKSHA451-04, TE-LEX-C451-RIKSHA451-05, TE-LEX-C452-NAUKA452-01, TE-LEX-C452-NAUKA452-02, TE-LEX-C452-NAUKA452-03, TE-LEX-C452-NAUKA452-04, TE-LEX-C452-NAUKA452-05, TE-LEX-C453-TEPPA453-01, TE-LEX-C453-TEPPA453-02, TE-LEX-C453-TEPPA453-03, TE-LEX-C453-TEPPA453-04, TE-LEX-C453-TEPPA453-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: bumpy, a jolt, to avoid, to overturn, to get dented]
+- [YOU SAY: a traffic signal, a licence, a pedestrian, a footpath, to break a rule]
+- [YOU SAY: a compass direction, a signpost, to lose one's way, to take a turn, a shortcut]
+- [YOU SAY: an obstacle, a diversion, to stop dead, to seize up, to get blocked]
+- [YOU SAY: parking, to pull up, to put aboard, to unload, to drop someone off]
+- [YOU SAY: a rickshaw, a bullock cart, a handcart, going on foot, a wayfarer]
+- [YOU SAY: a harbour, a ship, a sailor, an anchor, a lighthouse]
+- [YOU SAY: a riverbank, a rivulet, a raft, to float away, to be swept away]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C446-KUDUPU446-01, TE-LEX-C446-KUDUPU446-02, TE-LEX-C446-KUDUPU446-03, TE-LEX-C446-KUDUPU446-04, TE-LEX-C446-KUDUPU446-05, TE-LEX-C447-SIGNALU447-01, TE-LEX-C447-SIGNALU447-02, TE-LEX-C447-SIGNALU447-03, TE-LEX-C447-SIGNALU447-04, TE-LEX-C447-SIGNALU447-05, TE-LEX-C448-DISA448-01, TE-LEX-C448-DISA448-02, TE-LEX-C448-DISA448-03, TE-LEX-C448-DISA448-04, TE-LEX-C448-DISA448-05, TE-LEX-C449-ADDANKI449-01, TE-LEX-C449-ADDANKI449-02, TE-LEX-C449-ADDANKI449-03, TE-LEX-C449-ADDANKI449-04, TE-LEX-C449-ADDANKI449-05, TE-LEX-C450-PARKINGU450-01, TE-LEX-C450-PARKINGU450-02, TE-LEX-C450-PARKINGU450-03, TE-LEX-C450-PARKINGU450-04, TE-LEX-C450-PARKINGU450-05, TE-LEX-C451-RIKSHA451-01, TE-LEX-C451-RIKSHA451-02, TE-LEX-C451-RIKSHA451-03, TE-LEX-C451-RIKSHA451-04, TE-LEX-C451-RIKSHA451-05, TE-LEX-C452-NAUKA452-01, TE-LEX-C452-NAUKA452-02, TE-LEX-C452-NAUKA452-03, TE-LEX-C452-NAUKA452-04, TE-LEX-C452-NAUKA452-05, TE-LEX-C453-TEPPA453-01, TE-LEX-C453-TEPPA453-02, TE-LEX-C453-TEPPA453-03, TE-LEX-C453-TEPPA453-04, TE-LEX-C453-TEPPA453-05] -->
+
+[PAUSE 3s] Bumpy? (**ఎగుడుదిగుడు**, *eguḍudiguḍu*.) A jolt? (**కుదుపు**, *kudupu*.) To avoid? (**తప్పించు**, *tappiñcu*.) To overturn? (**బోల్తాపడు**, *bōltāpaḍu*.) To get dented? (**సొట్టపడు**, *soṭṭapaḍu*.) A traffic signal? (**సిగ్నలు**, *signalu*.) A licence? (**లైసెన్సు**, *laisensu*.) A pedestrian? (**పాదచారి**, *pādacāri*.) A footpath? (**కాలిబాట**, *kālibāṭa*.) To break a rule? (**అతిక్రమించు**, *atikramiñcu*.) A compass direction? (**దిశ**, *diśa*.) A signpost? (**సూచిక**, *sūcika*.) To lose one's way? (**దారి తప్పు**, *dāri tappu*.) To take a turn? (**మలుపు తిరుగు**, *malupu tirugu*.) A shortcut? (**అడ్డదారి**, *aḍḍadāri*.) An obstacle? (**అడ్డంకి**, *aḍḍaṅki*.) A diversion? (**మళ్ళింపు**, *maḷḷimpu*.) To stop dead? (**నిలిచిపోవు**, *nilicipōvu*.) To seize up? (**స్తంభించు**, *stambhiñcu*.) To get blocked? (**మూసుకుపోవు**, *mūsukupōvu*.) Parking? (**పార్కింగు**, *pārkiṅgu*.) To pull up? (**నిలుపు**, *nilupu*.) To put aboard? (**ఎక్కించు**, *ekkiñcu*.) To unload? (**దించు**, *diñcu*.) To drop someone off? (**దిగబెట్టు**, *digabeṭṭu*.) A rickshaw? (**రిక్షా**, *rikṣā*.) A bullock cart? (**ఎడ్లబండి**, *eḍlabaṇḍi*.) A handcart? (**తోపుడుబండి**, *tōpuḍubaṇḍi*.) Going on foot? (**కాలినడక**, *kālinaḍaka*.) A wayfarer? (**బాటసారి**, *bāṭasāri*.) A harbour? (**రేవు**, *rēvu*.) A ship? (**నౌక**, *nauka*.) A sailor? (**నావికుడు**, *nāvikuḍu*.) An anchor? (**లంగరు**, *laṅgaru*.) A lighthouse? (**దీపస్తంభం**, *dīpastambhaṁ*.) A riverbank? (**ఒడ్డు**, *oḍḍu*.) A rivulet? (**వాగు**, *vāgu*.) A raft? (**తెప్ప**, *teppa*.) To float away? (**తేలిపోవు**, *tēlipōvu*.) To be swept away? (**కొట్టుకుపోవు**, *koṭṭukupōvu*.)
+`;export{t};

@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TE-R357-review-350-357
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 17630
+chapter: 357
+type: review
+headword: (dialogue)
+gloss: a review of chapters 350-357
+concept_tag: REVIEW
+prerequisites: [TE-C350-neram, TE-C350-nerasthudu, TE-C350-dosi, TE-C350-nirdosi, TE-C350-siksincu, TE-C351-bandi, TE-C351-nirbandhincu, TE-C351-bandhincu, TE-C351-vidudala-ceyu, TE-C351-vidipincu, TE-C352-vembadincu, TE-C352-dakko, TE-C352-longipovu, TE-C352-pattincu, TE-C352-tappuko, TE-C353-adrsyam, TE-C353-mayamavu, TE-C353-kanumarugavu, TE-C353-pratyaksamavu, TE-C353-kanipettu, TE-C354-kutra, TE-C354-mabhyapettu, TE-C354-bayatapettu, TE-C354-kappipuccu, TE-C354-gudhacari, TE-C355-varsikotsavam, TE-C355-pelliroju, TE-C355-sastipurti, TE-C355-jayanti, TE-C355-sanmanam, TE-C356-utsavam, TE-C356-sanmanincu, TE-C356-grhapravesam, TE-C356-vidkolu, TE-C356-dattata, TE-C357-vamsam, TE-C357-taram, TE-C357-purvikulu, TE-C357-anatha, TE-C357-batuku]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-LEX-C350-NERAM350-01, TE-LEX-C350-NERAM350-02, TE-LEX-C350-NERAM350-03, TE-LEX-C350-NERAM350-04, TE-LEX-C350-NERAM350-05, TE-LEX-C351-BANDI351-01, TE-LEX-C351-BANDI351-02, TE-LEX-C351-BANDI351-03, TE-LEX-C351-BANDI351-04, TE-LEX-C351-BANDI351-05, TE-LEX-C352-VEMBADI352-01, TE-LEX-C352-VEMBADI352-02, TE-LEX-C352-VEMBADI352-03, TE-LEX-C352-VEMBADI352-04, TE-LEX-C352-VEMBADI352-05, TE-LEX-C353-ADRSYAM353-01, TE-LEX-C353-ADRSYAM353-02, TE-LEX-C353-ADRSYAM353-03, TE-LEX-C353-ADRSYAM353-04, TE-LEX-C353-ADRSYAM353-05, TE-LEX-C354-KUTRA354-01, TE-LEX-C354-KUTRA354-02, TE-LEX-C354-KUTRA354-03, TE-LEX-C354-KUTRA354-04, TE-LEX-C354-KUTRA354-05, TE-LEX-C355-VARSHIKAM355-01, TE-LEX-C355-VARSHIKAM355-02, TE-LEX-C355-VARSHIKAM355-03, TE-LEX-C355-VARSHIKAM355-04, TE-LEX-C355-VARSHIKAM355-05, TE-LEX-C356-UTSAVAM356-01, TE-LEX-C356-UTSAVAM356-02, TE-LEX-C356-UTSAVAM356-03, TE-LEX-C356-UTSAVAM356-04, TE-LEX-C356-UTSAVAM356-05, TE-LEX-C357-VAMSAM357-01, TE-LEX-C357-VAMSAM357-02, TE-LEX-C357-VAMSAM357-03, TE-LEX-C357-VAMSAM357-04, TE-LEX-C357-VAMSAM357-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TE-LEX-C350-NERAM350-01, TE-LEX-C350-NERAM350-02, TE-LEX-C350-NERAM350-03, TE-LEX-C350-NERAM350-04, TE-LEX-C350-NERAM350-05, TE-LEX-C351-BANDI351-01, TE-LEX-C351-BANDI351-02, TE-LEX-C351-BANDI351-03, TE-LEX-C351-BANDI351-04, TE-LEX-C351-BANDI351-05, TE-LEX-C352-VEMBADI352-01, TE-LEX-C352-VEMBADI352-02, TE-LEX-C352-VEMBADI352-03, TE-LEX-C352-VEMBADI352-04, TE-LEX-C352-VEMBADI352-05, TE-LEX-C353-ADRSYAM353-01, TE-LEX-C353-ADRSYAM353-02, TE-LEX-C353-ADRSYAM353-03, TE-LEX-C353-ADRSYAM353-04, TE-LEX-C353-ADRSYAM353-05, TE-LEX-C354-KUTRA354-01, TE-LEX-C354-KUTRA354-02, TE-LEX-C354-KUTRA354-03, TE-LEX-C354-KUTRA354-04, TE-LEX-C354-KUTRA354-05, TE-LEX-C355-VARSHIKAM355-01, TE-LEX-C355-VARSHIKAM355-02, TE-LEX-C355-VARSHIKAM355-03, TE-LEX-C355-VARSHIKAM355-04, TE-LEX-C355-VARSHIKAM355-05, TE-LEX-C356-UTSAVAM356-01, TE-LEX-C356-UTSAVAM356-02, TE-LEX-C356-UTSAVAM356-03, TE-LEX-C356-UTSAVAM356-04, TE-LEX-C356-UTSAVAM356-05, TE-LEX-C357-VAMSAM357-01, TE-LEX-C357-VAMSAM357-02, TE-LEX-C357-VAMSAM357-03, TE-LEX-C357-VAMSAM357-04, TE-LEX-C357-VAMSAM357-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C350-neram, TE-C350-nerasthudu, TE-C350-dosi, TE-C350-nirdosi, TE-C350-siksincu, TE-C351-bandi, TE-C351-nirbandhincu, TE-C351-bandhincu, TE-C351-vidudala-ceyu, TE-C351-vidipincu, TE-C352-vembadincu, TE-C352-dakko, TE-C352-longipovu, TE-C352-pattincu, TE-C352-tappuko, TE-C353-adrsyam, TE-C353-mayamavu, TE-C353-kanumarugavu, TE-C353-pratyaksamavu, TE-C353-kanipettu, TE-C354-kutra, TE-C354-mabhyapettu, TE-C354-bayatapettu, TE-C354-kappipuccu, TE-C354-gudhacari, TE-C355-varsikotsavam, TE-C355-pelliroju, TE-C355-sastipurti, TE-C355-jayanti, TE-C355-sanmanam, TE-C356-utsavam, TE-C356-sanmanincu, TE-C356-grhapravesam, TE-C356-vidkolu, TE-C356-dattata, TE-C357-vamsam, TE-C357-taram, TE-C357-purvikulu, TE-C357-anatha, TE-C357-batuku]
+---
+
+# Words from chapters 350–357 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C350-NERAM350-01, TE-LEX-C350-NERAM350-02] -->
+
+[PAUSE 3s] Say the Telugu for a crime and a criminal.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C350-NERAM350-01, TE-LEX-C350-NERAM350-02, TE-LEX-C350-NERAM350-03, TE-LEX-C350-NERAM350-04, TE-LEX-C350-NERAM350-05, TE-LEX-C351-BANDI351-01, TE-LEX-C351-BANDI351-02, TE-LEX-C351-BANDI351-03, TE-LEX-C351-BANDI351-04, TE-LEX-C351-BANDI351-05, TE-LEX-C352-VEMBADI352-01, TE-LEX-C352-VEMBADI352-02, TE-LEX-C352-VEMBADI352-03, TE-LEX-C352-VEMBADI352-04, TE-LEX-C352-VEMBADI352-05, TE-LEX-C353-ADRSYAM353-01, TE-LEX-C353-ADRSYAM353-02, TE-LEX-C353-ADRSYAM353-03, TE-LEX-C353-ADRSYAM353-04, TE-LEX-C353-ADRSYAM353-05, TE-LEX-C354-KUTRA354-01, TE-LEX-C354-KUTRA354-02, TE-LEX-C354-KUTRA354-03, TE-LEX-C354-KUTRA354-04, TE-LEX-C354-KUTRA354-05, TE-LEX-C355-VARSHIKAM355-01, TE-LEX-C355-VARSHIKAM355-02, TE-LEX-C355-VARSHIKAM355-03, TE-LEX-C355-VARSHIKAM355-04, TE-LEX-C355-VARSHIKAM355-05, TE-LEX-C356-UTSAVAM356-01, TE-LEX-C356-UTSAVAM356-02, TE-LEX-C356-UTSAVAM356-03, TE-LEX-C356-UTSAVAM356-04, TE-LEX-C356-UTSAVAM356-05, TE-LEX-C357-VAMSAM357-01, TE-LEX-C357-VAMSAM357-02, TE-LEX-C357-VAMSAM357-03, TE-LEX-C357-VAMSAM357-04, TE-LEX-C357-VAMSAM357-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a crime, a criminal, a guilty person, an innocent person, to punish]
+- [YOU SAY: a captive, to detain, to capture, to release, to free from captivity]
+- [YOU SAY: to pursue, to hide oneself, to surrender, to turn in, to step aside]
+- [YOU SAY: a disappearance, to vanish, to fade from view, to appear suddenly, to detect]
+- [YOU SAY: a conspiracy, to mislead, to expose, to cover up, a spy]
+- [YOU SAY: an anniversary, a wedding anniversary, a sixtieth birthday, a birth anniversary, a felicitation]
+- [YOU SAY: a public celebration, to felicitate, a housewarming, a farewell, adoption]
+- [YOU SAY: a lineage, a generation, ancestors, an orphan, to survive]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C350-NERAM350-01, TE-LEX-C350-NERAM350-02, TE-LEX-C350-NERAM350-03, TE-LEX-C350-NERAM350-04, TE-LEX-C350-NERAM350-05, TE-LEX-C351-BANDI351-01, TE-LEX-C351-BANDI351-02, TE-LEX-C351-BANDI351-03, TE-LEX-C351-BANDI351-04, TE-LEX-C351-BANDI351-05, TE-LEX-C352-VEMBADI352-01, TE-LEX-C352-VEMBADI352-02, TE-LEX-C352-VEMBADI352-03, TE-LEX-C352-VEMBADI352-04, TE-LEX-C352-VEMBADI352-05, TE-LEX-C353-ADRSYAM353-01, TE-LEX-C353-ADRSYAM353-02, TE-LEX-C353-ADRSYAM353-03, TE-LEX-C353-ADRSYAM353-04, TE-LEX-C353-ADRSYAM353-05, TE-LEX-C354-KUTRA354-01, TE-LEX-C354-KUTRA354-02, TE-LEX-C354-KUTRA354-03, TE-LEX-C354-KUTRA354-04, TE-LEX-C354-KUTRA354-05, TE-LEX-C355-VARSHIKAM355-01, TE-LEX-C355-VARSHIKAM355-02, TE-LEX-C355-VARSHIKAM355-03, TE-LEX-C355-VARSHIKAM355-04, TE-LEX-C355-VARSHIKAM355-05, TE-LEX-C356-UTSAVAM356-01, TE-LEX-C356-UTSAVAM356-02, TE-LEX-C356-UTSAVAM356-03, TE-LEX-C356-UTSAVAM356-04, TE-LEX-C356-UTSAVAM356-05, TE-LEX-C357-VAMSAM357-01, TE-LEX-C357-VAMSAM357-02, TE-LEX-C357-VAMSAM357-03, TE-LEX-C357-VAMSAM357-04, TE-LEX-C357-VAMSAM357-05] -->
+
+[PAUSE 3s] A crime? (**నేరం**, *nēraṁ*.) A criminal? (**నేరస్థుడు**, *nērasthuḍu*.) A guilty person? (**దోషి**, *dōṣi*.) An innocent person? (**నిర్దోషి**, *nirdōṣi*.) To punish? (**శిక్షించు**, *śikṣiñcu*.) A captive? (**బందీ**, *bandī*.) To detain? (**నిర్బంధించు**, *nirbandhiñcu*.) To capture? (**బంధించు**, *bandhiñcu*.) To release? (**విడుదల చేయు**, *viḍudala cēyu*.) To free from captivity? (**విడిపించు**, *viḍipiñcu*.) To pursue? (**వెంబడించు**, *vembaḍiñcu*.) To hide oneself? (**దాక్కో**, *dākkō*.) To surrender? (**లొంగిపోవు**, *loṅgipōvu*.) To turn in? (**పట్టించు**, *paṭṭiñcu*.) To step aside? (**తప్పుకో**, *tappukō*.) A disappearance? (**అదృశ్యం**, *adṛśyaṁ*.) To vanish? (**మాయమవు**, *māyamavu*.) To fade from view? (**కనుమరుగవు**, *kanumarugavu*.) To appear suddenly? (**ప్రత్యక్షమవు**, *pratyakṣamavu*.) To detect? (**కనిపెట్టు**, *kanipeṭṭu*.) A conspiracy? (**కుట్ర**, *kuṭra*.) To mislead? (**మభ్యపెట్టు**, *mabhyapeṭṭu*.) To expose? (**బయటపెట్టు**, *bayaṭapeṭṭu*.) To cover up? (**కప్పిపుచ్చు**, *kappipuccu*.) A spy? (**గూఢచారి**, *gūḍhacāri*.) An anniversary? (**వార్షికోత్సవం**, *vārṣikōtsavaṁ*.) A wedding anniversary? (**పెళ్ళిరోజు**, *peḷḷirōju*.) A sixtieth birthday? (**షష్టిపూర్తి**, *ṣaṣṭipūrti*.) A birth anniversary? (**జయంతి**, *jayanti*.) A felicitation? (**సన్మానం**, *sanmānaṁ*.) A public celebration? (**ఉత్సవం**, *utsavaṁ*.) To felicitate? (**సన్మానించు**, *sanmāniñcu*.) A housewarming? (**గృహప్రవేశం**, *gṛhapravēśaṁ*.) A farewell? (**వీడ్కోలు**, *vīḍkōlu*.) Adoption? (**దత్తత**, *dattata*.) A lineage? (**వంశం**, *vaṁśaṁ*.) A generation? (**తరం**, *taraṁ*.) Ancestors? (**పూర్వీకులు**, *pūrvīkulu*.) An orphan? (**అనాథ**, *anātha*.) To survive? (**బతుకు**, *batuku*.)
+`;export{t};

@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TE-R461-review-454-461
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 23220
+chapter: 461
+type: review
+headword: (dialogue)
+gloss: a review of chapters 454-461
+concept_tag: REVIEW
+prerequisites: [TE-C454-pailatu, TE-C454-antarjatiya, TE-C454-svadesam, TE-C454-ravana, TE-C454-saganampu, TE-C455-paryatakudu, TE-C455-paryatana, TE-C455-gaidu, TE-C455-pravesam, TE-C455-viharayatra, TE-C456-sikaru, TE-C456-viharincu, TE-C456-drsyam, TE-C456-sandhya, TE-C456-majili, TE-C457-vasati, TE-C457-satram, TE-C457-risepsanu, TE-C457-liphtu, TE-C457-basa-ceyu, TE-C458-sarduko, TE-C458-alavatupadu, TE-C458-domatera, TE-C458-marugudoddi, TE-C458-taguniru, TE-C459-phalaharam, TE-C459-bhojanasala, TE-C459-sadupayam, TE-C459-antarjalam, TE-C459-charjaru, TE-C460-asaukaryam, TE-C460-ibbandi, TE-C460-vakabu-ceyu, TE-C460-vapasu, TE-C460-saricusuko, TE-C461-attapette, TE-C461-vadilivellu, TE-C461-paresuko, TE-C461-taralincu, TE-C461-ceraveyu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-LEX-C454-PAILATU454-01, TE-LEX-C454-PAILATU454-02, TE-LEX-C454-PAILATU454-03, TE-LEX-C454-PAILATU454-04, TE-LEX-C454-PAILATU454-05, TE-LEX-C455-PARYATANA455-01, TE-LEX-C455-PARYATANA455-02, TE-LEX-C455-PARYATANA455-03, TE-LEX-C455-PARYATANA455-04, TE-LEX-C455-PARYATANA455-05, TE-LEX-C456-SHIKARU456-01, TE-LEX-C456-SHIKARU456-02, TE-LEX-C456-SHIKARU456-03, TE-LEX-C456-SHIKARU456-04, TE-LEX-C456-SHIKARU456-05, TE-LEX-C457-VASATI457-01, TE-LEX-C457-VASATI457-02, TE-LEX-C457-VASATI457-03, TE-LEX-C457-VASATI457-04, TE-LEX-C457-VASATI457-05, TE-LEX-C458-GADI458-01, TE-LEX-C458-GADI458-02, TE-LEX-C458-GADI458-03, TE-LEX-C458-GADI458-04, TE-LEX-C458-GADI458-05, TE-LEX-C459-PHALAHARAM459-01, TE-LEX-C459-PHALAHARAM459-02, TE-LEX-C459-PHALAHARAM459-03, TE-LEX-C459-PHALAHARAM459-04, TE-LEX-C459-PHALAHARAM459-05, TE-LEX-C460-ASAUKARYAM460-01, TE-LEX-C460-ASAUKARYAM460-02, TE-LEX-C460-ASAUKARYAM460-03, TE-LEX-C460-ASAUKARYAM460-04, TE-LEX-C460-ASAUKARYAM460-05, TE-LEX-C461-SAMANU461-01, TE-LEX-C461-SAMANU461-02, TE-LEX-C461-SAMANU461-03, TE-LEX-C461-SAMANU461-04, TE-LEX-C461-SAMANU461-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TE-LEX-C454-PAILATU454-01, TE-LEX-C454-PAILATU454-02, TE-LEX-C454-PAILATU454-03, TE-LEX-C454-PAILATU454-04, TE-LEX-C454-PAILATU454-05, TE-LEX-C455-PARYATANA455-01, TE-LEX-C455-PARYATANA455-02, TE-LEX-C455-PARYATANA455-03, TE-LEX-C455-PARYATANA455-04, TE-LEX-C455-PARYATANA455-05, TE-LEX-C456-SHIKARU456-01, TE-LEX-C456-SHIKARU456-02, TE-LEX-C456-SHIKARU456-03, TE-LEX-C456-SHIKARU456-04, TE-LEX-C456-SHIKARU456-05, TE-LEX-C457-VASATI457-01, TE-LEX-C457-VASATI457-02, TE-LEX-C457-VASATI457-03, TE-LEX-C457-VASATI457-04, TE-LEX-C457-VASATI457-05, TE-LEX-C458-GADI458-01, TE-LEX-C458-GADI458-02, TE-LEX-C458-GADI458-03, TE-LEX-C458-GADI458-04, TE-LEX-C458-GADI458-05, TE-LEX-C459-PHALAHARAM459-01, TE-LEX-C459-PHALAHARAM459-02, TE-LEX-C459-PHALAHARAM459-03, TE-LEX-C459-PHALAHARAM459-04, TE-LEX-C459-PHALAHARAM459-05, TE-LEX-C460-ASAUKARYAM460-01, TE-LEX-C460-ASAUKARYAM460-02, TE-LEX-C460-ASAUKARYAM460-03, TE-LEX-C460-ASAUKARYAM460-04, TE-LEX-C460-ASAUKARYAM460-05, TE-LEX-C461-SAMANU461-01, TE-LEX-C461-SAMANU461-02, TE-LEX-C461-SAMANU461-03, TE-LEX-C461-SAMANU461-04, TE-LEX-C461-SAMANU461-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C454-pailatu, TE-C454-antarjatiya, TE-C454-svadesam, TE-C454-ravana, TE-C454-saganampu, TE-C455-paryatakudu, TE-C455-paryatana, TE-C455-gaidu, TE-C455-pravesam, TE-C455-viharayatra, TE-C456-sikaru, TE-C456-viharincu, TE-C456-drsyam, TE-C456-sandhya, TE-C456-majili, TE-C457-vasati, TE-C457-satram, TE-C457-risepsanu, TE-C457-liphtu, TE-C457-basa-ceyu, TE-C458-sarduko, TE-C458-alavatupadu, TE-C458-domatera, TE-C458-marugudoddi, TE-C458-taguniru, TE-C459-phalaharam, TE-C459-bhojanasala, TE-C459-sadupayam, TE-C459-antarjalam, TE-C459-charjaru, TE-C460-asaukaryam, TE-C460-ibbandi, TE-C460-vakabu-ceyu, TE-C460-vapasu, TE-C460-saricusuko, TE-C461-attapette, TE-C461-vadilivellu, TE-C461-paresuko, TE-C461-taralincu, TE-C461-ceraveyu]
+---
+
+# Words from chapters 454–461 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C454-PAILATU454-01, TE-LEX-C454-PAILATU454-02] -->
+
+[PAUSE 3s] Say the Telugu for a pilot and international.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C454-PAILATU454-01, TE-LEX-C454-PAILATU454-02, TE-LEX-C454-PAILATU454-03, TE-LEX-C454-PAILATU454-04, TE-LEX-C454-PAILATU454-05, TE-LEX-C455-PARYATANA455-01, TE-LEX-C455-PARYATANA455-02, TE-LEX-C455-PARYATANA455-03, TE-LEX-C455-PARYATANA455-04, TE-LEX-C455-PARYATANA455-05, TE-LEX-C456-SHIKARU456-01, TE-LEX-C456-SHIKARU456-02, TE-LEX-C456-SHIKARU456-03, TE-LEX-C456-SHIKARU456-04, TE-LEX-C456-SHIKARU456-05, TE-LEX-C457-VASATI457-01, TE-LEX-C457-VASATI457-02, TE-LEX-C457-VASATI457-03, TE-LEX-C457-VASATI457-04, TE-LEX-C457-VASATI457-05, TE-LEX-C458-GADI458-01, TE-LEX-C458-GADI458-02, TE-LEX-C458-GADI458-03, TE-LEX-C458-GADI458-04, TE-LEX-C458-GADI458-05, TE-LEX-C459-PHALAHARAM459-01, TE-LEX-C459-PHALAHARAM459-02, TE-LEX-C459-PHALAHARAM459-03, TE-LEX-C459-PHALAHARAM459-04, TE-LEX-C459-PHALAHARAM459-05, TE-LEX-C460-ASAUKARYAM460-01, TE-LEX-C460-ASAUKARYAM460-02, TE-LEX-C460-ASAUKARYAM460-03, TE-LEX-C460-ASAUKARYAM460-04, TE-LEX-C460-ASAUKARYAM460-05, TE-LEX-C461-SAMANU461-01, TE-LEX-C461-SAMANU461-02, TE-LEX-C461-SAMANU461-03, TE-LEX-C461-SAMANU461-04, TE-LEX-C461-SAMANU461-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a pilot, international, one's homeland, transport, to see off]
+- [YOU SAY: a tourist, a tour, a tour guide, entry, a pleasure trip]
+- [YOU SAY: a jaunt, to stroll, a view, dusk, a stopover]
+- [YOU SAY: lodging, an inn, a reception desk, an elevator, to stay overnight]
+- [YOU SAY: to settle in, to get used to, a mosquito net, a toilet, drinking water]
+- [YOU SAY: a snack, a dining hall, a facility, the web, a phone charger]
+- [YOU SAY: inconvenience, trouble, to inquire, a refund, to double-check]
+- [YOU SAY: a cardboard box, to leave behind, to mislay, to shift elsewhere, to deliver]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C454-PAILATU454-01, TE-LEX-C454-PAILATU454-02, TE-LEX-C454-PAILATU454-03, TE-LEX-C454-PAILATU454-04, TE-LEX-C454-PAILATU454-05, TE-LEX-C455-PARYATANA455-01, TE-LEX-C455-PARYATANA455-02, TE-LEX-C455-PARYATANA455-03, TE-LEX-C455-PARYATANA455-04, TE-LEX-C455-PARYATANA455-05, TE-LEX-C456-SHIKARU456-01, TE-LEX-C456-SHIKARU456-02, TE-LEX-C456-SHIKARU456-03, TE-LEX-C456-SHIKARU456-04, TE-LEX-C456-SHIKARU456-05, TE-LEX-C457-VASATI457-01, TE-LEX-C457-VASATI457-02, TE-LEX-C457-VASATI457-03, TE-LEX-C457-VASATI457-04, TE-LEX-C457-VASATI457-05, TE-LEX-C458-GADI458-01, TE-LEX-C458-GADI458-02, TE-LEX-C458-GADI458-03, TE-LEX-C458-GADI458-04, TE-LEX-C458-GADI458-05, TE-LEX-C459-PHALAHARAM459-01, TE-LEX-C459-PHALAHARAM459-02, TE-LEX-C459-PHALAHARAM459-03, TE-LEX-C459-PHALAHARAM459-04, TE-LEX-C459-PHALAHARAM459-05, TE-LEX-C460-ASAUKARYAM460-01, TE-LEX-C460-ASAUKARYAM460-02, TE-LEX-C460-ASAUKARYAM460-03, TE-LEX-C460-ASAUKARYAM460-04, TE-LEX-C460-ASAUKARYAM460-05, TE-LEX-C461-SAMANU461-01, TE-LEX-C461-SAMANU461-02, TE-LEX-C461-SAMANU461-03, TE-LEX-C461-SAMANU461-04, TE-LEX-C461-SAMANU461-05] -->
+
+[PAUSE 3s] A pilot? (**పైలటు**, *pailaṭu*.) International? (**అంతర్జాతీయ**, *antarjātīya*.) One's homeland? (**స్వదేశం**, *svadēśaṁ*.) Transport? (**రవాణా**, *ravāṇā*.) To see off? (**సాగనంపు**, *sāganampu*.) A tourist? (**పర్యాటకుడు**, *paryāṭakuḍu*.) A tour? (**పర్యటన**, *paryaṭana*.) A tour guide? (**గైడు**, *gaiḍu*.) Entry? (**ప్రవేశం**, *pravēśaṁ*.) A pleasure trip? (**విహారయాత్ర**, *vihārayātra*.) A jaunt? (**షికారు**, *ṣikāru*.) To stroll? (**విహరించు**, *vihariñcu*.) A view? (**దృశ్యం**, *dṛśyaṁ*.) Dusk? (**సంధ్య**, *sandhya*.) A stopover? (**మజిలీ**, *majilī*.) Lodging? (**వసతి**, *vasati*.) An inn? (**సత్రం**, *satraṁ*.) A reception desk? (**రిసెప్షను**, *risepṣanu*.) An elevator? (**లిఫ్టు**, *liphṭu*.) To stay overnight? (**బస చేయు**, *basa cēyu*.) To settle in? (**సర్దుకో**, *sardukō*.) To get used to? (**అలవాటుపడు**, *alavāṭupaḍu*.) A mosquito net? (**దోమతెర**, *dōmatera*.) A toilet? (**మరుగుదొడ్డి**, *marugudoḍḍi*.) Drinking water? (**తాగునీరు**, *tāgunīru*.) A snack? (**ఫలహారం**, *phalahāraṁ*.) A dining hall? (**భోజనశాల**, *bhōjanaśāla*.) A facility? (**సదుపాయం**, *sadupāyaṁ*.) The web? (**అంతర్జాలం**, *antarjālaṁ*.) A phone charger? (**ఛార్జరు**, *chārjaru*.) Inconvenience? (**అసౌకర్యం**, *asaukaryaṁ*.) Trouble? (**ఇబ్బంది**, *ibbandi*.) To inquire? (**వాకబు చేయు**, *vākabu cēyu*.) A refund? (**వాపసు**, *vāpasu*.) To double-check? (**సరిచూసుకో**, *saricūsukō*.) A cardboard box? (**అట్టపెట్టె**, *aṭṭapeṭṭe*.) To leave behind? (**వదిలివెళ్ళు**, *vadiliveḷḷu*.) To mislay? (**పారేసుకో**, *pārēsukō*.) To shift elsewhere? (**తరలించు**, *taraliñcu*.) To deliver? (**చేరవేయు**, *cēravēyu*.)
+`;export{t};

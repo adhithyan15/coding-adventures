@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TE-R477-review-470-477
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 24040
+chapter: 477
+type: review
+headword: (dialogue)
+gloss: a review of chapters 470-477
+concept_tag: REVIEW
+prerequisites: [TE-C470-kalusyam, TE-C470-vyarthalu, TE-C470-vayuvu, TE-C470-kalusitam-ceyu, TE-C470-svacchamaina, TE-C471-paryavaranam, TE-C471-paccadanam, TE-C471-naruku, TE-C471-nastaparacu, TE-C471-samraksincu, TE-C472-vanyaprani, TE-C472-abhayaranyam, TE-C472-vetadu, TE-C472-antarincipovu, TE-C472-valasapovu, TE-C473-dvipam, TE-C473-timingalam, TE-C473-pagadam, TE-C473-uppena, TE-C473-garjincu, TE-C474-sikharam, TE-C474-pithabhumi, TE-C474-khandam, TE-C474-agniparvatam, TE-C474-prasantamaina, TE-C475-sangamam, TE-C475-anakatta, TE-C475-jalasayam, TE-C475-nitiparudala, TE-C475-cittadi, TE-C476-sitosnasthiti, TE-C476-usnograta, TE-C476-tema, TE-C476-ukkapota, TE-C476-vedekku, TE-C477-rtupavanam, TE-C477-varsapatam, TE-C477-musuru, TE-C477-jallu, TE-C477-tadisipovu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-LEX-C470-KALUSHYAM470-01, TE-LEX-C470-KALUSHYAM470-02, TE-LEX-C470-KALUSHYAM470-03, TE-LEX-C470-KALUSHYAM470-04, TE-LEX-C470-KALUSHYAM470-05, TE-LEX-C471-PARYAVARANAM471-01, TE-LEX-C471-PARYAVARANAM471-02, TE-LEX-C471-PARYAVARANAM471-03, TE-LEX-C471-PARYAVARANAM471-04, TE-LEX-C471-PARYAVARANAM471-05, TE-LEX-C472-VANYAPRANI472-01, TE-LEX-C472-VANYAPRANI472-02, TE-LEX-C472-VANYAPRANI472-03, TE-LEX-C472-VANYAPRANI472-04, TE-LEX-C472-VANYAPRANI472-05, TE-LEX-C473-DVIPAM473-01, TE-LEX-C473-DVIPAM473-02, TE-LEX-C473-DVIPAM473-03, TE-LEX-C473-DVIPAM473-04, TE-LEX-C473-DVIPAM473-05, TE-LEX-C474-SIKHARAM474-01, TE-LEX-C474-SIKHARAM474-02, TE-LEX-C474-SIKHARAM474-03, TE-LEX-C474-SIKHARAM474-04, TE-LEX-C474-SIKHARAM474-05, TE-LEX-C475-ANAKATTA475-01, TE-LEX-C475-ANAKATTA475-02, TE-LEX-C475-ANAKATTA475-03, TE-LEX-C475-ANAKATTA475-04, TE-LEX-C475-ANAKATTA475-05, TE-LEX-C476-USHNOGRATA476-01, TE-LEX-C476-USHNOGRATA476-02, TE-LEX-C476-USHNOGRATA476-03, TE-LEX-C476-USHNOGRATA476-04, TE-LEX-C476-USHNOGRATA476-05, TE-LEX-C477-RUTUPAVANAM477-01, TE-LEX-C477-RUTUPAVANAM477-02, TE-LEX-C477-RUTUPAVANAM477-03, TE-LEX-C477-RUTUPAVANAM477-04, TE-LEX-C477-RUTUPAVANAM477-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TE-LEX-C470-KALUSHYAM470-01, TE-LEX-C470-KALUSHYAM470-02, TE-LEX-C470-KALUSHYAM470-03, TE-LEX-C470-KALUSHYAM470-04, TE-LEX-C470-KALUSHYAM470-05, TE-LEX-C471-PARYAVARANAM471-01, TE-LEX-C471-PARYAVARANAM471-02, TE-LEX-C471-PARYAVARANAM471-03, TE-LEX-C471-PARYAVARANAM471-04, TE-LEX-C471-PARYAVARANAM471-05, TE-LEX-C472-VANYAPRANI472-01, TE-LEX-C472-VANYAPRANI472-02, TE-LEX-C472-VANYAPRANI472-03, TE-LEX-C472-VANYAPRANI472-04, TE-LEX-C472-VANYAPRANI472-05, TE-LEX-C473-DVIPAM473-01, TE-LEX-C473-DVIPAM473-02, TE-LEX-C473-DVIPAM473-03, TE-LEX-C473-DVIPAM473-04, TE-LEX-C473-DVIPAM473-05, TE-LEX-C474-SIKHARAM474-01, TE-LEX-C474-SIKHARAM474-02, TE-LEX-C474-SIKHARAM474-03, TE-LEX-C474-SIKHARAM474-04, TE-LEX-C474-SIKHARAM474-05, TE-LEX-C475-ANAKATTA475-01, TE-LEX-C475-ANAKATTA475-02, TE-LEX-C475-ANAKATTA475-03, TE-LEX-C475-ANAKATTA475-04, TE-LEX-C475-ANAKATTA475-05, TE-LEX-C476-USHNOGRATA476-01, TE-LEX-C476-USHNOGRATA476-02, TE-LEX-C476-USHNOGRATA476-03, TE-LEX-C476-USHNOGRATA476-04, TE-LEX-C476-USHNOGRATA476-05, TE-LEX-C477-RUTUPAVANAM477-01, TE-LEX-C477-RUTUPAVANAM477-02, TE-LEX-C477-RUTUPAVANAM477-03, TE-LEX-C477-RUTUPAVANAM477-04, TE-LEX-C477-RUTUPAVANAM477-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C470-kalusyam, TE-C470-vyarthalu, TE-C470-vayuvu, TE-C470-kalusitam-ceyu, TE-C470-svacchamaina, TE-C471-paryavaranam, TE-C471-paccadanam, TE-C471-naruku, TE-C471-nastaparacu, TE-C471-samraksincu, TE-C472-vanyaprani, TE-C472-abhayaranyam, TE-C472-vetadu, TE-C472-antarincipovu, TE-C472-valasapovu, TE-C473-dvipam, TE-C473-timingalam, TE-C473-pagadam, TE-C473-uppena, TE-C473-garjincu, TE-C474-sikharam, TE-C474-pithabhumi, TE-C474-khandam, TE-C474-agniparvatam, TE-C474-prasantamaina, TE-C475-sangamam, TE-C475-anakatta, TE-C475-jalasayam, TE-C475-nitiparudala, TE-C475-cittadi, TE-C476-sitosnasthiti, TE-C476-usnograta, TE-C476-tema, TE-C476-ukkapota, TE-C476-vedekku, TE-C477-rtupavanam, TE-C477-varsapatam, TE-C477-musuru, TE-C477-jallu, TE-C477-tadisipovu]
+---
+
+# Words from chapters 470–477 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C470-KALUSHYAM470-01, TE-LEX-C470-KALUSHYAM470-02] -->
+
+[PAUSE 3s] Say the Telugu for pollution and waste.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C470-KALUSHYAM470-01, TE-LEX-C470-KALUSHYAM470-02, TE-LEX-C470-KALUSHYAM470-03, TE-LEX-C470-KALUSHYAM470-04, TE-LEX-C470-KALUSHYAM470-05, TE-LEX-C471-PARYAVARANAM471-01, TE-LEX-C471-PARYAVARANAM471-02, TE-LEX-C471-PARYAVARANAM471-03, TE-LEX-C471-PARYAVARANAM471-04, TE-LEX-C471-PARYAVARANAM471-05, TE-LEX-C472-VANYAPRANI472-01, TE-LEX-C472-VANYAPRANI472-02, TE-LEX-C472-VANYAPRANI472-03, TE-LEX-C472-VANYAPRANI472-04, TE-LEX-C472-VANYAPRANI472-05, TE-LEX-C473-DVIPAM473-01, TE-LEX-C473-DVIPAM473-02, TE-LEX-C473-DVIPAM473-03, TE-LEX-C473-DVIPAM473-04, TE-LEX-C473-DVIPAM473-05, TE-LEX-C474-SIKHARAM474-01, TE-LEX-C474-SIKHARAM474-02, TE-LEX-C474-SIKHARAM474-03, TE-LEX-C474-SIKHARAM474-04, TE-LEX-C474-SIKHARAM474-05, TE-LEX-C475-ANAKATTA475-01, TE-LEX-C475-ANAKATTA475-02, TE-LEX-C475-ANAKATTA475-03, TE-LEX-C475-ANAKATTA475-04, TE-LEX-C475-ANAKATTA475-05, TE-LEX-C476-USHNOGRATA476-01, TE-LEX-C476-USHNOGRATA476-02, TE-LEX-C476-USHNOGRATA476-03, TE-LEX-C476-USHNOGRATA476-04, TE-LEX-C476-USHNOGRATA476-05, TE-LEX-C477-RUTUPAVANAM477-01, TE-LEX-C477-RUTUPAVANAM477-02, TE-LEX-C477-RUTUPAVANAM477-03, TE-LEX-C477-RUTUPAVANAM477-04, TE-LEX-C477-RUTUPAVANAM477-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: pollution, waste, a gas, to pollute, pure]
+- [YOU SAY: the environment, greenery, to chop down, to damage, to conserve]
+- [YOU SAY: a wild animal, a wildlife sanctuary, to hunt, to die out, to migrate]
+- [YOU SAY: an isle, a whale, coral, a tidal surge, to roar]
+- [YOU SAY: a peak, a plateau, a continent, a volcano, peaceful]
+- [YOU SAY: a confluence, a dam, a reservoir, irrigation, a marsh]
+- [YOU SAY: the climate, temperature, humidity, muggy heat, to heat up]
+- [YOU SAY: the monsoon, rainfall, a spell of drizzle, a shower of rain, to get soaked]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C470-KALUSHYAM470-01, TE-LEX-C470-KALUSHYAM470-02, TE-LEX-C470-KALUSHYAM470-03, TE-LEX-C470-KALUSHYAM470-04, TE-LEX-C470-KALUSHYAM470-05, TE-LEX-C471-PARYAVARANAM471-01, TE-LEX-C471-PARYAVARANAM471-02, TE-LEX-C471-PARYAVARANAM471-03, TE-LEX-C471-PARYAVARANAM471-04, TE-LEX-C471-PARYAVARANAM471-05, TE-LEX-C472-VANYAPRANI472-01, TE-LEX-C472-VANYAPRANI472-02, TE-LEX-C472-VANYAPRANI472-03, TE-LEX-C472-VANYAPRANI472-04, TE-LEX-C472-VANYAPRANI472-05, TE-LEX-C473-DVIPAM473-01, TE-LEX-C473-DVIPAM473-02, TE-LEX-C473-DVIPAM473-03, TE-LEX-C473-DVIPAM473-04, TE-LEX-C473-DVIPAM473-05, TE-LEX-C474-SIKHARAM474-01, TE-LEX-C474-SIKHARAM474-02, TE-LEX-C474-SIKHARAM474-03, TE-LEX-C474-SIKHARAM474-04, TE-LEX-C474-SIKHARAM474-05, TE-LEX-C475-ANAKATTA475-01, TE-LEX-C475-ANAKATTA475-02, TE-LEX-C475-ANAKATTA475-03, TE-LEX-C475-ANAKATTA475-04, TE-LEX-C475-ANAKATTA475-05, TE-LEX-C476-USHNOGRATA476-01, TE-LEX-C476-USHNOGRATA476-02, TE-LEX-C476-USHNOGRATA476-03, TE-LEX-C476-USHNOGRATA476-04, TE-LEX-C476-USHNOGRATA476-05, TE-LEX-C477-RUTUPAVANAM477-01, TE-LEX-C477-RUTUPAVANAM477-02, TE-LEX-C477-RUTUPAVANAM477-03, TE-LEX-C477-RUTUPAVANAM477-04, TE-LEX-C477-RUTUPAVANAM477-05] -->
+
+[PAUSE 3s] Pollution? (**కాలుష్యం**, *kāluṣyaṁ*.) Waste? (**వ్యర్థాలు**, *vyarthālu*.) A gas? (**వాయువు**, *vāyuvu*.) To pollute? (**కలుషితం చేయు**, *kaluṣitaṁ cēyu*.) Pure? (**స్వచ్ఛమైన**, *svacchamaina*.) The environment? (**పర్యావరణం**, *paryāvaraṇaṁ*.) Greenery? (**పచ్చదనం**, *paccadanaṁ*.) To chop down? (**నరుకు**, *naruku*.) To damage? (**నష్టపరచు**, *naṣṭaparacu*.) To conserve? (**సంరక్షించు**, *saṁrakṣiñcu*.) A wild animal? (**వన్యప్రాణి**, *vanyaprāṇi*.) A wildlife sanctuary? (**అభయారణ్యం**, *abhayāraṇyaṁ*.) To hunt? (**వేటాడు**, *vēṭāḍu*.) To die out? (**అంతరించిపోవు**, *antariñcipōvu*.) To migrate? (**వలసపోవు**, *valasapōvu*.) An isle? (**ద్వీపం**, *dvīpaṁ*.) A whale? (**తిమింగలం**, *timiṅgalaṁ*.) Coral? (**పగడం**, *pagaḍaṁ*.) A tidal surge? (**ఉప్పెన**, *uppena*.) To roar? (**గర్జించు**, *garjiñcu*.) A peak? (**శిఖరం**, *śikharaṁ*.) A plateau? (**పీఠభూమి**, *pīṭhabhūmi*.) A continent? (**ఖండం**, *khaṇḍaṁ*.) A volcano? (**అగ్నిపర్వతం**, *agniparvataṁ*.) Peaceful? (**ప్రశాంతమైన**, *praśāntamaina*.) A confluence? (**సంగమం**, *saṅgamaṁ*.) A dam? (**ఆనకట్ట**, *ānakaṭṭa*.) A reservoir? (**జలాశయం**, *jalāśayaṁ*.) Irrigation? (**నీటిపారుదల**, *nīṭipārudala*.) A marsh? (**చిత్తడి**, *cittaḍi*.) The climate? (**శీతోష్ణస్థితి**, *śītōṣṇasthiti*.) Temperature? (**ఉష్ణోగ్రత**, *uṣṇōgrata*.) Humidity? (**తేమ**, *tēma*.) Muggy heat? (**ఉక్కపోత**, *ukkapōta*.) To heat up? (**వేడెక్కు**, *vēḍekku*.) The monsoon? (**ఋతుపవనం**, *ṛtupavanaṁ*.) Rainfall? (**వర్షపాతం**, *varṣapātaṁ*.) A spell of drizzle? (**ముసురు**, *musuru*.) A shower of rain? (**జల్లు**, *jallu*.) To get soaked? (**తడిసిపోవు**, *taḍisipōvu*.)
+`;export{t};
