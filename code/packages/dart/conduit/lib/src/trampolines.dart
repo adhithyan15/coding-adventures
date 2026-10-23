@@ -136,15 +136,19 @@ Pointer<Void> dispatchAfter(
 ) {
   final fn = _afterRegistry[ctx];
   if (fn == null) return current;
+  // We own `current` until it is freed; after that a hook that throws must
+  // not free it a second time (a native double free aborts the process).
+  var owned = true;
   try {
     final currentResp = Response.fromNative(current);
     ffi.conduitResponseFree(current);
+    owned = false;
     return fn(Request.internal(req), currentResp).toNative();
   } on HaltException catch (e) {
-    ffi.conduitResponseFree(current);
+    if (owned) ffi.conduitResponseFree(current);
     return e.response.toNative();
   } catch (ex) {
-    ffi.conduitResponseFree(current);
+    if (owned) ffi.conduitResponseFree(current);
     _reportError(ex);
     try {
       return Response.json(
