@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-188-A2-MEETING-FAMILY",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can distinguish and use a meeting infinitive, a regular-group meeting form, and one completed masculine-singular meeting frame.",
+  "prerequisites": [
+    "PA-EXT-187-A2-PAST-COPULA"
+  ]
+}

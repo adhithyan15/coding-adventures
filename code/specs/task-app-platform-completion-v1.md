@@ -324,7 +324,7 @@ and installers remain #13977. Published and audited from
 the immutable tag and manifest match, and all thirteen assets and twelve
 checksum entries match GitHub asset digests.
 
-### Next bounded fidelity item — #17913: Qt Text widths
+### Completed fidelity item — #17913: Qt Text widths
 
 Preserve the authored calendar heading fill width and timeline label/window
 widths through Qt Text geometry. Refresh both themes before lowering or
@@ -339,6 +339,18 @@ build evidence belongs to CI, not a local source-generation claim.
 Implemented bare Text scalar/fill lowering with ordered scalar states. Painted
 Text retains existing outer-wrapper scalar geometry. Both authored themes
 measure 78 style drops and zero width drops; all unrelated allowances remain.
+
+### Next release checkpoint — #17950: TaskApp v0.5.9
+
+Prepare the compatible Qt Text width fix merged in #17915, Web Component
+per-keystroke input/focus acceptance, and stylesheet-derived web host theme
+tokens as `task-app-v0.5.9`. Move the authoritative unreleased entries into a
+dated patch section and update the release receipt and queue. Validate the
+release helper tests and generated notes, then require all existing web and
+native payload CI before publication from main after preparation merges.
+Audit the immutable tag, source manifest, assets, and checksums before closing
+#17950. Keep HTML, Web Components, and Paint CI-only and all unsigned native
+artifact/signing boundaries unchanged; #13977 remains the live signing tracker.
 
 ### Tier C — reach, stated honestly
 

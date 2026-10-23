@@ -29,6 +29,22 @@ const ER_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-11.16.1-visual-corpus.json"
 ));
+const ER_STYLES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-styles-11.16.1-corpus.json"
+));
+const ER_STYLES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-styles-11.16.1-visual-corpus.json"
+));
+const ER_DEFAULT_CLASS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-default-class-11.16.1-corpus.json"
+));
+const ER_DEFAULT_CLASS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-default-class-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -1901,6 +1917,57 @@ fn pinned_er_direction_corpus_reaches_semantic_ir() {
             .unwrap_or_else(|error| panic!("failed to parse {:?}: {error}", fixture["name"]));
         assert_eq!(diagram.direction, Some(direction));
     }
+}
+
+#[test]
+fn pinned_er_style_corpus_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_STYLES_CORPUS).expect("ER style corpus must be JSON");
+    let visual: Value =
+        serde_json::from_str(ER_STYLES_VISUAL_CORPUS).expect("ER style visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().expect("ER style fixtures must be an array");
+
+    let inline = parse_er_diagram(fixtures[0]["source"].as_str().expect("inline class source"))
+        .expect("inline ER class must parse");
+    let customer = inline.nodes.iter().find(|node| node.id == "CUSTOMER").expect("CUSTOMER");
+    let style = customer.style.as_ref().expect("inline class style");
+    assert_eq!(style.fill.as_deref(), Some("#dbeafe"));
+    assert_eq!(style.stroke.as_deref(), Some("#1d4ed8"));
+    assert_eq!(style.text_color.as_deref(), Some("#172554"));
+    assert_eq!(style.stroke_width, Some(3.0));
+    assert_eq!(style.font_size, Some(16.0));
+    assert_eq!(style.font_weight, Some(700));
+
+    let assigned = parse_er_diagram(fixtures[1]["source"].as_str().expect("assigned class source"))
+        .expect("assigned ER classes and direct style must parse");
+    let customer = assigned.nodes.iter().find(|node| node.id == "CUSTOMER").expect("CUSTOMER");
+    let order = assigned.nodes.iter().find(|node| node.id == "ORDER").expect("ORDER");
+    assert_eq!(customer.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#dcfce7"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fef3c7"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#b45309"));
+    assert_eq!(order.style.as_ref().and_then(|style| style.stroke_width), Some(4.0));
+}
+
+#[test]
+fn pinned_er_default_class_respects_specific_style_precedence() {
+    let syntax: Value =
+        serde_json::from_str(ER_DEFAULT_CLASS_CORPUS).expect("ER default class corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_DEFAULT_CLASS_VISUAL_CORPUS)
+        .expect("ER default class visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let source = syntax["fixtures"][0]["source"].as_str().expect("ER default class source");
+    let diagram = parse_er_diagram(source).expect("ER default class fixture must parse");
+
+    let car = diagram.nodes.iter().find(|node| node.id == "CAR").expect("CAR");
+    let person = diagram.nodes.iter().find(|node| node.id == "PERSON").expect("PERSON");
+    let house = diagram.nodes.iter().find(|node| node.id == "HOUSE").expect("HOUSE");
+    assert_eq!(car.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fce7f3"));
+    assert_eq!(car.style.as_ref().and_then(|style| style.stroke_width), Some(4.0));
+    assert_eq!(person.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#dbeafe"));
+    assert_eq!(person.style.as_ref().and_then(|style| style.stroke_width), None);
+    assert_eq!(house.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fef3c7"));
+    assert_eq!(house.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#b45309"));
+    assert_eq!(house.style.as_ref().and_then(|style| style.stroke_width), Some(4.0));
 }
 
 #[test]
