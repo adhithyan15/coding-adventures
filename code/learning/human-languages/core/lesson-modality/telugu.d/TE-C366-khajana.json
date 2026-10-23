@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C366-khajana",
+    "language": "telugu",
+    "chapter": 366,
+    "sequence": 18050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78046db1b587e87b"
+  },
+  "findings": []
+}

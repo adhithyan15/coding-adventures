@@ -1,0 +1,11 @@
+{
+  "id": "TE-C489-mosapovu",
+  "pathSegment": "TE-PATH-489-KALTI489",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-489-KALTI489",
+      "order": 2
+    }
+  ]
+}

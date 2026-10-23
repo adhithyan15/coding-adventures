@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:e062b738a47f7a4d",
+  "lessonIds": [
+    "TE-C529-menamama",
+    "TE-C529-menatta",
+    "TE-C529-peddananna",
+    "TE-C529-peddamma",
+    "TE-C529-menakodalu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch529.txt",
+  "json": "telugu/narration/ch529.json",
+  "textHash": "fnv1a64:882abb9009507dce",
+  "jsonHash": "fnv1a64:c5dbe7710af51607",
+  "findings": []
+}

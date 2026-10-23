@@ -1,0 +1,11 @@
+{
+  "id": "TE-R324-if-and-otherwise",
+  "pathSegment": "TE-PATH-324-IF-REAL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-324-IF-REAL",
+      "order": 2
+    }
+  ]
+}

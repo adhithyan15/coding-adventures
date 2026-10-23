@@ -1,0 +1,12 @@
+{
+  "language": "telugu",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:38513e169612e2e8",
+  "lessonIds": [
+    "TE-C318-anipincu",
+    "TE-C318-anukuntunnanu",
+    "TE-C318-kabatti",
+    "TE-R318-opinion-and-result"
+  ],
+  "tex": "telugu/book/chapters/ch318-what-i-think-and-so.tex"
+}

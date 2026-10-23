@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-412-PARISODHANA412",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TE-EXT-412-PARISODHANA412"
+  ],
+  "after": []
+}

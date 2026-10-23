@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "Bringing Up Children",
+  "label": "ch:te-bringing-up-children",
+  "canDo": "I can talk about bringing up children, coaxing them and their tantrums.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C532-maram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can talk about bringing up children, coaxing them and their tantrums.",
+    "assesses": [
+      "TE-LEX-C532-PENPAKAM532-03",
+      "TE-LEX-C532-PENPAKAM532-04",
+      "TE-LEX-C532-PENPAKAM532-05"
+    ]
+  }
+}

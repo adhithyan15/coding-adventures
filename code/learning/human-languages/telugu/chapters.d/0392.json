@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "Where Things Come From",
+  "label": "ch:te-where-things-come-from",
+  "canDo": "I can talk about sources, origins and what something leads to.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C392-talettu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can talk about sources, origins and what something leads to.",
+    "assesses": [
+      "TE-LEX-C392-MULAM392-03",
+      "TE-LEX-C392-MULAM392-04",
+      "TE-LEX-C392-MULAM392-05"
+    ]
+  }
+}

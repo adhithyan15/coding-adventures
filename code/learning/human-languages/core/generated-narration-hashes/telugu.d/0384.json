@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:f930f897a134e4d7",
+  "lessonIds": [
+    "TE-C384-sucincu",
+    "TE-C384-pratipadincu",
+    "TE-C384-pratipadana",
+    "TE-C384-sipharsu-ceyu",
+    "TE-C384-amsam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch384.txt",
+  "json": "telugu/narration/ch384.json",
+  "textHash": "fnv1a64:c451f1b7e62259eb",
+  "jsonHash": "fnv1a64:9e74b94fcc2c50b6",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C460-saricusuko",
+    "language": "telugu",
+    "chapter": 460,
+    "sequence": 23160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05d91593bb5a856e"
+  },
+  "findings": []
+}

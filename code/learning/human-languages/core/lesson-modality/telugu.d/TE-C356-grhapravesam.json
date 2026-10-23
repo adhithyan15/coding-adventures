@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C356-grhapravesam",
+    "language": "telugu",
+    "chapter": 356,
+    "sequence": 17550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cefce4a2a0fb4983"
+  },
+  "findings": []
+}

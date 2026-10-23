@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 400,
+  "output": "telugu/book/chapters/ch400-elections.tex",
+  "scriptSet": "telugu-comparisons"
+}

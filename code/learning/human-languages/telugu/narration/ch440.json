@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 440,
+  "title": "Waiting on the Platform",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a57cea265b3b0599",
+  "lessons": [
+    {
+      "id": "TE-C440-alasyam",
+      "sequence": 22100,
+      "title": "ఆలస్యం (ālasyaṁ) — a delay; lateness",
+      "headword": "ఆలస్యం",
+      "romanization": "ālasyaṁ",
+      "gloss": "a delay; lateness",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7c1cc63a8932321",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a railway coach, then the Telugu for a fare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆలస్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆలస్యం — ālasyaṁ — \"a delay; lateness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వర్షం వల్ల రైలు రెండు గంటలు ఆలస్యం అయింది. varṣaṁ valla railu reṇḍu gaṇṭalu ālasyaṁ ayindi. Because of the rain the train was two hours late."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆలస్యంగా is late, adverb: ఆలస్యంగా వచ్చాడు, he came late. In Sanskrit the word meant laziness; Telugu uses it for lateness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆలస్యం (ālasyaṁ) is borrowed from Sanskrit ālasya, \"sloth, idleness\" (CDIAL 1371). In Telugu the slowness of the idle became plain lateness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālasyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālasyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālasyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālasyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varṣaṁ valla railu reṇḍu gaṇṭalu ālasyaṁ ayindi. — Because of the rain the train was two hours late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varṣaṁ valla railu reṇḍu gaṇṭalu ālasyaṁ ayindi.* — Because of the rain the train was two hours late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a railway coach, then the Telugu for a fare, then say ālasyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a railway coach, then the Telugu for a fare, then say *ālasyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆలస్యం (ālasyaṁ) mean? (\"A delay; lateness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C440-veci-undu",
+      "sequence": 22110,
+      "title": "వేచి ఉండు (vēci uṇḍu) — to wait",
+      "headword": "వేచి ఉండు",
+      "romanization": "vēci uṇḍu",
+      "gloss": "to wait",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:456c498798b0f9e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a fare, then the Telugu for a delay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వేచి ఉండు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వేచి ఉండు — vēci uṇḍu — \"to wait\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మేము గంటసేపు బస్సు కోసం వేచి ఉన్నాం. mēmu gaṇṭasēpu bassu kōsaṁ vēci unnāṁ. We waited an hour for the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): వేచి ఉన్నాను, vēci unnānu."
+            },
+            {
+              "kind": "speech",
+              "text": "What you wait for takes కోసం: బస్సు కోసం వేచి ఉన్నాను. It is a little more careful than ఆగు, to stop and wait."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వేచి ఉండు (vēci uṇḍu) is native Dravidian, a phrase of two verbs: వేచి, from వేచు, \"to wait for, to look out for\" (DEDR 5533), and ఉండు, \"to be, to stay\" (DEDR 697). Together they say \"to stay waiting\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēci uṇḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēci uṇḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēci uṇḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēci uṇḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēmu gaṇṭasēpu bassu kōsaṁ vēci unnāṁ. — We waited an hour for the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēmu gaṇṭasēpu bassu kōsaṁ vēci unnāṁ.* — We waited an hour for the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a fare, then the Telugu for a delay, then say vēci uṇḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a fare, then the Telugu for a delay, then say *vēci uṇḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వేచి ఉండు (vēci uṇḍu) mean? (\"To wait\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C440-samayapalana",
+      "sequence": 22120,
+      "title": "సమయపాలన (samayapālana) — punctuality",
+      "headword": "సమయపాలన",
+      "romanization": "samayapālana",
+      "gloss": "punctuality",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d794669bcb648d44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a delay, then the Telugu for to wait."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సమయపాలన",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సమయపాలన — samayapālana — \"punctuality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా డ్రైవరుకు సమయపాలన చాలా ముఖ్యం. mā ḍraivaruku samayapālana cālā mukhyaṁ. Punctuality matters a great deal to our driver."
+            },
+            {
+              "kind": "speech",
+              "text": "సమయం, time, + పాలన, keeping: keeping time. పాలన alone is rule or administration."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సమయపాలన (samayapālana) is a compound of two words borrowed from Sanskrit: samaya, \"an appointed time\" (CDIAL 13185), and pālana, \"guarding, keeping\" (CDIAL 8128)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samayapālana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samayapālana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samayapālana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samayapālana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā ḍraivaruku samayapālana cālā mukhyaṁ. — Punctuality matters a great deal to our driver.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā ḍraivaruku samayapālana cālā mukhyaṁ.* — Punctuality matters a great deal to our driver.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a delay, then the Telugu for to wait, then say samayapālana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a delay, then the Telugu for to wait, then say *samayapālana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సమయపాలన (samayapālana) mean? (\"Punctuality\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C440-viramam",
+      "sequence": 22130,
+      "title": "విరామం (virāmaṁ) — an interval; a break",
+      "headword": "విరామం",
+      "romanization": "virāmaṁ",
+      "gloss": "an interval; a break",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f380ad978eec1016",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to wait, then the Telugu for punctuality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: విరామం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విరామం — virāmaṁ — \"an interval; a break\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రెండు గంటల ప్రయాణం తరువాత పది నిమిషాల విరామం ఉంది. reṇḍu gaṇṭala prayāṇaṁ taruvāta padi nimiṣāla virāmaṁ undi. After two hours on the road there is a ten-minute break."
+            },
+            {
+              "kind": "speech",
+              "text": "A film has an interval, విరామం (virāmaṁ), too. In Sanskrit grammar virāma is also the name of the sign ్, which takes away a consonant's vowel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విరామం (virāmaṁ) is borrowed from Sanskrit virāma, \"cessation, a stop, a pause\" (Monier-Williams), from vi-ram, \"to stop\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virāmaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virāmaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virāmaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virāmaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reṇḍu gaṇṭala prayāṇaṁ taruvāta padi nimiṣāla virāmaṁ undi. — After two hours on the road there is a ten-minute break.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reṇḍu gaṇṭala prayāṇaṁ taruvāta padi nimiṣāla virāmaṁ undi.* — After two hours on the road there is a ten-minute break.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to wait, then the Telugu for punctuality, then say virāmaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to wait, then the Telugu for punctuality, then say *virāmaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does విరామం (virāmaṁ) mean? (\"An interval; a break\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C440-tvarapadu",
+      "sequence": 22140,
+      "title": "త్వరపడు (tvarapaḍu) — to hurry up",
+      "headword": "త్వరపడు",
+      "romanization": "tvarapaḍu",
+      "gloss": "to hurry up",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e82601a46456d02f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for punctuality, then the Telugu for an interval."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: త్వరపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "త్వరపడు — tvarapaḍu — \"to hurry up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బస్సు వస్తోందని మేము త్వరపడ్డాం. bassu vastōndani mēmu tvarapaḍḍāṁ. Hearing that the bus was coming, we hurried."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): త్వరపడ్డాను, tvarapaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "త్వరగా, quickly, holds the same Sanskrit word. తొందరపడు is its everyday native twin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "త్వరపడు (tvarapaḍu) is a Telugu compound: Sanskrit tvarā, \"haste\" (Monier-Williams), with the native verb పడు, \"to fall into, to undergo\" (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tvarapaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tvarapaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tvarapaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tvarapaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bassu vastōndani mēmu tvarapaḍḍāṁ. — Hearing that the bus was coming, we hurried.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bassu vastōndani mēmu tvarapaḍḍāṁ.* — Hearing that the bus was coming, we hurried.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for punctuality, then the Telugu for an interval, then say tvarapaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for punctuality, then the Telugu for an interval, then say *tvarapaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does త్వరపడు (tvarapaḍu) mean? (\"To hurry up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

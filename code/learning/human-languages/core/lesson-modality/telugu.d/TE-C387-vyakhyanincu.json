@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C387-vyakhyanincu",
+    "language": "telugu",
+    "chapter": 387,
+    "sequence": 19280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ee36c78fdbff17b"
+  },
+  "findings": []
+}

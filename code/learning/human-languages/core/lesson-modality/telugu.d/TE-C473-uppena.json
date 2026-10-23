@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C473-uppena",
+    "language": "telugu",
+    "chapter": 473,
+    "sequence": 23820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78551b75efda4ed5"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:5db10c533ac291c2",
+  "lessonIds": [
+    "TE-C446-egududigudu",
+    "TE-C446-kudupu",
+    "TE-C446-tappincu",
+    "TE-C446-boltapadu",
+    "TE-C446-sottapadu"
+  ],
+  "tex": "telugu/book/chapters/ch446-bumps-on-the-road.tex"
+}

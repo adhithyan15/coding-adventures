@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "Cheated at the Market",
+  "label": "ch:te-cheated-at-the-market",
+  "canDo": "I can say a pickpocket, adulteration, to be cheated, to rot and to be left over.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C489-migulu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can say a pickpocket, adulteration, to be cheated, to rot and to be left over.",
+    "assesses": [
+      "TE-LEX-C489-KALTI489-03",
+      "TE-LEX-C489-KALTI489-04",
+      "TE-LEX-C489-KALTI489-05"
+    ]
+  }
+}

@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 534,
+  "title": "Quarrels",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6c12cccd1a0f2359",
+  "lessons": [
+    {
+      "id": "TE-C534-godavapadu",
+      "sequence": 27050,
+      "title": "గొడవపడు (goḍavapaḍu) — to have a row; to quarrel",
+      "headword": "గొడవపడు",
+      "romanization": "goḍavapaḍu",
+      "gloss": "to have a row; to quarrel",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c695c3f5ec2bde25",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for hospitality, then the Telugu for to chat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గొడవపడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గొడవపడు — goḍavapaḍu — \"to have a row; to quarrel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చిన్న విషయానికి అన్నదమ్ములు గొడవపడ్డారు. cinna viṣayāniki annadammulu goḍavapaḍḍāru. The brothers had a row over a small thing."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): గొడవపడ్డాను, goḍavapaḍḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "-తో గొడవపడు (goḍavapaḍu), to quarrel with."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గొడవపడు (goḍavapaḍu) is native Dravidian: DEDR 2048 lists Telugu goḍava, \"bother, worry, fuss\", with Kannada goḍave; the native verb paḍu, \"to feel, to suffer\" (DEDR 3853) makes the verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goḍavapaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goḍavapaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goḍavapaḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goḍavapaḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cinna viṣayāniki annadammulu goḍavapaḍḍāru. — The brothers had a row over a small thing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cinna viṣayāniki annadammulu goḍavapaḍḍāru.* — The brothers had a row over a small thing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for hospitality, then the Telugu for to chat, then say goḍavapaḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for hospitality, then the Telugu for to chat, then say *goḍavapaḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గొడవపడు (goḍavapaḍu) mean? (\"To have a row; to quarrel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C534-tagada",
+      "sequence": 27060,
+      "title": "తగాదా (tagādā) — a dispute; a row",
+      "headword": "తగాదా",
+      "romanization": "tagādā",
+      "gloss": "a dispute; a row",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bfe89f3f41fecf02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to chat, then the Telugu for to have a row."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తగాదా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తగాదా — tagādā — \"a dispute; a row\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పొలం గురించి రెండు కుటుంబాల మధ్య తగాదా వచ్చింది. polaṁ guriñci reṇḍu kuṭumbāla madhya tagādā vaccindi. A dispute arose between two families over a field."
+            },
+            {
+              "kind": "speech",
+              "text": "Often about land or money."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తగాదా (tagādā) is usually traced to Arabic taqāḍā, \"a demand, a claim\", which came through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tagādā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tagādā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tagādā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tagādā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polaṁ guriñci reṇḍu kuṭumbāla madhya tagādā vaccindi. — A dispute arose between two families over a field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polaṁ guriñci reṇḍu kuṭumbāla madhya tagādā vaccindi.* — A dispute arose between two families over a field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to chat, then the Telugu for to have a row, then say tagādā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to chat, then the Telugu for to have a row, then say *tagādā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తగాదా (tagādā) mean? (\"A dispute; a row\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C534-alugu",
+      "sequence": 27070,
+      "title": "అలుగు (alugu) — to sulk; to take offence",
+      "headword": "అలుగు",
+      "romanization": "alugu",
+      "gloss": "to sulk; to take offence",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50d81754a9db8661",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to have a row, then the Telugu for a dispute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అలుగు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అలుగు — alugu — \"to sulk; to take offence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బొమ్మ కొనలేదని పాప అలిగింది. bomma konalēdani pāpa aligindi. The little girl sulked because nobody bought her the doll."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): అలిగాను, aligānu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is అలక, a sulk."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అలుగు (alugu) is native Dravidian: DEDR 304 lists Telugu alugu, \"to be angry or displeased, to take offence\", and aluka, \"displeasure\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alugu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alugu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alugu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alugu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bomma konalēdani pāpa aligindi. — The little girl sulked because nobody bought her the doll.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bomma konalēdani pāpa aligindi.* — The little girl sulked because nobody bought her the doll.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to have a row, then the Telugu for a dispute, then say alugu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to have a row, then the Telugu for a dispute, then say *alugu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అలుగు (alugu) mean? (\"To sulk; to take offence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C534-raji",
+      "sequence": 27080,
+      "title": "రాజీ (rājī) — a compromise; a reconciliation",
+      "headword": "రాజీ",
+      "romanization": "rājī",
+      "gloss": "a compromise; a reconciliation",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:866a9488a42bce7c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a dispute, then the Telugu for to sulk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: రాజీ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాజీ — rājī — \"a compromise; a reconciliation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చివరికి ఇద్దరూ రాజీ పడ్డారు. civariki iddarū rājī paḍḍāru. In the end the two of them came to terms."
+            },
+            {
+              "kind": "speech",
+              "text": "రాజీ (rājī) పడు, to come to terms."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాజీ (rājī) came into Telugu through Hindustani rāzī, \"agreed, content\", which is usually traced to Arabic."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "civariki iddarū rājī paḍḍāru. — In the end the two of them came to terms.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *civariki iddarū rājī paḍḍāru.* — In the end the two of them came to terms.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a dispute, then the Telugu for to sulk, then say rājī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a dispute, then the Telugu for to sulk, then say *rājī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does రాజీ (rājī) mean? (\"A compromise; a reconciliation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C534-manaspartha",
+      "sequence": 27090,
+      "title": "మనస్పర్థ (manaspartha) — a rift; a misunderstanding",
+      "headword": "మనస్పర్థ",
+      "romanization": "manaspartha",
+      "gloss": "a rift; a misunderstanding",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91cd5f47b3a15a72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to sulk, then the Telugu for a compromise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మనస్పర్థ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మనస్పర్థ — manaspartha — \"a rift; a misunderstanding\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చిన్న మనస్పర్థ వల్ల స్నేహితులు మాట్లాడుకోవడం మానేశారు. cinna manaspartha valla snēhitulu māṭlāḍukōvaḍaṁ mānēśāru. Because of a small rift the friends stopped talking."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural మనస్పర్థలు; మనసు, mind, + స్పర్థ, rivalry."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మనస్పర్థ (manaspartha) is a learned compound built from Sanskrit manas, \"mind\", and spardhā, \"rivalry, emulation\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manaspartha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manaspartha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manaspartha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manaspartha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cinna manaspartha valla snēhitulu māṭlāḍukōvaḍaṁ mānēśāru. — Because of a small rift the friends stopped talking.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cinna manaspartha valla snēhitulu māṭlāḍukōvaḍaṁ mānēśāru.* — Because of a small rift the friends stopped talking.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to sulk, then the Telugu for a compromise, then say manaspartha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to sulk, then the Telugu for a compromise, then say *manaspartha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మనస్పర్థ (manaspartha) mean? (\"A rift; a misunderstanding\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 347,
+  "title": "Feasts and Presents",
+  "label": "ch:te-feasts-and-presents",
+  "canDo": "I can say a feast, a present, a bouquet, to greet warmly and to meet.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C347-kalusuko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can say a feast, a present, a bouquet, to greet warmly and to meet.",
+    "assesses": [
+      "TE-LEX-C347-VINDU347-03",
+      "TE-LEX-C347-VINDU347-04",
+      "TE-LEX-C347-VINDU347-05"
+    ]
+  }
+}

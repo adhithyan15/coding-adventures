@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:aba1e23c3f76a202",
+  "lessonIds": [
+    "TE-C355-varsikotsavam",
+    "TE-C355-pelliroju",
+    "TE-C355-sastipurti",
+    "TE-C355-jayanti",
+    "TE-C355-sanmanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch355.txt",
+  "json": "telugu/narration/ch355.json",
+  "textHash": "fnv1a64:83995c6b11ffa767",
+  "jsonHash": "fnv1a64:0cf58177feae4bdd",
+  "findings": []
+}

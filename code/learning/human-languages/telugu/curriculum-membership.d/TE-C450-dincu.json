@@ -1,0 +1,11 @@
+{
+  "id": "TE-C450-dincu",
+  "pathSegment": "TE-PATH-450-PARKINGU450",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-450-PARKINGU450",
+      "order": 3
+    }
+  ]
+}

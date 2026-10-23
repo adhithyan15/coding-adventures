@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C534-alugu",
+    "language": "telugu",
+    "chapter": 534,
+    "sequence": 27070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50d81754a9db8661"
+  },
+  "findings": []
+}

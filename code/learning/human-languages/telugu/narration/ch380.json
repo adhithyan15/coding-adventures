@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 380,
+  "title": "Ever Since",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:72fb1c6e659efc93",
+  "lessons": [
+    {
+      "id": "TE-C380-kritam",
+      "sequence": 18760,
+      "title": "క్రితం (kritaṁ) — ago",
+      "headword": "క్రితం",
+      "romanization": "kritaṁ",
+      "gloss": "ago",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4a60cbe12ca7300",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to petition, then the Telugu for to beg."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: క్రితం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "క్రితం — kritaṁ — \"ago\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పది సంవత్సరాల క్రితం ఇక్కడ పెద్ద వరద వచ్చింది. padi saṁvatsarāla kritaṁ ikkaḍa pedda varada vaccindi. Ten years ago a big flood came here."
+            },
+            {
+              "kind": "speech",
+              "text": "It follows the span: రెండు రోజుల క్రితం (kritaṁ), two days ago."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "క్రితం (kritaṁ) is the Telugu word for ago; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kritaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kritaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kritaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kritaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padi saṁvatsarāla kritaṁ ikkaḍa pedda varada vaccindi. — Ten years ago a big flood came here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padi saṁvatsarāla kritaṁ ikkaḍa pedda varada vaccindi.* — Ten years ago a big flood came here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to petition, then the Telugu for to beg, then say kritaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to petition, then the Telugu for to beg, then say *kritaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does క్రితం (kritaṁ) mean? (\"Ago\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C380-antakumundu",
+      "sequence": 18770,
+      "title": "అంతకుముందు (antakumundu) — before that",
+      "headword": "అంతకుముందు",
+      "romanization": "antakumundu",
+      "gloss": "before that",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d731ffe528e37fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to beg, then the Telugu for ago."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అంతకుముందు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అంతకుముందు — antakumundu — \"before that\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అంతకుముందు అతను ఎప్పుడూ ఇక్కడికి రాలేదు. antakumundu atanu eppuḍū ikkaḍiki rālēdu. Before that he had never come here."
+            },
+            {
+              "kind": "speech",
+              "text": "అంత, that, -కు, to, and ముందు, before."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అంతకుముందు (antakumundu) is native Telugu: anta, \"that much\" (DEDR 1), with -ku and mundu, \"before\" (DEDR 5020)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antakumundu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antakumundu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antakumundu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antakumundu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antakumundu atanu eppuḍū ikkaḍiki rālēdu. — Before that he had never come here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antakumundu atanu eppuḍū ikkaḍiki rālēdu.* — Before that he had never come here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to beg, then the Telugu for ago, then say antakumundu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to beg, then the Telugu for ago, then say *antakumundu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అంతకుముందు (antakumundu) mean? (\"Before that\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C380-appatinunci",
+      "sequence": 18780,
+      "title": "అప్పటినుంచి (appaṭinuñci) — from then on; ever since",
+      "headword": "అప్పటినుంచి",
+      "romanization": "appaṭinuñci",
+      "gloss": "from then on; ever since",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2c228d6e49e7fc1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for ago, then the Telugu for before that."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అప్పటినుంచి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అప్పటినుంచి — appaṭinuñci — \"from then on; ever since\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అప్పటినుంచి ఆ ఇంట్లో ఎవరూ ఉండటం లేదు. appaṭinuñci ā iṇṭlō evarū uṇḍaṭaṁ lēdu. Since then nobody has lived in that house."
+            },
+            {
+              "kind": "speech",
+              "text": "అప్పటి, of that time, and నుంచి, from."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అప్పటినుంచి (appaṭinuñci) is native Telugu: appaṭi, \"of that time\", from appuḍu (DEDR 4559), with nuñci, \"from\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appaṭinuñci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appaṭinuñci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appaṭinuñci, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appaṭinuñci*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appaṭinuñci ā iṇṭlō evarū uṇḍaṭaṁ lēdu. — Since then nobody has lived in that house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appaṭinuñci ā iṇṭlō evarū uṇḍaṭaṁ lēdu.* — Since then nobody has lived in that house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for ago, then the Telugu for before that, then say appaṭinuñci again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for ago, then the Telugu for before that, then say *appaṭinuñci* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అప్పటినుంచి (appaṭinuñci) mean? (\"From then on; ever since\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C380-mrtadeham",
+      "sequence": 18790,
+      "title": "మృతదేహం (mṛtadēhaṁ) — a dead body",
+      "headword": "మృతదేహం",
+      "romanization": "mṛtadēhaṁ",
+      "gloss": "a dead body",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a025355c945332d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for before that, then the Telugu for from then on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మృతదేహం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మృతదేహం — mṛtadēhaṁ — \"a dead body\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నది ఒడ్డున ఒక మృతదేహం కనిపించింది. nadi oḍḍuna oka mṛtadēhaṁ kanipiñcindi. A dead body was found on the riverbank."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: మృతదేహాలు, mṛtadēhālu."
+            },
+            {
+              "kind": "speech",
+              "text": "మృత, dead, and దేహం, a body: a news word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మృతదేహం (mṛtadēhaṁ) is borrowed from Sanskrit: mṛta, \"dead\", and deha, \"the body\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mṛtadēhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mṛtadēhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mṛtadēhaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mṛtadēhaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nadi oḍḍuna oka mṛtadēhaṁ kanipiñcindi. — A dead body was found on the riverbank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nadi oḍḍuna oka mṛtadēhaṁ kanipiñcindi.* — A dead body was found on the riverbank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for before that, then the Telugu for from then on, then say mṛtadēhaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for before that, then the Telugu for from then on, then say *mṛtadēhaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మృతదేహం (mṛtadēhaṁ) mean? (\"A dead body\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C380-ventadu",
+      "sequence": 18800,
+      "title": "వెంటాడు (veṇṭāḍu) — to haunt; to hound",
+      "headword": "వెంటాడు",
+      "romanization": "veṇṭāḍu",
+      "gloss": "to haunt; to hound",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c31cda5a1f60c9bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for from then on, then the Telugu for a dead body."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వెంటాడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెంటాడు — veṇṭāḍu — \"to haunt; to hound\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ రాత్రి జ్ఞాపకం అతన్ని ఇంకా వెంటాడుతోంది. ā rātri jñāpakaṁ atanni iṅkā veṇṭāḍutōndi. The memory of that night still haunts him."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): వెంటాడాను, veṇṭāḍānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to hunt or chase: పులి జింకను వెంటాడింది."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెంటాడు (veṇṭāḍu) is native Dravidian: DEDR 5527 lists Telugu veṇṭa, \"hunting, the chase\", and vēṭ-āḍu, \"to hunt\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veṇṭāḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veṇṭāḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veṇṭāḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veṇṭāḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā rātri jñāpakaṁ atanni iṅkā veṇṭāḍutōndi. — The memory of that night still haunts him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā rātri jñāpakaṁ atanni iṅkā veṇṭāḍutōndi.* — The memory of that night still haunts him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for from then on, then the Telugu for a dead body, then say veṇṭāḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for from then on, then the Telugu for a dead body, then say *veṇṭāḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వెంటాడు (veṇṭāḍu) mean? (\"To haunt; to hound\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

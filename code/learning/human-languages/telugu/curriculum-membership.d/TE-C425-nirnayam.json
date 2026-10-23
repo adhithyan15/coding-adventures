@@ -1,0 +1,11 @@
+{
+  "id": "TE-C425-nirnayam",
+  "pathSegment": "TE-PATH-425-NIRNAYAM425",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-425-NIRNAYAM425",
+      "order": 0
+    }
+  ]
+}

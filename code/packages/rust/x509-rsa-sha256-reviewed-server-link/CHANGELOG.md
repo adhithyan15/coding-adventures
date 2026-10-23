@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.6.0 - 2026-10-23
+
+### Added
+
+- Applied an exact retained intermediate's critical NameConstraints extension
+  to every dNSName in the exact target retained by the reviewed two-link path.
+- Added distinct non-copyable evidence retaining the complete root anchor-policy
+  proof plus optional payload-free intermediate DNS count evidence.
+- Added fail-closed criticality, full-DER framing, unsupported-form, caller-limit,
+  violation, redaction, and real unconstrained-intermediate coverage.
+
+## 0.5.0 - 2026-10-23
+
+### Added
+
+- Applied the selected reviewed root's supported permitted DNS constraints to
+  the exact target retained by a complete two-link server-path proof.
+- Added distinct non-copyable success evidence retaining the entire
+  target-to-intermediate-to-reviewed-root path plus optional payload-free DNS
+  count evidence.
+- Added public-API runtime coverage over the static public Let's Encrypt chain,
+  proving the unconstrained ISRG Root X1 branch retains the exact target and
+  reviewed root without weakening upstream evidence construction.
+
 ## 0.4.0 - 2026-10-23
 
 ### Added

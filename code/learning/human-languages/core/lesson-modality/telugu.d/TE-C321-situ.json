@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C321-situ",
+    "language": "telugu",
+    "chapter": 321,
+    "sequence": 15440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c6c11282cd37008"
+  },
+  "findings": []
+}

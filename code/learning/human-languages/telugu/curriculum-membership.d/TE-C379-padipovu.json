@@ -1,0 +1,11 @@
+{
+  "id": "TE-C379-padipovu",
+  "pathSegment": "TE-PATH-379-BADHITUDU379",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-379-BADHITUDU379",
+      "order": 1
+    }
+  ]
+}

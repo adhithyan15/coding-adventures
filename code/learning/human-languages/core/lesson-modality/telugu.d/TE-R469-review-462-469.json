@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R469-review-462-469",
+    "language": "telugu",
+    "chapter": 469,
+    "sequence": 23630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7800994ccbab01c6"
+  },
+  "findings": []
+}

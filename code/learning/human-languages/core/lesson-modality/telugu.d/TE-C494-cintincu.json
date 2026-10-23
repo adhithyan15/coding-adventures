@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C494-cintincu",
+    "language": "telugu",
+    "chapter": 494,
+    "sequence": 25010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a453e848eea30517"
+  },
+  "findings": []
+}

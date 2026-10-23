@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:731347840a5c8bb4",
+  "lessonIds": [
+    "TE-C353-adrsyam",
+    "TE-C353-mayamavu",
+    "TE-C353-kanumarugavu",
+    "TE-C353-pratyaksamavu",
+    "TE-C353-kanipettu"
+  ],
+  "tex": "telugu/book/chapters/ch353-vanished.tex"
+}

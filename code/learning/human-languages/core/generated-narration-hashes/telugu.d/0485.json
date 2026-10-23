@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:9bc6494f0515024a",
+  "lessonIds": [
+    "TE-C485-cellimpu",
+    "TE-C485-nagadu",
+    "TE-C485-baki",
+    "TE-C485-marakam",
+    "TE-C485-eggottu",
+    "TE-R485-review-478-485"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch485.txt",
+  "json": "telugu/narration/ch485.json",
+  "textHash": "fnv1a64:3fe8414764567c3e",
+  "jsonHash": "fnv1a64:b9929039eeecd5c9",
+  "findings": []
+}

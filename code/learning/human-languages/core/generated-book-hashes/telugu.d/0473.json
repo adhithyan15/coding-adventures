@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:40881d23f7379ad1",
+  "lessonIds": [
+    "TE-C473-dvipam",
+    "TE-C473-timingalam",
+    "TE-C473-pagadam",
+    "TE-C473-uppena",
+    "TE-C473-garjincu"
+  ],
+  "tex": "telugu/book/chapters/ch473-islands-and-the-deep-sea.tex"
+}

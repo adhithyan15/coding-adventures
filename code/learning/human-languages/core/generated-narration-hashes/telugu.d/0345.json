@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:05c731a1074cd62e",
+  "lessonIds": [
+    "TE-C345-smasanam",
+    "TE-C345-samadhi",
+    "TE-C345-nivali",
+    "TE-C345-vardhanti",
+    "TE-C345-vilunama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch345.txt",
+  "json": "telugu/narration/ch345.json",
+  "textHash": "fnv1a64:eafb4e43b5549cb6",
+  "jsonHash": "fnv1a64:5dc3b2f04ea8d9ca",
+  "findings": []
+}

@@ -238,11 +238,13 @@ cd host/web && npm install && npm run dev       # http://localhost:5173
 
 ## Incremental releases
 
-The prepared `task-app-v0.5.9` patch preserves Qt calendar/timeline text widths
+The published `task-app-v0.5.9` patch preserves Qt calendar/timeline text widths
 (#17913), reducing measured Qt style drops from 81 to 78. It also includes Web
 Component per-keystroke input/focus acceptance and stylesheet-derived web host
-theme tokens. Publication and immutable asset auditing remain pending in
-#17950. The previous `task-app-v0.5.8` release was published and audited in
+theme tokens. Publication and immutable asset auditing completed in #17950:
+run 39904677952 passed all payloads and the publisher, with source
+`fa203bccd486279cbd651ccd492987c1b2b1004e`, thirteen assets, and twelve
+verified checksum entries. The previous `task-app-v0.5.8` release was audited in
 #17682. Downloadable coverage is unchanged; HTML, Web Components, and Paint
 remain CI-only, and signing remains tracked in #13977.
 

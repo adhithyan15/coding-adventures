@@ -1,0 +1,11 @@
+{
+  "id": "TE-C336-velladincu",
+  "pathSegment": "TE-PATH-336-PUKARU336",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-336-PUKARU336",
+      "order": 4
+    }
+  ]
+}

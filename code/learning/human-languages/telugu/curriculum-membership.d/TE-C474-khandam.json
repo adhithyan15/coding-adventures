@@ -1,0 +1,11 @@
+{
+  "id": "TE-C474-khandam",
+  "pathSegment": "TE-PATH-474-SIKHARAM474",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-474-SIKHARAM474",
+      "order": 2
+    }
+  ]
+}

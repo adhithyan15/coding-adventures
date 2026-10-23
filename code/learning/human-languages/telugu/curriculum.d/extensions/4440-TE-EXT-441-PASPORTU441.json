@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-441-PASPORTU441",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a passport, identification, a customs duty, security and a certificate.",
+  "prerequisites": []
+}

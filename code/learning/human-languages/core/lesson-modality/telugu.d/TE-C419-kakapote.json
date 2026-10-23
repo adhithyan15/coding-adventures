@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C419-kakapote",
+    "language": "telugu",
+    "chapter": 419,
+    "sequence": 20890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aef4052f2e730334"
+  },
+  "findings": []
+}

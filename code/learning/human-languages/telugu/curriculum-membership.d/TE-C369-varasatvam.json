@@ -1,0 +1,11 @@
+{
+  "id": "TE-C369-varasatvam",
+  "pathSegment": "TE-PATH-369-RAJABHAVANAM369",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-369-RAJABHAVANAM369",
+      "order": 2
+    }
+  ]
+}

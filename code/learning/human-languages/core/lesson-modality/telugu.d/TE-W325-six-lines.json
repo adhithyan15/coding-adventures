@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-W325-six-lines",
+    "language": "telugu",
+    "chapter": 325,
+    "sequence": 15650,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8b14ee6e6b62bf4b",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C366-nidhi",
+    "language": "telugu",
+    "chapter": 366,
+    "sequence": 18060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5a1fc2e5a65adc4"
+  },
+  "findings": []
+}

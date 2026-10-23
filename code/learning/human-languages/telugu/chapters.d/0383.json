@@ -1,0 +1,19 @@
+{
+  "chapter": 383,
+  "title": "Making a Case",
+  "label": "ch:te-making-a-case",
+  "canDo": "I can talk about arguments, evidence, proof and logic.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C383-sahetukamaina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can talk about arguments, evidence, proof and logic.",
+    "assesses": [
+      "TE-LEX-C383-VADANA383-03",
+      "TE-LEX-C383-VADANA383-04",
+      "TE-LEX-C383-VADANA383-05"
+    ]
+  }
+}

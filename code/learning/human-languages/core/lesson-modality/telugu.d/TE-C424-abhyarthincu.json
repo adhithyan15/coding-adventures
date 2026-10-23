@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C424-abhyarthincu",
+    "language": "telugu",
+    "chapter": 424,
+    "sequence": 21170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3fe5604bb238f51"
+  },
+  "findings": []
+}

@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 460,
+  "title": "Complaints at the Desk",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:16ac1eeaa15ff63c",
+  "lessons": [
+    {
+      "id": "TE-C460-asaukaryam",
+      "sequence": 23120,
+      "title": "అసౌకర్యం (asaukaryaṁ) — inconvenience",
+      "headword": "అసౌకర్యం",
+      "romanization": "asaukaryaṁ",
+      "gloss": "inconvenience",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b270cf851bd37257",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for the web, then the Telugu for a phone charger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అసౌకర్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అసౌకర్యం — asaukaryaṁ — \"inconvenience\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆలస్యం వల్ల కలిగిన అసౌకర్యానికి క్షమించండి. ālasyaṁ valla kaligina asaukaryāniki kṣamiñcaṇḍi. We are sorry for the inconvenience caused by the delay."
+            },
+            {
+              "kind": "speech",
+              "text": "అ-, not, + సౌకర్యం, comfort. Station announcements use this sentence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అసౌకర్యం (asaukaryaṁ) is built from Sanskrit a-, \"not\", and saukarya, \"ease, practicability\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asaukaryaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asaukaryaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asaukaryaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asaukaryaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālasyaṁ valla kaligina asaukaryāniki kṣamiñcaṇḍi. — We are sorry for the inconvenience caused by the delay.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālasyaṁ valla kaligina asaukaryāniki kṣamiñcaṇḍi.* — We are sorry for the inconvenience caused by the delay.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for the web, then the Telugu for a phone charger, then say asaukaryaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for the web, then the Telugu for a phone charger, then say *asaukaryaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అసౌకర్యం (asaukaryaṁ) mean? (\"Inconvenience\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C460-ibbandi",
+      "sequence": 23130,
+      "title": "ఇబ్బంది (ibbandi) — trouble; difficulty",
+      "headword": "ఇబ్బంది",
+      "romanization": "ibbandi",
+      "gloss": "trouble; difficulty",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:670cc2f0a8f419f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a phone charger, then the Telugu for inconvenience."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఇబ్బంది",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇబ్బంది — ibbandi — \"trouble; difficulty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కొత్త నగరంలో భాష వల్ల ఇబ్బంది పడ్డాం. kotta nagaraṁlō bhāṣa valla ibbandi paḍḍāṁ. In the new city we had trouble because of the language."
+            },
+            {
+              "kind": "speech",
+              "text": "ఇబ్బంది (ibbandi) పడు, to have trouble; ఇబ్బంది (ibbandi) పెట్టు, to cause someone trouble."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇబ్బంది (ibbandi) is native Dravidian: DEDR 524 lists Telugu ibbandi, \"difficulty, inconvenience\", beside iṟuku, \"to be squeezed, to be stuck in\", and ikkaṭṭu, \"hardship\". A tight spot became a difficulty."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ibbandi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ibbandi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ibbandi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ibbandi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kotta nagaraṁlō bhāṣa valla ibbandi paḍḍāṁ. — In the new city we had trouble because of the language.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kotta nagaraṁlō bhāṣa valla ibbandi paḍḍāṁ.* — In the new city we had trouble because of the language.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a phone charger, then the Telugu for inconvenience, then say ibbandi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a phone charger, then the Telugu for inconvenience, then say *ibbandi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఇబ్బంది (ibbandi) mean? (\"Trouble; difficulty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C460-vakabu-ceyu",
+      "sequence": 23140,
+      "title": "వాకబు చేయు (vākabu cēyu) — to inquire; to make enquiries",
+      "headword": "వాకబు చేయు",
+      "romanization": "vākabu cēyu",
+      "gloss": "to inquire; to make enquiries",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68f57c2dff633cbe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for inconvenience, then the Telugu for trouble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వాకబు చేయు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వాకబు చేయు — vākabu cēyu — \"to inquire; to make enquiries\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రైలు ఎప్పుడు వస్తుందో స్టేషన్లో వాకబు చేశాను. railu eppuḍu vastundō sṭēṣanlō vākabu cēśānu. I inquired at the station when the train would come."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): వాకబు చేశాను, vākabu cēśānu."
+            },
+            {
+              "kind": "speech",
+              "text": "A careful word for asking after something: a train, a person, a parcel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వాకబు చేయు (vākabu cēyu) is a Telugu phrase: వాకబు, \"an enquiry\", whose origin is not settled, and the native చేయు, \"to do\" (DEDR 1957)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vākabu cēyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vākabu cēyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vākabu cēyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vākabu cēyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "railu eppuḍu vastundō sṭēṣanlō vākabu cēśānu. — I inquired at the station when the train would come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *railu eppuḍu vastundō sṭēṣanlō vākabu cēśānu.* — I inquired at the station when the train would come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for inconvenience, then the Telugu for trouble, then say vākabu cēyu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for inconvenience, then the Telugu for trouble, then say *vākabu cēyu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వాకబు చేయు (vākabu cēyu) mean? (\"To inquire; to make enquiries\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C460-vapasu",
+      "sequence": 23150,
+      "title": "వాపసు (vāpasu) — a refund; a return",
+      "headword": "వాపసు",
+      "romanization": "vāpasu",
+      "gloss": "a refund; a return",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6bf09c8af8a5885c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for trouble, then the Telugu for to inquire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వాపసు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వాపసు — vāpasu — \"a refund; a return\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రద్దు చేసిన టిక్కెట్టుకు సగం డబ్బు వాపసు వచ్చింది. raddu cēsina ṭikkeṭṭuku sagaṁ ḍabbu vāpasu vaccindi. For the cancelled ticket half the money came back as a refund."
+            },
+            {
+              "kind": "speech",
+              "text": "వాపసు (vāpasu) ఇచ్చు, to give back; వాపసు (vāpasu) వచ్చు, to come back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వాపసు (vāpasu) is a loan from Persian vāpas, \"back, returned\", which reached Telugu through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāpasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāpasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāpasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāpasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raddu cēsina ṭikkeṭṭuku sagaṁ ḍabbu vāpasu vaccindi. — For the cancelled ticket half the money came back as a refund.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raddu cēsina ṭikkeṭṭuku sagaṁ ḍabbu vāpasu vaccindi.* — For the cancelled ticket half the money came back as a refund.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for trouble, then the Telugu for to inquire, then say vāpasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for trouble, then the Telugu for to inquire, then say *vāpasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వాపసు (vāpasu) mean? (\"A refund; a return\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C460-saricusuko",
+      "sequence": 23160,
+      "title": "సరిచూసుకో (saricūsukō) — to double-check",
+      "headword": "సరిచూసుకో",
+      "romanization": "saricūsukō",
+      "gloss": "to double-check",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05d91593bb5a856e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to inquire, then the Telugu for a refund."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సరిచూసుకో",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సరిచూసుకో — saricūsukō — \"to double-check\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బయలుదేరే ముందు టిక్కెట్లు సరిచూసుకున్నాను. bayaludērē mundu ṭikkeṭlu saricūsukunnānu. Before setting out I double-checked the tickets."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): సరిచూసుకున్నాను, saricūsukunnānu."
+            },
+            {
+              "kind": "speech",
+              "text": "సరి, right, + చూసు, to see, + -కో: to see for oneself that it is right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సరిచూసుకో (saricūsukō) is native Dravidian: సరి, \"right, equal\", చూచు, \"to see\" (DEDR 2735), and -కో, \"for oneself\" (DEDR 2151)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saricūsukō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saricūsukō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saricūsukō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saricūsukō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bayaludērē mundu ṭikkeṭlu saricūsukunnānu. — Before setting out I double-checked the tickets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bayaludērē mundu ṭikkeṭlu saricūsukunnānu.* — Before setting out I double-checked the tickets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to inquire, then the Telugu for a refund, then say saricūsukō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to inquire, then the Telugu for a refund, then say *saricūsukō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సరిచూసుకో (saricūsukō) mean? (\"To double-check\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

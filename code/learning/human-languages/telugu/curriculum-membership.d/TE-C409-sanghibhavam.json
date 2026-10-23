@@ -1,0 +1,11 @@
+{
+  "id": "TE-C409-sanghibhavam",
+  "pathSegment": "TE-PATH-409-AIKYATA409",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-409-AIKYATA409",
+      "order": 3
+    }
+  ]
+}

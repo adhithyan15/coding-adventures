@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C364-poratam",
+    "language": "telugu",
+    "chapter": 364,
+    "sequence": 17960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29cb9bd8c6250869"
+  },
+  "findings": []
+}

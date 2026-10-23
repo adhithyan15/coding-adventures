@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:b902c0c14d7411a4",
+  "lessonIds": [
+    "TE-C462-kauntaru",
+    "TE-C462-sakha",
+    "TE-C462-purincu",
+    "TE-C462-jari-ceyu",
+    "TE-C462-manjuru-ceyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch462.txt",
+  "json": "telugu/narration/ch462.json",
+  "textHash": "fnv1a64:8793a5664910c94f",
+  "jsonHash": "fnv1a64:5c3aab5cf42ce349",
+  "findings": []
+}

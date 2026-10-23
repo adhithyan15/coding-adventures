@@ -1,0 +1,11 @@
+{
+  "id": "TE-C381-vicarincu",
+  "pathSegment": "TE-PATH-381-SAHASAM381",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-381-SAHASAM381",
+      "order": 2
+    }
+  ]
+}

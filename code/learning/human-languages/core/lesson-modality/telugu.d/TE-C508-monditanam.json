@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C508-monditanam",
+    "language": "telugu",
+    "chapter": 508,
+    "sequence": 25720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6714454423f5274"
+  },
+  "findings": []
+}

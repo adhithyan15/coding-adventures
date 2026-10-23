@@ -1,0 +1,11 @@
+{
+  "id": "TE-C356-vidkolu",
+  "pathSegment": "TE-PATH-356-UTSAVAM356",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-356-UTSAVAM356",
+      "order": 3
+    }
+  ]
+}

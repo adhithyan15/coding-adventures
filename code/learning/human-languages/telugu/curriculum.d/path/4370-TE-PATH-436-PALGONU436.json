@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-436-PALGONU436",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TE-EXT-436-PALGONU436"
+  ],
+  "after": []
+}

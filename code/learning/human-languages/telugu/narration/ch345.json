@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 345,
+  "title": "Remembering",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:05c731a1074cd62e",
+  "lessons": [
+    {
+      "id": "TE-C345-smasanam",
+      "sequence": 16970,
+      "title": "శ్మశానం (śmaśānaṁ) — a cremation ground",
+      "headword": "శ్మశానం",
+      "romanization": "śmaśānaṁ",
+      "gloss": "a cremation ground",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51a0b11279a63b24",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a funeral procession, then the Telugu for a funeral."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: శ్మశానం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శ్మశానం — śmaśānaṁ — \"a cremation ground\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అంతిమయాత్ర శ్మశానం చేరింది. antimayātra śmaśānaṁ cērindi. The funeral procession reached the cremation ground."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శ్మశానం (śmaśānaṁ) is borrowed from Sanskrit śmaśāna, \"a place for burning the dead\" (CDIAL 12658)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śmaśānaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śmaśānaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śmaśānaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śmaśānaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antimayātra śmaśānaṁ cērindi. — The funeral procession reached the cremation ground.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antimayātra śmaśānaṁ cērindi.* — The funeral procession reached the cremation ground.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a funeral procession, then the Telugu for a funeral, then say śmaśānaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a funeral procession, then the Telugu for a funeral, then say *śmaśānaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does శ్మశానం (śmaśānaṁ) mean? (\"A cremation ground\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C345-samadhi",
+      "sequence": 16980,
+      "title": "సమాధి (samādhi) — a grave; a tomb",
+      "headword": "సమాధి",
+      "romanization": "samādhi",
+      "gloss": "a grave; a tomb",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d94b744ab29f1cd3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a funeral, then the Telugu for a cremation ground."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సమాధి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సమాధి — samādhi — \"a grave; a tomb\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ పాత సమాధి దగ్గర ఒక చెట్టు ఉంది. ā pāta samādhi daggara oka ceṭṭu undi. There is a tree near that old tomb."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: సమాధులు, samādhulu."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సమాధి (samādhi) is borrowed from Sanskrit samādhi (Monier-Williams), whose first sense is \"putting together, joining\"; in Telugu it names a tomb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samādhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samādhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samādhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samādhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā pāta samādhi daggara oka ceṭṭu undi. — There is a tree near that old tomb.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā pāta samādhi daggara oka ceṭṭu undi.* — There is a tree near that old tomb.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a funeral, then the Telugu for a cremation ground, then say samādhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a funeral, then the Telugu for a cremation ground, then say *samādhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సమాధి (samādhi) mean? (\"A grave; a tomb\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C345-nivali",
+      "sequence": 16990,
+      "title": "నివాళి (nivāḷi) — a tribute",
+      "headword": "నివాళి",
+      "romanization": "nivāḷi",
+      "gloss": "a tribute",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b52dc7793fa6da8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a cremation ground, then the Telugu for a grave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నివాళి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నివాళి — nivāḷi — \"a tribute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "విద్యార్థులు తమ మాస్టారికి నివాళి అర్పించారు. vidyārthulu tama māsṭāriki nivāḷi arpiñcāru. The students paid tribute to their teacher."
+            },
+            {
+              "kind": "speech",
+              "text": "నివాళి (nivāḷi) అర్పించు, to pay tribute: the phrase every news report uses."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నివాళి (nivāḷi) is a Telugu word for a tribute, an offering of honour; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivāḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivāḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivāḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivāḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidyārthulu tama māsṭāriki nivāḷi arpiñcāru. — The students paid tribute to their teacher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidyārthulu tama māsṭāriki nivāḷi arpiñcāru.* — The students paid tribute to their teacher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a cremation ground, then the Telugu for a grave, then say nivāḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a cremation ground, then the Telugu for a grave, then say *nivāḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నివాళి (nivāḷi) mean? (\"A tribute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C345-vardhanti",
+      "sequence": 17000,
+      "title": "వర్ధంతి (vardhanti) — a death anniversary",
+      "headword": "వర్ధంతి",
+      "romanization": "vardhanti",
+      "gloss": "a death anniversary",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d2e1549d84956e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a grave, then the Telugu for a tribute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వర్ధంతి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వర్ధంతి — vardhanti — \"a death anniversary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నిన్న తాతగారి మొదటి వర్ధంతి జరిగింది. ninna tātagāri modaṭi vardhanti jarigindi. Yesterday was grandfather's first death anniversary."
+            },
+            {
+              "kind": "speech",
+              "text": "Families remember the dead on this day each year."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వర్ధంతి (vardhanti) comes from Sanskrit, but its exact source is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vardhanti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vardhanti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vardhanti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vardhanti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ninna tātagāri modaṭi vardhanti jarigindi. — Yesterday was grandfather's first death anniversary.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ninna tātagāri modaṭi vardhanti jarigindi.* — Yesterday was grandfather's first death anniversary.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a grave, then the Telugu for a tribute, then say vardhanti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a grave, then the Telugu for a tribute, then say *vardhanti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వర్ధంతి (vardhanti) mean? (\"A death anniversary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C345-vilunama",
+      "sequence": 17010,
+      "title": "వీలునామా (vīlunāmā) — a will; a testament",
+      "headword": "వీలునామా",
+      "romanization": "vīlunāmā",
+      "gloss": "a will; a testament",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01732bde87aa153e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a tribute, then the Telugu for a death anniversary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వీలునామా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వీలునామా — vīlunāmā — \"a will; a testament\"."
+            },
+            {
+              "kind": "speech",
+              "text": "తాతగారు ఇల్లు నా పేరు మీద వీలునామా రాశారు. tātagāru illu nā pēru mīda vīlunāmā rāśāru. Grandfather wrote a will leaving the house to me."
+            },
+            {
+              "kind": "speech",
+              "text": "వీలునామా (vīlunāmā) రాయు, to make a will."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వీలునామా (vīlunāmā) ends in Persian nāma, \"a writing, a deed\", as several loans for documents do; the origin of the first part is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīlunāmā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīlunāmā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīlunāmā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīlunāmā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tātagāru illu nā pēru mīda vīlunāmā rāśāru. — Grandfather wrote a will leaving the house to me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tātagāru illu nā pēru mīda vīlunāmā rāśāru.* — Grandfather wrote a will leaving the house to me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a tribute, then the Telugu for a death anniversary, then say vīlunāmā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a tribute, then the Telugu for a death anniversary, then say *vīlunāmā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వీలునామా (vīlunāmā) mean? (\"A will; a testament\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

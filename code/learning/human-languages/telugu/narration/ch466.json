@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 466,
+  "title": "Around the Square",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:86c3d201be70b883",
+  "lessons": [
+    {
+      "id": "TE-C466-caurasta",
+      "sequence": 23430,
+      "title": "చౌరస్తా (caurastā) — a town square; a crossroads",
+      "headword": "చౌరస్తా",
+      "romanization": "caurastā",
+      "gloss": "a town square; a crossroads",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00320c5c06bf86cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a local person, then the Telugu for a stranger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చౌరస్తా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చౌరస్తా — caurastā — \"a town square; a crossroads\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చౌరస్తాలో పెద్ద గడియారం ఉంది. caurastālō pedda gaḍiyāraṁ undi. There is a big clock in the town square."
+            },
+            {
+              "kind": "speech",
+              "text": "Where four roads meet; the busy centre of a small town."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చౌరస్తా (caurastā) is usually traced to Persian chahār, \"four\", and rāsta, \"a road\", which came into Telugu through Hindustani: the place where four roads meet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caurastā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caurastā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caurastā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caurastā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caurastālō pedda gaḍiyāraṁ undi. — There is a big clock in the town square.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caurastālō pedda gaḍiyāraṁ undi.* — There is a big clock in the town square.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a local person, then the Telugu for a stranger, then say caurastā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a local person, then the Telugu for a stranger, then say *caurastā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చౌరస్తా (caurastā) mean? (\"A town square; a crossroads\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C466-udyanavanam",
+      "sequence": 23440,
+      "title": "ఉద్యానవనం (udyānavanaṁ) — a public garden; a park",
+      "headword": "ఉద్యానవనం",
+      "romanization": "udyānavanaṁ",
+      "gloss": "a public garden; a park",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9eb61fcd57b90f69",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a stranger, then the Telugu for a town square."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఉద్యానవనం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉద్యానవనం — udyānavanaṁ — \"a public garden; a park\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సాయంత్రం ఉద్యానవనంలో చాలా మంది నడుస్తారు. sāyantraṁ udyānavanaṁlō cālā mandi naḍustāru. In the evening a lot of people walk in the park."
+            },
+            {
+              "kind": "speech",
+              "text": "ఉద్యానం, a garden, + వనం, a grove. పార్కు is the everyday loan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉద్యానవనం (udyānavanaṁ) is a compound of two words borrowed from Sanskrit: udyāna, \"a park, a garden\" (CDIAL 2052), and vana, \"a wood, a grove\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udyānavanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udyānavanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udyānavanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udyānavanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāyantraṁ udyānavanaṁlō cālā mandi naḍustāru. — In the evening a lot of people walk in the park.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāyantraṁ udyānavanaṁlō cālā mandi naḍustāru.* — In the evening a lot of people walk in the park.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a stranger, then the Telugu for a town square, then say udyānavanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a stranger, then the Telugu for a town square, then say *udyānavanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఉద్యానవనం (udyānavanaṁ) mean? (\"A public garden; a park\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C466-paccika",
+      "sequence": 23450,
+      "title": "పచ్చిక (paccika) — a lawn; grassland",
+      "headword": "పచ్చిక",
+      "romanization": "paccika",
+      "gloss": "a lawn; grassland",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0074fc2220a65eca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a town square, then the Telugu for a public garden."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పచ్చిక",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పచ్చిక — paccika — \"a lawn; grassland\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పిల్లలు పచ్చిక మీద ఆడుకుంటున్నారు. pillalu paccika mīda āḍukuṇṭunnāru. The children are playing on the lawn."
+            },
+            {
+              "kind": "speech",
+              "text": "Fresh green grass for sitting or grazing. పచ్చ, green, is in the word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పచ్చిక (paccika) is native Dravidian: DEDR 3821 lists Telugu paccika, \"grass\", beside pacca, \"green\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paccika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paccika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paccika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paccika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pillalu paccika mīda āḍukuṇṭunnāru. — The children are playing on the lawn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pillalu paccika mīda āḍukuṇṭunnāru.* — The children are playing on the lawn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a town square, then the Telugu for a public garden, then say paccika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a town square, then the Telugu for a public garden, then say *paccika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పచ్చిక (paccika) mean? (\"A lawn; grassland\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C466-vidhidipam",
+      "sequence": 23460,
+      "title": "వీధిదీపం (vīdhidīpaṁ) — a street lamp",
+      "headword": "వీధిదీపం",
+      "romanization": "vīdhidīpaṁ",
+      "gloss": "a street lamp",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59c6d21ec45ca177",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a public garden, then the Telugu for a lawn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వీధిదీపం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వీధిదీపం — vīdhidīpaṁ — \"a street lamp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా వీధిలో వీధిదీపాలు వెలగడం లేదు. mā vīdhilō vīdhidīpālu velagaḍaṁ lēdu. The street lamps in our street are not working."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: వీధిదీపాలు, vīdhidīpālu."
+            },
+            {
+              "kind": "speech",
+              "text": "వీధి, a street, + దీపం, a lamp. Plural వీధిదీపాలు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వీధిదీపం (vīdhidīpaṁ) is a compound of two words borrowed from Sanskrit: vīthi, \"a road, a street\" (CDIAL 12050), and dīpa, \"a lamp\" (CDIAL 6348)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīdhidīpaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīdhidīpaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīdhidīpaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīdhidīpaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā vīdhilō vīdhidīpālu velagaḍaṁ lēdu. — The street lamps in our street are not working.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā vīdhilō vīdhidīpālu velagaḍaṁ lēdu.* — The street lamps in our street are not working.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a public garden, then the Telugu for a lawn, then say vīdhidīpaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a public garden, then the Telugu for a lawn, then say *vīdhidīpaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వీధిదీపం (vīdhidīpaṁ) mean? (\"A street lamp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C466-parisaralu",
+      "sequence": 23470,
+      "title": "పరిసరాలు (parisarālu) — surroundings",
+      "headword": "పరిసరాలు",
+      "romanization": "parisarālu",
+      "gloss": "surroundings",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d284b58ecc414dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a lawn, then the Telugu for a street lamp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పరిసరాలు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పరిసరాలు — parisarālu — \"surroundings\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మన పరిసరాలను శుభ్రంగా ఉంచాలి. mana parisarālanu śubhraṅgā uñcāli. We should keep our surroundings clean."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly plural. The area around a house, a school or a town."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పరిసరాలు (parisarālu) is borrowed from Sanskrit parisara, \"the surroundings, the neighbourhood\" (Monier-Williams), with the Telugu plural -లు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parisarālu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parisarālu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parisarālu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parisarālu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mana parisarālanu śubhraṅgā uñcāli. — We should keep our surroundings clean.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mana parisarālanu śubhraṅgā uñcāli.* — We should keep our surroundings clean.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a lawn, then the Telugu for a street lamp, then say parisarālu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a lawn, then the Telugu for a street lamp, then say *parisarālu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పరిసరాలు (parisarālu) mean? (\"Surroundings\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

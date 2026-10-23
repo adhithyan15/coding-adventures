@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C326-yuddham",
+    "language": "telugu",
+    "chapter": 326,
+    "sequence": 16010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f875184b07f080b"
+  },
+  "findings": []
+}

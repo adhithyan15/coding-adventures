@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C403-pratinidhi",
+    "language": "telugu",
+    "chapter": 403,
+    "sequence": 20080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee2b67ec8a8ea389"
+  },
+  "findings": []
+}

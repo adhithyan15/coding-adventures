@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:fe42c6592673bae6",
+  "lessonIds": [
+    "TE-C382-alocana",
+    "TE-C382-drkpatham",
+    "TE-C382-abhiprayabhedam",
+    "TE-C382-bhavincu",
+    "TE-C382-konam"
+  ],
+  "tex": "telugu/book/chapters/ch382-ideas-and-points-of-view.tex"
+}

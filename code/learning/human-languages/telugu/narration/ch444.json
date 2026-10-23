@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 444,
+  "title": "Fuel and Breakdowns",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:64695faa82b269ea",
+  "lessons": [
+    {
+      "id": "TE-C444-indhanam",
+      "sequence": 22300,
+      "title": "ఇంధనం (indhanaṁ) — fuel",
+      "headword": "ఇంధనం",
+      "romanization": "indhanaṁ",
+      "gloss": "fuel",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2148776d44415b4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a brake, then the Telugu for a horn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఇంధనం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇంధనం — indhanaṁ — \"fuel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "దారి మధ్యలో కారులో ఇంధనం అయిపోయింది. dāri madhyalō kārulō indhanaṁ ayipōyindi. Halfway there the car ran out of fuel."
+            },
+            {
+              "kind": "speech",
+              "text": "A word for every kind of fuel: firewood, petrol, gas. అయిపోవు, to run out, goes with it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇంధనం (indhanaṁ) is borrowed from Sanskrit indhana, \"lighting, kindling, fuel\", from the root indh, \"to kindle\" (CDIAL 1584)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indhanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indhanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indhanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indhanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāri madhyalō kārulō indhanaṁ ayipōyindi. — Halfway there the car ran out of fuel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāri madhyalō kārulō indhanaṁ ayipōyindi.* — Halfway there the car ran out of fuel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a brake, then the Telugu for a horn, then say indhanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a brake, then the Telugu for a horn, then say *indhanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఇంధనం (indhanaṁ) mean? (\"Fuel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C444-cedipovu",
+      "sequence": 22310,
+      "title": "చెడిపోవు (ceḍipōvu) — to break down; to go bad",
+      "headword": "చెడిపోవు",
+      "romanization": "ceḍipōvu",
+      "gloss": "to break down; to go bad",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7ec6d25a03d8b61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a horn, then the Telugu for fuel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చెడిపోవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చెడిపోవు — ceḍipōvu — \"to break down; to go bad\"."
+            },
+            {
+              "kind": "speech",
+              "text": "దారిలో మా బస్సు చెడిపోయింది. dārilō mā bassu ceḍipōyindi. Our bus broke down on the way."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): చెడిపోయింది, ceḍipōyindi."
+            },
+            {
+              "kind": "speech",
+              "text": "చెడు, bad, + పోవు, to go: gone bad. A machine breaks down this way, and food goes off this way too. Its subject is a thing, so the past shown is the third person: చెడిపోయింది, it broke down."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చెడిపోవు (ceḍipōvu) is native Dravidian: చెడు, \"to rot, to be spoiled\" (DEDR 2760), with పోవు, \"to go\" (DEDR 4572), which marks a change that has happened."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceḍipōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceḍipōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceḍipōvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceḍipōvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dārilō mā bassu ceḍipōyindi. — Our bus broke down on the way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dārilō mā bassu ceḍipōyindi.* — Our bus broke down on the way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a horn, then the Telugu for fuel, then say ceḍipōvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a horn, then the Telugu for fuel, then say *ceḍipōvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చెడిపోవు (ceḍipōvu) mean? (\"To break down; to go bad\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C444-morayincu",
+      "sequence": 22320,
+      "title": "మొరాయించు (morāyiñcu) — to refuse to start; to balk",
+      "headword": "మొరాయించు",
+      "romanization": "morāyiñcu",
+      "gloss": "to refuse to start; to balk",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f3f7b59277206ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for fuel, then the Telugu for to break down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మొరాయించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మొరాయించు — morāyiñcu — \"to refuse to start; to balk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చలికి మా కారు మొరాయించింది. caliki mā kāru morāyiñcindi. In the cold our car would not start."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): మొరాయించింది, morāyiñcindi."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of a machine, or a stubborn animal, that will not do what it should. Its subject is a thing, so the past shown is the third person: మొరాయించింది, it would not start."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మొరాయించు (morāyiñcu) is a Telugu verb in -ఇంచు whose first part has an origin that is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "morāyiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *morāyiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "morāyiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *morāyiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caliki mā kāru morāyiñcindi. — In the cold our car would not start.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caliki mā kāru morāyiñcindi.* — In the cold our car would not start.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for fuel, then the Telugu for to break down, then say morāyiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for fuel, then the Telugu for to break down, then say *morāyiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మొరాయించు (morāyiñcu) mean? (\"To refuse to start; to balk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C444-pankcaru",
+      "sequence": 22330,
+      "title": "పంక్చరు (paṅkcaru) — a puncture",
+      "headword": "పంక్చరు",
+      "romanization": "paṅkcaru",
+      "gloss": "a puncture",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27648fded567ec79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to break down, then the Telugu for to refuse to start."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పంక్చరు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పంక్చరు — paṅkcaru — \"a puncture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సైకిలు టైరుకు పంక్చరు అయింది. saikilu ṭairuku paṅkcaru ayindi. The bicycle tyre got a puncture."
+            },
+            {
+              "kind": "speech",
+              "text": "పంక్చరు (paṅkcaru) అయింది, it got a puncture; the shop that mends it is the పంక్చరు (paṅkcaru) shop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పంక్చరు (paṅkcaru) is a loan from English puncture, with the Telugu final -ఉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṅkcaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṅkcaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṅkcaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṅkcaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saikilu ṭairuku paṅkcaru ayindi. — The bicycle tyre got a puncture.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saikilu ṭairuku paṅkcaru ayindi.* — The bicycle tyre got a puncture.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to break down, then the Telugu for to refuse to start, then say paṅkcaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to break down, then the Telugu for to refuse to start, then say *paṅkcaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పంక్చరు (paṅkcaru) mean? (\"A puncture\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C444-marammatu-ceyu",
+      "sequence": 22340,
+      "title": "మరమ్మతు చేయు (marammatu cēyu) — to mend; to repair",
+      "headword": "మరమ్మతు చేయు",
+      "romanization": "marammatu cēyu",
+      "gloss": "to mend; to repair",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d1b0ebe85c29b0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to refuse to start, then the Telugu for a puncture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మరమ్మతు చేయు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మరమ్మతు చేయు — marammatu cēyu — \"to mend; to repair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మెకానిక్కు గంటలో బస్సును మరమ్మతు చేశాడు. mekānikku gaṇṭalō bassunu marammatu cēśāḍu. The mechanic repaired the bus within an hour."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): మరమ్మతు చేశాను, marammatu cēśānu."
+            },
+            {
+              "kind": "speech",
+              "text": "మరమ్మతు, a repair, + చేయు, to do. The thing repaired takes -ని or -ను: బస్సును."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మరమ్మతు చేయు (marammatu cēyu) pairs మరమ్మతు, a loan from Arabic marammat, \"repair\", which came through Persian and Hindustani, with the native చేయు, \"to do\" (DEDR 1957)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marammatu cēyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marammatu cēyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marammatu cēyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marammatu cēyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mekānikku gaṇṭalō bassunu marammatu cēśāḍu. — The mechanic repaired the bus within an hour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mekānikku gaṇṭalō bassunu marammatu cēśāḍu.* — The mechanic repaired the bus within an hour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to refuse to start, then the Telugu for a puncture, then say marammatu cēyu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to refuse to start, then the Telugu for a puncture, then say *marammatu cēyu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మరమ్మతు చేయు (marammatu cēyu) mean? (\"To mend; to repair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

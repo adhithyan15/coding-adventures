@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:a691ed2359100d01",
+  "lessonIds": [
+    "TE-C546-curu",
+    "TE-C546-pita",
+    "TE-C546-bavi",
+    "TE-C546-cembu",
+    "TE-C546-boddinka"
+  ],
+  "tex": "telugu/book/chapters/ch546-around-the-house.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:8e307f6b16363440",
+  "lessonIds": [
+    "TE-C408-samajam",
+    "TE-C408-samajika",
+    "TE-C408-sangham",
+    "TE-C408-sabhyudu",
+    "TE-C408-vivaksa"
+  ],
+  "tex": "telugu/book/chapters/ch408-society.tex"
+}

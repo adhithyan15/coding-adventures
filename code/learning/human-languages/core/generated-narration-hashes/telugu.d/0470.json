@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:b409c45d4860c39c",
+  "lessonIds": [
+    "TE-C470-kalusyam",
+    "TE-C470-vyarthalu",
+    "TE-C470-vayuvu",
+    "TE-C470-kalusitam-ceyu",
+    "TE-C470-svacchamaina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch470.txt",
+  "json": "telugu/narration/ch470.json",
+  "textHash": "fnv1a64:0750d06f5e51940a",
+  "jsonHash": "fnv1a64:cb65f24d24405af7",
+  "findings": []
+}

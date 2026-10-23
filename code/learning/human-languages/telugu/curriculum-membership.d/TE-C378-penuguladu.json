@@ -1,0 +1,11 @@
+{
+  "id": "TE-C378-penuguladu",
+  "pathSegment": "TE-PATH-378-KOTLATA378",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-378-KOTLATA378",
+      "order": 3
+    }
+  ]
+}

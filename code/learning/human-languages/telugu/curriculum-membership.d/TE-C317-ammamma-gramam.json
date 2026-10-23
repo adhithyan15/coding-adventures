@@ -1,0 +1,11 @@
+{
+  "id": "TE-C317-ammamma-gramam",
+  "pathSegment": "TE-PATH-317-STORY-ORDER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-317-STORY-ORDER",
+      "order": 4
+    }
+  ]
+}

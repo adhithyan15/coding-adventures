@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "Roads Blocked",
+  "label": "ch:te-roads-blocked",
+  "canDo": "I can say an obstacle, a diversion, to stop dead, to seize up and to get blocked.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C449-musukupovu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can say an obstacle, a diversion, to stop dead, to seize up and to get blocked.",
+    "assesses": [
+      "TE-LEX-C449-ADDANKI449-03",
+      "TE-LEX-C449-ADDANKI449-04",
+      "TE-LEX-C449-ADDANKI449-05"
+    ]
+  }
+}

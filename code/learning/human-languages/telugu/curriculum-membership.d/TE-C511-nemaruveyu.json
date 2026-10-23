@@ -1,0 +1,11 @@
+{
+  "id": "TE-C511-nemaruveyu",
+  "pathSegment": "TE-PATH-511-GNAPAKAM511",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-511-GNAPAKAM511",
+      "order": 3
+    }
+  ]
+}

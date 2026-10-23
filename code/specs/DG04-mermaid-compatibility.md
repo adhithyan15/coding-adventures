@@ -120,9 +120,12 @@ before native rendering. Single-line accessibility titles and single-line or
 braced multiline descriptions survive structural semantic IR and layout, then
 lower to backend-neutral PaintScene metadata. Backtick-escaped attribute types
 and names preserve punctuation after unquoting, then flow through entity
-compartments, structural layout, and backend-neutral text paint. ER remains
-partial while the rest of the pinned upstream syntax and visual corpus is
-incomplete.
+compartments, structural layout, and backend-neutral text paint. Attribute types
+with comma-separated parameters, such as spatial reference identifiers, remain
+single semantic field types through the same layout and paint pipeline. Repeated
+declarations of one entity append split attribute blocks into one ordered field
+compartment before structural layout and paint. ER remains partial while the
+rest of the pinned upstream syntax and visual corpus is incomplete.
 
 ## Required New Semantic Families
 

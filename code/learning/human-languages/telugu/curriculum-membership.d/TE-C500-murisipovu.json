@@ -1,0 +1,11 @@
+{
+  "id": "TE-C500-murisipovu",
+  "pathSegment": "TE-PATH-500-ANANDAM500",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-500-ANANDAM500",
+      "order": 1
+    }
+  ]
+}

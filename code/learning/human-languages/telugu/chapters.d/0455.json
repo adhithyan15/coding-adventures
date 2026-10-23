@@ -1,0 +1,19 @@
+{
+  "chapter": 455,
+  "title": "Being a Tourist",
+  "label": "ch:te-being-a-tourist",
+  "canDo": "I can say a tourist, a tour, a tour guide, entry and a pleasure trip.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C455-viharayatra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can say a tourist, a tour, a tour guide, entry and a pleasure trip.",
+    "assesses": [
+      "TE-LEX-C455-PARYATANA455-03",
+      "TE-LEX-C455-PARYATANA455-04",
+      "TE-LEX-C455-PARYATANA455-05"
+    ]
+  }
+}

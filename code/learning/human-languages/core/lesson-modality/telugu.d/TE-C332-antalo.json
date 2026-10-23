@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C332-antalo",
+    "language": "telugu",
+    "chapter": 332,
+    "sequence": 16310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a10be02efabfb44"
+  },
+  "findings": []
+}

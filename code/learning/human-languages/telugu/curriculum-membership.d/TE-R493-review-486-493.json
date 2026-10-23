@@ -1,0 +1,11 @@
+{
+  "id": "TE-R493-review-486-493",
+  "pathSegment": "TE-PATH-493-TIRUGU493",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TE-EXT-493-TIRUGU493",
+      "order": 5
+    }
+  ]
+}

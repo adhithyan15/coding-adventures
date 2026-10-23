@@ -1,0 +1,11 @@
+{
+  "id": "TE-C463-rayabari",
+  "pathSegment": "TE-PATH-463-RAYABARI463",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-463-RAYABARI463",
+      "order": 1
+    }
+  ]
+}

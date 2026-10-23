@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-424-OTTIDI424",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TE-EXT-424-OTTIDI424"
+  ],
+  "after": []
+}

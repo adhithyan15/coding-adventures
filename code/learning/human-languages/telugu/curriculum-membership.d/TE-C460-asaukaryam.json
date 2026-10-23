@@ -1,0 +1,11 @@
+{
+  "id": "TE-C460-asaukaryam",
+  "pathSegment": "TE-PATH-460-ASAUKARYAM460",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-460-ASAUKARYAM460",
+      "order": 0
+    }
+  ]
+}

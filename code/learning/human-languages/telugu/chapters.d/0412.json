@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Research",
+  "label": "ch:te-research",
+  "canDo": "I can talk about research, information and exploring a question.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C412-anvesincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can talk about research, information and exploring a question.",
+    "assesses": [
+      "TE-LEX-C412-PARISODHANA412-03",
+      "TE-LEX-C412-PARISODHANA412-04",
+      "TE-LEX-C412-PARISODHANA412-05"
+    ]
+  }
+}

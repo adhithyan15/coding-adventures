@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:3fe5ca46bade298f",
+  "lessonIds": [
+    "TE-C457-vasati",
+    "TE-C457-satram",
+    "TE-C457-risepsanu",
+    "TE-C457-liphtu",
+    "TE-C457-basa-ceyu"
+  ],
+  "tex": "telugu/book/chapters/ch457-a-place-to-stay.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C447-atikramincu",
+  "pathSegment": "TE-PATH-447-SIGNALU447",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-447-SIGNALU447",
+      "order": 4
+    }
+  ]
+}

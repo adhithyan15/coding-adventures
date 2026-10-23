@@ -1,0 +1,11 @@
+{
+  "id": "TE-C480-irukkupovu",
+  "pathSegment": "TE-PATH-480-MUNCETTU480",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-480-MUNCETTU480",
+      "order": 4
+    }
+  ]
+}

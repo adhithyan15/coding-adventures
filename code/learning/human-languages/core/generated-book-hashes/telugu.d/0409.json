@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:34d77bc321fdd583",
+  "lessonIds": [
+    "TE-C409-himsa",
+    "TE-C409-samarasyam",
+    "TE-C409-aikyata",
+    "TE-C409-sanghibhavam",
+    "TE-C409-acarincu"
+  ],
+  "tex": "telugu/book/chapters/ch409-living-together.tex"
+}

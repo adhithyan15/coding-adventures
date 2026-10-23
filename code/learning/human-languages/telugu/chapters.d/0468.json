@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "Drains and Rubbish",
+  "label": "ch:te-drains-and-rubbish",
+  "canDo": "I can say sewage, sanitation, a stench, a slum and to pile up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C468-perukupovu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can say sewage, sanitation, a stench, a slum and to pile up.",
+    "assesses": [
+      "TE-LEX-C468-MURUGU468-03",
+      "TE-LEX-C468-MURUGU468-04",
+      "TE-LEX-C468-MURUGU468-05"
+    ]
+  }
+}

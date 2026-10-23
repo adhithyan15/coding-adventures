@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:8acd75b607940591",
+  "lessonIds": [
+    "TE-C487-veccincu",
+    "TE-C487-ada-ceyu",
+    "TE-C487-giraki",
+    "TE-C487-labhincu",
+    "TE-C487-ammudupovu"
+  ],
+  "tex": "telugu/book/chapters/ch487-spending-and-saving.tex"
+}

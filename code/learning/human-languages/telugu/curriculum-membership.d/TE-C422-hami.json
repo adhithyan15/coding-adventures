@@ -1,0 +1,11 @@
+{
+  "id": "TE-C422-hami",
+  "pathSegment": "TE-PATH-422-HAMI422",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-422-HAMI422",
+      "order": 0
+    }
+  ]
+}

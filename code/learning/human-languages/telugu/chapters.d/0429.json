@@ -1,0 +1,21 @@
+{
+  "chapter": 429,
+  "title": "Progress and Setbacks",
+  "label": "ch:te-progress-and-setbacks",
+  "canDo": "I can talk about progress, steps forward and improvement.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-R429-review-422-429",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can talk about progress, steps forward and improvement.",
+    "assesses": [
+      "TE-LEX-C429-PUROGATI429-01",
+      "TE-LEX-C429-PUROGATI429-02",
+      "TE-LEX-C429-PUROGATI429-03",
+      "TE-LEX-C429-PUROGATI429-04",
+      "TE-LEX-C429-PUROGATI429-05"
+    ]
+  }
+}

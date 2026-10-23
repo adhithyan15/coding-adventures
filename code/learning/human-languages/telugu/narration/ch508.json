@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 508,
+  "title": "Stubborn or Brave",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1303d117e5924b6d",
+  "lessons": [
+    {
+      "id": "TE-C508-pogaru",
+      "sequence": 25710,
+      "title": "పొగరు (pogaru) — conceit; cheek",
+      "headword": "పొగరు",
+      "romanization": "pogaru",
+      "gloss": "conceit; cheek",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07959af73fdb67b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for humility, then the Telugu for arrogance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పొగరు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పొగరు — pogaru — \"conceit; cheek\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ అబ్బాయికి కొంచెం పొగరు ఎక్కువ. ā abbāyiki koñceṁ pogaru ekkuva. That boy is a bit too cheeky."
+            },
+            {
+              "kind": "speech",
+              "text": "Colloquial and blunt: పొగరుగా మాట్లాడు, to talk cheekily."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పొగరు (pogaru) is native Dravidian: DEDR 4234 lists Telugu pogaru with Tamil pukalvu, \"pride, arrogance\", and Kannada puggu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pogaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pogaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pogaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pogaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā abbāyiki koñceṁ pogaru ekkuva. — That boy is a bit too cheeky.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā abbāyiki koñceṁ pogaru ekkuva.* — That boy is a bit too cheeky.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for humility, then the Telugu for arrogance, then say pogaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for humility, then the Telugu for arrogance, then say *pogaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పొగరు (pogaru) mean? (\"Conceit; cheek\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C508-monditanam",
+      "sequence": 25720,
+      "title": "మొండితనం (moṇḍitanaṁ) — stubbornness",
+      "headword": "మొండితనం",
+      "romanization": "moṇḍitanaṁ",
+      "gloss": "stubbornness",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6714454423f5274",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for arrogance, then the Telugu for conceit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మొండితనం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మొండితనం — moṇḍitanaṁ — \"stubbornness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పాప మొండితనంతో అన్నం తినలేదు. pāpa moṇḍitanantō annaṁ tinalēdu. Out of stubbornness the little girl did not eat."
+            },
+            {
+              "kind": "speech",
+              "text": "మొండి, stubborn, + -తనం. మొండిగా, stubbornly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మొండితనం (moṇḍitanaṁ) is native Dravidian: DEDR 4971 lists Telugu moṇḍi, \"stubborn, obstinate, perverse\", beside Tamil muraṭu, \"roughness, obstinacy\"; -తనం makes the abstract noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṇḍitanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṇḍitanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṇḍitanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṇḍitanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāpa moṇḍitanantō annaṁ tinalēdu. — Out of stubbornness the little girl did not eat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāpa moṇḍitanantō annaṁ tinalēdu.* — Out of stubbornness the little girl did not eat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for arrogance, then the Telugu for conceit, then say moṇḍitanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for arrogance, then the Telugu for conceit, then say *moṇḍitanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మొండితనం (moṇḍitanaṁ) mean? (\"Stubbornness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C508-pattudala",
+      "sequence": 25730,
+      "title": "పట్టుదల (paṭṭudala) — determination; persistence",
+      "headword": "పట్టుదల",
+      "romanization": "paṭṭudala",
+      "gloss": "determination; persistence",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f481c134b8d640ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for conceit, then the Telugu for stubbornness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పట్టుదల",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పట్టుదల — paṭṭudala — \"determination; persistence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పట్టుదలతో చదివి ఆమె డాక్టరు అయింది. paṭṭudalatō cadivi āme ḍākṭaru ayindi. By studying with determination, she became a doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "పట్టుదలతో, with grit; పట్టు, to hold."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పట్టుదల (paṭṭudala) is native Dravidian: DEDR 4034 lists Telugu paṭṭu, \"to hold, to seize\", also as a noun, \"grip, perseverance\", and paṭṭudala itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭudala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭudala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭudala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭudala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭudalatō cadivi āme ḍākṭaru ayindi. — By studying with determination, she became a doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭudalatō cadivi āme ḍākṭaru ayindi.* — By studying with determination, she became a doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for conceit, then the Telugu for stubbornness, then say paṭṭudala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for conceit, then the Telugu for stubbornness, then say *paṭṭudala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పట్టుదల (paṭṭudala) mean? (\"Determination; persistence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C508-sahasam",
+      "sequence": 25740,
+      "title": "సాహసం (sāhasaṁ) — daring; boldness",
+      "headword": "సాహసం",
+      "romanization": "sāhasaṁ",
+      "gloss": "daring; boldness",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30bf119002ecd020",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for stubbornness, then the Telugu for determination."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సాహసం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సాహసం — sāhasaṁ — \"daring; boldness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రాత్రి ఒంటరిగా అడవిలో నడవడం సాహసమే. rātri oṇṭarigā aḍavilō naḍavaḍaṁ sāhasamē. Walking alone in the forest at night is daring indeed."
+            },
+            {
+              "kind": "speech",
+              "text": "సాహసంగా, boldly; సాహసి, a daring person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సాహసం (sāhasaṁ) is borrowed from Sanskrit sāhasa, \"boldness; aggression\" (CDIAL 13378)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāhasaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāhasaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāhasaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāhasaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātri oṇṭarigā aḍavilō naḍavaḍaṁ sāhasamē. — Walking alone in the forest at night is daring indeed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātri oṇṭarigā aḍavilō naḍavaḍaṁ sāhasamē.* — Walking alone in the forest at night is daring indeed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for stubbornness, then the Telugu for determination, then say sāhasaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for stubbornness, then the Telugu for determination, then say *sāhasaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సాహసం (sāhasaṁ) mean? (\"Daring; boldness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C508-piriki",
+      "sequence": 25750,
+      "title": "పిరికి (piriki) — timid; cowardly",
+      "headword": "పిరికి",
+      "romanization": "piriki",
+      "gloss": "timid; cowardly",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ffe05a4fde426af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for determination, then the Telugu for daring."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పిరికి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పిరికి — piriki — \"timid; cowardly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా కుక్క చాలా పిరికిది. mā kukka cālā pirikidi. Our dog is very timid."
+            },
+            {
+              "kind": "speech",
+              "text": "పిరికివాడు, a coward."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పిరికి (piriki) is native Dravidian: DEDR 4200 lists Telugu piṟiki, \"timid, cowardly\", with Kannada piṟiki, \"coward\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piriki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piriki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piriki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piriki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā kukka cālā pirikidi. — Our dog is very timid.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā kukka cālā pirikidi.* — Our dog is very timid.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for determination, then the Telugu for daring, then say piriki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for determination, then the Telugu for daring, then say *piriki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పిరికి (piriki) mean? (\"Timid; cowardly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

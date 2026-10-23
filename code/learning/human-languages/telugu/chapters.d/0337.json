@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Under Arrest",
+  "label": "ch:te-under-arrest",
+  "canDo": "I can say to arrest, to get caught, a prisoner, shackles and the accused.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C337-ninditudu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can say to arrest, to get caught, a prisoner, shackles and the accused.",
+    "assesses": [
+      "TE-LEX-C337-ARESTU337-03",
+      "TE-LEX-C337-ARESTU337-04",
+      "TE-LEX-C337-ARESTU337-05"
+    ]
+  }
+}

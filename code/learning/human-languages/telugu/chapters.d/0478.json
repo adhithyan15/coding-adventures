@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Storms",
+  "label": "ch:te-storms",
+  "canDo": "I can say a low-pressure area, a gale, a whirlwind, a rainstorm and to lose strength.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C478-balahinapadu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can say a low-pressure area, a gale, a whirlwind, a rainstorm and to lose strength.",
+    "assesses": [
+      "TE-LEX-C478-PEDAGALI478-03",
+      "TE-LEX-C478-PEDAGALI478-04",
+      "TE-LEX-C478-PEDAGALI478-05"
+    ]
+  }
+}

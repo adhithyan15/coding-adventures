@@ -1,0 +1,11 @@
+{
+  "id": "TE-C348-dadi-ceyu",
+  "pathSegment": "TE-PATH-348-DOPIDI348",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-348-DOPIDI348",
+      "order": 1
+    }
+  ]
+}

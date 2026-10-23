@@ -13706,10 +13706,18 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 class_assignments.push((vec![entity_id], entity_classes));
             }
             if !fields.is_empty() {
-                nodes[index].compartments.push(Compartment {
-                    kind: CompartmentKind::Fields,
-                    entries: fields,
-                });
+                if let Some(compartment) = nodes[index]
+                    .compartments
+                    .iter_mut()
+                    .find(|compartment| compartment.kind == CompartmentKind::Fields)
+                {
+                    compartment.entries.extend(fields);
+                } else {
+                    nodes[index].compartments.push(Compartment {
+                        kind: CompartmentKind::Fields,
+                        entries: fields,
+                    });
+                }
             }
         }
         cursor.skip_terminators();
@@ -13745,7 +13753,9 @@ fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
             | "ATTRIBUTE_KEY"
             | "MD_PARENT"
             | "STRING"
+            | "TITLE_KW"
             | "ESCAPED_ATTRIBUTE"
+            | "COMMA_ATTRIBUTE_TYPE"
     ) {
         return Err(token_error(&token, "expected ER name"));
     }

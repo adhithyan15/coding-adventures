@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:0e9e790c1cd72bbb",
+  "lessonIds": [
+    "TE-C510-svartham",
+    "TE-C510-nirlaksyam",
+    "TE-C510-kramasiksana",
+    "TE-C510-atmavisvasam",
+    "TE-C510-kutuhalam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch510.txt",
+  "json": "telugu/narration/ch510.json",
+  "textHash": "fnv1a64:1ba7bcbc772a9a71",
+  "jsonHash": "fnv1a64:0d57e6f202a1fd15",
+  "findings": []
+}

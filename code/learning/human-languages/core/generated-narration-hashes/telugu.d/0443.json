@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:a659fd2d78ef6255",
+  "lessonIds": [
+    "TE-C443-vahanam",
+    "TE-C443-injanu",
+    "TE-C443-tairu",
+    "TE-C443-breku",
+    "TE-C443-haranu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch443.txt",
+  "json": "telugu/narration/ch443.json",
+  "textHash": "fnv1a64:f757d39f24dfa40f",
+  "jsonHash": "fnv1a64:cf6a3c67419f7c8e",
+  "findings": []
+}

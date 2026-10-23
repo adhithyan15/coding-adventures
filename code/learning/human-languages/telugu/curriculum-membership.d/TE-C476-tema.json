@@ -1,0 +1,11 @@
+{
+  "id": "TE-C476-tema",
+  "pathSegment": "TE-PATH-476-USHNOGRATA476",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-476-USHNOGRATA476",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C546-pita",
+    "language": "telugu",
+    "chapter": 546,
+    "sequence": 27670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e895976c8adba4c"
+  },
+  "findings": []
+}

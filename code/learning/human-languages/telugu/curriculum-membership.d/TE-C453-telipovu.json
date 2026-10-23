@@ -1,0 +1,11 @@
+{
+  "id": "TE-C453-telipovu",
+  "pathSegment": "TE-PATH-453-TEPPA453",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-453-TEPPA453",
+      "order": 3
+    }
+  ]
+}

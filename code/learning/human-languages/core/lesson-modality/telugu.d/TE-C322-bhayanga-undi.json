@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C322-bhayanga-undi",
+    "language": "telugu",
+    "chapter": 322,
+    "sequence": 15520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:95c2ab86209f9da5"
+  },
+  "findings": []
+}

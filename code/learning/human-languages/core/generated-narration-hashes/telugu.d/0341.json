@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:9aed0f6e3c74e9f0",
+  "lessonIds": [
+    "TE-C341-mukhyamsalu",
+    "TE-C341-sampadakudu",
+    "TE-C341-sampadakiyam",
+    "TE-C341-pathakudu",
+    "TE-C341-dhruvikarincu",
+    "TE-R341-review-334-341"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch341.txt",
+  "json": "telugu/narration/ch341.json",
+  "textHash": "fnv1a64:a7ed20ff0d0345d1",
+  "jsonHash": "fnv1a64:35d96c84b99c25e8",
+  "findings": []
+}

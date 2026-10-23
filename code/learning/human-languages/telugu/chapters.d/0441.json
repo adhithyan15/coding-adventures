@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "Papers at the Border",
+  "label": "ch:te-papers-at-the-border",
+  "canDo": "I can say a passport, identification, a customs duty, security and a certificate.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C441-dhruvapatram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can say a passport, identification, a customs duty, security and a certificate.",
+    "assesses": [
+      "TE-LEX-C441-PASPORTU441-03",
+      "TE-LEX-C441-PASPORTU441-04",
+      "TE-LEX-C441-PASPORTU441-05"
+    ]
+  }
+}

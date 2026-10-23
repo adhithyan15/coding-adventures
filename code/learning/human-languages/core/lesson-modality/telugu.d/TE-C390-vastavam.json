@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C390-vastavam",
+    "language": "telugu",
+    "chapter": 390,
+    "sequence": 19410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9e6ff570a73da1b"
+  },
+  "findings": []
+}

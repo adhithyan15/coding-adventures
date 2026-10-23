@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:a9bf05bed0123a2b",
+  "lessonIds": [
+    "TE-C398-cattam",
+    "TE-C398-ullanghincu",
+    "TE-C398-amalu-ceyu",
+    "TE-C398-siksa",
+    "TE-C398-nisedhincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch398.txt",
+  "json": "telugu/narration/ch398.json",
+  "textHash": "fnv1a64:694a9f7fb5eeb9b9",
+  "jsonHash": "fnv1a64:99423871e7d4e8e3",
+  "findings": []
+}

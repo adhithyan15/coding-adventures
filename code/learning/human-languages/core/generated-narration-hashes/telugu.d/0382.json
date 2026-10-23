@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:972280e9af6abc8a",
+  "lessonIds": [
+    "TE-C382-alocana",
+    "TE-C382-drkpatham",
+    "TE-C382-abhiprayabhedam",
+    "TE-C382-bhavincu",
+    "TE-C382-konam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch382.txt",
+  "json": "telugu/narration/ch382.json",
+  "textHash": "fnv1a64:9cd2bcd87c5f86d2",
+  "jsonHash": "fnv1a64:f925b3206fc65b23",
+  "findings": []
+}

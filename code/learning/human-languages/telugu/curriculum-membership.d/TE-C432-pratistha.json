@@ -1,0 +1,11 @@
+{
+  "id": "TE-C432-pratistha",
+  "pathSegment": "TE-PATH-432-ADARSAM432",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-432-ADARSAM432",
+      "order": 2
+    }
+  ]
+}

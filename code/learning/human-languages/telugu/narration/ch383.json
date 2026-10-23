@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 383,
+  "title": "Making a Case",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7fd89c8c40586add",
+  "lessons": [
+    {
+      "id": "TE-C383-vadana",
+      "sequence": 19050,
+      "title": "వాదన (vādana) — a line of reasoning; an argument",
+      "headword": "వాదన",
+      "romanization": "vādana",
+      "gloss": "a line of reasoning; an argument",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:875b63eaeaaa0200",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to regard as, then the Telugu for an angle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వాదన",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వాదన — vādana — \"a line of reasoning; an argument\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతని వాదనలో బలం లేదు. atani vādanalō balaṁ lēdu. There is no strength in his argument."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: వాదనలు, vādanalu."
+            },
+            {
+              "kind": "speech",
+              "text": "The case you make, not a quarrel. Its verb is వాదించు, to argue, which you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వాదన (vādana) is built on Sanskrit vāda, \"speech, statement\" (CDIAL 11507), from the root vad, \"to speak\"; the verb వాదించు comes from the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vādana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vādana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vādana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vādana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atani vādanalō balaṁ lēdu. — There is no strength in his argument.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atani vādanalō balaṁ lēdu.* — There is no strength in his argument.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to regard as, then the Telugu for an angle, then say vādana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to regard as, then the Telugu for an angle, then say *vādana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వాదన (vādana) mean? (\"A line of reasoning; an argument\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C383-saksyam",
+      "sequence": 19060,
+      "title": "సాక్ష్యం (sākṣyaṁ) — evidence; testimony",
+      "headword": "సాక్ష్యం",
+      "romanization": "sākṣyaṁ",
+      "gloss": "evidence; testimony",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dfd89dabdd474b30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an angle, then the Telugu for a line of reasoning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సాక్ష్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సాక్ష్యం — sākṣyaṁ — \"evidence; testimony\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ మాటకు సాక్ష్యం ఏమిటి? ā māṭaku sākṣyaṁ ēmiṭi? What is the evidence for that statement?"
+            },
+            {
+              "kind": "speech",
+              "text": "సాక్ష్యం (sākṣyaṁ) చెప్పు, to give evidence, to testify."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సాక్ష్యం (sākṣyaṁ) is borrowed from Sanskrit sākṣya, \"evidence\" (CDIAL 13322), and also \"testimony, attestation\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sākṣyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sākṣyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sākṣyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sākṣyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā māṭaku sākṣyaṁ ēmiṭi? — What is the evidence for that statement?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā māṭaku sākṣyaṁ ēmiṭi?* — What is the evidence for that statement?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an angle, then the Telugu for a line of reasoning, then say sākṣyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an angle, then the Telugu for a line of reasoning, then say *sākṣyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సాక్ష్యం (sākṣyaṁ) mean? (\"Evidence; testimony\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C383-nirupincu",
+      "sequence": 19070,
+      "title": "నిరూపించు (nirūpiñcu) — to prove",
+      "headword": "నిరూపించు",
+      "romanization": "nirūpiñcu",
+      "gloss": "to prove",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e91fba6f910d738",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a line of reasoning, then the Telugu for evidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిరూపించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిరూపించు — nirūpiñcu — \"to prove\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె తన మాట నిజమని నిరూపించింది. āme tana māṭa nijamani nirūpiñcindi. She proved that what she said was true."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): నిరూపించాను, nirūpiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "What you prove is often a clause ending in అని:... నిజమని నిరూపించు (nirūpiñcu), to prove that... is true."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిరూపించు (nirūpiñcu) is built on Sanskrit nirūpaṇa, \"stating, determining, defining\", and also \"examination\" (Monier-Williams), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirūpiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirūpiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirūpiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirūpiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme tana māṭa nijamani nirūpiñcindi. — She proved that what she said was true.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme tana māṭa nijamani nirūpiñcindi.* — She proved that what she said was true.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a line of reasoning, then the Telugu for evidence, then say nirūpiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a line of reasoning, then the Telugu for evidence, then say *nirūpiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిరూపించు (nirūpiñcu) mean? (\"To prove\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C383-tarkam",
+      "sequence": 19080,
+      "title": "తర్కం (tarkaṁ) — logic",
+      "headword": "తర్కం",
+      "romanization": "tarkaṁ",
+      "gloss": "logic",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82809b7c6a2580d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for evidence, then the Telugu for to prove."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తర్కం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తర్కం — tarkaṁ — \"logic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతని మాటల్లో తర్కం లేదు. atani māṭallō tarkaṁ lēdu. There is no logic in what he says."
+            },
+            {
+              "kind": "speech",
+              "text": "Careful, step-by-step reasoning. The adjective is తార్కిక, logical."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తర్కం (tarkaṁ) is borrowed from Sanskrit tarka, \"inquiry\" (CDIAL 5714), which Monier-Williams also glosses \"reasoning, speculation\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarkaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarkaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarkaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarkaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atani māṭallō tarkaṁ lēdu. — There is no logic in what he says.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atani māṭallō tarkaṁ lēdu.* — There is no logic in what he says.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for evidence, then the Telugu for to prove, then say tarkaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for evidence, then the Telugu for to prove, then say *tarkaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తర్కం (tarkaṁ) mean? (\"Logic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C383-sahetukamaina",
+      "sequence": 19090,
+      "title": "సహేతుకమైన (sahētukamaina) — reasonable; well-grounded",
+      "headword": "సహేతుకమైన",
+      "romanization": "sahētukamaina",
+      "gloss": "reasonable; well-grounded",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f209e2fdc512151e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to prove, then the Telugu for logic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సహేతుకమైన",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సహేతుకమైన — sahētukamaina — \"reasonable; well-grounded\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అది సహేతుకమైన ప్రశ్న. adi sahētukamaina praśna. That is a reasonable question."
+            },
+            {
+              "kind": "speech",
+              "text": "A reason stands behind it: స-, with, + హేతు, a reason. The ending -మైన makes an adjective, as in కఠినమైన."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సహేతుకమైన (sahētukamaina) is built on Sanskrit sahetuka, \"together with a reason\" (Monier-Williams), from sa-, \"with\", and hetu, \"a cause, a reason\"; Telugu adds -మైన to make an adjective."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahētukamaina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahētukamaina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahētukamaina, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahētukamaina*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adi sahētukamaina praśna. — That is a reasonable question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adi sahētukamaina praśna.* — That is a reasonable question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to prove, then the Telugu for logic, then say sahētukamaina again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to prove, then the Telugu for logic, then say *sahētukamaina* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సహేతుకమైన (sahētukamaina) mean? (\"Reasonable; well-grounded\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

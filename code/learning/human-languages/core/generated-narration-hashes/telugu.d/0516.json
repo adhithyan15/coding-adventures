@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:6d22bd5e06e74693",
+  "lessonIds": [
+    "TE-C516-cupu",
+    "TE-C516-vinikidi",
+    "TE-C516-cevudu",
+    "TE-C516-alerji",
+    "TE-C516-nidralemi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch516.txt",
+  "json": "telugu/narration/ch516.json",
+  "textHash": "fnv1a64:583b7d7101119f8e",
+  "jsonHash": "fnv1a64:87e099bd16b34e33",
+  "findings": []
+}

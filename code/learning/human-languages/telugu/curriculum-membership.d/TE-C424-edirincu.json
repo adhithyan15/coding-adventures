@@ -1,0 +1,11 @@
+{
+  "id": "TE-C424-edirincu",
+  "pathSegment": "TE-PATH-424-OTTIDI424",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-424-OTTIDI424",
+      "order": 3
+    }
+  ]
+}

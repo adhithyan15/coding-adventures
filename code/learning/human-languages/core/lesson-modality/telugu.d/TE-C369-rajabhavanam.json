@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C369-rajabhavanam",
+    "language": "telugu",
+    "chapter": 369,
+    "sequence": 18200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89a6e7b2a3b010de"
+  },
+  "findings": []
+}

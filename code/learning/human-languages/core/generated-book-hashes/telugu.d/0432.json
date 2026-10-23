@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:fcdd203ddc66ff81",
+  "lessonIds": [
+    "TE-C432-niti",
+    "TE-C432-adarsam",
+    "TE-C432-pratistha",
+    "TE-C432-visvasaniyata",
+    "TE-C432-avagahana"
+  ],
+  "tex": "telugu/book/chapters/ch432-ideals-and-standing.tex"
+}

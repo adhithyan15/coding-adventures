@@ -1,0 +1,11 @@
+{
+  "id": "TE-C438-prayanincu",
+  "pathSegment": "TE-PATH-438-PRAYANAM438",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-438-PRAYANAM438",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:f44dc60e7e53ab54",
+  "lessonIds": [
+    "TE-C378-kotlata",
+    "TE-C378-kalpulu",
+    "TE-C378-gayaparacu",
+    "TE-C378-penuguladu",
+    "TE-C378-gumigudu"
+  ],
+  "tex": "telugu/book/chapters/ch378-a-brawl.tex"
+}

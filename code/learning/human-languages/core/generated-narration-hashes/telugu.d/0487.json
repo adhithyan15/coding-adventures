@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:538dabb21bac9e5b",
+  "lessonIds": [
+    "TE-C487-veccincu",
+    "TE-C487-ada-ceyu",
+    "TE-C487-giraki",
+    "TE-C487-labhincu",
+    "TE-C487-ammudupovu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch487.txt",
+  "json": "telugu/narration/ch487.json",
+  "textHash": "fnv1a64:ede722aef2b64c06",
+  "jsonHash": "fnv1a64:4f21095d17c3b28d",
+  "findings": []
+}

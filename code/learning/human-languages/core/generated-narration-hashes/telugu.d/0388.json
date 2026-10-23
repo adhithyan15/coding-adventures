@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:1a26c1f6ac8c1899",
+  "lessonIds": [
+    "TE-C388-sandeham",
+    "TE-C388-sandehincu",
+    "TE-C388-visvasincu",
+    "TE-C388-niscayam",
+    "TE-C388-anisciti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch388.txt",
+  "json": "telugu/narration/ch388.json",
+  "textHash": "fnv1a64:3eb9376882eddd3f",
+  "jsonHash": "fnv1a64:96c25289206f93f4",
+  "findings": []
+}

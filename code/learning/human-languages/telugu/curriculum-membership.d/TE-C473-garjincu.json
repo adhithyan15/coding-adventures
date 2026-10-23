@@ -1,0 +1,11 @@
+{
+  "id": "TE-C473-garjincu",
+  "pathSegment": "TE-PATH-473-DVIPAM473",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-473-DVIPAM473",
+      "order": 4
+    }
+  ]
+}

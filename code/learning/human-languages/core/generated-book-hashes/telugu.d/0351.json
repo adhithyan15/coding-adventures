@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:9bda54dc438d76bd",
+  "lessonIds": [
+    "TE-C351-bandi",
+    "TE-C351-nirbandhincu",
+    "TE-C351-bandhincu",
+    "TE-C351-vidudala-ceyu",
+    "TE-C351-vidipincu"
+  ],
+  "tex": "telugu/book/chapters/ch351-captives.tex"
+}

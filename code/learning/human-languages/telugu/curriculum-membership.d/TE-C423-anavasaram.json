@@ -1,0 +1,11 @@
+{
+  "id": "TE-C423-anavasaram",
+  "pathSegment": "TE-PATH-423-PRATIPHALAM423",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-423-PRATIPHALAM423",
+      "order": 2
+    }
+  ]
+}

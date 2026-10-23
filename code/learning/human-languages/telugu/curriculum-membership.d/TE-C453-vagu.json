@@ -1,0 +1,11 @@
+{
+  "id": "TE-C453-vagu",
+  "pathSegment": "TE-PATH-453-TEPPA453",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-453-TEPPA453",
+      "order": 1
+    }
+  ]
+}

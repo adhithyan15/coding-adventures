@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:0b12b7c39764c5d2",
+  "lessonIds": [
+    "TE-C399-kartavyam",
+    "TE-C399-sveccha",
+    "TE-C399-samanatvam",
+    "TE-C399-anyayam",
+    "TE-C399-gauravincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch399.txt",
+  "json": "telugu/narration/ch399.json",
+  "textHash": "fnv1a64:79cb61c474dcf539",
+  "jsonHash": "fnv1a64:cbbc5a8c500b0af4",
+  "findings": []
+}

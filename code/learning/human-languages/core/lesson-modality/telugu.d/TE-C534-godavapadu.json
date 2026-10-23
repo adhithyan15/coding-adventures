@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C534-godavapadu",
+    "language": "telugu",
+    "chapter": 534,
+    "sequence": 27050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c695c3f5ec2bde25"
+  },
+  "findings": []
+}

@@ -371,6 +371,11 @@ describe("the gate that would have caught the A2 claim", () => {
     // with -ഏക്കാൾ, and the conditional -ആൽ / എങ്കിൽ, realizing all five B1 nodes,
     // plus letter lessons for ഈ ഐ ഔ ഋ ഡ ഘ ൗ ഃ) and chapters 349-572 (1,120
     // headwords).
+    // Telugu followed as the eleventh, with chapters 316-325 (the B1 core: the plain past
+    // and the habitual -ఏవాడిని, reasons with కాబట్టి and అందుకే, the obligative
+    // -ఆలి, travel, comparison with కంటే, and the conditional -తే with the unreal
+    // -ఇ ఉంటే, realizing all five B1 nodes, plus letter lessons for ఈ ఓ ఊ ఔ ః)
+    // and chapters 326-549 (1,120 headwords, 388 verbs).
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

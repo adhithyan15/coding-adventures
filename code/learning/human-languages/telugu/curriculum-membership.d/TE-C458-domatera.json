@@ -1,0 +1,11 @@
+{
+  "id": "TE-C458-domatera",
+  "pathSegment": "TE-PATH-458-GADI458",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-458-GADI458",
+      "order": 2
+    }
+  ]
+}

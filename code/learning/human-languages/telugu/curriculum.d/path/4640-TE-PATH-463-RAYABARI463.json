@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-463-RAYABARI463",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TE-EXT-463-RAYABARI463"
+  ],
+  "after": []
+}

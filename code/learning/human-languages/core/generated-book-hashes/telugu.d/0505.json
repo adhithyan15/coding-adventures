@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:24dc80513ac69bcf",
+  "lessonIds": [
+    "TE-C505-jali",
+    "TE-C505-karuna",
+    "TE-C505-adarincu",
+    "TE-C505-aduko",
+    "TE-C505-samudayincu"
+  ],
+  "tex": "telugu/book/chapters/ch505-kindness-and-comfort.tex"
+}

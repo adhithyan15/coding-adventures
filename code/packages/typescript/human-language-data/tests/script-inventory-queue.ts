@@ -15,6 +15,14 @@ export function assertCorpusGlyphGapQueue({
     ([leftGlyph, leftCount], [rightGlyph, rightCount]) =>
       rightCount - leftCount || leftGlyph.localeCompare(rightGlyph),
   );
+  // The Telugu B1 core (chapters 316-325) teaches the independent vowels ఈ ఓ ఊ
+  // ఔ with letter lessons anchored on ఈలోగా, ఓటు, ఊరు and ఔషధం. Their rows in
+  // data/scripts/telugu.json are still recognition-only: validate.ts covers an
+  // independent vowel in a headword only once its handwriting row is
+  // source-backed and font-checked, and no stroke order for these four has been
+  // taken from a source yet. So each anchor headword is one glyph gap, held
+  // here until a cited row (and its script-ductus ductus) lands. No letter
+  // lesson promises a numbered strip for them.
   // The Malayalam B1 core (chapters 339-348) teaches the independent vowels
   // ഈ ഐ ഔ ഋ with letter lessons anchored on ഈയിടെ, ഐക്യം, ഔദ്യോഗികമായ and
   // ഋതു. Their rows in data/scripts/malayalam.json are recognition-only:
@@ -25,6 +33,10 @@ export function assertCorpusGlyphGapQueue({
   // (and its script-ductus ductus) lands. No letter lesson promises a numbered
   // strip for them.
   expect(queue).toEqual([
+    ["ఈ", 1],
+    ["ఊ", 1],
+    ["ఓ", 1],
+    ["ఔ", 1],
     ["ഈ", 1],
     ["ഋ", 1],
     ["ഐ", 1],

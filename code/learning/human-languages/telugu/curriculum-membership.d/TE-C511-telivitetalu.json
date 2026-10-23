@@ -1,0 +1,11 @@
+{
+  "id": "TE-C511-telivitetalu",
+  "pathSegment": "TE-PATH-511-GNAPAKAM511",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-511-GNAPAKAM511",
+      "order": 0
+    }
+  ]
+}

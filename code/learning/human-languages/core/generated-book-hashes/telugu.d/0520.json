@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:cedf22e384f3cc17",
+  "lessonIds": [
+    "TE-C520-kudutapadu",
+    "TE-C520-balapadu",
+    "TE-C520-naligipovu",
+    "TE-C520-cidu",
+    "TE-C520-punjuko"
+  ],
+  "tex": "telugu/book/chapters/ch520-wearing-down-and-bouncing-back.tex"
+}

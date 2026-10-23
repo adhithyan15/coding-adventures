@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C366-dora",
+    "language": "telugu",
+    "chapter": 366,
+    "sequence": 18080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba621a14bf41c7b8"
+  },
+  "findings": []
+}

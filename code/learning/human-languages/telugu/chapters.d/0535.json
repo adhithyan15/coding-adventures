@@ -1,0 +1,19 @@
+{
+  "chapter": 535,
+  "title": "Teasing and Telling Off",
+  "label": "ch:te-teasing-and-telling-off",
+  "canDo": "I can say that someone mocked, scolded, confronted or deceived another.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C535-mosagincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 535: I can say that someone mocked, scolded, confronted or deceived another.",
+    "assesses": [
+      "TE-LEX-C535-EGATALI535-03",
+      "TE-LEX-C535-EGATALI535-04",
+      "TE-LEX-C535-EGATALI535-05"
+    ]
+  }
+}

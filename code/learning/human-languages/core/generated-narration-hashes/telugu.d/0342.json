@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:15bc85897aee81b8",
+  "lessonIds": [
+    "TE-C342-dandora",
+    "TE-C342-pramukhudu",
+    "TE-C342-sabha",
+    "TE-C342-prasangam",
+    "TE-C342-prasangincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch342.txt",
+  "json": "telugu/narration/ch342.json",
+  "textHash": "fnv1a64:ec57f49eea55b835",
+  "jsonHash": "fnv1a64:585965156b1aac68",
+  "findings": []
+}

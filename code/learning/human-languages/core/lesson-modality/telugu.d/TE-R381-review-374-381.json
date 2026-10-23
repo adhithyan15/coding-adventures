@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R381-review-374-381",
+    "language": "telugu",
+    "chapter": 381,
+    "sequence": 18860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:212eaacaa045c31b"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:7621daa69cbb19cd",
+  "lessonIds": [
+    "TE-C511-telivitetalu",
+    "TE-C511-tikamakapadu",
+    "TE-C511-talacuko",
+    "TE-C511-nemaruveyu",
+    "TE-C511-gurtuceyu"
+  ],
+  "tex": "telugu/book/chapters/ch511-memory-and-muddle.tex"
+}

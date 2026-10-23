@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:1b1f023d7746c806",
+  "lessonIds": [
+    "TE-C435-medhavi",
+    "TE-C435-panditudu",
+    "TE-C435-tatvasastram",
+    "TE-C435-samskarta",
+    "TE-C435-prerepincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch435.txt",
+  "json": "telugu/narration/ch435.json",
+  "textHash": "fnv1a64:e6b7ca1cb472b8d5",
+  "jsonHash": "fnv1a64:e1d877e785bac36f",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C368-sasanam",
+    "language": "telugu",
+    "chapter": 368,
+    "sequence": 18150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22d1ea80ed1341f4"
+  },
+  "findings": []
+}

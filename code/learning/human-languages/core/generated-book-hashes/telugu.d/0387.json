@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:06e228e540681e2c",
+  "lessonIds": [
+    "TE-C387-vimarsa",
+    "TE-C387-vimarsincu",
+    "TE-C387-prasamsincu",
+    "TE-C387-vyakhyanincu",
+    "TE-C387-tappubattu"
+  ],
+  "tex": "telugu/book/chapters/ch387-praise-and-criticism.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C430-samatulyam",
+    "language": "telugu",
+    "chapter": 430,
+    "sequence": 21480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9ac24455117fec8"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C419-emainappatiki",
+  "pathSegment": "TE-PATH-419-KAKAPOTE419",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-419-KAKAPOTE419",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:5d63c45be8d34738",
+  "lessonIds": [
+    "TE-C332-appatike",
+    "TE-C332-antalo",
+    "TE-C332-hathattuga",
+    "TE-C332-ksanam",
+    "TE-C332-arucu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch332.txt",
+  "json": "telugu/narration/ch332.json",
+  "textHash": "fnv1a64:41671d15e2b0848d",
+  "jsonHash": "fnv1a64:76aa77d9975df2c2",
+  "findings": []
+}
