@@ -1,5 +1,5 @@
 ---
-category: Human-language data
+category: Repo policy / workflow reminders
 ---
 
 # Session-map shard filenames normalize case, but row IDs do not

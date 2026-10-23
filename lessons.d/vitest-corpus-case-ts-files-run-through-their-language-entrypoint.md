@@ -1,5 +1,5 @@
 ---
-category: Testing
+category: Testing & coverage
 ---
 
 # Vitest corpus `.case.ts` files run through their language entrypoint
