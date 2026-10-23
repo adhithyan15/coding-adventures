@@ -6530,6 +6530,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(if choose() then (abs((6 div 4) - 3) * sign(left)) else (entier(abs(((10 div 3) + (7 mod 4)) ^ (6 div 3))) * ((2 * sign(right)) + 2))); output(result) end",
         expect: Expect::Stdout("144"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
