@@ -1,0 +1,700 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 192,
+  "title": "People Before Postpositions",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:b2844aee3e86c05a",
+  "lessons": [
+    {
+      "id": "PA-C192-lok-return",
+      "sequence": 10400,
+      "title": "Return to people and three postpositions",
+      "headword": "ਲੋਕ · ਨਾਲ · ਲਈ · ਤੋਂ",
+      "romanization": "lok; naal; laii; ton",
+      "gloss": "retrieve people and three familiar postpositions",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ceac6fd1e380775",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "lok; YOU SAY: ਲੋਕ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *lok*; YOU SAY: **ਲੋਕ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the familiar word for “people” ready. Then retrieve the three familiar postpositions ਨਾਲ, ਲਈ, and ਤੋਂ without joining them to the noun yet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "lok; YOU SAY: ਲੋਕ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *lok*; YOU SAY: **ਲੋਕ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "naal; laii; ton; YOU SAY: ਨਾਲ; ਲਈ; ਤੋਂ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *naal; laii; ton*; YOU SAY: **ਨਾਲ; ਲਈ; ਤੋਂ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “people,” then “with,” “for,” and “from.” This opener owns no new form."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C192-lokaan",
+      "sequence": 10410,
+      "title": "Change one familiar noun before a postposition",
+      "headword": "ਲੋਕਾਂ",
+      "romanization": "lokaan",
+      "gloss": "people before a postposition",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:26589ca2e8f22dad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਲੋਕ, then the familiar companion postposition ਨਾਲ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: direct owner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਲੋਕਾਂ ਨਾਲ (lokaan naal) — lokā̃ nāl — with people."
+            },
+            {
+              "kind": "speech",
+              "text": "The standalone form is ਲੋਕ. Before a postposition, this noun becomes ਲੋਕਾਂ (lokaan). Keep the step narrow: this lesson follows one noun and does not say that every Punjabi noun changes in the same way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: source boundary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Johal explains the oblique case before a postposition and shows that this class of masculine plural adds the nasal ending -ਾਂ. Here that source rule is applied only to ਲੋਕ. Source: Ranbir Johal, Speaking and Writing Punjabi (2018), pp. 76–78, oblique nouns before postpositions."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "lokaan naal; YOU SAY: ਲੋਕਾਂ ਨਾਲ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *lokaan naal*; YOU SAY: **ਲੋਕਾਂ ਨਾਲ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਲੋਕਾਂ ਨਾਲ (lokaan naal)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਲੋਕਾਂ ਨਾਲ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਲੋਕਾਂ (lokaan) once, then check the final ਾਂ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਲੋਕਾਂ** once, then check the final **ਾਂ**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the form of “people” used before ਨਾਲ."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C192-lokaan-review",
+      "sequence": 10420,
+      "title": "Retrieve the pre-postposition form",
+      "headword": "ਲੋਕਾਂ",
+      "romanization": "lokaan",
+      "gloss": "retrieve people before a postposition",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc276b12c84ed2c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the familiar standalone word ਲੋਕ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the contrast small: standalone ਲੋਕ; before a postposition ਲੋਕਾਂ (lokaan). No other noun pattern enters this retrieval."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "lok; lokaan; YOU SAY: ਲੋਕ; ਲੋਕਾਂ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *lok; lokaan*; YOU SAY: **ਲੋਕ; ਲੋਕਾਂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਲੋਕਾਂ (lokaan)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਲੋਕਾਂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the model and write ਲੋਕਾਂ (lokaan)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the model and write **ਲੋਕਾਂ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the form that waits for a postposition."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C192-lokaan-naal",
+      "sequence": 10430,
+      "title": "Return to the companion frame",
+      "headword": "ਲੋਕਾਂ ਨਾਲ",
+      "romanization": "lokaan naal",
+      "gloss": "with people",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5dab75e4dde5f4ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the pre-postposition form, then the word for “with.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one familiar postposition",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਲੋਕਾਂ ਨਾਲ (lokaan naal) — lokā̃ nāl — with people."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun comes first. The familiar postposition follows it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "lokaan naal; YOU SAY: ਲੋਕਾਂ ਨਾਲ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *lokaan naal*; YOU SAY: **ਲੋਕਾਂ ਨਾਲ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਲੋਕਾਂ ਨਾਲ (lokaan naal)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਲੋਕਾਂ ਨਾਲ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਲੋਕਾਂ ਨਾਲ (lokaan naal)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਲੋਕਾਂ ਨਾਲ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce “with people.”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C192-lokaan-lai",
+      "sequence": 10440,
+      "title": "Move the same noun form to for",
+      "headword": "ਲੋਕਾਂ ਲਈ",
+      "romanization": "lokaan laii",
+      "gloss": "for people",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3e1733d8c45c9d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the noun form, then familiar ਲਈ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: keep the noun form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਲੋਕਾਂ ਲਈ (lokaan laii) — lokā̃ laī — for people."
+            },
+            {
+              "kind": "speech",
+              "text": "Only the familiar postposition changes. The noun remains ਲੋਕਾਂ (lokaan)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "lokaan laii; YOU SAY: ਲੋਕਾਂ ਲਈ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *lokaan laii*; YOU SAY: **ਲੋਕਾਂ ਲਈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਲੋਕਾਂ ਲਈ (lokaan laii)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਲੋਕਾਂ ਲਈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਲੋਕਾਂ ਲਈ (lokaan laii)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਲੋਕਾਂ ਲਈ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce “for people.”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C192-lokaan-ton",
+      "sequence": 10450,
+      "title": "Move the same noun form to from",
+      "headword": "ਲੋਕਾਂ ਤੋਂ",
+      "romanization": "lokaan ton",
+      "gloss": "from people",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b42870a8cf109530",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the noun form, then familiar ਤੋਂ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: a third familiar postposition",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਲੋਕਾਂ ਤੋਂ (lokaan ton) — lokā̃ tõ — from people."
+            },
+            {
+              "kind": "speech",
+              "text": "The postposition changes again. The pre-postposition noun form stays fixed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "lokaan ton; YOU SAY: ਲੋਕਾਂ ਤੋਂ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *lokaan ton*; YOU SAY: **ਲੋਕਾਂ ਤੋਂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਲੋਕਾਂ ਤੋਂ (lokaan ton)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਲੋਕਾਂ ਤੋਂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਲੋਕਾਂ ਤੋਂ (lokaan ton)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਲੋਕਾਂ ਤੋਂ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce “from people.”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C192-payoff",
+      "sequence": 10460,
+      "title": "A bounded people-and-postpositions payoff",
+      "headword": "ਲੋਕ · ਲੋਕਾਂ ਨਾਲ · ਲੋਕਾਂ ਲਈ · ਲੋਕਾਂ ਤੋਂ",
+      "romanization": "lok; lokaan naal; lokaan laii; lokaan ton",
+      "gloss": "contrast standalone people with three postposition frames",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cdb585a28d502b76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall standalone ਲੋਕ, then the form used before a postposition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "lok; lokaan naal; lokaan laii; lokaan ton; YOU SAY: ਲੋਕ; ਲੋਕਾਂ ਨਾਲ; ਲੋਕਾਂ ਲਈ; ਲੋਕਾਂ ਤੋਂ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *lok; lokaan naal; lokaan laii; lokaan ton*; YOU SAY: **ਲੋਕ; ਲੋਕਾਂ ਨਾਲ; ਲੋਕਾਂ ਲਈ; ਲੋਕਾਂ ਤੋਂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਲੋਕ, ਲੋਕਾਂ ਨਾਲ (lokaan naal), ਲੋਕਾਂ ਲਈ (lokaan laii), ਲੋਕਾਂ ਤੋਂ (lokaan ton)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਲੋਕ · ਲੋਕਾਂ ਨਾਲ · ਲੋਕਾਂ ਲਈ · ਲੋਕਾਂ ਤੋਂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write ਲੋਕਾਂ (lokaan) once, then one complete postposition phrase",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write **ਲੋਕਾਂ** once, then one complete postposition phrase]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the standalone form, then all three postposition phrases."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the fifteenth prerequisite tranche exposed by Punjabi A2 mock drafting. It does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
