@@ -1340,6 +1340,11 @@ backend immediately) come before the enabler-dependent items.
   conservative.
   Additional built-in `entier` calls may wrap that already integral bounded
   result; an unrestricted runtime `entier` operand remains conservative.
+  A checked static integer reduction may contain a conditional whose selector
+  does not call a procedure when both branches independently reduce to the
+  same exact integer. The selector still executes at runtime; unequal,
+  dynamic, invalid, or oversized branch reductions and procedure-calling
+  selectors remain conservative.
   Built-in `sqrt` may also map an `abs`-normalized bounded result to exact `0`
   or `1` before `entier`; an unnormalized or unrestricted operand remains
   conservative. Additional built-in `sqrt` calls may wrap that nonnegative
