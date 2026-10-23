@@ -743,6 +743,21 @@ still owns all RFC 5280 Name normalization and equality semantics; the result
 does not prove self-signature, construct a path, or grant trust. Complete Name
 comparison, path construction and validation, trust-anchor constraints, name
 constraints, revocation, TLS, HTTP, and network effects remain blockers.
+A bounded `x509-intermediate-certificate-policy` composition now consumes
+certificate-wide issuing-CA role-policy evidence, certificate-bound
+caller-selected algorithm-policy evidence, and caller-policy self-issued
+classification. It fails closed unless all three non-copyable inputs retain
+the same exact decoded certificate object and the role is exactly issuing CA,
+then classifies that certificate's inclusive validity interval at one explicit
+validated caller-owned observation. Its non-copyable result retains all three
+inputs plus the validity result so later path traversal can consume one
+non-mixable intermediate-certificate policy boundary. The self-issued result
+remains only caller-owned Name classification, and the algorithm profile
+remains policy data rather than a verifier. This composition does not
+authenticate either adjacent link, advance path-length state, apply name
+constraints, construct or validate a certification path, recognize or
+constrain a trust anchor, check revocation, perform TLS or HTTP, authorize
+OAuth transport, or open a network connection.
 A bounded `x509-certificate-issuer-candidate-selection` path-construction
 prerequisite now scans one caller-bounded pool of decoded candidate
 certificates in caller order. It invokes caller-owned Name policy exactly once
