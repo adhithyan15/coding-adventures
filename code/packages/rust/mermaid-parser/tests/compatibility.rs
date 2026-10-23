@@ -45,6 +45,14 @@ const ER_DEFAULT_CLASS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-default-class-11.16.1-visual-corpus.json"
 ));
+const ER_QUOTED_TEXT_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-quoted-text-11.16.1-corpus.json"
+));
+const ER_QUOTED_TEXT_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-quoted-text-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -1968,6 +1976,32 @@ fn pinned_er_default_class_respects_specific_style_precedence() {
     assert_eq!(house.style.as_ref().and_then(|style| style.fill.as_deref()), Some("#fef3c7"));
     assert_eq!(house.style.as_ref().and_then(|style| style.stroke.as_deref()), Some("#b45309"));
     assert_eq!(house.style.as_ref().and_then(|style| style.stroke_width), Some(4.0));
+}
+
+#[test]
+fn pinned_er_quoted_text_reaches_semantic_ir() {
+    let syntax: Value =
+        serde_json::from_str(ER_QUOTED_TEXT_CORPUS).expect("ER quoted text corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_QUOTED_TEXT_VISUAL_CORPUS)
+        .expect("ER quoted text visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let source = syntax["fixtures"][0]["source"].as_str().expect("ER quoted text source");
+    let diagram = parse_er_diagram(source).expect("ER quoted text fixture must parse");
+
+    let customer = diagram
+        .nodes
+        .iter()
+        .find(|node| node.id == "Customer ❤")
+        .expect("quoted Unicode entity");
+    let account = diagram.nodes.iter().find(|node| node.id == "account").expect("account");
+    assert_eq!(customer.label, "Customer ❤");
+    assert_eq!(account.label, "Customer Account");
+    assert_eq!(customer.compartments[0].entries, ["id: string [PK] - Primary identifier"]);
+    assert_eq!(account.compartments[0].entries, ["displayName: string? - Preferred name"]);
+    assert_eq!(diagram.relationships[0].from, "Customer ❤");
+    assert_eq!(diagram.relationships[0].to, "account");
+    assert_eq!(diagram.relationships[0].label.as_deref(), Some("places order"));
 }
 
 #[test]
