@@ -25,6 +25,8 @@
 #      here; then that command runs. The README's text is checked, never run.
 #   3. Android: `android:allowBackup="false"` on <application>, as Mosaic's
 #      Compose manifest has it, so the app's state stays on the device.
+#      Flutter's pinned NDK, which plugins with native code (package:jni)
+#      build with, is installed up front (ensure-flutter-android-ndk.sh).
 #   4. flutter pub get (path_provider's resolved versions are printed),
 #      flutter analyze, and a debug build: `flutter build apk --debug`, or
 #      `flutter build ios --simulator --debug`.
@@ -133,6 +135,13 @@ if [[ "$platform" == android ]]; then
       grep -qxF "    ndkVersion = \"$ndk_version\"" "$app_gradle"
     fi
   fi
+
+  # `:app` now uses the runner's NDK, but the plugins don't: package:jni
+  # (through path_provider_android) builds C code with Flutter's own pinned
+  # NDK, which an app can't override. Install that one up front, verified and
+  # retried, so Gradle never downloads it mid-build (a corrupt download failed
+  # "trestle (Flutter, Android)" on PR #17914).
+  "$here/ensure-flutter-android-ndk.sh"
 fi
 
 flutter pub get

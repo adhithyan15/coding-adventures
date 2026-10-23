@@ -13746,6 +13746,7 @@ fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
             | "MD_PARENT"
             | "STRING"
             | "ESCAPED_ATTRIBUTE"
+            | "COMMA_ATTRIBUTE_TYPE"
     ) {
         return Err(token_error(&token, "expected ER name"));
     }

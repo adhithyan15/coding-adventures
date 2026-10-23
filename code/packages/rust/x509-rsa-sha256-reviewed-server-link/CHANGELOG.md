@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.0 - 2026-10-23
+
+### Added
+
+- Applied an exact retained intermediate's critical NameConstraints extension
+  to every dNSName in the exact target retained by the reviewed two-link path.
+- Added distinct non-copyable evidence retaining the complete root anchor-policy
+  proof plus optional payload-free intermediate DNS count evidence.
+- Added fail-closed criticality, full-DER framing, unsupported-form, caller-limit,
+  violation, redaction, and real unconstrained-intermediate coverage.
+
 ## 0.5.0 - 2026-10-23
 
 ### Added
