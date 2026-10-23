@@ -5,7 +5,8 @@
 ### Added
 
 - Applied supported critical excluded dNSName constraints from the exact
-  retained intermediate, with exclusion taking precedence over permission.
+  retained intermediate, with exclusion taking precedence over permission and
+  broader target wildcards rejected when any expansion overlaps an exclusion.
 - Migrated direct, two-link anchor, and intermediate consumers to generalized
   DNS-constraint evidence so decoded exclusions cannot be silently ignored.
 - Added exact-consumer coverage for combined permitted and excluded subtrees;

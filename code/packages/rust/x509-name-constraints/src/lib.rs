@@ -273,7 +273,7 @@ pub fn evaluate_dns_names(
 
         let excluded = validated_excluded[..constraints.excluded_len()]
             .iter()
-            .any(|constraint| within_subtree(name, *constraint));
+            .any(|constraint| overlaps_excluded_subtree(name, *constraint));
         if excluded {
             return Err(DnsConstraintError::new(
                 DnsConstraintErrorKind::PresentedDnsNameExcluded,
@@ -396,6 +396,28 @@ fn within_subtree(name: &str, constraint: ValidConstraint<'_>) -> bool {
     let base_offset = name.len() - constraint.base.len();
     name.as_bytes()[base_offset - 1] == b'.'
         && name[base_offset..].eq_ignore_ascii_case(constraint.base)
+}
+
+fn overlaps_excluded_subtree(name: &str, constraint: ValidConstraint<'_>) -> bool {
+    if within_subtree(name, constraint) {
+        return true;
+    }
+
+    // A presented wildcard stands for exactly one concrete left-most label.
+    // Ordinary subtree matching covers constraints at or above its fixed
+    // suffix. An exact excluded base one label below that suffix also overlaps
+    // one possible expansion and must therefore reject the wildcard.
+    let Some(wildcard_base) = name.strip_prefix("*.") else {
+        return false;
+    };
+    if constraint.subdomains_only || constraint.base.len() <= wildcard_base.len() {
+        return false;
+    }
+
+    let suffix_offset = constraint.base.len() - wildcard_base.len();
+    constraint.base.as_bytes()[suffix_offset - 1] == b'.'
+        && constraint.base[suffix_offset..].eq_ignore_ascii_case(wildcard_base)
+        && !constraint.base[..suffix_offset - 1].contains('.')
 }
 
 /// Decode the supported DER contents of an RFC 5280 NameConstraints SEQUENCE.

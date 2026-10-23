@@ -990,8 +990,10 @@ in schema order; the supported GeneralSubtree form remains dNSName with absent
 minimum and maximum. The snapshot-contents decoder remains restricted to its
 reviewed permitted-DNS-only input. Evaluation validates every retained
 permitted and excluded subtree before examining a presented name, rejects a
-name matching any excluded subtree, and, when permitted subtrees are present,
-still requires a match in that set. The exact direct and two-link anchor-policy
+name matching any excluded subtree, rejects a presented wildcard when any of
+its concrete expansions falls within an excluded subtree, and, when permitted
+subtrees are present, requires every represented name to stay within that set.
+The exact direct and two-link anchor-policy
 consumers use the shared evaluator, while the exact intermediate-policy
 consumer now accepts and enforces supported critical excluded-DNS constraints
 instead of rejecting their field solely by tag. Empty fields, duplicates,

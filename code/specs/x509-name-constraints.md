@@ -83,12 +83,16 @@ adding one or more labels to its left. A leading-dot constraint matches only
 names with at least one label to the left: `.tr` matches `example.tr` and
 `*.example.tr`, but not `tr`, `eviltr`, or the invalid literal `.tr`.
 
-Every presented DNS name is rejected if it matches an excluded subtree.
-Exclusion takes precedence when both sets match. When a permitted set is
-present, every remaining name must match at least one permitted subtree; when
-it is absent, exclusion is the only subtree restriction. The empty presented
-collection succeeds because DNS constraints do not constrain absent name
-forms. One invalid, excluded, or unmatched presented name fails the whole
+Every presented DNS name is rejected if it matches an excluded subtree. A
+presented wildcard is rejected if any concrete name it can represent falls
+within an excluded subtree; for example, `*.example.test` overlaps excluded
+`private.example.test`. This is distinct from permitted matching, which
+requires every name represented by the wildcard to remain within a permitted
+subtree. Exclusion takes precedence when both sets match. When a permitted set
+is present, every remaining name must match at least one permitted subtree;
+when it is absent, exclusion is the only subtree restriction. The empty
+presented collection succeeds because DNS constraints do not constrain absent
+name forms. One invalid, excluded, or unmatched presented name fails the whole
 evaluation; the evaluator never accepts merely because another SAN matches.
 
 ## Limits and Representation

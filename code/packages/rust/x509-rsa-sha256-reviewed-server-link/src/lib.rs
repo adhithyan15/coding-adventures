@@ -1299,6 +1299,33 @@ mod tests {
     }
 
     #[test]
+    fn critical_intermediate_exclusion_rejects_an_overlapping_target_wildcard() {
+        let target_encoded = certificate(&[subject_alt_name(&[dns_name("*.example.test")])]);
+        let intermediate_encoded = certificate(&[combined_name_constraints(
+            &[b"example.test"],
+            &[b"private.example.test"],
+            true,
+        )]);
+        let target = decode_x509_certificate(&target_encoded, Asn1Limits::default()).unwrap();
+        let intermediate =
+            decode_x509_certificate(&intermediate_encoded, Asn1Limits::default()).unwrap();
+
+        let error = evaluate_intermediate_dns_policy(
+            &target,
+            &intermediate,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap_err();
+        assert_eq!(
+            error.kind(),
+            X509RsaSha256ReviewedServerLinkErrorKind::TargetIntermediateDnsNameConstraints(
+                DnsConstraintErrorKind::PresentedDnsNameExcluded,
+            )
+        );
+    }
+
+    #[test]
     fn absent_intermediate_constraints_preserve_the_prior_proof_without_dns_evidence() {
         let target_encoded = certificate(&[subject_alt_name(&[dns_name("api.tr")])]);
         let intermediate_encoded = certificate(&[]);

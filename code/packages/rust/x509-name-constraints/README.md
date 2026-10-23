@@ -14,7 +14,9 @@ one exact permitted field. The crate retains arbitrary non-empty ASCII subtree
 strings in wire order, including leading-dot forms such as `.tr`, without
 hard-coding a reviewed root or DNS suffix. A separate bounded evaluator
 validates every retained constraint and caller-supplied DNS name, rejects any
-name within an excluded subtree, then requires each remaining name to match a
+name within an excluded subtree, and rejects a presented wildcard if any name
+it can represent falls within an excluded subtree. It then requires each
+remaining name, including every expansion of a wildcard, to stay within a
 permitted subtree when a permitted set is present.
 
 ## Security boundary
@@ -26,9 +28,10 @@ out of diagnostics. Unknown, duplicate, reversed, or empty top-level fields,
 unsupported GeneralName choices, minimum/maximum distances, and trailing
 fields fail closed. Each constraint class and the presented-name collection
 are capped at 256. Evaluation is allocation-free, validates all constraints
-before matching, gives exclusion precedence, and uses strict ASCII label,
-leading-dot, and complete-leftmost-label wildcard rules with case-insensitive
-label-boundary comparison.
+before matching, gives exclusion precedence, distinguishes wildcard overlap
+from wildcard containment, and uses strict ASCII label, leading-dot, and
+complete-leftmost-label wildcard rules with case-insensitive label-boundary
+comparison.
 
 Successful decoding or evaluation proves only that supplied strings satisfy
 the decoded supported DNS subtree sets. It does not extract names from a

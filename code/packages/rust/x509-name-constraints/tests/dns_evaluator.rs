@@ -145,6 +145,37 @@ fn exclusion_wins_when_a_name_is_also_permitted() {
 }
 
 #[test]
+fn excluded_subtree_rejects_a_broader_overlapping_presented_wildcard() {
+    let error = evaluate_full(
+        &[b"example.test"],
+        &[b"private.example.test"],
+        &["*.example.test"],
+    )
+    .unwrap_err();
+    assert_eq!(
+        error.kind(),
+        DnsConstraintErrorKind::PresentedDnsNameExcluded
+    );
+
+    assert!(evaluate_full(
+        &[b"example.test"],
+        &[b"deeper.private.example.test", b".private.example.test"],
+        &["*.example.test"],
+    )
+    .is_ok());
+    assert_eq!(
+        evaluate_full(
+            &[b"example.test"],
+            &[b"PRIVATE.EXAMPLE.TEST"],
+            &["*.example.test"],
+        )
+        .unwrap_err()
+        .kind(),
+        DnsConstraintErrorKind::PresentedDnsNameExcluded
+    );
+}
+
+#[test]
 fn every_excluded_constraint_is_validated_before_any_name_is_accepted() {
     let error = evaluate_full(
         &[b"example.test"],

@@ -56,9 +56,9 @@ extension preserves the prior proof without new DNS evidence. A present
 extension must be critical and must be one exact DER NameConstraints SEQUENCE
 inside the repository's permitted-and-excluded-dNSName subset. The policy
 re-decodes Subject Alternative Name from the exact retained target, validates
-every constraint, rejects excluded names before applying any permitted set, and
-retains the complete prior proof plus optional payload-free intermediate DNS
-evidence.
+every constraint, rejects excluded names and any wildcard overlapping an
+excluded subtree before applying the permitted containment rule, and retains
+the complete prior proof plus optional payload-free intermediate DNS evidence.
 
 ## Boundary
 
