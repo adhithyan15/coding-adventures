@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:e0622e099f7fe7a5",
+  "lessonIds": [
+    "TA-C426-cantati",
+    "TA-C426-iraiccal",
+    "TA-C426-tiral",
+    "TA-C426-nirampu",
+    "TA-C426-tinaru"
+  ],
+  "tex": "tamil/book/chapters/ch426-crowds-and-noise.tex"
+}

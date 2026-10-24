@@ -1,0 +1,11 @@
+{
+  "id": "TA-C344-urumaru",
+  "pathSegment": "TA-PATH-344-MAYAM344",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-344-MAYAM344",
+      "order": 4
+    }
+  ]
+}

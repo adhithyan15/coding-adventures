@@ -1,0 +1,19 @@
+{
+  "chapter": 447,
+  "title": "Paying in Parts",
+  "label": "ch:ta-paying-in-parts",
+  "canDo": "I can talk about an advance, instalments, dues, the remainder and the total sum.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C447-tokai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can talk about an advance, instalments, dues, the remainder and the total sum.",
+    "assesses": [
+      "TA-LEX-C447-THAVANAI447-03",
+      "TA-LEX-C447-THAVANAI447-04",
+      "TA-LEX-C447-THAVANAI447-05"
+    ]
+  }
+}

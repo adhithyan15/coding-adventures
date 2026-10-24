@@ -1,0 +1,11 @@
+{
+  "id": "TA-C500-tunai",
+  "pathSegment": "TA-PATH-500-VITU500",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-500-VITU500",
+      "order": 0
+    }
+  ]
+}

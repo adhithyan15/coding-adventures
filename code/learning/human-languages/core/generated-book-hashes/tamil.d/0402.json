@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:21577d388aec2519",
+  "lessonIds": [
+    "TA-C402-caman",
+    "TA-C402-cutkes",
+    "TA-C402-muttai",
+    "TA-C402-cuma",
+    "TA-C402-irakku"
+  ],
+  "tex": "tamil/book/chapters/ch402-bags-and-bundles.tex"
+}

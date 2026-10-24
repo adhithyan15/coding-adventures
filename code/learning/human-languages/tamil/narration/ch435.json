@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 435,
+  "title": "Bays and Capes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:adacac9cc9c0e133",
+  "lessons": [
+    {
+      "id": "TA-C435-kataloram",
+      "sequence": 24890,
+      "title": "கடலோரம் (kaṭalōram) — the coast; the seaside",
+      "headword": "கடலோரம்",
+      "romanization": "kaṭalōram",
+      "gloss": "the coast; the seaside",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:750e53f44c5f3bc8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a palmyra palm, then the Tamil for a bush."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கடலோரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கடலோரம் — kaṭalōram — \"the coast; the seaside\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கடலோரக் கிராமங்களில் மீனவர்கள் வாழ்கிறார்கள். kaṭalōrak kirāmaṅkaḷil mīṉavarkaḷ vāḻkiṟārkaḷ. Fishermen live in the coastal villages."
+            },
+            {
+              "kind": "speech",
+              "text": "As a modifier it drops -ம்: கடலோரக் கிராமம், a coastal village."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கடலோரம் (kaṭalōram) is built from கடல், \"the sea\" (DEDR 1118), and ஓரம், \"an edge, a border\" (DEDR 1060)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭalōram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭalōram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭalōram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭalōram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭalōrak kirāmaṅkaḷil mīṉavarkaḷ vāḻkiṟārkaḷ. — Fishermen live in the coastal villages.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭalōrak kirāmaṅkaḷil mīṉavarkaḷ vāḻkiṟārkaḷ.* — Fishermen live in the coastal villages.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a palmyra palm, then the Tamil for a bush, then say kaṭalōram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a palmyra palm, then the Tamil for a bush, then say *kaṭalōram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கடலோரம் (kaṭalōram) mean? (\"The coast; the seaside\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C435-valaikuta",
+      "sequence": 24900,
+      "title": "வளைகுடா (vaḷaikuṭā) — a bay; a gulf",
+      "headword": "வளைகுடா",
+      "romanization": "vaḷaikuṭā",
+      "gloss": "a bay; a gulf",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1777b433c5ca3ff8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a bush, then the Tamil for the coast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வளைகுடா",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வளைகுடா — vaḷaikuṭā — \"a bay; a gulf\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வளைகுடாவில் அலைகள் அமைதியாக இருந்தன. vaḷaikuṭāvil alaikaḷ amaitiyāka iruntaṉa. The waves in the bay were calm."
+            },
+            {
+              "kind": "speech",
+              "text": "வளை, to bend, + குடா, a curve: where the coast bends in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வளைகுடா (vaḷaikuṭā) is built from வளை, \"to bend\" (DEDR 5314), and குடா, \"a bend, a curve\" (DEDR 2054)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḷaikuṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḷaikuṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḷaikuṭā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḷaikuṭā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḷaikuṭāvil alaikaḷ amaitiyāka iruntaṉa. — The waves in the bay were calm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḷaikuṭāvil alaikaḷ amaitiyāka iruntaṉa.* — The waves in the bay were calm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a bush, then the Tamil for the coast, then say vaḷaikuṭā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a bush, then the Tamil for the coast, then say *vaḷaikuṭā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வளைகுடா (vaḷaikuṭā) mean? (\"A bay; a gulf\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C435-munai",
+      "sequence": 24910,
+      "title": "முனை (muṉai) — a cape; a point, a tip",
+      "headword": "முனை",
+      "romanization": "muṉai",
+      "gloss": "a cape; a point, a tip",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a93814d42d3a6c7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for the coast, then the Tamil for a bay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முனை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முனை — muṉai — \"a cape; a point, a tip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நாட்டின் தெற்கு முனையில் மூன்று கடல்கள் சேர்கின்றன. nāṭṭiṉ teṟku muṉaiyil mūṉṟu kaṭalkaḷ cērkiṉṟaṉa. Three seas meet at the southern tip of the country."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the tip of a pen or a knife: பேனாவின் முனை (muṉai)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முனை (muṉai) is native Dravidian (DEDR 5020), \"a front, a point, a sharpened end\", the family of முன், \"front\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭṭiṉ teṟku muṉaiyil mūṉṟu kaṭalkaḷ cērkiṉṟaṉa. — Three seas meet at the southern tip of the country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭṭiṉ teṟku muṉaiyil mūṉṟu kaṭalkaḷ cērkiṉṟaṉa.* — Three seas meet at the southern tip of the country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for the coast, then the Tamil for a bay, then say muṉai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for the coast, then the Tamil for a bay, then say *muṉai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முனை (muṉai) mean? (\"A cape; a point, a tip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C435-uppalam",
+      "sequence": 24920,
+      "title": "உப்பளம் (uppaḷam) — a salt pan",
+      "headword": "உப்பளம்",
+      "romanization": "uppaḷam",
+      "gloss": "a salt pan",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1917cd1dd8bafe6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a bay, then the Tamil for a cape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உப்பளம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உப்பளம் — uppaḷam — \"a salt pan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கடலோரத்தில் நிறைய உப்பளங்கள் இருக்கின்றன. kaṭalōrattil niṟaiya uppaḷaṅkaḷ irukkiṉṟaṉa. There are many salt pans along the coast."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: உப்பளங்கள், uppaḷaṅkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "உப்பு, salt, + அளம், a salt pan; plural உப்பளங்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உப்பளம் (uppaḷam) is native Dravidian: DEDR 2674 lists it, \"saltpans\", built from உப்பு, \"salt\", and அளம், \"a saltpan\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uppaḷam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uppaḷam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uppaḷam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uppaḷam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭalōrattil niṟaiya uppaḷaṅkaḷ irukkiṉṟaṉa. — There are many salt pans along the coast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭalōrattil niṟaiya uppaḷaṅkaḷ irukkiṉṟaṉa.* — There are many salt pans along the coast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a bay, then the Tamil for a cape, then say uppaḷam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a bay, then the Tamil for a cape, then say *uppaḷam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உப்பளம் (uppaḷam) mean? (\"A salt pan\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C435-kulankal",
+      "sequence": 24930,
+      "title": "கூழாங்கல் (kūḻāṅkal) — a pebble",
+      "headword": "கூழாங்கல்",
+      "romanization": "kūḻāṅkal",
+      "gloss": "a pebble",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b6df9ecda8764e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a cape, then the Tamil for a salt pan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கூழாங்கல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கூழாங்கல் — kūḻāṅkal — \"a pebble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆற்றங்கரையில் குழந்தைகள் கூழாங்கற்களைச் சேகரித்தார்கள். āṟṟaṅkaraiyil kuḻantaikaḷ kūḻāṅkaṟkaḷaic cēkarittārkaḷ. On the riverbank the children collected pebbles."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: கூழாங்கற்கள், kūḻāṅkaṟkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "கல் makes its plural as கற்கள்: கூழாங்கற்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கூழாங்கல் (kūḻāṅkal) is built with கல், \"a stone, a pebble\" (DEDR 1298); the origin of its first part is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūḻāṅkal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūḻāṅkal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūḻāṅkal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūḻāṅkal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṟṟaṅkaraiyil kuḻantaikaḷ kūḻāṅkaṟkaḷaic cēkarittārkaḷ. — On the riverbank the children collected pebbles.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṟṟaṅkaraiyil kuḻantaikaḷ kūḻāṅkaṟkaḷaic cēkarittārkaḷ.* — On the riverbank the children collected pebbles.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a cape, then the Tamil for a salt pan, then say kūḻāṅkal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a cape, then the Tamil for a salt pan, then say *kūḻāṅkal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கூழாங்கல் (kūḻāṅkal) mean? (\"A pebble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

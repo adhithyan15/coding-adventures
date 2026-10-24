@@ -1,0 +1,11 @@
+{
+  "id": "TA-C428-tenku",
+  "pathSegment": "TA-PATH-428-SARAL428",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-428-SARAL428",
+      "order": 3
+    }
+  ]
+}

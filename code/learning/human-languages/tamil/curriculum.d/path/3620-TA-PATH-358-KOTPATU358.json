@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-358-KOTPATU358",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TA-EXT-358-KOTPATU358"
+  ],
+  "after": []
+}

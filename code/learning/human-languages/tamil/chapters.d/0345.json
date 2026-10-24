@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "Telling a Tale",
+  "label": "ch:ta-telling-a-tale",
+  "canDo": "I can talk about storytellers and how stories are told.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C345-arankeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can talk about storytellers and how stories are told.",
+    "assesses": [
+      "TA-LEX-C345-KATHAICOLLI345-03",
+      "TA-LEX-C345-KATHAICOLLI345-04",
+      "TA-LEX-C345-KATHAICOLLI345-05"
+    ]
+  }
+}

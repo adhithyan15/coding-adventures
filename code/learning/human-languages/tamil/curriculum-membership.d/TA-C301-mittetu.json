@@ -1,0 +1,11 @@
+{
+  "id": "TA-C301-mittetu",
+  "pathSegment": "TA-PATH-301-MEETPU301",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-301-MEETPU301",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Bending and Leaning",
+  "label": "ch:ta-bending-and-leaning",
+  "canDo": "I can talk about straightening up, bending, leaning, shaking off and aching.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C490-no",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can talk about straightening up, bending, leaning, shaking off and aching.",
+    "assesses": [
+      "TA-LEX-C490-NIMIR490-03",
+      "TA-LEX-C490-NIMIR490-04",
+      "TA-LEX-C490-NIMIR490-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C433-malaiyeru",
+    "language": "tamil",
+    "chapter": 433,
+    "sequence": 24800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70c8ead7131c9d7f"
+  },
+  "findings": []
+}

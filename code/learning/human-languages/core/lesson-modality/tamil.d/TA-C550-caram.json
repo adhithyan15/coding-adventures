@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C550-caram",
+    "language": "tamil",
+    "chapter": 550,
+    "sequence": 31380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3363f8cf9ae5a436"
+  },
+  "findings": []
+}

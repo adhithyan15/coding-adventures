@@ -1,0 +1,11 @@
+{
+  "id": "TA-C496-tattetu",
+  "pathSegment": "TA-PATH-496-PIRAPPU496",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-496-PIRAPPU496",
+      "order": 4
+    }
+  ]
+}

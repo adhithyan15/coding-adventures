@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C485-kasayam",
+    "language": "tamil",
+    "chapter": 485,
+    "sequence": 27740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:954682055736f8ee"
+  },
+  "findings": []
+}

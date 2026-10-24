@@ -1,0 +1,11 @@
+{
+  "id": "TA-C350-manappanmai",
+  "pathSegment": "TA-PATH-350-KANNOTTAM350",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-350-KANNOTTAM350",
+      "order": 2
+    }
+  ]
+}

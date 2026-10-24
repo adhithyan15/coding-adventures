@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C453-munumunu",
+    "language": "tamil",
+    "chapter": 453,
+    "sequence": 26140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8757a40c0047eb4"
+  },
+  "findings": []
+}

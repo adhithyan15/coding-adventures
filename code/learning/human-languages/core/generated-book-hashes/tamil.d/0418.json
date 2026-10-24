@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:456c60139b1a2638",
+  "lessonIds": [
+    "TA-C418-vituti",
+    "TA-C418-varaverpalar",
+    "TA-C418-mintukki",
+    "TA-C418-patukkai",
+    "TA-C418-viri"
+  ],
+  "tex": "tamil/book/chapters/ch418-at-the-lodge.tex"
+}

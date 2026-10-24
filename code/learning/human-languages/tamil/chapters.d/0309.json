@@ -1,0 +1,21 @@
+{
+  "chapter": 309,
+  "title": "Readers and Listeners",
+  "label": "ch:ta-readers-and-listeners",
+  "canDo": "I can talk about the people who follow the news.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-R309-review-302-309",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can talk about the people who follow the news.",
+    "assesses": [
+      "TA-LEX-C309-VASAKAR309-01",
+      "TA-LEX-C309-VASAKAR309-02",
+      "TA-LEX-C309-VASAKAR309-03",
+      "TA-LEX-C309-VASAKAR309-04",
+      "TA-LEX-C309-VASAKAR309-05"
+    ]
+  }
+}

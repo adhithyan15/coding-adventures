@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 358,
+  "title": "Theories and Principles",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e12f4169539c3e3d",
+  "lessons": [
+    {
+      "id": "TA-C358-kotpatu",
+      "sequence": 20660,
+      "title": "கோட்பாடு (kōṭpāṭu) — a theory; a doctrine",
+      "headword": "கோட்பாடு",
+      "romanization": "kōṭpāṭu",
+      "gloss": "a theory; a doctrine",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:badb73fb4ab5e8b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for likewise, then the Tamil for to differ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கோட்பாடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கோட்பாடு — kōṭpāṭu — \"a theory; a doctrine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தக் கோட்பாடு எனக்குப் புரியவில்லை. intak kōṭpāṭu eṉakkup puriyavillai. I do not understand this theory."
+            },
+            {
+              "kind": "speech",
+              "text": "கோட்பாட்டை, the theory as an object: a noun in -டு doubles it to -ட்டு- before a case ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கோட்பாடு (kōṭpāṭu) is native: kōḷ, \"taking, opinion, tenet\", the noun of koḷ, \"to take, to hold\" (DEDR 2151), with pāṭu, the noun of paṭu: \"what is held to be so\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōṭpāṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōṭpāṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōṭpāṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōṭpāṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intak kōṭpāṭu eṉakkup puriyavillai. — I do not understand this theory.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intak kōṭpāṭu eṉakkup puriyavillai.* — I do not understand this theory.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for likewise, then the Tamil for to differ, then say kōṭpāṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for likewise, then the Tamil for to differ, then say *kōṭpāṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கோட்பாடு (kōṭpāṭu) mean? (\"A theory; a doctrine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C358-tattuvam",
+      "sequence": 20670,
+      "title": "தத்துவம் (tattuvam) — a philosophy; a principle",
+      "headword": "தத்துவம்",
+      "romanization": "tattuvam",
+      "gloss": "a philosophy; a principle",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7839779536df76d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to differ, then the Tamil for a theory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தத்துவம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தத்துவம் — tattuvam — \"a philosophy; a principle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் அண்ணன் கல்லூரியில் தத்துவம் படிக்கிறான். eṉ aṇṇaṉ kallūriyil tattuvam paṭikkiṟāṉ. My elder brother studies philosophy at college."
+            },
+            {
+              "kind": "speech",
+              "text": "வாழ்க்கைத் தத்துவம் (tattuvam), a philosophy of life. Plural தத்துவங்கள், principles."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தத்துவம் (tattuvam) is borrowed from Sanskrit tattva, \"the real state of things, truth\" (CDIAL 5642). Tamil splits the cluster tv with a vowel: tattuvam."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tattuvam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tattuvam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tattuvam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tattuvam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ aṇṇaṉ kallūriyil tattuvam paṭikkiṟāṉ. — My elder brother studies philosophy at college.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ aṇṇaṉ kallūriyil tattuvam paṭikkiṟāṉ.* — My elder brother studies philosophy at college.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to differ, then the Tamil for a theory, then say tattuvam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to differ, then the Tamil for a theory, then say *tattuvam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தத்துவம் (tattuvam) mean? (\"A philosophy; a principle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C358-cittantam",
+      "sequence": 20680,
+      "title": "சித்தாந்தம் (cittāntam) — an ideology; a doctrine",
+      "headword": "சித்தாந்தம்",
+      "romanization": "cittāntam",
+      "gloss": "an ideology; a doctrine",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a832b33f0b7e45a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a theory, then the Tamil for a philosophy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சித்தாந்தம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சித்தாந்தம் — cittāntam — \"an ideology; a doctrine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவருடைய சித்தாந்தம் எனக்குப் பிடிக்கவில்லை. avaruṭaiya cittāntam eṉakkup piṭikkavillai. I do not like his ideology."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word for a whole system of ideas: அவருடைய சித்தாந்தம் (cittāntam), his ideology."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சித்தாந்தம் (cittāntam) is borrowed from Sanskrit siddhānta, \"established end, doctrine\" (CDIAL 13404), from siddha, \"settled\", and anta, \"end\": a settled conclusion."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cittāntam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cittāntam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cittāntam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cittāntam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaruṭaiya cittāntam eṉakkup piṭikkavillai. — I do not like his ideology.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaruṭaiya cittāntam eṉakkup piṭikkavillai.* — I do not like his ideology.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a theory, then the Tamil for a philosophy, then say cittāntam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a theory, then the Tamil for a philosophy, then say *cittāntam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சித்தாந்தம் (cittāntam) mean? (\"An ideology; a doctrine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C358-kolkai",
+      "sequence": 20690,
+      "title": "கொள்கை (koḷkai) — a policy; a principle",
+      "headword": "கொள்கை",
+      "romanization": "koḷkai",
+      "gloss": "a policy; a principle",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebda397283ae10e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a philosophy, then the Tamil for an ideology."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கொள்கை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கொள்கை — koḷkai — \"a policy; a principle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அரசின் புதிய கொள்கையை மக்கள் வரவேற்றார்கள். araciṉ putiya koḷkaiyai makkaḷ varavēṟṟārkaḷ. People welcomed the new government policy."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a personal principle: அது என் கொள்கை (koḷkai), that is my principle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கொள்கை (koḷkai) is native Dravidian: DEDR 2151 lists Tamil koḷ, \"to take, receive, regard\", and koḷkai, \"taking, acceptance\", the noun that now means \"a principle one holds\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koḷkai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koḷkai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koḷkai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koḷkai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "araciṉ putiya koḷkaiyai makkaḷ varavēṟṟārkaḷ. — People welcomed the new government policy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *araciṉ putiya koḷkaiyai makkaḷ varavēṟṟārkaḷ.* — People welcomed the new government policy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a philosophy, then the Tamil for an ideology, then say koḷkai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a philosophy, then the Tamil for an ideology, then say *koḷkai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கொள்கை (koḷkai) mean? (\"A policy; a principle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C358-niruvu",
+      "sequence": 20700,
+      "title": "நிறுவு (niṟuvu) — to establish; to found",
+      "headword": "நிறுவு",
+      "romanization": "niṟuvu",
+      "gloss": "to establish; to found",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98a53b2095613c34",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an ideology, then the Tamil for a policy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நிறுவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிறுவு — niṟuvu — \"to establish; to found\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் இந்த ஊரில் ஒரு பள்ளியை நிறுவினார். avar inta ūril oru paḷḷiyai niṟuviṉār. He founded a school in this town."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): நிறுவினேன், niṟuviṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is founded takes -ஐ; a fact can be established too: உண்மையை நிறுவு (niṟuvu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிறுவு (niṟuvu) is native Dravidian: DEDR 3675 lists Tamil niṟuvu, \"to set up, establish\", in the family of nil, \"to stand\": to make something stand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṟuvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṟuvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṟuvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṟuvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar inta ūril oru paḷḷiyai niṟuviṉār. — He founded a school in this town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar inta ūril oru paḷḷiyai niṟuviṉār.* — He founded a school in this town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an ideology, then the Tamil for a policy, then say niṟuvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an ideology, then the Tamil for a policy, then say *niṟuvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நிறுவு (niṟuvu) mean? (\"To establish; to found\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

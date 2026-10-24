@@ -1,0 +1,11 @@
+{
+  "id": "TA-C286-enave",
+  "pathSegment": "TA-PATH-286-OPINION-SO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-286-OPINION-SO",
+      "order": 1
+    }
+  ]
+}

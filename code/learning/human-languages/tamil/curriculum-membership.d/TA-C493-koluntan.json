@@ -1,0 +1,11 @@
+{
+  "id": "TA-C493-koluntan",
+  "pathSegment": "TA-PATH-493-URAVU493",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-493-URAVU493",
+      "order": 1
+    }
+  ]
+}

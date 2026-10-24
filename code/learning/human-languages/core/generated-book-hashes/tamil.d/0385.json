@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:fe473542a421cc0b",
+  "lessonIds": [
+    "TA-C385-culnilai",
+    "TA-C385-nilaimai",
+    "TA-C385-pinnani",
+    "TA-C385-cikkal",
+    "TA-C385-kaiyal",
+    "TA-R385-review-379-385"
+  ],
+  "tex": "tamil/book/chapters/ch385-handling-a-situation.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:314b890dc77d57e8",
+  "lessonIds": [
+    "TA-C310-keliccittiram",
+    "TA-C310-cuvarotti",
+    "TA-C310-avanappatam",
+    "TA-C310-cittari",
+    "TA-C310-utakam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch310.txt",
+  "json": "tamil/narration/ch310.json",
+  "textHash": "fnv1a64:f09ffb9b2fc8699d",
+  "jsonHash": "fnv1a64:adeda3fa5ed6cdac",
+  "findings": []
+}

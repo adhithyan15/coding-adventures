@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:a08488ce6e4f6517",
+  "lessonIds": [
+    "TA-C441-aluku",
+    "TA-C441-naru",
+    "TA-C441-kuvi",
+    "TA-C441-marucularci-cey",
+    "TA-C441-uyirinam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch441.txt",
+  "json": "tamil/narration/ch441.json",
+  "textHash": "fnv1a64:7d46471cb09cffbb",
+  "jsonHash": "fnv1a64:034f26458a6cab0d",
+  "findings": []
+}

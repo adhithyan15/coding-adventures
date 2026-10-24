@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C474-arikuri",
+    "language": "tamil",
+    "chapter": 474,
+    "sequence": 27170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b544a147d1fa6f02"
+  },
+  "findings": []
+}

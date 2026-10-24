@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:21fced49d6f28952",
+  "lessonIds": [
+    "TA-C465-enku",
+    "TA-C465-pacam",
+    "TA-C465-piriyam",
+    "TA-C465-mokam",
+    "TA-C465-nekil"
+  ],
+  "tex": "tamil/book/chapters/ch465-longing-and-fondness.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C396-tuntu",
+    "language": "tamil",
+    "chapter": 396,
+    "sequence": 22610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c811bf12083e47f8"
+  },
+  "findings": []
+}

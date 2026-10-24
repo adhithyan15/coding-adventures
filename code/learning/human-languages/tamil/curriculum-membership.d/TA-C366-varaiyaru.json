@@ -1,0 +1,11 @@
+{
+  "id": "TA-C366-varaiyaru",
+  "pathSegment": "TA-PATH-366-TURAI366",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-366-TURAI366",
+      "order": 4
+    }
+  ]
+}

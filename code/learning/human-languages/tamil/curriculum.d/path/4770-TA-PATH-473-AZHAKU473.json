@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-473-AZHAKU473",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-473-AZHAKU473"
+  ],
+  "after": []
+}

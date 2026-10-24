@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "Change for the Better",
+  "label": "ch:ta-change-for-the-better",
+  "canDo": "I can talk about reform, progress and improvement.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C390-valuppatuttu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can talk about reform, progress and improvement.",
+    "assesses": [
+      "TA-LEX-C390-CIRTIRUTTAM390-03",
+      "TA-LEX-C390-CIRTIRUTTAM390-04",
+      "TA-LEX-C390-CIRTIRUTTAM390-05"
+    ]
+  }
+}

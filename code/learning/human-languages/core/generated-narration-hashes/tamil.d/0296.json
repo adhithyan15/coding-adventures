@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:0d172d114994ccf1",
+  "lessonIds": [
+    "TA-C296-kavalturai",
+    "TA-C296-kaitu-cey",
+    "TA-C296-currivalai",
+    "TA-C296-kaiti",
+    "TA-C296-oppukkol"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch296.txt",
+  "json": "tamil/narration/ch296.json",
+  "textHash": "fnv1a64:1000f324da54c034",
+  "jsonHash": "fnv1a64:bf4821c450e0d6c8",
+  "findings": []
+}

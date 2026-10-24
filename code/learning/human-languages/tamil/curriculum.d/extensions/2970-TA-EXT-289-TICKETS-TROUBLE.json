@@ -1,0 +1,10 @@
+{
+  "id": "TA-EXT-289-TICKETS-TROUBLE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can buy a ticket with … oru cīṭṭu koṭuṅkaḷ, ask for a seat (irukkai) and when a train leaves, and report a problem: a bag that is missing (kāṇavillai), a passport that is lost, a bus I missed.",
+  "prerequisites": [
+    "TA-EXT-288-ASK-THE-WAY"
+  ]
+}

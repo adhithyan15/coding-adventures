@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:51c8b1c655b5bc95",
+  "lessonIds": [
+    "TA-C317-mutanmuraiyaka",
+    "TA-C317-tirumpattirumpa",
+    "TA-C317-totarcciyaka",
+    "TA-C317-utanukkutan",
+    "TA-C317-atuttatuttu",
+    "TA-R317-review-310-317"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch317.txt",
+  "json": "tamil/narration/ch317.json",
+  "textHash": "fnv1a64:10bfcf92d305bcf9",
+  "jsonHash": "fnv1a64:fcafd9ea9557824a",
+  "findings": []
+}

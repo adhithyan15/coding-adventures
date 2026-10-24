@@ -1,0 +1,11 @@
+{
+  "id": "TA-C446-kacolai",
+  "pathSegment": "TA-PATH-446-VANKI446",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-446-VANKI446",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:471d9473a9b69d17",
+  "lessonIds": [
+    "TA-C374-tertal",
+    "TA-C374-vetpalar",
+    "TA-C374-vakkali",
+    "TA-C374-tokuti",
+    "TA-C374-piraccaram"
+  ],
+  "tex": "tamil/book/chapters/ch374-elections.tex"
+}

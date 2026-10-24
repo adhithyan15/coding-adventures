@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C556-ilakkiyam",
+    "language": "tamil",
+    "chapter": 556,
+    "sequence": 31670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e57b9f47f373ef4"
+  },
+  "findings": []
+}

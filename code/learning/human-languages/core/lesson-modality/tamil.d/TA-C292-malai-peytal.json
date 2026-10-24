@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C292-malai-peytal",
+    "language": "tamil",
+    "chapter": 292,
+    "sequence": 16420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ebd3e6952e1062d"
+  },
+  "findings": []
+}

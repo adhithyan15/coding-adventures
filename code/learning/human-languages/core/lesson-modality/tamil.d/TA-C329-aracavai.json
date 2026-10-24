@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C329-aracavai",
+    "language": "tamil",
+    "chapter": 329,
+    "sequence": 18890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ddf90246249316e4"
+  },
+  "findings": []
+}

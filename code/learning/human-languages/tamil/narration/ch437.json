@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 437,
+  "title": "Wildlife on the Move",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7442c5b6ce353b4b",
+  "lessons": [
+    {
+      "id": "TA-C437-vanavilanku",
+      "sequence": 24990,
+      "title": "வனவிலங்கு (vaṉavilaṅku) — wildlife; a wild animal",
+      "headword": "வனவிலங்கு",
+      "romanization": "vaṉavilaṅku",
+      "gloss": "wildlife; a wild animal",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f48b71ab34d67fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a seashell, then the Tamil for coral."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வனவிலங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வனவிலங்கு — vaṉavilaṅku — \"wildlife; a wild animal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தக் காட்டில் நிறைய வனவிலங்குகள் இருக்கின்றன. intak kāṭṭil niṟaiya vaṉavilaṅkukaḷ irukkiṉṟaṉa. There are many wild animals in this forest."
+            },
+            {
+              "kind": "speech",
+              "text": "வனம், a forest, + விலங்கு, an animal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வனவிலங்கு (vaṉavilaṅku) is built from வனம், \"a forest\", borrowed from Sanskrit vana (CDIAL 11258), and native விலங்கு, \"an animal\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṉavilaṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṉavilaṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṉavilaṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṉavilaṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intak kāṭṭil niṟaiya vaṉavilaṅkukaḷ irukkiṉṟaṉa. — There are many wild animals in this forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intak kāṭṭil niṟaiya vaṉavilaṅkukaḷ irukkiṉṟaṉa.* — There are many wild animals in this forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a seashell, then the Tamil for coral, then say vaṉavilaṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a seashell, then the Tamil for coral, then say *vaṉavilaṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வனவிலங்கு (vaṉavilaṅku) mean? (\"Wildlife; a wild animal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C437-caranalayam",
+      "sequence": 25000,
+      "title": "சரணாலயம் (caraṇālayam) — a sanctuary",
+      "headword": "சரணாலயம்",
+      "romanization": "caraṇālayam",
+      "gloss": "a sanctuary",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b851630877539a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for coral, then the Tamil for wildlife."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சரணாலயம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சரணாலயம் — caraṇālayam — \"a sanctuary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தச் சரணாலயத்தில் பல நாடுகளிலிருந்து வந்த பறவைகள் இருக்கின்றன. intac caraṇālayattil pala nāṭukaḷiliruntu vanta paṟavaikaḷ irukkiṉṟaṉa. In this sanctuary there are birds that came from many countries."
+            },
+            {
+              "kind": "speech",
+              "text": "பறவைகள் சரணாலயம் (caraṇālayam) is a bird sanctuary."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சரணாலயம் (caraṇālayam) is built from two words borrowed from Sanskrit: śaraṇa, \"shelter\" (CDIAL 12326), + ālaya, \"a house, a dwelling\" (CDIAL 1366)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caraṇālayam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caraṇālayam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caraṇālayam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caraṇālayam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intac caraṇālayattil pala nāṭukaḷiliruntu vanta paṟavaikaḷ irukkiṉṟaṉa. — In this sanctuary there are birds that came from many countries.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intac caraṇālayattil pala nāṭukaḷiliruntu vanta paṟavaikaḷ irukkiṉṟaṉa.* — In this sanctuary there are birds that came from many countries.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for coral, then the Tamil for wildlife, then say caraṇālayam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for coral, then the Tamil for wildlife, then say *caraṇālayam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சரணாலயம் (caraṇālayam) mean? (\"A sanctuary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C437-itampeyar",
+      "sequence": 25010,
+      "title": "இடம்பெயர் (iṭampeyar) — to migrate; to move away",
+      "headword": "இடம்பெயர்",
+      "romanization": "iṭampeyar",
+      "gloss": "to migrate; to move away",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccc01105ce2bd749",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for wildlife, then the Tamil for a sanctuary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இடம்பெயர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இடம்பெயர் — iṭampeyar — \"to migrate; to move away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குளிர் காலத்தில் இந்தப் பறவைகள் தெற்கே இடம்பெயர்கின்றன. kuḷir kālattil intap paṟavaikaḷ teṟkē iṭampeyarkiṉṟaṉa. In winter these birds migrate south."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): இடம்பெயர்ந்தேன், iṭampeyarntēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "இடம், a place, + பெயர், to move."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இடம்பெயர் (iṭampeyar) is built from இடம், \"a place\" (DEDR 434), and பெயர், \"to move, to depart\" (DEDR 4409)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭampeyar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭampeyar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭampeyar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭampeyar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḷir kālattil intap paṟavaikaḷ teṟkē iṭampeyarkiṉṟaṉa. — In winter these birds migrate south.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḷir kālattil intap paṟavaikaḷ teṟkē iṭampeyarkiṉṟaṉa.* — In winter these birds migrate south.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for wildlife, then the Tamil for a sanctuary, then say iṭampeyar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for wildlife, then the Tamil for a sanctuary, then say *iṭampeyar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இடம்பெயர் (iṭampeyar) mean? (\"To migrate; to move away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C437-vettaiyatu",
+      "sequence": 25020,
+      "title": "வேட்டையாடு (vēṭṭaiyāṭu) — to hunt",
+      "headword": "வேட்டையாடு",
+      "romanization": "vēṭṭaiyāṭu",
+      "gloss": "to hunt",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6150e2c403a5aa9b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a sanctuary, then the Tamil for to migrate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வேட்டையாடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வேட்டையாடு — vēṭṭaiyāṭu — \"to hunt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புலி இரவில் வேட்டையாடுகிறது. puli iravil vēṭṭaiyāṭukiṟatu. The tiger hunts at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): வேட்டையாடினேன், vēṭṭaiyāṭiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "வேட்டை, hunting, + ஆடு, a verb-making second part."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வேட்டையாடு (vēṭṭaiyāṭu) is built from வேட்டை, \"hunting, the chase\" (DEDR 5527), and ஆடு, \"to move, to play\" (DEDR 347)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēṭṭaiyāṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēṭṭaiyāṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēṭṭaiyāṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēṭṭaiyāṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puli iravil vēṭṭaiyāṭukiṟatu. — The tiger hunts at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puli iravil vēṭṭaiyāṭukiṟatu.* — The tiger hunts at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a sanctuary, then the Tamil for to migrate, then say vēṭṭaiyāṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a sanctuary, then the Tamil for to migrate, then say *vēṭṭaiyāṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வேட்டையாடு (vēṭṭaiyāṭu) mean? (\"To hunt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C437-inam",
+      "sequence": 25030,
+      "title": "இனம் (iṉam) — a species; a kind",
+      "headword": "இனம்",
+      "romanization": "iṉam",
+      "gloss": "a species; a kind",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b640ad96d12f895",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to migrate, then the Tamil for to hunt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இனம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இனம் — iṉam — \"a species; a kind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தப் பறவை இனம் இப்போது மிக அபூர்வம். intap paṟavai iṉam ippōtu mika apūrvam. This species of bird is now very rare."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a group of people or things of one kind."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இனம் (iṉam) is native Dravidian (DEDR 531), \"a class, a group, a kind, a species\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṉam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṉam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṉam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṉam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intap paṟavai iṉam ippōtu mika apūrvam. — This species of bird is now very rare.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intap paṟavai iṉam ippōtu mika apūrvam.* — This species of bird is now very rare.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to migrate, then the Tamil for to hunt, then say iṉam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to migrate, then the Tamil for to hunt, then say *iṉam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இனம் (iṉam) mean? (\"A species; a kind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C418-patukkai",
+    "language": "tamil",
+    "chapter": 418,
+    "sequence": 24050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:443f48c269067245"
+  },
+  "findings": []
+}

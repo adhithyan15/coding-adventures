@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R452-review-446-452",
+    "language": "tamil",
+    "chapter": 452,
+    "sequence": 25810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3afa1ec03d89f7aa"
+  },
+  "findings": []
+}

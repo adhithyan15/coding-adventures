@@ -1,0 +1,11 @@
+{
+  "id": "TA-C415-erpatu-cey",
+  "pathSegment": "TA-PATH-415-AVANAM415",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-415-AVANAM415",
+      "order": 4
+    }
+  ]
+}

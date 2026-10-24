@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "Raising Children",
+  "label": "ch:ta-raising-children",
+  "canDo": "I can talk about doting on children, pampering, obedience, care and advice.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C497-alocanai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can talk about doting on children, pampering, obedience, care and advice.",
+    "assesses": [
+      "TA-LEX-C497-VALARPPU497-03",
+      "TA-LEX-C497-VALARPPU497-04",
+      "TA-LEX-C497-VALARPPU497-05"
+    ]
+  }
+}

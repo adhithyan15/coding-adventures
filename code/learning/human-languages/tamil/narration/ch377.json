@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 377,
+  "title": "Unity and Division",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b93b7f5bde160863",
+  "lessons": [
+    {
+      "id": "TA-C377-vanmurai",
+      "sequence": 21630,
+      "title": "வன்முறை (vaṉmuṟai) — violence",
+      "headword": "வன்முறை",
+      "romanization": "vaṉmuṟai",
+      "gloss": "violence",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a36639b4efddece5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to demand, then the Tamil for a petition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வன்முறை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வன்முறை — vaṉmuṟai — \"violence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நாங்கள் வன்முறையை ஏற்றுக்கொள்ள மாட்டோம். nāṅkaḷ vaṉmuṟaiyai ēṟṟukkoḷḷa māṭṭōm. We will not accept violence."
+            },
+            {
+              "kind": "speech",
+              "text": "வல், hard + முறை, way: the hard way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வன்முறை (vaṉmuṟai) is native: val, \"strong, hard, forceful\" (DEDR 5276), whose l becomes ன் before m, and muṟai, \"order, way\" (DEDR 5015)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṉmuṟai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṉmuṟai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṉmuṟai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṉmuṟai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṅkaḷ vaṉmuṟaiyai ēṟṟukkoḷḷa māṭṭōm. — We will not accept violence.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṅkaḷ vaṉmuṟaiyai ēṟṟukkoḷḷa māṭṭōm.* — We will not accept violence.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to demand, then the Tamil for a petition, then say vaṉmuṟai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to demand, then the Tamil for a petition, then say *vaṉmuṟai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வன்முறை (vaṉmuṟai) mean? (\"Violence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C377-akimcai",
+      "sequence": 21640,
+      "title": "அகிம்சை (akimcai) — non-violence",
+      "headword": "அகிம்சை",
+      "romanization": "akimcai",
+      "gloss": "non-violence",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7900367027b5f828",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a petition, then the Tamil for violence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அகிம்சை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அகிம்சை — akimcai — \"non-violence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் அகிம்சை வழியில் போராடினார். avar akimcai vaḻiyil pōrāṭiṉār. He fought in the way of non-violence."
+            },
+            {
+              "kind": "speech",
+              "text": "அகிம்சை (akimcai) வழி, the path of non-violence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அகிம்சை (akimcai) is borrowed from Sanskrit ahiṃsā, \"not injuring anything\" (Monier-Williams). Tamil writes the Sanskrit h as க and the final -ā as -ஐ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akimcai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akimcai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akimcai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akimcai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar akimcai vaḻiyil pōrāṭiṉār. — He fought in the way of non-violence.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar akimcai vaḻiyil pōrāṭiṉār.* — He fought in the way of non-violence.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a petition, then the Tamil for violence, then say akimcai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a petition, then the Tamil for violence, then say *akimcai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அகிம்சை (akimcai) mean? (\"Non-violence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C377-orrumai",
+      "sequence": 21650,
+      "title": "ஒற்றுமை (oṟṟumai) — unity",
+      "headword": "ஒற்றுமை",
+      "romanization": "oṟṟumai",
+      "gloss": "unity",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5dec5c81bcde54cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for violence, then the Tamil for non-violence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஒற்றுமை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒற்றுமை — oṟṟumai — \"unity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "எங்கள் ஊர் மக்களிடையே நல்ல ஒற்றுமை இருக்கிறது. eṅkaḷ ūr makkaḷiṭaiyē nalla oṟṟumai irukkiṟatu. There is great unity among the people of our town."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒற்றுமையாக, united: ஒற்றுமையாக வாழ், to live in harmony."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒற்றுமை (oṟṟumai) is native Dravidian: DEDR 990 lists Tamil oru, \"one\", and oṟṟumai, \"union, oneness\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṟṟumai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṟṟumai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṟṟumai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṟṟumai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṅkaḷ ūr makkaḷiṭaiyē nalla oṟṟumai irukkiṟatu. — There is great unity among the people of our town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṅkaḷ ūr makkaḷiṭaiyē nalla oṟṟumai irukkiṟatu.* — There is great unity among the people of our town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for violence, then the Tamil for non-violence, then say oṟṟumai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for violence, then the Tamil for non-violence, then say *oṟṟumai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஒற்றுமை (oṟṟumai) mean? (\"Unity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C377-verrumai",
+      "sequence": 21660,
+      "title": "வேற்றுமை (vēṟṟumai) — diversity; difference",
+      "headword": "வேற்றுமை",
+      "romanization": "vēṟṟumai",
+      "gloss": "diversity; difference",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62e87de4224c2504",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for non-violence, then the Tamil for unity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வேற்றுமை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வேற்றுமை — vēṟṟumai — \"diversity; difference\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வேற்றுமையில் ஒற்றுமை நம் நாட்டின் சிறப்பு. vēṟṟumaiyil oṟṟumai nam nāṭṭiṉ ciṟappu. Unity in diversity is what makes our country special."
+            },
+            {
+              "kind": "speech",
+              "text": "In grammar, வேற்றுமை (vēṟṟumai) also names the cases of a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வேற்றுமை (vēṟṟumai) is native Dravidian: DEDR 5548 lists Tamil vēṟu, \"other, different\", and vēṟṟumai, \"difference\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēṟṟumai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēṟṟumai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēṟṟumai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēṟṟumai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēṟṟumaiyil oṟṟumai nam nāṭṭiṉ ciṟappu. — Unity in diversity is what makes our country special.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēṟṟumaiyil oṟṟumai nam nāṭṭiṉ ciṟappu.* — Unity in diversity is what makes our country special.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for non-violence, then the Tamil for unity, then say vēṟṟumai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for non-violence, then the Tamil for unity, then say *vēṟṟumai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வேற்றுமை (vēṟṟumai) mean? (\"Diversity; difference\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C377-pilavupatu",
+      "sequence": 21670,
+      "title": "பிளவுபடு (piḷavupaṭu) — to be divided; to split",
+      "headword": "பிளவுபடு",
+      "romanization": "piḷavupaṭu",
+      "gloss": "to be divided; to split",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0e311f339271776",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for unity, then the Tamil for diversity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பிளவுபடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பிளவுபடு — piḷavupaṭu — \"to be divided; to split\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்த முடிவால் எங்கள் குழு இரண்டாகப் பிளவுபட்டது. anta muṭivāl eṅkaḷ kuḻu iraṇṭākap piḷavupaṭṭatu. Because of that decision, our group split in two."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): பிளவுபட்டது, piḷavupaṭṭatu."
+            },
+            {
+              "kind": "speech",
+              "text": "பிளவு, a split + படு, to undergo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பிளவுபடு (piḷavupaṭu) is native: DEDR 4194 lists Tamil piḷa, \"to be split\", and piḷavu, \"cleft, division, disunion\", here with paṭu, \"to undergo\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piḷavupaṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piḷavupaṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piḷavupaṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piḷavupaṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anta muṭivāl eṅkaḷ kuḻu iraṇṭākap piḷavupaṭṭatu. — Because of that decision, our group split in two.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anta muṭivāl eṅkaḷ kuḻu iraṇṭākap piḷavupaṭṭatu.* — Because of that decision, our group split in two.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for unity, then the Tamil for diversity, then say piḷavupaṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for unity, then the Tamil for diversity, then say *piḷavupaṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பிளவுபடு (piḷavupaṭu) mean? (\"To be divided; to split\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

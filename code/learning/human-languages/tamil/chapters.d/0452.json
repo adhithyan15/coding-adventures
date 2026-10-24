@@ -1,0 +1,21 @@
+{
+  "chapter": 452,
+  "title": "Heading Home",
+  "label": "ch:ta-heading-home",
+  "canDo": "I can talk about pedalling, goods, regions and areas, and wheels rolling.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-R452-review-final-452",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can talk about pedalling, goods, regions and areas, and wheels rolling.",
+    "assesses": [
+      "TA-LEX-C452-VEEDU452-01",
+      "TA-LEX-C452-VEEDU452-02",
+      "TA-LEX-C452-VEEDU452-03",
+      "TA-LEX-C452-VEEDU452-04",
+      "TA-LEX-C452-VEEDU452-05"
+    ]
+  }
+}

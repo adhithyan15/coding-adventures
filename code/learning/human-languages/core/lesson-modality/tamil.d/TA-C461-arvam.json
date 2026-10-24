@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C461-arvam",
+    "language": "tamil",
+    "chapter": 461,
+    "sequence": 26540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13a91aa03e347048"
+  },
+  "findings": []
+}

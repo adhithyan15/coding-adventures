@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 343,
+  "title": "Legends",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:45605c3f20a17d27",
+  "lessons": [
+    {
+      "id": "TA-C343-palankatai",
+      "sequence": 19610,
+      "title": "பழங்கதை (paḻaṅkatai) — a legend; an old tale",
+      "headword": "பழங்கதை",
+      "romanization": "paḻaṅkatai",
+      "gloss": "a legend; an old tale",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ae2bc4f21372571",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an age, then the Tamil for archaeology."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பழங்கதை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பழங்கதை — paḻaṅkatai — \"a legend; an old tale\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பாட்டி ஒரு பழங்கதை சொன்னார். pāṭṭi oru paḻaṅkatai coṉṉār. Grandmother told an old legend."
+            },
+            {
+              "kind": "speech",
+              "text": "பழம், old + கதை, story."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பழங்கதை (paḻaṅkatai) joins native பழ, \"old\" (DEDR 3999), with கதை, \"story\", from Sanskrit kathā (CDIAL 2704)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻaṅkatai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻaṅkatai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻaṅkatai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻaṅkatai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭṭi oru paḻaṅkatai coṉṉār. — Grandmother told an old legend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭṭi oru paḻaṅkatai coṉṉār.* — Grandmother told an old legend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an age, then the Tamil for archaeology, then say paḻaṅkatai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an age, then the Tamil for archaeology, then say *paḻaṅkatai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பழங்கதை (paḻaṅkatai) mean? (\"A legend; an old tale\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C343-puranam",
+      "sequence": 19620,
+      "title": "புராணம் (purāṇam) — a myth; a sacred legend",
+      "headword": "புராணம்",
+      "romanization": "purāṇam",
+      "gloss": "a myth; a sacred legend",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27237fb40d63ccbb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for archaeology, then the Tamil for a legend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புராணம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புராணம் — purāṇam — \"a myth; a sacred legend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த ஊருக்கு ஒரு பழைய புராணம் இருக்கிறது. inta ūrukku oru paḻaiya purāṇam irukkiṟatu. This town has an old myth about it."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural புராணங்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புராணம் (purāṇam) is borrowed from Sanskrit purāṇa, \"ancient\" (CDIAL 8283): an old tale."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purāṇam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purāṇam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purāṇam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purāṇam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta ūrukku oru paḻaiya purāṇam irukkiṟatu. — This town has an old myth about it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta ūrukku oru paḻaiya purāṇam irukkiṟatu.* — This town has an old myth about it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for archaeology, then the Tamil for a legend, then say purāṇam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for archaeology, then the Tamil for a legend, then say *purāṇam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புராணம் (purāṇam) mean? (\"A myth; a sacred legend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C343-kattukkatai",
+      "sequence": 19630,
+      "title": "கட்டுக்கதை (kaṭṭukkatai) — a made-up story; a myth",
+      "headword": "கட்டுக்கதை",
+      "romanization": "kaṭṭukkatai",
+      "gloss": "a made-up story; a myth",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6794170b35bdf0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a legend, then the Tamil for a myth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கட்டுக்கதை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கட்டுக்கதை — kaṭṭukkatai — \"a made-up story; a myth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவன் சொன்னது ஒரு கட்டுக்கதை. avaṉ coṉṉatu oru kaṭṭukkatai. What he said was a made-up story."
+            },
+            {
+              "kind": "speech",
+              "text": "கட்டு, to build + கதை: a story put together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கட்டுக்கதை (kaṭṭukkatai) joins native கட்டு, \"to tie, build\" (DEDR 1147), with கதை, \"story\", from Sanskrit kathā (CDIAL 2704)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭṭukkatai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭṭukkatai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭṭukkatai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭṭukkatai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaṉ coṉṉatu oru kaṭṭukkatai. — What he said was a made-up story.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaṉ coṉṉatu oru kaṭṭukkatai.* — What he said was a made-up story.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a legend, then the Tamil for a myth, then say kaṭṭukkatai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a legend, then the Tamil for a myth, then say *kaṭṭukkatai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கட்டுக்கதை (kaṭṭukkatai) mean? (\"A made-up story; a myth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C343-punai",
+      "sequence": 19640,
+      "title": "புனை (puṉai) — to make up; to compose",
+      "headword": "புனை",
+      "romanization": "puṉai",
+      "gloss": "to make up; to compose",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3a2a84bdc67b9e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a myth, then the Tamil for a made-up story."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புனை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புனை — puṉai — \"to make up; to compose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவன் ஒரு பொய்யான காரணத்தைப் புனைந்தான். avaṉ oru poyyāṉa kāraṇattaip puṉaintāṉ. He made up a false reason."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): புனைந்தேன், puṉaintēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to compose a poem; புனைபெயர், a pen name."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புனை (puṉai) is native Dravidian (DEDR 4340): to dress, adorn, make, form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṉai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṉai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṉai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṉai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaṉ oru poyyāṉa kāraṇattaip puṉaintāṉ. — He made up a false reason.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaṉ oru poyyāṉa kāraṇattaip puṉaintāṉ.* — He made up a false reason.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a myth, then the Tamil for a made-up story, then say puṉai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a myth, then the Tamil for a made-up story, then say *puṉai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புனை (puṉai) mean? (\"To make up; to compose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C343-palamoli",
+      "sequence": 19650,
+      "title": "பழமொழி (paḻamoḻi) — a proverb",
+      "headword": "பழமொழி",
+      "romanization": "paḻamoḻi",
+      "gloss": "a proverb",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68fa105adf392a86",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a made-up story, then the Tamil for to make up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பழமொழி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பழமொழி — paḻamoḻi — \"a proverb\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் பேசும்போது நிறையப் பழமொழிகளைச் சொல்வார். avar pēcumpōtu niṟaiyap paḻamoḻikaḷaic colvār. When he talks he uses lots of proverbs."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural பழமொழிகள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பழமொழி (paḻamoḻi) is a Tamil compound built from பழ, \"old\" (DEDR 3999), and மொழி, \"word, saying\" (DEDR 4989)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻamoḻi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻamoḻi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻamoḻi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻamoḻi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar pēcumpōtu niṟaiyap paḻamoḻikaḷaic colvār. — When he talks he uses lots of proverbs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar pēcumpōtu niṟaiyap paḻamoḻikaḷaic colvār.* — When he talks he uses lots of proverbs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a made-up story, then the Tamil for to make up, then say paḻamoḻi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a made-up story, then the Tamil for to make up, then say *paḻamoḻi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பழமொழி (paḻamoḻi) mean? (\"A proverb\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:ec595c9e468012cc",
+  "lessonIds": [
+    "TA-C476-kirumi",
+    "TA-C476-tatuppuci",
+    "TA-C476-mukakkavacam",
+    "TA-C476-cukataram",
+    "TA-C476-noyvayppatu",
+    "TA-R476-review-469-476"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch476.txt",
+  "json": "tamil/narration/ch476.json",
+  "textHash": "fnv1a64:39444880e6784212",
+  "jsonHash": "fnv1a64:4fd5d25c8ebab56c",
+  "findings": []
+}

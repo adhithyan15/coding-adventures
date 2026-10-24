@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:a4a66e0119ccbf01",
+  "lessonIds": [
+    "TA-C346-uccakattam",
+    "TA-C346-pirkalattil",
+    "TA-C346-enrenrum",
+    "TA-C346-ivvaru",
+    "TA-C346-viti-dawn",
+    "TA-R346-review-340-346",
+    "TA-R346-review-final-346"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch346.txt",
+  "json": "tamil/narration/ch346.json",
+  "textHash": "fnv1a64:e39feafdca211e7f",
+  "jsonHash": "fnv1a64:cc48e88966081911",
+  "findings": []
+}

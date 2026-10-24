@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:386e8ca4b566cba1",
+  "lessonIds": [
+    "TA-C543-kattalai",
+    "TA-C543-katumaiyana",
+    "TA-C543-kairekai",
+    "TA-C543-taniyurimai",
+    "TA-C543-coti"
+  ],
+  "tex": "tamil/book/chapters/ch543-rules-and-checks.tex"
+}

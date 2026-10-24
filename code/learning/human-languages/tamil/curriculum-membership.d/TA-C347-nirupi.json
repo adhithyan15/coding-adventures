@@ -1,0 +1,11 @@
+{
+  "id": "TA-C347-nirupi",
+  "pathSegment": "TA-PATH-347-ATARAM347",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-347-ATARAM347",
+      "order": 1
+    }
+  ]
+}

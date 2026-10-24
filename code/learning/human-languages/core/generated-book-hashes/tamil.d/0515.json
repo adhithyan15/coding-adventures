@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:de104e81d33e6b02",
+  "lessonIds": [
+    "TA-C515-tolilnutpam",
+    "TA-C515-menporul",
+    "TA-C515-vanporul",
+    "TA-C515-matikkanini",
+    "TA-C515-minnul"
+  ],
+  "tex": "tamil/book/chapters/ch515-computers.tex"
+}

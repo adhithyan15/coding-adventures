@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:4dbb7ebcd177ec12",
+  "lessonIds": [
+    "TA-C512-paninikkam",
+    "TA-C512-patavi-vilaku",
+    "TA-C512-oyvu-peru",
+    "TA-C512-itamarram",
+    "TA-C512-totanku"
+  ],
+  "tex": "tamil/book/chapters/ch512-leaving-a-job.tex"
+}

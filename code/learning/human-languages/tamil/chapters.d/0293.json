@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "It Depends and What Would Have Been",
+  "label": "ch:ta-it-depends-and-what-would-have-been",
+  "canDo": "I can say what something depends on with … -aip poṟuttatu, say what would have happened with -iruntāl … -iruppēṉ, and write six connected lines about a trip.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-R293-depends-and-would",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: say what something depends on and what would have been, after writing six connected lines about a trip.",
+    "assesses": [
+      "TA-GRAMMAR-C293-DEPENDS-01",
+      "TA-GRAMMAR-C293-UNREAL-IF-01",
+      "TA-GRAMMAR-C293-WOULD-01"
+    ]
+  }
+}

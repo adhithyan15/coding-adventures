@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "Guides and Guidebooks",
+  "label": "ch:ta-guides-and-guidebooks",
+  "canDo": "I can talk about guides and guidebooks, showing someone around, visiting and seeing people off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C421-valiyanuppu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can talk about guides and guidebooks, showing someone around, visiting and seeing people off.",
+    "assesses": [
+      "TA-LEX-C421-VAZHIKATTI421-03",
+      "TA-LEX-C421-VAZHIKATTI421-04",
+      "TA-LEX-C421-VAZHIKATTI421-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C488-meli",
+  "pathSegment": "TA-PATH-488-EDAI488",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-488-EDAI488",
+      "order": 2
+    }
+  ]
+}

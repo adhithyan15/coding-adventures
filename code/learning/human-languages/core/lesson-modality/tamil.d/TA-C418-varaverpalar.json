@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C418-varaverpalar",
+    "language": "tamil",
+    "chapter": 418,
+    "sequence": 24030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86d7d06a8fc4d6ec"
+  },
+  "findings": []
+}

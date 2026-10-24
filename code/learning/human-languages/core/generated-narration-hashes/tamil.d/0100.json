@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 100,
-  "sourceHash": "fnv1a64:b24aab30a4c59138",
+  "sourceHash": "fnv1a64:b0413afaca8f8776",
   "lessonIds": [
     "TA-C100-children",
     "TA-C100-boy",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch100.txt",
   "json": "tamil/narration/ch100.json",
-  "textHash": "fnv1a64:77e107d0c2b2bd28",
-  "jsonHash": "fnv1a64:3bcd434095a386e3",
+  "textHash": "fnv1a64:fe36d750af005e38",
+  "jsonHash": "fnv1a64:fa3aa1141c54f394",
   "findings": []
 }

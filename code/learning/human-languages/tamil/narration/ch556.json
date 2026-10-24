@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 556,
+  "title": "A Writing and Craft Contest",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1ca1c8d534d0871d",
+  "lessons": [
+    {
+      "id": "TA-C556-cirukatai",
+      "sequence": 31660,
+      "title": "சிறுகதை (ciṟukatai) — a short story",
+      "headword": "சிறுகதை",
+      "romanization": "ciṟukatai",
+      "gloss": "a short story",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13b7fde031c306f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a review, then the Tamil for a story character."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சிறுகதை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிறுகதை — ciṟukatai — \"a short story\"."
+            },
+            {
+              "kind": "speech",
+              "text": "உங்கள் சிறுகதை தேர்வானால் இதழில் வெளிவரும். uṅkaḷ ciṟukatai tērvāṉāl itaḻil veḷivarum. If your short story is chosen, it will appear in the magazine."
+            },
+            {
+              "kind": "speech",
+              "text": "சிறு \"small\" + கதை (katai). The plural is சிறுகதைகள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிறுகதை (ciṟukatai) joins the native சிறு (ciṟu), \"small\" (DEDR 1594), and கதை (katai), \"a story\", from Sanskrit kathā (CDIAL 2704)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṟukatai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṟukatai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṟukatai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṟukatai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṅkaḷ ciṟukatai tērvāṉāl itaḻil veḷivarum. — If your short story is chosen, it will appear in the magazine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṅkaḷ ciṟukatai tērvāṉāl itaḻil veḷivarum.* — If your short story is chosen, it will appear in the magazine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a review, then the Tamil for a story character, then say ciṟukatai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a review, then the Tamil for a story character, then say *ciṟukatai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சிறுகதை (ciṟukatai) mean? (\"A short story\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C556-ilakkiyam",
+      "sequence": 31670,
+      "title": "இலக்கியம் (ilakkiyam) — literature",
+      "headword": "இலக்கியம்",
+      "romanization": "ilakkiyam",
+      "gloss": "literature",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e57b9f47f373ef4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a story character, then the Tamil for a short story."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இலக்கியம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இலக்கியம் — ilakkiyam — \"literature\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தமிழ் இலக்கியம் இரண்டாயிரம் ஆண்டுகளுக்கும் மேல் பழமையானது. tamiḻ ilakkiyam iraṇṭāyiram āṇṭukaḷukkum mēl paḻamaiyāṉatu. Tamil literature is more than two thousand years old."
+            },
+            {
+              "kind": "speech",
+              "text": "A -அம் noun: இலக்கியத்தில். An இலக்கியவாதி is a literary man."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இலக்கியம் (ilakkiyam) is usually traced to Sanskrit lakṣya, \"a mark, something kept in view\" (Monier-Williams), the source of லட்சியம் (laṭciyam) too; Tamil puts இ before the initial ல. How it came to mean literature is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ilakkiyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ilakkiyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ilakkiyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ilakkiyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tamiḻ ilakkiyam iraṇṭāyiram āṇṭukaḷukkum mēl paḻamaiyāṉatu. — Tamil literature is more than two thousand years old.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tamiḻ ilakkiyam iraṇṭāyiram āṇṭukaḷukkum mēl paḻamaiyāṉatu.* — Tamil literature is more than two thousand years old.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a story character, then the Tamil for a short story, then say ilakkiyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a story character, then the Tamil for a short story, then say *ilakkiyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இலக்கியம் (ilakkiyam) mean? (\"Literature\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C556-kaivinai",
+      "sequence": 31680,
+      "title": "கைவினை (kaiviṉai) — a craft; handicraft",
+      "headword": "கைவினை",
+      "romanization": "kaiviṉai",
+      "gloss": "a craft; handicraft",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c343050577d3c298",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a short story, then the Tamil for literature."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கைவினை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கைவினை — kaiviṉai — \"a craft; handicraft\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கைவினைப் பொருட்களைப் போட்டிக்கு அனுப்பினால் பரிசு கிடைக்கலாம். kaiviṉaip poruṭkaḷaip pōṭṭikku aṉuppiṉāl paricu kiṭaikkalām. If you send craftwork to the contest, you may win a prize."
+            },
+            {
+              "kind": "speech",
+              "text": "Craftwork is கைவினைப் பொருட்கள்: கை \"hand\" + வினை \"work\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கைவினை (kaiviṉai) is a native compound: கை (kai), \"a hand\", and வினை (viṉai), \"action, work\" (DEDR 5445)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaiviṉai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaiviṉai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaiviṉai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaiviṉai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaiviṉaip poruṭkaḷaip pōṭṭikku aṉuppiṉāl paricu kiṭaikkalām. — If you send craftwork to the contest, you may win a prize.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaiviṉaip poruṭkaḷaip pōṭṭikku aṉuppiṉāl paricu kiṭaikkalām.* — If you send craftwork to the contest, you may win a prize.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a short story, then the Tamil for literature, then say kaiviṉai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a short story, then the Tamil for literature, then say *kaiviṉai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கைவினை (kaiviṉai) mean? (\"A craft; handicraft\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C556-necavu",
+      "sequence": 31690,
+      "title": "நெசவு (necavu) — weaving",
+      "headword": "நெசவு",
+      "romanization": "necavu",
+      "gloss": "weaving",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8df9a1845b400db2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for literature, then the Tamil for a craft."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நெசவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நெசவு — necavu — \"weaving\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நெசவு எங்கள் கிராமத்தின் முக்கியத் தொழில். necavu eṅkaḷ kirāmattiṉ mukkiyat toḻil. Weaving is the main trade of our village."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb is நெய் (ney), to weave; a weaver is a நெசவாளர் (necavāḷar)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நெசவு (necavu) is native Dravidian: DEDR 3745 gives நெய் (ney), \"to weave\", and நெசவு (necavu), \"weaving, a web\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "necavu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *necavu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "necavu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *necavu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "necavu eṅkaḷ kirāmattiṉ mukkiyat toḻil. — Weaving is the main trade of our village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *necavu eṅkaḷ kirāmattiṉ mukkiyat toḻil.* — Weaving is the main trade of our village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for literature, then the Tamil for a craft, then say necavu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for literature, then the Tamil for a craft, then say *necavu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நெசவு (necavu) mean? (\"Weaving\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C556-carikai",
+      "sequence": 31700,
+      "title": "சரிகை (carikai) — gold thread; zari",
+      "headword": "சரிகை",
+      "romanization": "carikai",
+      "gloss": "gold thread; zari",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61e0997145cae554",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a craft, then the Tamil for weaving."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சரிகை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சரிகை — carikai — \"gold thread; zari\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சேலையின் ஓரத்தில் சரிகை இருந்தால் விலை அதிகம். cēlaiyiṉ ōrattil carikai iruntāl vilai atikam. If there is gold thread on the border of the sari, the price is higher."
+            },
+            {
+              "kind": "speech",
+              "text": "The gold or silver thread woven into the border of a silk sari."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of சரிகை (carikai) is not settled: it may be the same word as zarī in other Indian languages, but no source we can check shows the path."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carikai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carikai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carikai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carikai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cēlaiyiṉ ōrattil carikai iruntāl vilai atikam. — If there is gold thread on the border of the sari, the price is higher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cēlaiyiṉ ōrattil carikai iruntāl vilai atikam.* — If there is gold thread on the border of the sari, the price is higher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a craft, then the Tamil for weaving, then say carikai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a craft, then the Tamil for weaving, then say *carikai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சரிகை (carikai) mean? (\"Gold thread; zari\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C466-kolai",
+    "language": "tamil",
+    "chapter": 466,
+    "sequence": 26770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9fc21ac649feedf4"
+  },
+  "findings": []
+}

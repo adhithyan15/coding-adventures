@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:c649692cb20963cc",
+  "lessonIds": [
+    "TA-C450-acal",
+    "TA-C450-poli-fake",
+    "TA-C450-atamparam",
+    "TA-C450-vilaivaci",
+    "TA-C450-nottu"
+  ],
+  "tex": "tamil/book/chapters/ch450-real-or-fake.tex"
+}

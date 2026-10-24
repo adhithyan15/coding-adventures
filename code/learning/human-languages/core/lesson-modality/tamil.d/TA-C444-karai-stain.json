@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C444-karai-stain",
+    "language": "tamil",
+    "chapter": 444,
+    "sequence": 25380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea29557571424248"
+  },
+  "findings": []
+}

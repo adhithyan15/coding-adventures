@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-486-VAITTIYAM486",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-486-VAITTIYAM486"
+  ],
+  "after": []
+}

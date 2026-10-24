@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:f12bccf72dcc728a",
+  "lessonIds": [
+    "TA-C363-pullivivaram",
+    "TA-C363-catavitam",
+    "TA-C363-caracari",
+    "TA-C363-vikitam",
+    "TA-C363-kani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch363.txt",
+  "json": "tamil/narration/ch363.json",
+  "textHash": "fnv1a64:cdad6963f8934a63",
+  "jsonHash": "fnv1a64:6d4027a3628bf6ba",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:2ea19cbec04d3dec",
+  "lessonIds": [
+    "TA-C422-mukam",
+    "TA-C422-tarc",
+    "TA-C422-kutuvai",
+    "TA-C422-tolainokki",
+    "TA-C422-avil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch422.txt",
+  "json": "tamil/narration/ch422.json",
+  "textHash": "fnv1a64:14da1188cd669c40",
+  "jsonHash": "fnv1a64:0535125b80d8b1d9",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C531-kapati",
+    "language": "tamil",
+    "chapter": 531,
+    "sequence": 30420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79edd90062a01136"
+  },
+  "findings": []
+}

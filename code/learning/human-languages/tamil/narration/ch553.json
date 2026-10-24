@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 553,
+  "title": "For Now or For Good",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3dbe656421d1d2a9",
+  "lessons": [
+    {
+      "id": "TA-C553-tarkalika",
+      "sequence": 31510,
+      "title": "தற்காலிக (taṟkālika) — temporary",
+      "headword": "தற்காலிக",
+      "romanization": "taṟkālika",
+      "gloss": "temporary",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c334e61a573e133b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to speed up, then the Tamil for time to act."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தற்காலிக",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தற்காலிக — taṟkālika — \"temporary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இது ஒரு தற்காலிக வேலை, மூன்று மாதங்கள் மட்டுமே. itu oru taṟkālika vēlai, mūṉṟu mātaṅkaḷ maṭṭumē. This is a temporary job, only for three months."
+            },
+            {
+              "kind": "speech",
+              "text": "It stands before a noun. As an adverb: தற்காலிகமாக, for the time being."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தற்காலிக (taṟkālika) is borrowed from a Sanskrit adjective built on tatkāla, \"happening at that same time, immediately\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṟkālika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṟkālika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṟkālika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṟkālika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itu oru taṟkālika vēlai, mūṉṟu mātaṅkaḷ maṭṭumē. — This is a temporary job, only for three months.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itu oru taṟkālika vēlai, mūṉṟu mātaṅkaḷ maṭṭumē.* — This is a temporary job, only for three months.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to speed up, then the Tamil for time to act, then say taṟkālika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to speed up, then the Tamil for time to act, then say *taṟkālika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தற்காலிக (taṟkālika) mean? (\"Temporary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C553-nirantara",
+      "sequence": 31520,
+      "title": "நிரந்தர (nirantara) — permanent",
+      "headword": "நிரந்தர",
+      "romanization": "nirantara",
+      "gloss": "permanent",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de09ce569e2d1399",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for time to act, then the Tamil for temporary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நிரந்தர",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிரந்தர — nirantara — \"permanent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவருக்கு அரசு அலுவலகத்தில் நிரந்தர வேலை கிடைத்தது. avarukku aracu aluvalakattil nirantara vēlai kiṭaittatu. He got a permanent job in a government office."
+            },
+            {
+              "kind": "speech",
+              "text": "It stands before a noun, like தற்காலிக (taṟkālika). As an adverb: நிரந்தரமாக."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிரந்தர (nirantara) is borrowed from Sanskrit nirantara, \"having no interval, uninterrupted, constant\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirantara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirantara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirantara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirantara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avarukku aracu aluvalakattil nirantara vēlai kiṭaittatu. — He got a permanent job in a government office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avarukku aracu aluvalakattil nirantara vēlai kiṭaittatu.* — He got a permanent job in a government office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for time to act, then the Tamil for temporary, then say nirantara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for time to act, then the Tamil for temporary, then say *nirantara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நிரந்தர (nirantara) mean? (\"Permanent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C553-inriyamaiyata",
+      "sequence": 31530,
+      "title": "இன்றியமையாத (iṉṟiyamaiyāta) — essential; indispensable",
+      "headword": "இன்றியமையாத",
+      "romanization": "iṉṟiyamaiyāta",
+      "gloss": "essential; indispensable",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17208503498863ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for temporary, then the Tamil for permanent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இன்றியமையாத",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இன்றியமையாத — iṉṟiyamaiyāta — \"essential; indispensable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "உணவும் தண்ணீரும் வாழ்க்கைக்கு இன்றியமையாதவை. uṇavum taṇṇīrum vāḻkkaikku iṉṟiyamaiyātavai. Food and water are essential for life."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"that cannot be done without\": இன்றி \"without\" + அமையாத \"not fitting\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இன்றியமையாத (iṉṟiyamaiyāta) is a native phrase grown into one word: இன்றி (iṉṟi), \"without\", and அமையாத, the negative adjective of அமை (amai), \"to fit, to come about\" (DEDR 162)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṉṟiyamaiyāta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṉṟiyamaiyāta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṉṟiyamaiyāta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṉṟiyamaiyāta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṇavum taṇṇīrum vāḻkkaikku iṉṟiyamaiyātavai. — Food and water are essential for life.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṇavum taṇṇīrum vāḻkkaikku iṉṟiyamaiyātavai.* — Food and water are essential for life.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for temporary, then the Tamil for permanent, then say iṉṟiyamaiyāta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for temporary, then the Tamil for permanent, then say *iṉṟiyamaiyāta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இன்றியமையாத (iṉṟiyamaiyāta) mean? (\"Essential; indispensable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C553-marruvali",
+      "sequence": 31540,
+      "title": "மாற்றுவழி (māṟṟuvaḻi) — an alternative; a way round",
+      "headword": "மாற்றுவழி",
+      "romanization": "māṟṟuvaḻi",
+      "gloss": "an alternative; a way round",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ebfd0183ad05408",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for permanent, then the Tamil for essential."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மாற்றுவழி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மாற்றுவழி — māṟṟuvaḻi — \"an alternative; a way round\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சாலை மூடப்பட்டால் மாற்றுவழியில் போகலாம். cālai mūṭappaṭṭāl māṟṟuvaḻiyil pōkalām. If the road is closed, we can take another route."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"a change-way\": மாற்று (māṟṟu) + வழி (vaḻi)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மாற்றுவழி (māṟṟuvaḻi) is a native compound: மாற்று (māṟṟu), \"a change, a substitute\", from மாறு (DEDR 4834), and வழி (vaḻi), \"a way\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṟṟuvaḻi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṟṟuvaḻi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṟṟuvaḻi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṟṟuvaḻi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālai mūṭappaṭṭāl māṟṟuvaḻiyil pōkalām. — If the road is closed, we can take another route.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālai mūṭappaṭṭāl māṟṟuvaḻiyil pōkalām.* — If the road is closed, we can take another route.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for permanent, then the Tamil for essential, then say māṟṟuvaḻi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for permanent, then the Tamil for essential, then say *māṟṟuvaḻi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மாற்றுவழி (māṟṟuvaḻi) mean? (\"An alternative; a way round\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C553-torayamaka",
+      "sequence": 31550,
+      "title": "தோராயமாக (tōrāyamāka) — approximately; roughly",
+      "headword": "தோராயமாக",
+      "romanization": "tōrāyamāka",
+      "gloss": "approximately; roughly",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e4c717913d5711a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for essential, then the Tamil for an alternative."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தோராயமாக",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தோராயமாக — tōrāyamāka — \"approximately; roughly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கூட்டத்துக்குத் தோராயமாக ஐம்பது பேர் வந்தார்கள். kūṭṭattukkut tōrāyamāka aimpatu pēr vantārkaḷ. Roughly fifty people came to the meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "The -ஆக adverb of தோராயம், a rough estimate. A near synonym is கிட்டத்தட்ட (kiṭṭattaṭṭa)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of தோராயமாக (tōrāyamāka) is not settled: it is the -ஆக adverb of தோராயம் (tōrāyam), \"a rough estimate\", whose source is unclear."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōrāyamāka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōrāyamāka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōrāyamāka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōrāyamāka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭṭattukkut tōrāyamāka aimpatu pēr vantārkaḷ. — Roughly fifty people came to the meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭṭattukkut tōrāyamāka aimpatu pēr vantārkaḷ.* — Roughly fifty people came to the meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for essential, then the Tamil for an alternative, then say tōrāyamāka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for essential, then the Tamil for an alternative, then say *tōrāyamāka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தோராயமாக (tōrāyamāka) mean? (\"Approximately; roughly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

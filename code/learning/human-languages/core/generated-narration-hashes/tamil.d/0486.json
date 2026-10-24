@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:d09dbb800d29f739",
+  "lessonIds": [
+    "TA-C486-tatavu",
+    "TA-C486-amukku",
+    "TA-C486-koppali",
+    "TA-C486-unrukol",
+    "TA-C486-mil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch486.txt",
+  "json": "tamil/narration/ch486.json",
+  "textHash": "fnv1a64:13979b93b03ce078",
+  "jsonHash": "fnv1a64:0cee6ece5048e111",
+  "findings": []
+}

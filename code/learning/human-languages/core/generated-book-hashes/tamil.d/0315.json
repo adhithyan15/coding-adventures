@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:f82b470a169a0dfe",
+  "lessonIds": [
+    "TA-C315-nataiperu",
+    "TA-C315-erpatu",
+    "TA-C315-nikalvu",
+    "TA-C315-tarpotu",
+    "TA-C315-eppotavatu"
+  ],
+  "tex": "tamil/book/chapters/ch315-events-take-place.tex"
+}

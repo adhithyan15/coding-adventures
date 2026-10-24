@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:af9758801edbca97",
+  "lessonIds": [
+    "TA-C423-nakaratci",
+    "TA-C423-puranakar",
+    "TA-C423-kutiyiruppu",
+    "TA-C423-vattaram",
+    "TA-C423-maiyam",
+    "TA-R423-review-416-423"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch423.txt",
+  "json": "tamil/narration/ch423.json",
+  "textHash": "fnv1a64:108e419064fc4e61",
+  "jsonHash": "fnv1a64:9d61e138fb751115",
+  "findings": []
+}

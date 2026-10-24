@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 551,
+  "sourceHash": "fnv1a64:cc7103fd43ecb207",
+  "lessonIds": [
+    "TA-C551-vativamai",
+    "TA-C551-kankirit",
+    "TA-C551-veli",
+    "TA-C551-cottu",
+    "TA-C551-yatarttam",
+    "TA-R551-review-545-551"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch551.txt",
+  "json": "tamil/narration/ch551.json",
+  "textHash": "fnv1a64:535390dfe878869f",
+  "jsonHash": "fnv1a64:39e8af3d77433d8b",
+  "findings": []
+}

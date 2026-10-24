@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:4dcda2104198ac64",
+  "lessonIds": [
+    "TA-C366-turai",
+    "TA-C366-ulaviyal",
+    "TA-C366-puviyiyal",
+    "TA-C366-cuttiram",
+    "TA-C366-varaiyaru"
+  ],
+  "tex": "tamil/book/chapters/ch366-fields-of-knowledge.tex"
+}

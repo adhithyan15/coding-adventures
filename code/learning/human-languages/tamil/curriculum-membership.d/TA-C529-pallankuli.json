@@ -1,0 +1,11 @@
+{
+  "id": "TA-C529-pallankuli",
+  "pathSegment": "TA-PATH-529-VILAIYATTU529",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-529-VILAIYATTU529",
+      "order": 4
+    }
+  ]
+}

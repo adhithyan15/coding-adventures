@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "Pay and Leave",
+  "label": "ch:ta-pay-and-leave",
+  "canDo": "I can talk about wages, leave and overtime.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C508-eluttar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can talk about wages, leave and overtime.",
+    "assesses": [
+      "TA-LEX-C508-OOTHIYAM508-03",
+      "TA-LEX-C508-OOTHIYAM508-04",
+      "TA-LEX-C508-OOTHIYAM508-05"
+    ]
+  }
+}

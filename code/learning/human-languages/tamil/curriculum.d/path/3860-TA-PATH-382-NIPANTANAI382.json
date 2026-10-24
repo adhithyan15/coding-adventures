@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-382-NIPANTANAI382",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TA-EXT-382-NIPANTANAI382"
+  ],
+  "after": []
+}

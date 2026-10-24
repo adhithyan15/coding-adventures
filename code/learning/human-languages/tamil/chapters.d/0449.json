@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "Auctions and Leases",
+  "label": "ch:ta-auctions-and-leases",
+  "canDo": "I can talk about auctions, leases, transactions and investments, and pawning jewellery.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C449-ataku-vai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can talk about auctions, leases, transactions and investments, and pawning jewellery.",
+    "assesses": [
+      "TA-LEX-C449-ELAM449-03",
+      "TA-LEX-C449-ELAM449-04",
+      "TA-LEX-C449-ELAM449-05"
+    ]
+  }
+}

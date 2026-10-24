@@ -1,0 +1,19 @@
+{
+  "chapter": 437,
+  "title": "Wildlife on the Move",
+  "label": "ch:ta-wildlife-on-the-move",
+  "canDo": "I can talk about wildlife and sanctuaries, species, and animals migrating and hunting.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C437-inam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can talk about wildlife and sanctuaries, species, and animals migrating and hunting.",
+    "assesses": [
+      "TA-LEX-C437-VILANKU437-03",
+      "TA-LEX-C437-VILANKU437-04",
+      "TA-LEX-C437-VILANKU437-05"
+    ]
+  }
+}

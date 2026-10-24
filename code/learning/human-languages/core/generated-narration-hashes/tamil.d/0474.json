@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:2048f7b7d8f1ec8b",
+  "lessonIds": [
+    "TA-C474-arikuri",
+    "TA-C474-kumattal",
+    "TA-C474-patapatappu",
+    "TA-C474-vikku",
+    "TA-C474-uruttu-chafe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch474.txt",
+  "json": "tamil/narration/ch474.json",
+  "textHash": "fnv1a64:c90390d85bbca78a",
+  "jsonHash": "fnv1a64:d452041bac8a3230",
+  "findings": []
+}

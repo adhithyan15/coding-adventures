@@ -1,0 +1,11 @@
+{
+  "id": "TA-C469-vancam",
+  "pathSegment": "TA-PATH-469-PAKAI469",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-469-PAKAI469",
+      "order": 2
+    }
+  ]
+}

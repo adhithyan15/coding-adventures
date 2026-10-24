@@ -1,0 +1,21 @@
+{
+  "chapter": 301,
+  "title": "A Rescue",
+  "label": "ch:ta-a-rescue",
+  "canDo": "I can describe a rescue.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-R301-review-294-301",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can describe a rescue.",
+    "assesses": [
+      "TA-LEX-C301-MEETPU301-01",
+      "TA-LEX-C301-MEETPU301-02",
+      "TA-LEX-C301-MEETPU301-03",
+      "TA-LEX-C301-MEETPU301-04",
+      "TA-LEX-C301-MEETPU301-05"
+    ]
+  }
+}

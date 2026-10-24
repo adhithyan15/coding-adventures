@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C346-enrenrum",
+    "language": "tamil",
+    "chapter": 346,
+    "sequence": 19780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:477c1f3ece3ca71a"
+  },
+  "findings": []
+}

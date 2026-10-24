@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C482-atipatu",
+    "language": "tamil",
+    "chapter": 482,
+    "sequence": 27600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91b5da879f5cd059"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C420-cevai",
+  "pathSegment": "TA-PATH-420-SEVAI420",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-420-SEVAI420",
+      "order": 1
+    }
+  ]
+}

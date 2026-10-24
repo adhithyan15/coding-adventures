@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C532-cilampam",
+    "language": "tamil",
+    "chapter": 532,
+    "sequence": 30450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df0be8e181e9c1b4"
+  },
+  "findings": []
+}

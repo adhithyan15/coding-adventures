@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "Arrows and Chariots",
+  "label": "ch:ta-arrows-and-chariots",
+  "canDo": "I can talk about old weapons and warriors.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C334-talapati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can talk about old weapons and warriors.",
+    "assesses": [
+      "TA-LEX-C334-THER334-03",
+      "TA-LEX-C334-THER334-04",
+      "TA-LEX-C334-THER334-05"
+    ]
+  }
+}

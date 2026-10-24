@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C558-talam",
+    "language": "tamil",
+    "chapter": 558,
+    "sequence": 31790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3c8902c3b242deb"
+  },
+  "findings": []
+}

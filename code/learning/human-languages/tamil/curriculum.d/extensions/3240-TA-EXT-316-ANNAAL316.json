@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-316-ANNAAL316",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can place events on a day in a story.",
+  "prerequisites": []
+}

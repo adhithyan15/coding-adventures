@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C292-vantal",
+    "language": "tamil",
+    "chapter": 292,
+    "sequence": 16410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7e4d7228c0d5bc1"
+  },
+  "findings": []
+}

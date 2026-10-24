@@ -1,0 +1,11 @@
+{
+  "id": "TA-C512-totanku",
+  "pathSegment": "TA-PATH-512-VILAKAL512",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-512-VILAKAL512",
+      "order": 4
+    }
+  ]
+}

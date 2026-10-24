@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 557,
+  "sourceHash": "fnv1a64:03179a57ed1f09df",
+  "lessonIds": [
+    "TA-C557-parutti",
+    "TA-C557-kampali",
+    "TA-C557-cayam",
+    "TA-C557-kittar",
+    "TA-C557-vayalin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch557.txt",
+  "json": "tamil/narration/ch557.json",
+  "textHash": "fnv1a64:6fb5d10aa28cb577",
+  "jsonHash": "fnv1a64:2ae360a9aa7f2304",
+  "findings": []
+}

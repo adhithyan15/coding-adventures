@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C343-palamoli",
+    "language": "tamil",
+    "chapter": 343,
+    "sequence": 19650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68fa105adf392a86"
+  },
+  "findings": []
+}

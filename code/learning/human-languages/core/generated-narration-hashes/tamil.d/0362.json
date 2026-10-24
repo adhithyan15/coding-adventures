@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:99abd7c6441929d4",
+  "lessonIds": [
+    "TA-C362-araycci",
+    "TA-C362-ayvu",
+    "TA-C362-taravu",
+    "TA-C362-pakuppayvu",
+    "TA-C362-alacu",
+    "TA-R362-review-355-362"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch362.txt",
+  "json": "tamil/narration/ch362.json",
+  "textHash": "fnv1a64:09911ef095da0a6b",
+  "jsonHash": "fnv1a64:1881d5449b8e71e4",
+  "findings": []
+}

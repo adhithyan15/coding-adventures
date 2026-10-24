@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-500-VITU500",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-500-VITU500"
+  ],
+  "after": []
+}

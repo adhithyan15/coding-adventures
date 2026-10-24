@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:8603e1cc3a0749c6",
+  "lessonIds": [
+    "TA-C319-antu-niraivu",
+    "TA-C319-ponvila",
+    "TA-C319-antuvila",
+    "TA-C319-vilakkolam",
+    "TA-C319-alaippital"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch319.txt",
+  "json": "tamil/narration/ch319.json",
+  "textHash": "fnv1a64:bd76c962fba775c3",
+  "jsonHash": "fnv1a64:ead990bf96bb81fe",
+  "findings": []
+}

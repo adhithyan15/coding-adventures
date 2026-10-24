@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C333-val-sword",
+    "language": "tamil",
+    "chapter": 333,
+    "sequence": 19120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc1af4975f545aaf"
+  },
+  "findings": []
+}

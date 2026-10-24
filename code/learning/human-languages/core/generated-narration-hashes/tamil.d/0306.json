@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:ff5acc8d1a6794b4",
+  "lessonIds": [
+    "TA-C306-talaippuc-ceyti",
+    "TA-C306-mutal-pakkam",
+    "TA-C306-ital",
+    "TA-C306-patippu",
+    "TA-C306-veliyitu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch306.txt",
+  "json": "tamil/narration/ch306.json",
+  "textHash": "fnv1a64:eff647d1e273abb0",
+  "jsonHash": "fnv1a64:f005c4d8cf2e4414",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "Elections",
+  "label": "ch:ta-elections",
+  "canDo": "I can talk about elections, candidates and voting.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C374-piraccaram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can talk about elections, candidates and voting.",
+    "assesses": [
+      "TA-LEX-C374-TERTAL374-03",
+      "TA-LEX-C374-TERTAL374-04",
+      "TA-LEX-C374-TERTAL374-05"
+    ]
+  }
+}

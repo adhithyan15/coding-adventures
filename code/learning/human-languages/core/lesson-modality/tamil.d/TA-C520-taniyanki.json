@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C520-taniyanki",
+    "language": "tamil",
+    "chapter": 520,
+    "sequence": 29820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c079e838a55bebf8"
+  },
+  "findings": []
+}

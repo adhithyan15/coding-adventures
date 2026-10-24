@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:723523c3a24d2015",
+  "lessonIds": [
+    "TA-C355-parinturai",
+    "TA-C355-arivurai",
+    "TA-C355-arivuruttu",
+    "TA-C355-aloci",
+    "TA-C355-munmoli"
+  ],
+  "tex": "tamil/book/chapters/ch355-advice-and-proposals.tex"
+}

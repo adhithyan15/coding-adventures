@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:584564840b5c6276",
+  "lessonIds": [
+    "TA-C414-vica",
+    "TA-C414-ellai",
+    "TA-C414-cavati",
+    "TA-C414-nulaivayil",
+    "TA-C414-parimutal-cey"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch414.txt",
+  "json": "tamil/narration/ch414.json",
+  "textHash": "fnv1a64:ba06c2b0889a7d6d",
+  "jsonHash": "fnv1a64:3883b92d61f0c002",
+  "findings": []
+}

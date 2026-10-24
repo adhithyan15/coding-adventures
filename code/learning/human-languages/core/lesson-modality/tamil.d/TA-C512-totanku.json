@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C512-totanku",
+    "language": "tamil",
+    "chapter": 512,
+    "sequence": 29440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e52104da9082a29"
+  },
+  "findings": []
+}

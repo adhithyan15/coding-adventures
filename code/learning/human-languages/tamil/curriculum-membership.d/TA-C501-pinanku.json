@@ -1,0 +1,11 @@
+{
+  "id": "TA-C501-pinanku",
+  "pathSegment": "TA-PATH-501-CANTAI501",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-501-CANTAI501",
+      "order": 3
+    }
+  ]
+}

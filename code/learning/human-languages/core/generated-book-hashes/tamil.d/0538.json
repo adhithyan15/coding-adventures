@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:8b85a314ef52ee55",
+  "lessonIds": [
+    "TA-C538-pinnu",
+    "TA-C538-mutai",
+    "TA-C538-kor",
+    "TA-C538-tari",
+    "TA-C538-pattu"
+  ],
+  "tex": "tamil/book/chapters/ch538-threads-and-beads.tex"
+}

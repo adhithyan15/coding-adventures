@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "Muscles and Nerves",
+  "label": "ch:ta-muscles-and-nerves",
+  "canDo": "I can talk about muscles, nerves, the chest and the ribs.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C479-tuti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can talk about muscles, nerves, the chest and the ribs.",
+    "assesses": [
+      "TA-LEX-C479-TACAI479-03",
+      "TA-LEX-C479-TACAI479-04",
+      "TA-LEX-C479-TACAI479-05"
+    ]
+  }
+}

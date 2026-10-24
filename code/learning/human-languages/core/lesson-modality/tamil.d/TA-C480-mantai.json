@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C480-mantai",
+    "language": "tamil",
+    "chapter": 480,
+    "sequence": 27480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:703db6c6db88b4e9"
+  },
+  "findings": []
+}

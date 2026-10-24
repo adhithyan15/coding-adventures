@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "A Restless Night",
+  "label": "ch:ta-a-restless-night",
+  "canDo": "I can talk about slumber, snoring, tossing and turning, waking and sweating.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C489-viyar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can talk about slumber, snoring, tossing and turning, waking and sweating.",
+    "assesses": [
+      "TA-LEX-C489-TUKKAM489-03",
+      "TA-LEX-C489-TUKKAM489-04",
+      "TA-LEX-C489-TUKKAM489-05"
+    ]
+  }
+}

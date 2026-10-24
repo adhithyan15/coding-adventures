@@ -1,0 +1,11 @@
+{
+  "id": "TA-C440-currucculal",
+  "pathSegment": "TA-PATH-440-MASU440",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-440-MASU440",
+      "order": 1
+    }
+  ]
+}

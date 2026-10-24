@@ -1,0 +1,19 @@
+{
+  "chapter": 388,
+  "title": "Approval and Appointments",
+  "label": "ch:ta-approval-and-appointments",
+  "canDo": "I can say that something was approved and someone appointed.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C388-amarvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 388: I can say that something was approved and someone appointed.",
+    "assesses": [
+      "TA-LEX-C388-OPPUTAL388-03",
+      "TA-LEX-C388-OPPUTAL388-04",
+      "TA-LEX-C388-OPPUTAL388-05"
+    ]
+  }
+}

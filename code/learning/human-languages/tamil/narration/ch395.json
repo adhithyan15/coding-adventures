@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 395,
+  "title": "Taking Action",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2bd8cac2e4ddb5cf",
+  "lessons": [
+    {
+      "id": "TA-C395-natattu",
+      "sequence": 22560,
+      "title": "நடத்து (naṭattu) — to conduct; to hold; to run",
+      "headword": "நடத்து",
+      "romanization": "naṭattu",
+      "gloss": "to conduct; to hold; to run",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:816d0463136f4e6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for on behalf of, then the Tamil for about."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நடத்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நடத்து — naṭattu — \"to conduct; to hold; to run\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நல்ல வானிலை இருந்தால் பள்ளி விளையாட்டுப் போட்டி நடத்தும். nalla vāṉilai iruntāl paḷḷi viḷaiyāṭṭup pōṭṭi naṭattum. If the weather is good, the school will hold a sports meet."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): நடத்தினேன், naṭattiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "கூட்டம் நடத்து (naṭattu), to hold a meeting. It is the causative of நட, to walk: to make things walk."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நடத்து (naṭattu) is native Dravidian: DEDR 3582 lists Tamil naṭa, \"to walk, proceed, happen\", and its causative naṭattu, \"to make walk, conduct, manage\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṭattu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṭattu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṭattu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṭattu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nalla vāṉilai iruntāl paḷḷi viḷaiyāṭṭup pōṭṭi naṭattum. — If the weather is good, the school will hold a sports meet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nalla vāṉilai iruntāl paḷḷi viḷaiyāṭṭup pōṭṭi naṭattum.* — If the weather is good, the school will hold a sports meet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for on behalf of, then the Tamil for about, then say naṭattu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for on behalf of, then the Tamil for about, then say *naṭattu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நடத்து (naṭattu) mean? (\"To conduct; to hold; to run\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C395-uruvakku",
+      "sequence": 22570,
+      "title": "உருவாக்கு (uruvākku) — to create; to form",
+      "headword": "உருவாக்கு",
+      "romanization": "uruvākku",
+      "gloss": "to create; to form",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54ec94871e4ce8c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for about, then the Tamil for to conduct."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உருவாக்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உருவாக்கு — uruvākku — \"to create; to form\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நாம் ஒன்றாக வேலை செய்தால் ஒரு நல்ல திட்டத்தை உருவாக்கலாம். nām oṉṟāka vēlai ceytāl oru nalla tiṭṭattai uruvākkalām. If we work together, we can create a good plan."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): உருவாக்கினேன், uruvākkiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "உரு, form + ஆக்கு, to make. Its intransitive partner is உருவாகு, to take shape."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உருவாக்கு (uruvākku) is built from uru, \"form\", borrowed from Sanskrit rūpa (CDIAL 10803), and native ākku, \"to make\", the causative of āku (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uruvākku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uruvākku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uruvākku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uruvākku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nām oṉṟāka vēlai ceytāl oru nalla tiṭṭattai uruvākkalām. — If we work together, we can create a good plan.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nām oṉṟāka vēlai ceytāl oru nalla tiṭṭattai uruvākkalām.* — If we work together, we can create a good plan.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for about, then the Tamil for to conduct, then say uruvākku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for about, then the Tamil for to conduct, then say *uruvākku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உருவாக்கு (uruvākku) mean? (\"To create; to form\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C395-nikku",
+      "sequence": 22580,
+      "title": "நீக்கு (nīkku) — to remove; to dismiss",
+      "headword": "நீக்கு",
+      "romanization": "nīkku",
+      "gloss": "to remove; to dismiss",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a51b2a1df42311b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to conduct, then the Tamil for to create."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நீக்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நீக்கு — nīkku — \"to remove; to dismiss\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தவறுகளை நீக்கினால் இந்தக் கட்டுரை நன்றாக இருக்கும். tavaṟukaḷai nīkkiṉāl intak kaṭṭurai naṉṟāka irukkum. If the mistakes are removed, this essay will be good."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): நீக்கினேன், nīkkiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is removed takes -ஐ; வேலையிலிருந்து நீக்கு (nīkku), to dismiss from a job."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நீக்கு (nīkku) is native Dravidian: DEDR 3685 lists Tamil nī, \"to separate from, put away, abandon\", and nīkku, \"to remove\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīkku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīkku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīkku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīkku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tavaṟukaḷai nīkkiṉāl intak kaṭṭurai naṉṟāka irukkum. — If the mistakes are removed, this essay will be good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tavaṟukaḷai nīkkiṉāl intak kaṭṭurai naṉṟāka irukkum.* — If the mistakes are removed, this essay will be good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to conduct, then the Tamil for to create, then say nīkku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to conduct, then the Tamil for to create, then say *nīkku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நீக்கு (nīkku) mean? (\"To remove; to dismiss\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C395-oli-abolish",
+      "sequence": 22590,
+      "title": "ஒழி (oḻi) — to abolish; to root out",
+      "headword": "ஒழி",
+      "romanization": "oḻi",
+      "gloss": "to abolish; to root out",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:adeffd936f20a382",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to create, then the Tamil for to remove."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஒழி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒழி — oḻi — \"to abolish; to root out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "எல்லோரும் சேர்ந்தால் ஊழலை ஒழிக்கலாம். ellōrum cērntāl ūḻalai oḻikkalām. If everyone joins together, we can root out corruption."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ஒழித்தேன், oḻittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Transitive with -ஐ and the past ஒழித்தேன்; the intransitive ஒழி (oḻi), to cease, has ஒழிந்தது."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒழி (oḻi) is native Dravidian: DEDR 1009 lists Tamil oḻi, \"to cease, be finished\" with the past in -ந்த-, and \"to finish, bring to an end\" with the past in -த்த-."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḻi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḻi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḻi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḻi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellōrum cērntāl ūḻalai oḻikkalām. — If everyone joins together, we can root out corruption.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellōrum cērntāl ūḻalai oḻikkalām.* — If everyone joins together, we can root out corruption.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to create, then the Tamil for to remove, then say oḻi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to create, then the Tamil for to remove, then say *oḻi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஒழி (oḻi) mean? (\"To abolish; to root out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C395-kaivitu",
+      "sequence": 22600,
+      "title": "கைவிடு (kaiviṭu) — to abandon; to give up",
+      "headword": "கைவிடு",
+      "romanization": "kaiviṭu",
+      "gloss": "to abandon; to give up",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5bd510678e26a441",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to remove, then the Tamil for to abolish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கைவிடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கைவிடு — kaiviṭu — \"to abandon; to give up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மழை பெய்ததால் நாங்கள் பயணத்தைக் கைவிட்டோம். maḻai peytatāl nāṅkaḷ payaṇattaik kaiviṭṭōm. Because it rained, we gave up the trip."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): கைவிட்டேன், kaiviṭṭēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is given up takes -ஐ: பழக்கத்தைக் கைவிடு (kaiviṭu), to give up a habit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கைவிடு (kaiviṭu) is native: kai, \"hand\" (DEDR 2023), and viṭu, \"to let go, leave\" (DEDR 5393): to let something go from the hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaiviṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaiviṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaiviṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaiviṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻai peytatāl nāṅkaḷ payaṇattaik kaiviṭṭōm. — Because it rained, we gave up the trip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻai peytatāl nāṅkaḷ payaṇattaik kaiviṭṭōm.* — Because it rained, we gave up the trip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to remove, then the Tamil for to abolish, then say kaiviṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to remove, then the Tamil for to abolish, then say *kaiviṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கைவிடு (kaiviṭu) mean? (\"To abandon; to give up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

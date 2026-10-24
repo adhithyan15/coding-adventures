@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-521-VEEDU521",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-521-VEEDU521"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "Smugglers on the Run",
+  "label": "ch:ta-smugglers-on-the-run",
+  "canDo": "I can tell a story about smugglers and an investigation.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C297-kurrancattu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can tell a story about smugglers and an investigation.",
+    "assesses": [
+      "TA-LEX-C297-KADATHAL297-03",
+      "TA-LEX-C297-KADATHAL297-04",
+      "TA-LEX-C297-KADATHAL297-05"
+    ]
+  }
+}

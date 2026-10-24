@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "Press Releases and Titbits",
+  "label": "ch:ta-press-releases-and-titbits",
+  "canDo": "I can say how news reaches the papers.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C307-arivi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can say how news reaches the papers.",
+    "assesses": [
+      "TA-LEX-C307-SEYTHI307-03",
+      "TA-LEX-C307-SEYTHI307-04",
+      "TA-LEX-C307-SEYTHI307-05"
+    ]
+  }
+}

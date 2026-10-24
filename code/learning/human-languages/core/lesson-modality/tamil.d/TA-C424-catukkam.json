@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C424-catukkam",
+    "language": "tamil",
+    "chapter": 424,
+    "sequence": 24330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3e20d6bc6ddce0d"
+  },
+  "findings": []
+}

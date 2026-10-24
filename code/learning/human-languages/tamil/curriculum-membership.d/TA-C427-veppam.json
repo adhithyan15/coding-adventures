@@ -1,0 +1,11 @@
+{
+  "id": "TA-C427-veppam",
+  "pathSegment": "TA-PATH-427-VEPPAM427",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-427-VEPPAM427",
+      "order": 1
+    }
+  ]
+}

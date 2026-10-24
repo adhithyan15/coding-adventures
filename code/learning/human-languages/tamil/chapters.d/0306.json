@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "Front Page News",
+  "label": "ch:ta-front-page-news",
+  "canDo": "I can talk about newspapers and what they print.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C306-veliyitu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can talk about newspapers and what they print.",
+    "assesses": [
+      "TA-LEX-C306-THALAIPPU306-03",
+      "TA-LEX-C306-THALAIPPU306-04",
+      "TA-LEX-C306-THALAIPPU306-05"
+    ]
+  }
+}

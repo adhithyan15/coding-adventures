@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 444,
+  "title": "Spills and Stains",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:caf2cfddaf927e95",
+  "lessons": [
+    {
+      "id": "TA-C444-cintu",
+      "sequence": 25350,
+      "title": "சிந்து (cintu) — to spill",
+      "headword": "சிந்து",
+      "romanization": "cintu",
+      "gloss": "to spill",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62dfd958d91dc9ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a hole, then the Tamil for to scratch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சிந்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிந்து — cintu — \"to spill\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நான் தரையில் காபியைச் சிந்தினேன். nāṉ taraiyil kāpiyaic cintiṉēṉ. I spilled coffee on the floor."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): சிந்தினேன், cintiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of tears: கண்ணீர் சிந்து (cintu), to shed tears."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிந்து (cintu) is native Dravidian (DEDR 1546), \"to be spilled, to trickle; to scatter\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cintu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cintu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cintu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cintu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṉ taraiyil kāpiyaic cintiṉēṉ. — I spilled coffee on the floor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṉ taraiyil kāpiyaic cintiṉēṉ.* — I spilled coffee on the floor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a hole, then the Tamil for to scratch, then say cintu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a hole, then the Tamil for to scratch, then say *cintu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சிந்து (cintu) mean? (\"To spill\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C444-citaru",
+      "sequence": 25360,
+      "title": "சிதறு (citaṟu) — to scatter",
+      "headword": "சிதறு",
+      "romanization": "citaṟu",
+      "gloss": "to scatter",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9752ca441e20511a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to scratch, then the Tamil for to spill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சிதறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிதறு — citaṟu — \"to scatter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பை கிழிந்ததால் அரிசி தரையில் சிதறியது. pai kiḻintatāl arici taraiyil citaṟiyatu. Because the bag tore, the rice scattered on the floor."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): சிதறியது, citaṟiyatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a crowd: மக்கள் சிதறி ஓடினார்கள், the people scattered."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிதறு (citaṟu) is native Dravidian (DEDR 1546), \"to disperse, to scatter, to be shed\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citaṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citaṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citaṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citaṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pai kiḻintatāl arici taraiyil citaṟiyatu. — Because the bag tore, the rice scattered on the floor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pai kiḻintatāl arici taraiyil citaṟiyatu.* — Because the bag tore, the rice scattered on the floor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to scratch, then the Tamil for to spill, then say citaṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to scratch, then the Tamil for to spill, then say *citaṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சிதறு (citaṟu) mean? (\"To scatter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C444-teri",
+      "sequence": 25370,
+      "title": "தெறி (teṟi) — to splash; to spatter",
+      "headword": "தெறி",
+      "romanization": "teṟi",
+      "gloss": "to splash; to spatter",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba9e4e688f8b3e82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to spill, then the Tamil for to scatter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தெறி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தெறி — teṟi — \"to splash; to spatter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வண்டி போனபோது சேறு என் மேல் தெறித்தது. vaṇṭi pōṉapōtu cēṟu eṉ mēl teṟittatu. When the vehicle went past, mud splashed on me."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): தெறித்தது, teṟittatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Where it lands takes மேல்: என் மேல் தெறித்தது."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தெறி (teṟi) is native Dravidian (DEDR 3438), \"to strike and fly off, to splash\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teṟi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teṟi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teṟi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teṟi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṇṭi pōṉapōtu cēṟu eṉ mēl teṟittatu. — When the vehicle went past, mud splashed on me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṇṭi pōṉapōtu cēṟu eṉ mēl teṟittatu.* — When the vehicle went past, mud splashed on me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to spill, then the Tamil for to scatter, then say teṟi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to spill, then the Tamil for to scatter, then say *teṟi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தெறி (teṟi) mean? (\"To splash; to spatter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C444-karai-stain",
+      "sequence": 25380,
+      "title": "கறை (kaṟai) — a stain",
+      "headword": "கறை",
+      "romanization": "kaṟai",
+      "gloss": "a stain",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea29557571424248",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to scatter, then the Tamil for to splash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கறை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கறை — kaṟai — \"a stain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சட்டையில் காபிக் கறை இருக்கிறது. caṭṭaiyil kāpik kaṟai irukkiṟatu. There is a coffee stain on the shirt."
+            },
+            {
+              "kind": "speech",
+              "text": "கறை (kaṟai) படி is to get stained."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கறை (kaṟai) is native Dravidian (DEDR 1395), \"a spot, a stain, a blemish\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṟai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṟai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṟai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṟai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caṭṭaiyil kāpik kaṟai irukkiṟatu. — There is a coffee stain on the shirt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caṭṭaiyil kāpik kaṟai irukkiṟatu.* — There is a coffee stain on the shirt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to scatter, then the Tamil for to splash, then say kaṟai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to scatter, then the Tamil for to splash, then say *kaṟai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கறை (kaṟai) mean? (\"A stain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C444-oluku",
+      "sequence": 25390,
+      "title": "ஒழுகு (oḻuku) — to drip; to leak",
+      "headword": "ஒழுகு",
+      "romanization": "oḻuku",
+      "gloss": "to drip; to leak",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:254ee524899ff402",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to splash, then the Tamil for a stain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஒழுகு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒழுகு — oḻuku — \"to drip; to leak\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மழையில் கூரை ஒழுகியது. maḻaiyil kūrai oḻukiyatu. The roof leaked in the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ஒழுகியது, oḻukiyatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a tap: குழாய் ஒழுகுகிறது, the tap is dripping."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒழுகு (oḻuku) is native Dravidian (DEDR 1010), \"to flow, to leak, to trickle down\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḻuku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḻuku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḻuku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḻuku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻaiyil kūrai oḻukiyatu. — The roof leaked in the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻaiyil kūrai oḻukiyatu.* — The roof leaked in the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to splash, then the Tamil for a stain, then say oḻuku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to splash, then the Tamil for a stain, then say *oḻuku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஒழுகு (oḻuku) mean? (\"To drip; to leak\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

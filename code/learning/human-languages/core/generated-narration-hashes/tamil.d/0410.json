@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:a92e6e598d6f7832",
+  "lessonIds": [
+    "TA-C410-patacari",
+    "TA-C410-valippokkar",
+    "TA-C410-palakai",
+    "TA-C410-ulavu",
+    "TA-C410-tantu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch410.txt",
+  "json": "tamil/narration/ch410.json",
+  "textHash": "fnv1a64:60fb727922f4edeb",
+  "jsonHash": "fnv1a64:74f21267a5fa167b",
+  "findings": []
+}

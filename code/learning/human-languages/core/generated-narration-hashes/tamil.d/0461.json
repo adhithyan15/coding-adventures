@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:afdeaea9627bff7e",
+  "lessonIds": [
+    "TA-C461-porumai",
+    "TA-C461-nitanam",
+    "TA-C461-caki",
+    "TA-C461-arvam",
+    "TA-C461-aval"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch461.txt",
+  "json": "tamil/narration/ch461.json",
+  "textHash": "fnv1a64:f61db7d84031b1d7",
+  "jsonHash": "fnv1a64:30e6ea184e0438c4",
+  "findings": []
+}

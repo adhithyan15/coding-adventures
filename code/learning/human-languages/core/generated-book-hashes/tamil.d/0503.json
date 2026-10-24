@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:1d0fa200ac48dd8f",
+  "lessonIds": [
+    "TA-C503-toli",
+    "TA-C503-anniyar",
+    "TA-C503-arimukam",
+    "TA-C503-upacari",
+    "TA-C503-piriyavitai"
+  ],
+  "tex": "tamil/book/chapters/ch503-friends-and-strangers.tex"
+}

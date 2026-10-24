@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C512-oyvu-peru",
+    "language": "tamil",
+    "chapter": 512,
+    "sequence": 29420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6295cc1c184caec9"
+  },
+  "findings": []
+}

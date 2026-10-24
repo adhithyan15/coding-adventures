@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-333-KALAM333",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-333-KALAM333"
+  ],
+  "after": []
+}

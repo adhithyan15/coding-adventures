@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "Making Demands",
+  "label": "ch:ta-making-demands",
+  "canDo": "I can talk about protests, rallies and petitions.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C376-manu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can talk about protests, rallies and petitions.",
+    "assesses": [
+      "TA-LEX-C376-PORATU376-03",
+      "TA-LEX-C376-PORATU376-04",
+      "TA-LEX-C376-PORATU376-05"
+    ]
+  }
+}

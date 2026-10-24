@@ -1,0 +1,11 @@
+{
+  "id": "TA-C292-vantal",
+  "pathSegment": "TA-PATH-292-IF-REAL",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-292-IF-REAL",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C310-cittari",
+  "pathSegment": "TA-PATH-310-OODAKAM310",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-310-OODAKAM310",
+      "order": 3
+    }
+  ]
+}

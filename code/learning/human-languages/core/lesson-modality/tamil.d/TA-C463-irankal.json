@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C463-irankal",
+    "language": "tamil",
+    "chapter": 463,
+    "sequence": 26650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a5df9c730c08257"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:de5ac37589287e01",
+  "lessonIds": [
+    "TA-C462-avamanam",
+    "TA-C462-cankatam",
+    "TA-C462-kuccam",
+    "TA-C462-aruvaruppu",
+    "TA-C462-mukam-culi"
+  ],
+  "tex": "tamil/book/chapters/ch462-shame-and-disgust.tex"
+}

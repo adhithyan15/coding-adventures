@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "The Police Close In",
+  "label": "ch:ta-the-police-close-in",
+  "canDo": "I can say what the police did.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C296-oppukkol",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can say what the police did.",
+    "assesses": [
+      "TA-LEX-C296-KAVAL296-03",
+      "TA-LEX-C296-KAVAL296-04",
+      "TA-LEX-C296-KAVAL296-05"
+    ]
+  }
+}

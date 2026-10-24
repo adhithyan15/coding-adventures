@@ -1,0 +1,19 @@
+{
+  "chapter": 554,
+  "title": "Weekend Plans",
+  "label": "ch:ta-weekend-plans",
+  "canDo": "I can talk about weekend plans and what we will do if the weather allows.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C554-pommalattam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 554: I can talk about weekend plans and what we will do if the weather allows.",
+    "assesses": [
+      "TA-LEX-C554-VARAIRUTHI554-03",
+      "TA-LEX-C554-VARAIRUTHI554-04",
+      "TA-LEX-C554-VARAIRUTHI554-05"
+    ]
+  }
+}

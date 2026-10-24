@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C402-irakku",
+    "language": "tamil",
+    "chapter": 402,
+    "sequence": 23240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ba68d427b07b501"
+  },
+  "findings": []
+}

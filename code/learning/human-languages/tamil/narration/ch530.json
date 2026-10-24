@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 530,
+  "title": "Children's Games",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a2270f2d1cd717e6",
+  "lessons": [
+    {
+      "id": "TA-C530-kannamucci",
+      "sequence": 30330,
+      "title": "கண்ணாமூச்சி (kaṇṇāmūcci) — hide and seek",
+      "headword": "கண்ணாமூச்சி",
+      "romanization": "kaṇṇāmūcci",
+      "gloss": "hide and seek",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22a93996360728bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a die, then the Tamil for a seed-and-pit board game."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கண்ணாமூச்சி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கண்ணாமூச்சி — kaṇṇāmūcci — \"hide and seek\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குழந்தைகள் தோட்டத்தில் கண்ணாமூச்சி விளையாடினார்கள். kuḻantaikaḷ tōṭṭattil kaṇṇāmūcci viḷaiyāṭiṉārkaḷ. The children played hide and seek in the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "The seeker covers the eyes while the others hide."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கண்ணாமூச்சி (kaṇṇāmūcci) begins with the native கண் (kaṇ), \"an eye\" (DEDR 1159), since the seeker shuts the eyes; the formation of the rest is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṇāmūcci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṇāmūcci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṇāmūcci, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṇāmūcci*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻantaikaḷ tōṭṭattil kaṇṇāmūcci viḷaiyāṭiṉārkaḷ. — The children played hide and seek in the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻantaikaḷ tōṭṭattil kaṇṇāmūcci viḷaiyāṭiṉārkaḷ.* — The children played hide and seek in the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a die, then the Tamil for a seed-and-pit board game, then say kaṇṇāmūcci again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a die, then the Tamil for a seed-and-pit board game, then say *kaṇṇāmūcci* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கண்ணாமூச்சி (kaṇṇāmūcci) mean? (\"Hide and seek\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C530-pamparam",
+      "sequence": 30340,
+      "title": "பம்பரம் (pamparam) — a spinning top",
+      "headword": "பம்பரம்",
+      "romanization": "pamparam",
+      "gloss": "a spinning top",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b582b23e237c4382",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a seed-and-pit board game, then the Tamil for hide and seek."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பம்பரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பம்பரம் — pamparam — \"a spinning top\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் தம்பி தரையில் பம்பரம் சுற்றினான். eṉ tampi taraiyil pamparam cuṟṟiṉāṉ. My little brother spun a top on the floor."
+            },
+            {
+              "kind": "speech",
+              "text": "One spins a top with சுற்று (cuṟṟu) or விடு: பம்பரம் (pamparam) விடு."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பம்பரம் (pamparam) is listed in DEDR 3930 as the Tamil word for a spinning top; the article marks a possible source in Sanskrit bhramaraka, \"a humming top\", with a question mark, so the origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pamparam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pamparam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pamparam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pamparam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ tampi taraiyil pamparam cuṟṟiṉāṉ. — My little brother spun a top on the floor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ tampi taraiyil pamparam cuṟṟiṉāṉ.* — My little brother spun a top on the floor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a seed-and-pit board game, then the Tamil for hide and seek, then say pamparam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a seed-and-pit board game, then the Tamil for hide and seek, then say *pamparam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பம்பரம் (pamparam) mean? (\"A spinning top\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C530-koli",
+      "sequence": 30350,
+      "title": "கோலி (kōli) — marbles",
+      "headword": "கோலி",
+      "romanization": "kōli",
+      "gloss": "marbles",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c34642ab87082118",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for hide and seek, then the Tamil for a spinning top."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கோலி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கோலி — kōli — \"marbles\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சிறுவர்கள் மண்ணில் கோலி விளையாடினார்கள். ciṟuvarkaḷ maṇṇil kōli viḷaiyāṭiṉārkaḷ. The boys played marbles in the dirt."
+            },
+            {
+              "kind": "speech",
+              "text": "One marble is a கோலிக்குண்டு."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of கோலி (kōli) is not settled: no dictionary we can check gives it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṟuvarkaḷ maṇṇil kōli viḷaiyāṭiṉārkaḷ. — The boys played marbles in the dirt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṟuvarkaḷ maṇṇil kōli viḷaiyāṭiṉārkaḷ.* — The boys played marbles in the dirt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for hide and seek, then the Tamil for a spinning top, then say kōli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for hide and seek, then the Tamil for a spinning top, then say *kōli* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கோலி (kōli) mean? (\"Marbles\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C530-keram",
+      "sequence": 30360,
+      "title": "கேரம் (kēram) — carrom",
+      "headword": "கேரம்",
+      "romanization": "kēram",
+      "gloss": "carrom",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69175c55995f8bca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a spinning top, then the Tamil for marbles."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கேரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கேரம் — kēram — \"carrom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மழைக்காலத்தில் நாங்கள் வீட்டில் கேரம் விளையாடுவோம். maḻaikkālattil nāṅkaḷ vīṭṭil kēram viḷaiyāṭuvōm. In the rainy season we play carrom at home."
+            },
+            {
+              "kind": "speech",
+              "text": "A board game: players flick a striker to knock pieces into the four corner pockets."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of கேரம் (kēram) is not settled: it is the same word as English carrom, but which way the name travelled is unclear."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻaikkālattil nāṅkaḷ vīṭṭil kēram viḷaiyāṭuvōm. — In the rainy season we play carrom at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻaikkālattil nāṅkaḷ vīṭṭil kēram viḷaiyāṭuvōm.* — In the rainy season we play carrom at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a spinning top, then the Tamil for marbles, then say kēram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a spinning top, then the Tamil for marbles, then say *kēram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கேரம் (kēram) mean? (\"Carrom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C530-karrati",
+      "sequence": 30370,
+      "title": "காற்றாடி (kāṟṟāṭi) — a pinwheel; a paper windmill",
+      "headword": "காற்றாடி",
+      "romanization": "kāṟṟāṭi",
+      "gloss": "a pinwheel; a paper windmill",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7dfdfb98f397c1d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for marbles, then the Tamil for carrom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: காற்றாடி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காற்றாடி — kāṟṟāṭi — \"a pinwheel; a paper windmill\"."
+            },
+            {
+              "kind": "speech",
+              "text": "திருவிழாவில் அப்பா எனக்கு ஒரு காற்றாடி வாங்கினார். tiruviḻāvil appā eṉakku oru kāṟṟāṭi vāṅkiṉār. At the festival Father bought me a pinwheel."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"wind-dancer\": காற்று (kāṟṟu) + ஆடி, \"that which swings\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காற்றாடி (kāṟṟāṭi) is a native compound: காற்று (kāṟṟu), \"wind\" (DEDR 1481), and ஆடி (āṭi), \"that which moves or swings\", from ஆடு, \"to move, to dance\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṟṟāṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṟṟāṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṟṟāṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṟṟāṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiruviḻāvil appā eṉakku oru kāṟṟāṭi vāṅkiṉār. — At the festival Father bought me a pinwheel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiruviḻāvil appā eṉakku oru kāṟṟāṭi vāṅkiṉār.* — At the festival Father bought me a pinwheel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for marbles, then the Tamil for carrom, then say kāṟṟāṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for marbles, then the Tamil for carrom, then say *kāṟṟāṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does காற்றாடி (kāṟṟāṭi) mean? (\"A pinwheel; a paper windmill\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

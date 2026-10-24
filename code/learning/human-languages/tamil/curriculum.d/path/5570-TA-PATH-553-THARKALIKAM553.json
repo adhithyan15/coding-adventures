@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-553-THARKALIKAM553",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TA-EXT-553-THARKALIKAM553"
+  ],
+  "after": []
+}

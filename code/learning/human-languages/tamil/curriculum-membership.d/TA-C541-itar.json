@@ -1,0 +1,11 @@
+{
+  "id": "TA-C541-itar",
+  "pathSegment": "TA-PATH-541-KAPPEEDU541",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-541-KAPPEEDU541",
+      "order": 1
+    }
+  ]
+}

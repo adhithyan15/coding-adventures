@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:c8ca605d7bdf28cc",
+  "lessonIds": [
+    "TA-C439-vantu",
+    "TA-C439-paci",
+    "TA-C439-marakkanru",
+    "TA-C439-mulai",
+    "TA-C439-acai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch439.txt",
+  "json": "tamil/narration/ch439.json",
+  "textHash": "fnv1a64:be03b0cdf6e7296f",
+  "jsonHash": "fnv1a64:e5c5d41d8cea958f",
+  "findings": []
+}

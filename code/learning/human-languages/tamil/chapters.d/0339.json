@@ -1,0 +1,21 @@
+{
+  "chapter": 339,
+  "title": "Heroes Remembered",
+  "label": "ch:ta-heroes-remembered",
+  "canDo": "I can talk about heroes and how they are remembered.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-R339-review-333-339",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can talk about heroes and how they are remembered.",
+    "assesses": [
+      "TA-LEX-C339-VEERAM339-01",
+      "TA-LEX-C339-VEERAM339-02",
+      "TA-LEX-C339-VEERAM339-03",
+      "TA-LEX-C339-VEERAM339-04",
+      "TA-LEX-C339-VEERAM339-05"
+    ]
+  }
+}

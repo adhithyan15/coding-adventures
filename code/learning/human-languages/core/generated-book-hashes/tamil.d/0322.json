@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:b6dc266faf40480b",
+  "lessonIds": [
+    "TA-C322-manamuti",
+    "TA-C322-tali",
+    "TA-C322-mukurttam",
+    "TA-C322-manametai",
+    "TA-C322-pantal"
+  ],
+  "tex": "tamil/book/chapters/ch322-a-wedding-day.tex"
+}

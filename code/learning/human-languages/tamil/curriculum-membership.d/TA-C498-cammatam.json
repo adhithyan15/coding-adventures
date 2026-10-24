@@ -1,0 +1,11 @@
+{
+  "id": "TA-C498-cammatam",
+  "pathSegment": "TA-PATH-498-ILAMAI498",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-498-ILAMAI498",
+      "order": 4
+    }
+  ]
+}

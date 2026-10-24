@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:fc268cd5020d2947",
+  "lessonIds": [
+    "TA-C373-araciyal",
+    "TA-C373-amaiccar",
+    "TA-C373-piratamar",
+    "TA-C373-alunar",
+    "TA-C373-natalumanram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch373.txt",
+  "json": "tamil/narration/ch373.json",
+  "textHash": "fnv1a64:82877c389f3affa3",
+  "jsonHash": "fnv1a64:5f5b8eb914c04bd4",
+  "findings": []
+}

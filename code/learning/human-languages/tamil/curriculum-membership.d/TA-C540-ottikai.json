@@ -1,0 +1,11 @@
+{
+  "id": "TA-C540-ottikai",
+  "pathSegment": "TA-PATH-540-MEDAI540",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-540-MEDAI540",
+      "order": 3
+    }
+  ]
+}

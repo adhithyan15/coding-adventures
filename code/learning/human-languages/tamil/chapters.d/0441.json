@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "Rot and Recycling",
+  "label": "ch:ta-rot-and-recycling",
+  "canDo": "I can talk about things rotting, stinking and piling up, recycling, and living creatures.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C441-uyirinam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can talk about things rotting, stinking and piling up, recycling, and living creatures.",
+    "assesses": [
+      "TA-LEX-C441-KUPPAI441-03",
+      "TA-LEX-C441-KUPPAI441-04",
+      "TA-LEX-C441-KUPPAI441-05"
+    ]
+  }
+}

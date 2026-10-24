@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C348-atcepi",
+    "language": "tamil",
+    "chapter": 348,
+    "sequence": 20160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b85c27c9c7215b2b"
+  },
+  "findings": []
+}

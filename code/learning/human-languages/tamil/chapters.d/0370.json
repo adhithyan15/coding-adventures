@@ -1,0 +1,21 @@
+{
+  "chapter": 370,
+  "title": "Rich and Poor",
+  "label": "ch:ta-rich-and-poor",
+  "canDo": "I can talk about poverty, wealth and inequality.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-R370-review-363-370",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can talk about poverty, wealth and inequality.",
+    "assesses": [
+      "TA-LEX-C370-VARUMAI370-01",
+      "TA-LEX-C370-VARUMAI370-02",
+      "TA-LEX-C370-VARUMAI370-03",
+      "TA-LEX-C370-VARUMAI370-04",
+      "TA-LEX-C370-VARUMAI370-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:8cf0aaf519422a89",
+  "lessonIds": [
+    "TA-C394-orutalaippatcam",
+    "TA-C394-ulnokkam",
+    "TA-C394-natunilai",
+    "TA-C394-carpaka",
+    "TA-C394-kurittu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch394.txt",
+  "json": "tamil/narration/ch394.json",
+  "textHash": "fnv1a64:6ed88ffe43160abf",
+  "jsonHash": "fnv1a64:861873fee72b2f16",
+  "findings": []
+}

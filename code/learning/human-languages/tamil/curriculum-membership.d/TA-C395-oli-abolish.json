@@ -1,0 +1,11 @@
+{
+  "id": "TA-C395-oli-abolish",
+  "pathSegment": "TA-PATH-395-NATATTU395",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-395-NATATTU395",
+      "order": 3
+    }
+  ]
+}

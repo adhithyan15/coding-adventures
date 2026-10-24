@@ -1,0 +1,21 @@
+{
+  "chapter": 513,
+  "title": "People at Work",
+  "label": "ch:ta-people-at-work",
+  "canDo": "I can name more people by the work they do.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-R513-review-506-513",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can name more people by the work they do.",
+    "assesses": [
+      "TA-LEX-C513-THOZHILALAR513-01",
+      "TA-LEX-C513-THOZHILALAR513-02",
+      "TA-LEX-C513-THOZHILALAR513-03",
+      "TA-LEX-C513-THOZHILALAR513-04",
+      "TA-LEX-C513-THOZHILALAR513-05"
+    ]
+  }
+}

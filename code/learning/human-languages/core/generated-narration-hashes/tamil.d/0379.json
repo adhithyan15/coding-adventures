@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:2d0bc1be4a1cf0c9",
+  "lessonIds": [
+    "TA-C379-tannarvalar",
+    "TA-C379-payanali",
+    "TA-C379-niti-funds",
+    "TA-C379-tirattu",
+    "TA-C379-nalan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch379.txt",
+  "json": "tamil/narration/ch379.json",
+  "textHash": "fnv1a64:e7687922155edfe6",
+  "jsonHash": "fnv1a64:0ecd1da4dd682697",
+  "findings": []
+}

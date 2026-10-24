@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "Storm Warnings",
+  "label": "ch:ta-storm-warnings",
+  "canDo": "I can talk about forecasts, cyclones, hail, a downpour and an overcast sky.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C429-mekamuttam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can talk about forecasts, cyclones, hail, a downpour and an overcast sky.",
+    "assesses": [
+      "TA-LEX-C429-PUYAL429-03",
+      "TA-LEX-C429-PUYAL429-04",
+      "TA-LEX-C429-PUYAL429-05"
+    ]
+  }
+}

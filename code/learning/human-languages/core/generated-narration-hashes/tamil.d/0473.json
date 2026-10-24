@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:4aff55f6c605470f",
+  "lessonIds": [
+    "TA-C473-vacikaram",
+    "TA-C473-kampiram",
+    "TA-C473-taralam",
+    "TA-C473-tannampikkai",
+    "TA-C473-meccu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch473.txt",
+  "json": "tamil/narration/ch473.json",
+  "textHash": "fnv1a64:8e6645330a5dc9ba",
+  "jsonHash": "fnv1a64:972b16a706b6ef28",
+  "findings": []
+}

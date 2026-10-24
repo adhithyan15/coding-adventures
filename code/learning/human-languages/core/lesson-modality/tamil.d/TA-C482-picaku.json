@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C482-picaku",
+    "language": "tamil",
+    "chapter": 482,
+    "sequence": 27590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e57b7c723f63f66a"
+  },
+  "findings": []
+}

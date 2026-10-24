@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C531-kaippantu",
+    "language": "tamil",
+    "chapter": 531,
+    "sequence": 30400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69bd0c5d755dd0e8"
+  },
+  "findings": []
+}

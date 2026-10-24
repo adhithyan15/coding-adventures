@@ -1,0 +1,11 @@
+{
+  "id": "TA-C394-natunilai",
+  "pathSegment": "TA-PATH-394-ORUTALAIPPAT394",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-394-ORUTALAIPPAT394",
+      "order": 2
+    }
+  ]
+}

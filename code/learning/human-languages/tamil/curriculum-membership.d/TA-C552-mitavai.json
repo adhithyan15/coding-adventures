@@ -1,0 +1,11 @@
+{
+  "id": "TA-C552-mitavai",
+  "pathSegment": "TA-PATH-552-PATHUKAPPU552",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-552-PATHUKAPPU552",
+      "order": 2
+    }
+  ]
+}

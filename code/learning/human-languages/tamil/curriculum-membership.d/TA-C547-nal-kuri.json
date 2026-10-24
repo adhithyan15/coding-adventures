@@ -1,0 +1,11 @@
+{
+  "id": "TA-C547-nal-kuri",
+  "pathSegment": "TA-PATH-547-KAIKOODU547",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-547-KAIKOODU547",
+      "order": 4
+    }
+  ]
+}

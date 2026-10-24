@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-345-KATHAICOLLI345",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-345-KATHAICOLLI345"
+  ],
+  "after": []
+}

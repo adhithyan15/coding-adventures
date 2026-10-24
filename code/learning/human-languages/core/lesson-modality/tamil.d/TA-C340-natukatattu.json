@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C340-natukatattu",
+    "language": "tamil",
+    "chapter": 340,
+    "sequence": 19480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8917c6cf2c4dba7"
+  },
+  "findings": []
+}

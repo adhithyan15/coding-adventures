@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-318-VIZHA318",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-318-VIZHA318"
+  ],
+  "after": []
+}

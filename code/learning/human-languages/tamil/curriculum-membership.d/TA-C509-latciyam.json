@@ -1,0 +1,11 @@
+{
+  "id": "TA-C509-latciyam",
+  "pathSegment": "TA-PATH-509-MUNNERRAM509",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-509-MUNNERRAM509",
+      "order": 1
+    }
+  ]
+}

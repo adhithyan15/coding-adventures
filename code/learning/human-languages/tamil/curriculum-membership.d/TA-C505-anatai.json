@@ -1,0 +1,11 @@
+{
+  "id": "TA-C505-anatai",
+  "pathSegment": "TA-PATH-505-MARANAM505",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-505-MARANAM505",
+      "order": 4
+    }
+  ]
+}

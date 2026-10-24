@@ -1,0 +1,11 @@
+{
+  "id": "TA-C304-takar",
+  "pathSegment": "TA-PATH-304-ATHIRCHI304",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-304-ATHIRCHI304",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C424-malikai",
+    "language": "tamil",
+    "chapter": 424,
+    "sequence": 24360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1676d1ece3e7246"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C498-pirammaccari",
+  "pathSegment": "TA-PATH-498-ILAMAI498",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-498-ILAMAI498",
+      "order": 2
+    }
+  ]
+}

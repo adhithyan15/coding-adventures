@@ -1,0 +1,11 @@
+{
+  "id": "TA-C517-tunti",
+  "pathSegment": "TA-PATH-517-MIN517",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-517-MIN517",
+      "order": 3
+    }
+  ]
+}

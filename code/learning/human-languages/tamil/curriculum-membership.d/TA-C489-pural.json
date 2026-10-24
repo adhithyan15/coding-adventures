@@ -1,0 +1,11 @@
+{
+  "id": "TA-C489-pural",
+  "pathSegment": "TA-PATH-489-TUKKAM489",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-489-TUKKAM489",
+      "order": 2
+    }
+  ]
+}

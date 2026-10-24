@@ -1,0 +1,11 @@
+{
+  "id": "TA-C333-ketayam",
+  "pathSegment": "TA-PATH-333-KALAM333",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-333-KALAM333",
+      "order": 3
+    }
+  ]
+}

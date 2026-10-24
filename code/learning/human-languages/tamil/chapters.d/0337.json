@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Plots and Betrayal",
+  "label": "ch:ta-plots-and-betrayal",
+  "canDo": "I can tell a story of plots and betrayal.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C337-maruvetam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can tell a story of plots and betrayal.",
+    "assesses": [
+      "TA-LEX-C337-SATHI337-03",
+      "TA-LEX-C337-SATHI337-04",
+      "TA-LEX-C337-SATHI337-05"
+    ]
+  }
+}

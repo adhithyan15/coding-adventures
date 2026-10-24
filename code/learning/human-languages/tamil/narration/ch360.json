@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 360,
+  "title": "Right and Wrong",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d0f8a4e3845b0e3c",
+  "lessons": [
+    {
+      "id": "TA-C360-niyayam",
+      "sequence": 20760,
+      "title": "நியாயம் (niyāyam) — fairness; what is right",
+      "headword": "நியாயம்",
+      "romanization": "niyāyam",
+      "gloss": "fairness; what is right",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebf5c07b7fdded04",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for uncertainty, then the Tamil for to reject."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நியாயம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நியாயம் — niyāyam — \"fairness; what is right\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவருக்கு நடந்தது நியாயம் இல்லை. avarukku naṭantatu niyāyam illai. What happened to him is not fair."
+            },
+            {
+              "kind": "speech",
+              "text": "நியாயமான, fair: நியாயமான விலை, a fair price."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நியாயம் (niyāyam) is borrowed from Sanskrit nyāya, \"rule, method\" (CDIAL 7614); Pali has ñāya, \"justice\". Tamil breaks the cluster ny with a vowel: niyāyam."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyāyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyāyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyāyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyāyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avarukku naṭantatu niyāyam illai. — What happened to him is not fair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avarukku naṭantatu niyāyam illai.* — What happened to him is not fair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for uncertainty, then the Tamil for to reject, then say niyāyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for uncertainty, then the Tamil for to reject, then say *niyāyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நியாயம் (niyāyam) mean? (\"Fairness; what is right\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C360-niti",
+      "sequence": 20770,
+      "title": "நீதி (nīti) — justice",
+      "headword": "நீதி",
+      "romanization": "nīti",
+      "gloss": "justice",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b6e6b3d2da201df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to reject, then the Tamil for fairness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நீதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நீதி — nīti — \"justice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பாதிக்கப்பட்ட மக்களுக்கு நீதி கிடைக்க வேண்டும். pātikkappaṭṭa makkaḷukku nīti kiṭaikka vēṇṭum. The people who were harmed must get justice."
+            },
+            {
+              "kind": "speech",
+              "text": "நீதி (nīti) கேள், to demand justice. நீதிபதி, a judge, is நீதி (nīti) + பதி, master."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நீதி (nīti) is borrowed from Sanskrit nīti, \"conduct, guidance\" (CDIAL 7546), from the root nī, \"to lead\"; Sinhala niya means \"law\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātikkappaṭṭa makkaḷukku nīti kiṭaikka vēṇṭum. — The people who were harmed must get justice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātikkappaṭṭa makkaḷukku nīti kiṭaikka vēṇṭum.* — The people who were harmed must get justice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to reject, then the Tamil for fairness, then say nīti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to reject, then the Tamil for fairness, then say *nīti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நீதி (nīti) mean? (\"Justice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C360-aram",
+      "sequence": 20780,
+      "title": "அறம் (aṟam) — ethics; virtue",
+      "headword": "அறம்",
+      "romanization": "aṟam",
+      "gloss": "ethics; virtue",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7acf07a9db8afcd9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for fairness, then the Tamil for justice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அறம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அறம் — aṟam — \"ethics; virtue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அறம் இல்லாத வாழ்க்கை பயனற்றது. aṟam illāta vāḻkkai payaṉaṟṟatu. A life without virtue is worthless."
+            },
+            {
+              "kind": "speech",
+              "text": "An old Tamil word; அறவழி, the path of virtue. நீதி (nīti) is justice between people, அறம் (aṟam) the good in a person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அறம் (aṟam) is native Dravidian: DEDR 311 lists Tamil aṟam, \"moral duty, virtue\", and aṟavaṉ, \"one who is virtuous\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṟam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṟam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṟam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṟam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṟam illāta vāḻkkai payaṉaṟṟatu. — A life without virtue is worthless.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṟam illāta vāḻkkai payaṉaṟṟatu.* — A life without virtue is worthless.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for fairness, then the Tamil for justice, then say aṟam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for fairness, then the Tamil for justice, then say *aṟam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அறம் (aṟam) mean? (\"Ethics; virtue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C360-pali",
+      "sequence": 20790,
+      "title": "பழி (paḻi) — blame",
+      "headword": "பழி",
+      "romanization": "paḻi",
+      "gloss": "blame",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82f3a1942174623e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for justice, then the Tamil for ethics."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பழி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பழி — paḻi — \"blame\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவன் தன் தவறுக்கு மற்றவர்கள் மீது பழி போட்டான். avaṉ taṉ tavaṟukku maṟṟavarkaḷ mītu paḻi pōṭṭāṉ. He blamed others for his mistake."
+            },
+            {
+              "kind": "speech",
+              "text": "X மீது பழி (paḻi) போடு, to put the blame on X."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பழி (paḻi) is native Dravidian: DEDR 4002 lists Tamil paḻi, \"to blame, censure; blame, fault\", with Malayalam paḻi, \"fault, false accusation\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaṉ taṉ tavaṟukku maṟṟavarkaḷ mītu paḻi pōṭṭāṉ. — He blamed others for his mistake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaṉ taṉ tavaṟukku maṟṟavarkaḷ mītu paḻi pōṭṭāṉ.* — He blamed others for his mistake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for justice, then the Tamil for ethics, then say paḻi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for justice, then the Tamil for ethics, then say *paḻi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பழி (paḻi) mean? (\"Blame\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C360-cakku",
+      "sequence": 20800,
+      "title": "சாக்கு (cākku) — an excuse; a pretext",
+      "headword": "சாக்கு",
+      "romanization": "cākku",
+      "gloss": "an excuse; a pretext",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cefbdab2054fa8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for ethics, then the Tamil for blame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சாக்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சாக்கு — cākku — \"an excuse; a pretext\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தாமதமாக வந்ததற்கு அவன் ஒரு சாக்கு சொன்னான். tāmatamāka vantataṟku avaṉ oru cākku coṉṉāṉ. He made an excuse for coming late."
+            },
+            {
+              "kind": "speech",
+              "text": "சாக்குப்போக்கு, excuses, an echo pair. சாக்கு (cākku), a sack, sounds the same but is another word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சாக்கு (cākku) is native Dravidian: DEDR 2428 lists Tamil cākku, \"excuse, pretext\", with Kannada sāku and Telugu sāku, \"pretence, plea\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cākku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cākku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cākku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cākku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāmatamāka vantataṟku avaṉ oru cākku coṉṉāṉ. — He made an excuse for coming late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāmatamāka vantataṟku avaṉ oru cākku coṉṉāṉ.* — He made an excuse for coming late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for ethics, then the Tamil for blame, then say cākku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for ethics, then the Tamil for blame, then say *cākku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சாக்கு (cākku) mean? (\"An excuse; a pretext\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

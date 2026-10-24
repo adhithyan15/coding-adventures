@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C445-turu-rust",
+    "language": "tamil",
+    "chapter": 445,
+    "sequence": 25420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8063b896374c08b4"
+  },
+  "findings": []
+}

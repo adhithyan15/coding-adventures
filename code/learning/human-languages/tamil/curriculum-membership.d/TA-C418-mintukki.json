@@ -1,0 +1,11 @@
+{
+  "id": "TA-C418-mintukki",
+  "pathSegment": "TA-PATH-418-VIDUTHI418",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-418-VIDUTHI418",
+      "order": 2
+    }
+  ]
+}

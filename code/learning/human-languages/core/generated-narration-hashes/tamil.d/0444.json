@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:caf2cfddaf927e95",
+  "lessonIds": [
+    "TA-C444-cintu",
+    "TA-C444-citaru",
+    "TA-C444-teri",
+    "TA-C444-karai-stain",
+    "TA-C444-oluku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch444.txt",
+  "json": "tamil/narration/ch444.json",
+  "textHash": "fnv1a64:0aa951f226f5e633",
+  "jsonHash": "fnv1a64:2d8a871f3ba481a6",
+  "findings": []
+}

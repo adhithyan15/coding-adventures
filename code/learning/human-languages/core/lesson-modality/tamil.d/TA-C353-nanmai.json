@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C353-nanmai",
+    "language": "tamil",
+    "chapter": 353,
+    "sequence": 20420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f030b321389726e8"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C550-caram",
+  "pathSegment": "TA-PATH-550-KATTIDAM550",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-550-KATTIDAM550",
+      "order": 3
+    }
+  ]
+}

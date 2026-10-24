@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:7856b4fee2afb01f",
+  "lessonIds": [
+    "TA-C440-macu",
+    "TA-C440-currucculal",
+    "TA-C440-tuci",
+    "TA-C440-kalivu",
+    "TA-C440-nekili"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch440.txt",
+  "json": "tamil/narration/ch440.json",
+  "textHash": "fnv1a64:ea2b590cae0a3406",
+  "jsonHash": "fnv1a64:e8bbb2e980f83952",
+  "findings": []
+}

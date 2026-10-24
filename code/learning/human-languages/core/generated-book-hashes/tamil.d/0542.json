@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:f4a0503ef4daae9c",
+  "lessonIds": [
+    "TA-C542-uttaravatam",
+    "TA-C542-cellupati",
+    "TA-C542-muttirai",
+    "TA-C542-cattiyam-cey",
+    "TA-C542-ali-grant"
+  ],
+  "tex": "tamil/book/chapters/ch542-guarantees-and-oaths.tex"
+}

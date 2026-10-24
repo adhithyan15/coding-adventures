@@ -1,0 +1,11 @@
+{
+  "id": "TA-C285-atan-piraku",
+  "pathSegment": "TA-PATH-285-STORY-ORDER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-285-STORY-ORDER",
+      "order": 2
+    }
+  ]
+}

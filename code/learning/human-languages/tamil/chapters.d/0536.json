@@ -1,0 +1,19 @@
+{
+  "chapter": 536,
+  "title": "Painting",
+  "label": "ch:ta-painting",
+  "canDo": "I can talk about painting and exhibitions.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C536-kankatci",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 536: I can talk about painting and exhibitions.",
+    "assesses": [
+      "TA-LEX-C536-OVIYAM536-03",
+      "TA-LEX-C536-OVIYAM536-04",
+      "TA-LEX-C536-OVIYAM536-05"
+    ]
+  }
+}

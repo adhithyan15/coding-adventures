@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:b89ad6bffa4b7a07",
+  "lessonIds": [
+    "TA-C477-marataippu",
+    "TA-C477-purrunoy",
+    "TA-C477-pakkavatam",
+    "TA-C477-astuma",
+    "TA-C477-kamalai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch477.txt",
+  "json": "tamil/narration/ch477.json",
+  "textHash": "fnv1a64:61fb687f35eac673",
+  "jsonHash": "fnv1a64:49256deba6ce2d6f",
+  "findings": []
+}

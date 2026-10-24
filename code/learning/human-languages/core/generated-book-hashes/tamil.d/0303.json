@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:158f947e29d72054",
+  "lessonIds": [
+    "TA-C303-kuccal",
+    "TA-C303-amali",
+    "TA-C303-kuttanerical",
+    "TA-C303-tancam",
+    "TA-C303-virattu"
+  ],
+  "tex": "tamil/book/chapters/ch303-a-crowd-out-of-control.tex"
+}

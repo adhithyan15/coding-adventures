@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C333-porkkalam",
+    "language": "tamil",
+    "chapter": 333,
+    "sequence": 19100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d762031d741f86c6"
+  },
+  "findings": []
+}

@@ -1,0 +1,853 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 285,
+  "title": "Telling a Story in Order",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:0cd223100a50e752",
+  "lessons": [
+    {
+      "id": "TA-C285-iram",
+      "sequence": 16140,
+      "title": "ஈரம் (īram) — dampness, moisture",
+      "headword": "ஈரம்",
+      "romanization": "īram",
+      "gloss": "dampness, moisture; wet",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:142d0c557b526e99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"It was raining.\" (maḻai peytukoṇṭiruntatu.) Then the words for a shirt and a cloth. (caṭṭai, tuṇi.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஈரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஈரம் — īram — \"dampness, moisture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மழை பெய்தது. என் சட்டை ஈரமாக இருக்கிறது. maḻai peytatu. eṉ caṭṭai īramāka irukkiṟatu. — \"It rained. My shirt is wet.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ஈரம் (īram) names the wetness itself. To say a thing is wet, add the -ஆக you know from நன்றாக and மெதுவாக, then இருக்கிறது: ஈரமாக இருக்கிறது, \"it is damp\". In front of a noun it takes -ஆன: ஈரமான துணி (īramāṉa tuṇi, \"a wet cloth\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the first sound long: ī-ram. It is the long ī you know as the sign ீ on நீ, here standing at the very front of the word. Standing alone, it is a letter of its own, one you have not met as a letter yet. The next lesson takes it out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஈரம் (īram) is native Dravidian. DEDR 3690 lists Tamil īram, \"wet, moisture\", in the same entry as nīr, \"water\", the நீர் at the end of தேநீர், and sets Malayalam īram and Kannada īra, \"moisture\", beside it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īram, slowly, then at speed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īram*, slowly, then at speed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It rained. My shirt is wet.\" — maḻai peytatu. eṉ caṭṭai īramāka irukkiṟatu.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It rained. My shirt is wet.\" — *maḻai peytatu. eṉ caṭṭai īramāka irukkiṟatu.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"a wet cloth\" — īramāṉa tuṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"a wet cloth\" — *īramāṉa tuṇi*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஈரம் (īram) mean? (Dampness, moisture.) \"It is wet\"? (ஈரமாக இருக்கிறது.) \"A wet cloth\"? (ஈரமான துணி.) Which word does DEDR list it with? (நீர், \"water\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-S141-letter-ii",
+      "sequence": 16150,
+      "title": "ஈ (ī) — the long i, standing alone, taken from ஈரம் (īram)",
+      "headword": "ஈ",
+      "romanization": "ī",
+      "gloss": "the single character ஈ — the long i, standing alone, taken from ஈரம்",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:1ff938d8294c3336",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ஈ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ஈ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read இ aloud (i), then நீ (nī), whose long ī is the sign ீ."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say ஈரம் (īram), \"dampness\". You met it a moment ago. Its first character is the letter of this lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ஈ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஈ — ī."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens ஈரம் (īram). It is the long partner of இ (i), as ஊ is of உ, and ஏ of எ. After a consonant, you have read this vowel for a long time as the sign ீ: நீ, தேநீர். ஈ (ī) is the same vowel when nothing comes before it, at the front of a word."
+            },
+            {
+              "kind": "speech",
+              "text": "Its shape does not grow out of இ the way ஊ grows out of உ. In print the two look nothing alike: இ is all curves, a small loop inside a larger one; ஈ (ī) is straight lines and dots. In the print of this book, ஈ (ī) has a flat bar along the top and two straight legs hanging down from it, one from the left end and one from the middle. The right half of the bar has no leg. Two round dots sit halfway down, one between the two legs and one under the right half of the bar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ஈ — copy the printed shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen beside ஈ (ī) and copy the shape you can see, slowly and large. Check the copy against the print: the bar, the left leg, the middle leg, the two dots."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start ஈ (ī) or which way the pen travels. That is real knowledge, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ஈ (ī) at the front of ஈரம் (īram)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: ஈ at the front of **ஈரம்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ஈ three times, saying ī as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ஈ three times, saying *ī* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "இ, then ஈ (ī), from memory, naming each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: இ, then ஈ, from memory, naming each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ஈரம் (īram)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ஈரம்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஈரம் (īram) aloud once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஈரம்** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ஈ? (ī: the long partner of இ.) Which word did it come from? (ஈரம், īram, \"dampness\".) Does it look like இ? (No: a bar, two legs, two dots.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C285-atan-piraku",
+      "sequence": 16160,
+      "title": "அதன் பிறகு (ataṉ piṟaku) — first, after that, in the end",
+      "headword": "அதன் பிறகு",
+      "romanization": "ataṉ piṟaku",
+      "gloss": "after that — with முதலில், 'first', and கடைசியில், 'in the end'",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b3c0327a445b1d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"afterwards\" (piṟaku), \"first of all\" (mutalil) and \"finally\" (kaṭaiciyāka). Then the word for dampness. (īram.) Which letter opens it? (ஈ, ī.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முதலில் … அதன் பிறகு … கடைசியில்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முதலில் நான் தேநீர் குடித்தேன். அதன் பிறகு பள்ளிக்குப் போனேன். mutalil nāṉ tēnīr kuṭittēṉ. ataṉ piṟaku paḷḷikkup pōṉēṉ. — \"First I drank tea. After that I went to school.\""
+            },
+            {
+              "kind": "speech",
+              "text": "முதலில் opens a story. அதன் is அது in the shape that carries endings, \"of that\", so அதன் பிறகு (ataṉ piṟaku) is \"after that\". பிறகு alone does the same job."
+            },
+            {
+              "kind": "speech",
+              "text": "கடைசியில் நான் இரவு பத்து மணிக்கு வீட்டுக்கு வந்தேன். kaṭaiciyil nāṉ iravu pattu maṇikku vīṭṭukku vantēṉ. — \"In the end I came home at ten at night.\""
+            },
+            {
+              "kind": "speech",
+              "text": "கடைசியில் (kaṭaiciyil, \"in the end\") is the end of a story, where things came to rest. கடைசியாக, \"finally, last of all\", closes a list. A told story often runs on three posts: முதலில் … அதன் பிறகு (ataṉ piṟaku) … கடைசியில்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: before and after a thing",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சாப்பாட்டுக்குப் பிறகு நாங்கள் கடைக்குப் போனோம். cāppāṭṭukkup piṟaku nāṅkaḷ kaṭaikkup pōṉōm. — \"After the meal we went to the shop.\""
+            },
+            {
+              "kind": "speech",
+              "text": "சாப்பாடு (cāppāṭu, \"a meal\"), the noun beside சாப்பிடு, takes -க்கு before பிறகு: சாப்பாட்டுக்குப் பிறகு, \"after the meal\". முன்பு, \"before\", takes the same ending: சாப்பாட்டுக்கு முன்பு (cāppāṭṭukku muṉpu, \"before the meal\")."
+            },
+            {
+              "kind": "speech",
+              "text": "With a span of days, Tamil counts with கழித்து, \"having spent\", from கழி:"
+            },
+            {
+              "kind": "speech",
+              "text": "இரண்டு நாள் கழித்து அவன் வந்தான். iraṇṭu nāḷ kaḻittu avaṉ vantāṉ. — \"Two days later he came.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"First I drank tea. After that I went to school.\" — mutalil nāṉ tēnīr kuṭittēṉ. ataṉ piṟaku paḷḷikkup pōṉēṉ.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"First I drank tea. After that I went to school.\" — *mutalil nāṉ tēnīr kuṭittēṉ. ataṉ piṟaku paḷḷikkup pōṉēṉ.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"After the meal we went to the shop\" — cāppāṭṭukkup piṟaku nāṅkaḷ kaṭaikkup pōṉōm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"After the meal we went to the shop\" — *cāppāṭṭukkup piṟaku nāṅkaḷ kaṭaikkup pōṉōm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Two days later he came\" — iraṇṭu nāḷ kaḻittu avaṉ vantāṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Two days later he came\" — *iraṇṭu nāḷ kaḻittu avaṉ vantāṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yesterday in three steps: first, after that, in the end",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: yesterday in three steps: first, after that, in the end]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"First\"? (முதலில்.) \"After that\"? (அதன் பிறகு (ataṉ piṟaku).) \"In the end\"? (கடைசியில்.) \"Before the meal\"? (சாப்பாட்டுக்கு முன்பு.) \"Two days later\"? (இரண்டு நாள் கழித்து.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C285-vantu",
+      "sequence": 16170,
+      "title": "வந்து (vantu) — having come, and then",
+      "headword": "வந்து",
+      "romanization": "vantu",
+      "gloss": "having come — the form that joins one action to the next",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5abddc0cdcd5666a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"First I drank tea. After that I went to school.\" (mutalil nāṉ tēnīr kuṭittēṉ. ataṉ piṟaku paḷḷikkup pōṉēṉ.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two sentences, two full verbs. Tamil can fold them into one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the -உ and -இ form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நான் வீட்டுக்கு வந்து சாப்பிட்டேன். nāṉ vīṭṭukku vantu cāppiṭṭēṉ. — \"I came home and ate.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The first verb carries no person and no time: வந்து (vantu), \"having come\". Only the last verb says who and when. So a chain of these runs on to one full verb at the end:"
+            },
+            {
+              "kind": "speech",
+              "text": "அவன் கடைக்குப் போய் ஒரு புத்தகம் வாங்கி வீட்டுக்கு வந்தான். avaṉ kaṭaikkup pōy oru puttakam vāṅki vīṭṭukku vantāṉ. — \"He went to the shop, bought a book and came home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Build it from the \"I\" past. Where the past has -இன்- (பேசினேன், வாங்கினேன்), the form ends in -இ: பேசி, வாங்கி. Elsewhere, put -உ in place of -ஏன்: வந்தேன் becomes வந்து (vantu), பார்த்தேன் becomes பார்த்து, செய்தேன் becomes செய்து. A few go their own way, among them போ becomes போய் and சொல் becomes சொல்லி."
+            },
+            {
+              "kind": "speech",
+              "text": "You have said it for a long time: போய் வருகிறேன், \"having gone, I come (back)\"; தயவுசெய்து, \"having done (a kindness)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: -த பிறகு, after doing",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சாப்பிட்ட பிறகு நான் தூங்கினேன். cāppiṭṭa piṟaku nāṉ tūṅkiṉēṉ. — \"After eating, I slept.\""
+            },
+            {
+              "kind": "speech",
+              "text": "சாப்பிட்ட is the piece you met in வந்த போது. Before பிறகு it gives \"after doing\": வந்த பிறகு, \"after coming\". The -உ / -இ form ties two actions tightly; -த பிறகு marks a clear step in time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I came home and ate\" — nāṉ vīṭṭukku vantu cāppiṭṭēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I came home and ate\" — *nāṉ vīṭṭukku vantu cāppiṭṭēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"He went to the shop, bought a book and came home\" — avaṉ kaṭaikkup pōy oru puttakam vāṅki vīṭṭukku vantāṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"He went to the shop, bought a book and came home\" — *avaṉ kaṭaikkup pōy oru puttakam vāṅki vīṭṭukku vantāṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"After eating, I slept\" — cāppiṭṭa piṟaku nāṉ tūṅkiṉēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"After eating, I slept\" — *cāppiṭṭa piṟaku nāṉ tūṅkiṉēṉ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Having come\"? (வந்து (vantu).) \"Having bought\"? (வாங்கி.) \"Having gone\"? (போய்.) Which verb in the chain says who and when? (Only the last.) \"After seeing\"? (பார்த்த பிறகு.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C285-mazhai-naal",
+      "sequence": 16180,
+      "title": "(reading) — a rainy day",
+      "headword": "(reading)",
+      "romanization": "",
+      "gloss": "a rainy day, in about eighty words, told with every past this core has taught",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "reading-type",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:f1a00c7a33419f8e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "About eighty words, nearly all met before; new forms are glossed after it. A young man tells a friend about yesterday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நேற்று நான் பாட்டி வீட்டுக்குப் போனேன். காலையில் வெயில் இருந்தது. நான் பேருந்தில் போய்ப் பாட்டியைப் பார்த்தேன். பாட்டி எனக்குத் தேநீர் கொடுத்தார். அவர் ஒரு காலத்தில் ஆசிரியராக இருந்தார். அவர் எனக்கு ஒரு கதை சொன்னார். நாங்கள் பேசிக்கொண்டிருந்த போது திடீரென்று மழை பெய்தது. மாலையில் நான் வீட்டுக்குப் புறப்பட்டேன். முதலில் பேருந்து நிலையத்துக்கு நடந்து போனேன். என் குடை வீட்டில் இருந்தது. அதனால் என் சட்டை ஈரமாக இருந்தது. என் பையிலும் ஈரம் (īram). அதன் பிறகு (ataṉ piṟaku) பேருந்து வந்தது. பேருந்தில் நிறைய பயணிகள் இருந்தார்கள். கடைசியில் இரவு எட்டு மணிக்கு வீட்டுக்கு வந்தேன். அப்பா செய்தி படித்துக்கொண்டிருந்தார். அம்மா சமைத்துக்கொண்டிருந்தார். நான் சாப்பிட்ட பிறகு தூங்கினேன். அது ஒரு நல்ல நாள்."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read it once without stopping, then once more, sorting every verb: event, scene, or a step in a chain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "New forms: பேருந்தில், \"by bus\"; பாட்டியை, \"grandmother\", with the -ஐ of the one you see; ஆசிரியராக, \"(as) a teacher\"; சொன்னார், \"(she) told\", the past of சொல்; பயணிகள், \"passengers\"; பையிலும், \"in the bag too\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The scenes are பேசிக்கொண்டிருந்த போது, the two -கொண்டிருந்தார் and every \"was\"; the chains are போய் and நடந்து போனேன். The rest are events."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the story aloud, once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the story aloud, once, without stopping]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why the shirt was wet, in Tamil — the umbrella was at home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why the shirt was wet, in Tamil — the umbrella was at home]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where did he go first in the evening? (To the bus station, on foot.) Why was his shirt wet? (His umbrella was at home.) When did he get home? (At eight at night.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R285-a-story-in-order",
+      "sequence": 16190,
+      "title": "Review — a story in order",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "first, after that, having done, in the end: a story in order, and the letter ஈ",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14e385f6eb1c6f8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"dampness\". (īram.) Which letter opens it, and whose long partner is it? (ஈ (ī): the long partner of இ.) Then \"It was raining.\""
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ஈ (ī) and ஈரம் (īram), once each from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ஈ** and **ஈரம்**, once each from memory]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "First I went to Grandmother's house. After that we drank tea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: First I went to Grandmother's house. After that we drank tea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "While we were talking, suddenly it rained.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: While we were talking, suddenly it rained.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I walked to the bus station. My shirt was wet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I walked to the bus station. My shirt was wet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In the end I came home and ate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In the end I came home and ate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rainy day of your own, in four sentences, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rainy day of your own, in four sentences, in order]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Dampness\"? (ஈரம் (īram).) \"First … after that … in the end\"? (முதலில் … அதன் பிறகு (ataṉ piṟaku) … கடைசியில்.) \"Having come\"? (வந்து (vantu).) \"After eating\"? (சாப்பிட்ட பிறகு.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

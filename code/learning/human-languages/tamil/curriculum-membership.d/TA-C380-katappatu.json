@@ -1,0 +1,11 @@
+{
+  "id": "TA-C380-katappatu",
+  "pathSegment": "TA-PATH-380-PORUPPU380",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-380-PORUPPU380",
+      "order": 1
+    }
+  ]
+}

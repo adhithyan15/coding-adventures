@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 310,
+  "title": "Pictures and Posters",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:314b890dc77d57e8",
+  "lessons": [
+    {
+      "id": "TA-C310-keliccittiram",
+      "sequence": 17920,
+      "title": "கேலிச்சித்திரம் (kēliccittiram) — a cartoon",
+      "headword": "கேலிச்சித்திரம்",
+      "romanization": "kēliccittiram",
+      "gloss": "a cartoon",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f41a28bd9a0b7cf4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to state, then the Tamil for to hear of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கேலிச்சித்திரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கேலிச்சித்திரம் — kēliccittiram — \"a cartoon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நாளிதழில் ஒரு வேடிக்கையான கேலிச்சித்திரம் வந்தது. nāḷitaḻil oru vēṭikkaiyāṉa kēliccittiram vantatu. A funny cartoon appeared in the newspaper."
+            },
+            {
+              "kind": "speech",
+              "text": "கேலி, mockery + சித்திரம், picture."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கேலிச்சித்திரம் (kēliccittiram) joins கேலி, \"mockery\", usually traced to Sanskrit keli, \"play, sport\" (Monier-Williams), and சித்திரம், \"a picture\", from Sanskrit citra, \"bright, variegated\" (CDIAL 4803)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēliccittiram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēliccittiram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēliccittiram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēliccittiram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāḷitaḻil oru vēṭikkaiyāṉa kēliccittiram vantatu. — A funny cartoon appeared in the newspaper.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāḷitaḻil oru vēṭikkaiyāṉa kēliccittiram vantatu.* — A funny cartoon appeared in the newspaper.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to state, then the Tamil for to hear of, then say kēliccittiram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to state, then the Tamil for to hear of, then say *kēliccittiram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கேலிச்சித்திரம் (kēliccittiram) mean? (\"A cartoon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C310-cuvarotti",
+      "sequence": 17930,
+      "title": "சுவரொட்டி (cuvaroṭṭi) — a poster",
+      "headword": "சுவரொட்டி",
+      "romanization": "cuvaroṭṭi",
+      "gloss": "a poster",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d91ce5073d26b84",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to hear of, then the Tamil for a cartoon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சுவரொட்டி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுவரொட்டி — cuvaroṭṭi — \"a poster\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சுவர்களில் புதிய படத்தின் சுவரொட்டிகள் இருந்தன. cuvarkaḷil putiya paṭattiṉ cuvaroṭṭikaḷ iruntaṉa. There were posters for the new film on the walls."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: சுவரொட்டிகள், cuvaroṭṭikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "சுவர், wall + ஒட்டி, a thing stuck on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுவரொட்டி (cuvaroṭṭi) is a Tamil compound built from சுவர், \"wall\" (DEDR 1975), and ஒட்டு, \"to stick, glue on\" (DEDR 958)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuvaroṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuvaroṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuvaroṭṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuvaroṭṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuvarkaḷil putiya paṭattiṉ cuvaroṭṭikaḷ iruntaṉa. — There were posters for the new film on the walls.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuvarkaḷil putiya paṭattiṉ cuvaroṭṭikaḷ iruntaṉa.* — There were posters for the new film on the walls.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to hear of, then the Tamil for a cartoon, then say cuvaroṭṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to hear of, then the Tamil for a cartoon, then say *cuvaroṭṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சுவரொட்டி (cuvaroṭṭi) mean? (\"A poster\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C310-avanappatam",
+      "sequence": 17940,
+      "title": "ஆவணப்படம் (āvaṇappaṭam) — a documentary",
+      "headword": "ஆவணப்படம்",
+      "romanization": "āvaṇappaṭam",
+      "gloss": "a documentary",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a890137b7f6e33fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a cartoon, then the Tamil for a poster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆவணப்படம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆவணப்படம் — āvaṇappaṭam — \"a documentary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "காடுகள் பற்றிய ஒரு ஆவணப்படம் பார்த்தேன். kāṭukaḷ paṟṟiya oru āvaṇappaṭam pārttēṉ. I watched a documentary about forests."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆவணம், a record + படம், a film."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆவணப்படம் (āvaṇappaṭam) is a Tamil compound built from ஆவணம், \"a document\", and படம், \"a picture, a film\", usually traced to Sanskrit paṭa, \"cloth\" (CDIAL 7692)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvaṇappaṭam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvaṇappaṭam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvaṇappaṭam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvaṇappaṭam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṭukaḷ paṟṟiya oru āvaṇappaṭam pārttēṉ. — I watched a documentary about forests.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṭukaḷ paṟṟiya oru āvaṇappaṭam pārttēṉ.* — I watched a documentary about forests.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a cartoon, then the Tamil for a poster, then say āvaṇappaṭam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a cartoon, then the Tamil for a poster, then say *āvaṇappaṭam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆவணப்படம் (āvaṇappaṭam) mean? (\"A documentary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C310-cittari",
+      "sequence": 17950,
+      "title": "சித்தரி (cittari) — to portray; to depict",
+      "headword": "சித்தரி",
+      "romanization": "cittari",
+      "gloss": "to portray; to depict",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cbc063ef39bba5f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a poster, then the Tamil for a documentary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சித்தரி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சித்தரி — cittari — \"to portray; to depict\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தப் படம் கிராம வாழ்க்கையை அழகாகச் சித்தரித்தது. antap paṭam kirāma vāḻkkaiyai aḻakākac cittarittatu. That film portrayed village life beautifully."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): சித்தரித்தேன், cittarittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is portrayed takes -ஐ; from சித்திரம், a picture."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சித்தரி (cittari) is a Tamil verb built on சித்திரம், \"a picture\", borrowed from Sanskrit citra, \"bright, variegated\" (CDIAL 4803)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cittari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cittari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cittari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cittari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antap paṭam kirāma vāḻkkaiyai aḻakākac cittarittatu. — That film portrayed village life beautifully.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antap paṭam kirāma vāḻkkaiyai aḻakākac cittarittatu.* — That film portrayed village life beautifully.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a poster, then the Tamil for a documentary, then say cittari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a poster, then the Tamil for a documentary, then say *cittari* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சித்தரி (cittari) mean? (\"To portray; to depict\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C310-utakam",
+      "sequence": 17960,
+      "title": "ஊடகம் (ūṭakam) — the media; a medium",
+      "headword": "ஊடகம்",
+      "romanization": "ūṭakam",
+      "gloss": "the media; a medium",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cec1c1d7db664ffa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a documentary, then the Tamil for to portray."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஊடகம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஊடகம் — ūṭakam — \"the media; a medium\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஊடகங்கள் அந்தச் சம்பவத்தைப் பெரிதாகப் பேசின. ūṭakaṅkaḷ antac campavattaip peritākap pēciṉa. The media made a lot of that incident."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ஊடகங்கள், ūṭakaṅkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Usually plural: ஊடகங்கள், the media."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஊடகம் (ūṭakam) is built on native ஊடு, \"the middle, what comes between\" (DEDR 737): the media stand between events and their readers."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūṭakam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūṭakam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūṭakam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūṭakam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūṭakaṅkaḷ antac campavattaip peritākap pēciṉa. — The media made a lot of that incident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūṭakaṅkaḷ antac campavattaip peritākap pēciṉa.* — The media made a lot of that incident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a documentary, then the Tamil for to portray, then say ūṭakam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a documentary, then the Tamil for to portray, then say *ūṭakam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஊடகம் (ūṭakam) mean? (\"The media; a medium\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

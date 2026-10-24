@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:5f4c6c050d24fa6c",
+  "lessonIds": [
+    "TA-C525-erivayu",
+    "TA-C525-viraku",
+    "TA-C525-kari",
+    "TA-C525-avi",
+    "TA-C525-veku"
+  ],
+  "tex": "tamil/book/chapters/ch525-fire-and-fuel.tex"
+}

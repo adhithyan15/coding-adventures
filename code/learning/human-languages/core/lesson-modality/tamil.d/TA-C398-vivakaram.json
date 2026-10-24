@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C398-vivakaram",
+    "language": "tamil",
+    "chapter": 398,
+    "sequence": 22750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db9885742e1d337b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C530-koli",
+    "language": "tamil",
+    "chapter": 530,
+    "sequence": 30350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c34642ab87082118"
+  },
+  "findings": []
+}

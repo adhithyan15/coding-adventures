@@ -1,0 +1,11 @@
+{
+  "id": "TA-C495-uttu",
+  "pathSegment": "TA-PATH-495-KUZHANTAI495",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-495-KUZHANTAI495",
+      "order": 4
+    }
+  ]
+}

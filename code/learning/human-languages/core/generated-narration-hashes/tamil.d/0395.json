@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:2bd8cac2e4ddb5cf",
+  "lessonIds": [
+    "TA-C395-natattu",
+    "TA-C395-uruvakku",
+    "TA-C395-nikku",
+    "TA-C395-oli-abolish",
+    "TA-C395-kaivitu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch395.txt",
+  "json": "tamil/narration/ch395.json",
+  "textHash": "fnv1a64:b01895d079dc89c0",
+  "jsonHash": "fnv1a64:9a9cf3d9de3ae7a0",
+  "findings": []
+}

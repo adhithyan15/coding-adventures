@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:11fc8452b851022b",
+  "lessonIds": [
+    "TA-C519-oliperukki",
+    "TA-C519-olivanki",
+    "TA-C519-tolaipeci",
+    "TA-C519-accuppori",
+    "TA-C519-minnanu"
+  ],
+  "tex": "tamil/book/chapters/ch519-sound-and-print.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:4e5b4861e1c42fc3",
+  "lessonIds": [
+    "TA-C446-kanakku",
+    "TA-C446-iruppu",
+    "TA-C446-vatti",
+    "TA-C446-kacolai",
+    "TA-C446-rokkam"
+  ],
+  "tex": "tamil/book/chapters/ch446-at-the-bank.tex"
+}

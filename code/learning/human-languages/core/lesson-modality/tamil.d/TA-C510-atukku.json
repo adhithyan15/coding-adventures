@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C510-atukku",
+    "language": "tamil",
+    "chapter": 510,
+    "sequence": 29330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1baae39333f96f79"
+  },
+  "findings": []
+}

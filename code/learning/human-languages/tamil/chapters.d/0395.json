@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "Taking Action",
+  "label": "ch:ta-taking-action",
+  "canDo": "I can talk about holding, creating, removing and giving up.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C395-kaivitu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can talk about holding, creating, removing and giving up.",
+    "assesses": [
+      "TA-LEX-C395-NATATTU395-03",
+      "TA-LEX-C395-NATATTU395-04",
+      "TA-LEX-C395-NATATTU395-05"
+    ]
+  }
+}

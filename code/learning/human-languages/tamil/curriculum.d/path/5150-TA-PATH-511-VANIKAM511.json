@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-511-VANIKAM511",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-511-VANIKAM511"
+  ],
+  "after": []
+}

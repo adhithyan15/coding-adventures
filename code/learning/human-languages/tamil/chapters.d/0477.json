@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "Serious Illness",
+  "label": "ch:ta-serious-illness",
+  "canDo": "I can name serious illnesses such as heart attacks, cancer and strokes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C477-kamalai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can name serious illnesses such as heart attacks, cancer and strokes.",
+    "assesses": [
+      "TA-LEX-C477-NOYKAL477-03",
+      "TA-LEX-C477-NOYKAL477-04",
+      "TA-LEX-C477-NOYKAL477-05"
+    ]
+  }
+}

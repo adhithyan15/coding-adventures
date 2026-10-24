@@ -1,0 +1,11 @@
+{
+  "id": "TA-C334-kutiraiviran",
+  "pathSegment": "TA-PATH-334-THER334",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-334-THER334",
+      "order": 2
+    }
+  ]
+}

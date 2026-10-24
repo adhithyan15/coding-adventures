@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:f265cc3172b25fe3",
+  "lessonIds": [
+    "TA-C527-vetikkai",
+    "TA-C527-kelikkai",
+    "TA-C527-arattai-ati",
+    "TA-C527-manram",
+    "TA-C527-atari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch527.txt",
+  "json": "tamil/narration/ch527.json",
+  "textHash": "fnv1a64:6e1c2f906e7bddb5",
+  "jsonHash": "fnv1a64:81837bf862cd53a0",
+  "findings": []
+}

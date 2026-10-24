@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:74a1055fb1e527d9",
+  "lessonIds": [
+    "TA-C347-ataram",
+    "TA-C347-nirupi",
+    "TA-C347-tarkkam",
+    "TA-C347-atippatai",
+    "TA-C347-vilakkam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch347.txt",
+  "json": "tamil/narration/ch347.json",
+  "textHash": "fnv1a64:6ffecb1979e62ea2",
+  "jsonHash": "fnv1a64:3643fa36af0a88ca",
+  "findings": []
+}

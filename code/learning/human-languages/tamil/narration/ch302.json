@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 302,
+  "title": "After the Disaster",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1459522e37b3cae0",
+  "lessons": [
+    {
+      "id": "TA-C302-peralivu",
+      "sequence": 17510,
+      "title": "பேரழிவு (pēraḻivu) — a disaster",
+      "headword": "பேரழிவு",
+      "romanization": "pēraḻivu",
+      "gloss": "a disaster",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9d70f369a9b9195",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to survive, then the Tamil for to retrieve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பேரழிவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பேரழிவு — pēraḻivu — \"a disaster\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வெள்ளம் ஒரு பேரழிவாக மாறியது. veḷḷam oru pēraḻivāka māṟiyatu. The flood turned into a disaster."
+            },
+            {
+              "kind": "speech",
+              "text": "பேர்- before a noun means great."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பேரழிவு (pēraḻivu) is a Tamil compound built from பேர், \"great\" (DEDR 4411), and அழிவு, \"destruction, ruin\" (DEDR 277)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēraḻivu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēraḻivu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēraḻivu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēraḻivu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷam oru pēraḻivāka māṟiyatu. — The flood turned into a disaster.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷam oru pēraḻivāka māṟiyatu.* — The flood turned into a disaster.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to survive, then the Tamil for to retrieve, then say pēraḻivu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to survive, then the Tamil for to retrieve, then say *pēraḻivu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பேரழிவு (pēraḻivu) mean? (\"A disaster\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C302-uyirilappu",
+      "sequence": 17520,
+      "title": "உயிரிழப்பு (uyiriḻappu) — a loss of life",
+      "headword": "உயிரிழப்பு",
+      "romanization": "uyiriḻappu",
+      "gloss": "a loss of life",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df20766e388b4242",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to retrieve, then the Tamil for a disaster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உயிரிழப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உயிரிழப்பு — uyiriḻappu — \"a loss of life\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நல்லவேளையாக, உயிரிழப்பு எதுவும் இல்லை. nallavēḷaiyāka, uyiriḻappu etuvum illai. Fortunately, there was no loss of life."
+            },
+            {
+              "kind": "speech",
+              "text": "உயிர், life + இழப்பு, loss, from இழ, to lose."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உயிரிழப்பு (uyiriḻappu) is a Tamil compound built from உயிர், \"life\" (DEDR 645), and இழப்பு, \"loss\", from இழ, \"to lose\" (DEDR 501)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uyiriḻappu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uyiriḻappu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uyiriḻappu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uyiriḻappu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nallavēḷaiyāka, uyiriḻappu etuvum illai. — Fortunately, there was no loss of life.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nallavēḷaiyāka, uyiriḻappu etuvum illai.* — Fortunately, there was no loss of life.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to retrieve, then the Tamil for a disaster, then say uyiriḻappu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to retrieve, then the Tamil for a disaster, then say *uyiriḻappu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உயிரிழப்பு (uyiriḻappu) mean? (\"A loss of life\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C302-nivaranam",
+      "sequence": 17530,
+      "title": "நிவாரணம் (nivāraṇam) — relief aid; relief",
+      "headword": "நிவாரணம்",
+      "romanization": "nivāraṇam",
+      "gloss": "relief aid; relief",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15a94a9c46d8ac2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a disaster, then the Tamil for a loss of life."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நிவாரணம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிவாரணம் — nivāraṇam — \"relief aid; relief\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அரசு மக்களுக்கு நிவாரணம் கொடுத்தது. aracu makkaḷukku nivāraṇam koṭuttatu. The government gave the people relief aid."
+            },
+            {
+              "kind": "speech",
+              "text": "Also relief from pain: வலிக்கு நிவாரணம் (nivāraṇam)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிவாரணம் (nivāraṇam) is borrowed from Sanskrit nivāraṇa, \"keeping back, preventing\" (CDIAL 7418): what keeps harm away."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivāraṇam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivāraṇam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivāraṇam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivāraṇam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aracu makkaḷukku nivāraṇam koṭuttatu. — The government gave the people relief aid.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aracu makkaḷukku nivāraṇam koṭuttatu.* — The government gave the people relief aid.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a disaster, then the Tamil for a loss of life, then say nivāraṇam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a disaster, then the Tamil for a loss of life, then say *nivāraṇam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நிவாரணம் (nivāraṇam) mean? (\"Relief aid; relief\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C302-mintelu",
+      "sequence": 17540,
+      "title": "மீண்டெழு (mīṇṭeḻu) — to rise again",
+      "headword": "மீண்டெழு",
+      "romanization": "mīṇṭeḻu",
+      "gloss": "to rise again",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9f799d457a58caa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a loss of life, then the Tamil for relief aid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மீண்டெழு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மீண்டெழு — mīṇṭeḻu — \"to rise again\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சில மாதங்களில் அந்த ஊர் மீண்டெழுந்தது. cila mātaṅkaḷil anta ūr mīṇṭeḻuntatu. In a few months that town rose again."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): மீண்டெழுந்தேன், mīṇṭeḻuntēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "From மீண்டு, having returned, and எழு, to rise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மீண்டெழு (mīṇṭeḻu) is a Tamil compound built from மீண்டு, \"having returned\", from மீள் (DEDR 4883), and எழு, \"to rise\" (DEDR 851)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīṇṭeḻu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīṇṭeḻu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīṇṭeḻu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīṇṭeḻu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cila mātaṅkaḷil anta ūr mīṇṭeḻuntatu. — In a few months that town rose again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cila mātaṅkaḷil anta ūr mīṇṭeḻuntatu.* — In a few months that town rose again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a loss of life, then the Tamil for relief aid, then say mīṇṭeḻu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a loss of life, then the Tamil for relief aid, then say *mīṇṭeḻu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மீண்டெழு (mīṇṭeḻu) mean? (\"To rise again\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C302-curaiyatu",
+      "sequence": 17550,
+      "title": "சூறையாடு (cūṟaiyāṭu) — to ravage; to plunder",
+      "headword": "சூறையாடு",
+      "romanization": "cūṟaiyāṭu",
+      "gloss": "to ravage; to plunder",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:60eb18e494a1f183",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for relief aid, then the Tamil for to rise again."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சூறையாடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சூறையாடு — cūṟaiyāṭu — \"to ravage; to plunder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வெள்ளம் பல கிராமங்களைச் சூறையாடியது. veḷḷam pala kirāmaṅkaḷaic cūṟaiyāṭiyatu. The flood ravaged many villages."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): சூறையாடினேன், cūṟaiyāṭiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is ravaged takes -ஐ; said of robbers too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சூறையாடு (cūṟaiyāṭu) is a Tamil compound built from சூறை, \"robbery, pillage\" (DEDR 2744), and ஆடு, \"to move, act\" (DEDR 347)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūṟaiyāṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūṟaiyāṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūṟaiyāṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūṟaiyāṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷam pala kirāmaṅkaḷaic cūṟaiyāṭiyatu. — The flood ravaged many villages.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷam pala kirāmaṅkaḷaic cūṟaiyāṭiyatu.* — The flood ravaged many villages.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for relief aid, then the Tamil for to rise again, then say cūṟaiyāṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for relief aid, then the Tamil for to rise again, then say *cūṟaiyāṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சூறையாடு (cūṟaiyāṭu) mean? (\"To ravage; to plunder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

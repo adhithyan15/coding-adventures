@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:b3a7ad19c18cc3b6",
+  "lessonIds": [
+    "TA-C421-valikatti",
+    "TA-C421-kaiyetu",
+    "TA-C421-currikkattu",
+    "TA-C421-parvaiyitu",
+    "TA-C421-valiyanuppu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch421.txt",
+  "json": "tamil/narration/ch421.json",
+  "textHash": "fnv1a64:157ad471b23740fc",
+  "jsonHash": "fnv1a64:af87779048a4eea9",
+  "findings": []
+}

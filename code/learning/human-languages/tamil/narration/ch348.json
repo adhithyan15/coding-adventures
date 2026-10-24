@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 348,
+  "title": "For and Against",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:26cf61e08e4f9b8d",
+  "lessons": [
+    {
+      "id": "TA-C348-etir",
+      "sequence": 20150,
+      "title": "எதிர் (etir) — to oppose; to resist",
+      "headword": "எதிர்",
+      "romanization": "etir",
+      "gloss": "to oppose; to resist",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:286c4b1ea59b03d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a basis, then the Tamil for an explanation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: எதிர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எதிர் — etir — \"to oppose; to resist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பல மாணவர்கள் இந்தத் திட்டத்தை எதிர்த்தார்கள். pala māṇavarkaḷ intat tiṭṭattai etirttārkaḷ. Many students opposed this plan."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): எதிர்த்தேன், etirttēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is opposed takes -ஐ: திட்டத்தை எதிர் (etir). The same word means opposite, as in எதிரே."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எதிர் (etir) is native Dravidian (DEDR 795): the noun means \"that which is in front, opposite, adverse\", and the verb \"to oppose, to face\". Tamil already uses it in எதிரே, \"opposite\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "etir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *etir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "etir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *etir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pala māṇavarkaḷ intat tiṭṭattai etirttārkaḷ. — Many students opposed this plan.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pala māṇavarkaḷ intat tiṭṭattai etirttārkaḷ.* — Many students opposed this plan.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a basis, then the Tamil for an explanation, then say etir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a basis, then the Tamil for an explanation, then say *etir* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does எதிர் (etir) mean? (\"To oppose; to resist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C348-atcepi",
+      "sequence": 20160,
+      "title": "ஆட்சேபி (āṭcēpi) — to object",
+      "headword": "ஆட்சேபி",
+      "romanization": "āṭcēpi",
+      "gloss": "to object",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b85c27c9c7215b2b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an explanation, then the Tamil for to oppose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆட்சேபி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆட்சேபி — āṭcēpi — \"to object\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்த முடிவை யாரும் ஆட்சேபிக்கவில்லை. anta muṭivai yārum āṭcēpikkavillai. Nobody objected to that decision."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ஆட்சேபித்தேன், āṭcēpittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is objected to takes -ஐ: முடிவை ஆட்சேபி (āṭcēpi). The noun is ஆட்சேபனை, an objection."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆட்சேபி (āṭcēpi) is a verb built on Sanskrit ākṣepa, \"objection\" (CDIAL 1032). Tamil writes the Sanskrit kṣ as ட்ச, as in சாட்சி from sākṣin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṭcēpi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṭcēpi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṭcēpi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṭcēpi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anta muṭivai yārum āṭcēpikkavillai. — Nobody objected to that decision.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anta muṭivai yārum āṭcēpikkavillai.* — Nobody objected to that decision.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an explanation, then the Tamil for to oppose, then say āṭcēpi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an explanation, then the Tamil for to oppose, then say *āṭcēpi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆட்சேபி (āṭcēpi) mean? (\"To object\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C348-vatitu",
+      "sequence": 20170,
+      "title": "வாதிடு (vātiṭu) — to argue",
+      "headword": "வாதிடு",
+      "romanization": "vātiṭu",
+      "gloss": "to argue",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44f2a56e90bd936d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to oppose, then the Tamil for to object."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வாதிடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வாதிடு — vātiṭu — \"to argue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவள் தன் உரிமைக்காக வாதிட்டாள். avaḷ taṉ urimaikkāka vātiṭṭāḷ. She argued for her right."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): வாதிட்டேன், vātiṭṭēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "With -உடன் for the other side: அவருடன் வாதிட்டேன், I argued with him."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வாதிடு (vātiṭu) is a compound: vātam, \"argument\", is borrowed from Sanskrit vāda, \"speech\" (CDIAL 11507), and native iṭu, \"to put\" (DEDR 442), makes it a verb, as in முத்தமிடு."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vātiṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vātiṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vātiṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vātiṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ taṉ urimaikkāka vātiṭṭāḷ. — She argued for her right.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ taṉ urimaikkāka vātiṭṭāḷ.* — She argued for her right.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to oppose, then the Tamil for to object, then say vātiṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to oppose, then the Tamil for to object, then say *vātiṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வாதிடு (vātiṭu) mean? (\"To argue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C348-utanpatu",
+      "sequence": 20180,
+      "title": "உடன்பாடு (uṭaṉpāṭu) — a consensus; agreement",
+      "headword": "உடன்பாடு",
+      "romanization": "uṭaṉpāṭu",
+      "gloss": "a consensus; agreement",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:921b7d1303bb2ee8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to object, then the Tamil for to argue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உடன்பாடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உடன்பாடு — uṭaṉpāṭu — \"a consensus; agreement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த விஷயத்தில் எங்களுக்குள் உடன்பாடு இருக்கிறது. inta viṣayattil eṅkaḷukkuḷ uṭaṉpāṭu irukkiṟatu. We are in agreement on this matter."
+            },
+            {
+              "kind": "speech",
+              "text": "எனக்கு உடன்பாடு (uṭaṉpāṭu) இல்லை, I do not agree: the dative experiencer again."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உடன்பாடு (uṭaṉpāṭu) is native: DEDR 945 lists Tamil uṭaṉ, \"together with\", and uṭaṉ-paṭu, \"to agree\"; pāṭu is the noun of paṭu, so the word means \"a being-together\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭaṉpāṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭaṉpāṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭaṉpāṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭaṉpāṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta viṣayattil eṅkaḷukkuḷ uṭaṉpāṭu irukkiṟatu. — We are in agreement on this matter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta viṣayattil eṅkaḷukkuḷ uṭaṉpāṭu irukkiṟatu.* — We are in agreement on this matter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to object, then the Tamil for to argue, then say uṭaṉpāṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to object, then the Tamil for to argue, then say *uṭaṉpāṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உடன்பாடு (uṭaṉpāṭu) mean? (\"A consensus; agreement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C348-cilar",
+      "sequence": 20190,
+      "title": "சிலர் (cilar) — some people",
+      "headword": "சிலர்",
+      "romanization": "cilar",
+      "gloss": "some people",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:425c884e99c6a1db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to argue, then the Tamil for a consensus."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சிலர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிலர் — cilar — \"some people\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சிலர் இந்த யோசனையை ஒத்துக்கொள்ளவில்லை. cilar inta yōcaṉaiyai ottukkoḷḷavillai. Some people did not accept this idea."
+            },
+            {
+              "kind": "speech",
+              "text": "Take -ஐ for an object: சிலரைக் கேட்டேன், I asked some people."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிலர் (cilar) is native Dravidian: DEDR 1571 lists Tamil cil, cila, \"some, few\", and cilar, \"a few persons\", with the personal plural -அர்."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cilar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cilar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cilar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cilar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cilar inta yōcaṉaiyai ottukkoḷḷavillai. — Some people did not accept this idea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cilar inta yōcaṉaiyai ottukkoḷḷavillai.* — Some people did not accept this idea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to argue, then the Tamil for a consensus, then say cilar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to argue, then the Tamil for a consensus, then say *cilar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சிலர் (cilar) mean? (\"Some people\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

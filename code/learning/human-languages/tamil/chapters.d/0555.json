@@ -1,0 +1,19 @@
+{
+  "chapter": 555,
+  "title": "Prizes and Reviews",
+  "label": "ch:ta-prizes-and-reviews",
+  "canDo": "I can talk about awards, reviews and audiences.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C555-katapattiram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 555: I can talk about awards, reviews and audiences.",
+    "assesses": [
+      "TA-LEX-C555-VIRUTHU555-03",
+      "TA-LEX-C555-VIRUTHU555-04",
+      "TA-LEX-C555-VIRUTHU555-05"
+    ]
+  }
+}

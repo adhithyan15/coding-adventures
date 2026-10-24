@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Courage and Cowardice",
+  "label": "ch:ta-courage-and-cowardice",
+  "canDo": "I can talk about courage, cowards and threats.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C466-mirattu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can talk about courage, cowards and threats.",
+    "assesses": [
+      "TA-LEX-C466-TUNIVU466-03",
+      "TA-LEX-C466-TUNIVU466-04",
+      "TA-LEX-C466-TUNIVU466-05"
+    ]
+  }
+}

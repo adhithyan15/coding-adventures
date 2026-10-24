@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "A Crowd Out of Control",
+  "label": "ch:ta-a-crowd-out-of-control",
+  "canDo": "I can describe a noisy crowd and what it did.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C303-virattu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can describe a noisy crowd and what it did.",
+    "assesses": [
+      "TA-LEX-C303-KOOCHAL303-03",
+      "TA-LEX-C303-KOOCHAL303-04",
+      "TA-LEX-C303-KOOCHAL303-05"
+    ]
+  }
+}

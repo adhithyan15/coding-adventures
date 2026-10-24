@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-470-VICUVACAM470",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-470-VICUVACAM470"
+  ],
+  "after": []
+}

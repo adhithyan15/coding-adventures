@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Children's Games",
+  "label": "ch:ta-children-s-games",
+  "canDo": "I can name games children play outdoors.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C530-karrati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can name games children play outdoors.",
+    "assesses": [
+      "TA-LEX-C530-KUZHANTHAI530-03",
+      "TA-LEX-C530-KUZHANTHAI530-04",
+      "TA-LEX-C530-KUZHANTHAI530-05"
+    ]
+  }
+}

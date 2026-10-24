@@ -1,0 +1,11 @@
+{
+  "id": "TA-C288-nerakap-ponkal",
+  "pathSegment": "TA-PATH-288-ASK-THE-WAY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-288-ASK-THE-WAY",
+      "order": 1
+    }
+  ]
+}

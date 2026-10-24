@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "Clues and Suspects",
+  "label": "ch:ta-clues-and-suspects",
+  "canDo": "I can talk about clues, suspects and crimes.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C295-kurravali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can talk about clues, suspects and crimes.",
+    "assesses": [
+      "TA-LEX-C295-THUPPU295-03",
+      "TA-LEX-C295-THUPPU295-04",
+      "TA-LEX-C295-THUPPU295-05"
+    ]
+  }
+}

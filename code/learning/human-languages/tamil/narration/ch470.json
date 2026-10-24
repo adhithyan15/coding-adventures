@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 470,
+  "title": "Loyalty and Betrayal",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4fc4f4062aaeefc0",
+  "lessons": [
+    {
+      "id": "TA-C470-vicuvacam",
+      "sequence": 26970,
+      "title": "விசுவாசம் (vicuvācam) — loyalty; faithfulness",
+      "headword": "விசுவாசம்",
+      "romanization": "vicuvācam",
+      "gloss": "loyalty; faithfulness",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:805d57371990d366",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an enemy, then the Tamil for to take revenge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விசுவாசம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விசுவாசம் — vicuvācam — \"loyalty; faithfulness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் இருபது வருடமாக அந்த நிறுவனத்துக்கு விசுவாசமாக இருந்தார். avar irupatu varuṭamāka anta niṟuvaṉattukku vicuvācamāka iruntār. He was loyal to that company for twenty years."
+            },
+            {
+              "kind": "speech",
+              "text": "விசுவாசமாக இரு, to be loyal; the one you are loyal to takes -க்கு."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விசுவாசம் (vicuvācam) is borrowed from Sanskrit viśvāsa, \"trust, confidence\" (CDIAL 11966)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicuvācam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicuvācam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vicuvācam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vicuvācam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar irupatu varuṭamāka anta niṟuvaṉattukku vicuvācamāka iruntār. — He was loyal to that company for twenty years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar irupatu varuṭamāka anta niṟuvaṉattukku vicuvācamāka iruntār.* — He was loyal to that company for twenty years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an enemy, then the Tamil for to take revenge, then say vicuvācam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an enemy, then the Tamil for to take revenge, then say *vicuvācam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விசுவாசம் (vicuvācam) mean? (\"Loyalty; faithfulness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C470-turokam",
+      "sequence": 26980,
+      "title": "துரோகம் (turōkam) — betrayal",
+      "headword": "துரோகம்",
+      "romanization": "turōkam",
+      "gloss": "betrayal",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44fdc74e9e03ae4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to take revenge, then the Tamil for loyalty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: துரோகம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துரோகம் — turōkam — \"betrayal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் நம்பிய நண்பனே அவருக்குத் துரோகம் செய்தான். avar nampiya naṇpaṉē avarukkut turōkam ceytāṉ. The very friend he trusted betrayed him."
+            },
+            {
+              "kind": "speech",
+              "text": "துரோகம் (turōkam) செய், to betray; the one betrayed takes -க்கு."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துரோகம் (turōkam) is borrowed from Sanskrit drōha, \"injury, treachery\" (Monier-Williams); Tamil opens the dr with a vowel."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "turōkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *turōkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "turōkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *turōkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar nampiya naṇpaṉē avarukkut turōkam ceytāṉ. — The very friend he trusted betrayed him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar nampiya naṇpaṉē avarukkut turōkam ceytāṉ.* — The very friend he trusted betrayed him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to take revenge, then the Tamil for loyalty, then say turōkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to take revenge, then the Tamil for loyalty, then say *turōkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does துரோகம் (turōkam) mean? (\"Betrayal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C470-tiyakam",
+      "sequence": 26990,
+      "title": "தியாகம் (tiyākam) — sacrifice",
+      "headword": "தியாகம்",
+      "romanization": "tiyākam",
+      "gloss": "sacrifice",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2925f1d32cc00701",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for loyalty, then the Tamil for betrayal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தியாகம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தியாகம் — tiyākam — \"sacrifice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குழந்தைகளுக்காக அம்மா பல தியாகங்கள் செய்தாள். kuḻantaikaḷukkāka ammā pala tiyākaṅkaḷ ceytāḷ. The mother made many sacrifices for her children."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: தியாகங்கள், tiyākaṅkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "A -அம் noun takes -ங்கள் in the plural."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தியாகம் (tiyākam) is borrowed from Sanskrit tyāga, \"giving up; liberality\" (CDIAL 5985)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiyākam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiyākam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiyākam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiyākam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻantaikaḷukkāka ammā pala tiyākaṅkaḷ ceytāḷ. — The mother made many sacrifices for her children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻantaikaḷukkāka ammā pala tiyākaṅkaḷ ceytāḷ.* — The mother made many sacrifices for her children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for loyalty, then the Tamil for betrayal, then say tiyākam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for loyalty, then the Tamil for betrayal, then say *tiyākam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தியாகம் (tiyākam) mean? (\"Sacrifice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C470-mannippu",
+      "sequence": 27000,
+      "title": "மன்னிப்பு (maṉṉippu) — forgiveness; an apology",
+      "headword": "மன்னிப்பு",
+      "romanization": "maṉṉippu",
+      "gloss": "forgiveness; an apology",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92dd0d6796d70052",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for betrayal, then the Tamil for sacrifice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மன்னிப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மன்னிப்பு — maṉṉippu — \"forgiveness; an apology\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தவறுக்காக அவன் என்னிடம் மன்னிப்புக் கேட்டான். tavaṟukkāka avaṉ eṉṉiṭam maṉṉippuk kēṭṭāṉ. He asked my forgiveness for the mistake."
+            },
+            {
+              "kind": "speech",
+              "text": "மன்னிப்புக் கேள், to apologise. The polite மன்னிக்கவும் \"sorry\" is the same verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மன்னிப்பு (maṉṉippu) is a Tamil noun from the verb மன்னி \"to forgive\"; the origin of the verb is not settled in our sources."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṉṉippu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṉṉippu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṉṉippu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṉṉippu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tavaṟukkāka avaṉ eṉṉiṭam maṉṉippuk kēṭṭāṉ. — He asked my forgiveness for the mistake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tavaṟukkāka avaṉ eṉṉiṭam maṉṉippuk kēṭṭāṉ.* — He asked my forgiveness for the mistake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for betrayal, then the Tamil for sacrifice, then say maṉṉippu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for betrayal, then the Tamil for sacrifice, then say *maṉṉippu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மன்னிப்பு (maṉṉippu) mean? (\"Forgiveness; an apology\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C470-paramukam",
+      "sequence": 27010,
+      "title": "பாராமுகம் (pārāmukam) — the cold shoulder",
+      "headword": "பாராமுகம்",
+      "romanization": "pārāmukam",
+      "gloss": "the cold shoulder",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2de8e27dfc674b20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for sacrifice, then the Tamil for forgiveness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பாராமுகம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பாராமுகம் — pārāmukam — \"the cold shoulder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சண்டைக்குப் பிறகு அவள் என்னிடம் பாராமுகமாக இருந்தாள். caṇṭaikkup piṟaku avaḷ eṉṉiṭam pārāmukamāka iruntāḷ. After the quarrel she gave me the cold shoulder."
+            },
+            {
+              "kind": "speech",
+              "text": "பாரா \"not looking\" + முகம் \"face\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பாராமுகம் (pārāmukam) is a native compound: the negative of பார் pār, \"to see\" (DEDR 4091), with முகம் mukam, \"face\" (DEDR 4889)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pārāmukam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pārāmukam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pārāmukam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pārāmukam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caṇṭaikkup piṟaku avaḷ eṉṉiṭam pārāmukamāka iruntāḷ. — After the quarrel she gave me the cold shoulder.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caṇṭaikkup piṟaku avaḷ eṉṉiṭam pārāmukamāka iruntāḷ.* — After the quarrel she gave me the cold shoulder.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for sacrifice, then the Tamil for forgiveness, then say pārāmukam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for sacrifice, then the Tamil for forgiveness, then say *pārāmukam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பாராமுகம் (pārāmukam) mean? (\"The cold shoulder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

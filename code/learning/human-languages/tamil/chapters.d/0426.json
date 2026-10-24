@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "Crowds and Noise",
+  "label": "ch:ta-crowds-and-noise",
+  "canDo": "I can talk about bustle and noise, crowds gathering, places filling up and gasping for air.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C426-tinaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can talk about bustle and noise, crowds gathering, places filling up and gasping for air.",
+    "assesses": [
+      "TA-LEX-C426-SANTHATI426-03",
+      "TA-LEX-C426-SANTHATI426-04",
+      "TA-LEX-C426-SANTHATI426-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Facts and Figures",
+  "label": "ch:ta-facts-and-figures",
+  "canDo": "I can talk about reports, surveys and rough numbers.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C393-perumpalum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can talk about reports, surveys and rough numbers.",
+    "assesses": [
+      "TA-LEX-C393-ARIKKAI393-03",
+      "TA-LEX-C393-ARIKKAI393-04",
+      "TA-LEX-C393-ARIKKAI393-05"
+    ]
+  }
+}

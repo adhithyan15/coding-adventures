@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 387,
+  "title": "Promises and Agreements",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:95abbc5d859a39f9",
+  "lessons": [
+    {
+      "id": "TA-C387-oppantam",
+      "sequence": 22150,
+      "title": "ஒப்பந்தம் (oppantam) — a contract; an agreement",
+      "headword": "ஒப்பந்தம்",
+      "romanization": "oppantam",
+      "gloss": "a contract; an agreement",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2c54d1a94c2f2d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to take forward, then the Tamil for an aim."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஒப்பந்தம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒப்பந்தம் — oppantam — \"a contract; an agreement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இரண்டு நிறுவனங்களும் ஒப்பந்தத்தில் கையெழுத்திட்டன. iraṇṭu niṟuvaṉaṅkaḷum oppantattil kaiyeḻuttiṭṭaṉa. The two companies signed the contract."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒப்பந்தம் (oppantam) செய், to make an agreement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒப்பந்தம் (oppantam) is native Dravidian: DEDR 924 lists Tamil o, \"to be suited, acceptable, in concord\", with oppu, \"agreement\", and oppantam, \"agreement\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oppantam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oppantam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oppantam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oppantam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iraṇṭu niṟuvaṉaṅkaḷum oppantattil kaiyeḻuttiṭṭaṉa. — The two companies signed the contract.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iraṇṭu niṟuvaṉaṅkaḷum oppantattil kaiyeḻuttiṭṭaṉa.* — The two companies signed the contract.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to take forward, then the Tamil for an aim, then say oppantam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to take forward, then the Tamil for an aim, then say *oppantam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஒப்பந்தம் (oppantam) mean? (\"A contract; an agreement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C387-utanpatikkai",
+      "sequence": 22160,
+      "title": "உடன்படிக்கை (uṭaṉpaṭikkai) — a treaty; a pact",
+      "headword": "உடன்படிக்கை",
+      "romanization": "uṭaṉpaṭikkai",
+      "gloss": "a treaty; a pact",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:177528251d882c54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an aim, then the Tamil for a contract."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உடன்படிக்கை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உடன்படிக்கை — uṭaṉpaṭikkai — \"a treaty; a pact\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இரண்டு நாடுகளும் அமைதி உடன்படிக்கை செய்தன. iraṇṭu nāṭukaḷum amaiti uṭaṉpaṭikkai ceytaṉa. The two countries made a peace treaty."
+            },
+            {
+              "kind": "speech",
+              "text": "Between countries; ஒப்பந்தம் (oppantam) is the general word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உடன்படிக்கை (uṭaṉpaṭikkai) is native, built on uṭaṉ, \"together\", which DEDR 945 lists with uṭaṉ-paṭu, \"to agree, yield\": a written agreeing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭaṉpaṭikkai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭaṉpaṭikkai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭaṉpaṭikkai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭaṉpaṭikkai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iraṇṭu nāṭukaḷum amaiti uṭaṉpaṭikkai ceytaṉa. — The two countries made a peace treaty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iraṇṭu nāṭukaḷum amaiti uṭaṉpaṭikkai ceytaṉa.* — The two countries made a peace treaty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an aim, then the Tamil for a contract, then say uṭaṉpaṭikkai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an aim, then the Tamil for a contract, then say *uṭaṉpaṭikkai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உடன்படிக்கை (uṭaṉpaṭikkai) mean? (\"A treaty; a pact\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C387-vakkuruti",
+      "sequence": 22170,
+      "title": "வாக்குறுதி (vākkuṟuti) — a promise",
+      "headword": "வாக்குறுதி",
+      "romanization": "vākkuṟuti",
+      "gloss": "a promise",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df1888ce0375816d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a contract, then the Tamil for a treaty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வாக்குறுதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வாக்குறுதி — vākkuṟuti — \"a promise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தேர்தலுக்கு முன் அவர் பல வாக்குறுதிகள் கொடுத்தார். tērtalukku muṉ avar pala vākkuṟutikaḷ koṭuttār. Before the election he made many promises."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: வாக்குறுதிகள், vākkuṟutikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "வாக்குறுதி (vākkuṟuti) கொடு, to promise; வாக்குறுதியைக் காப்பாற்று, to keep a promise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வாக்குறுதி (vākkuṟuti) is built from vākku, \"word\", borrowed from Sanskrit vāc (Monier-Williams), and native uṟuti, \"firmness, assurance\" (DEDR 721): a firm word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vākkuṟuti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vākkuṟuti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vākkuṟuti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vākkuṟuti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tērtalukku muṉ avar pala vākkuṟutikaḷ koṭuttār. — Before the election he made many promises.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tērtalukku muṉ avar pala vākkuṟutikaḷ koṭuttār.* — Before the election he made many promises.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a contract, then the Tamil for a treaty, then say vākkuṟuti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a contract, then the Tamil for a treaty, then say *vākkuṟuti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வாக்குறுதி (vākkuṟuti) mean? (\"A promise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C387-urutimoli",
+      "sequence": 22180,
+      "title": "உறுதிமொழி (uṟutimoḻi) — a pledge; an oath",
+      "headword": "உறுதிமொழி",
+      "romanization": "uṟutimoḻi",
+      "gloss": "a pledge; an oath",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f2f3fe01777ebe1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a treaty, then the Tamil for a promise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உறுதிமொழி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உறுதிமொழி — uṟutimoḻi — \"a pledge; an oath\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மாணவர்கள் ஊரைச் சுத்தமாக வைப்போம் என்று உறுதிமொழி எடுத்தார்கள். māṇavarkaḷ ūraic cuttamāka vaippōm eṉṟu uṟutimoḻi eṭuttārkaḷ. The students took a pledge to keep the town clean."
+            },
+            {
+              "kind": "speech",
+              "text": "உறுதிமொழி (uṟutimoḻi) எடு, to take a pledge."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உறுதிமொழி (uṟutimoḻi) is native: uṟuti, \"firmness, certainty\" (DEDR 721), and moḻi, \"word, saying\" (DEDR 4989): a firm word, spoken out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṟutimoḻi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṟutimoḻi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṟutimoḻi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṟutimoḻi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṇavarkaḷ ūraic cuttamāka vaippōm eṉṟu uṟutimoḻi eṭuttārkaḷ. — The students took a pledge to keep the town clean.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṇavarkaḷ ūraic cuttamāka vaippōm eṉṟu uṟutimoḻi eṭuttārkaḷ.* — The students took a pledge to keep the town clean.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a treaty, then the Tamil for a promise, then say uṟutimoḻi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a treaty, then the Tamil for a promise, then say *uṟutimoḻi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உறுதிமொழி (uṟutimoḻi) mean? (\"A pledge; an oath\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C387-niraiverru",
+      "sequence": 22190,
+      "title": "நிறைவேற்று (niṟaivēṟṟu) — to fulfil; to carry out",
+      "headword": "நிறைவேற்று",
+      "romanization": "niṟaivēṟṟu",
+      "gloss": "to fulfil; to carry out",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c152eb0a3c2d4b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a promise, then the Tamil for a pledge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நிறைவேற்று",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிறைவேற்று — niṟaivēṟṟu — \"to fulfil; to carry out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் தன் வாக்குறுதியை நிறைவேற்றினார். avar taṉ vākkuṟutiyai niṟaivēṟṟiṉār. He fulfilled his promise."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): நிறைவேற்றினேன், niṟaivēṟṟiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to pass a law: சட்டத்தை நிறைவேற்று (niṟaivēṟṟu). Its intransitive partner is நிறைவேறு, to come true."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிறைவேற்று (niṟaivēṟṟu) is native Dravidian: DEDR 3682 lists Tamil niṟai, \"to become full\", and niṟaivēṟṟu, \"to accomplish\": to bring something to fullness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṟaivēṟṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṟaivēṟṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṟaivēṟṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṟaivēṟṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar taṉ vākkuṟutiyai niṟaivēṟṟiṉār. — He fulfilled his promise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar taṉ vākkuṟutiyai niṟaivēṟṟiṉār.* — He fulfilled his promise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a promise, then the Tamil for a pledge, then say niṟaivēṟṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a promise, then the Tamil for a pledge, then say *niṟaivēṟṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நிறைவேற்று (niṟaivēṟṟu) mean? (\"To fulfil; to carry out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:3c18d2941dcdb53a",
+  "lessonIds": [
+    "TA-C428-caral",
+    "TA-C428-turu",
+    "TA-C428-poli",
+    "TA-C428-tenku",
+    "TA-C428-vati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch428.txt",
+  "json": "tamil/narration/ch428.json",
+  "textHash": "fnv1a64:877460486b605aeb",
+  "jsonHash": "fnv1a64:0e2b38f2afff0bac",
+  "findings": []
+}

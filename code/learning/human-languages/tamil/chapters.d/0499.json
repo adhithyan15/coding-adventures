@@ -1,0 +1,19 @@
+{
+  "chapter": 499,
+  "title": "Getting Married",
+  "label": "ch:ta-getting-married",
+  "canDo": "I can talk about dowry, blessings, marrying and married couples.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C499-illaram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 499: I can talk about dowry, blessings, marrying and married couples.",
+    "assesses": [
+      "TA-LEX-C499-MANAM499-03",
+      "TA-LEX-C499-MANAM499-04",
+      "TA-LEX-C499-MANAM499-05"
+    ]
+  }
+}

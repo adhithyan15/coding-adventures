@@ -1,0 +1,11 @@
+{
+  "id": "TA-C344-tevatai",
+  "pathSegment": "TA-PATH-344-MAYAM344",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-344-MAYAM344",
+      "order": 1
+    }
+  ]
+}

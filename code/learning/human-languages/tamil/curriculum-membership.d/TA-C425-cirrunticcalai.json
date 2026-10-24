@@ -1,0 +1,11 @@
+{
+  "id": "TA-C425-cirrunticcalai",
+  "pathSegment": "TA-PATH-425-KATCHI425",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-425-KATCHI425",
+      "order": 4
+    }
+  ]
+}

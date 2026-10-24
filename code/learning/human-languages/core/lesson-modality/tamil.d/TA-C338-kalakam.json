@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C338-kalakam",
+    "language": "tamil",
+    "chapter": 338,
+    "sequence": 19380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4dde851589bd7ca"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C305-neralai",
+    "language": "tamil",
+    "chapter": 305,
+    "sequence": 17670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bff6158765366f7c"
+  },
+  "findings": []
+}

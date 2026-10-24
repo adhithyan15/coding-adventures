@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:ae1c1d95d2e4fcf6",
+  "lessonIds": [
+    "TA-C412-ataiyalam",
+    "TA-C412-valitavaru",
+    "TA-C412-pintanku",
+    "TA-C412-munneru",
+    "TA-C412-vilaku"
+  ],
+  "tex": "tamil/book/chapters/ch412-losing-the-way.tex"
+}

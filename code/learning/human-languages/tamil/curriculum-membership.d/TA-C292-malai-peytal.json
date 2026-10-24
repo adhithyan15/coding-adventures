@@ -1,0 +1,11 @@
+{
+  "id": "TA-C292-malai-peytal",
+  "pathSegment": "TA-PATH-292-IF-REAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-292-IF-REAL",
+      "order": 1
+    }
+  ]
+}

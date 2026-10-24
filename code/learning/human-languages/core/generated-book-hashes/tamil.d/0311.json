@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:c49fd7b0af291fb9",
+  "lessonIds": [
+    "TA-C311-mulakkam",
+    "TA-C311-unnaviratam",
+    "TA-C311-kilarntelu",
+    "TA-C311-elucci",
+    "TA-C311-pirakatanam"
+  ],
+  "tex": "tamil/book/chapters/ch311-raising-voices.tex"
+}

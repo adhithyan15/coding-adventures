@@ -1,0 +1,21 @@
+{
+  "chapter": 445,
+  "title": "Power Cuts and Shortages",
+  "label": "ch:ta-power-cuts-and-shortages",
+  "canDo": "I can talk about power cuts, shortages, rust and difficulty, and windows rattling.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-R445-review-439-445",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can talk about power cuts, shortages, rust and difficulty, and windows rattling.",
+    "assesses": [
+      "TA-LEX-C445-MINVETTU445-01",
+      "TA-LEX-C445-MINVETTU445-02",
+      "TA-LEX-C445-MINVETTU445-03",
+      "TA-LEX-C445-MINVETTU445-04",
+      "TA-LEX-C445-MINVETTU445-05"
+    ]
+  }
+}

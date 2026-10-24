@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:ba665fdbafa4396d",
+  "lessonIds": [
+    "TA-C343-palankatai",
+    "TA-C343-puranam",
+    "TA-C343-kattukkatai",
+    "TA-C343-punai",
+    "TA-C343-palamoli"
+  ],
+  "tex": "tamil/book/chapters/ch343-legends.tex"
+}

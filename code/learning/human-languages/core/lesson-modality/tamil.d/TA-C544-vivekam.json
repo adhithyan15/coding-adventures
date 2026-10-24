@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C544-vivekam",
+    "language": "tamil",
+    "chapter": 544,
+    "sequence": 31080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3797e108c079881e"
+  },
+  "findings": []
+}

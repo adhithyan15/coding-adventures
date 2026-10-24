@@ -1,0 +1,11 @@
+{
+  "id": "TA-C318-talaimaitanku",
+  "pathSegment": "TA-PATH-318-VIZHA318",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-318-VIZHA318",
+      "order": 3
+    }
+  ]
+}

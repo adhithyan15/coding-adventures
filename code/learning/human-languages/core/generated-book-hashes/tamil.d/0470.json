@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:186dc221a171bd36",
+  "lessonIds": [
+    "TA-C470-vicuvacam",
+    "TA-C470-turokam",
+    "TA-C470-tiyakam",
+    "TA-C470-mannippu",
+    "TA-C470-paramukam"
+  ],
+  "tex": "tamil/book/chapters/ch470-loyalty-and-betrayal.tex"
+}

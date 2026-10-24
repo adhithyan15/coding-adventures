@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "At the Office Desk",
+  "label": "ch:ta-at-the-office-desk",
+  "canDo": "I can talk about the place where I work.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C507-merparvaiyitu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can talk about the place where I work.",
+    "assesses": [
+      "TA-LEX-C507-ALUVALAKAM507-03",
+      "TA-LEX-C507-ALUVALAKAM507-04",
+      "TA-LEX-C507-ALUVALAKAM507-05"
+    ]
+  }
+}

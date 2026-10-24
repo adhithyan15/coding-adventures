@@ -1,0 +1,11 @@
+{
+  "id": "TA-C480-imai",
+  "pathSegment": "TA-PATH-480-MUKAM480",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-480-MUKAM480",
+      "order": 3
+    }
+  ]
+}

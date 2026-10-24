@@ -1,0 +1,11 @@
+{
+  "id": "TA-C370-curantu",
+  "pathSegment": "TA-PATH-370-VARUMAI370",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-370-VARUMAI370",
+      "order": 4
+    }
+  ]
+}

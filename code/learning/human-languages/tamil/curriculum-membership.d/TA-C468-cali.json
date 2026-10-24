@@ -1,0 +1,11 @@
+{
+  "id": "TA-C468-cali",
+  "pathSegment": "TA-PATH-468-CORVU468",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-468-CORVU468",
+      "order": 1
+    }
+  ]
+}

@@ -41,7 +41,16 @@ export function assertCorpusGlyphGapQueue({
   // anchor headword is therefore one glyph gap, held here until a cited row
   // (and its script-ductus ductus) lands. No letter lesson promises a numbered
   // strip for them.
+  // The Tamil B1 core (chapters 284-293) teaches the independent vowel ஈ with a
+  // letter lesson, TA-S141-letter-ii, anchored on ஈரம். data/scripts/tamil.d
+  // has no ஈ row: every row there is source-backed and owned by an evidence
+  // module, and no stroke order for ஈ has been taken from a source yet
+  // (script-ductus has no geometry for it). So the anchor headword is one
+  // glyph gap, held here until a cited row (and its ductus) lands. The letter
+  // lesson promises no numbered strip, and the vocabulary builder refuses ஈ in
+  // every other headword.
   expect(queue).toEqual([
+    ["ஈ", 1],
     ["ఈ", 1],
     ["ఊ", 1],
     ["ఓ", 1],

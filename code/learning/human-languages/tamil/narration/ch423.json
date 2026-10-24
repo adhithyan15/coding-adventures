@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 423,
+  "title": "Parts of a City",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:af9758801edbca97",
+  "lessons": [
+    {
+      "id": "TA-C423-nakaratci",
+      "sequence": 24270,
+      "title": "நகராட்சி (nakarāṭci) — a municipality",
+      "headword": "நகராட்சி",
+      "romanization": "nakarāṭci",
+      "gloss": "a municipality",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eab00a90968d42d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for binoculars, then the Tamil for to untie."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நகராட்சி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நகராட்சி — nakarāṭci — \"a municipality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நகராட்சி புதிய பூங்காவைத் திறந்தது. nakarāṭci putiya pūṅkāvait tiṟantatu. The municipality opened a new park."
+            },
+            {
+              "kind": "speech",
+              "text": "நகர், town, + ஆட்சி, rule."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நகராட்சி (nakarāṭci) is built from நகர், \"a town\" (DEDR 3568), and ஆட்சி, \"rule, government\" (DEDR 5157)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakarāṭci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakarāṭci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakarāṭci, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakarāṭci*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakarāṭci putiya pūṅkāvait tiṟantatu. — The municipality opened a new park.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakarāṭci putiya pūṅkāvait tiṟantatu.* — The municipality opened a new park.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for binoculars, then the Tamil for to untie, then say nakarāṭci again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for binoculars, then the Tamil for to untie, then say *nakarāṭci* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நகராட்சி (nakarāṭci) mean? (\"A municipality\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C423-puranakar",
+      "sequence": 24280,
+      "title": "புறநகர் (puṟanakar) — a suburb",
+      "headword": "புறநகர்",
+      "romanization": "puṟanakar",
+      "gloss": "a suburb",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:706713fdf5e57c91",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to untie, then the Tamil for a municipality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புறநகர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புறநகர் — puṟanakar — \"a suburb\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் அண்ணன் புறநகரில் வாழ்கிறான். eṉ aṇṇaṉ puṟanakaril vāḻkiṟāṉ. My elder brother lives in a suburb."
+            },
+            {
+              "kind": "speech",
+              "text": "புறம், the outside, + நகர், town."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புறநகர் (puṟanakar) is built from புறம், \"the outside\" (DEDR 4333), and நகர், \"a town\" (DEDR 3568)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṟanakar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṟanakar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṟanakar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṟanakar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ aṇṇaṉ puṟanakaril vāḻkiṟāṉ. — My elder brother lives in a suburb.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ aṇṇaṉ puṟanakaril vāḻkiṟāṉ.* — My elder brother lives in a suburb.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to untie, then the Tamil for a municipality, then say puṟanakar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to untie, then the Tamil for a municipality, then say *puṟanakar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புறநகர் (puṟanakar) mean? (\"A suburb\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C423-kutiyiruppu",
+      "sequence": 24290,
+      "title": "குடியிருப்பு (kuṭiyiruppu) — a housing colony; a residence",
+      "headword": "குடியிருப்பு",
+      "romanization": "kuṭiyiruppu",
+      "gloss": "a housing colony; a residence",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ec40f162858fa5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a municipality, then the Tamil for a suburb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குடியிருப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குடியிருப்பு — kuṭiyiruppu — \"a housing colony; a residence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புதிய குடியிருப்பில் ஒரு பள்ளி இருக்கிறது. putiya kuṭiyiruppil oru paḷḷi irukkiṟatu. There is a school in the new housing colony."
+            },
+            {
+              "kind": "speech",
+              "text": "குடி, a home, + a noun made from இரு, to stay."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குடியிருப்பு (kuṭiyiruppu) is built from குடி, \"a house, a home\" (DEDR 1655), and the noun of இரு, \"to be, to stay\" (DEDR 480)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭiyiruppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭiyiruppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭiyiruppu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭiyiruppu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putiya kuṭiyiruppil oru paḷḷi irukkiṟatu. — There is a school in the new housing colony.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putiya kuṭiyiruppil oru paḷḷi irukkiṟatu.* — There is a school in the new housing colony.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a municipality, then the Tamil for a suburb, then say kuṭiyiruppu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a municipality, then the Tamil for a suburb, then say *kuṭiyiruppu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குடியிருப்பு (kuṭiyiruppu) mean? (\"A housing colony; a residence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C423-vattaram",
+      "sequence": 24300,
+      "title": "வட்டாரம் (vaṭṭāram) — a locality; a district",
+      "headword": "வட்டாரம்",
+      "romanization": "vaṭṭāram",
+      "gloss": "a locality; a district",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1733cb8cc790aa16",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a suburb, then the Tamil for a housing colony."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வட்டாரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வட்டாரம் — vaṭṭāram — \"a locality; a district\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த வட்டாரத்தில் நிறைய தோட்டங்கள் இருக்கின்றன. inta vaṭṭārattil niṟaiya tōṭṭaṅkaḷ irukkiṉṟaṉa. There are many gardens in this locality."
+            },
+            {
+              "kind": "speech",
+              "text": "வட்டார மொழி is a local dialect."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வட்டாரம் (vaṭṭāram), \"a locality, a circle of villages\", is a Tamil word whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṭṭāram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṭṭāram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṭṭāram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṭṭāram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta vaṭṭārattil niṟaiya tōṭṭaṅkaḷ irukkiṉṟaṉa. — There are many gardens in this locality.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta vaṭṭārattil niṟaiya tōṭṭaṅkaḷ irukkiṉṟaṉa.* — There are many gardens in this locality.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a suburb, then the Tamil for a housing colony, then say vaṭṭāram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a suburb, then the Tamil for a housing colony, then say *vaṭṭāram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வட்டாரம் (vaṭṭāram) mean? (\"A locality; a district\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C423-maiyam",
+      "sequence": 24310,
+      "title": "மையம் (maiyam) — a centre",
+      "headword": "மையம்",
+      "romanization": "maiyam",
+      "gloss": "a centre",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6ac70398e9c2db4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a housing colony, then the Tamil for a locality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மையம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மையம் — maiyam — \"a centre\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நகரத்தின் மையத்தில் ஒரு பெரிய சந்தை இருக்கிறது. nakarattiṉ maiyattil oru periya cantai irukkiṟatu. There is a big market in the centre of the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Also an institution: பயிற்சி மையம் (maiyam), a training centre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மையம் (maiyam) is usually traced to Sanskrit madhya, \"the middle\" (CDIAL 9804)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakarattiṉ maiyattil oru periya cantai irukkiṟatu. — There is a big market in the centre of the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakarattiṉ maiyattil oru periya cantai irukkiṟatu.* — There is a big market in the centre of the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a housing colony, then the Tamil for a locality, then say maiyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a housing colony, then the Tamil for a locality, then say *maiyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மையம் (maiyam) mean? (\"A centre\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R423-review-416-423",
+      "sequence": 24320,
+      "title": "Looking back: from Boats and Oars to Parts of a City",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Boats and Oars to Parts of a City",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4cbd0b358ca0fd89",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Tamil for a boatman and an oar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a boatman, an oar, a dinghy, a catamaran, a net",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a boatman, an oar, a dinghy, a catamaran, a net]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sailor, an anchor, a raft, to flounder, a shore",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sailor, an anchor, a raft, to flounder, a shore]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lodge, a receptionist, an elevator, bedding, to spread out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lodge, a receptionist, an elevator, bedding, to spread out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an air conditioner, hot water, to wrap up, to relax, hospitality",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an air conditioner, hot water, to wrap up, to relax, hospitality]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laundry, a service, a porter, a wage, cleaning",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: laundry, a service, a porter, a wage, cleaning]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a guide, a handbook, to show around, to visit, to see off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a guide, a handbook, to show around, to visit, to see off]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a camp, a torch, a flask, binoculars, to untie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a camp, a torch, a flask, binoculars, to untie]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a municipality, a suburb, a housing colony, a locality, a centre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a municipality, a suburb, a housing colony, a locality, a centre]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A boatman? (படகோட்டி, paṭakōṭṭi.) An oar? (துடுப்பு, tuṭuppu.) A dinghy? (தோணி, tōṇi.) A catamaran? (கட்டுமரம், kaṭṭumaram.) A net? (வலை, valai.) A sailor? (மாலுமி, mālumi.) An anchor? (நங்கூரம், naṅkūram.) A raft? (தெப்பம், teppam.) To flounder? (தத்தளி, tattaḷi.) A shore? (கரை, karai.) A lodge? (விடுதி, viṭuti.) A receptionist? (வரவேற்பாளர், varavēṟpāḷar.) An elevator? (மின்தூக்கி, miṉtūkki.) Bedding? (படுக்கை, paṭukkai.) To spread out? (விரி, viri.) An air conditioner? (குளிரூட்டி, kuḷirūṭṭi.) Hot water? (வெந்நீர், vennīr.) To wrap up? (போர்த்து, pōrttu.) To relax? (இளைப்பாறு, iḷaippāṟu.) Hospitality? (விருந்தோம்பல், viruntōmpal.) Laundry? (சலவை, calavai.) A service? (சேவை, cēvai.) A porter? (சுமைதூக்கி, cumaitūkki.) A wage? (கூலி, kūli.) Cleaning? (துப்புரவு, tuppuravu.) A guide? (வழிகாட்டி, vaḻikāṭṭi.) A handbook? (கையேடு, kaiyēṭu.) To show around? (சுற்றிக்காட்டு, cuṟṟikkāṭṭu.) To visit? (பார்வையிடு, pārvaiyiṭu.) To see off? (வழியனுப்பு, vaḻiyaṉuppu.) A camp? (முகாம், mukām.) A torch? (டார்ச், ṭārc.) A flask? (குடுவை, kuṭuvai.) Binoculars? (தொலைநோக்கி, tolainōkki.) To untie? (அவிழ், aviḻ.) A municipality? (நகராட்சி, nakarāṭci.) A suburb? (புறநகர், puṟanakar.) A housing colony? (குடியிருப்பு, kuṭiyiruppu.) A locality? (வட்டாரம், vaṭṭāram.) A centre? (மையம், maiyam.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-350-KANNOTTAM350",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TA-EXT-350-KANNOTTAM350"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "Friends and Strangers",
+  "label": "ch:ta-friends-and-strangers",
+  "canDo": "I can talk about friends, strangers, introductions, hosting guests and farewells.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C503-piriyavitai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can talk about friends, strangers, introductions, hosting guests and farewells.",
+    "assesses": [
+      "TA-LEX-C503-NATPU503-03",
+      "TA-LEX-C503-NATPU503-04",
+      "TA-LEX-C503-NATPU503-05"
+    ]
+  }
+}

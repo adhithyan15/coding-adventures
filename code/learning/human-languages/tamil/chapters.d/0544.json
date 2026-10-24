@@ -1,0 +1,21 @@
+{
+  "chapter": 544,
+  "title": "Luck and Daring",
+  "label": "ch:ta-luck-and-daring",
+  "canDo": "I can talk about gambling, risks and good sense.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-R544-review-538-544",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 544: I can talk about gambling, risks and good sense.",
+    "assesses": [
+      "TA-LEX-C544-SOOTHU544-01",
+      "TA-LEX-C544-SOOTHU544-02",
+      "TA-LEX-C544-SOOTHU544-03",
+      "TA-LEX-C544-SOOTHU544-04",
+      "TA-LEX-C544-SOOTHU544-05"
+    ]
+  }
+}

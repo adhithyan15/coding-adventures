@@ -1,0 +1,11 @@
+{
+  "id": "TA-C299-parriyeri",
+  "pathSegment": "TA-PATH-299-THEE299",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-299-THEE299",
+      "order": 1
+    }
+  ]
+}

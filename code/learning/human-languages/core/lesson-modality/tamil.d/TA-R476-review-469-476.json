@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R476-review-469-476",
+    "language": "tamil",
+    "chapter": 476,
+    "sequence": 27320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:711fe1792cfc0731"
+  },
+  "findings": []
+}

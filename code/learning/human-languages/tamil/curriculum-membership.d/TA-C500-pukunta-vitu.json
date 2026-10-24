@@ -1,0 +1,11 @@
+{
+  "id": "TA-C500-pukunta-vitu",
+  "pathSegment": "TA-PATH-500-VITU500",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-500-VITU500",
+      "order": 2
+    }
+  ]
+}

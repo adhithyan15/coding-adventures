@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Computers",
+  "label": "ch:ta-computers",
+  "canDo": "I can talk about computers and what runs on them.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C515-minnul",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can talk about computers and what runs on them.",
+    "assesses": [
+      "TA-LEX-C515-KANINI515-03",
+      "TA-LEX-C515-KANINI515-04",
+      "TA-LEX-C515-KANINI515-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "Pictures and Posters",
+  "label": "ch:ta-pictures-and-posters",
+  "canDo": "I can talk about cartoons, posters and films about real life.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C310-utakam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can talk about cartoons, posters and films about real life.",
+    "assesses": [
+      "TA-LEX-C310-OODAKAM310-03",
+      "TA-LEX-C310-OODAKAM310-04",
+      "TA-LEX-C310-OODAKAM310-05"
+    ]
+  }
+}

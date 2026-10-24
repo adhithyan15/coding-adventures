@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "Peaks and Plains",
+  "label": "ch:ta-peaks-and-plains",
+  "canDo": "I can talk about peaks, volcanoes, glaciers and plains, and trekking.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C433-camaveli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can talk about peaks, volcanoes, glaciers and plains, and trekking.",
+    "assesses": [
+      "TA-LEX-C433-SIKARAM433-03",
+      "TA-LEX-C433-SIKARAM433-04",
+      "TA-LEX-C433-SIKARAM433-05"
+    ]
+  }
+}

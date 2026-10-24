@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:e3af65b3f906599a",
+  "lessonIds": [
+    "TA-C543-kattalai",
+    "TA-C543-katumaiyana",
+    "TA-C543-kairekai",
+    "TA-C543-taniyurimai",
+    "TA-C543-coti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch543.txt",
+  "json": "tamil/narration/ch543.json",
+  "textHash": "fnv1a64:f40a92a8a0128cfc",
+  "jsonHash": "fnv1a64:85b54cd7cce2344b",
+  "findings": []
+}

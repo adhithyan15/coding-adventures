@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:7feb2de4aaf2d767",
+  "lessonIds": [
+    "TA-C360-niyayam",
+    "TA-C360-niti",
+    "TA-C360-aram",
+    "TA-C360-pali",
+    "TA-C360-cakku"
+  ],
+  "tex": "tamil/book/chapters/ch360-right-and-wrong.tex"
+}

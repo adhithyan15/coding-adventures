@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 462,
+  "title": "Shame and Disgust",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a190ad6dcee060de",
+  "lessons": [
+    {
+      "id": "TA-C462-avamanam",
+      "sequence": 26560,
+      "title": "அவமானம் (avamāṉam) — humiliation; disgrace",
+      "headword": "அவமானம்",
+      "romanization": "avamāṉam",
+      "gloss": "humiliation; disgrace",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b0a65a0eee9b4f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for keenness, then the Tamil for eagerness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அவமானம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அவமானம் — avamāṉam — \"humiliation; disgrace\"."
+            },
+            {
+              "kind": "speech",
+              "text": "எல்லோர் முன்னாலும் திட்டியதால் அவனுக்கு அவமானமாக இருந்தது. ellōr muṉṉālum tiṭṭiyatāl avaṉukku avamāṉamāka iruntatu. He felt humiliated because he was scolded in front of everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "அவமானப்படுத்து, to humiliate someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அவமானம் (avamāṉam) is borrowed from Sanskrit avamāna, \"disrespect, contempt\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avamāṉam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avamāṉam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avamāṉam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avamāṉam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellōr muṉṉālum tiṭṭiyatāl avaṉukku avamāṉamāka iruntatu. — He felt humiliated because he was scolded in front of everyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellōr muṉṉālum tiṭṭiyatāl avaṉukku avamāṉamāka iruntatu.* — He felt humiliated because he was scolded in front of everyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for keenness, then the Tamil for eagerness, then say avamāṉam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for keenness, then the Tamil for eagerness, then say *avamāṉam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அவமானம் (avamāṉam) mean? (\"Humiliation; disgrace\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C462-cankatam",
+      "sequence": 26570,
+      "title": "சங்கடம் (caṅkaṭam) — awkwardness; embarrassment",
+      "headword": "சங்கடம்",
+      "romanization": "caṅkaṭam",
+      "gloss": "awkwardness; embarrassment",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d1d49aeb4bb0508",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for eagerness, then the Tamil for humiliation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சங்கடம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சங்கடம் — caṅkaṭam — \"awkwardness; embarrassment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவருடைய கேள்வி எனக்குச் சங்கடமாக இருந்தது. avaruṭaiya kēḷvi eṉakkuc caṅkaṭamāka iruntatu. His question made me uncomfortable."
+            },
+            {
+              "kind": "speech",
+              "text": "சங்கடமான நிலை, an awkward situation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சங்கடம் (caṅkaṭam) is borrowed from Sanskrit saṁkaṭa, \"narrow; a strait, a difficulty\" (CDIAL 12817)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caṅkaṭam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caṅkaṭam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caṅkaṭam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caṅkaṭam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaruṭaiya kēḷvi eṉakkuc caṅkaṭamāka iruntatu. — His question made me uncomfortable.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaruṭaiya kēḷvi eṉakkuc caṅkaṭamāka iruntatu.* — His question made me uncomfortable.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for eagerness, then the Tamil for humiliation, then say caṅkaṭam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for eagerness, then the Tamil for humiliation, then say *caṅkaṭam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சங்கடம் (caṅkaṭam) mean? (\"Awkwardness; embarrassment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C462-kuccam",
+      "sequence": 26580,
+      "title": "கூச்சம் (kūccam) — bashfulness; ticklishness",
+      "headword": "கூச்சம்",
+      "romanization": "kūccam",
+      "gloss": "bashfulness; ticklishness",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:099a09ea4ce6e0a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for humiliation, then the Tamil for awkwardness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கூச்சம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கூச்சம் — kūccam — \"bashfulness; ticklishness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புதியவர்களிடம் பேச என் மகனுக்குக் கூச்சம். putiyavarkaḷiṭam pēca eṉ makaṉukkuk kūccam. My son is shy about talking to new people."
+            },
+            {
+              "kind": "speech",
+              "text": "Also being ticklish: கூச்சமாக இருக்கிறது, it tickles."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கூச்சம் (kūccam) is native Dravidian, from கூசு kūcu, \"to be shy, to be ticklish, to shrink back\" (DEDR 1876)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūccam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūccam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūccam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūccam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putiyavarkaḷiṭam pēca eṉ makaṉukkuk kūccam. — My son is shy about talking to new people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putiyavarkaḷiṭam pēca eṉ makaṉukkuk kūccam.* — My son is shy about talking to new people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for humiliation, then the Tamil for awkwardness, then say kūccam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for humiliation, then the Tamil for awkwardness, then say *kūccam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கூச்சம் (kūccam) mean? (\"Bashfulness; ticklishness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C462-aruvaruppu",
+      "sequence": 26590,
+      "title": "அருவருப்பு (aruvaruppu) — disgust",
+      "headword": "அருவருப்பு",
+      "romanization": "aruvaruppu",
+      "gloss": "disgust",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9438d5d2bd51f123",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for awkwardness, then the Tamil for bashfulness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அருவருப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அருவருப்பு — aruvaruppu — \"disgust\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கெட்டுப்போன உணவைப் பார்த்து எனக்கு அருவருப்பாக இருந்தது. keṭṭuppōṉa uṇavaip pārttu eṉakku aruvaruppāka iruntatu. The spoiled food disgusted me."
+            },
+            {
+              "kind": "speech",
+              "text": "அருவருப்பான, disgusting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அருவருப்பு (aruvaruppu) is native Dravidian (DEDR 323), the noun of a verb அருவரு aruvaru, \"to loathe\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aruvaruppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aruvaruppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aruvaruppu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aruvaruppu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keṭṭuppōṉa uṇavaip pārttu eṉakku aruvaruppāka iruntatu. — The spoiled food disgusted me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keṭṭuppōṉa uṇavaip pārttu eṉakku aruvaruppāka iruntatu.* — The spoiled food disgusted me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for awkwardness, then the Tamil for bashfulness, then say aruvaruppu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for awkwardness, then the Tamil for bashfulness, then say *aruvaruppu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அருவருப்பு (aruvaruppu) mean? (\"Disgust\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C462-mukam-culi",
+      "sequence": 26600,
+      "title": "முகம் சுளி (mukam cuḷi) — to grimace; to frown",
+      "headword": "முகம் சுளி",
+      "romanization": "mukam cuḷi",
+      "gloss": "to grimace; to frown",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7dc23f057e90f9a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for bashfulness, then the Tamil for disgust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முகம் சுளி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முகம் சுளி — mukam cuḷi — \"to grimace; to frown\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கசப்பான மருந்தைக் குடித்து அவன் முகம் சுளித்தான். kacappāṉa maruntaik kuṭittu avaṉ mukam cuḷittāṉ. He grimaced after drinking the bitter medicine."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): முகம் சுளித்தேன், mukam cuḷittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "முகம் \"face\" with சுளி \"to show displeasure\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முகம் சுளி (mukam cuḷi) is built from native words: முகம் mukam, \"face\" (DEDR 4889), and சுளி cuḷi, \"to be angry, to show displeasure\" (DEDR 2700)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukam cuḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukam cuḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukam cuḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukam cuḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kacappāṉa maruntaik kuṭittu avaṉ mukam cuḷittāṉ. — He grimaced after drinking the bitter medicine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kacappāṉa maruntaik kuṭittu avaṉ mukam cuḷittāṉ.* — He grimaced after drinking the bitter medicine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for bashfulness, then the Tamil for disgust, then say mukam cuḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for bashfulness, then the Tamil for disgust, then say *mukam cuḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முகம் சுளி (mukam cuḷi) mean? (\"To grimace; to frown\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

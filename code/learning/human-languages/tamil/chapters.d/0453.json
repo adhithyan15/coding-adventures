@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "Rage and Irritation",
+  "label": "ch:ta-rage-and-irritation",
+  "canDo": "I can talk about rage, irritation and grumbling.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C453-munumunu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can talk about rage, irritation and grumbling.",
+    "assesses": [
+      "TA-LEX-C453-KOPAM453-03",
+      "TA-LEX-C453-KOPAM453-04",
+      "TA-LEX-C453-KOPAM453-05"
+    ]
+  }
+}

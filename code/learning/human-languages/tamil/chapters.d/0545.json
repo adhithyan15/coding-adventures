@@ -1,0 +1,19 @@
+{
+  "chapter": 545,
+  "title": "Stocks and Brokers",
+  "label": "ch:ta-stocks-and-brokers",
+  "canDo": "I can talk about shares, brokers and prices going up.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C545-matiri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 545: I can talk about shares, brokers and prices going up.",
+    "assesses": [
+      "TA-LEX-C545-PANKU545-03",
+      "TA-LEX-C545-PANKU545-04",
+      "TA-LEX-C545-PANKU545-05"
+    ]
+  }
+}

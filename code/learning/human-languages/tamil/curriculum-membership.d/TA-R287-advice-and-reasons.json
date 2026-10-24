@@ -1,0 +1,11 @@
+{
+  "id": "TA-R287-advice-and-reasons",
+  "pathSegment": "TA-PATH-287-MUST-BECAUSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-287-MUST-BECAUSE",
+      "order": 2
+    }
+  ]
+}

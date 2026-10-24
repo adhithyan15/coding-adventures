@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:6598048916680ca2",
+  "lessonIds": [
+    "TA-C386-utti",
+    "TA-C386-munneccarikkai",
+    "TA-C386-varaivu",
+    "TA-C386-munnetu",
+    "TA-C386-kurikkol"
+  ],
+  "tex": "tamil/book/chapters/ch386-planning-ahead.tex"
+}

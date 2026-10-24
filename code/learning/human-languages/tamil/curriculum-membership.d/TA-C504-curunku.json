@@ -1,0 +1,11 @@
+{
+  "id": "TA-C504-curunku",
+  "pathSegment": "TA-PATH-504-MUTUMAI504",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-504-MUTUMAI504",
+      "order": 4
+    }
+  ]
+}

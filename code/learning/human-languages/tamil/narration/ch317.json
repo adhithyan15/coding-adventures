@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 317,
+  "title": "Again and Again",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:51c8b1c655b5bc95",
+  "lessons": [
+    {
+      "id": "TA-C317-mutanmuraiyaka",
+      "sequence": 18270,
+      "title": "முதன்முறையாக (mutaṉmuṟaiyāka) — for the first time",
+      "headword": "முதன்முறையாக",
+      "romanization": "mutaṉmuṟaiyāka",
+      "gloss": "for the first time",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0e10fce029c300c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for after that, then the Tamil for at the same time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முதன்முறையாக",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முதன்முறையாக — mutaṉmuṟaiyāka — \"for the first time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நான் முதன்முறையாக விமானத்தில் பயணம் செய்தேன். nāṉ mutaṉmuṟaiyāka vimāṉattil payaṇam ceytēṉ. I travelled by plane for the first time."
+            },
+            {
+              "kind": "speech",
+              "text": "முதல் + முறை; ல் turns to ன் before ம."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முதன்முறையாக (mutaṉmuṟaiyāka) is built from native முதல், \"first\" (DEDR 4950), and முறை, \"order, turn, time\" (DEDR 5015), with the adverb ending -ஆக."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutaṉmuṟaiyāka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutaṉmuṟaiyāka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutaṉmuṟaiyāka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutaṉmuṟaiyāka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṉ mutaṉmuṟaiyāka vimāṉattil payaṇam ceytēṉ. — I travelled by plane for the first time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṉ mutaṉmuṟaiyāka vimāṉattil payaṇam ceytēṉ.* — I travelled by plane for the first time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for after that, then the Tamil for at the same time, then say mutaṉmuṟaiyāka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for after that, then the Tamil for at the same time, then say *mutaṉmuṟaiyāka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முதன்முறையாக (mutaṉmuṟaiyāka) mean? (\"For the first time\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C317-tirumpattirumpa",
+      "sequence": 18280,
+      "title": "திரும்பத்திரும்ப (tirumpattirumpa) — again and again",
+      "headword": "திரும்பத்திரும்ப",
+      "romanization": "tirumpattirumpa",
+      "gloss": "again and again",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e69635fad9bd68a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for at the same time, then the Tamil for for the first time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: திரும்பத்திரும்ப",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திரும்பத்திரும்ப — tirumpattirumpa — \"again and again\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவன் அதே கேள்வியைத் திரும்பத்திரும்பக் கேட்டான். avaṉ atē kēḷviyait tirumpattirumpak kēṭṭāṉ. He asked the same question again and again."
+            },
+            {
+              "kind": "speech",
+              "text": "The infinitive of திரும்பு, doubled."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திரும்பத்திரும்ப (tirumpattirumpa) doubles the infinitive of native திரும்பு, \"to turn, turn back\" (DEDR 3246)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tirumpattirumpa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tirumpattirumpa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tirumpattirumpa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tirumpattirumpa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaṉ atē kēḷviyait tirumpattirumpak kēṭṭāṉ. — He asked the same question again and again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaṉ atē kēḷviyait tirumpattirumpak kēṭṭāṉ.* — He asked the same question again and again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for at the same time, then the Tamil for for the first time, then say tirumpattirumpa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for at the same time, then the Tamil for for the first time, then say *tirumpattirumpa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does திரும்பத்திரும்ப (tirumpattirumpa) mean? (\"Again and again\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C317-totarcciyaka",
+      "sequence": 18290,
+      "title": "தொடர்ச்சியாக (toṭarcciyāka) — continuously",
+      "headword": "தொடர்ச்சியாக",
+      "romanization": "toṭarcciyāka",
+      "gloss": "continuously",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f6e01247bd283cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for for the first time, then the Tamil for again and again."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தொடர்ச்சியாக",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொடர்ச்சியாக — toṭarcciyāka — \"continuously\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மூன்று நாள் தொடர்ச்சியாக மழை பெய்தது. mūṉṟu nāḷ toṭarcciyāka maḻai peytatu. It rained for three days without a break."
+            },
+            {
+              "kind": "speech",
+              "text": "From தொடர், to continue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொடர்ச்சியாக (toṭarcciyāka) is built on தொடர்ச்சி, \"continuation\", from native தொடர், \"to follow uninterruptedly\" (DEDR 3480), with -ஆக."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toṭarcciyāka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toṭarcciyāka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toṭarcciyāka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toṭarcciyāka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūṉṟu nāḷ toṭarcciyāka maḻai peytatu. — It rained for three days without a break.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūṉṟu nāḷ toṭarcciyāka maḻai peytatu.* — It rained for three days without a break.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for for the first time, then the Tamil for again and again, then say toṭarcciyāka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for for the first time, then the Tamil for again and again, then say *toṭarcciyāka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தொடர்ச்சியாக (toṭarcciyāka) mean? (\"Continuously\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C317-utanukkutan",
+      "sequence": 18300,
+      "title": "உடனுக்குடன் (uṭaṉukkuṭaṉ) — then and there; promptly",
+      "headword": "உடனுக்குடன்",
+      "romanization": "uṭaṉukkuṭaṉ",
+      "gloss": "then and there; promptly",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab1d0a8bdf5ea225",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for again and again, then the Tamil for continuously."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உடனுக்குடன்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உடனுக்குடன் — uṭaṉukkuṭaṉ — \"then and there; promptly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நிருபர்கள் செய்திகளை உடனுக்குடன் அனுப்பினார்கள். niruparkaḷ ceytikaḷai uṭaṉukkuṭaṉ aṉuppiṉārkaḷ. The reporters sent the news then and there."
+            },
+            {
+              "kind": "speech",
+              "text": "உடன் doubled with -க்கு: as soon as anything happens."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உடனுக்குடன் (uṭaṉukkuṭaṉ) doubles native உடன், \"together with, at once\" (DEDR 945)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭaṉukkuṭaṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭaṉukkuṭaṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭaṉukkuṭaṉ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭaṉukkuṭaṉ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niruparkaḷ ceytikaḷai uṭaṉukkuṭaṉ aṉuppiṉārkaḷ. — The reporters sent the news then and there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niruparkaḷ ceytikaḷai uṭaṉukkuṭaṉ aṉuppiṉārkaḷ.* — The reporters sent the news then and there.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for again and again, then the Tamil for continuously, then say uṭaṉukkuṭaṉ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for again and again, then the Tamil for continuously, then say *uṭaṉukkuṭaṉ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உடனுக்குடன் (uṭaṉukkuṭaṉ) mean? (\"Then and there; promptly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C317-atuttatuttu",
+      "sequence": 18310,
+      "title": "அடுத்தடுத்து (aṭuttaṭuttu) — one after another",
+      "headword": "அடுத்தடுத்து",
+      "romanization": "aṭuttaṭuttu",
+      "gloss": "one after another",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b9719443b808513",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for continuously, then the Tamil for then and there."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அடுத்தடுத்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அடுத்தடுத்து — aṭuttaṭuttu — \"one after another\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நேற்று அடுத்தடுத்து மூன்று விபத்துகள் நடந்தன. nēṟṟu aṭuttaṭuttu mūṉṟu vipattukaḷ naṭantaṉa. Yesterday three accidents happened one after another."
+            },
+            {
+              "kind": "speech",
+              "text": "அடுத்து, next, doubled: each one right after the last."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அடுத்தடுத்து (aṭuttaṭuttu) doubles அடுத்து, \"next\", from native அடு, \"to be next, near\" (DEDR 79)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭuttaṭuttu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭuttaṭuttu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭuttaṭuttu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭuttaṭuttu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēṟṟu aṭuttaṭuttu mūṉṟu vipattukaḷ naṭantaṉa. — Yesterday three accidents happened one after another.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēṟṟu aṭuttaṭuttu mūṉṟu vipattukaḷ naṭantaṉa.* — Yesterday three accidents happened one after another.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for continuously, then the Tamil for then and there, then say aṭuttaṭuttu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for continuously, then the Tamil for then and there, then say *aṭuttaṭuttu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அடுத்தடுத்து (aṭuttaṭuttu) mean? (\"One after another\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R317-review-310-317",
+      "sequence": 18320,
+      "title": "Looking back: from Pictures and Posters to Again and Again",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Pictures and Posters to Again and Again",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:392f58ae96a8ff54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Tamil for a cartoon and a poster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cartoon, a poster, a documentary, to portray, the media",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cartoon, a poster, a documentary, to portray, the media]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a slogan, a hunger strike, to rise up, an uprising, a proclamation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a slogan, a hunger strike, to rise up, an uprising, a proclamation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "in detail, directly, to describe vividly, to recite, oral tradition",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: in detail, directly, to describe vividly, to recite, oral tradition]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meanwhile, immediately, gradually, at long last, earlier",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: meanwhile, immediately, gradually, at long last, earlier]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a moment, to recall, over time, by then, following this",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a moment, to recall, over time, by then, following this]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to take place, to arise, an event, at present, once in a while",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to take place, to arise, an event, at present, once in a while]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "later on, of that day, previous, after that, at the same time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: later on, of that day, previous, after that, at the same time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "for the first time, again and again, continuously, then and there, one after another",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: for the first time, again and again, continuously, then and there, one after another]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A cartoon? (கேலிச்சித்திரம், kēliccittiram.) A poster? (சுவரொட்டி, cuvaroṭṭi.) A documentary? (ஆவணப்படம், āvaṇappaṭam.) To portray? (சித்தரி, cittari.) The media? (ஊடகம், ūṭakam.) A slogan? (முழக்கம், muḻakkam.) A hunger strike? (உண்ணாவிரதம், uṇṇāviratam.) To rise up? (கிளர்ந்தெழு, kiḷarnteḻu.) An uprising? (எழுச்சி, eḻucci.) A proclamation? (பிரகடனம், pirakaṭaṉam.) In detail? (விரிவாக, virivāka.) Directly? (நேரடியாக, nēraṭiyāka.) To describe vividly? (வர்ணி, varṇi.) To recite? (ஒப்பி, oppi.) Oral tradition? (வாய்மொழி, vāymoḻi.) Meanwhile? (இதற்கிடையில், itaṟkiṭaiyil.) Immediately? (உடனடியாக, uṭaṉaṭiyāka.) Gradually? (படிப்படியாக, paṭippaṭiyāka.) At long last? (ஒருவழியாக, oruvaḻiyāka.) Earlier? (முன்னதாக, muṉṉatāka.) A moment? (தருணம், taruṇam.) To recall? (நினைவுகூர், niṉaivukūr.) Over time? (நாளடைவில், nāḷaṭaivil.) By then? (அதற்குள், ataṟkuḷ.) Following this? (இதையடுத்து, itaiyaṭuttu.) To take place? (நடைபெறு, naṭaipeṟu.) To arise? (ஏற்படு, ēṟpaṭu.) An event? (நிகழ்வு, nikaḻvu.) At present? (தற்போது, taṟpōtu.) Once in a while? (எப்போதாவது, eppōtāvatu.) Later on? (பின்னர், piṉṉar.) Of that day? (அன்றைய, aṉṟaiya.) Previous? (முந்தைய, muntaiya.) After that? (அதன்பின், ataṉpiṉ.) At the same time? (அதே சமயம், atē camayam.) For the first time? (முதன்முறையாக, mutaṉmuṟaiyāka.) Again and again? (திரும்பத்திரும்ப, tirumpattirumpa.) Continuously? (தொடர்ச்சியாக, toṭarcciyāka.) Then and there? (உடனுக்குடன், uṭaṉukkuṭaṉ.) One after another? (அடுத்தடுத்து, aṭuttaṭuttu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-284-PAST-SCENE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-284-PAST-SCENE"
+  ],
+  "after": []
+}

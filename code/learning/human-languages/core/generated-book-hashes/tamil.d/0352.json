@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:3378ca7369f3844f",
+  "lessonIds": [
+    "TA-C352-erpatuttu",
+    "TA-C352-takkam",
+    "TA-C352-karani",
+    "TA-C352-valivaku",
+    "TA-C352-pati"
+  ],
+  "tex": "tamil/book/chapters/ch352-causes-and-effects.tex"
+}

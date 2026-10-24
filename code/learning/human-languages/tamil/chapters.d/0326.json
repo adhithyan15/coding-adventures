@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "The Past",
+  "label": "ch:ta-the-past",
+  "canDo": "I can talk about history and periods of time.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C326-tacaptam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can talk about history and periods of time.",
+    "assesses": [
+      "TA-LEX-C326-VARALARU326-03",
+      "TA-LEX-C326-VARALARU326-04",
+      "TA-LEX-C326-VARALARU326-05"
+    ]
+  }
+}

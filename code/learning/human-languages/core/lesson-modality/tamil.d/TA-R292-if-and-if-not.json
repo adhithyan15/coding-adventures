@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R292-if-and-if-not",
+    "language": "tamil",
+    "chapter": 292,
+    "sequence": 16430,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e4267d5199be17b2"
+  },
+  "findings": []
+}
