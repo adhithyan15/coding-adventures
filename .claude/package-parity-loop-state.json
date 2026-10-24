@@ -16,11 +16,11 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
+  "active_pr": 18143,
   "last_ci_action": {
-    "observed_at": "2026-10-24T16:50:14Z",
-    "pr_number": 18105,
-    "action": "Verified PR #18105 merged after all required checks reached terminal success. GitHub records squash merge 8908cd9ef8113340b9ce6ec5dc9ea87b77dcc738 at 2026-10-24T16:50:14Z; no parity PR remains active before the C# renderer publication step."
+    "observed_at": "2026-10-24T18:55:24Z",
+    "pr_number": 18143,
+    "action": "Opened draft PR #18143 at exact reviewed head d5e6ad5f8372294611ac51b2569a6a6ecb448c21 only to obtain its durable number. Record the pr-open lifecycle receipt, push it, revalidate the exact head, then mark ready and babysit required CI before guarded auto-merge."
   },
   "last_inventory": {
     "revision": "2a0365e356839e22652717fb213499c4454cb972",
@@ -25793,10 +25793,11 @@
     {
       "id": "document-ast-to-html-csharp-lane-parity",
       "title": "Add the document AST HTML renderer to C#",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/parity-csharp-commonmark-html-20261024",
-      "pr_number": null,
+      "pr_number": 18143,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18143",
       "delivery_class": "portable-lane-adoption",
       "selection_blocked": false,
       "started_at": "2026-10-24T18:13:58Z",
@@ -25804,7 +25805,10 @@
       "package_paths": [
         "code/packages/csharp/document-ast-to-html"
       ],
-      "notes": "Deliver the missing pure C# renderer root through its public TE00 API with independently authored vectors for every existing C# AST node, raw routing, URL hardening, ownership/resource limits, native coverage and Unix/Windows build fronts. Rendering extension-shaped AST data does not claim GFM parser adoption."
+      "notes": "Deliver the missing pure C# renderer root through its public TE00 API with independently authored vectors for every existing C# AST node, raw routing, URL hardening, ownership/resource limits, native coverage and Unix/Windows build fronts. Rendering extension-shaped AST data does not claim GFM parser adoption.",
+      "pr_opened_at": "2026-10-24T18:55:24Z",
+      "publication_head": "d5e6ad5f8372294611ac51b2569a6a6ecb448c21",
+      "publication_notes": "Draft PR #18143 was opened only to obtain the durable PR number after exact-head security and evidence review passed. This lifecycle commit advances the owner from in-progress to pr-open; the PR remains draft until this receipt is pushed and revalidated."
     },
     {
       "id": "commonmark-parser-csharp-652-reconciliation",
