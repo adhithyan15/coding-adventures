@@ -32,7 +32,10 @@ fn sequence(fields: &[Vec<u8>]) -> Vec<u8> {
 }
 
 fn cert_id() -> Vec<u8> {
-    let algorithm = sequence(&[element(0x06, &[0x2b, 0x0e, 0x03, 0x02, 0x1a]), vec![0x05, 0x00]]);
+    let algorithm = sequence(&[
+        element(0x06, &[0x2b, 0x0e, 0x03, 0x02, 0x1a]),
+        vec![0x05, 0x00],
+    ]);
     sequence(&[
         algorithm,
         element(0x04, &[0x11; 20]),
@@ -134,7 +137,10 @@ fn every_required_field_is_enforced_in_schema_order() {
         X509OcspSingleResponseErrorKind::MissingThisUpdate,
     ];
     for count in 0..fields.len() {
-        assert_eq!(decode(&sequence(&fields[..count])).unwrap_err().kind(), expected[count]);
+        assert_eq!(
+            decode(&sequence(&fields[..count])).unwrap_err().kind(),
+            expected[count]
+        );
     }
 }
 
@@ -145,20 +151,28 @@ fn nested_required_field_failures_keep_stable_categories() {
     let invalid_time = time(b"20260230123456Z");
 
     assert_eq!(
-        decode(&sequence(&[invalid_cert_id, vec![0x80, 0], time(b"20261024123456Z")]))
-            .unwrap_err()
-            .kind(),
+        decode(&sequence(&[
+            invalid_cert_id,
+            vec![0x80, 0],
+            time(b"20261024123456Z")
+        ]))
+        .unwrap_err()
+        .kind(),
         X509OcspSingleResponseErrorKind::InvalidCertId(
             X509OcspCertIdErrorKind::MissingHashAlgorithm
         )
     );
     assert_eq!(
-        decode(&sequence(&[cert_id(), invalid_status, time(b"20261024123456Z")]))
-            .unwrap_err()
-            .kind(),
-        X509OcspSingleResponseErrorKind::InvalidCertStatus(
-            X509OcspCertStatusErrorKind::Structure(Asn1ErrorKind::NonEmptyNull)
-        )
+        decode(&sequence(&[
+            cert_id(),
+            invalid_status,
+            time(b"20261024123456Z")
+        ]))
+        .unwrap_err()
+        .kind(),
+        X509OcspSingleResponseErrorKind::InvalidCertStatus(X509OcspCertStatusErrorKind::Structure(
+            Asn1ErrorKind::NonEmptyNull
+        ))
     );
     assert_eq!(
         decode(&sequence(&[cert_id(), vec![0x80, 0], invalid_time]))
@@ -252,9 +266,18 @@ fn malformed_children_report_offsets_in_the_whole_response() {
 fn shared_depth_element_and_oid_limits_are_enforced() {
     let encoded = response(&[single_extensions(extensions(&[extension(17, &[])]))]);
     for limits in [
-        Asn1Limits { max_depth: 2, ..Asn1Limits::default() },
-        Asn1Limits { max_total_elements: 6, ..Asn1Limits::default() },
-        Asn1Limits { max_oid_arcs: 2, ..Asn1Limits::default() },
+        Asn1Limits {
+            max_depth: 2,
+            ..Asn1Limits::default()
+        },
+        Asn1Limits {
+            max_total_elements: 6,
+            ..Asn1Limits::default()
+        },
+        Asn1Limits {
+            max_oid_arcs: 2,
+            ..Asn1Limits::default()
+        },
     ] {
         let mut decoder = Asn1Decoder::new(limits);
         let root = decoder.decode_exact(&encoded).unwrap();
@@ -264,7 +287,10 @@ fn shared_depth_element_and_oid_limits_are_enforced() {
 
 #[test]
 fn debug_and_errors_do_not_disclose_identifier_or_extension_bytes() {
-    let encoded = response(&[single_extensions(extensions(&[extension(17, &[0xde, 0xad])]))]);
+    let encoded = response(&[single_extensions(extensions(&[extension(
+        17,
+        &[0xde, 0xad],
+    )]))]);
     let decoded = decode(&encoded).unwrap();
     let debug = format!("{decoded:?}");
     assert!(!debug.contains("dead"));
