@@ -4,6 +4,16 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - a statement that starts with `{` or `function` is never an expression (F12 phase 0)
+
+`{ a }⏎/foo/g.exec(s)` compiled at SIMPLE to `({a})/foo/g.exec(s)`, a
+different program. `if (x) function f(){}` compiled to `x&&function f(){}`,
+which Closure refuses. The ES grammars now enforce ECMA-262's
+ExpressionStatement lookahead, so both are refused. The fix is in the
+grammars and `javascript-parser`. `tests/regression_expression_statement_lookahead.rs`
+checks 4 refusals and 7 programs that must still compile and, under `node`,
+print what the source prints.
+
 ### Changed - WHITESPACE_ONLY unwraps a single-statement labeled block (CCR-087, #15924)
 
 `lbl:{a()}` now prints as `lbl:a();`, matching upstream. The rule:

@@ -2,6 +2,19 @@
 
 ## 0.1.0 — unreleased
 
+- **ExpressionStatement lookahead (F12 phase 0): 94 tests now pass, 74 are
+  removed.** The 94 are negative tests that are now correctly rejected, such
+  as `if (x) class C {}` and declarations in loop bodies. The owner approved
+  removing the 74:
+  - 72 are Annex B sloppy-mode forms: `if (x) function f(){}` and
+    `l: function f(){}`, across `annexB/` (69) and
+    `staging/sm/lexical-environment/` (3). Closure refuses them, and the
+    parser had only accepted them by reading the declaration as a function
+    expression.
+  - 2 are `language/statementList/block-with-statment-regexp-literal-flags.js`
+    (sloppy and strict), a block followed by a regex. F12 phase 3 brings them
+    back.
+
 - **165 more tests parse: #17840's 38, plus block-level declarations and
   their redeclaration early errors (#17877).** Blocks and case clauses now
   hold function and class declarations, and javascript-parser enforces

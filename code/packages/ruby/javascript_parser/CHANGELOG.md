@@ -5,6 +5,7 @@ All notable changes to `coding_adventures_javascript_parser` will be documented 
 ## [Unreleased]
 
 ### Fixed
+- Regenerated `_grammar_es1.rb` through `_grammar_es2025.rb` after the ECMAScript grammars gained the ExpressionStatement lookahead (F12 phase 0). A statement that starts with `{`, `function`, `class`, `let [` or `async function` is no longer parsed as an expression statement.
 - Regenerated `_grammar_es2015.rb` through `_grammar_es2025.rb` after the ECMAScript grammars gained block-level declarations (#17877). A `block`, `case` clause or `default` clause now accepts `function`/`class` (and generator/async) declarations, so `{ function g(){} g() }` parses with `g` as a declaration instead of failing or reading it as an expression.
 
 ## [0.2.1] - 2026-08-17

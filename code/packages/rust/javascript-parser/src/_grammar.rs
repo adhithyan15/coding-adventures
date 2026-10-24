@@ -480,6 +480,20 @@ mod v_es1 {
                     name: r#"expression_statement"#.to_string(),
                     body: GrammarElement::Sequence {
                         elements: vec![
+                            GrammarElement::NegativeLookahead {
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::TokenReference {
+                                                name: r#"LBRACE"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"function"#.to_string(),
+                                            },
+                                        ],
+                                    }),
+                                }),
+                            },
                             GrammarElement::RuleReference {
                                 name: r#"expression"#.to_string(),
                             },
@@ -2038,6 +2052,20 @@ mod v_es3 {
                     name: r#"expression_statement"#.to_string(),
                     body: GrammarElement::Sequence {
                         elements: vec![
+                            GrammarElement::NegativeLookahead {
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::TokenReference {
+                                                name: r#"LBRACE"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"function"#.to_string(),
+                                            },
+                                        ],
+                                    }),
+                                }),
+                            },
                             GrammarElement::RuleReference {
                                 name: r#"expression"#.to_string(),
                             },
@@ -3702,6 +3730,20 @@ mod v_es5 {
                     name: r#"expression_statement"#.to_string(),
                     body: GrammarElement::Sequence {
                         elements: vec![
+                            GrammarElement::NegativeLookahead {
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::TokenReference {
+                                                name: r#"LBRACE"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"function"#.to_string(),
+                                            },
+                                        ],
+                                    }),
+                                }),
+                            },
                             GrammarElement::RuleReference {
                                 name: r#"expression"#.to_string(),
                             },
@@ -6206,6 +6248,33 @@ mod v_es2015 {
                     name: r#"expression_statement"#.to_string(),
                     body: GrammarElement::Sequence {
                         elements: vec![
+                            GrammarElement::NegativeLookahead {
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::TokenReference {
+                                                name: r#"LBRACE"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"function"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"class"#.to_string(),
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"let"#.to_string(),
+                                                    },
+                                                    GrammarElement::TokenReference {
+                                                        name: r#"LBRACKET"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    }),
+                                }),
+                            },
                             GrammarElement::RuleReference {
                                 name: r#"expression"#.to_string(),
                             },
@@ -9738,6 +9807,33 @@ mod v_es2016 {
                     name: r#"expression_statement"#.to_string(),
                     body: GrammarElement::Sequence {
                         elements: vec![
+                            GrammarElement::NegativeLookahead {
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::TokenReference {
+                                                name: r#"LBRACE"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"function"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"class"#.to_string(),
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"let"#.to_string(),
+                                                    },
+                                                    GrammarElement::TokenReference {
+                                                        name: r#"LBRACKET"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    }),
+                                }),
+                            },
                             GrammarElement::RuleReference {
                                 name: r#"expression"#.to_string(),
                             },
@@ -13059,6 +13155,43 @@ mod v_es2017 {
                     name: r#"expression_statement"#.to_string(),
                     body: GrammarElement::Sequence {
                         elements: vec![
+                            GrammarElement::NegativeLookahead {
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::TokenReference {
+                                                name: r#"LBRACE"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"function"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"class"#.to_string(),
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"let"#.to_string(),
+                                                    },
+                                                    GrammarElement::TokenReference {
+                                                        name: r#"LBRACKET"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"async"#.to_string(),
+                                                    },
+                                                    GrammarElement::Literal {
+                                                        value: r#"function"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    }),
+                                }),
+                            },
                             GrammarElement::RuleReference {
                                 name: r#"expression"#.to_string(),
                             },
@@ -16525,6 +16658,43 @@ mod v_es2018 {
                     name: r#"expression_statement"#.to_string(),
                     body: GrammarElement::Sequence {
                         elements: vec![
+                            GrammarElement::NegativeLookahead {
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::TokenReference {
+                                                name: r#"LBRACE"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"function"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"class"#.to_string(),
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"let"#.to_string(),
+                                                    },
+                                                    GrammarElement::TokenReference {
+                                                        name: r#"LBRACKET"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"async"#.to_string(),
+                                                    },
+                                                    GrammarElement::Literal {
+                                                        value: r#"function"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    }),
+                                }),
+                            },
                             GrammarElement::RuleReference {
                                 name: r#"expression"#.to_string(),
                             },
@@ -20072,6 +20242,43 @@ mod v_es2019 {
                     name: r#"expression_statement"#.to_string(),
                     body: GrammarElement::Sequence {
                         elements: vec![
+                            GrammarElement::NegativeLookahead {
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::TokenReference {
+                                                name: r#"LBRACE"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"function"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"class"#.to_string(),
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"let"#.to_string(),
+                                                    },
+                                                    GrammarElement::TokenReference {
+                                                        name: r#"LBRACKET"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"async"#.to_string(),
+                                                    },
+                                                    GrammarElement::Literal {
+                                                        value: r#"function"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    }),
+                                }),
+                            },
                             GrammarElement::RuleReference {
                                 name: r#"expression"#.to_string(),
                             },
@@ -23625,6 +23832,43 @@ mod v_es2020 {
                     name: r#"expression_statement"#.to_string(),
                     body: GrammarElement::Sequence {
                         elements: vec![
+                            GrammarElement::NegativeLookahead {
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::TokenReference {
+                                                name: r#"LBRACE"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"function"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"class"#.to_string(),
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"let"#.to_string(),
+                                                    },
+                                                    GrammarElement::TokenReference {
+                                                        name: r#"LBRACKET"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"async"#.to_string(),
+                                                    },
+                                                    GrammarElement::Literal {
+                                                        value: r#"function"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    }),
+                                }),
+                            },
                             GrammarElement::RuleReference {
                                 name: r#"expression"#.to_string(),
                             },
@@ -27332,6 +27576,43 @@ mod v_es2021 {
                     name: r#"expression_statement"#.to_string(),
                     body: GrammarElement::Sequence {
                         elements: vec![
+                            GrammarElement::NegativeLookahead {
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::TokenReference {
+                                                name: r#"LBRACE"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"function"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"class"#.to_string(),
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"let"#.to_string(),
+                                                    },
+                                                    GrammarElement::TokenReference {
+                                                        name: r#"LBRACKET"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"async"#.to_string(),
+                                                    },
+                                                    GrammarElement::Literal {
+                                                        value: r#"function"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    }),
+                                }),
+                            },
                             GrammarElement::RuleReference {
                                 name: r#"expression"#.to_string(),
                             },
@@ -31297,6 +31578,43 @@ mod v_es2022 {
                     name: r#"expression_statement"#.to_string(),
                     body: GrammarElement::Sequence {
                         elements: vec![
+                            GrammarElement::NegativeLookahead {
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::TokenReference {
+                                                name: r#"LBRACE"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"function"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"class"#.to_string(),
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"let"#.to_string(),
+                                                    },
+                                                    GrammarElement::TokenReference {
+                                                        name: r#"LBRACKET"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"async"#.to_string(),
+                                                    },
+                                                    GrammarElement::Literal {
+                                                        value: r#"function"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    }),
+                                }),
+                            },
                             GrammarElement::RuleReference {
                                 name: r#"expression"#.to_string(),
                             },
@@ -35335,6 +35653,43 @@ mod v_es2023 {
                     name: r#"expression_statement"#.to_string(),
                     body: GrammarElement::Sequence {
                         elements: vec![
+                            GrammarElement::NegativeLookahead {
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::TokenReference {
+                                                name: r#"LBRACE"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"function"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"class"#.to_string(),
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"let"#.to_string(),
+                                                    },
+                                                    GrammarElement::TokenReference {
+                                                        name: r#"LBRACKET"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"async"#.to_string(),
+                                                    },
+                                                    GrammarElement::Literal {
+                                                        value: r#"function"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    }),
+                                }),
+                            },
                             GrammarElement::RuleReference {
                                 name: r#"expression"#.to_string(),
                             },
@@ -39373,6 +39728,43 @@ mod v_es2024 {
                     name: r#"expression_statement"#.to_string(),
                     body: GrammarElement::Sequence {
                         elements: vec![
+                            GrammarElement::NegativeLookahead {
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::TokenReference {
+                                                name: r#"LBRACE"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"function"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"class"#.to_string(),
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"let"#.to_string(),
+                                                    },
+                                                    GrammarElement::TokenReference {
+                                                        name: r#"LBRACKET"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"async"#.to_string(),
+                                                    },
+                                                    GrammarElement::Literal {
+                                                        value: r#"function"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    }),
+                                }),
+                            },
                             GrammarElement::RuleReference {
                                 name: r#"expression"#.to_string(),
                             },
@@ -43627,6 +44019,43 @@ mod v_es2025 {
                     name: r#"expression_statement"#.to_string(),
                     body: GrammarElement::Sequence {
                         elements: vec![
+                            GrammarElement::NegativeLookahead {
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::TokenReference {
+                                                name: r#"LBRACE"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"function"#.to_string(),
+                                            },
+                                            GrammarElement::Literal {
+                                                value: r#"class"#.to_string(),
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"let"#.to_string(),
+                                                    },
+                                                    GrammarElement::TokenReference {
+                                                        name: r#"LBRACKET"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                            GrammarElement::Sequence {
+                                                elements: vec![
+                                                    GrammarElement::Literal {
+                                                        value: r#"async"#.to_string(),
+                                                    },
+                                                    GrammarElement::Literal {
+                                                        value: r#"function"#.to_string(),
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    }),
+                                }),
+                            },
                             GrammarElement::RuleReference {
                                 name: r#"expression"#.to_string(),
                             },
