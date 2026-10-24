@@ -67,14 +67,12 @@ fn decodes_success_and_preserves_generic_response_bytes() {
     let encoded = successful(&inner);
     let decoded = decode(&encoded).unwrap();
     let bytes = decoded.response_bytes().unwrap();
+    let response_bytes_encoding = response_bytes(BASIC_RESPONSE_OID, &inner);
 
     assert_eq!(decoded.encoded(), encoded);
     assert_eq!(decoded.status(), X509OcspResponseStatus::Successful);
     assert_eq!(decoded.status().as_u8(), 0);
-    assert_eq!(
-        bytes.encoded(),
-        response_bytes(BASIC_RESPONSE_OID, &inner)[2..]
-    );
+    assert_eq!(bytes.encoded(), &response_bytes_encoding[2..]);
     assert!(bytes
         .response_type()
         .equals(&[1, 3, 6, 1, 5, 5, 7, 48, 1, 1]));
@@ -94,7 +92,8 @@ fn decodes_every_assigned_error_status_without_response_bytes() {
         (5, X509OcspResponseStatus::SigRequired),
         (6, X509OcspResponseStatus::Unauthorized),
     ] {
-        let decoded = decode(&response(value, None)).unwrap();
+        let encoded = response(value, None);
+        let decoded = decode(&encoded).unwrap();
         assert_eq!(decoded.status(), expected);
         assert_eq!(decoded.status().as_u8(), value);
         assert!(decoded.response_bytes().is_none());
@@ -259,12 +258,15 @@ fn nested_framing_offsets_are_rebased_to_the_complete_response() {
     let error = decode(&encoded).unwrap_err();
 
     assert!(error.offset() >= wrapper_offset);
-    assert!(matches!(
-        error.kind(),
-        X509OcspResponseErrorKind::InvalidResponseBytes(Asn1ErrorKind::Framing(
-            DerErrorKind::TruncatedValue
-        ))
-    ));
+    assert!(
+        matches!(
+            error.kind(),
+            X509OcspResponseErrorKind::InvalidResponseBytes(Asn1ErrorKind::Framing(
+                DerErrorKind::TruncatedValue
+            ))
+        ),
+        "{error:?}"
+    );
 }
 
 #[test]
