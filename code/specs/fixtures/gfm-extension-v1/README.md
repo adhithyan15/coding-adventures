@@ -21,3 +21,6 @@ coordinated changes to source/AST/HTML literals.
 Fence payloads are inert strings.  Passing this corpus does not execute
 Mermaid, Graphviz, plugins, HTML, files, or network requests.  The neutral
 foundation grants no native-language adoption credit by itself.
+
+See [VALIDATION.md](VALIDATION.md) for the durable local evidence and explicit
+limits recorded before publication.
