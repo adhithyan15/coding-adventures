@@ -1508,6 +1508,23 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_numeric_cardinalities_without_consuming_numeric_entities() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER 1--one or more DELIVERY-ADDRESS : has\nROOT many to 1 1 : numeric child\n",
+        );
+        let numbers: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ == TokenType::Number)
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(numbers, ["1", "1", "1"]);
+        assert!(tokens.iter().any(|token| {
+            token.type_name.as_deref() == Some("IDENTIFIER") && token.value == "DELIVERY-ADDRESS"
+        }));
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
