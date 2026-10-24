@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER bracketed attribute name vertical slice",
+  "fixtures": [
+    {
+      "name": "bracketed-attribute-name-with-parenthesized-suffix",
+      "source": "erDiagram\nBOOK {\n  string author-ref[name](1)\n}"
+    }
+  ]
+}
