@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Changed — engine bundle regenerated (#17914)
+
+- `vendor/spreadsheet-engine-wasm.js` re-embeds `spreadsheet-wasm`'s rebuilt
+  `.wasm` after the generic lexer changed.
+
 ### Changed — engine bundle regenerated
 
 - `vendor/spreadsheet-engine-wasm.js` re-embeds `spreadsheet-wasm`'s rebuilt

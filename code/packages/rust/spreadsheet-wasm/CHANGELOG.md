@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+**Rebuilt for the lexer's borrowed callback context (#17914).** The generic
+`lexer` crate changed (`LexerContext::previous_token` is borrowed, not
+cloned), so the `.wasm`'s inputs digest changed. `pkg/spreadsheet_engine.wasm`,
+its `.inputs` stamp and the VisiCalc HTML bundle are regenerated;
+`js/smoke.mjs` and `verify-infinite.mjs` pass.
+
 **Rebuilt for the lexer's token-adjacency predicates (#17824).** The engine's
 formula lexer depends on the generic `lexer` crate, so that crate's source
 change made `build-wasm.sh --check` report the `.wasm` stale.

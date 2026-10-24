@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased — `LexerContext` borrows the previous token
+
+`LexerContext::previous_token` is now a borrow of the lexer's last emitted
+token instead of a clone made for every on-token callback. A callback can
+suppress any number of tokens in a row, and suppressed tokens never replace
+the last emitted one, so the old clone copied the same token again for every
+suppressed token. JavaScript's Annex B `-->` comment (javascript-lexer,
+#17914) suppresses two tokens per line: a 1 MB string followed by 100,000
+such lines allocated about 200 GB and took about 10 s. Lexing is linear
+again. The public accessor `previous_token() -> Option<&Token>` is
+unchanged; the callback context is consumed before the lexer records the
+next emitted token.
+
 ## [Unreleased] — F11: tokens record the gap before them (LANG84 E6)
 
 `GrammarLexer` now records, on every token it matches from a `.tokens`

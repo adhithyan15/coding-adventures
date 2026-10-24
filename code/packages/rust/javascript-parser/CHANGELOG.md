@@ -96,6 +96,15 @@ the parse failed instead.
 
 ## [Unreleased]
 
+### Tests — HTML close comments never reach the newline-led `--` split
+
+- `line_leading_html_close_comment_is_not_a_newline_led_decrement` parses
+  test262's `single-line-html-close-asi.js` body as script and as strict
+  script, and checks that the restricted-production pre-pass forces no `;`
+  for it while still splitting a real newline-led `--foo`. The fix is in
+  javascript-lexer, which now drops the Annex B `-->` comment. No code change
+  here.
+
 ### Added — `asi::asi_insertion_points`, and the postfix `++`/`--` restricted production (#17840)
 
 - `asi_insertion_points(tokens, version)` runs the same ASI as
