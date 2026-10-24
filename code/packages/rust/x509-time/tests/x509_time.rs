@@ -58,6 +58,7 @@ fn generalized_time_starts_at_2050_and_reaches_9999() {
 #[test]
 fn generalized_time_syntax_accepts_present_day_ocsp_years() {
     for (contents, expected_year) in [
+        (b"00000229000000Z", 0),
         (b"19500101000000Z", 1950),
         (b"20261024115654Z", 2026),
         (b"20491231235959Z", 2049),
