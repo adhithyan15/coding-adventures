@@ -303,6 +303,80 @@ impl fmt::Debug
     }
 }
 
+/// Non-copyable constructed reviewed path after selected-anchor DNS policy.
+///
+/// Success proves either that the exact reviewed terminal selected for this
+/// construction carries no out-of-band name constraints or that its supported
+/// permitted DNS subtrees were applied to every dNSName in the exact target
+/// retained by the construction-bound server-path proof. This is not evidence
+/// for intermediate constraints, excluded or non-DNS anchor constraints,
+/// generalized path validation, revocation, TLS, HTTP, OAuth, or network
+/// authority.
+pub struct ValidatedX509RsaSha256ConstructedReviewedIntermediateServerAnchorPolicy<
+    'path,
+    'server_certificate,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    reviewed_intermediate_server_path: BoundX509RsaSha256ConstructedReviewedIntermediateServerPath<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    constrained_dns_names: Option<ConstrainedDnsNames>,
+}
+
+impl<'path, 'server_certificate, 'target, 'target_encoded, 'candidates, 'candidate_encoded>
+    ValidatedX509RsaSha256ConstructedReviewedIntermediateServerAnchorPolicy<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+{
+    /// Return the consumed complete construction-bound server-path evidence.
+    pub const fn reviewed_intermediate_server_path(
+        &self,
+    ) -> &BoundX509RsaSha256ConstructedReviewedIntermediateServerPath<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.reviewed_intermediate_server_path
+    }
+
+    /// Return DNS evidence when the reviewed terminal carried constraints.
+    pub const fn constrained_dns_names(&self) -> Option<ConstrainedDnsNames> {
+        self.constrained_dns_names
+    }
+}
+
+impl fmt::Debug
+    for ValidatedX509RsaSha256ConstructedReviewedIntermediateServerAnchorPolicy<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .write_str("ValidatedX509RsaSha256ConstructedReviewedIntermediateServerAnchorPolicy")
+    }
+}
+
 /// Non-copyable direct reviewed-server-link evidence after anchor DNS policy.
 ///
 /// Success proves either that the selected snapshot entry carries no
@@ -830,6 +904,63 @@ pub fn bind_x509_rsa_sha256_constructed_reviewed_intermediate_server_path<
         BoundX509RsaSha256ConstructedReviewedIntermediateServerPath {
             server_policy,
             reviewed_intermediate_path,
+        },
+    )
+}
+
+/// Apply selected-anchor DNS policy to one exact constructed reviewed path.
+///
+/// The target is derived only from the retained validated server policy, and
+/// the constraint bytes are derived only from the reviewed terminal retained
+/// by the same authenticated construction. Separate caller-owned limits bound
+/// both ASN.1 parses. The complete construction-bound proof remains intact.
+pub fn validate_x509_rsa_sha256_constructed_reviewed_intermediate_server_anchor_policy<
+    'path,
+    'server_certificate,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    reviewed_intermediate_server_path: BoundX509RsaSha256ConstructedReviewedIntermediateServerPath<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedX509RsaSha256ConstructedReviewedIntermediateServerAnchorPolicy<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    X509RsaSha256ReviewedServerLinkError,
+> {
+    let certificate = reviewed_intermediate_server_path
+        .server_policy()
+        .certificate();
+    let name_constraints = reviewed_intermediate_server_path
+        .reviewed_intermediate_path()
+        .reviewed_anchor()
+        .name_constraints();
+    let constrained_dns_names = evaluate_selected_anchor_dns_policy(
+        certificate,
+        name_constraints,
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
+
+    Ok(
+        ValidatedX509RsaSha256ConstructedReviewedIntermediateServerAnchorPolicy {
+            reviewed_intermediate_server_path,
+            constrained_dns_names,
         },
     )
 }
