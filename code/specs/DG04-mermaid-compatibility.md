@@ -148,8 +148,10 @@ prototype-safe for entity and class identifiers such as `__proto__`,
 `constructor`, and `prototype` through semantic IR, style resolution, layout,
 and paint. Explicit empty quoted relationship roles remain distinguishable in
 semantic IR and layout while lowering without empty label geometry. ER remains
-partial while the rest of the pinned upstream syntax and visual corpus is
-incomplete.
+compatible with integer and decimal entity identifiers as standalone entities,
+attribute owners, and relationship endpoints through semantic IR, layout, and
+paint. ER remains partial while the rest of the pinned upstream syntax and
+visual corpus is incomplete.
 
 ## Required New Semantic Families
 

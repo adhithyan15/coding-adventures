@@ -189,6 +189,14 @@ const ER_EMPTY_RELATIONSHIP_ROLE_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-empty-relationship-role-11.16.1-visual-corpus.json"
 ));
+const ER_NUMERIC_ENTITIES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-numeric-entities-11.16.1-corpus.json"
+));
+const ER_NUMERIC_ENTITIES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-numeric-entities-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2609,6 +2617,36 @@ fn pinned_er_empty_relationship_role_reaches_semantic_ir() {
 
     assert_eq!(diagram.relationships.len(), 1);
     assert_eq!(diagram.relationships[0].label.as_deref(), Some(""));
+}
+
+#[test]
+fn pinned_er_numeric_entity_identifiers_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_NUMERIC_ENTITIES_CORPUS)
+        .expect("ER numeric entity corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_NUMERIC_ENTITIES_VISUAL_CORPUS)
+        .expect("ER numeric entity visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER numeric entity source"),
+    )
+    .expect("ER numeric entity fixture must parse");
+
+    assert_eq!(diagram.nodes.len(), 3);
+    for id in ["1", "2.5", "99.99"] {
+        assert!(diagram.nodes.iter().any(|node| node.id == id));
+    }
+    let decimal = diagram
+        .nodes
+        .iter()
+        .find(|node| node.id == "2.5")
+        .expect("2.5 entity");
+    assert_eq!(decimal.compartments[0].entries, ["value: string"]);
+    assert_eq!(diagram.relationships.len(), 1);
+    assert_eq!(diagram.relationships[0].from, "2.5");
+    assert_eq!(diagram.relationships[0].to, "99.99");
 }
 
 #[test]

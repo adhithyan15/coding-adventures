@@ -1661,6 +1661,20 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_numeric_entity_identifiers() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\n1\n2.5 {\n  string value\n}\n99.99\n2.5 ||--|| 99.99 : \"\"\n",
+        );
+        let numbers: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ == TokenType::Number)
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(numbers, ["1", "2.5", "99.99", "2.5", "99.99"]);
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
