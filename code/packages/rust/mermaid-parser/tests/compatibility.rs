@@ -141,6 +141,14 @@ const ER_ATTRIBUTE_FORMS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-forms-11.16.1-visual-corpus.json"
 ));
+const ER_ALIAS_ORDER_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-alias-order-11.16.1-corpus.json"
+));
+const ER_ALIAS_ORDER_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-alias-order-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2387,6 +2395,50 @@ fn pinned_er_attribute_forms_reach_semantic_ir() {
             "alias: string? [UK] - Optional display name"
         ]
     );
+}
+
+#[test]
+fn pinned_er_aliases_update_entities_across_declaration_order() {
+    let syntax: Value = serde_json::from_str(ER_ALIAS_ORDER_CORPUS)
+        .expect("ER alias order corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_ALIAS_ORDER_VISUAL_CORPUS)
+        .expect("ER alias order visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(syntax["fixtures"].as_array().expect("ER alias fixtures").len(), 2);
+    assert_eq!(visual["fixtures"].as_array().expect("ER alias visuals").len(), 2);
+
+    let relationship_first = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("relationship-first ER alias source"),
+    )
+    .expect("relationship-first ER alias fixture must parse");
+    let customer = relationship_first
+        .nodes
+        .iter()
+        .find(|node| node.id == "customer")
+        .expect("customer");
+    assert_eq!(customer.label, "Customer Account");
+    assert_eq!(customer.compartments[0].entries, ["id: string [PK]"]);
+    assert_eq!(
+        customer.style.as_ref().and_then(|style| style.fill.as_deref()),
+        Some("#dbeafe")
+    );
+
+    let declaration_first = parse_er_diagram(
+        syntax["fixtures"][1]["source"]
+            .as_str()
+            .expect("declaration-first ER alias source"),
+    )
+    .expect("declaration-first ER alias fixture must parse");
+    let supplier = declaration_first
+        .nodes
+        .iter()
+        .find(|node| node.id == "supplier")
+        .expect("supplier");
+    assert_eq!(supplier.label, "SUPPLIER");
+    assert_eq!(supplier.compartments[0].entries, ["id: string [PK]"]);
+    assert_eq!(declaration_first.relationships[0].from, "supplier");
 }
 
 #[test]
