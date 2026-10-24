@@ -1,3 +1,4 @@
+use intel8080_simulator::Intel8080Error;
 use intel8085_simulator::{Intel8085Error, Intel8085Simulator, InterruptRequest, RestartMasks};
 
 const UNDOCUMENTED: [u8; 10] = [0x08, 0x10, 0x18, 0x28, 0x38, 0xCB, 0xD9, 0xDD, 0xED, 0xFD];
@@ -282,4 +283,172 @@ fn reset_runs_and_snapshots_cover_the_complete_owned_state() {
     assert_eq!(reset.loaded_len, 0);
     assert!(!reset.serial_input);
     assert!(!reset.serial_output);
+}
+
+#[test]
+fn remaining_interrupt_paths_and_bounded_run_contract_are_covered() {
+    let mut rst65 = ready_simulator();
+    rst65.restart_masks = RestartMasks::unmasked();
+    rst65.core.interrupts_enabled = true;
+    rst65.request_interrupt(InterruptRequest::Rst65);
+    assert_eq!(rst65.step().unwrap().mnemonic, "INT RST6.5");
+    assert_eq!(rst65.core.pc, 0x0034);
+
+    let mut rst55 = ready_simulator();
+    rst55.restart_masks = RestartMasks::unmasked();
+    rst55.core.interrupts_enabled = true;
+    rst55.request_interrupt(InterruptRequest::Rst55);
+    assert_eq!(rst55.step().unwrap().mnemonic, "INT RST5.5");
+    assert_eq!(rst55.core.pc, 0x002C);
+
+    let mut trapped_halt = Intel8085Simulator::new(65_536);
+    trapped_halt.load_program(&[0x76]).unwrap();
+    trapped_halt.core.regs.sp = 0x1000;
+    trapped_halt.step().unwrap();
+    trapped_halt.request_interrupt(InterruptRequest::Trap);
+    let result = trapped_halt.run_loaded_with_limit(1).unwrap();
+    assert_eq!(result.steps, 1);
+    assert_eq!(result.pc, 0x0024);
+    assert!(!result.halted);
+
+    let mut bounded = Intel8085Simulator::new(65_536);
+    bounded.load_program(&[0x00, 0x76]).unwrap();
+    let one = bounded.run_loaded_with_limit(1).unwrap();
+    assert_eq!(one.steps, 1);
+    assert!(!one.halted);
+    let completed = bounded.run_loaded().unwrap();
+    assert_eq!(completed.steps, 1);
+    assert!(completed.halted);
+    assert_eq!(
+        bounded.step(),
+        Err(Intel8085Error::Halted),
+        "a post-HLT step without a serviceable interrupt is typed"
+    );
+}
+
+#[test]
+fn short_memory_data_fault_and_oversized_run_are_atomic() {
+    let mut data = Intel8085Simulator::new(8);
+    data.load_program(&[0x7E]).unwrap(); // MOV A,M
+    data.core.regs.h = 1;
+    let before = data.snapshot();
+    assert_eq!(
+        data.step(),
+        Err(Intel8085Error::MemoryOutOfRange {
+            address: 0x0100,
+            memory_size: 8,
+        })
+    );
+    assert_eq!(data.snapshot(), before);
+
+    let mut run = Intel8085Simulator::new(2);
+    let before = run.snapshot();
+    assert_eq!(
+        run.run(&[0, 0, 0], 1),
+        Err(Intel8085Error::ProgramOutOfRange {
+            origin: 0,
+            length: 3,
+            memory_size: 2,
+        })
+    );
+    assert_eq!(run.snapshot(), before);
+}
+
+#[test]
+fn errors_have_stable_messages_and_core_failures_map_without_information_loss() {
+    assert_eq!(RestartMasks::default(), RestartMasks::masked());
+
+    let errors = [
+        Intel8085Error::ProgramOutOfRange {
+            origin: 7,
+            length: 2,
+            memory_size: 8,
+        },
+        Intel8085Error::FetchOutsideProgram {
+            address: 3,
+            origin: 4,
+            length: 1,
+        },
+        Intel8085Error::TruncatedInstruction {
+            address: 4,
+            expected: 2,
+            available: 1,
+        },
+        Intel8085Error::UnknownOpcode {
+            address: 2,
+            opcode: 0x08,
+        },
+        Intel8085Error::Halted,
+        Intel8085Error::MemoryOutOfRange {
+            address: 0x0100,
+            memory_size: 8,
+        },
+        Intel8085Error::StackOutOfRange {
+            address: 0xFFFE,
+            memory_size: 32,
+        },
+        Intel8085Error::UnsupportedInterruptOpcode { opcode: 0 },
+    ];
+    let rendered = errors.map(|error| error.to_string());
+    assert!(rendered[0].contains("program of 2 bytes"));
+    assert!(rendered[1].contains("outside installed program"));
+    assert!(rendered[2].contains("needs 2 bytes"));
+    assert!(rendered[3].contains("unknown opcode 0x08"));
+    assert_eq!(rendered[4], "CPU is halted");
+    assert!(rendered[5].contains("address 0x0100"));
+    assert!(rendered[6].contains("stack address 0xFFFE"));
+    assert!(rendered[7].contains("not a RST instruction"));
+
+    let mapped = [
+        Intel8080Error::ProgramOutOfRange {
+            length: 9,
+            memory_size: 8,
+        },
+        Intel8080Error::TruncatedInstruction {
+            address: 7,
+            expected: 2,
+            available: 1,
+        },
+        Intel8080Error::UnknownOpcode {
+            address: 1,
+            opcode: 0x08,
+        },
+        Intel8080Error::Halted,
+        Intel8080Error::MemoryOutOfRange {
+            address: 9,
+            memory_size: 8,
+        },
+    ]
+    .map(Intel8085Error::from);
+    assert_eq!(
+        mapped[0],
+        Intel8085Error::ProgramOutOfRange {
+            origin: 0,
+            length: 9,
+            memory_size: 8,
+        }
+    );
+    assert_eq!(
+        mapped[1],
+        Intel8085Error::TruncatedInstruction {
+            address: 7,
+            expected: 2,
+            available: 1,
+        }
+    );
+    assert_eq!(
+        mapped[2],
+        Intel8085Error::UnknownOpcode {
+            address: 1,
+            opcode: 0x08,
+        }
+    );
+    assert_eq!(mapped[3], Intel8085Error::Halted);
+    assert_eq!(
+        mapped[4],
+        Intel8085Error::MemoryOutOfRange {
+            address: 9,
+            memory_size: 8,
+        }
+    );
 }
