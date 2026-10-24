@@ -4,6 +4,22 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - WHITESPACE_ONLY no longer moves an argument IIFE's call outside the call (#18114)
+
+`console.log(function(){return 1}())` prints `1` in node. closurec's
+WHITESPACE_ONLY output was `console.log(function(){return 1})();`, which
+prints the function and then throws `TypeError`. The gap-051 IIFE rewrite
+(`(function(){}())` → `(function(){})()`) fired on any `} ( ) )` token
+window, including one whose outer `)` closes a call's argument list.
+
+It now fires only when the outer `(` is a grouping paren that holds exactly
+the function expression. Argument lists, `if`/`while` heads, `new(…)`,
+`a?.(…)` and wider parens keep their source form, which matches upstream.
+
+`tests/regression_ws_argument_iife.rs` pins 20 shapes to the jar's bytes. It
+checks with `node` that seven programs print what their source prints. Five
+unit tests cover the rule.
+
 ### Changed - WHITESPACE_ONLY unwraps a single-statement labeled block (CCR-087, #15924)
 
 `lbl:{a()}` now prints as `lbl:a();`, matching upstream. The rule:
