@@ -1,7 +1,9 @@
 use core::cmp::Ordering;
 
 use der_asn1::{Asn1Decoder, Asn1Element, Asn1Limits};
-use x509_time::{decode_x509_time, X509TimeEncoding, X509TimeErrorKind};
+use x509_time::{
+    decode_x509_generalized_time, decode_x509_time, X509TimeEncoding, X509TimeErrorKind,
+};
 
 fn decode_element(input: &[u8]) -> Asn1Element<'_> {
     let mut decoder = Asn1Decoder::new(Asn1Limits::default());
@@ -51,6 +53,60 @@ fn generalized_time_starts_at_2050_and_reaches_9999() {
             .kind(),
         X509TimeErrorKind::GeneralizedTimeBefore2050
     );
+}
+
+#[test]
+fn generalized_time_syntax_accepts_present_day_ocsp_years() {
+    for (contents, expected_year) in [
+        (b"19500101000000Z", 1950),
+        (b"20261024115654Z", 2026),
+        (b"20491231235959Z", 2049),
+        (b"20500101000000Z", 2050),
+        (b"99991231235959Z", 9999),
+    ] {
+        let encoded = generalized(contents);
+        let time = decode_x509_generalized_time(decode_element(&encoded)).unwrap();
+        assert_eq!(time.encoding(), X509TimeEncoding::GeneralizedTime);
+        assert_eq!(time.year(), expected_year);
+    }
+
+    let encoded = generalized(b"20261024115654Z");
+    assert_eq!(
+        decode_x509_time(decode_element(&encoded))
+            .unwrap_err()
+            .kind(),
+        X509TimeErrorKind::GeneralizedTimeBefore2050
+    );
+}
+
+#[test]
+fn generalized_time_syntax_remains_tag_and_shape_strict() {
+    for (encoded, expected) in [
+        (utc(b"261024115654Z"), X509TimeErrorKind::UnexpectedTag),
+        (
+            [&[0x38, 15][..], b"20261024115654Z"].concat(),
+            X509TimeErrorKind::UnexpectedTag,
+        ),
+        (
+            [&[0x18, 17][..], b"20261024115654.1Z"].concat(),
+            X509TimeErrorKind::InvalidLength,
+        ),
+        (
+            generalized(b"20261024115654z"),
+            X509TimeErrorKind::MissingZulu,
+        ),
+        (
+            generalized(b"20260229115654Z"),
+            X509TimeErrorKind::InvalidDay,
+        ),
+    ] {
+        assert_eq!(
+            decode_x509_generalized_time(decode_element(&encoded))
+                .unwrap_err()
+                .kind(),
+            expected
+        );
+    }
 }
 
 #[test]
