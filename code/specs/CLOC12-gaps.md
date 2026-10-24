@@ -235,6 +235,43 @@ historical context with status `RESOLVED` and a link to the fix PR.
   - 10 inline tests pin every rule + edge case (function-expression doesn't get trailing `;`, if/while/for body slots preserved, dedup works, multi-stmt drops only last `;`, top-level `var` unchanged).
   - The pre-existing `tests/diff/whitespace-only/expected.stdout` was updated — its hand-written golden predicted `function add(a,b){return a+b;}` (closurec's old shape), but upstream Closure actually emits `function add(a,b){return a+b};`. Re-captured from upstream JAR to match the now-correct output.
 
+### #17883 — Rule A keeps a `with(...)` or label body `;` (exception to gap-030 rule A)
+
+- **The bug.** Rule A drops a `;` before `}` unless `body_position_next` says
+  it is a body slot. Only `if`/`while`/`for` armed that flag, so
+  `function f(){with(a);}` printed as `function f(){with(a)}` and `{l2:;}`
+  as `{l2:}`. Neither parses.
+- **Upstream rule (v20260915, probed on the jar).** `with` prints exactly
+  like `while`: `with(o);` keeps its `;`, `with(o){}` becomes `with(o);`,
+  and `with(o){a()}` becomes `with(o)a();`. A label keeps its `;` (`l:;`),
+  and a `case`/`default` clause drops it (`case 1:}`).
+- **Resolution (WHITESPACE_ONLY).** `is_with_body` keeps a `;` that
+  directly follows the `)` of a `with(...)` head (not after `.`/`?.`).
+  `with` is deliberately *not* armed like `while`. That flag can't tell a
+  `with` statement from a method named `with`, and the security review
+  showed `class C{with(){}}` would then print as the invalid
+  `class C{with();}`. A method's `)` is never followed by `;`. The cost is
+  that `with(o){}` keeps its braces, where upstream prints `with(o);`.
+  `is_label_body` keeps a `;` that follows a label's `:`. A label is a word followed by `:`
+  where the token before the word is a statement boundary (start, `;`,
+  `{`, `}`, `)`, `:`, `else`, `do`). That excludes `case x:` and
+  `case a.b:`.
+- **Related fix.** `opens_control_flow_head` arms `if`/`while`/`for`/`with`
+  only when a `(` follows (or `await (` for `for`), the keyword is not
+  after `.`/`?.`, and it is not a string token. Before, a keyword used as a
+  property name (`{if:1}`) left the flag armed for the next `(`, which
+  could be a function's parameter list:
+  `x={if:1};function g(){}` printed as the invalid `x={if:1};function g();`.
+- **Still open, filed from the review.** #18123: a *method* named
+  `if`/`while`/`for`/`with` still gets body-slot rules (`class C{if(){}}`
+  → `class C{if();}`). #18124: gap-032/gap-076 flatten a lone `let`/`const`
+  into a body slot. #18125: a newline after `y.if` loses its boundary.
+- **Tests.** Eight unit tests, and
+  `closurec/tests/regression_ws_empty_body_semi.rs`. It pins 25 shapes to
+  the jar's bytes, and checks with `node` that those shapes, plus 11
+  shapes left different on purpose (empty `with` blocks and methods named
+  `with`), all parse.
+
 ### CCR-084 (#15919) — a block-final `throw` keeps its `;` (exception to gap-030 rule A)
 
 - **Upstream rule.** At the audited commit `10ca677a`, `CodeGenerator` ends
