@@ -43,7 +43,10 @@ fn accepts_good_observations_at_inclusive_freshness_endpoints() {
             .expect("inclusive fresh good observation");
         assert!(core::ptr::eq(accepted.observation(), &revocation));
         assert_eq!(accepted.observation_time(), utc(observed));
-        assert_eq!(format!("{accepted:?}"), "AcceptedX509RevocationObservation");
+        assert_eq!(format!("{accepted:?}"), "X509RevocationPolicyAcceptance");
+        assert_eq!(accepted.observation().status(), X509RevocationStatus::Good);
+        assert!(accepted.observation().this_update().is_some());
+        assert!(accepted.observation().next_update().is_some());
     }
 }
 
