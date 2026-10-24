@@ -17716,3 +17716,17 @@ existing C#, F#, and Haskell packages first; add Swift after its CommonMark
 prerequisites; then add Java, Kotlin, and Dart after their parser and renderer
 prerequisites.  Those successors remain separate work items even if the same
 fixture exposes implementation differences.
+
+Local adoption evidence exercises all sixteen rows dynamically through those
+two public APIs and passes 20 focused assertions, including independent
+source, AST, and HTML corruption witnesses.  The unchanged package suite passes
+763 tests at 89.21% statement and 87.37% branch coverage through its actual
+BUILD front.  Exact-path selector tests pass for Linux, macOS, and Windows,
+including language filters, missing-reader atomicity, dependent propagation,
+and path lookalikes.  The production Go selector builds and passes vet; its
+complete package suite passes apart from the pre-existing PowerShell-dependent
+registry-generator round trip on hosts without `pwsh`.  A real unforced
+TypeScript dry run discovers 505 package roots, identifies only
+`typescript/gfm-parser` as directly changed, and retains its 60-package
+prerequisite/dependent closure.  These results qualify the TypeScript adoption
+only; hosted CI and final-head security review remain publication gates.
