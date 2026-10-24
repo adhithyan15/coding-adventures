@@ -840,17 +840,7 @@ fn app_package_emits_native_project_shells() {
 #[test]
 fn native_project_shells_expose_engram_host_contract() {
     let tmp = tempfile::tempdir().expect("temp dist root");
-    for backend in [
-        Backend::Html,
-        Backend::WebComponent,
-        Backend::React,
-        Backend::Electron,
-        Backend::Flutter,
-        Backend::Compose,
-        Backend::Qt,
-        Backend::SwiftUI,
-        Backend::Xaml,
-    ] {
+    for backend in Backend::ALL {
         build_package(&BuildOptions {
             package_root: package_root(),
             output_root: tmp.path().to_path_buf(),
