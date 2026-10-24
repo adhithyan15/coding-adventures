@@ -251,7 +251,7 @@ public static class DocumentAstToHtml
 
             Append("\n");
             RenderBlocks(children, tight, depth);
-            if (tight && children[^1] is ParagraphNode && _output.Length > 0 && _output[^1] == '\n')
+            if (checkbox is null && tight && children[^1] is ParagraphNode && _output.Length > 0 && _output[^1] == '\n')
             {
                 _output.Length--;
             }
@@ -261,26 +261,35 @@ public static class DocumentAstToHtml
 
         private void RenderTable(TableNode table, int depth)
         {
+            if (table.Children.Count > MaxRenderNodes - _nodes)
+            {
+                throw new InvalidOperationException($"Document tree exceeds the supported limit of {MaxRenderNodes} nodes.");
+            }
+
             Append("<table>\n");
-            var headers = table.Children.Where(row => row.IsHeader).ToArray();
-            var body = table.Children.Where(row => !row.IsHeader).ToArray();
-            if (headers.Length > 0)
+            if (table.Children.Any(row => row.IsHeader))
             {
                 Append("<thead>\n");
-                foreach (var row in headers)
+                foreach (var row in table.Children)
                 {
-                    RenderTableRow(row, table.Align, depth + 1);
+                    if (row.IsHeader)
+                    {
+                        RenderTableRow(row, table.Align, depth + 1);
+                    }
                 }
 
                 Append("</thead>\n");
             }
 
-            if (body.Length > 0)
+            if (table.Children.Any(row => !row.IsHeader))
             {
                 Append("<tbody>\n");
-                foreach (var row in body)
+                foreach (var row in table.Children)
                 {
-                    RenderTableRow(row, table.Align, depth + 1);
+                    if (!row.IsHeader)
+                    {
+                        RenderTableRow(row, table.Align, depth + 1);
+                    }
                 }
 
                 Append("</tbody>\n");

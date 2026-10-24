@@ -268,6 +268,16 @@ public sealed class DocumentAstToHtmlTests
         Assert.Throws<InvalidOperationException>(() => Renderer.ToHtml(Document(new ParagraphNode(children))));
     }
 
+    [Fact]
+    public void ToHtml_RejectsOversizedTablesBeforeAllocatingRowPartitions()
+    {
+        var rows = Enumerable.Range(0, 100_001)
+            .Select(_ => new TableRowNode(false, []))
+            .ToArray();
+
+        Assert.Throws<InvalidOperationException>(() => Renderer.ToHtml(Document(new TableNode([], rows))));
+    }
+
     [Theory]
     [InlineData(0)]
     [InlineData(7)]

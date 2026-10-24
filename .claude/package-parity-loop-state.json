@@ -19816,7 +19816,7 @@
       "delivery_class": "aggregate",
       "selection_blocked": true,
       "notes": "Selection-blocked aggregate retained for historical dependency references. Its concrete children separately own the missing renderer, the measured 233/652 parser reconciliation, and the facade that follows both; do not select this aggregate as one implementation PR.",
-      "classification_refresh": "Current inventory commonmark and document-ast-to-html are actual missing nine-lane facade/renderer families; commonmark-parser is present12including this lane. Native execution on 2026-10-24 ran all652official0.31.2 records through the public parser/renderer seam:233exact matches,419 mismatches. This is qualification evidence, not conformance. Ownership is split across three exact children to avoid a renderer PR growing into a parser rewrite or shipping a misleading facade.",
+      "classification_refresh": "Current inventory shows commonmark and document-ast-to-html as actual nine-lane facade/renderer families with missing C# roots; commonmark-parser is present in 12 lanes including C#. Native execution on 2026-10-24 ran all 652 official CommonMark 0.31.2 records through the public parser/renderer seam: 233 exact matches and 419 mismatches. This is qualification evidence, not conformance. Ownership is split across three exact children to avoid a renderer PR growing into a parser rewrite or shipping a misleading facade.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/commonmark-html-csharp-lane-prerequisites"
       ],
@@ -25817,7 +25817,7 @@
       "package_paths": [
         "code/packages/csharp/commonmark-parser"
       ],
-      "notes": "Native qualification executed every official CommonMark0.31.2 record through the current public C# parser and TE00 renderer:233/652 exact HTML matches and419 mismatches. Reconcile the existing substantive parser without a fixture lookup, third-party engine, external process or cross-language bridge; preserve current resource guards and qualify the full corpus plus production coverage before claiming conformance."
+      "notes": "Native qualification executed every official CommonMark 0.31.2 record through the current public C# parser and TE00 renderer: 233 / 652 exact HTML matches and 419 mismatches. Reconcile the existing substantive parser without a fixture lookup, third-party engine, external process or cross-language bridge; preserve current resource guards and qualify the full corpus plus production coverage before claiming conformance."
     },
     {
       "id": "commonmark-csharp-facade-lane-parity",
@@ -25836,7 +25836,7 @@
       "package_paths": [
         "code/packages/csharp/commonmark"
       ],
-      "notes": "Add only the thin public parse/to-HTML composition package after the C# parser passes all652official cases and the renderer merges. Re-run all652 through the facade, preserve AST access and raw-HTML security documentation, and do not absorb GFM adoption."
+      "notes": "Add only the thin public parse/to-HTML composition package after the C# parser passes all 652 official cases and the renderer merges. Re-run all 652 through the facade, preserve AST access and raw-HTML security documentation, and do not absorb GFM adoption."
     }
   ]
 }
