@@ -1,0 +1,11 @@
+{
+  "id": "UR-R267-a-story-in-order",
+  "pathSegment": "UR-PATH-267-STORY",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "UR-EXT-267-STORY",
+      "order": 5
+    }
+  ]
+}

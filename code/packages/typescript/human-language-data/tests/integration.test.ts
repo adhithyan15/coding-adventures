@@ -330,7 +330,11 @@ describe("real curriculum", () => {
       // 211 -> 238: the third A2 vocabulary tranche, 135 headwords.
       // 238 -> 263: the last A2 vocabulary tranche, 125 headwords; Urdu attains
       // A2.
-      ...Array.from({ length: 176 }, (_, i) => 88 + i)]);
+      // 263 -> 275: the B1 core. 264-265 bridge the past (with تھا and the
+      // agent نے) and the full future, which A2 had said only in romanization;
+      // 266-275 realize the five B1 spine nodes, with letter lessons for ؤ ع غ
+      // ذ ث ڈ ص, the first Urdu reading and the six-line writing task.
+      ...Array.from({ length: 188 }, (_, i) => 88 + i)]);
     expect(
       books.books
         .find((book) => book.language === "russian")

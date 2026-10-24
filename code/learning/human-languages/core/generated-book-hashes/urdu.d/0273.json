@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:99caa4ea6c8d5226",
+  "lessonIds": [
+    "UR-C273-se-bara",
+    "UR-C273-behtar",
+    "UR-C273-subah",
+    "UR-W273-suad",
+    "UR-C273-do-sal-se",
+    "UR-R273-comparing-and-time"
+  ],
+  "tex": "urdu/book/chapters/ch273-comparing-and-how-long.tex"
+}

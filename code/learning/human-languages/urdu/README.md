@@ -104,6 +104,27 @@ Urdu and Hindi share a large grammatical core, while the formal lexicon and
 writing systems make their histories visible. Both the shared structure and the
 Persian-Arabic vocabulary bridges are drawn out as you go. Script conventions are grounded in Northwestern University's *Zero Zabar*.
 
+## What the track can do, as of chapters 264–275
+
+The B1 core writes the track's first running Urdu sentences. A learner can now
+say **where someone went and where someone was** (**وہ گیا**, **وہ گئی**,
+**میں گھر پر تھا**) and what they used to do (**جاتا تھا**); say **who did
+something** with the agent **نے**, letting the verb follow the object (**اس نے
+روٹی کھائی**); say **what will happen** for every person (**کروں گا**,
+**کرے گی**, **کریں گے**); and then the five B1 nodes: **narrate** a scene and
+its events in order (**پڑھ رہا تھا**, **جب … تو**, **کھا کر**, **اس کے بعد**),
+**give reasons and advice** (**مجھے لگتا ہے کہ**, **کی وجہ سے**, **چاہیے**,
+**جانا پڑے گا**, **اس لیے**), **handle travel** (**اسٹیشن کیسے جاتے ہیں؟**, the
+polite **مڑیے** and **دیجیے**, a ticket, a lost bag, a missed train),
+**describe experience** (**مجھے ڈر لگتا ہے**, **استاد بننا چاہتی ہوں**,
+**سے بڑا**, **سب سے**, **دو سال سے**) and **set conditions** (**اگر … تو**,
+**ورنہ**, **… پر منحصر ہے**, **اگر وقت ہوتا تو میں آتا**).
+
+It reads a ninety-word story and writes six connected lines. Seven letters
+arrive, each from its word: ؤ ع غ ذ ث ڈ ص, copy-only, with no stroke order
+claimed. Still untaught: ژ, the standalone ء, the vowel marks, ۂ and ۓ, the
+subjunctive and the passive.
+
 ## What the track can do, as of chapters 23–27
 
 A learner can now **change a noun into the shape a postposition demands** — the

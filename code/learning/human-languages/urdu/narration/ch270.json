@@ -1,0 +1,687 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 270,
+  "title": "Asking the Way",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:4197ff21d8f85e46",
+  "lessons": [
+    {
+      "id": "UR-C270-kitna",
+      "sequence": 16370,
+      "title": "کتنا (kitnā) — how much, how many",
+      "headword": "کتنا",
+      "romanization": "kitnā",
+      "gloss": "how much; how many",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4324677ea0071bfa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"a fare\" and \"far\". (kirāyā, dūr.) A traveller asks about both."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کتنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کتنا — kitnā — \"how much; how many\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کرایہ کتنا ہے؟ kirāyā kitnā hai? — \"How much is the fare?\""
+            },
+            {
+              "kind": "speech",
+              "text": "It follows its noun like اچھا (achchhā): کتنا (kitnā) for کرایہ, کتنے (kitne) for a plural."
+            },
+            {
+              "kind": "speech",
+              "text": "کتنے مسافر تھے؟ kitne musāfir the? — \"How many passengers were there?\""
+            },
+            {
+              "kind": "speech",
+              "text": "کتنی دور (kitnī dūr), \"how far\", goes as one pair:"
+            },
+            {
+              "kind": "speech",
+              "text": "اسٹیشن کتنی دور ہے؟ isṭeshan kitnī dūr hai? — \"How far is the station?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کتنا (kitnā) is inherited. CDIAL lists its Hindi twin, with the sense \"how great?\", under a reconstructed kiyatta (CDIAL 3167)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitnā, then kirāyā kitnā hai?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitnā*, then *kirāyā kitnā hai?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How far is the market?\" — bāzār kitnī dūr hai?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How far is the market?\" — *bāzār kitnī dūr hai?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کتنا (kitnā) mean? (\"How much, how many\".) \"How far is the station?\" (اسٹیشن کتنی دور ہے؟)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C270-zara",
+      "sequence": 16380,
+      "title": "ذرا (zarā) — a little",
+      "headword": "ذرا",
+      "romanization": "zarā",
+      "gloss": "a little",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:039240debd07defe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"how much is the fare?\" (kirāyā kitnā hai?) Then \"expensive\". (mahãgā.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ذرا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ذرا — zarā — \"a little\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ ذرا مہنگا ہے۔ yih zarā mahãgā hai. — \"This is a little expensive.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ذرا آرام سے۔ zarā ārām se. — \"A little more slowly, please.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Before a request it softens it, as \"please\" does. The next lessons put it to work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ذرا (zarā) is usually traced, through Persian, to Arabic dharra, \"a speck, an atom\". Its first letter is new to your hand; the next lesson takes it out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zarā, then zarā ārām se",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zarā*, then *zarā ārām se*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"This is a little difficult\" — yih zarā mushkil hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"This is a little difficult\" — *yih zarā mushkil hai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ذرا (zarā) mean? (\"A little\".) What does it do before a request? (It softens it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-W270-zal",
+      "sequence": 16390,
+      "title": "ذ (zāl) — the letter that opens ذرا (zarā)",
+      "headword": "ذ",
+      "romanization": "zāl",
+      "gloss": "zāl — the letter that opens ذرا",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:19a9d8ad355c1b2a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ذ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ذ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write غ once, and name it. (ghain.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say ذرا (zarā), \"a little\". This lesson takes one letter out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ذ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ذ — zāl, the sound z."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens ذرا (zarā). You already write د: ذ (zāl) is that shape with one dot above it. Like د, it does not join the letter after it. It is one more way Urdu writes z, beside ز, ض and ظ, and it comes in words from Arabic."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ذ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ذ (zāl) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ذرا (zarā) and point at ذ (zāl) inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ذرا** and point at ذ inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ذ (zāl) three times, saying z as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ذ three times, saying *z* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ذرا (zarā) once, with the dot above its first letter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ذرا** once, with the dot above its first letter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ذرا (zarā) aloud once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ذرا** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ذ? (zāl, z.) What tells it from د? (The dot.) Which word did it come from? (ذرا, zarā, \"a little\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C270-kaise-jate-hain",
+      "sequence": 16400,
+      "title": "کیسے جاتے ہیں (kaise jāte haiṅ) — asking the way",
+      "headword": "کیسے جاتے ہیں",
+      "romanization": "kaise jāte haiṅ",
+      "gloss": "how do you get there — asking the way, and the polite request with -iye",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aad674de8f30f4ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"where?\" (kahāṅ?) Then \"how far is the station?\" (isṭeshan kitnī dūr hai?) Now ask the way there."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: how do you get there?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اسٹیشن کہاں ہے؟ isṭeshan kahāṅ hai? — \"Where is the station?\""
+            },
+            {
+              "kind": "speech",
+              "text": "اسٹیشن کیسے جاتے ہیں؟ isṭeshan kaise jāte haiṅ? — \"How do you get to the station?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"how do people go to the station?\": the plural جاتے ہیں (jāte haiṅ) asks about anyone."
+            },
+            {
+              "kind": "speech",
+              "text": "کیا راستہ لمبا ہے؟ kyā rāstā lambā hai? — \"Is it a long way?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the polite request",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سیدھے جائیے۔ sīdhe jāiye. — \"Go straight on.\""
+            },
+            {
+              "kind": "speech",
+              "text": "جائیے (jāiye) is جانا asked of someone you call آپ. The stem takes -یے (-iye); after a vowel, -ئیے:"
+            },
+            {
+              "kind": "speech",
+              "text": "بائیں مڑیے۔ bāeṅ muṛiye. — \"Turn left.\""
+            },
+            {
+              "kind": "speech",
+              "text": "پل کے بعد دائیں مڑیے۔ pul ke bād dāeṅ muṛiye. — \"After the bridge, turn right.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ذرا بتائیے، بازار کہاں ہے؟ zarā batāiye, bāzār kahāṅ hai? — \"Could you tell me where the market is?\""
+            },
+            {
+              "kind": "speech",
+              "text": "سنیے (suniye), \"listen\", opens a question to a stranger: \"excuse me\". Three verbs bend the stem: دیجیے (dījiye) from دینا, لیجیے (lījiye) from لینا, کیجیے (kījiye) from کرنا."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Turn left\" — bāeṅ muṛiye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Turn left\" — *bāeṅ muṛiye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Turn right\" — dāeṅ muṛiye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Turn right\" — *dāeṅ muṛiye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Go straight on\" — sīdhe jāiye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Go straight on\" — *sīdhe jāiye*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "UR-C270-kaise-jate-hain-r1",
+              "prompt": "Ask a stranger, politely, how to get to the station; then tell someone to turn left after the bridge.",
+              "assesses": [
+                "UR-GRAMMAR-C270-DIRECTION-01",
+                "UR-GRAMMAR-C270-DIRECTION-02"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "suniye, isṭeshan kaise jāte haiṅ?; pul ke bād bāeṅ muṛiye",
+                "سنیے، اسٹیشن کیسے جاتے ہیں؟ پل کے بعد بائیں مڑیے۔",
+                "suniye, isṭeshan kaise jāte haiṅ? pul ke bād bāeṅ muṛiye"
+              ],
+              "feedback": {
+                "correct": "kaise jāte haiṅ asks the way; muṛiye asks politely.",
+                "incorrect": "Ask: isṭeshan kaise jāte haiṅ? Tell: the stem with -iye, muṛiye."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"How do you get to the market?\" (بازار کیسے جاتے ہیں (kaise jāte haiṅ)؟) \"Turn right\"? (دائیں مڑیے.) \"Please tell me\"? (ذرا (zarā) بتائیے.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R270-asking-the-way",
+      "sequence": 16410,
+      "title": "Review — asking the way",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "asking the way, and asking politely",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d0276f0ac45891e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"you should go\" and \"so I didn't come\". (āp ko jānā chāhiye, is liye maiṅ nahīṅ āyā.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Excuse me, how do you get to the station?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Excuse me, how do you get to the station?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "How far is it? How much is the fare?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: How far is it? How much is the fare?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Go straight on, then turn left after the bridge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Go straight on, then turn left after the bridge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Could you tell me where the market is?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Could you tell me where the market is?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ذرا (zarā) once, and point at ذ (zāl) inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ذرا** once, and point at ذ inside it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"How many passengers?\" (کتنے مسافر؟) Now the other way round: from مڑیے, what is the verb? (مڑنا.) The polite form of دینا? (دیجیے.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

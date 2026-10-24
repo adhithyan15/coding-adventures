@@ -1,0 +1,12 @@
+{
+  "language": "urdu",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:012fab54a01a2abb",
+  "lessonIds": [
+    "UR-C265-us-ne-khaya",
+    "UR-C265-main-jaun-ga",
+    "UR-W265-waw-hamza",
+    "UR-R265-who-did-it"
+  ],
+  "tex": "urdu/book/chapters/ch265-who-did-it-and-what-will-happen.tex"
+}

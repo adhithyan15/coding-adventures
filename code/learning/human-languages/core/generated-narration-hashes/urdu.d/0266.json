@@ -1,0 +1,17 @@
+{
+  "language": "urdu",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:40c76332c844a584",
+  "lessonIds": [
+    "UR-C266-parh-raha-tha",
+    "UR-C266-dauran",
+    "UR-R266-what-was-going-on"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "urdu/narration/ch266.txt",
+  "json": "urdu/narration/ch266.json",
+  "textHash": "fnv1a64:81407949a37b756b",
+  "jsonHash": "fnv1a64:aebb48716e65fd37",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C275-agar-vaqt-hota",
+    "language": "urdu",
+    "chapter": 275,
+    "sequence": 16670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:138b58fdd39a65b1"
+  },
+  "findings": []
+}

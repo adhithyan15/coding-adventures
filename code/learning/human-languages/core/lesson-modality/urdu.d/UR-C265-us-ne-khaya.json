@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C265-us-ne-khaya",
+    "language": "urdu",
+    "chapter": 265,
+    "sequence": 16130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5561be81b74fd0d"
+  },
+  "findings": []
+}

@@ -1,0 +1,848 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 273,
+  "title": "Comparing, and How Long",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:dd01924aba0d7987",
+  "lessons": [
+    {
+      "id": "UR-C273-se-bara",
+      "sequence": 16550,
+      "title": "سے بڑا (se baṛā) — bigger than, the biggest",
+      "headword": "سے بڑا",
+      "romanization": "se baṛā",
+      "gloss": "bigger than — se after the thing compared, and sab se for the most",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c7fedd4177382fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"big\" and \"small\". (baṛā, chhoṭā.) Then \"I liked this city\". (mujhe yih shahr achchhā lagā.) Now compare two cities."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: bigger than",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لاہور بڑا ہے۔ Lāhaur baṛā hai. — \"Lahore is big.\""
+            },
+            {
+              "kind": "speech",
+              "text": "یہ گھر اس گھر سے بڑا ہے۔ yih ghar us ghar se baṛā hai. — \"This house is bigger than that one.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Urdu has no \"-er\". سے (se), \"from, than\", goes after the thing compared, and the word stays as it is:"
+            },
+            {
+              "kind": "speech",
+              "text": "بس ٹیکسی سے سستی ہے۔ bas ṭaiksī se sastī hai. — \"The bus is cheaper than a taxi.\""
+            },
+            {
+              "kind": "speech",
+              "text": "بس is feminine: سستی. زیادہ (zyādā) and کم (kam) say more and less:"
+            },
+            {
+              "kind": "speech",
+              "text": "مجھے چائے زیادہ پسند ہے۔ mujhe chāy zyādā pasand hai. — \"I like tea more.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the most",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "یہ سب سے اچھا ہے۔ yih sab se achchhā hai. — \"This is the best.\""
+            },
+            {
+              "kind": "speech",
+              "text": "وہ سب سے لمبی لڑکی ہے۔ voh sab se lambī laṛkī hai. — \"She is the tallest girl.\""
+            },
+            {
+              "kind": "speech",
+              "text": "سب سے (sab se), \"than all\", makes the most: سب سے بڑا (se baṛā), سب سے سستا."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"This is the biggest\" — yih sab se baṛā hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"This is the biggest\" — *yih sab se baṛā hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"This is the smallest\" — yih sab se chhoṭā hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"This is the smallest\" — *yih sab se chhoṭā hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"This is the cheapest\" — yih sab se sastā hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"This is the cheapest\" — *yih sab se sastā hai*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "UR-C273-se-bara-r1",
+              "prompt": "Say that the bus is cheaper than a taxi, then that this is the best.",
+              "assesses": [
+                "UR-GRAMMAR-C273-COMPARISON-01",
+                "UR-GRAMMAR-C273-COMPARISON-02"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "bas ṭaiksī se sastī hai; yih sab se achchhā hai",
+                "بس ٹیکسی سے سستی ہے۔ یہ سب سے اچھا ہے۔",
+                "bas ṭaiksī se sastī hai, yih sab se achchhā hai"
+              ],
+              "feedback": {
+                "correct": "se after the taxi; sab se for the best.",
+                "incorrect": "Put se after the thing compared: ṭaiksī se sastī. The most: sab se achchhā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Cheaper than a taxi\"? (ٹیکسی سے سستی.) \"The best\"? (سب سے اچھا.) Where does سے go? (After the thing compared.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C273-behtar",
+      "sequence": 16560,
+      "title": "بہتر (behtar) — better",
+      "headword": "بہتر",
+      "romanization": "behtar",
+      "gloss": "better",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93e9684fdfca02ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"the bus is cheaper than a taxi\". (bas ṭaiksī se sastī hai.) \"Good\" has a word of its own for \"better\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بہتر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بہتر — behtar — \"better\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ بہتر ہے۔ yih behtar hai. — \"This is better.\""
+            },
+            {
+              "kind": "speech",
+              "text": "بس ٹیکسی سے بہتر ہے۔ bas ṭaiksī se behtar hai. — \"The bus is better than a taxi.\""
+            },
+            {
+              "kind": "speech",
+              "text": "آج میں بہتر ہوں۔ āj maiṅ behtar hūṅ. — \"I'm better today.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It does not change for a man or a woman, and it takes سے like any comparison."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بہتر (behtar) is usually traced to Persian behtar, \"better\", built from beh, \"good\", and the Persian ending -tar, \"more\". Urdu took it whole."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "behtar, then yih behtar hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *behtar*, then *yih behtar hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Tea is better than coffee\" — chāy kāfī se behtar hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Tea is better than coffee\" — *chāy kāfī se behtar hai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بہتر (behtar) mean? (\"Better\".) \"I'm better today\"? (آج میں بہتر (behtar) ہوں.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C273-subah",
+      "sequence": 16570,
+      "title": "صبح (subah) — the morning",
+      "headword": "صبح",
+      "romanization": "subah",
+      "gloss": "the morning",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f82585b018a89973",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"this is better\". (yih behtar hai.) Then \"evening\". (shām.) This lesson gives the other end of the day."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صبح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صبح — subah — \"the morning\". It is feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "صبح بارش ہوئی۔ subah bārish huī. — \"It rained in the morning.\""
+            },
+            {
+              "kind": "speech",
+              "text": "میں صبح جلدی اٹھتا ہوں۔ maiṅ subah jaldī uṭhtā hūṅ. — \"I get up early in the morning.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Like شام (shām), it can stand alone as a time: \"in the morning\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صبح (subah) is usually traced, through Persian, to Arabic ṣubḥ, \"morning, dawn\". Its first letter is new to your hand; the next lesson takes it out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "subah, then subah bārish huī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *subah*, then *subah bārish huī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I get up early in the morning\" — maiṅ subah jaldī uṭhtā hūṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I get up early in the morning\" — *maiṅ subah jaldī uṭhtā hūṅ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صبح (subah) mean? (\"The morning\".) Its partner at the end of the day? (شام.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-W273-suad",
+      "sequence": 16580,
+      "title": "ص (suād) — the letter that opens صبح (subah)",
+      "headword": "ص",
+      "romanization": "suād",
+      "gloss": "suād — the letter that opens صبح",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:23c896ce44e7a6dc",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ص",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ص and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ڈ and ض once each, and name them. (ḍāl, zuād.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say صبح (subah), \"the morning\". This lesson takes one letter out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ص",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ص — suād, the sound s, the same as س."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens صبح (subah). You already write ض (zuād): ص (suād) is the same body without its dot, an oval loop with a short tooth. At the start of a word, as here, the loop joins the next letter; standing alone, it ends in a bowl below the line. Urdu keeps it for words from Arabic."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ص",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ص (suād) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at صبح (subah) and point at ص (suād) inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **صبح** and point at ص inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ص (suād) three times, saying s as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ص three times, saying *s* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "صبح (subah) once, joined, with no dot on its first letter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **صبح** once, joined, with no dot on its first letter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "صبح (subah) aloud once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **صبح** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ص? (suād, s.) What tells it from ض? (No dot.) Which word did it come from? (صبح, subah, \"the morning\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C273-do-sal-se",
+      "sequence": 16590,
+      "title": "دو سال سے (do sāl se) — how long, and since when",
+      "headword": "دو سال سے",
+      "romanization": "do sāl se",
+      "gloss": "for two years — se for since when and how long, se … tak, and bhar",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6fd2b4c3824bf22b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the morning\" and \"a year\". (subah, sāl.) Then \"two\". (do.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: since, and for",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دو سال سے۔ do sāl se. — \"For two years.\""
+            },
+            {
+              "kind": "speech",
+              "text": "میں دو سال سے یہاں رہتا ہوں۔ maiṅ do sāl se yahāṅ rahtā hūṅ. — \"I've lived here for two years.\""
+            },
+            {
+              "kind": "speech",
+              "text": "سے (se), \"from\", after a time says since when, or for how long. Urdu keeps the present: the living began two years ago and goes on."
+            },
+            {
+              "kind": "speech",
+              "text": "وہ کل سے بیمار ہے۔ voh kal se bīmār hai. — \"She's been ill since yesterday.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: from … to, all day",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "میں صبح سے شام تک کام کرتا ہوں۔ maiṅ subah se shām tak kām kartā hūṅ. — \"I work from morning to evening.\""
+            },
+            {
+              "kind": "speech",
+              "text": "سے opens the span and تک (tak), \"up to\", closes it. بھر (bhar), \"full\", after a time word fills it:"
+            },
+            {
+              "kind": "speech",
+              "text": "کل دن بھر بارش ہوئی۔ kal din bhar bārish huī. — \"Yesterday it rained all day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "رات بھر (rāt bhar) is \"all night\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I've lived here for two years\" — maiṅ do sāl se yahāṅ rahtā hūṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I've lived here for two years\" — *maiṅ do sāl se yahāṅ rahtā hūṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I've lived here for three years\" — maiṅ tīn sāl se yahāṅ rahtā hūṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I've lived here for three years\" — *maiṅ tīn sāl se yahāṅ rahtā hūṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I've lived here for a year\" — maiṅ ek sāl se yahāṅ rahtā hūṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I've lived here for a year\" — *maiṅ ek sāl se yahāṅ rahtā hūṅ*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "UR-C273-do-sal-se-r1",
+              "prompt": "Say that you have lived here for two years, then that it rained all day yesterday.",
+              "assesses": [
+                "UR-GRAMMAR-C273-DURATION-01",
+                "UR-GRAMMAR-C273-DURATION-02"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "maiṅ do sāl se yahāṅ rahtā (rahtī) hūṅ; kal din bhar bārish huī",
+                "میں دو سال سے یہاں رہتا ہوں۔ کل دن بھر بارش ہوئی۔",
+                "میں دو سال سے یہاں رہتی ہوں۔ کل دن بھر بارش ہوئی۔",
+                "maiṅ do sāl se yahāṅ rahtī hūṅ, kal din bhar bārish huī"
+              ],
+              "feedback": {
+                "correct": "do sāl se with the present; din bhar for all day.",
+                "incorrect": "How long: the time, then se, and the present verb. All day: din bhar."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Since yesterday\"? (کل سے.) \"From morning to evening\"? (صبح (subah) سے شام تک.) \"All day\"? (دن بھر.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R273-comparing-and-time",
+      "sequence": 16600,
+      "title": "Review — comparing, and how long",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "comparing two things, and how long",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1fa42ff499efe90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I want to become a teacher\" and \"I'm happy\". (maiṅ ustād bannā chāhtā hūṅ, maiṅ khush hūṅ.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "The bus is cheaper than a taxi. In my view, it is better.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: The bus is cheaper than a taxi. In my view, it is better.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "This is the best tea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: This is the best tea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I've lived in Lahore for two years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I've lived in Lahore for two years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I work from morning to evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I work from morning to evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yesterday it rained all day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Yesterday it rained all day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "صبح (subah) once, and point at ص (suād) inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **صبح** once, and point at ص inside it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Bigger than this\"? (اس سے بڑا (se baṛā).) Now the other way round: what does سب سے add? (The most.) \"Since yesterday\"? (کل سے.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

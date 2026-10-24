@@ -98,6 +98,25 @@ romanization once the Urdu form is familiar.
   extra stroke laid across the top — the same dot-count logic that told
   **ب** apart from **پ**, this time with a stroke instead of a dot.
 
+## Letters the B1 core adds (chapters 264–275)
+
+Each is taken out of a word the learner already says, in a copy-only lesson:
+no stroke order is claimed until an Urdu-scoped source is verified. ث ڈ ذ ص
+ع غ are recognition-only rows in the inventory; ؤ is و with the hamza mark,
+both of which already have rows.
+
+| Letter | Sound | Anchor word | Shape |
+|---|---|---|---|
+| **ؤ** *vāo hamza* | marks the break between two vowels | **جاؤں** *jāūṅ* | **و** wearing the small hamza that sits on **ئ** |
+| **ع** *ain* | no sound of its own; it colours or lengthens the vowel beside it | **بعد** *bād* | a small closed loop inside a word; alone, an open head over a deep bowl |
+| **غ** *ghain* | *gh*, made far back in the throat | **غلط** *ghalat* | **ع** with one dot above |
+| **ذ** *zāl* | *z*, as **ز** **ض** **ظ** | **ذرا** *zarā* | **د** with one dot above; it does not join forward |
+| **ث** *se* | *s*, as **س** and **ص** | **حادثہ** *hādsā* | **ت** with three dots above in place of two |
+| **ڈ** *ḍāl* | retroflex *ḍ*, the tongue curled back as for **ٹ** and **ڑ** | **ڈر** *ḍar* | **د** wearing the small mark of **ٹ** and **ڑ** |
+| **ص** *suād* | *s*, as **س** and **ث** | **صبح** *subah* | the **ض** body without its dot |
+
+ژ and the standalone **ء** are not yet taught.
+
 ## The Persian-Arabic and Indo-Aryan layers
 
 Script does not determine a word's history. **سلام** and **شکریہ** expose the
