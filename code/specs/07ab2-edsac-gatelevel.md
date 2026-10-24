@@ -29,6 +29,10 @@ teleprinter transcript, their host cursors, and installed origin/length are
 peripheral or lifecycle metadata, but are still included in complete snapshots
 and transactional rollback.
 
+Bounded execution retains at most 65,536 traces and per-step output events.
+Larger caller limits are rejected before any clock edge; trace storage is
+fallibly reserved so allocation pressure also becomes a typed atomic error.
+
 | Component | Flip-flops |
 |---|---:|
 | 512 even 18-bit store locations | 9,216 |
@@ -60,13 +64,14 @@ or delay-line model.
   order. Invalid or short-only/long mismatches are rejected before a rising
   edge.
 - Ten address wires select the short store through a gate-built equality and
-  multiplexer network. Long operands clear the low address wire and select the
-  adjacent even/odd pair.
+  multiplexer network. Writes drive every location through the corresponding
+  one-hot select/mux line. Long operands clear the low address wire through an
+  AND gate and select the adjacent even/odd pair.
 - Repository full adders form 15-bit ripple chains for accumulator addition,
   rounding, collation, sequence-control movement, and product accumulation.
 - Negation, sign tests, E/G branch selection, I/O field replacement, T/U store
   selection, and halt are Boolean-gate networks.
-- R/L orders are explicit tank-wire permutations repeated for the decoded
+- R/L orders are explicit 71-wire permutations repeated for the decoded
   pulse count. The multiplier network is built from AND partial products and
   ripple-carry reductions; host multiplication is not an architectural path.
 - Every fixed-width persistent update clocks through repository D flip-flops.

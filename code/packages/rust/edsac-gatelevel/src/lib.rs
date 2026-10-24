@@ -25,6 +25,16 @@ use state::{
 pub const FLIP_FLOP_COUNT: usize = MEMORY_DFFS + 10 + 17 + 71 + 35 + 35 + 1 + 5 + 1;
 /// Stable educational estimate; this is not a valve or transistor count.
 pub const ESTIMATED_GATE_COUNT: usize = FLIP_FLOP_COUNT * 6 + 36_000;
+/// Maximum number of retained instruction traces and per-step output events.
+pub const MAX_RETAINED_STEPS: usize = 65_536;
+
+fn validate_step_budget(max_steps: usize) -> Result<(), EdsacError> {
+    if max_steps > MAX_RETAINED_STEPS {
+        Err(EdsacError::MaxStepsExceeded { max_steps })
+    } else {
+        Ok(())
+    }
+}
 
 /// Complete gate-level EDSAC machine at an instruction boundary.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -229,8 +239,12 @@ impl EdsacGateLevel {
 
     /// Run until Z retires, restoring the exact entry state on any error.
     pub fn run(&mut self, max_steps: usize) -> Result<ExecutionResult, EdsacError> {
+        validate_step_budget(max_steps)?;
         let before = self.state();
         let mut traces = Vec::new();
+        traces
+            .try_reserve_exact(max_steps)
+            .map_err(|_| EdsacError::MaxStepsExceeded { max_steps })?;
         for _ in 0..max_steps {
             if self.halted != 0 {
                 return Ok(ExecutionResult {
@@ -267,6 +281,7 @@ impl EdsacGateLevel {
         origin: usize,
         max_steps: usize,
     ) -> Result<ExecutionResult, EdsacError> {
+        validate_step_budget(max_steps)?;
         let before = self.state();
         self.load_words(program, origin)?;
         match self.run(max_steps) {
@@ -285,6 +300,7 @@ impl EdsacGateLevel {
         origin: usize,
         max_steps: usize,
     ) -> Result<ExecutionResult, EdsacError> {
+        validate_step_budget(max_steps)?;
         let before = self.state();
         self.load(program, origin)?;
         match self.run(max_steps) {

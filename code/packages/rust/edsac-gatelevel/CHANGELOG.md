@@ -10,3 +10,5 @@
 - Added complete checked transport, state restoration, paper-tape and
   teleprinter state, atomic stepping, transactional execution, typed faults,
   and functional full-state differential tests.
+- Added one-hot gate/mux short-store selection, explicit 71-wire shifts, and a
+  65,536-step retained-execution budget with fallible trace reservation.

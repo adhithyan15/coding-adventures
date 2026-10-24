@@ -28,6 +28,8 @@ through one-hot gate predicates; performs arithmetic with full-adder chains;
 forms multiplication from AND partial products; and clocks every fixed-width
 state update through repository DFFs. A decode, fetch, input, halt, or step-limit
 fault occurs before any rising edge and therefore preserves the entire machine.
+Runs retain at most 65,536 traces/output events; larger limits and failed trace
+reservations become typed, atomic errors instead of unbounded allocation.
 
 ## Example
 

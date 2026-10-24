@@ -6,7 +6,7 @@
 
 use arithmetic::adders::full_adder;
 use edsac_simulator::{
-    EdsacError, EdsacState, Length, Opcode, StepTrace, EVEN_CELL_MASK, ODD_CELL_MASK,
+    EdsacError, EdsacState, Length, Opcode, StepTrace, EVEN_CELL_MASK, MEMORY_CELLS, ODD_CELL_MASK,
 };
 use logic_gates::gates::{and_gate, not_gate, or_gate, xor_gate};
 
@@ -27,6 +27,77 @@ fn gate_equal(value: u128, expected: u128, width: usize) -> u8 {
             not_gate(xor_gate(bit(value, index), bit(expected, index))),
         )
     })
+}
+
+fn gate_mux(select: u8, when_high: u8, when_low: u8) -> u8 {
+    or_gate(
+        and_gate(select, when_high),
+        and_gate(not_gate(select), when_low),
+    )
+}
+
+fn wire_field(value: u128, first: usize, width: usize) -> u128 {
+    (0..width).fold(0, |field, index| {
+        field | (u128::from(bit(value, first + index)) << index)
+    })
+}
+
+fn gate_store_read(memory: &[u32; MEMORY_CELLS], address: usize) -> u32 {
+    let mut output = 0_u32;
+    for (location, &word) in memory.iter().enumerate() {
+        let selected = gate_equal(address as u128, location as u128, 10);
+        for index in 0..18 {
+            let driven = and_gate(selected, bit(word.into(), index));
+            let combined = or_gate(bit(output.into(), index), driven);
+            if combined == 1 {
+                output |= 1 << index;
+            }
+        }
+    }
+    output
+}
+
+fn gate_store_write(memory: &mut [u32; MEMORY_CELLS], address: usize, value: u32) {
+    for (location, word) in memory.iter_mut().enumerate() {
+        let selected = gate_equal(address as u128, location as u128, 10);
+        let width = if location.is_multiple_of(2) { 18 } else { 17 };
+        let mut next = 0_u32;
+        for index in 0..width {
+            let q = gate_mux(
+                selected,
+                bit(value.into(), index),
+                bit((*word).into(), index),
+            );
+            next |= u32::from(q) << index;
+        }
+        *word = next;
+    }
+}
+
+fn gate_even_address(address: usize) -> usize {
+    let mut even = 0_usize;
+    for index in 0..10 {
+        let wire = if index == 0 {
+            and_gate(bit(address as u128, index), 0)
+        } else {
+            bit(address as u128, index)
+        };
+        even |= usize::from(wire) << index;
+    }
+    even
+}
+
+fn gate_odd_address(even: usize) -> usize {
+    let mut odd = 0_usize;
+    for index in 0..10 {
+        let wire = if index == 0 {
+            or_gate(bit(even as u128, index), 1)
+        } else {
+            bit(even as u128, index)
+        };
+        odd |= usize::from(wire) << index;
+    }
+    odd
 }
 
 fn gate_add(a: u128, b: u128, carry_in: u8, width: usize) -> (u128, u8) {
@@ -201,8 +272,8 @@ impl WorkingMachine {
             });
         }
 
-        let instruction = self.state.memory[pc_before] & ODD_CELL_MASK;
-        let code = ((instruction >> 12) & 0x1f) as u8;
+        let instruction = gate_store_read(&self.state.memory, pc_before) & ODD_CELL_MASK;
+        let code = wire_field(instruction.into(), 12, 5) as u8;
         let opcode = decode_opcode(code).ok_or(EdsacError::UnknownOpcode {
             opcode: code,
             instruction,
@@ -218,7 +289,7 @@ impl WorkingMachine {
                 instruction,
             });
         }
-        let address = ((instruction >> 1) & 0x03ff) as usize;
+        let address = wire_field(instruction.into(), 1, 10) as usize;
         let operand = self.load_operand(address, length);
         let (next_scr, overflow) = gate_add(pc_before as u128, 1, 0, 10);
 
@@ -277,23 +348,22 @@ impl WorkingMachine {
                     .get(self.state.input_cursor)
                     .ok_or(EdsacError::InputExhausted)?;
                 self.state.input_cursor += 1;
-                self.state.memory[address] =
-                    replace_field(self.state.memory[address], u32::from(code), 0, 5);
+                let current = gate_store_read(&self.state.memory, address);
+                let next = replace_field(current, u32::from(code), 0, 5);
+                gate_store_write(&mut self.state.memory, address, next);
                 io_code = Some(code);
             }
             Opcode::O => {
-                let code = ((self.state.memory[address] >> 12) & 0x1f) as u8;
+                let word = gate_store_read(&self.state.memory, address);
+                let code = wire_field(word.into(), 12, 5) as u8;
                 self.state.output.push(code);
                 self.state.last_output = code;
                 io_code = Some(code);
             }
             Opcode::F => {
-                self.state.memory[address] = replace_field(
-                    self.state.memory[address],
-                    u32::from(self.state.last_output),
-                    12,
-                    5,
-                );
+                let current = gate_store_read(&self.state.memory, address);
+                let next = replace_field(current, u32::from(self.state.last_output), 12, 5);
+                gate_store_write(&mut self.state.memory, address, next);
                 io_code = Some(self.state.last_output);
             }
             Opcode::X => {}
@@ -332,33 +402,61 @@ impl WorkingMachine {
     fn load_operand(&self, address: usize, length: Length) -> [u16; 3] {
         match length {
             Length::Short => {
-                let value = self.state.memory[address] & ODD_CELL_MASK;
-                [(value >> 2) as u16, ((value << 13) & 0x6000) as u16, 0]
+                let value = gate_store_read(&self.state.memory, address) & ODD_CELL_MASK;
+                let mut first = 0_u16;
+                let mut second = 0_u16;
+                for index in 0..15 {
+                    first |= u16::from(bit(value.into(), index + 2)) << index;
+                }
+                for index in 0..2 {
+                    second |= u16::from(bit(value.into(), index)) << (index + 13);
+                }
+                [first, second, 0]
             }
             Length::Long => {
-                let even = address & !1;
-                let senior = self.state.memory[even | 1];
-                let junior = self.state.memory[even];
-                [
-                    (senior >> 2) as u16,
-                    ((senior << 13 | junior >> 5) & 0x7fff) as u16,
-                    ((junior << 10) & 0x7c00) as u16,
-                ]
+                let even = gate_even_address(address);
+                let junior = gate_store_read(&self.state.memory, even);
+                let senior = gate_store_read(&self.state.memory, gate_odd_address(even));
+                let mut operand = [0_u16; 3];
+                for index in 0..15 {
+                    operand[0] |= u16::from(bit(senior.into(), index + 2)) << index;
+                }
+                for index in 0..13 {
+                    operand[1] |= u16::from(bit(junior.into(), index + 5)) << index;
+                }
+                for index in 0..2 {
+                    operand[1] |= u16::from(bit(senior.into(), index)) << (index + 13);
+                }
+                for index in 0..5 {
+                    operand[2] |= u16::from(bit(junior.into(), index)) << (index + 10);
+                }
+                operand
             }
         }
     }
 
     fn store_accumulator(&mut self, address: usize, length: Length) {
         let [a0, a1, a2, ..] = self.state.accumulator;
+        let mut senior = 0_u32;
+        for index in 0..15 {
+            senior |= u32::from(bit(a0.into(), index)) << (index + 2);
+        }
+        for index in 0..2 {
+            senior |= u32::from(bit(a1.into(), index + 13)) << index;
+        }
         match length {
-            Length::Short => {
-                self.state.memory[address] = (u32::from(a0) << 2) | (u32::from(a1) >> 13);
-            }
+            Length::Short => gate_store_write(&mut self.state.memory, address, senior),
             Length::Long => {
-                let even = address & !1;
-                self.state.memory[even | 1] = (u32::from(a0) << 2) | (u32::from(a1) >> 13);
-                self.state.memory[even] =
-                    ((u32::from(a1) << 5) | (u32::from(a2) >> 10)) & EVEN_CELL_MASK;
+                let even = gate_even_address(address);
+                let mut junior = 0_u32;
+                for index in 0..13 {
+                    junior |= u32::from(bit(a1.into(), index)) << (index + 5);
+                }
+                for index in 0..5 {
+                    junior |= u32::from(bit(a2.into(), index + 10)) << index;
+                }
+                gate_store_write(&mut self.state.memory, gate_odd_address(even), senior);
+                gate_store_write(&mut self.state.memory, even, junior & EVEN_CELL_MASK);
             }
         }
     }
@@ -491,28 +589,23 @@ impl WorkingMachine {
 
     fn shift_right(&mut self, count: usize) {
         for _ in 0..count {
-            let old = self.state.accumulator;
-            self.state.accumulator = [
-                (old[0] >> 1) | (old[0] & 0x4000),
-                (old[1] >> 1) | ((old[0] & 1) << 14),
-                (old[2] >> 1) | ((old[1] & 1) << 14),
-                (old[3] >> 1) | ((old[2] & 1) << 14),
-                (old[4] >> 1) | ((old[3] & 1) << 14),
-            ];
+            let old = pack_accumulator(self.state.accumulator);
+            let mut shifted = u128::from(bit(old, 70)) << 70;
+            for index in 0..70 {
+                shifted |= u128::from(bit(old, index + 1)) << index;
+            }
+            self.state.accumulator = unpack_accumulator(shifted);
         }
-        self.state.accumulator[4] &= 0x7ff0;
     }
 
     fn shift_left(&mut self, count: usize) {
         for _ in 0..count {
-            let old = self.state.accumulator;
-            self.state.accumulator = [
-                ((old[0] << 1) | (old[1] >> 14)) & SLICE_MASK,
-                ((old[1] << 1) | (old[2] >> 14)) & SLICE_MASK,
-                ((old[2] << 1) | (old[3] >> 14)) & SLICE_MASK,
-                ((old[3] << 1) | (old[4] >> 14)) & SLICE_MASK,
-                (old[4] << 1) & 0x7ff0,
-            ];
+            let old = pack_accumulator(self.state.accumulator);
+            let mut shifted = 0_u128;
+            for index in 1..71 {
+                shifted |= u128::from(bit(old, index - 1)) << index;
+            }
+            self.state.accumulator = unpack_accumulator(shifted);
         }
     }
 }
@@ -528,5 +621,26 @@ mod tests {
         assert_eq!(gate_add(0x7fff, 1, 0, 15), (0, 1));
         assert_eq!(gate_twos_complement(1, 35), (1_u128 << 35) - 1);
         assert_eq!(gate_multiply_15(123, 456), 56_088);
+    }
+
+    #[test]
+    fn gate_store_mux_and_shift_wires_are_independent_paths() {
+        let mut memory = [0_u32; MEMORY_CELLS];
+        memory[3] = 0x1_2345;
+        assert_eq!(gate_store_read(&memory, 3), 0x1_2345);
+        gate_store_write(&mut memory, 3, 0x1_abcd);
+        assert_eq!(memory[3], 0x1_abcd);
+        assert_eq!(memory[2], 0);
+        assert_eq!(gate_even_address(3), 2);
+        assert_eq!(gate_odd_address(2), 3);
+
+        let mut machine = WorkingMachine {
+            state: edsac_simulator::EdsacSimulator::new().state(),
+        };
+        machine.state.accumulator = [0x4001, 0, 0, 0, 0];
+        machine.shift_right(1);
+        assert_eq!(machine.state.accumulator[0], 0x6000);
+        machine.shift_left(1);
+        assert_eq!(machine.state.accumulator[0], 0x4001);
     }
 }

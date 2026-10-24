@@ -1,4 +1,4 @@
-use edsac_gatelevel::{EdsacGateLevel, ESTIMATED_GATE_COUNT, FLIP_FLOP_COUNT};
+use edsac_gatelevel::{EdsacGateLevel, ESTIMATED_GATE_COUNT, FLIP_FLOP_COUNT, MAX_RETAINED_STEPS};
 use edsac_simulator::{
     encode_order, encode_raw_order, EdsacError, EdsacSimulator, Length, Opcode, EVEN_CELL_MASK,
     MEMORY_CELLS,
@@ -174,4 +174,35 @@ fn execute_variants_are_transactional_and_return_oracle_results() {
         functional.execute(&bytes, 40, 4)
     );
     assert_eq!(gate.state(), functional.state());
+}
+
+#[test]
+fn retained_execution_budget_is_bounded_and_preflighted() {
+    let mut gate = EdsacGateLevel::new();
+    let halt = [encode_order(Opcode::Z, 0, Length::Short)];
+    gate.load_words(&halt, 0).unwrap();
+    let before = gate.state();
+    let excessive = MAX_RETAINED_STEPS + 1;
+    assert_eq!(
+        gate.run(excessive),
+        Err(EdsacError::MaxStepsExceeded {
+            max_steps: excessive
+        })
+    );
+    assert_eq!(gate.state(), before);
+    assert_eq!(
+        gate.execute_words(&halt, 12, excessive),
+        Err(EdsacError::MaxStepsExceeded {
+            max_steps: excessive
+        })
+    );
+    assert_eq!(gate.state(), before);
+    assert_eq!(
+        gate.run(0),
+        Err(EdsacError::MaxStepsExceeded { max_steps: 0 })
+    );
+    assert_eq!(gate.state(), before);
+
+    gate.step().unwrap();
+    assert!(gate.run(0).unwrap().halted);
 }
