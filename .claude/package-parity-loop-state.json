@@ -16,11 +16,11 @@
       "external-approval"
     ]
   },
-  "active_pr": 18118,
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-24T18:02:51+00:00",
+    "observed_at": "2026-10-24T18:59:25+00:00",
     "pr_number": 18118,
-    "action": "Opened the neutral GFM conformance foundation at 93c1d6c08edd86de9c7d1c2f50df7a8fadec71bc after local validation and final security review. GitHub reports MERGEABLE; CI, CodeQL, and book detectors remain queued without a runner or failure. The operator authorized up to three dependency-safe parity PRs in flight and guarded auto-merge only after required checks pass and conflicts are absent."
+    "action": "PR #18118 merged after all required checks passed and GitHub reported no conflict. The exact merge receipt is 83f1871e3d61e8151b0e9313337f5dc2c842a3e6 at 2026-10-24T18:59:25Z; the neutral fixture itself grants no native-lane credit."
   },
   "last_inventory": {
     "revision": "2949f52059ed81e2a202f171c53d2b57069be002",
@@ -17239,17 +17239,20 @@
     {
       "id": "gfm-language-neutral-conformance-fixture",
       "title": "Define the language-neutral GFM parser conformance fixture",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "gfm-fenced-block-ast-and-consumer-contract-repair"
       ],
       "branch": "codex/parity-gfm-neutral-20261024",
       "pr_number": 18118,
-      "notes": "PR #18118 freezes sixteen source/AST/HTML vectors for strikethrough, task items, tables, and source-preserving fences behind a strict schema and bounded validator. The neutral foundation itself grants no native-lane credit. Local validation and final security review pass; GitHub checks are runner-queued with no failures.",
+      "notes": "Merged PR #18118 freezes sixteen source/AST/HTML vectors for strikethrough, task items, tables, and source-preserving fences behind a strict schema and bounded validator. The neutral foundation itself grants no native-lane credit. All required checks passed before guarded auto-merge.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/gfm-language-neutral-conformance-fixture"
       ],
-      "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+      "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited.",
+      "merged_at": "2026-10-24T18:59:25Z",
+      "merge_revision": "83f1871e3d61e8151b0e9313337f5dc2c842a3e6",
+      "merge_notes": "Guarded squash auto-merge completed only after seven reported checks passed, twenty-eight intentional checks skipped, no check failed or remained pending, and GitHub reported the exact reviewed head conflict-free."
     },
     {
       "id": "gfm-typescript-neutral-conformance-adoption",
@@ -17267,11 +17270,15 @@
       "title": "Implement GFM parser parity in Swift",
       "status": "pending",
       "depends_on": [
-        "gfm-language-neutral-conformance-fixture"
+        "gfm-fenced-block-swift-contract-adoption",
+        "commonmark-parser-swift-652-reconciliation",
+        "gfm-parser-swift-lane-parity"
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Swift already has CommonMark parser and HTML renderer packages, though its parser documents subset coverage. Reconcile that prerequisite against the neutral corpus and add GFM extensions with native conformance tests.",
+      "delivery_class": "aggregate",
+      "selection_blocked": true,
+      "notes": "Selection-blocked aggregate retained for historical dependency references. Swift lacks a source-preserving fenced_block AST/renderer contract and the actual gfm-parser root, while its CommonMark parser documents subset coverage. Complete the three exact children before treating the aggregate as ready.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/gfm-swift-lane-parity"
       ],
@@ -19823,7 +19830,8 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Two missing portable C# roots in the 9/15 CommonMark and document-ast-to-html families; consume shared parser/renderer fixtures before GFM extensions.",
+      "selection_blocked": true,
+      "notes": "Selection remains blocked while the renderer/facade split lands. The measured parser reconciliation is also too broad for one replacement: decompose it into a full-652 harness and failure inventory, sequential block and inline repairs, and a final exact gate before selecting parser work.",
       "classification_refresh": "Current inventory commonmark and document-ast-to-html are actual missing nine-lane facade/renderer families; commonmark-parser is present12including this lane. Qualify existing parser where required, deliver actual owned CommonMark facade and HTML renderer with upstream fixtures; do not invent absent parser root or add duplicate facade/renderer owner. No native tests/merged receipt in this refresh.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/commonmark-html-csharp-lane-prerequisites"
@@ -19835,12 +19843,16 @@
       "title": "Port CommonMark parser and document AST HTML renderer to F#",
       "status": "pending",
       "depends_on": [
-        "gfm-fenced-block-ast-and-consumer-contract-repair"
+        "document-ast-to-html-fsharp-lane-parity",
+        "commonmark-parser-fsharp-652-reconciliation",
+        "commonmark-fsharp-facade-lane-parity"
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Two missing portable F# roots in the 9/15 CommonMark and document-ast-to-html families; prove an F# front door even if a shared .NET engine is reviewed.",
-      "classification_refresh": "Current inventory commonmark and document-ast-to-html are actual missing nine-lane facade/renderer families; commonmark-parser is present12including this lane. Qualify existing parser where required, deliver actual owned CommonMark facade and HTML renderer with upstream fixtures; do not invent absent parser root or add duplicate facade/renderer owner. No native tests/merged receipt in this refresh.",
+      "delivery_class": "aggregate",
+      "selection_blocked": true,
+      "notes": "Selection-blocked aggregate retained for historical dependencies. Its exact children separately own the missing F# renderer, official-corpus reconciliation of the existing substantive parser, and the facade that follows both.",
+      "classification_refresh": "F# already has document-ast and a substantive commonmark-parser, but lacks document-ast-to-html and commonmark roots. The parser cannot make an official HTML conformance claim until the renderer exists and all 652 CommonMark 0.31.2 examples are measured. Keep renderer, parser reconciliation, and facade as separate reviewable owners.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/commonmark-html-fsharp-lane-prerequisites"
       ],
@@ -25754,6 +25766,173 @@
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261024-gfm-resume-classification.json#x509-revocation-observation-policy-profile-classification"
       ]
+    },
+    {
+      "id": "document-ast-to-html-fsharp-lane-parity",
+      "title": "Add the document AST HTML renderer to F#",
+      "status": "in-progress",
+      "depends_on": [],
+      "branch": "codex/parity-fsharp-document-html-20261024",
+      "pr_number": null,
+      "delivery_class": "portable-lane-adoption",
+      "selection_blocked": false,
+      "registered_at": "2026-10-24T19:17:58Z",
+      "started_at": "2026-10-24T19:17:58Z",
+      "base_revision": "6b6b5cc9fef871e2ebc8e7554d0ad5a5f554aafe",
+      "package_paths": [
+        "code/packages/fsharp/document-ast-to-html"
+      ],
+      "notes": "Selected as the smallest independent post-#18118 tranche. Deliver one pure native F# renderer over every existing F# document-ast case with raw routing, URL hardening, immutable ownership, explicit depth/node/output bounds, native coverage, package metadata and Unix/Windows build fronts. Do not edit the parser or add CommonMark/GFM facades."
+    },
+    {
+      "id": "commonmark-parser-fsharp-652-reconciliation",
+      "title": "Reconcile the F# parser with all 652 CommonMark 0.31.2 examples",
+      "status": "pending",
+      "depends_on": [
+        "document-ast-to-html-fsharp-lane-parity"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "portable-lane-reconciliation",
+      "selection_blocked": false,
+      "registered_at": "2026-10-24T19:17:58Z",
+      "package_paths": [
+        "code/packages/fsharp/commonmark-parser"
+      ],
+      "notes": "Run every official CommonMark 0.31.2 example through the existing native F# parser and the merged F# renderer, record the measured baseline, then reconcile behavior without fixture lookup, third-party engines, external processes or cross-language bridges. Split further by measured failure families before implementation if the gap cannot fit one bounded review."
+    },
+    {
+      "id": "commonmark-fsharp-facade-lane-parity",
+      "title": "Add the thin CommonMark facade to F#",
+      "status": "pending",
+      "depends_on": [
+        "commonmark-parser-fsharp-652-reconciliation",
+        "document-ast-to-html-fsharp-lane-parity"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "portable-lane-adoption",
+      "selection_blocked": false,
+      "registered_at": "2026-10-24T19:17:58Z",
+      "package_paths": [
+        "code/packages/fsharp/commonmark"
+      ],
+      "notes": "Add only the thin native parse/to-HTML composition package after the F# parser passes all 652 official examples and the renderer merges. Preserve AST access and raw-HTML security documentation; do not absorb GFM adoption."
+    },
+    {
+      "id": "gfm-fenced-block-swift-contract-adoption",
+      "title": "Adopt the source-preserving fenced-block contract in Swift",
+      "status": "pending",
+      "depends_on": [
+        "gfm-language-neutral-conformance-fixture"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "portable-lane-reconciliation",
+      "selection_blocked": false,
+      "registered_at": "2026-10-24T19:17:58Z",
+      "package_paths": [
+        "code/packages/swift/document-ast",
+        "code/packages/swift/commonmark-parser",
+        "code/packages/swift/document-ast-to-html"
+      ],
+      "notes": "Swift currently lowers fences to code_block and has no fenced_block AST/renderer case. Adopt TE04 source-preserving name/info/value semantics and inert HTML fallback before adding the missing GFM parser root. Keep the sixteen-case GFM parser adoption itself downstream."
+    },
+    {
+      "id": "commonmark-parser-swift-652-reconciliation",
+      "title": "Reconcile the Swift parser with all 652 CommonMark 0.31.2 examples",
+      "status": "pending",
+      "depends_on": [
+        "gfm-fenced-block-swift-contract-adoption"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "portable-lane-reconciliation",
+      "selection_blocked": false,
+      "registered_at": "2026-10-24T19:17:58Z",
+      "package_paths": [
+        "code/packages/swift/commonmark-parser",
+        "code/packages/swift/commonmark",
+        "code/packages/swift/document-ast-to-html"
+      ],
+      "notes": "The Swift parser documents subset coverage and currently mixes strikethrough into its CommonMark surface. Establish exact native 652-case behavior and preserve the fenced-block contract before claiming the base prerequisite for GFM."
+    },
+    {
+      "id": "gfm-parser-swift-lane-parity",
+      "title": "Add the GFM parser package to Swift",
+      "status": "pending",
+      "depends_on": [
+        "gfm-language-neutral-conformance-fixture",
+        "gfm-fenced-block-swift-contract-adoption",
+        "commonmark-parser-swift-652-reconciliation"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "portable-lane-adoption",
+      "selection_blocked": false,
+      "registered_at": "2026-10-24T19:17:58Z",
+      "package_paths": [
+        "code/packages/swift/gfm-parser"
+      ],
+      "notes": "Add the actual missing Swift gfm-parser root and run all sixteen neutral source/AST/HTML vectors through native public APIs after the same-lane fenced and CommonMark prerequisites merge. The separate GFM facade owner remains downstream."
+    },
+    {
+      "id": "commonmark-language-neutral-conformance-centralization",
+      "title": "Centralize CommonMark parser and renderer conformance fixtures",
+      "status": "pending",
+      "depends_on": [
+        "commonmark-language-neutral-fixture-foundation",
+        "commonmark-language-neutral-reader-migrations"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "aggregate",
+      "selection_blocked": true,
+      "registered_at": "2026-10-24T19:17:58Z",
+      "package_paths": [
+        "code/specs/fixtures"
+      ],
+      "notes": "Selection-blocked aggregate. Nine current readers across seven languages carry byte-identical CommonMark 0.31.2 copies with SHA-256 d431b29d97b6f73e69d547109cf5081578fac931e72afe95639ebe766c1b2a20. Separate the canonical bounded foundation from per-language reader and CI migrations; neither is required for the selected F# renderer."
+    },
+    {
+      "id": "commonmark-language-neutral-fixture-foundation",
+      "title": "Define the canonical CommonMark 0.31.2 conformance fixture",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "portable-conformance-foundation",
+      "selection_blocked": false,
+      "registered_at": "2026-10-24T19:17:58Z",
+      "package_paths": [
+        "code/specs/fixtures/commonmark-0.31.2"
+      ],
+      "notes": "Pin the official 652-case corpus once with provenance, digest, bounded transport/schema validation, and independently authored renderer vectors. Do not migrate native readers or absorb GFM in this foundation PR."
+    },
+    {
+      "id": "commonmark-language-neutral-reader-migrations",
+      "title": "Migrate CommonMark native readers to the canonical fixture",
+      "status": "pending",
+      "depends_on": [
+        "commonmark-language-neutral-fixture-foundation"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "aggregate",
+      "selection_blocked": true,
+      "registered_at": "2026-10-24T19:17:58Z",
+      "package_paths": [
+        "code/packages/elixir/commonmark_parser",
+        "code/packages/go/commonmark",
+        "code/packages/lua/commonmark",
+        "code/packages/lua/gfm",
+        "code/packages/python/commonmark-parser",
+        "code/packages/ruby/commonmark_parser",
+        "code/packages/rust/commonmark",
+        "code/packages/typescript/commonmark-parser",
+        "code/packages/typescript/commonmark"
+      ],
+      "notes": "Split into per-language or otherwise non-overlapping reader/CI migration children before selection. Preserve publishable-package test independence, prove fixture-only CI selection, and do not change parser behavior while removing duplicate corpus ownership."
     },
     {
       "id": "typescript-transitive-node-builtin-declaration-ownership",
