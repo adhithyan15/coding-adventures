@@ -205,6 +205,14 @@ const ER_RECURSIVE_RELATIONSHIPS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-recursive-relationships-11.16.1-visual-corpus.json"
 ));
+const ER_PARALLEL_RELATIONSHIPS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-parallel-relationships-11.16.1-corpus.json"
+));
+const ER_PARALLEL_RELATIONSHIPS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-parallel-relationships-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2679,6 +2687,30 @@ fn pinned_er_recursive_relationship_reaches_semantic_ir() {
     assert_eq!(diagram.relationships[0].from, "NODE");
     assert_eq!(diagram.relationships[0].to, "NODE");
     assert_eq!(diagram.relationships[0].label.as_deref(), Some("leads to"));
+}
+
+#[test]
+fn pinned_er_parallel_relationships_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_PARALLEL_RELATIONSHIPS_CORPUS)
+        .expect("ER parallel relationship corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_PARALLEL_RELATIONSHIPS_VISUAL_CORPUS)
+        .expect("ER parallel relationship visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER parallel relationship source"),
+    )
+    .expect("ER parallel relationship fixture must parse");
+
+    assert_eq!(diagram.nodes.len(), 2);
+    assert_eq!(diagram.relationships.len(), 2);
+    assert_eq!(diagram.relationships[0].label.as_deref(), Some("insured for"));
+    assert_eq!(diagram.relationships[1].label.as_deref(), Some("owned by"));
+    assert!(diagram.relationships.iter().all(|relationship| {
+        relationship.from == "CAR" && relationship.to == "PERSON"
+    }));
 }
 
 #[test]
