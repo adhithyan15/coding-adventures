@@ -82,8 +82,12 @@ it("adds a slow Punjabi A2 start-word prerequisite without mock credit", () => {
   expect(learnerCopy).toMatch(/ਕਰੋ.*polite command|polite command.*ਕਰੋ/is);
   expect(learnerCopy).toMatch(/noun-plus-.*ਕਰਨਾ.*pattern/is);
   expect(learnerCopy).toMatch(/keep.*whole|whole word/is);
-  expect(learnerCopy).toContain("https://dic.learnpunjabi.org/default.aspx");
-  expect(learnerCopy).toMatch(/Arabic.*through Persian.*Urdu|Arabic-origin.*Persian.*Urdu/is);
+  expect(learnerCopy).toContain(
+    "https://dic.learnpunjabi.org/default.aspx?look=%E0%A8%B6%E0%A9%81%E0%A8%B0%E0%A9%82",
+  );
+  expect(learnerCopy).toMatch(/borrowed from Arabic/is);
+  expect(learnerCopy).not.toMatch(/through Persian|through Urdu/is);
+  expect(learnerCopy).toMatch(/index uses the equivalent precomposed letter spelling/is);
   expect(learnerCopy).toMatch(/source history separate.*Punjabi use/is);
   expect(learnerCopy).toMatch(/Gill.*Gleason.*pp\. 122.*124/is);
   expect(learnerCopy).toMatch(/not every possible combination.*tense.*function/is);

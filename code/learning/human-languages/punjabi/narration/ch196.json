@@ -4,7 +4,7 @@
   "chapter": 196,
   "title": "Start the Work",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:46f45a22370fceb6",
+  "sourceHash": "fnv1a64:0444710926bc3f1c",
   "lessons": [
     {
       "id": "PA-C196-work-command-return",
@@ -116,7 +116,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac90bd97d5e2a08e",
+      "sourceHash": "fnv1a64:64ce2bf661385a50",
       "notice": null,
       "blocks": [
         {
@@ -158,7 +158,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The Punjabi University dictionary records ਸ਼ੁਰੂ (shuruu) as a noun for a beginning or start. Its history reaches Punjabi from Arabic through Persian and Urdu. Keep that source history separate from present-day Punjabi use, and learn the Punjabi form as one whole. Sources: Punjabi University Punjabi-English Dictionary; Wiktionary: ਸ਼ੁਰੂ (shuruu)."
+              "text": "The Punjabi University dictionary records this Punjabi noun for a beginning or start; its index uses the equivalent precomposed letter spelling. Wiktionary records the Punjabi word as borrowed from Arabic. Keep that source history separate from present-day Punjabi use, and learn the Punjabi form as one whole. Sources: Punjabi University Punjabi-English Dictionary; Wiktionary: ਸ਼ੁਰੂ (shuruu)."
             }
           ]
         },

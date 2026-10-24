@@ -12,7 +12,7 @@ concept_tag: PA-A2-SHURU-DIRECT-OWNER
 prerequisites: [PA-C196-work-command-return]
 sounds: []
 roots: []
-etymology_hook: "Punjabi ਸ਼ੁਰੂ 'start, begin' is an Arabic-origin borrowing transmitted through Persian and Urdu; keep the source history separate from present-day Punjabi use"
+etymology_hook: "Punjabi ਸ਼ੁਰੂ 'beginning, start' is borrowed from Arabic; keep the source history separate from present-day Punjabi use"
 duration:
   max_seconds: 225
 requires:
@@ -51,11 +51,12 @@ complete instruction comes only after a separate retrieval.
 ## Across the family
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SHURU-196] -->
 
-The Punjabi University dictionary records **ਸ਼ੁਰੂ** as a noun for a beginning
-or start. Its history reaches Punjabi from Arabic through Persian and Urdu.
-Keep that source history separate from present-day Punjabi use, and learn the
-Punjabi form as one whole. Sources:
-[Punjabi University Punjabi-English Dictionary](https://dic.learnpunjabi.org/default.aspx?look=%E0%A8%B8%E0%A8%BC%E0%A9%81%E0%A8%B0%E0%A9%82);
+The Punjabi University dictionary records this Punjabi noun for a beginning or
+start; its index uses the equivalent precomposed letter spelling. Wiktionary
+records the Punjabi word as borrowed from Arabic. Keep that source history
+separate from present-day Punjabi use, and learn the Punjabi form as one whole.
+Sources:
+[Punjabi University Punjabi-English Dictionary](https://dic.learnpunjabi.org/default.aspx?look=%E0%A8%B6%E0%A9%81%E0%A8%B0%E0%A9%82);
 [Wiktionary: ਸ਼ੁਰੂ](https://en.wiktionary.org/wiki/%E0%A8%B8%E0%A8%BC%E0%A9%81%E0%A8%B0%E0%A9%82).
 
 ## Guided Practice

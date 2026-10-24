@@ -27,10 +27,12 @@ light-verb paradigm.
 
 The Punjabi University Punjabi-English Dictionary supplies the Punjabi
 headword and meaning:
-<https://dic.learnpunjabi.org/default.aspx?look=%E0%A8%B8%E0%A8%BC%E0%A9%81%E0%A8%B0%E0%A9%82>.
-The source note may identify the word as an Arabic-origin borrowing transmitted
-through Persian/Urdu, but it must keep that history separate from present-day
-Punjabi use and must not turn an Arabic root into a productive Punjabi rule.
+<https://dic.learnpunjabi.org/default.aspx?look=%E0%A8%B6%E0%A9%81%E0%A8%B0%E0%A9%82>.
+The dictionary indexes the equivalent precomposed letter spelling; authored
+learner copy keeps the curriculum's modern decomposed target spelling. The
+source note may identify the word as borrowed from Arabic, but it must keep
+that history separate from present-day Punjabi use and must not turn an Arabic
+root into a productive Punjabi rule.
 Gill and Gleason's discussion of conventional noun/adjective-plus-verb
 conjuncts on pp. 122 and 124 supports the bounded construction without
 licensing every possible combination:

@@ -1,6 +1,6 @@
 [package]
 name = "x509-rsa-sha256-reviewed-server-link"
-version = "0.9.0"
+version = "0.10.0"
 edition = "2021"
 description = "Reviewed-root RSA SHA-256 server-path binding with exact DNS constraint policy"
 
