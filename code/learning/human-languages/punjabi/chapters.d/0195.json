@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "A Room with a Window",
+  "label": "ch:pa-a2-vala-forms",
+  "canDo": "I can contrast a room with a window with in that room, using one bounded masculine direct-oblique pattern.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C195-payoff",
+    "kind": "production",
+    "summary": "Contrast a room with a window and in that room through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-GRAMMAR-VALA-ASSOCIATIVE-195",
+      "PA-FORM-VALE-MASC-OBLIQUE-195"
+    ],
+    "note": "This eighteenth Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}
