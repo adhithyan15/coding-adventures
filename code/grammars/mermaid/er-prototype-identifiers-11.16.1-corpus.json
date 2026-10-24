@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER prototype-safe entity and class identifier vertical slice",
+  "fixtures": [
+    {
+      "name": "prototype-safe-identifiers",
+      "source": "erDiagram\n__proto__ ||--|| constructor : links\nconstructor ||--|| prototype : links\n__proto__ {\n  string id PK\n}\nclassDef constructor fill:#dcfce7,stroke:#166534,color:#14532d\nclass prototype constructor"
+    }
+  ]
+}

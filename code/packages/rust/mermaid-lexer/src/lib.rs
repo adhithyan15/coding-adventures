@@ -1637,6 +1637,18 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_prototype_safe_identifiers() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\n__proto__ ||--|| constructor : links\nconstructor ||--|| prototype : links\n",
+        );
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        for expected in ["__proto__", "constructor", "prototype"] {
+            assert!(values.contains(&expected));
+        }
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
