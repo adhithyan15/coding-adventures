@@ -1609,6 +1609,20 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_empty_and_compact_attribute_blocks() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nBOOK{}\nAUTHOR         {}\nBOOK{string title PK \"Display title\"}\n",
+        );
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        assert_eq!(values.iter().filter(|value| **value == "{").count(), 3);
+        assert_eq!(values.iter().filter(|value| **value == "}").count(), 3);
+        for expected in ["string", "title", "PK", "Display title"] {
+            assert!(values.contains(&expected));
+        }
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",

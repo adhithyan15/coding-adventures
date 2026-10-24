@@ -15,7 +15,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.28.0";
+pub const VERSION: &str = "0.29.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -302,7 +302,7 @@ fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
     // Track max height per row so rows don't overlap.
     let padding = outer_padding(architecture_config);
     let mut row_y: Vec<f64> = vec![padding];
-    let mut row_adjustments: Vec<f64> = vec![0.0];
+    let mut row_x: Vec<f64> = vec![padding];
 
     let mut previous_index = None;
     for (slot, node_index) in placement_order.into_iter().enumerate() {
@@ -316,23 +316,20 @@ fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
         while row_y.len() <= row {
             row_y.push(*row_y.last().unwrap_or(&padding));
         }
-        while row_adjustments.len() <= row {
-            row_adjustments.push(0.0);
+        while row_x.len() <= row {
+            row_x.push(padding);
         }
 
-        if col > 0 {
+        let gap = if col > 0 {
             let fallback = horizontal_gap(architecture_config);
-            row_adjustments[row] += previous_index.map_or(0.0, |previous| {
-                connected_node_gap(&nodes[previous], node, diagram, fallback) - fallback
-            });
-        }
-
-        let minimum_width = architecture_config.map_or(MIN_NODE_W, |config| {
-            MIN_NODE_W * config.icon_size / 80.0
-        });
-        let x = padding
-            + col as f64 * (minimum_width + horizontal_gap(architecture_config))
-            + row_adjustments[row];
+            previous_index.map_or(fallback, |previous| {
+                connected_node_gap(&nodes[previous], node, diagram, fallback)
+            })
+        } else {
+            0.0
+        };
+        let x = row_x[row] + gap;
+        row_x[row] = x + nw;
         let y =
             row_y[row] + group_depth(node.parent_group.as_deref(), groups) as f64 * GROUP_HEADER_H;
 
@@ -1147,7 +1144,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.28.0");
+        assert_eq!(crate::VERSION, "0.29.0");
     }
 
     #[test]
@@ -1164,6 +1161,17 @@ mod tests {
             assert!(n.width > 0.0, "width must be positive");
             assert!(n.height > 0.0, "height must be positive");
         }
+    }
+
+    #[test]
+    fn wide_grid_nodes_do_not_overlap_following_nodes() {
+        let mut diagram = two_class_diagram();
+        diagram.nodes[0].compartments[0].entries = vec![
+            "title: string [PK] - A deliberately wide field comment".into(),
+        ];
+        let layout = layout_structural_diagram(&diagram);
+
+        assert!(layout.nodes[1].x >= layout.nodes[0].x + layout.nodes[0].width + COL_GAP);
     }
 
     #[test]

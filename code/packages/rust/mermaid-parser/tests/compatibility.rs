@@ -157,6 +157,14 @@ const ER_PARENT_CARDINALITY_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-parent-cardinality-11.16.1-visual-corpus.json"
 ));
+const ER_COMPACT_ATTRIBUTE_BLOCKS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-compact-attribute-blocks-11.16.1-corpus.json"
+));
+const ER_COMPACT_ATTRIBUTE_BLOCKS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-compact-attribute-blocks-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2479,6 +2487,37 @@ fn pinned_er_parent_cardinality_disambiguates_u_entity_names() {
     assert_eq!(u.compartments[0].entries, ["id: string [PK]"]);
     assert_eq!(entity.relationships[0].from, "u");
     assert_eq!(entity.relationships[0].from_mult.as_deref(), Some("1"));
+}
+
+#[test]
+fn pinned_er_compact_attribute_blocks_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_COMPACT_ATTRIBUTE_BLOCKS_CORPUS)
+        .expect("ER compact attribute block corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_COMPACT_ATTRIBUTE_BLOCKS_VISUAL_CORPUS)
+        .expect("ER compact attribute block visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(syntax["fixtures"].as_array().expect("ER compact fixtures").len(), 2);
+
+    let empty = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER empty block source"),
+    )
+    .expect("ER empty block fixture must parse");
+    assert_eq!(empty.nodes.len(), 2);
+    assert!(empty.nodes.iter().all(|node| node.compartments.is_empty()));
+
+    let compact = parse_er_diagram(
+        syntax["fixtures"][1]["source"]
+            .as_str()
+            .expect("ER compact block source"),
+    )
+    .expect("ER compact block fixture must parse");
+    let book = compact.nodes.iter().find(|node| node.id == "BOOK").expect("BOOK");
+    assert_eq!(
+        book.compartments[0].entries,
+        ["title: string [PK] - Display title"]
+    );
 }
 
 #[test]
