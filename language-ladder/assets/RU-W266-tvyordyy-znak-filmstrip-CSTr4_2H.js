@@ -1,0 +1,1 @@
+var e=new URL(`RU-W266-tvyordyy-znak-filmstrip-rdVZ6bsO.svg`,import.meta.url).href;export{e as default};
