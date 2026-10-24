@@ -134,7 +134,8 @@ detection through paint, while authored entity and attribute text retains its
 original case. Numeric `1` cardinalities are disambiguated from numeric entity
 identifiers, including compact relationship operators. Quoted entity names follow
 the pinned non-empty character constraints without narrowing quoted relationship
-roles or attribute comments. ER remains partial while the
+roles or attribute comments. Generic, array, nullable, and length-limited
+attribute types preserve ordered key lists and comments through paint. ER remains partial while the
 rest of the pinned upstream syntax and visual corpus is incomplete.
 
 ## Required New Semantic Families

@@ -1552,6 +1552,29 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_attribute_type_forms() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER {\n  type~T~ genericValue\n  string[] readers FK\n  character(10) isbn PK, FK\n  string? alias UK\n}\n",
+        );
+        let values: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ != TokenType::Eof)
+            .map(|token| token.value.as_str())
+            .collect();
+
+        for expected in ["type~T~", "string", "character(10)", "?"] {
+            assert!(values.contains(&expected));
+        }
+        assert_eq!(
+            values
+                .iter()
+                .filter(|value| matches!(**value, "FK" | "PK" | "UK"))
+                .count(),
+            4
+        );
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
