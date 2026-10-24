@@ -1190,6 +1190,19 @@ authenticate a response signature, authorize a responder, bind the identifier
 to a certificate or constructed path, decide status or freshness, fetch or
 cache revocation data, read a clock, or grant path, trust, TLS, HTTP, OAuth
 transport, or network authority. Concrete HTTPS remains unavailable.
+A bounded `x509-ocsp-cert-status` prerequisite now decodes exactly one RFC
+6960 `CertStatus` CHOICE within caller-owned DER depth, element, and length
+limits. It accepts the exact primitive empty `good [0]` and `unknown [2]`
+forms, or the exact constructed `revoked [1]` form containing one required
+OCSP GeneralizedTime and one optional explicit `CRLReason`. The reason registry
+is the fixed RFC 5280 set used by RFC 6960; canonical negative, unassigned, and
+out-of-range ENUMERATED values fail closed. Success retains only a clock-free
+validated revocation time and the optional typed reason. This structural layer
+does not parse a `SingleResponse` or larger OCSP response, authenticate a
+response signature, authorize a responder, bind status to a `CertID`,
+certificate, or constructed path, decide freshness, fetch or cache revocation
+data, read a clock, or grant path, trust, TLS, HTTP, OAuth transport, or network
+authority. Concrete HTTPS remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
