@@ -1876,7 +1876,7 @@
     "preserved_legacy_alias": "gfm-typescript-extension-v1-native-adoption",
     "preserved_cpp_pending_owner": "cpp-text-stack-applicability-classification",
     "preserved_new_root_owner": "x509-ocsp-response-envelope-profile-classification",
-    "one_active_parity_pr_limit": 1,
+    "maximum_active_parity_prs": 3,
     "scope": "All saved bounded audits incorporated as evidence/preparation; native adopters remain pending. Historical waiting-for-merge text in the29th receipt was superseded by verified external merge during capture."
   },
   "priority_review": [
