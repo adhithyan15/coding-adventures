@@ -512,7 +512,13 @@ primitive context-specific tags, providing typed value prerequisites for
 later X.509 schemas without claiming their semantics. A separate
 `x509-time` profile layer now validates exact RFC 5280
 UTCTime and GeneralizedTime tags, fixed Zulu forms, the 1950/2050 century
-split, and Gregorian fields without a clock or platform calendar. A bounded
+split, and Gregorian fields without a clock or platform calendar. A separate
+tag-strict entry point in that same repository-owned layer validates the RFC
+5280 GeneralizedTime wire form used by RFC 6960 OCSP fields without applying
+the certificate-validity rule that reserves GeneralizedTime for 2050 and
+later. It accepts only the fixed `YYYYMMDDHHMMSSZ` form and returns the same
+clock-free calendar value; it does not parse an OCSP container, read a clock,
+or decide freshness. A bounded
 `x509-validity` layer is now shipped above them: it decodes the exact two-field
 `Validity` sequence, rejects inverted endpoints, and classifies an explicitly
 supplied validated time against inclusive endpoints. These layers still
