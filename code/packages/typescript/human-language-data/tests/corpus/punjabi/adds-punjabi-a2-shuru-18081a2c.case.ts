@@ -78,12 +78,15 @@ it("adds a slow Punjabi A2 start-word prerequisite without mock credit", () => {
     .flatMap((lesson) => lesson?.blocks.map((block) => block.markdown) ?? [])
     .join("\n").replace(/\s+/gu, " ");
   expect(learnerCopy).toContain("ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ");
-  expect(learnerCopy).toMatch(/start|begin/is);
+  expect(learnerCopy).toMatch(/noun.*beginning|noun.*start/is);
   expect(learnerCopy).toMatch(/ਕਰੋ.*polite command|polite command.*ਕਰੋ/is);
+  expect(learnerCopy).toMatch(/noun-plus-.*ਕਰਨਾ.*pattern/is);
   expect(learnerCopy).toMatch(/keep.*whole|whole word/is);
   expect(learnerCopy).toContain("https://dic.learnpunjabi.org/default.aspx");
   expect(learnerCopy).toMatch(/Arabic.*through Persian.*Urdu|Arabic-origin.*Persian.*Urdu/is);
   expect(learnerCopy).toMatch(/source history separate.*Punjabi use/is);
+  expect(learnerCopy).toMatch(/Gill.*Gleason.*pp\. 122.*124/is);
+  expect(learnerCopy).toMatch(/not every possible combination.*tense.*function/is);
   expect(learnerCopy).not.toContain("ਸ਼ੁਰੂਆਤ");
   expect(learnerCopy).not.toContain("ਸ਼ੁਰੂ ਵਿੱਚ");
   expect(learnerCopy).not.toContain("ਸ਼ੁਰੂ ਹੋਣਾ");

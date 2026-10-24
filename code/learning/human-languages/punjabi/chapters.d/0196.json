@@ -1,0 +1,18 @@
+{
+  "chapter": 196,
+  "title": "Start the Work",
+  "label": "ch:pa-a2-shuru",
+  "canDo": "I can recognise and use the familiar word for start in one bounded polite work instruction.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C196-payoff",
+    "kind": "production",
+    "summary": "Recognise and produce the start word in one bounded polite work instruction through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-LEX-SHURU-196"
+    ],
+    "note": "This nineteenth Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}
