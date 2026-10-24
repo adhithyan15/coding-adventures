@@ -19,14 +19,13 @@ use x509_rsa_public_key::{RsaPublicKeyErrorKind, RsaPublicKeyPolicy};
 use x509_rsa_sha256_issuer_link::{
     advance_x509_rsa_sha256_authenticated_intermediate_path_length,
     bind_x509_rsa_sha256_intermediate_issuer_policy_link,
-    verify_constructed_x509_rsa_sha256_issuer_link,
-    verify_selected_x509_rsa_sha256_issuer_link,
+    verify_constructed_x509_rsa_sha256_issuer_link, verify_selected_x509_rsa_sha256_issuer_link,
     verify_selected_x509_rsa_sha256_issuer_link_with_policies,
     verify_selected_x509_rsa_sha256_issuer_link_with_role_policy,
     verify_x509_rsa_sha256_issuer_link, X509RsaSha256ConstructedPathAdjacentLinkErrorKind,
     X509RsaSha256IntermediateIssuerPolicyLinkErrorKind, X509RsaSha256IssuerLinkErrorKind,
-    X509RsaSha256IssuerLinkPolicy,
-    X509RsaSha256IssuerPolicyLinkErrorKind, X509RsaSha256IssuerRolePolicyLinkErrorKind,
+    X509RsaSha256IssuerLinkPolicy, X509RsaSha256IssuerPolicyLinkErrorKind,
+    X509RsaSha256IssuerRolePolicyLinkErrorKind,
 };
 use x509_time::{decode_x509_time, X509Time};
 
@@ -295,25 +294,19 @@ fn authenticates_the_exact_target_link_projected_from_a_constructed_path() {
         1,
         2,
         |certificate| certificate.encoded() == candidates[0].encoded(),
-        |child_issuer, candidate_subject| {
-            child_issuer.encoded() == candidate_subject.encoded()
-        },
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
     )
     .unwrap();
     let adjacent_link = path.adjacent_link(0).unwrap();
 
-    let verified =
-        verify_constructed_x509_rsa_sha256_issuer_link(adjacent_link, policy()).unwrap();
+    let verified = verify_constructed_x509_rsa_sha256_issuer_link(adjacent_link, policy()).unwrap();
 
     assert!(std::ptr::eq(
         verified.adjacent_link().constructed_path(),
         &path
     ));
     assert!(std::ptr::eq(
-        verified
-            .adjacent_link()
-            .child_target_certificate()
-            .unwrap(),
+        verified.adjacent_link().child_target_certificate().unwrap(),
         &child
     ));
     assert!(verified
@@ -354,12 +347,7 @@ fn authenticates_the_projected_candidate_child_without_endpoint_substitution() {
         b"root001.example",
     );
     let mut root_encoded = fixture();
-    replace_nth(
-        &mut root_encoded,
-        b"fixture.example",
-        1,
-        b"root001.example",
-    );
+    replace_nth(&mut root_encoded, b"fixture.example", 1, b"root001.example");
     let target = decode(&target_encoded);
     let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
     let path = construct_unique_x509_certificate_path_by(
@@ -368,9 +356,7 @@ fn authenticates_the_projected_candidate_child_without_endpoint_substitution() {
         2,
         3,
         |certificate| certificate.encoded() == candidates[1].encoded(),
-        |child_issuer, candidate_subject| {
-            child_issuer.encoded() == candidate_subject.encoded()
-        },
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
     )
     .unwrap();
     let adjacent_link = path.adjacent_link(1).unwrap();

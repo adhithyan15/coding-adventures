@@ -27,6 +27,15 @@ checks without invoking Name policy again. This prevents a caller from
 selecting one candidate and accidentally authenticating another, while still
 granting no complete-path or trust authority.
 
+A construction-bound entry point consumes one
+`ConstructedX509CertificatePathAdjacentLink`. It derives the target child at
+depth zero or the preceding selected candidate at later depths, authenticates
+that exact child against the exact projected issuer without rerunning Name
+policy, and returns non-copyable evidence retaining the projection and
+validated issuer key. This keeps construction order attached to one verified
+link. It does not authenticate another link, route algorithms, retain complete
+issuer policy, validate the full path, or establish trust.
+
 A stronger evidence-bound entry point additionally consumes one
 `ValidatedCertificateRolePolicy` for the selected issuer. Before key or
 signature work, it requires that evidence to retain the exact same candidate

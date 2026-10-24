@@ -29,6 +29,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a consuming authenticated path-length composition that advances only
   from the retained exact-intermediate policy and retains both the authenticated
   link evidence and resulting state.
+- Added a consuming constructed-path adjacency composition that authenticates
+  the exact projected target-or-candidate child and selected issuer without
+  rerunning Name policy, then retains both path order and the validated issuer
+  key in distinct non-copyable evidence.
 
 ### Security
 
@@ -50,3 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Authenticated path-length composition cannot advance from detached policy or
   discard its adjacent-link proof, while still granting no parent-link, path
   order, complete-path, trust, revocation, TLS, HTTP, or network authority.
+- Construction-bound authentication cannot substitute either endpoint or
+  silently discard the retained path order, while still granting no algorithm
+  routing, complete issuer policy, other-link authentication, complete-path,
+  trust, revocation, TLS, HTTP, or network authority.
