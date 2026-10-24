@@ -16,11 +16,11 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
+  "active_pr": 18147,
   "last_ci_action": {
-    "observed_at": "2026-10-24T19:04:16Z",
-    "pr_number": 18118,
-    "action": "Verified PR #18118 merged through guarded auto-merge as 83f1871e3d61e8151b0e9313337f5dc2c842a3e6 after every required check passed. Select the dependency-ready TypeScript adoption locally; the independent C# renderer continues in PR #18143 on its own branch."
+    "observed_at": "2026-10-24T19:12:40Z",
+    "pr_number": 18147,
+    "action": "Opened draft PR #18147 at exact reviewed head 67b0a2ccb50d1bf2c048b9932d5301e1e13bc920 only to obtain its durable number. Record the pr-open lifecycle receipt, push and revalidate it, then mark ready and babysit required CI before guarded auto-merge. Independent C# renderer PR #18143 continues on its own branch."
   },
   "last_inventory": {
     "revision": "2949f52059ed81e2a202f171c53d2b57069be002",
@@ -17257,16 +17257,20 @@
     {
       "id": "gfm-typescript-neutral-conformance-adoption",
       "title": "Adopt the neutral GFM extension corpus in TypeScript",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "gfm-language-neutral-conformance-fixture"
       ],
       "branch": "codex/parity-gfm-typescript-20261024",
-      "pr_number": null,
+      "pr_number": 18147,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18147",
       "notes": "Run all sixteen committed vectors through the real public TypeScript gfm-parser and document-ast-to-html APIs, compare exact AST and HTML, retain a dynamic fixture reader plus corruption witnesses and package coverage, and prove cases.json changes select the native package in the build-tool plan. This is the first post-fixture adoption item and must not be credited by the neutral validator alone.",
       "started_at": "2026-10-24T19:04:16Z",
       "base_revision": "83f1871e3d61e8151b0e9313337f5dc2c842a3e6",
-      "selection_notes": "Selected only after PR #18118 actually merged and exact-main contained the neutral corpus. The already-prepared bounded adoption has passed local native, selector, trust-boundary, and exact-head security review; merge current main, refresh evidence, then publish independently of the C# renderer PR."
+      "selection_notes": "Selected only after PR #18118 actually merged and exact-main contained the neutral corpus. The already-prepared bounded adoption has passed local native, selector, trust-boundary, and exact-head security review; merge current main, refresh evidence, then publish independently of the C# renderer PR.",
+      "pr_opened_at": "2026-10-24T19:12:40Z",
+      "publication_head": "67b0a2ccb50d1bf2c048b9932d5301e1e13bc920",
+      "publication_notes": "Draft PR #18147 was opened only to obtain the durable PR number after exact-head security and evidence review passed. This lifecycle commit advances the owner from in-progress to pr-open; the PR remains draft until this receipt is pushed and revalidated."
     },
     {
       "id": "gfm-swift-lane-parity",
