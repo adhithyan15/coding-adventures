@@ -102,6 +102,11 @@ const UNPARSEABLE_WHITESPACE_ONLY: &[&str] = &[
     "var n=0; o: for(var i=0;i<3;i++){ for(;;){ n++; break\no } }\nconsole.log(n); if (1) function g(){}",
     "function* g(){ yield\n7 }\nconsole.log(g().next().value); if (1) function h(){}",
     "function f(){ return\n42 }\nconsole.log(f()); l: function g(){}",
+    // Round 2: sloppy `yield` as a name must NOT get a `;` (a line break
+    // keeps both readings right).
+    "var yield = 2; var z = yield\n-1; console.log(z)",
+    "var yield = function(x){return x}; var z = yield\n(9); console.log(z)",
+    "var o = { return\n(){ return 3 } }; console.log(o.return())",
 ];
 
 #[test]

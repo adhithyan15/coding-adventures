@@ -18,9 +18,12 @@ WHITESPACE_ONLY drops every newline. When the parser can't read a program,
 it used to get no ASI points at all, so `function f(){ return⏎42 }` came out
 as `return 42`, a different program. The new refusals sent more programs down
 that path: any file containing `if (x) function f(){}`, for example. It now
-falls back to `asi::restricted_insertion_points`, which needs no parse.
+falls back to `asi::restricted_insertion_points`, which needs no parse, and
+keeps the source's line break at each of those points. It keeps a line break
+rather than inserting `;`, because without a parse generator `yield⏎7` (needs
+`;`) and sloppy `var yield; yield⏎(9)` (must not get one) look the same.
 `whitespace_only_keeps_restricted_semicolons_when_the_parse_fails` covers
-`return`, `break` and `yield`.
+`return`, `break`, `yield` (both kinds) and a method named `return`.
 
 ### Changed - WHITESPACE_ONLY unwraps a single-statement labeled block (CCR-087, #15924)
 

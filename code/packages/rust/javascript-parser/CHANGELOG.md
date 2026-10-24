@@ -26,9 +26,9 @@ All notable changes to the `coding-adventures-javascript-parser` crate will be d
 - `asi::restricted_insertion_points(tokens)`: the restricted-production `;`s
   (`return⏎`, `break⏎`, `continue⏎`, `throw⏎`, `yield⏎`, newline-led
   `++`/`--`), computed without parsing. These are the ASI points that change
-  what a program means. closurec's WHITESPACE_ONLY uses them when
-  `asi_insertion_points` fails, so a program the grammar can't parse no longer
-  loses them.
+  what a program means. When `asi_insertion_points` fails, closurec's
+  WHITESPACE_ONLY keeps the source's line break at these points, so a program
+  the grammar can't parse no longer loses them.
 
 ## 0.64.0 - Unreleased - quote-only string literals no longer panic the bridge
 

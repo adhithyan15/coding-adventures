@@ -223,6 +223,17 @@ pub fn whitespace_only_minify(
         s
     });
 
+    // The line break the parse-failure fallback keeps at restricted-production
+    // points (see `asi_points` below). Printed verbatim; it is never trivia to
+    // the emit loop, which only sees `kept`.
+    let synth_asi_newline: Option<lexer::token::Token> = tokens.first().map(|t| {
+        let mut s = t.clone();
+        s.value = "\n".to_string();
+        s.type_ = lexer::token::TokenType::Newline;
+        s.type_name = None;
+        s
+    });
+
     // gap-093 needs a synthetic `(`/`)` pair to WRAP a numeric
     // literal that is the object of a member access — `1 .x` and
     // `1..toString()` must become `(1).x` / `(1).toString()`,
@@ -275,27 +286,39 @@ pub fn whitespace_only_minify(
     // rule, `}`/end of input, and restricted productions such as
     // `return⏎x`. We splice `synth_asi_semi` in at each of those points.
     // The token vector itself is left alone, because the CV map below is keyed
-    // on pointers into it. A program the grammar can't parse still gets the
-    // restricted-production `;`s, which need no parse: without them
-    // `return⏎42` would come out as `return 42`, a different program, since
-    // every newline is dropped (F12 phase 0 security review).
-    let asi_points: Vec<usize> = match synth_asi_semi.as_ref() {
-        Some(_) => coding_adventures_javascript_parser::asi::asi_insertion_points(
-            tokens.clone(),
-            version,
-        )
-        .unwrap_or_else(|_| {
-            coding_adventures_javascript_parser::asi::restricted_insertion_points(tokens.clone())
-        }),
-        None => Vec::new(),
-    };
+    // on pointers into it.
+    //
+    // A program the grammar can't parse gets no ASI points from the parser.
+    // Dropping every newline would then glue `return⏎42` into `return 42`, a
+    // different program (F12 phase 0 security review). So the fallback keeps
+    // the source's line break at each restricted-production point, which
+    // needs no parse. It is a line break and not a `;` because without a
+    // parse we can't tell generator `yield⏎7` (needs the `;`) from sloppy
+    // `var yield; yield⏎(9)` (must not get one); the source's own newline is
+    // right for both.
+    let (asi_points, asi_splice): (Vec<usize>, Option<&lexer::token::Token>) =
+        match synth_asi_semi.as_ref() {
+            Some(semi) => match coding_adventures_javascript_parser::asi::asi_insertion_points(
+                tokens.clone(),
+                version,
+            ) {
+                Ok(points) => (points, Some(semi)),
+                Err(_) => (
+                    coding_adventures_javascript_parser::asi::restricted_insertion_points(
+                        tokens.clone(),
+                    ),
+                    synth_asi_newline.as_ref(),
+                ),
+            },
+            None => (Vec::new(), None),
+        };
     let mut kept: Vec<&lexer::token::Token> = Vec::with_capacity(tokens.len() + asi_points.len());
     {
         let mut points = asi_points.iter().peekable();
         for (i, t) in tokens.iter().enumerate() {
             while points.peek() == Some(&&i) {
-                if let Some(semi) = synth_asi_semi.as_ref() {
-                    kept.push(semi);
+                if let Some(splice) = asi_splice {
+                    kept.push(splice);
                 }
                 points.next();
             }
@@ -305,8 +328,8 @@ pub fn whitespace_only_minify(
         }
         // A point at `tokens.len()` (after everything) is the end of input.
         for _ in points {
-            if let Some(semi) = synth_asi_semi.as_ref() {
-                kept.push(semi);
+            if let Some(splice) = asi_splice {
+                kept.push(splice);
             }
         }
     }
