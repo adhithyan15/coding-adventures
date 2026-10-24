@@ -68,7 +68,7 @@ fn decode(input: &[u8]) -> X509Certificate<'_> {
 fn link_policy() -> X509RsaSha256IssuerLinkPolicy<'static> {
     X509RsaSha256IssuerLinkPolicy::new(
         Asn1Limits::default(),
-        RsaPublicKeyPolicy::new(4_096, 4_096, &[65_537]).unwrap(),
+        RsaPublicKeyPolicy::new(2_048, 4_096, &[65_537]).unwrap(),
         Asn1Limits::default(),
         RsaPublicOperationLimits::new(512).unwrap(),
     )
@@ -80,9 +80,9 @@ fn algorithm_profiles() -> [X509CertificateAlgorithmProfile<'static>; 1] {
         X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
         RSA_ENCRYPTION_OID,
         X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
-        4_096,
+        2_048,
         8_192,
-        4_096,
+        2_048,
         4_096,
     )
     .unwrap()]
