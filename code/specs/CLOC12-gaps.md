@@ -266,6 +266,50 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **WHITESPACE_ONLY token path: open.** It is queued behind #17840 (newline
   ASI), since both rewrite the same statement boundaries.
 
+### #17907 — a non-directive is never printed as `"use strict"`
+
+- **The bug.** ECMA-262 §11.2.1 makes a body strict only when its directive
+  prologue holds the exact token `"use strict"` or `'use strict'`. The AST
+  keeps no record of which statements were directives: the bridge decodes
+  escapes and drops grouping parentheses, and passes fold `` `use strict` ``
+  to a string and split `"use strict",1` into two statements. The printer
+  then wrote each of `"use\x20strict";`, `` `use strict`; ``,
+  `("use strict");` and `"use strict",1;` back as `"use strict";`, which made
+  sloppy code strict.
+- **Upstream rule (v20260915, probed on the jar).** Upstream never prints an
+  input `"use strict"`. It drops the leading run of statements in a program
+  or function body whose string value is `use strict`, whatever the escapes
+  or parentheses. It keeps one that follows any other statement
+  (`"a";"use strict"` and `0;"use strict"` print unchanged). It adds one
+  top-level directive back only for `--emit_use_strict`, single-quoted.
+- **AST emitter (SIMPLE/ADVANCED): resolved.** `use_strict_prologue_len`
+  computes that leading run, and `emit_program` and the new
+  `emit_function_body` skip it. Function declarations, function
+  expressions, methods, accessors, constructors and block-bodied arrows all
+  print their bodies through it. A plain block and a class `static {}` block
+  are not prologues and keep their strings.
+- **Deliberate divergence.** Upstream strips at parse time, before folding,
+  so at SIMPLE it prints `` `use strict`;x=1 `` as `"use strict";x=1;`
+  and `"use strict",1;x=1` as `"use strict";1;x=1;`. Both outputs are
+  strict, so upstream miscompiles them. closurec strips after folding and
+  prints `x=1;` and `1;x=1;`.
+- **WHITESPACE_ONLY token path: the escape case is resolved.**
+  `emit_quoted_string` prints a `use strict` string whose source spelling had
+  an escape as `"use\x20strict"`, so it stays inert. The template,
+  parenthesised and sequence forms already printed as written. Stripping the
+  leading run in WHITESPACE_ONLY, which needs function-body boundaries in the
+  token stream, is left to CCR-085 (#15920).
+- **Still open.** A `"use strict"` after another directive-shaped string,
+  such as `"a";("use strict")` or `"a";"use\x20strict"`, still prints as a
+  real directive at SIMPLE and ADVANCED, as it does upstream. Fixing that
+  needs the bridge to record directives, which waits for `javascript-parser`
+  to be free under backlog rule 8.
+- **Tests.** Ten emitter unit tests, and
+  `closurec/tests/regression_use_strict_prologue.rs`. The closurec test pins
+  WHITESPACE_ONLY and SIMPLE bytes for six shapes, asserts that no level
+  opens a body with `"use strict"`, and, when `node` is on `PATH`, checks
+  that every output prints what its source prints.
+
 ### gap-031 — empty `{}` body collapses to `;`
 
 - **Status:** **RESOLVED** in CLOC12.41 (PR pending). `minify_for_loop` flipped IGNORED → PASS.

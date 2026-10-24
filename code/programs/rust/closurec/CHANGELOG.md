@@ -4,6 +4,27 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - a non-directive no longer becomes `"use strict"` (#17907)
+
+`("use strict");x=1;console.log(x)` prints `1` in node. closurec compiled it
+at SIMPLE and ADVANCED to `"use strict";x=1;…`, which throws
+`ReferenceError`. The same happened for `"use\x20strict"`, for
+`` `use strict` `` and for `"use strict",1`, in programs and in function
+bodies. WHITESPACE_ONLY turned `"use\x20strict"` into `"use strict"` too.
+
+- SIMPLE and ADVANCED now drop a body's leading `"use strict"` statements,
+  as upstream does (`closure-emitter` 0.63.0). That includes real
+  directives, so their output no longer carries them; upstream doesn't
+  either. `--emit_use_strict` still adds one at the top.
+- WHITESPACE_ONLY prints an escaped spelling as `"use\x20strict"`, which
+  stays inert. It still keeps real directives, which CCR-085 (#15920) will
+  strip.
+
+`tests/regression_use_strict_prologue.rs` pins WHITESPACE_ONLY and SIMPLE
+bytes for six shapes. It asserts that no level opens a body with
+`"use strict"` and, with `node`, that every output prints what its source
+prints.
+
 ### Changed - WHITESPACE_ONLY unwraps a single-statement labeled block (CCR-087, #15924)
 
 `lbl:{a()}` now prints as `lbl:a();`, matching upstream. The rule:

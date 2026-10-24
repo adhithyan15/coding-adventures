@@ -5026,6 +5026,28 @@ pub(crate) fn emit_quoted_string(out: &mut String, raw_content: &str) {
     // Step 1: decode.
     let decoded = decode_js_string(raw_content);
 
+    // #17907: a source spelling of `use strict` that contains an escape
+    // (`"use\x20strict"`, `"\u0075se strict"`) is a directive but NOT a
+    // Use Strict Directive (ECMA-262 §11.2.1 requires the exact code points
+    // with no escape). Re-encoded canonically it would print as
+    // `"use strict"` and silently make a sloppy script or function strict.
+    // Keep one escape so it stays inert.
+    //
+    //   source                 canonical form    printed
+    //   ---------------------  ----------------  ------------------
+    //   "use strict"           "use strict"      "use strict"
+    //   'use strict'           "use strict"      "use strict"
+    //   "use\x20strict"        "use strict"      "use\x20strict"
+    //   "\u0075se strict"      "use strict"      "use\x20strict"
+    //
+    // The token pass cannot tell a directive position from any other, so
+    // this applies to every such string. Elsewhere the two spellings are
+    // the same value, so nothing observable changes there.
+    if decoded == "use strict" && raw_content != "use strict" {
+        out.push_str("\"use\\x20strict\"");
+        return;
+    }
+
     // Step 2: choose delimiter.
     let dq = decoded.chars().filter(|c| *c == '"').count();
     let sq = decoded.chars().filter(|c| *c == '\'').count();
