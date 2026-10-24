@@ -1,5 +1,6 @@
 use der_asn1::{Asn1Decoder, Asn1Limits};
 use rsa_public_operation::{RsaPublicOperationErrorKind, RsaPublicOperationLimits};
+use sha256::sha256;
 use x509_ocsp_basic_response::{decode_x509_ocsp_basic_response, X509OcspBasicResponse};
 use x509_ocsp_rsa_pkcs1_v1_5_sha256_signature::{
     verify_x509_ocsp_rsa_pkcs1_v1_5_sha256_signature, X509OcspRsaSha256SignatureErrorKind,
@@ -23,7 +24,7 @@ const RESPONSE_DATA_HEX: &str = concat!(
     "307ca21604144444444444444444444444444444444444444444180f32303236",
     "313032343132303030305a3051304f303a300906052b0e03021a050004141111",
     "1111111111111111111111111111111111110414222222222222222222222222",
-    "2222222222222222220201018000180f32303236313032343132333435365a",
+    "22222222222222220201018000180f32303236313032343132333435365a",
 );
 const PUBLIC_SPKI_HEX: &str = concat!(
     "30820122300d06092a864886f70d01010105000382010f003082010a02820101",
@@ -138,6 +139,22 @@ fn validated_key(encoded: &[u8]) -> ValidatedRsaPublicKey<'_> {
     let spki = decode_x509_subject_public_key_info(&mut decoder, root).unwrap();
     let policy = RsaPublicKeyPolicy::new(2_048, 2_048, &[65_537]).unwrap();
     validate_rsa_public_key(spki, policy, Asn1Limits::default()).unwrap()
+}
+
+#[test]
+fn checked_in_fixture_bytes_match_the_signing_trace() {
+    assert_eq!(
+        sha256(&signed_response_data()).as_slice(),
+        decode_hex("ca7ddddf9ea431b9bd338804380afd26c8dafc5b4bd651a9d48e2a72cf83684b")
+    );
+    assert_eq!(
+        sha256(&decode_hex(PUBLIC_SPKI_HEX)).as_slice(),
+        decode_hex("201929b3487147eb38c26b3de772792259849d8355fa3150f239b8a738e218b5")
+    );
+    assert_eq!(
+        sha256(&decode_hex(SIGNATURE_HEX)).as_slice(),
+        decode_hex("fc71cfd233c50c7f5c2853534cb243cd7f66e9f80a9eccb852c8777bf7783974")
+    );
 }
 
 #[test]
