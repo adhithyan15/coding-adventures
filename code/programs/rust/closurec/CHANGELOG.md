@@ -100,6 +100,17 @@ where the source prints `"undefined"`), and a dropped `function g` became a
 shapes at SIMPLE and ADVANCED and, when `node` is installed, checks that each
 output prints what the source prints.
 
+### Fixed - ADVANCED inlining no longer lets a nested function capture a caller's binding (#18134)
+
+`var y=1;function t(){return function(){return y}}function g(){var y=2;return t()()}console.log(g())`
+prints `1`. ADVANCED spliced `t` into `g`, so the returned function read
+`g`'s `y`, and the output printed `2`. The fix is in `closure-pass-inline`
+0.32.0: its capture guards now see the free names of nested `function` and
+method bodies.
+
+`tests/regression_inline_nested_capture.rs` checks with `node` that four
+programs print the same after SIMPLE and ADVANCED as before.
+
 ### Fixed - long expression chains fail cleanly instead of aborting (#16009, CLOC42)
 
 `console.log(x + x + … + x)` with about 1,000 or more terms used to overflow
