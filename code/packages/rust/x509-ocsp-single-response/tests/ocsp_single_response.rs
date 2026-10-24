@@ -263,6 +263,50 @@ fn malformed_children_report_offsets_in_the_whole_response() {
 }
 
 #[test]
+fn malformed_fields_are_rebased_from_each_cursor_position() {
+    let next = next_update(time(b"20261025123456Z"));
+    let exts = single_extensions(extensions(&[extension(17, &[])]));
+    for optional in [
+        vec![next.clone(), vec![0xa1, 0x02, 0x30]],
+        vec![next.clone(), exts.clone(), vec![0x05, 0x02, 0x00]],
+        vec![exts, vec![0xa0, 0x02, 0x18]],
+    ] {
+        let encoded = response(&optional);
+        let error = decode(&encoded).unwrap_err();
+        assert!(matches!(
+            error.kind(),
+            X509OcspSingleResponseErrorKind::Structure(Asn1ErrorKind::Framing(_))
+        ));
+        assert_eq!(error.offset(), encoded.len());
+    }
+
+    let encoded = element(0x30, &[0x30, 0x02, 0x06]);
+    assert!(matches!(
+        decode(&encoded).unwrap_err().kind(),
+        X509OcspSingleResponseErrorKind::Structure(Asn1ErrorKind::Framing(_))
+    ));
+}
+
+#[test]
+fn optional_wrapper_budget_errors_are_rebased_without_payloads() {
+    let encoded = response(&[next_update(time(b"20261025123456Z"))]);
+    let limits = Asn1Limits {
+        max_total_elements: 11,
+        ..Asn1Limits::default()
+    };
+    let mut decoder = Asn1Decoder::new(limits);
+    let root = decoder.decode_exact(&encoded).unwrap();
+    let error = decode_x509_ocsp_single_response(&mut decoder, root).unwrap_err();
+    assert_eq!(
+        error.kind(),
+        X509OcspSingleResponseErrorKind::InvalidNextUpdateWrapper(
+            Asn1ErrorKind::ElementLimitExceeded
+        )
+    );
+    assert!(!error.to_string().contains("20261025"));
+}
+
+#[test]
 fn shared_depth_element_and_oid_limits_are_enforced() {
     let encoded = response(&[single_extensions(extensions(&[extension(17, &[])]))]);
     for limits in [
