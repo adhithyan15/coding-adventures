@@ -161,6 +161,7 @@ const ISHL: u8 = 0x78;  // int shift left
 const LSHL: u8 = 0x79;  // long shift left
 const ISHR: u8 = 0x7A;  // int arithmetic shift right
 const LSHR: u8 = 0x7B;  // long arithmetic shift right
+const LUSHR: u8 = 0x7D; // long LOGICAL shift right (LANG83 PR6c f64_signbit)
 const IAND: u8 = 0x7E;  // int bitwise AND
 const LAND: u8 = 0x7F;  // long bitwise AND
 const IOR: u8 = 0x80;   // int bitwise OR
@@ -543,7 +544,7 @@ fn decode_stack_effect(
         LADD | LSUB | LMUL | LDIV | LREM | LAND | LOR | LXOR | DADD | DSUB | DMUL | DDIV => {
             simple(1, 4, 2)
         }
-        LSHL | LSHR => simple(1, 3, 2),
+        LSHL | LSHR | LUSHR => simple(1, 3, 2),
         INEG | FNEG => simple(1, 1, 1),
         LNEG | DNEG => simple(1, 2, 2),
         I2D | I2L => simple(1, 1, 2),
@@ -3065,6 +3066,72 @@ fn lower_function(
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, dest_jtype) = lookup_var(dest)?;
                     emit_typed_store(&mut code, dest_slot, dest_jtype);
+                }
+            }
+
+            // ── LANG83 PR6c: IEEE-754 binary64, never a trap ─────────────────
+            //
+            // JVM `double` arithmetic is IEEE by specification (JLS §15.17 —
+            // no exceptions: `1.0/0.0` is `Infinity`, `0.0/0.0` is `NaN`),
+            // and `dneg` flips only the sign (`-0.0` survives, unlike
+            // `0.0 - x`). The sign bit comes from the raw long bits:
+            //
+            //   f64_add d <- a, b   dload a; dload b; dadd; dstore d
+            //   f64_sub / f64_mul / f64_div   … dsub / dmul / ddiv …
+            //   f64_neg d <- a      dload a; dneg; dstore d
+            //   f64_signbit d <- a  dload a;
+            //                       invokestatic Double.doubleToRawLongBits(D)J;
+            //                       bipush 63; lushr; lstore d   (0 or 1)
+            //
+            // Every source is a `double` local, checked here: a non-double
+            // operand is a compile error, never a class the verifier rejects.
+            "f64_add" | "f64_sub" | "f64_mul" | "f64_div" | "f64_neg" | "f64_signbit" => {
+                let srcs = if matches!(instr.op.as_str(), "f64_neg" | "f64_signbit") {
+                    vec![one_src(func, instr, &slots)?]
+                } else {
+                    let (a, b) = two_srcs(func, instr, &slots)?;
+                    vec![a, b]
+                };
+                for (slot, jtype) in &srcs {
+                    if *jtype != JvmType::Double {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: func.name.clone(),
+                            detail: format!("{} expects f64 operands, got {jtype:?}", instr.op),
+                        });
+                    }
+                    emit_typed_load(&mut code, *slot, *jtype);
+                }
+                let result = match instr.op.as_str() {
+                    "f64_add" => { code.push(DADD); JvmType::Double }
+                    "f64_sub" => { code.push(DSUB); JvmType::Double }
+                    "f64_mul" => { code.push(DMUL); JvmType::Double }
+                    "f64_div" => { code.push(DDIV); JvmType::Double }
+                    "f64_neg" => { code.push(DNEG); JvmType::Double }
+                    _ => {
+                        let mref = cp.add_methodref("java/lang/Double", "doubleToRawLongBits", "(D)J");
+                        code.push(INVOKESTATIC);
+                        code.extend_from_slice(&mref.to_be_bytes());
+                        code.extend_from_slice(&[BIPUSH, 63, LUSHR]);
+                        JvmType::Long
+                    }
+                };
+                if let Some(dest) = &instr.dest {
+                    let (dest_slot, dest_jtype) = lookup_var(dest)?;
+                    if dest_jtype != result && !(result == JvmType::Long && dest_jtype == JvmType::Int) {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: func.name.clone(),
+                            detail: format!("{} produces {result:?} but {dest} is {dest_jtype:?}", instr.op),
+                        });
+                    }
+                    if result == JvmType::Long && dest_jtype == JvmType::Int {
+                        code.push(L2I); // the bit is 0 or 1, so narrowing is exact
+                    }
+                    emit_typed_store(&mut code, dest_slot, dest_jtype);
+                } else {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: func.name.clone(),
+                        detail: format!("{} must have a dest", instr.op),
+                    });
                 }
             }
 

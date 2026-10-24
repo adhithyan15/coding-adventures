@@ -884,26 +884,41 @@ result's bits back. A float literal that constant propagation folded into an
 operand is materialised into a fresh register first, as PR6a does for the
 writers. Any other use of an `f64` register still refuses the function, so
 integer code can never read float bits as an integer. `f64_signbit` writes an
-ordinary integer register.
+ordinary integer register. One more bytecode came with it: `RET_F64` returns a
+float register as `Value::Float`, so `ret_f64` of a float register compiles
+too (before PR6c every function returning an `f64` fell back to the
+interpreter, and the JIT's declaration test — one function per registry op
+that returns the op's result — could not have compiled `f64_add` without it).
+
+Two smaller implementation notes. On native x86-64 and AArch64, `f64_neg` and
+`f64_signbit` also accept a float literal that constant propagation folded
+into the operand (it is materialised as its `to_bits()` immediate); an
+integer literal is refused rather than read as float bits. On BEAM, the five
+refused ops are also listed in `validate_for_beam`'s `UNSUPPORTED_OPS`, so a
+direct `iir-to-beam` caller that skips `lang-aot` gets the same refusal.
 
 ### Conformance cases
 
 `op_conformance` gains three cases:
 
-- **Edges.** Every row of the edge table above, each result printed with
-  `write_f64_js` and its sign with `write_i64`: on the eight IEEE columns this
-  checks `Infinity`, `-Infinity`, `NaN`, signed zeros and overflow. BEAM is
-  covered by `refused_ops_are_rejected_at_compile_time`.
+- **Edges.** Every row of the edge table above (plus `f64_neg -inf`), each
+  result printed with `write_f64_js` and — except for the NaN rows, whose
+  sign is unspecified — its sign with `write_i64`: on the eight IEEE columns
+  this checks `Infinity`, `-Infinity`, `NaN`, signed zeros and overflow. BEAM
+  is covered by `refused_ops_are_rejected_at_compile_time`.
 - **Sign bit.** `f64_signbit` of `-0`, `0`, `-2.5`, `2.5`, the smallest
   subnormals of both signs and `±1.7976931348623157e308`, built from constants
   only, so the case is lowered on all nine backends (BEAM included).
-- **Aliasing.** `x = f64_add x, x` and `x = f64_neg x`, so a lowering that
+- **Aliasing.** `x = f64_add x, x`, then `f64_mul`, `f64_sub`, `f64_neg` and
+  `f64_div` all with `x` as both destination and operand, so a lowering that
   writes the destination before reading an operand fails.
 
 The gate `pr6c_ops_follow_the_ieee_contract` pins the support matrix (all six
 lowered on the eight IEEE backends; the five arithmetic ops refused and
-`f64_signbit` lowered on BEAM) and requires both executable cases to pass on
-every executable column whose toolchain is present.
+`f64_signbit` lowered on BEAM), requires all three cases to pass on every
+executable column whose toolchain is present, and checks the BEAM compile
+entry point: the two arithmetic cases are refused with `UnsupportedOps`, the
+sign-bit case compiles.
 
 Local evidence and its limits are those of PR6a: native x86-64, LLVM (clang),
 WASM, JVM (JDK 21), VM and JIT execute every case; CLR, BEAM and AArch64 are

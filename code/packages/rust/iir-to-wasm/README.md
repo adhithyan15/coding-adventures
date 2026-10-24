@@ -277,3 +277,5 @@ add/sub, `a == MIN` for negation, and for multiply a `-1 × MIN` guard followed 
 (`Trap.Overflow`) then `unreachable`.
 
 LANG83 PR6a adds `write_f64_py` / `write_f64_js` → the in-module `$__iir_write_f64(f64, i32 layout)`. Eleven in-module functions compute the shortest round-trip digits (Burger–Dybvig over big integers in a scratch region reserved after the static data) and print Python's `repr` or JavaScript's `toString` layout through `env.putchar` (see `src/lang83_f64.rs`).
+
+LANG83 PR6c adds the non-trapping IEEE `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` → `f64.add` … `f64.neg`, and `f64_signbit` → `i64.reinterpret_f64; i64.const 63; i64.shr_u`.
