@@ -16,7 +16,7 @@ prerequisites: [BN-C275-nirbhor-kore, BN-C274-jodi-tahole, BN-C159-jodi, BN-C218
 sounds: []
 roots: []
 duration:
-  max_seconds: 240
+  max_seconds: 245
 requires:
   knowledge: [BN-GRAMMAR-C275-DEPENDS-01, BN-GRAMMAR-C274-IF-THEN-01, BN-LEX-C159-KARON159-03, BN-LEX-C218-KARON218-04, BN-LEX-C80-TIME80-04, BN-CONCEPT-C05-THAKA-01, BN-LEX-C64-SCHOOL64-04, BN-LEX-C49-VERBS49-02, BN-LEX-C80-TIME80-02, BN-LEX-C92-TIME92-04, BN-LEX-C66-NATURE66-03, BN-LEX-C72-ADJ72-02]
 introduces:
@@ -44,7 +44,7 @@ reviews_of: [BN-C275-nirbhor-kore, BN-C274-jodi-tahole]
 >
 > *jôdi sômôy thāktô, tāhôle āmi jetām.* — "If I had time, I would go."
 
-For an if that is not true, both halves take the **-ত-** form: the stem, then **-ত-**, then the person: **আমি যেতাম** (*āmi jetām*), **তুমি যেতে** (*tumi jete*), **সে যেত** (*she jetô*), **আপনি যেতেন** (*āpni jeten*). **যাওয়া** → **যে-**, **খাওয়া** → **খে-**, **হওয়া** → **হ-**; **করা** → **করতাম**, **থাকা** → **থাকতাম**. **টাকা থাকলে আমি একটা নৌকা কিনতাম** (*ṭākā thākle āmi ekṭā noukā kintām*), "if I had money, I'd buy a boat".
+For an if that is not true, both halves take the **-ত-** form: the stem, then **-ত-**, then the person: **আমি যেতাম** (*āmi jetām*), **তুমি যেতে** (*tumi jete*), **সে যেত** (*she jetô*), **আপনি যেতেন** (*āpni jeten*). **যাওয়া** → **যে-**, **খাওয়া** → **খে-**, **হওয়া** → **হ-**; **করা** → **করতাম**, **থাকা** → **থাকতাম**. The if half may take the **-লে** form instead: **টাকা থাকলে আমি একটা নৌকা কিনতাম** (*ṭākā thākle āmi ekṭā noukā kintām*), "if I had money, I'd buy a boat".
 
 ## You'll want to know: what used to be
 <!-- hl-knowledge: introduces=[BN-GRAMMAR-C275-USED-TO-01]; assesses=[BN-LEX-C80-TIME80-02, BN-LEX-C92-TIME92-04, BN-LEX-C66-NATURE66-03, BN-LEX-C72-ADJ72-02] -->

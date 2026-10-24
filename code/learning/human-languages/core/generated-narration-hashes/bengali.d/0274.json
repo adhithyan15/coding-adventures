@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 274,
-  "sourceHash": "fnv1a64:401cc45d490a6744",
+  "sourceHash": "fnv1a64:6c887a2fd35cf3c4",
   "lessonIds": [
     "BN-C274-jodi-tahole",
     "BN-C274-brishti-hole",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "bengali/narration/ch274.txt",
   "json": "bengali/narration/ch274.json",
-  "textHash": "fnv1a64:23b0bbd8ef7e06f0",
-  "jsonHash": "fnv1a64:ed726da003314633",
+  "textHash": "fnv1a64:12cde6fa1a0c832c",
+  "jsonHash": "fnv1a64:5470bd36e9e502b6",
   "findings": []
 }

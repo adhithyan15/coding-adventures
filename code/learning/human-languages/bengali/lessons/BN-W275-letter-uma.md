@@ -10,8 +10,8 @@ delivery: script
 chapter: 275
 type: writing
 headword: "ঙ"
-gloss: "the letter ঙ — ng, the letter inside the ঙ্গ of সঙ্গে"
-romanization: "ng"
+gloss: "the letter ঙ — ngô, the letter inside the ঙ্গ of সঙ্গে"
+romanization: "ngô"
 prerequisites: [BN-C275-songge, BN-W41-anusvar, BN-C05-ami-bangla-boli, BN-W03-ga, BN-W274-letter-ddha]
 sounds: []
 roots: []
@@ -30,7 +30,7 @@ register: neutral
 variety: standard-colloquial
 reviews_of: [BN-C275-songge, BN-W41-anusvar, BN-C05-ami-bangla-boli]
 ---
-# ঙ (ng) — the letter inside সঙ্গে
+# ঙ (ngô) — the letter inside সঙ্গে
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C275-SONGGE-01, BN-SCRIPT-C41-ANUSVAR-01, BN-CONCEPT-C05-AMIBANGLABOLI-01] -->
@@ -40,7 +40,7 @@ reviews_of: [BN-C275-songge, BN-W41-anusvar, BN-C05-ami-bangla-boli]
 ## Script you'll notice: ঙ
 <!-- hl-knowledge: introduces=[BN-SCRIPT-C275-UMA-01]; assesses=[BN-SCRIPT-C41-ANUSVAR-01, BN-SCRIPT-GA-01, BN-LEX-C275-SONGGE-01, BN-SCRIPT-C274-DDHA-01] -->
 
-**ঙ** — *ng*, as in "sing". It almost never starts a word. In **সঙ্গে** it is joined to **গ** in one conjunct, **ঙ্গ**, *ngg*, which does not look like the two letters set side by side: learn that shape as a whole.
+**ঙ** — *ngô*: the *ng* of "sing". It almost never starts a word. In **সঙ্গে** it is joined to **গ** in one conjunct, **ঙ্গ**, *ngg*, which does not look like the two letters set side by side: learn that shape as a whole.
 
 In the print of this book, **ঙ** has no headline. Its lower part is a large round bowl: its left arm ends high, at the upper left, in a slanted tip, and its right side ends in a short flat end at the right. At the top, in the middle, sits a small closed loop, with a short straight arm slanting up to the left from it. Below the loop, a short stem and a curve join it to the end of the bowl's right side.
 

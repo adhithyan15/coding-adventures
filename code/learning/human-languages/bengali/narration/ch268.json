@@ -4,7 +4,7 @@
   "chapter": 268,
   "title": "What I Think, and Why",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b42b9ea5bb64bf22",
+  "sourceHash": "fnv1a64:a4ebe1221166e31f",
   "lessons": [
     {
       "id": "BN-C268-mone-hoy",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41c35dbdb4fc79c7",
+      "sourceHash": "fnv1a64:9436c9cec9772ccf",
       "notice": null,
       "blocks": [
         {
@@ -173,7 +173,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say \"I think\". (āmār mône hôy.) Then কেননা, \"because\", from chapter twenty-nine."
+              "text": "Before the new one: say \"I think\". (āmār mône hôy.) Then কেননা, \"because\", which you know."
             }
           ]
         },
@@ -273,10 +273,10 @@
     {
       "id": "BN-W268-letter-murdhanya-na",
       "sequence": 16730,
-      "title": "ণ (n) — the letter at the end of কারণ (kārôn)",
+      "title": "ণ (nô) — the letter at the end of কারণ (kārôn)",
       "headword": "ণ",
-      "romanization": "n",
-      "gloss": "the letter ণ — n, the letter at the end of কারণ",
+      "romanization": "nô",
+      "gloss": "the letter ণ — nô, the letter at the end of কারণ",
       "script": "bengali",
       "modality": "pen",
       "derivedModality": "pen",
@@ -286,7 +286,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:43f694f0728efd7f",
+      "sourceHash": "fnv1a64:4fe235223e681bb9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -327,11 +327,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ণ — n. Bengali says ণ and ন alike, so, like ষ beside শ, it is a matter of spelling: most words that carry ণ come from Sanskrit."
+              "text": "ণ — nô. Bengali says ণ and ন alike, so, like ষ beside শ, it is a matter of spelling: most words that carry ণ come from Sanskrit."
             },
             {
               "kind": "speech",
-              "text": "Set the print of ণ (n) beside ন. Both have an upright stem on the right and an arch on the left that ends in a solid knob. In ন, the headline is long and covers the whole letter, and the arch meets the stem low down, near its middle. In ণ (n), the headline is short and sits only at the stem and to its right; the arch meets the stem near the top, where the headline would be, and the stem's top end stands a little above the short headline, cut on a slant."
+              "text": "Set the print of ণ (nô) beside ন. Both have an upright stem on the right and an arch on the left that ends in a solid knob. In ন, the headline is long and covers the whole letter, and the arch meets the stem low down, near its middle. In ণ (nô), the headline is short and sits only at the stem and to its right; the arch meets the stem near the top, where the headline would be, and the stem's top end stands a little above the short headline, cut on a slant."
             }
           ]
         },
@@ -342,11 +342,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen beside ণ (n) and copy the shape you can see, slowly and large. Check the copy against the print: the short headline right of the stem, the arch joined near the top, the knob, the stem to its foot."
+              "text": "Put your pen beside ণ (nô) and copy the shape you can see, slowly and large. Check the copy against the print: the short headline right of the stem, the arch joined near the top, the knob, the stem to its foot."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start ণ (n) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
+              "text": "This book does not yet tell you where to start ণ (nô) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
             }
           ]
         },
@@ -364,7 +364,7 @@
             {
               "kind": "prompt",
               "action": "FIND",
-              "instruction": "ণ (n) at the end of কারণ (kārôn)",
+              "instruction": "ণ (nô) at the end of কারণ (kārôn)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -373,7 +373,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ন, then ণ (n), from the print, naming each",
+              "instruction": "ন, then ণ (nô), from the print, naming each",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -412,7 +412,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter ends কারণ (kārôn)? (ণ (n).) Where does its headline sit? (Only at the stem and to its right.) Where does its arch meet the stem? (Near the top; in ন, low down.)"
+              "text": "Which letter ends কারণ (kārôn)? (ণ (nô).) Where does its headline sit? (Only at the stem and to its right.) Where does its arch meet the stem? (Near the top; in ন, low down.)"
             },
             {
               "kind": "activity",
@@ -449,7 +449,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a833feddf1c2ddfa",
+      "sourceHash": "fnv1a64:ce2cc71095f0f184",
       "notice": null,
       "blocks": [
         {
@@ -480,7 +480,7 @@
             },
             {
               "kind": "speech",
-              "text": "A whole reason, with its own verb or its own ক্লান্ত, follows কারণ (kārôn). কেননা, which you met in chapter twenty-nine, does the same job in the same place: আজ আমি যাব না, কেননা আমি ক্লান্ত. To ask for one, কেন? (kenô?), \"why?\", the word inside কেননা."
+              "text": "A whole reason, with its own verb or a describing word such as ক্লান্ত, follows কারণ (kārôn). কেননা, which you know, does the same job in the same place: আজ আমি যাব না, কেননা আমি ক্লান্ত. To ask for one, কেন? (kenô?), \"why?\", the word inside কেননা."
             }
           ]
         },
@@ -696,7 +696,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"I don't think so\"? (আমার মনে হয় না.) Which word gives a reason with a verb? (কারণ (kārôn), or কেননা.) Which gives one with a noun? (-এর জন্য.) Which letter ends কারণ (kārôn)? (ণ (n).)"
+              "text": "\"I don't think so\"? (আমার মনে হয় না.) Which word gives a reason with a verb? (কারণ (kārôn), or কেননা.) Which gives one with a noun? (-এর জন্য.) Which letter ends কারণ (kārôn)? (ণ (nô).)"
             }
           ]
         }

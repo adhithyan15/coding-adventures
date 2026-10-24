@@ -42,12 +42,12 @@ reviews_of: [BN-C267-hothat, BN-W02-ta, BN-W01-hasanta]
 
 **ৎ** — *t*, the *khanda ta*, "a piece of ta". It is a **ত** with no vowel after it. Where a word ends in that bare *t*, as **হঠাৎ** does, Bengali often writes **ৎ** instead of **ত** with a hasanta.
 
-In the print of this book, **ৎ** has no headline. It is a small closed loop at the top, with a long slanting tail joined to the left side of the loop; the tail's lower end, at the bottom right, is a short upright foot.
+In the print of this book, **ৎ** has no headline. It is a round closed loop at the top, with a long slanting tail joined to the left side of the loop; the tail's lower end, at the bottom right, is a short upright foot.
 
 ## Writing: ৎ — copy the printed shape
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-C267-KHANDA-TA-01] -->
 
-Put your pen beside **ৎ** and copy the shape you can see, slowly and large. Check the copy against the print: the small loop, the long tail, the short foot.
+Put your pen beside **ৎ** and copy the shape you can see, slowly and large. Check the copy against the print: the round loop, the long tail, the short foot.
 
 > This book does not yet tell you where to start ৎ or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime.
 
@@ -62,6 +62,6 @@ Put your pen beside **ৎ** and copy the shape you can see, slowly and large. Ch
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-C267-KHANDA-TA-01, BN-LEX-C267-HOTHAT-01] -->
-<!-- hl-activity: {"id": "BN-W267-letter-khanda-ta-r1", "kind": "text", "assesses": ["BN-SCRIPT-C267-KHANDA-TA-01"], "prompt": "With no model, write hôṭhāt, 'suddenly'.", "answer": "হঠাৎ", "accepted": [], "feedback": {"correct": "ঠ in the middle, ৎ at the end.", "incorrect": "Reopen ৎ: a small loop, a long tail, a short foot. Then write হঠাৎ again."}, "response_seconds": 25} -->
+<!-- hl-activity: {"id": "BN-W267-letter-khanda-ta-r1", "kind": "text", "assesses": ["BN-SCRIPT-C267-KHANDA-TA-01"], "prompt": "With no model, write hôṭhāt, 'suddenly'.", "answer": "হঠাৎ", "accepted": [], "feedback": {"correct": "ঠ in the middle, ৎ at the end.", "incorrect": "Reopen ৎ: a round loop, a long tail, a short foot. Then write হঠাৎ again."}, "response_seconds": 25} -->
 
 [PAUSE 3s] Which letter ends **হঠাৎ**? (**ৎ**.) What does it say? (A *t* with no vowel after it.) Does it have a headline? (No.)

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 275,
-  "sourceHash": "fnv1a64:8646674a18dd3381",
+  "sourceHash": "fnv1a64:ddba5117ca11b013",
   "lessonIds": [
     "BN-C275-nirbhor-kore",
     "BN-C275-jetam",
@@ -14,7 +14,7 @@
   "drivablePrefix": 3,
   "text": "bengali/narration/ch275.txt",
   "json": "bengali/narration/ch275.json",
-  "textHash": "fnv1a64:95974532c90af312",
-  "jsonHash": "fnv1a64:d2fd64f225d0bdcc",
+  "textHash": "fnv1a64:058157cc060dbfd0",
+  "jsonHash": "fnv1a64:f8646f9726e154d7",
   "findings": []
 }

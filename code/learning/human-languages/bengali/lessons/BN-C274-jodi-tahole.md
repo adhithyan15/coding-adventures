@@ -16,7 +16,7 @@ prerequisites: [BN-C273-dhore, BN-C159-jodi, BN-C218-tahole, BN-C255-jhor, BN-C2
 sounds: []
 roots: []
 duration:
-  max_seconds: 200
+  max_seconds: 195
 requires:
   knowledge: [BN-GRAMMAR-C273-DHORE-01, BN-LEX-C159-KARON159-03, BN-LEX-C218-KARON218-04, BN-LEX-C255-JINIS255-02, BN-GRAMMAR-C265-FUTURE-NOT-01, BN-LEX-C148-ACT148-01, BN-GRAMMAR-C265-FUTURE-PERSON-01, BN-LEX-C187-SOMOY187-01, BN-LEX-C128-THINGS128-04, BN-LEX-C83-TOWN83-02]
 introduces:
@@ -35,7 +35,7 @@ reviews_of: [BN-C273-dhore, BN-C159-jodi, BN-C218-tahole]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C273-DHORE-01, BN-LEX-C159-KARON159-03, BN-LEX-C218-KARON218-04] -->
 
-[PAUSE 2s] Say "for two years". (*dui bôchhôr dhôre*.) Then **যদি**, "if", and **তাহলে**, "then, in that case": you met them in chapters one hundred and fifty-nine and two hundred and eighteen.
+[PAUSE 2s] Say "for two years". (*dui bôchhôr dhôre*.) Then **যদি**, "if", and **তাহলে**, "then, in that case": both of which you know.
 
 ## You'll want to know: if, then
 <!-- hl-knowledge: introduces=[BN-GRAMMAR-C274-IF-THEN-01]; assesses=[BN-LEX-C159-KARON159-03, BN-LEX-C218-KARON218-04, BN-LEX-C255-JINIS255-02, BN-GRAMMAR-C265-FUTURE-NOT-01, BN-LEX-C148-ACT148-01, BN-GRAMMAR-C265-FUTURE-PERSON-01] -->

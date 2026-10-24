@@ -4,7 +4,7 @@
   "chapter": 275,
   "title": "It Depends, and What Would Be",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:8646674a18dd3381",
+  "sourceHash": "fnv1a64:ddba5117ca11b013",
   "lessons": [
     {
       "id": "BN-C275-nirbhor-kore",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f176631a9333a82",
+      "sourceHash": "fnv1a64:eaae9e5cb02c21fe",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "ওপর (opôr), \"on, upon\", is the word inside ওপরে. নির্ভর করা (nirbhôr kôrā) is \"to depend\". What it depends on takes the -র form, then ওপর: \"it does depending upon the weather\". সব, \"all\", from the last chapter, makes it \"everything\": সব আবহাওয়ার ওপর নির্ভর করে."
+              "text": "ওপর (opôr), \"on, upon\", is the word inside ওপরে. নির্ভর করা (nirbhôr kôrā) is \"to depend\". What it depends on takes the -র form, then ওপর: word for word, \"it does reliance upon the weather\". সব, \"all\", from the lesson on সবচেয়ে, makes it \"everything\": সব আবহাওয়ার ওপর নির্ভর করে."
             }
           ]
         },
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd65791495530d84",
+      "sourceHash": "fnv1a64:5055978d8d376963",
       "notice": null,
       "blocks": [
         {
@@ -192,7 +192,7 @@
             },
             {
               "kind": "speech",
-              "text": "For an if that is not true, both halves take the -ত- form: the stem, then -ত-, then the person: আমি যেতাম (āmi jetām), তুমি যেতে (tumi jete), সে যেত (she jetô), আপনি যেতেন (āpni jeten). যাওয়া becomes যে-, খাওয়া becomes খে-, হওয়া becomes হ-; করা becomes করতাম, থাকা becomes থাকতাম. টাকা থাকলে আমি একটা নৌকা কিনতাম (ṭākā thākle āmi ekṭā noukā kintām), \"if I had money, I'd buy a boat\"."
+              "text": "For an if that is not true, both halves take the -ত- form: the stem, then -ত-, then the person: আমি যেতাম (āmi jetām), তুমি যেতে (tumi jete), সে যেত (she jetô), আপনি যেতেন (āpni jeten). যাওয়া becomes যে-, খাওয়া becomes খে-, হওয়া becomes হ-; করা becomes করতাম, থাকা becomes থাকতাম. The if half may take the -লে form instead: টাকা থাকলে আমি একটা নৌকা কিনতাম (ṭākā thākle āmi ekṭā noukā kintām), \"if I had money, I'd buy a boat\"."
             }
           ]
         },
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db2fdc9a00d38171",
+      "sourceHash": "fnv1a64:bf714c254f473705",
       "notice": null,
       "blocks": [
         {
@@ -342,7 +342,7 @@
             },
             {
               "kind": "speech",
-              "text": "The one you are with takes the -র form: বন্ধুর সঙ্গে (sôngge), আমার সঙ্গে (sôngge), তোমার সঙ্গে (sôngge). Now the greeting of chapter three can say who: তোমার সঙ্গে (sôngge) আলাপ করে ভালো লাগল, \"it was good to meet you\"."
+              "text": "The one you are with takes the -র form: বন্ধুর সঙ্গে (sôngge), আমার সঙ্গে (sôngge), তোমার সঙ্গে (sôngge). Now the line from your first meeting can say who: তোমার সঙ্গে (sôngge) আলাপ করে ভালো লাগল, \"it was good to meet you\"."
             }
           ]
         },
@@ -428,10 +428,10 @@
     {
       "id": "BN-W275-letter-uma",
       "sequence": 17080,
-      "title": "ঙ (ng) — the letter inside সঙ্গে (sôngge)",
+      "title": "ঙ (ngô) — the letter inside সঙ্গে (sôngge)",
       "headword": "ঙ",
-      "romanization": "ng",
-      "gloss": "the letter ঙ — ng, the letter inside the ঙ্গ of সঙ্গে",
+      "romanization": "ngô",
+      "gloss": "the letter ঙ — ngô, the letter inside the ঙ্গ of সঙ্গে",
       "script": "bengali",
       "modality": "pen",
       "derivedModality": "pen",
@@ -441,7 +441,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:ed90a5782624efe3",
+      "sourceHash": "fnv1a64:5f4fadc6f8e1f2f7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -482,11 +482,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ঙ — ng, as in \"sing\". It almost never starts a word. In সঙ্গে (sôngge) it is joined to গ in one conjunct, ঙ্গ, ngg, which does not look like the two letters set side by side: learn that shape as a whole."
+              "text": "ঙ — ngô: the ng of \"sing\". It almost never starts a word. In সঙ্গে (sôngge) it is joined to গ in one conjunct, ঙ্গ, ngg, which does not look like the two letters set side by side: learn that shape as a whole."
             },
             {
               "kind": "speech",
-              "text": "In the print of this book, ঙ (ng) has no headline. Its lower part is a large round bowl: its left arm ends high, at the upper left, in a slanted tip, and its right side ends in a short flat end at the right. At the top, in the middle, sits a small closed loop, with a short straight arm slanting up to the left from it. Below the loop, a short stem and a curve join it to the end of the bowl's right side."
+              "text": "In the print of this book, ঙ (ngô) has no headline. Its lower part is a large round bowl: its left arm ends high, at the upper left, in a slanted tip, and its right side ends in a short flat end at the right. At the top, in the middle, sits a small closed loop, with a short straight arm slanting up to the left from it. Below the loop, a short stem and a curve join it to the end of the bowl's right side."
             }
           ]
         },
@@ -497,11 +497,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen beside ঙ (ng) and copy the shape you can see, slowly and large. Check the copy against the print: the bowl and its tall left arm, the small loop and its arm, the short stem and curve."
+              "text": "Put your pen beside ঙ (ngô) and copy the shape you can see, slowly and large. Check the copy against the print: the bowl and its tall left arm, the small loop and its arm, the short stem and curve."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start ঙ (ng) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
+              "text": "This book does not yet tell you where to start ঙ (ngô) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
             }
           ]
         },
@@ -528,7 +528,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ঙ (ng), from the print, then ঙ্গ",
+              "instruction": "ঙ (ngô), from the print, then ঙ্গ",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -567,7 +567,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter is inside the ঙ্গ of সঙ্গে (sôngge)? (ঙ.) Does ঙ have a headline? (No.) Which other sign says ng? (ং, in বাংলা.)"
+              "text": "Which letter is inside the ঙ্গ of সঙ্গে (sôngge)? (ঙ (ngô).) Does ঙ (ngô) have a headline? (No.) Which other sign says ng? (ং, in বাংলা.)"
             },
             {
               "kind": "activity",
@@ -606,7 +606,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:9ac5cb2ff821418c",
+      "sourceHash": "fnv1a64:faf5d899dec01104",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -747,7 +747,7 @@
             },
             {
               "kind": "speech",
-              "text": "Then three checks. A past ending is -ল, said -lô: গেল, এল. নৌকা has ৌ around its ন, and সঙ্গে (sôngge) has ঙ (ng) joined to গ. হঠাৎ ends in ৎ."
+              "text": "Then three checks. A past ending is -ল, said -lô: গেল, এল. নৌকা has ৌ around its ন, and সঙ্গে (sôngge) has ঙ (ngô) joined to গ. হঠাৎ ends in ৎ."
             },
             {
               "kind": "pause",
@@ -757,7 +757,7 @@
             },
             {
               "kind": "speech",
-              "text": "Last, read line six alone. Do both halves of the if take -ত-: থাকত, যেতাম?"
+              "text": "Last, read line six alone. Does the if half take -ত- or -লে (থাকত, থাকলে), and the other half -ত- (যেতাম)?"
             }
           ]
         }
@@ -876,7 +876,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"It depends on\"? (-এর ওপর নির্ভর করে.) \"I would go\"? (যেতাম.) \"I used to go\"? (রোজ যেতাম.) Which letter is inside সঙ্গে (sôngge)? (ঙ (ng).)"
+              "text": "\"It depends on\"? (-এর ওপর নির্ভর করে.) \"I would go\"? (যেতাম.) \"I used to go\"? (রোজ যেতাম.) Which letter is inside সঙ্গে (sôngge)? (ঙ (ngô).)"
             }
           ]
         }

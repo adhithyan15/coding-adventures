@@ -16,7 +16,7 @@ prerequisites: [BN-C271-nouka, BN-C265-jabo, BN-C128-tikit, BN-C20-ekta, BN-C198
 sounds: []
 roots: []
 duration:
-  max_seconds: 285
+  max_seconds: 290
 requires:
   knowledge: [BN-LEX-C271-NOUKA-01, BN-GRAMMAR-C265-FUTURE-PERSON-01, BN-LEX-C128-THINGS128-05, BN-GRAMMAR-C20-EKTA-01, BN-LEX-C198-JINIS198-04, BN-LEX-C59-FOOD59-05, BN-LEX-C216-JAYGA216-02, BN-LEX-C147-PORA147-03, BN-LEX-C128-THINGS128-04, BN-LEX-C53-VERBS53-02, BN-LEX-C198-JINIS198-05]
 introduces:
@@ -53,7 +53,7 @@ Bengali often asks politely with the respectful future, "will you give?", where 
 >
 > *bhāṛā kôtô? ṭren kôkhôn chhāṛbe?* — "What's the fare? When does the train leave?"
 
-**কত**, "how much", asks the fare. **কখন**, "when", the third of chapter thirty's **যখন**, **তখন**, **কখন**, asks the time. **ছাড়বে**, "will leave", is **ছাড়া**, "to leave, to let go", in the future.
+**কত**, "how much", asks the fare. **কখন**, "when?", asks the time. **ছাড়বে**, "will leave", is **ছাড়া**, "to leave, to let go", in the future.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C271-TICKET-ASK-01, BN-GRAMMAR-C271-FARE-TIME-01, BN-LEX-C147-PORA147-03, BN-LEX-C128-THINGS128-04] -->

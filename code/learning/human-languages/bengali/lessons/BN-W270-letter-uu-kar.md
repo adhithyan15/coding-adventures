@@ -42,7 +42,7 @@ reviews_of: [BN-C270-dur, BN-W02-u-matra, BN-W269-letter-u]
 
 **ূ** — *-ū*, the long *u*, written under its consonant: **দূর**. Bengali says it the same as **ু**; the long sign is a spelling, mostly in words from Sanskrit, as **ী** is beside **ি**.
 
-Set the print of **দূ** beside **দু**. Under **দু** hangs a small closed loop with a short slanting tail at its lower right. Under **দূ** hangs a rounded hook that is open on the right, like a backward C, with a short slanting tail at its lower end.
+Set the print of **দূ** beside **দু**. Under **দু** hangs a small closed loop with a short slanting tail at its lower right. Under **দূ** hangs a rounded hook that is open on the right, like a C, with a short slanting tail at its lower end.
 
 ## Writing: ূ — copy the printed shape
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-C270-UU-KAR-01] -->

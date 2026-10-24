@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 272,
-  "sourceHash": "fnv1a64:b7b776c0b84e8b4d",
+  "sourceHash": "fnv1a64:6b6b1525bed79c1d",
   "lessonIds": [
     "BN-C272-obhigyota",
     "BN-W272-letter-o-indep",
@@ -13,7 +13,7 @@
   "drivablePrefix": 1,
   "text": "bengali/narration/ch272.txt",
   "json": "bengali/narration/ch272.json",
-  "textHash": "fnv1a64:515fada96b60806f",
-  "jsonHash": "fnv1a64:255639df1910b0cc",
+  "textHash": "fnv1a64:799dca7f0e318a23",
+  "jsonHash": "fnv1a64:9906b3fe23893ced",
   "findings": []
 }

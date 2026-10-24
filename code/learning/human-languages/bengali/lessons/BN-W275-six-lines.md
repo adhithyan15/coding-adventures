@@ -16,7 +16,7 @@ prerequisites: [BN-C267-ek-shonibar, BN-C275-songge, BN-C271-nouka, BN-C266-jokh
 sounds: []
 roots: []
 duration:
-  max_seconds: 275
+  max_seconds: 280
 requires:
   knowledge: [BN-SKILL-C267-READ-STORY-01, BN-LEX-C275-SONGGE-01, BN-LEX-C271-NOUKA-01, BN-GRAMMAR-C266-SCENE-EVENT-01, BN-GRAMMAR-C267-CONJUNCTIVE-01, BN-GRAMMAR-C267-FIRST-THEN-01, BN-GRAMMAR-C267-FINALLY-01, BN-GRAMMAR-C268-KARON-BECAUSE-01, BN-GRAMMAR-C269-TAI-01, BN-GRAMMAR-C272-FEELING-GENITIVE-01, BN-GRAMMAR-C272-FEELING-PAST-01, BN-GRAMMAR-C275-WOULD-01, BN-GRAMMAR-C274-LE-FORM-01, BN-GRAMMAR-C264-PAST-PERSON-01, BN-GRAMMAR-C264-PAST-STEMS-01, BN-GRAMMAR-C264-WAS-01, BN-GRAMMAR-C266-ONGOING-PAST-01, BN-LEX-C267-HOTHAT-01, BN-GRAMMAR-C268-JONNO-01, BN-GRAMMAR-C271-TICKET-ASK-01, BN-GRAMMAR-C271-LOST-01, BN-GRAMMAR-C271-MISSED-01, BN-LEX-C270-DUR-01, BN-GRAMMAR-C273-THEKE-PORJONTO-01, BN-LEX-C264-GHOTA-01, BN-SCRIPT-C265-MURDHANYA-SHA-01, BN-SCRIPT-C266-TTHA-01, BN-SCRIPT-C267-KHANDA-TA-01, BN-SCRIPT-C268-MURDHANYA-NA-01, BN-SCRIPT-C269-U-01, BN-SCRIPT-C270-UU-KAR-01, BN-SCRIPT-C271-AU-KAR-01, BN-SCRIPT-C272-O-INDEP-01, BN-SCRIPT-C273-OI-KAR-01, BN-SCRIPT-C274-DDHA-01, BN-SCRIPT-C275-UMA-01]
 introduces:
@@ -68,4 +68,4 @@ reviews_of: [BN-C267-ek-shonibar, BN-C275-songge, BN-C271-nouka]
 
 [PAUSE 2s] Then three checks. A past ending is **-ল**, said *-lô*: **গেল**, **এল**. **নৌকা** has **ৌ** around its **ন**, and **সঙ্গে** has **ঙ** joined to **গ**. **হঠাৎ** ends in **ৎ**.
 
-[PAUSE 2s] Last, read line six alone. Do both halves of the if take **-ত-**: **থাকত**, **যেতাম**?
+[PAUSE 2s] Last, read line six alone. Does the if half take **-ত-** or **-লে** (**থাকত**, **থাকলে**), and the other half **-ত-** (**যেতাম**)?

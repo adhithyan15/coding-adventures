@@ -4,7 +4,7 @@
   "chapter": 264,
   "title": "What Happened, and Where I Was",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ffba0a190f1cd8d7",
+  "sourceHash": "fnv1a64:9e2084871dfd3955",
   "lessons": [
     {
       "id": "BN-C264-gelam",
@@ -494,10 +494,10 @@
     {
       "id": "BN-W264-letter-gha",
       "sequence": 16530,
-      "title": "ঘ (gh) — the letter at the start of ঘটা (ghôṭā)",
+      "title": "ঘ (ghô) — the letter at the start of ঘটা (ghôṭā)",
       "headword": "ঘ",
-      "romanization": "gh",
-      "gloss": "the letter ঘ — gh, the letter at the start of ঘটা",
+      "romanization": "ghô",
+      "gloss": "the letter ঘ — ghô, the letter at the start of ঘটা",
       "script": "bengali",
       "modality": "pen",
       "derivedModality": "pen",
@@ -507,7 +507,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:49f6141c91985e44",
+      "sourceHash": "fnv1a64:b1cf5aa02b77c84a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -548,11 +548,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ঘ — gh: a g with a breath after it, as খ is a k with a breath. It opens ঘটা (ghôṭā)."
+              "text": "ঘ — ghô: a g with a breath after it, as খ (khô) is a k with a breath. It opens ঘটা (ghôṭā)."
             },
             {
               "kind": "speech",
-              "text": "In the print of this book, ঘ (gh) has the frame of ব: a headline along the top, an upright stem on the right, the full height of the letter, a pointed tip at the lower left, and a curve that joins that tip to the foot of the stem. Where ব has one straight diagonal, ঘ (gh) has two pieces. Under the left end of the headline hangs a rounded curl, open toward the stem, its end a short point aimed up and to the right. Below the curl, a short straight piece joins it to the pointed tip."
+              "text": "In the print of this book, ঘ (ghô) has the frame of ব: a headline along the top, an upright stem on the right, the full height of the letter, a pointed tip at the lower left, and a curve that joins that tip to the foot of the stem. Where ব has one straight diagonal, ঘ (ghô) has two pieces. Under the left end of the headline hangs a rounded curl, open toward the stem, its end a short point aimed up and to the right. Below the curl, a short straight piece joins it to the pointed tip."
             }
           ]
         },
@@ -563,11 +563,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen beside ঘ (gh) and copy the shape you can see, slowly and large. Check the copy against the print: the headline, the stem, the curl with its point, the tip at the lower left, and the curve to the foot."
+              "text": "Put your pen beside ঘ (ghô) and copy the shape you can see, slowly and large. Check the copy against the print: the headline, the stem, the curl with its point, the tip at the lower left, and the curve to the foot."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start ঘ (gh) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
+              "text": "This book does not yet tell you where to start ঘ (ghô) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
             }
           ]
         },
@@ -585,7 +585,7 @@
             {
               "kind": "prompt",
               "action": "FIND",
-              "instruction": "ঘ (gh) at the front of ঘটা (ghôṭā)",
+              "instruction": "ঘ (ghô) at the front of ঘটা (ghôṭā)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -594,7 +594,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ব, then ঘ (gh), from the print, naming each",
+              "instruction": "ব, then ঘ (ghô), from the print, naming each",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -633,7 +633,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter is this — ঘ? (gh.) Which word did it come from? (ঘটা (ghôṭā).) How is it unlike ব? (A curl hangs under its headline.)"
+              "text": "Which letter is this — ঘ? (ghô.) Which word did it come from? (ঘটা (ghôṭā).) How is it unlike ব? (A curl hangs under its headline.)"
             },
             {
               "kind": "activity",
@@ -670,7 +670,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab36e35c9f3834a5",
+      "sourceHash": "fnv1a64:f266dc800efe53bf",
       "notice": null,
       "blocks": [
         {
@@ -704,11 +704,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "I came back home in the evening, and then I sat.",
+              "instruction": "In the evening I came back home. I was tired.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: I came back home in the evening, and then I sat.]"
+              "source": "[YOU SAY: In the evening I came back home. I was tired.]"
             },
             {
               "kind": "prompt",
@@ -749,7 +749,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ঘ (gh), then ঘটল",
+              "instruction": "ঘ (ghô), then ঘটল",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -770,7 +770,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which ending is I and we? (-লাম: গেলাম.) Which verbs gave এল and পেল? (আসা, পাওয়া.) \"There was not\"? (ছিল না.) Which letter opens ঘটা (ghôṭā)? (ঘ (gh).)"
+              "text": "Which ending is I and we? (-লাম: গেলাম.) Which verbs gave এল and পেল? (আসা, পাওয়া.) \"There was not\"? (ছিল না.) Which letter opens ঘটা (ghôṭā)? (ঘ (ghô).)"
             }
           ]
         }

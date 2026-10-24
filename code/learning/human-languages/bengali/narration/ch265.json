@@ -4,7 +4,7 @@
   "chapter": 265,
   "title": "What Will Happen, and the End",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:93552fa1458fe137",
+  "sourceHash": "fnv1a64:e50d26a7c1e176fc",
   "lessons": [
     {
       "id": "BN-C265-jabo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b261b457c905a32",
+      "sourceHash": "fnv1a64:b1665b7d09270902",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"Yesterday I was at home\". (kāl āmi bāṛite chhilām.) Then the goodbye from chapter seven: কাল দেখা হবে, \"see you tomorrow\". Its last word, হবে, is a future: \"it will happen\"."
+              "text": "Say \"Yesterday I was at home\". (kāl āmi bāṛite chhilām.) Then the goodbye you know: কাল দেখা হবে, \"see you tomorrow\". Its last word, হবে, is a future: \"it will happen\"."
             }
           ]
         },
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cc2b8903efb33dc",
+      "sourceHash": "fnv1a64:9da1e126c9f79a0c",
       "notice": null,
       "blocks": [
         {
@@ -298,10 +298,10 @@
     {
       "id": "BN-W265-letter-murdhanya-sha",
       "sequence": 16570,
-      "title": "ষ (sh) — the letter at the end of শেষ (shesh)",
+      "title": "ষ (shô) — the letter at the end of শেষ (shesh)",
       "headword": "ষ",
-      "romanization": "sh",
-      "gloss": "the letter ষ — sh, the letter at the end of শেষ",
+      "romanization": "shô",
+      "gloss": "the letter ষ — shô, the letter at the end of শেষ",
       "script": "bengali",
       "modality": "pen",
       "derivedModality": "pen",
@@ -310,7 +310,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3707b17f086ada54",
+      "sourceHash": "fnv1a64:f0cb4aad07ba1fbe",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -349,11 +349,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ষ — sh. Bengali says শ, ষ and স alike, as sh in most words, so the letter is a matter of spelling: শেষ (shesh) begins with শ and ends with ষ. Most of the words that carry ষ come from Sanskrit."
+              "text": "ষ — shô. Bengali says শ, ষ and স alike, as sh in most words, so the letter is a matter of spelling: শেষ (shesh) begins with শ and ends with ষ. Most of the words that carry ষ come from Sanskrit."
             },
             {
               "kind": "speech",
-              "text": "In the print of this book, ষ (sh) has a headline and an upright stem on the right, the full height of the letter, as ব and ঘ do. A long straight line lies on a slant between the left end of the headline, close under it, and the middle of the stem. A shorter slanting line joins the middle of that line to a pointed tip at the lower left, and a curve joins that tip to the foot of the stem."
+              "text": "In the print of this book, ষ (shô) has a headline and an upright stem on the right, the full height of the letter, as ব and ঘ do. A long straight line lies on a slant between the left end of the headline, close under it, and the middle of the stem. A shorter slanting line joins the middle of that line to a pointed tip at the lower left, and a curve joins that tip to the foot of the stem."
             }
           ]
         },
@@ -364,11 +364,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen beside ষ (sh) and copy the shape you can see, slowly and large. Check the copy against the print: the headline, the stem, the long slanting line, the short one to the tip, and the curve to the foot."
+              "text": "Put your pen beside ষ (shô) and copy the shape you can see, slowly and large. Check the copy against the print: the headline, the stem, the long slanting line, the short one to the tip, and the curve to the foot."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start ষ (sh) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
+              "text": "This book does not yet tell you where to start ষ (shô) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
             }
           ]
         },
@@ -386,7 +386,7 @@
             {
               "kind": "prompt",
               "action": "FIND",
-              "instruction": "ষ (sh) at the end of শেষ (shesh)",
+              "instruction": "ষ (shô) at the end of শেষ (shesh)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -395,7 +395,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "শ, then ষ (sh), from the print, naming each",
+              "instruction": "শ, then ষ (shô), from the print, naming each",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -434,7 +434,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter ends শেষ (shesh)? (ষ.) How is it said? (sh, as শ is.) What lies across its middle? (A long slanting line, meeting the stem.)"
+              "text": "Which letter ends শেষ (shesh)? (ষ.) How is it said? (shô, as শ is.) What lies across its middle? (A long slanting line, meeting the stem.)"
             },
             {
               "kind": "activity",
@@ -571,7 +571,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which two people share -বে? (তুমি and সে.) \"It will happen\"? (হবে.) \"Will not\"? (না after the verb.) Which letter ends শেষ (shesh)? (ষ (sh).)"
+              "text": "Which two people share -বে? (তুমি and সে.) \"It will happen\"? (হবে.) \"Will not\"? (না after the verb.) Which letter ends শেষ (shesh)? (ষ (shô).)"
             }
           ]
         }

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 265,
-  "sourceHash": "fnv1a64:93552fa1458fe137",
+  "sourceHash": "fnv1a64:e50d26a7c1e176fc",
   "lessonIds": [
     "BN-C265-jabo",
     "BN-C265-shesh",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "bengali/narration/ch265.txt",
   "json": "bengali/narration/ch265.json",
-  "textHash": "fnv1a64:02d049473b439caa",
-  "jsonHash": "fnv1a64:d78b435739dc5765",
+  "textHash": "fnv1a64:05b030fea2ce64e3",
+  "jsonHash": "fnv1a64:92fca49035df7470",
   "findings": []
 }

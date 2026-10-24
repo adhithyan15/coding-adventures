@@ -4,7 +4,7 @@
   "chapter": 267,
   "title": "First, Then, Suddenly",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:287f0d3284e60e02",
+  "sourceHash": "fnv1a64:75b8483f346c5cb1",
   "lessons": [
     {
       "id": "BN-C267-giye",
@@ -428,7 +428,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:980d2ef56522f539",
+      "sourceHash": "fnv1a64:1f25791fb1b6026d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -473,7 +473,7 @@
             },
             {
               "kind": "speech",
-              "text": "In the print of this book, ৎ (t) has no headline. It is a small closed loop at the top, with a long slanting tail joined to the left side of the loop; the tail's lower end, at the bottom right, is a short upright foot."
+              "text": "In the print of this book, ৎ (t) has no headline. It is a round closed loop at the top, with a long slanting tail joined to the left side of the loop; the tail's lower end, at the bottom right, is a short upright foot."
             }
           ]
         },
@@ -484,7 +484,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen beside ৎ (t) and copy the shape you can see, slowly and large. Check the copy against the print: the small loop, the long tail, the short foot."
+              "text": "Put your pen beside ৎ (t) and copy the shape you can see, slowly and large. Check the copy against the print: the round loop, the long tail, the short foot."
             },
             {
               "kind": "speech",
@@ -571,7 +571,7 @@
               ],
               "feedback": {
                 "correct": "ঠ in the middle, ৎ at the end.",
-                "incorrect": "Reopen ৎ: a small loop, a long tail, a short foot. Then write হঠাৎ again."
+                "incorrect": "Reopen ৎ: a round loop, a long tail, a short foot. Then write হঠাৎ again."
               }
             }
           ]
@@ -591,7 +591,7 @@
       "modalityReasons": [
         "reading-type"
       ],
-      "sourceHash": "fnv1a64:89c7d6c7dd902b55",
+      "sourceHash": "fnv1a64:386271653d645891",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -616,7 +616,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ninety-eight words, every one met before or explained after the story. The writer is Mira, on her way to her grandmother's village."
+              "text": "Ninety-eight words, every one met before or explained after the story. The writer is Mira, telling of a Saturday at her grandmother's village."
             }
           ]
         },

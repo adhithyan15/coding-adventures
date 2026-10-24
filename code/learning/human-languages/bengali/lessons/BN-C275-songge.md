@@ -47,7 +47,7 @@ reviews_of: [BN-C275-jetam, BN-C02-alaap]
 >
 > *āmi bôndhur sôngge sinemāy gelām.* — "I went to the cinema with a friend."
 
-The one you are with takes the **-র** form: **বন্ধুর সঙ্গে**, **আমার সঙ্গে**, **তোমার সঙ্গে**. Now the greeting of chapter three can say who: **তোমার সঙ্গে আলাপ করে ভালো লাগল**, "it was good to meet you".
+The one you are with takes the **-র** form: **বন্ধুর সঙ্গে**, **আমার সঙ্গে**, **তোমার সঙ্গে**. Now the line from your first meeting can say who: **তোমার সঙ্গে আলাপ করে ভালো লাগল**, "it was good to meet you".
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

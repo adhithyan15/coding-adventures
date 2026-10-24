@@ -15,7 +15,7 @@ concept_tag: BN-TIME265-SHESH
 prerequisites: [BN-C265-jabo, BN-C05-kaj-kora, BN-C128-tren, BN-C78-rat, BN-C63-boi]
 sounds: []
 roots: [sanskrit-shesha]
-etymology_hook: "shesh ← Sanskrit śeṣa 'remainder; end; last', a tatsama (CDIAL 12611)"
+etymology_hook: "shesh ← Sanskrit śeṣa 'remainder' (CDIAL 12611), a tatsama; Monier-Williams also gives 'end' and 'last'"
 duration:
   max_seconds: 150
 requires:

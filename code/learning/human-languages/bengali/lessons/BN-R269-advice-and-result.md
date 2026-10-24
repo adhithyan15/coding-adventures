@@ -43,7 +43,7 @@ reviews_of: [BN-C269-uchit, BN-W269-letter-u, BN-C269-uchit-te-hobe, BN-C269-tai
 - [YOU SAY: I think you ought to go to the doctor.]
 - [YOU SAY: You shouldn't go alone at night.]
 - [YOU SAY: Tomorrow I have to go to school early.]
-- [YOU SAY: The bus didn't come, so we walked.]
+- [YOU SAY: There was no bus, so we walked.]
 - [YOU SAY: Mira was tired. That's why she stayed at home.]
 - [YOU WRITE: **উচিত**, then **কারণ**]
 

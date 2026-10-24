@@ -36,7 +36,7 @@ reviews_of: [BN-C268-mone-hoy, BN-C18-kenona]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C268-I-THINK-01, BN-LEX-C18-KENONA-01] -->
 
-[PAUSE 2s] Before the new one: say "I think". (*āmār mône hôy*.) Then **কেননা**, "because", from chapter twenty-nine.
+[PAUSE 2s] Before the new one: say "I think". (*āmār mône hôy*.) Then **কেননা**, "because", which you know.
 
 ## You'll want to know: কারণ
 <!-- hl-knowledge: introduces=[BN-LEX-C268-KARON-01]; assesses=[BN-LEX-C169-JINIS169-04, BN-LEX-C81-PLACE81-03, BN-LEX-C255-JINIS255-02, BN-GRAMMAR-C266-ONGOING-NOW-01, BN-GRAMMAR-C265-FUTURE-PERSON-01] -->

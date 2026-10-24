@@ -156,22 +156,22 @@
     },
     {
       "glyph": "ঘ",
-      "sound": "gh",
+      "sound": "ghô",
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "ঘ  gh — consonant (inherent “ô”)"
+        "ঘ  ghô — consonant (inherent “ô”)"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
     },
     {
       "glyph": "ঙ",
-      "sound": "ng",
+      "sound": "ngô",
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "ঙ  ng — consonant (inherent “ô”)"
+        "ঙ  ngô — consonant (inherent “ô”)"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -298,11 +298,11 @@
     },
     {
       "glyph": "ঠ",
-      "sound": "ṭh",
+      "sound": "ṭhô",
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "ঠ  ṭh — consonant (inherent “ô”)"
+        "ঠ  ṭhô — consonant (inherent “ô”)"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -335,22 +335,22 @@
     },
     {
       "glyph": "ঢ",
-      "sound": "ḍh",
+      "sound": "ḍhô",
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "ঢ  ḍh — consonant (inherent “ô”)"
+        "ঢ  ḍhô — consonant (inherent “ô”)"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
     },
     {
       "glyph": "ণ",
-      "sound": "n",
+      "sound": "nô",
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "ণ  n — consonant (inherent “ô”)"
+        "ণ  nô — consonant (inherent “ô”)"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
@@ -663,11 +663,11 @@
     },
     {
       "glyph": "ষ",
-      "sound": "sh",
+      "sound": "shô",
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "ষ  sh — consonant (inherent “ô”)"
+        "ষ  shô — consonant (inherent “ô”)"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""

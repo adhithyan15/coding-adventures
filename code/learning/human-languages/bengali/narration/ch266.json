@@ -4,7 +4,7 @@
   "chapter": 266,
   "title": "What Was Going On",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fa89c62f09c7d80e",
+  "sourceHash": "fnv1a64:cfa76c05fc77fc38",
   "lessons": [
     {
       "id": "BN-C266-porchhilam",
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:9d337fdb80932bf9",
+      "sourceHash": "fnv1a64:519fb25fd167aae5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -206,7 +206,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I was reading\". (āmi pôṛchhilām.) Chapter thirty paired যখন, \"when\", with তখন, \"then\": যখন আমি আসি, তখন চা খাই. Read it aloud."
+              "text": "Say \"I was reading\". (āmi pôṛchhilām.) You know যখন, \"when\", and its partner তখন, \"then\": যখন আমি আসি, তখন চা খাই. Read it aloud."
             }
           ]
         },
@@ -443,10 +443,10 @@
     {
       "id": "BN-W266-letter-ttha",
       "sequence": 16620,
-      "title": "ঠ (ṭh) — the letter at the start of ঠিক (ṭhik)",
+      "title": "ঠ (ṭhô) — the letter at the start of ঠিক (ṭhik)",
       "headword": "ঠ",
-      "romanization": "ṭh",
-      "gloss": "the letter ঠ — ṭh, the letter at the start of ঠিক",
+      "romanization": "ṭhô",
+      "gloss": "the letter ঠ — ṭhô, the letter at the start of ঠিক",
       "script": "bengali",
       "modality": "pen",
       "derivedModality": "pen",
@@ -456,7 +456,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:097aba3c229094a5",
+      "sourceHash": "fnv1a64:a87a950fd003a749",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -497,15 +497,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ঠ — ṭh: the ট sound with a breath after it, as খ is ক with a breath. It opens ঠিক (ṭhik)."
+              "text": "ঠ — ṭhô: the ট sound with a breath after it, as খ is ক with a breath. It opens ঠিক (ṭhik)."
             },
             {
               "kind": "speech",
-              "text": "In the print of this book, ঠ (ṭh) has a headline crossed by one curved line. Above the headline, that line ends in a short hook, bent over to the left, its tip at the top. Below the headline it widens into a large round bowl that fills the lower part of the letter; the bowl is open at its upper left, where it ends in a short point. ঠ (ṭh) has no stem."
+              "text": "In the print of this book, ঠ (ṭhô) has a headline crossed by one curved line. Above the headline, the line rises in a curve that bows out to the left, its tip at the top. Below the headline it makes a large closed loop, shaped like a drop hanging from the headline, that fills the lower part of the letter; at its left side the loop has a sharp corner. ঠ (ṭhô) has no stem."
             },
             {
               "kind": "speech",
-              "text": "Set it beside ট: ট has a raised hook above its headline too, but below it a stem, and a bowl that ends in a solid knob. ঠ (ṭh) has no knob."
+              "text": "Set it beside ট: ট has a raised hook above its headline too, but below it a stem, and a bowl that ends in a solid knob. ঠ (ṭhô) has no knob."
             }
           ]
         },
@@ -516,11 +516,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen beside ঠ (ṭh) and copy the shape you can see, slowly and large. Check the copy against the print: the hook above the headline, the line crossing it, the round bowl and its short point."
+              "text": "Put your pen beside ঠ (ṭhô) and copy the shape you can see, slowly and large. Check the copy against the print: the curve above the headline, the line crossing it, the closed loop and its corner."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start ঠ (ṭh) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
+              "text": "This book does not yet tell you where to start ঠ (ṭhô) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
             }
           ]
         },
@@ -538,7 +538,7 @@
             {
               "kind": "prompt",
               "action": "FIND",
-              "instruction": "ঠ (ṭh) at the front of ঠিক (ṭhik)",
+              "instruction": "ঠ (ṭhô) at the front of ঠিক (ṭhik)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -547,7 +547,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ট, then ঠ (ṭh), from the print, naming each",
+              "instruction": "ট, then ঠ (ṭhô), from the print, naming each",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -586,7 +586,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter opens ঠিক (ṭhik)? (ঠ (ṭh).) What does ট have that ঠ (ṭh) does not? (A stem and a solid knob.)"
+              "text": "Which letter opens ঠিক (ṭhik)? (ঠ (ṭhô).) What does ট have that ঠ (ṭhô) does not? (A stem and a solid knob.)"
             },
             {
               "kind": "activity",
@@ -602,7 +602,7 @@
                 "ঠ; ঠিক"
               ],
               "feedback": {
-                "correct": "One line crossing the headline, and a bowl with no knob.",
+                "correct": "One line crossing the headline, and a closed loop with no knob.",
                 "incorrect": "Reopen ঠ, compare it with ট, then write it again from memory."
               }
             }
@@ -623,7 +623,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:b57cc29c0c3bcbbc",
+      "sourceHash": "fnv1a64:1311fdf8b9a13a16",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -648,7 +648,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: write ঠ (ṭh), the letter of the last lesson, and say ঠিক (ṭhik). The next word carries ঠ (ṭh) too."
+              "text": "Before the new one: write ঠ (ṭhô), the letter of the last lesson, and say ঠিক (ṭhik). The next word carries ঠ (ṭhô) too."
             }
           ]
         },
@@ -667,7 +667,7 @@
             },
             {
               "kind": "speech",
-              "text": "ওঠে is the present for he or she, and the moon and the sun \"rise\" with it too: রাতে চাঁদ ওঠে (rāte chā̃d oṭhe), \"the moon rises at night\". In most other forms the o rises to u, as in খোলা becomes খুললাম: the past uṭhlô, \"got up\", and the -e form uṭhe. At the start of a word that u needs a letter of its own, which comes in chapter 269; until then, say those forms, and write ওঠে."
+              "text": "ওঠে is the present for he or she, and the moon and the sun \"rise\" with it too: রাতে চাঁদ ওঠে (rāte chā̃d oṭhe), \"the moon rises at night\". In most other forms the o rises to u, as in খোলা becomes খুললাম: the past uṭhlô, \"got up\", and the -e form uṭhe. At the start of a word that u needs a letter of its own, which comes three chapters on; until then, say those forms, and write ওঠে."
             }
           ]
         },

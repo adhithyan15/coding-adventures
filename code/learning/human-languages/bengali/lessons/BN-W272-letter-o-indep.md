@@ -40,11 +40,11 @@ reviews_of: [BN-C272-obhigyota, BN-W01-aa, BN-W01-ka]
 ## Script you'll notice: অ
 <!-- hl-knowledge: introduces=[BN-SCRIPT-C272-O-INDEP-01]; assesses=[BN-SCRIPT-AA-01, BN-SCRIPT-KA-01, BN-LEX-C272-OBHIGYOTA-01, BN-SCRIPT-C268-MURDHANYA-NA-01] -->
 
-**অ** — *ô*, the vowel inside every bare consonant: **ক** is *kô*. It has no sign, because a consonant carries it already; at the start of a word, with nothing to ride on, it is the letter **অ**: **অভিজ্ঞতা**. Now Mira's friend's name can be written: **অরুণ** (*ôrun*), Arun.
+**অ** — *ô*, the vowel inside every bare consonant: **ক** is *kô*. It has no sign, because a consonant carries it already; at the start of a word, with nothing to ride on, it is the letter **অ**: **অভিজ্ঞতা**. Now the name Arun can be written: **অরুণ** (*ôrun*).
 
 In the print of this book, **অ** has a headline and an upright stem on the right, the full height of the letter. Left of the stem is a large rounded bowl; its left arm ends in a slanted tip at the upper left. The bowl's right side is curled over inside the top of the bowl and ends there in a solid round knob, and a short curve joins the knob to the headline above it. A slanting leg joins the bottom right of the bowl to the foot of the stem.
 
-**আ**, the first vowel you wrote, is **অ** with one more upright stroke after it, standing from the headline: look at the two side by side.
+**আ**, which you write, is **অ** with one more upright stroke after it, standing from the headline: look at the two side by side.
 
 ## Writing: অ — copy the printed shape
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-C272-O-INDEP-01] -->

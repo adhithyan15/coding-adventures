@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 267,
-  "sourceHash": "fnv1a64:287f0d3284e60e02",
+  "sourceHash": "fnv1a64:75b8483f346c5cb1",
   "lessonIds": [
     "BN-C267-giye",
     "BN-C267-prothome-tarpor",
@@ -14,7 +14,7 @@
   "drivablePrefix": 3,
   "text": "bengali/narration/ch267.txt",
   "json": "bengali/narration/ch267.json",
-  "textHash": "fnv1a64:5b1b5651aea54ac0",
-  "jsonHash": "fnv1a64:6f47787a3b0a559a",
+  "textHash": "fnv1a64:f59dbaeaf0cb0e61",
+  "jsonHash": "fnv1a64:905ee0023f4fb2a7",
   "findings": []
 }

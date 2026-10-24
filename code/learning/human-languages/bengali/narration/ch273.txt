@@ -15,7 +15,7 @@ You'll want to know: দৈনিক.
 রোজ tells you when: "every day". দৈনিক describes a thing: দৈনিক খরচ, "daily spending", দৈনিক কাজ, "daily work". On its own it is a newspaper that comes out every day: বাবা রোজ একটা দৈনিক পড়েন (bābā roj ekṭā doinik pôṛen), "Father reads a daily every day".
 
 The word, taken apart.
-দৈনিক (doinik) is a tatsama: Sanskrit dainika, "daily" (Monier-Williams). It belongs with dina, "day", Bengali দিন: CDIAL (6566) lists the related daina, "relating to a day", under dina, and dainika has the same strengthened first vowel, ai, with -ika, "of, belonging to", added.
+দৈনিক (doinik) is a tatsama: Sanskrit dainika, "daily" (Monier-Williams). It belongs with dina, "day", Bengali দিন: CDIAL (6566) gives the related daina, "relating to a day", and refers it to dina; dainika has the same strengthened first vowel, ai, with -ika, "of, belonging to", added.
 
 Guided Practice.
 [pause 1 second]

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 270,
-  "sourceHash": "fnv1a64:96c3ba72df457e43",
+  "sourceHash": "fnv1a64:9f2abc150e1574cf",
   "lessonIds": [
     "BN-C270-dur",
     "BN-W270-letter-uu-kar",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "bengali/narration/ch270.txt",
   "json": "bengali/narration/ch270.json",
-  "textHash": "fnv1a64:8ba30f8a40cff08a",
-  "jsonHash": "fnv1a64:4d4cb91bd4f8fb12",
+  "textHash": "fnv1a64:462d90dc08e33801",
+  "jsonHash": "fnv1a64:4fb79451c9781454",
   "findings": []
 }

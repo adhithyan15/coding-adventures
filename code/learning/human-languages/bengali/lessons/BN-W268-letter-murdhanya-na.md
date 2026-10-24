@@ -10,8 +10,8 @@ delivery: script
 chapter: 268
 type: writing
 headword: "ণ"
-gloss: "the letter ণ — n, the letter at the end of কারণ"
-romanization: "n"
+gloss: "the letter ণ — nô, the letter at the end of কারণ"
+romanization: "nô"
 prerequisites: [BN-C268-karon, BN-W01-na, BN-W265-letter-murdhanya-sha, BN-W267-letter-khanda-ta]
 sounds: []
 roots: []
@@ -30,7 +30,7 @@ register: neutral
 variety: standard-colloquial
 reviews_of: [BN-C268-karon, BN-W01-na]
 ---
-# ণ (n) — the letter at the end of কারণ
+# ণ (nô) — the letter at the end of কারণ
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C268-KARON-01, BN-SCRIPT-NA-01] -->
@@ -40,7 +40,7 @@ reviews_of: [BN-C268-karon, BN-W01-na]
 ## Script you'll notice: ণ
 <!-- hl-knowledge: introduces=[BN-SCRIPT-C268-MURDHANYA-NA-01]; assesses=[BN-SCRIPT-NA-01, BN-LEX-C268-KARON-01, BN-SCRIPT-C265-MURDHANYA-SHA-01] -->
 
-**ণ** — *n*. Bengali says **ণ** and **ন** alike, so, like **ষ** beside **শ**, it is a matter of spelling: most words that carry **ণ** come from Sanskrit.
+**ণ** — *nô*. Bengali says **ণ** and **ন** alike, so, like **ষ** beside **শ**, it is a matter of spelling: most words that carry **ণ** come from Sanskrit.
 
 Set the print of **ণ** beside **ন**. Both have an upright stem on the right and an arch on the left that ends in a solid knob. In **ন**, the headline is long and covers the whole letter, and the arch meets the stem low down, near its middle. In **ণ**, the headline is short and sits only at the stem and to its right; the arch meets the stem near the top, where the headline would be, and the stem's top end stands a little above the short headline, cut on a slant.
 

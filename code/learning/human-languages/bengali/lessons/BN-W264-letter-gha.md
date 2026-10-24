@@ -10,8 +10,8 @@ delivery: script
 chapter: 264
 type: writing
 headword: "ঘ"
-gloss: "the letter ঘ — gh, the letter at the start of ঘটা"
-romanization: "gh"
+gloss: "the letter ঘ — ghô, the letter at the start of ঘটা"
+romanization: "ghô"
 prerequisites: [BN-C264-ghota, BN-W03-ba, BN-W03-kha]
 sounds: []
 roots: []
@@ -30,7 +30,7 @@ register: neutral
 variety: standard-colloquial
 reviews_of: [BN-C264-ghota, BN-W03-ba]
 ---
-# ঘ (gh) — the letter at the start of ঘটা
+# ঘ (ghô) — the letter at the start of ঘটা
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C264-GHOTA-01, BN-SCRIPT-BA-01] -->
@@ -40,7 +40,7 @@ reviews_of: [BN-C264-ghota, BN-W03-ba]
 ## Script you'll notice: ঘ
 <!-- hl-knowledge: introduces=[BN-SCRIPT-C264-GHA-01]; assesses=[BN-SCRIPT-BA-01, BN-SCRIPT-KHA-01] -->
 
-**ঘ** — *gh*: a *g* with a breath after it, as **খ** is a *k* with a breath. It opens **ঘটা**.
+**ঘ** — *ghô*: a *g* with a breath after it, as **খ** (*khô*) is a *k* with a breath. It opens **ঘটা**.
 
 In the print of this book, **ঘ** has the frame of **ব**: a headline along the top, an upright stem on the right, the full height of the letter, a pointed tip at the lower left, and a curve that joins that tip to the foot of the stem. Where **ব** has one straight diagonal, **ঘ** has two pieces. Under the left end of the headline hangs a rounded curl, open toward the stem, its end a short point aimed up and to the right. Below the curl, a short straight piece joins it to the pointed tip.
 
@@ -64,4 +64,4 @@ Put your pen beside **ঘ** and copy the shape you can see, slowly and large. Ch
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-C264-GHA-01, BN-LEX-C264-GHOTA-01] -->
 <!-- hl-activity: {"id": "BN-W264-letter-gha-r1", "kind": "text", "assesses": ["BN-SCRIPT-C264-GHA-01"], "prompt": "With no model, write the letter at the start of ghôṭā, then the word.", "answer": "ঘ; ঘটা", "accepted": [], "feedback": {"correct": "The curl under the headline is what makes it gh, not b.", "incorrect": "Reopen ঘ, compare the curl under the headline, then write it again from memory."}, "response_seconds": 25} -->
 
-[PAUSE 3s] Which letter is this — ঘ? (*gh*.) Which word did it come from? (**ঘটা**.) How is it unlike **ব**? (A curl hangs under its headline.)
+[PAUSE 3s] Which letter is this — ঘ? (*ghô*.) Which word did it come from? (**ঘটা**.) How is it unlike **ব**? (A curl hangs under its headline.)

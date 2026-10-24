@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 266,
-  "sourceHash": "fnv1a64:fa89c62f09c7d80e",
+  "sourceHash": "fnv1a64:cfa76c05fc77fc38",
   "lessonIds": [
     "BN-C266-porchhilam",
     "BN-C266-jokhon-tokhon",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "bengali/narration/ch266.txt",
   "json": "bengali/narration/ch266.json",
-  "textHash": "fnv1a64:21bbfec2dd2e157b",
-  "jsonHash": "fnv1a64:b2091757ab6f41d1",
+  "textHash": "fnv1a64:1b95bbfe8d728772",
+  "jsonHash": "fnv1a64:46b7b332f942aa17",
   "findings": []
 }

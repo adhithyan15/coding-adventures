@@ -14,7 +14,7 @@ romanization: "oṭhā"
 concept_tag: BN-VERB-OTHA
 prerequisites: [BN-W266-letter-ttha, BN-C266-thik, BN-C67-chad, BN-C78-rat, BN-C92-roj, BN-C78-sokal, BN-C73-taratari]
 sounds: []
-roots: [indo-aryan-utthati]
+roots: [indo-aryan-ut-sthati]
 etymology_hook: "oṭhā ← *ut-sthāti 'stands up', reconstructed (CDIAL 1900)"
 duration:
   max_seconds: 165
@@ -47,7 +47,7 @@ reviews_of: [BN-W266-letter-ttha, BN-C266-thik]
 >
 > *she roj sôkāle tāṛātāṛi oṭhe.* — "She gets up early every morning."
 
-**ওঠে** is the present for he or she, and the moon and the sun "rise" with it too: **রাতে চাঁদ ওঠে** (*rāte chā̃d oṭhe*), "the moon rises at night". In most other forms the *o* rises to *u*, as in **খোলা** → **খুললাম**: the past *uṭhlô*, "got up", and the *-e* form *uṭhe*. At the start of a word that *u* needs a letter of its own, which comes in chapter 269; until then, say those forms, and write **ওঠে**.
+**ওঠে** is the present for he or she, and the moon and the sun "rise" with it too: **রাতে চাঁদ ওঠে** (*rāte chā̃d oṭhe*), "the moon rises at night". In most other forms the *o* rises to *u*, as in **খোলা** → **খুললাম**: the past *uṭhlô*, "got up", and the *-e* form *uṭhe*. At the start of a word that *u* needs a letter of its own, which comes three chapters on; until then, say those forms, and write **ওঠে**.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

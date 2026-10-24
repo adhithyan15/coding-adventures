@@ -44,7 +44,7 @@ reviews_of: [BN-C268-karon, BN-C268-mone-hoy]
 >
 > *āj āmi jābô nā, kārôn āmi klāntô.* — "I won't go today, because I'm tired."
 
-A whole reason, with its own verb or its own **ক্লান্ত**, follows **কারণ**. **কেননা**, which you met in chapter twenty-nine, does the same job in the same place: **আজ আমি যাব না, কেননা আমি ক্লান্ত**. To ask for one, **কেন?** (*kenô?*), "why?", the word inside **কেননা**.
+A whole reason, with its own verb or a describing word such as **ক্লান্ত**, follows **কারণ**. **কেননা**, which you know, does the same job in the same place: **আজ আমি যাব না, কেননা আমি ক্লান্ত**. To ask for one, **কেন?** (*kenô?*), "why?", the word inside **কেননা**.
 
 ## You'll want to know: because of, for
 <!-- hl-knowledge: introduces=[BN-GRAMMAR-C268-JONNO-01]; assesses=[BN-LEX-C255-JINIS255-02, BN-LEX-C128-THINGS128-04, BN-LEX-C156-SOMOY156-05, BN-GRAMMAR-C264-PAST-PERSON-01] -->

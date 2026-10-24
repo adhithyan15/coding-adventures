@@ -4,7 +4,7 @@
   "chapter": 272,
   "title": "Feelings and Hopes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b7b776c0b84e8b4d",
+  "sourceHash": "fnv1a64:6b6b1525bed79c1d",
   "lessons": [
     {
       "id": "BN-C272-obhigyota",
@@ -145,7 +145,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:96cb47015afa5271",
+      "sourceHash": "fnv1a64:e1cf75d0c2e0237f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -187,7 +187,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "অ — ô, the vowel inside every bare consonant: ক is kô. It has no sign, because a consonant carries it already; at the start of a word, with nothing to ride on, it is the letter অ: অভিজ্ঞতা (ôbhigyôtā). Now Mira's friend's name can be written: অরুণ (ôrun), Arun."
+              "text": "অ — ô, the vowel inside every bare consonant: ক is kô. It has no sign, because a consonant carries it already; at the start of a word, with nothing to ride on, it is the letter অ: অভিজ্ঞতা (ôbhigyôtā). Now the name Arun can be written: অরুণ (ôrun)."
             },
             {
               "kind": "speech",
@@ -195,7 +195,7 @@
             },
             {
               "kind": "speech",
-              "text": "আ, the first vowel you wrote, is অ (ô) with one more upright stroke after it, standing from the headline: look at the two side by side."
+              "text": "আ, which you write, is অ (ô) with one more upright stroke after it, standing from the headline: look at the two side by side."
             }
           ]
         },
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4fadb392efc454c1",
+      "sourceHash": "fnv1a64:a303f76634f24060",
       "notice": null,
       "blocks": [
         {
@@ -359,7 +359,7 @@
             },
             {
               "kind": "speech",
-              "text": "ছবিটা আমার ভালো লাগল, কিন্তু ঝড়ে আমার ভয় করছিল। chhôbiṭā āmār bhālo lāglô, kintu jhôṛe āmār bhôy kôrchhilô. — \"I liked the picture, but I was scared in the storm.\""
+              "text": "গ্রামটা আমার ভালো লাগল, কিন্তু ঝড়ে আমার ভয় করছিল। grāmṭā āmār bhālo lāglô, kintu jhôṛe āmār bhôy kôrchhilô. — \"I liked the village, but I was scared in the storm.\""
             },
             {
               "kind": "speech",

@@ -35,7 +35,7 @@ reviews_of: [BN-C264-gelam, BN-C264-chhilam, BN-C04-kal-dekha-hobe]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C264-PAST-PERSON-01, BN-GRAMMAR-C264-WAS-01, BN-CONCEPT-C04-KALDEKHAHOBE-01] -->
 
-[PAUSE 2s] Say "Yesterday I was at home". (*kāl āmi bāṛite chhilām*.) Then the goodbye from chapter seven: **কাল দেখা হবে**, "see you tomorrow". Its last word, **হবে**, is a future: "it will happen".
+[PAUSE 2s] Say "Yesterday I was at home". (*kāl āmi bāṛite chhilām*.) Then the goodbye you know: **কাল দেখা হবে**, "see you tomorrow". Its last word, **হবে**, is a future: "it will happen".
 
 ## You'll want to know: the future, person by person
 <!-- hl-knowledge: introduces=[BN-GRAMMAR-C265-FUTURE-PERSON-01]; assesses=[BN-LEX-C82-PLACE82-05, BN-LEX-C07-JAOWA-01, BN-LEX-C24-AMRA-01, BN-CONCEPT-C02-TUMIAPNI-01, BN-LEX-C23-SHE-01] -->

@@ -35,7 +35,7 @@ reviews_of: [BN-C269-uchit-te-hobe, BN-C159-tai]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C269-TE-HOBE-01, BN-LEX-C159-KARON159-01] -->
 
-[PAUSE 2s] Say "I had to walk". (*āmāke hẽṭe jete hôlô*.) Then **তাই**, "so", from chapter one hundred and fifty-nine.
+[PAUSE 2s] Say "I had to walk". (*āmāke hẽṭe jete hôlô*.) Then **তাই**, "so", which you know.
 
 ## You'll want to know: so
 <!-- hl-knowledge: introduces=[BN-GRAMMAR-C269-TAI-01]; assesses=[BN-LEX-C159-KARON159-01, BN-GRAMMAR-C266-ONGOING-PAST-01, BN-LEX-C255-JINIS255-02, BN-LEX-C59-FOOD59-04] -->

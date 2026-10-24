@@ -4,7 +4,7 @@
   "chapter": 273,
   "title": "Than, Most, and How Long",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bbc8bfdbcbd39401",
+  "sourceHash": "fnv1a64:457b31557eaf8fcd",
   "lessons": [
     {
       "id": "BN-C273-doinik",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b805912ad17c8e1",
+      "sourceHash": "fnv1a64:5a5b4a515b167038",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "দৈনিক (doinik) is a tatsama: Sanskrit dainika, \"daily\" (Monier-Williams). It belongs with dina, \"day\", Bengali দিন: CDIAL (6566) lists the related daina, \"relating to a day\", under dina, and dainika has the same strengthened first vowel, ai, with -ika, \"of, belonging to\", added."
+              "text": "দৈনিক (doinik) is a tatsama: Sanskrit dainika, \"daily\" (Monier-Williams). It belongs with dina, \"day\", Bengali দিন: CDIAL (6566) gives the related daina, \"relating to a day\", and refers it to dina; dainika has the same strengthened first vowel, ai, with -ika, \"of, belonging to\", added."
             }
           ]
         },

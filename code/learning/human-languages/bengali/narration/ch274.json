@@ -4,7 +4,7 @@
   "chapter": 274,
   "title": "If, and Otherwise",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:401cc45d490a6744",
+  "sourceHash": "fnv1a64:6c887a2fd35cf3c4",
   "lessons": [
     {
       "id": "BN-C274-jodi-tahole",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5427597657d62e86",
+      "sourceHash": "fnv1a64:3753b89fedfde9fd",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"for two years\". (dui bôchhôr dhôre.) Then যদি, \"if\", and তাহলে, \"then, in that case\": you met them in chapters one hundred and fifty-nine and two hundred and eighteen."
+              "text": "Say \"for two years\". (dui bôchhôr dhôre.) Then যদি, \"if\", and তাহলে, \"then, in that case\": both of which you know."
             }
           ]
         },
@@ -423,10 +423,10 @@
     {
       "id": "BN-W274-letter-ddha",
       "sequence": 17030,
-      "title": "ঢ (ḍh) — the letter at the start of ঢোকা (ḍhokā)",
+      "title": "ঢ (ḍhô) — the letter at the start of ঢোকা (ḍhokā)",
       "headword": "ঢ",
-      "romanization": "ḍh",
-      "gloss": "the letter ঢ — ḍh, the letter at the start of ঢোকা",
+      "romanization": "ḍhô",
+      "gloss": "the letter ঢ — ḍhô, the letter at the start of ঢোকা",
       "script": "bengali",
       "modality": "pen",
       "derivedModality": "pen",
@@ -437,7 +437,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:6d1b37639a168932",
+      "sourceHash": "fnv1a64:86c7a56e8c3896e0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -479,11 +479,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ঢ — ḍh: the ড sound with a breath after it, as ঠ is ট with a breath. It opens ঢোকা (ḍhokā)."
+              "text": "ঢ — ḍhô: the ড sound with a breath after it, as ঠ is ট with a breath. It opens ঢোকা (ḍhokā)."
             },
             {
               "kind": "speech",
-              "text": "In the print of this book, ঢ (ḍh) is ট without its raised hook. It has a headline; a straight stem stands under the left part of it; the stem's foot rounds into a bowl, and the bowl's right side ends in a solid knob, tucked inside the curve under the right half of the headline. The right side does not reach the headline. Look at ট beside it: below the headline the two are alike, and ট has the hook above."
+              "text": "In the print of this book, ঢ (ḍhô) is ট without its raised hook. It has a headline; a straight stem stands under the left part of it; the stem's foot rounds into a bowl, and the bowl's right side ends in a solid knob, tucked inside the curve under the right half of the headline. The right side does not reach the headline. Look at ট beside it: below the headline the two are alike, and ট has the hook above."
             }
           ]
         },
@@ -494,11 +494,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen beside ঢ (ḍh) and copy the shape you can see, slowly and large. Check the copy against the print: the headline, the stem on the left, the round bottom, the solid knob, and the gap between the knob and the headline."
+              "text": "Put your pen beside ঢ (ḍhô) and copy the shape you can see, slowly and large. Check the copy against the print: the headline, the stem on the left, the round bottom, the solid knob, and the gap between the knob and the headline."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start ঢ (ḍh) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
+              "text": "This book does not yet tell you where to start ঢ (ḍhô) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
             }
           ]
         },
@@ -516,7 +516,7 @@
             {
               "kind": "prompt",
               "action": "FIND",
-              "instruction": "ঢ (ḍh) at the front of ঢোকা (ḍhokā)",
+              "instruction": "ঢ (ḍhô) at the front of ঢোকা (ḍhokā)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -525,7 +525,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ট, then ঢ (ḍh), from the print",
+              "instruction": "ট, then ঢ (ḍhô), from the print",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -564,7 +564,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter opens ঢোকা (ḍhokā)? (ঢ (ḍh).) What does its right side end in? (A solid knob.) What does ট have that ঢ (ḍh) does not? (The hook above the headline.)"
+              "text": "Which letter opens ঢোকা (ḍhokā)? (ঢ (ḍhô).) What does its right side end in? (A solid knob.) What does ট have that ঢ (ḍhô) does not? (The hook above the headline.)"
             },
             {
               "kind": "activity",
@@ -701,7 +701,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which tense after যদি? (The present.) যাওয়া in the -লে form? (গেলে.) \"Otherwise\"? (নাহলে.) Which letter opens ঢোকা (ḍhokā)? (ঢ (ḍh).)"
+              "text": "Which tense after যদি? (The present.) যাওয়া in the -লে form? (গেলে.) \"Otherwise\"? (নাহলে.) Which letter opens ঢোকা (ḍhokā)? (ঢ (ḍhô).)"
             }
           ]
         }

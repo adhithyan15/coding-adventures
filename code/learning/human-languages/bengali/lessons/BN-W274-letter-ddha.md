@@ -10,8 +10,8 @@ delivery: script
 chapter: 274
 type: writing
 headword: "ঢ"
-gloss: "the letter ঢ — ḍh, the letter at the start of ঢোকা"
-romanization: "ḍh"
+gloss: "the letter ঢ — ḍhô, the letter at the start of ঢোকা"
+romanization: "ḍhô"
 prerequisites: [BN-C274-dhoka, BN-W05-tta, BN-W04-dda, BN-W266-letter-ttha, BN-W273-letter-oi-kar]
 sounds: []
 roots: []
@@ -30,7 +30,7 @@ register: neutral
 variety: standard-colloquial
 reviews_of: [BN-C274-dhoka, BN-W05-tta, BN-W04-dda]
 ---
-# ঢ (ḍh) — the letter at the start of ঢোকা
+# ঢ (ḍhô) — the letter at the start of ঢোকা
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C274-DHOKA-01, BN-SCRIPT-TTA-01, BN-SCRIPT-DDA-01] -->
@@ -40,7 +40,7 @@ reviews_of: [BN-C274-dhoka, BN-W05-tta, BN-W04-dda]
 ## Script you'll notice: ঢ
 <!-- hl-knowledge: introduces=[BN-SCRIPT-C274-DDHA-01]; assesses=[BN-SCRIPT-TTA-01, BN-SCRIPT-DDA-01, BN-LEX-C274-DHOKA-01, BN-SCRIPT-C266-TTHA-01] -->
 
-**ঢ** — *ḍh*: the **ড** sound with a breath after it, as **ঠ** is **ট** with a breath. It opens **ঢোকা**.
+**ঢ** — *ḍhô*: the **ড** sound with a breath after it, as **ঠ** is **ট** with a breath. It opens **ঢোকা**.
 
 In the print of this book, **ঢ** is **ট** without its raised hook. It has a headline; a straight stem stands under the left part of it; the stem's foot rounds into a bowl, and the bowl's right side ends in a solid knob, tucked inside the curve under the right half of the headline. The right side does not reach the headline. Look at **ট** beside it: below the headline the two are alike, and **ট** has the hook above.
 

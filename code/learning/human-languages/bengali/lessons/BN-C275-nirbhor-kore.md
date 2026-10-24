@@ -44,7 +44,7 @@ reviews_of: [BN-C274-jodi-tahole, BN-C274-brishti-hole, BN-C216-opore]
 >
 > *eṭā ābôhāoyār opôr nirbhôr kôre.* — "It depends on the weather."
 
-**ওপর** (*opôr*), "on, upon", is the word inside **ওপরে**. **নির্ভর করা** (*nirbhôr kôrā*) is "to depend". What it depends on takes the **-র** form, then **ওপর**: "it does depending upon the weather". **সব**, "all", from the last chapter, makes it "everything": **সব আবহাওয়ার ওপর নির্ভর করে**.
+**ওপর** (*opôr*), "on, upon", is the word inside **ওপরে**. **নির্ভর করা** (*nirbhôr kôrā*) is "to depend". What it depends on takes the **-র** form, then **ওপর**: word for word, "it does reliance upon the weather". **সব**, "all", from the lesson on **সবচেয়ে**, makes it "everything": **সব আবহাওয়ার ওপর নির্ভর করে**.
 
 ## You'll want to know: it's up to you
 <!-- hl-knowledge: introduces=[BN-GRAMMAR-C275-DEPENDS-ON-PERSON-01]; assesses=[BN-CONCEPT-C02-TUMIAPNI-01, BN-CONCEPT-C02-AMAR-01, BN-GRAMMAR-C265-FUTURE-PERSON-01] -->

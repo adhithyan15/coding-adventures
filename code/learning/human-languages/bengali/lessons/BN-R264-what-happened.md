@@ -40,7 +40,7 @@ reviews_of: [BN-C264-gelam, BN-C264-chhilam, BN-C264-ghota, BN-W264-letter-gha]
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C264-PAST-PERSON-01, BN-GRAMMAR-C264-PAST-STEMS-01, BN-GRAMMAR-C264-WAS-01, BN-GRAMMAR-C264-WAS-NOT-01, BN-LEX-C264-GHOTA-01, BN-SCRIPT-C264-GHA-01, BN-LEX-C84-TOWN84-04, BN-LEX-C82-PLACE82-05, BN-LEX-C65-SCHOOL65-03] -->
 
 [PAUSE 2s each]
-- [YOU SAY: I came back home in the evening, and then I sat.]
+- [YOU SAY: In the evening I came back home. I was tired.]
 - [YOU SAY: What happened in the village yesterday?]
 - [YOU SAY: Mira was at the station. Arun was not there.]
 - [YOU SAY: There was a big tree in the neighbourhood.]

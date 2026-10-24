@@ -4,7 +4,7 @@
   "chapter": 269,
   "title": "Ought To, Have To, and So",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:39e6cc1c3e7204c2",
+  "sourceHash": "fnv1a64:3faf7e47e4da8e3c",
   "lessons": [
     {
       "id": "BN-C269-uchit",
@@ -466,7 +466,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:092eab1592cefdb2",
+      "sourceHash": "fnv1a64:896f94cf866ef27e",
       "notice": null,
       "blocks": [
         {
@@ -482,7 +482,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I had to walk\". (āmāke hẽṭe jete hôlô.) Then তাই, \"so\", from chapter one hundred and fifty-nine."
+              "text": "Say \"I had to walk\". (āmāke hẽṭe jete hôlô.) Then তাই, \"so\", which you know."
             }
           ]
         },
@@ -609,7 +609,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abb833363acfc3d0",
+      "sourceHash": "fnv1a64:82a1756115730ee2",
       "notice": null,
       "blocks": [
         {
@@ -670,11 +670,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "The bus didn't come, so we walked.",
+              "instruction": "There was no bus, so we walked.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: The bus didn't come, so we walked.]"
+              "source": "[YOU SAY: There was no bus, so we walked.]"
             },
             {
               "kind": "prompt",

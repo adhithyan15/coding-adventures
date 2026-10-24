@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 271,
-  "sourceHash": "fnv1a64:385bf5399d1c4cd9",
+  "sourceHash": "fnv1a64:162a370f2ef010e6",
   "lessonIds": [
     "BN-C271-nouka",
     "BN-W271-letter-au-kar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 1,
   "text": "bengali/narration/ch271.txt",
   "json": "bengali/narration/ch271.json",
-  "textHash": "fnv1a64:b16f40441b609e70",
-  "jsonHash": "fnv1a64:6ca59017721ee18e",
+  "textHash": "fnv1a64:a1ef49ae648c7563",
+  "jsonHash": "fnv1a64:fe4d352792f2920f",
   "findings": []
 }

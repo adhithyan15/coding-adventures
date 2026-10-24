@@ -35,7 +35,7 @@ reviews_of: [BN-C266-porchhilam, BN-C19-jokhon]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C266-ONGOING-PAST-01, BN-LEX-C19-JOKHON-01] -->
 
-[PAUSE 2s] Say "I was reading". (*āmi pôṛchhilām*.) Chapter thirty paired **যখন**, "when", with **তখন**, "then": **যখন আমি আসি, তখন চা খাই**. Read it aloud.
+[PAUSE 2s] Say "I was reading". (*āmi pôṛchhilām*.) You know **যখন**, "when", and its partner **তখন**, "then": **যখন আমি আসি, তখন চা খাই**. Read it aloud.
 
 ## You'll want to know: the scene and the event
 <!-- hl-knowledge: introduces=[BN-GRAMMAR-C266-SCENE-EVENT-01]; assesses=[BN-LEX-C19-JOKHON-01, BN-GRAMMAR-C266-ONGOING-PAST-01, BN-GRAMMAR-C264-PAST-PERSON-01, BN-LEX-C63-HOME63-04] -->

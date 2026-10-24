@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 269,
-  "sourceHash": "fnv1a64:39e6cc1c3e7204c2",
+  "sourceHash": "fnv1a64:3faf7e47e4da8e3c",
   "lessonIds": [
     "BN-C269-uchit",
     "BN-W269-letter-u",
@@ -13,7 +13,7 @@
   "drivablePrefix": 1,
   "text": "bengali/narration/ch269.txt",
   "json": "bengali/narration/ch269.json",
-  "textHash": "fnv1a64:26148f04665cb2ae",
-  "jsonHash": "fnv1a64:4b41f5552b0d7126",
+  "textHash": "fnv1a64:74e9d3716a5776b9",
+  "jsonHash": "fnv1a64:5b77eb548052115b",
   "findings": []
 }

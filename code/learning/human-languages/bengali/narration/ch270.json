@@ -4,7 +4,7 @@
   "chapter": 270,
   "title": "Which Way, and How Far",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:96c3ba72df457e43",
+  "sourceHash": "fnv1a64:9f2abc150e1574cf",
   "lessons": [
     {
       "id": "BN-C270-dur",
@@ -144,7 +144,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:64713dd8524d8668",
+      "sourceHash": "fnv1a64:1a9fc0e9ebf5e506",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -189,7 +189,7 @@
             },
             {
               "kind": "speech",
-              "text": "Set the print of দূ beside দু. Under দু hangs a small closed loop with a short slanting tail at its lower right. Under দূ hangs a rounded hook that is open on the right, like a backward C, with a short slanting tail at its lower end."
+              "text": "Set the print of দূ beside দু. Under দু hangs a small closed loop with a short slanting tail at its lower right. Under দূ hangs a rounded hook that is open on the right, like a C, with a short slanting tail at its lower end."
             }
           ]
         },

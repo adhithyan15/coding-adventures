@@ -10,8 +10,8 @@ delivery: script
 chapter: 266
 type: writing
 headword: "ঠ"
-gloss: "the letter ঠ — ṭh, the letter at the start of ঠিক"
-romanization: "ṭh"
+gloss: "the letter ঠ — ṭhô, the letter at the start of ঠিক"
+romanization: "ṭhô"
 prerequisites: [BN-C266-thik, BN-W05-tta, BN-W265-letter-murdhanya-sha]
 sounds: []
 roots: []
@@ -30,7 +30,7 @@ register: neutral
 variety: standard-colloquial
 reviews_of: [BN-C266-thik, BN-W05-tta]
 ---
-# ঠ (ṭh) — the letter at the start of ঠিক
+# ঠ (ṭhô) — the letter at the start of ঠিক
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C266-THIK-01, BN-SCRIPT-TTA-01] -->
@@ -40,16 +40,16 @@ reviews_of: [BN-C266-thik, BN-W05-tta]
 ## Script you'll notice: ঠ
 <!-- hl-knowledge: introduces=[BN-SCRIPT-C266-TTHA-01]; assesses=[BN-SCRIPT-TTA-01, BN-LEX-C266-THIK-01] -->
 
-**ঠ** — *ṭh*: the **ট** sound with a breath after it, as **খ** is **ক** with a breath. It opens **ঠিক**.
+**ঠ** — *ṭhô*: the **ট** sound with a breath after it, as **খ** is **ক** with a breath. It opens **ঠিক**.
 
-In the print of this book, **ঠ** has a headline crossed by one curved line. Above the headline, that line ends in a short hook, bent over to the left, its tip at the top. Below the headline it widens into a large round bowl that fills the lower part of the letter; the bowl is open at its upper left, where it ends in a short point. **ঠ** has no stem.
+In the print of this book, **ঠ** has a headline crossed by one curved line. Above the headline, the line rises in a curve that bows out to the left, its tip at the top. Below the headline it makes a large closed loop, shaped like a drop hanging from the headline, that fills the lower part of the letter; at its left side the loop has a sharp corner. **ঠ** has no stem.
 
 Set it beside **ট**: **ট** has a raised hook above its headline too, but below it a stem, and a bowl that ends in a solid knob. **ঠ** has no knob.
 
 ## Writing: ঠ — copy the printed shape
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-C266-TTHA-01] -->
 
-Put your pen beside **ঠ** and copy the shape you can see, slowly and large. Check the copy against the print: the hook above the headline, the line crossing it, the round bowl and its short point.
+Put your pen beside **ঠ** and copy the shape you can see, slowly and large. Check the copy against the print: the curve above the headline, the line crossing it, the closed loop and its corner.
 
 > This book does not yet tell you where to start ঠ or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime.
 
@@ -64,6 +64,6 @@ Put your pen beside **ঠ** and copy the shape you can see, slowly and large. Ch
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-C266-TTHA-01, BN-LEX-C266-THIK-01] -->
-<!-- hl-activity: {"id": "BN-W266-letter-ttha-r1", "kind": "text", "assesses": ["BN-SCRIPT-C266-TTHA-01"], "prompt": "With no model, write the letter at the start of ṭhik, then the word.", "answer": "ঠ; ঠিক", "accepted": [], "feedback": {"correct": "One line crossing the headline, and a bowl with no knob.", "incorrect": "Reopen ঠ, compare it with ট, then write it again from memory."}, "response_seconds": 25} -->
+<!-- hl-activity: {"id": "BN-W266-letter-ttha-r1", "kind": "text", "assesses": ["BN-SCRIPT-C266-TTHA-01"], "prompt": "With no model, write the letter at the start of ṭhik, then the word.", "answer": "ঠ; ঠিক", "accepted": [], "feedback": {"correct": "One line crossing the headline, and a closed loop with no knob.", "incorrect": "Reopen ঠ, compare it with ট, then write it again from memory."}, "response_seconds": 25} -->
 
 [PAUSE 3s] Which letter opens **ঠিক**? (**ঠ**.) What does **ট** have that **ঠ** does not? (A stem and a solid knob.)
