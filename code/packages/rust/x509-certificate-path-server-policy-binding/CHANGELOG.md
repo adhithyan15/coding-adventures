@@ -3,6 +3,15 @@
 All notable changes to `x509-certificate-path-server-policy-binding` are
 documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Added a combined non-copyable result that retains reviewed-terminal path
+  evidence and complete server policy for the path's exact target object.
+- Rejected byte-equal target policy from an independent decode before either
+  endpoint proof is retained.
+
 ## [0.1.0] - 2026-10-23
 
 ### Added
