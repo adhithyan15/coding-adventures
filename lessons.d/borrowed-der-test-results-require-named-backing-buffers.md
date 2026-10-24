@@ -10,5 +10,3 @@ dropped at the end of the statement, so any decoded view cannot be inspected
 afterward. Bind generated DER to a named variable before decoding it. Bind
 generated expected encodings too, then compare borrowed slices by reference;
 this makes both the lifetime and the intended exact bytes explicit.
-
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
