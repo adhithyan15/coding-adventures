@@ -27,6 +27,9 @@ Japanese headwords in the book:
 - `JA-C41-namae` teaches the word **なまえ**. It does not teach a full “my
   name is” construction. An identity prompt can ask for one chosen personal
   name as a single spoken response, without scoring an untaught sentence.
+- Reading recognition can also use **コーヒー** from `JA-C01-koohii` and **あし**,
+  **口**, and **め** from their direct `JA-C11` lessons. The reading packet must
+  not print the exact later writing or speaking response targets.
 
 Any candidate prompt, recording line, distractor, or model beyond those
 bounded forms needs an exact direct lesson owner and script check before it

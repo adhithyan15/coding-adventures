@@ -9,11 +9,11 @@ Print the four skill sections as separate packets. Give only the current packet:
 Choose A, B, or C. No dictionary or other aid.
 
 <!-- mock-part:prea1-reading-kana-and-doorway-words -->
-1. **こんにちは** — A goodbye / B daytime greeting / C no
-2. **日本語** — A Japanese language / B a hand / C an ear
-3. **はい** — A thank you / B no / C yes
-4. **いいえ** — A no / B please / C a name
-5. **ありがとうございます** — A yes / B thank you / C hello
+1. **コーヒー** — A coffee / B an ear / C a mouth
+2. **なまえ** — A yes / B a name / C a hand
+3. **あし** — A a face / B an eye / C a foot
+4. **口** — A a mouth / B a nose / C an ear
+5. **め** — A a face / B an eye / C a foot
 <!-- /mock-part:prea1-reading-kana-and-doorway-words -->
 
 ## Listening — 5 minutes

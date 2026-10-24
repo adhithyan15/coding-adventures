@@ -82,7 +82,12 @@ it("adds Japanese pre-A1 full mock 1 with separate secure four-skill packets", (
   expect(count("prea1-writing-dictation")).toBe(2);
   expect(count("prea1-writing-bounded-production")).toBe(2);
   expect(count("prea1-speaking-doorway-exchange")).toBe(5);
-  expect(part(key, "prea1-reading-kana-and-doorway-words")).toMatch(/1 B; 2 A; 3 C; 4 A; 5 B/);
+  expect(part(key, "prea1-reading-kana-and-doorway-words")).toMatch(/1 A; 2 B; 3 C; 4 A; 5 B/);
+  expect(part(paper, "prea1-reading-kana-and-doorway-words")).toContain("**コーヒー** — A coffee");
+  expect(part(paper, "prea1-reading-kana-and-doorway-words")).toContain("**なまえ** — A yes / B a name");
+  expect(part(paper, "prea1-reading-kana-and-doorway-words")).toContain("**あし** — A a face / B an eye / C a foot");
+  expect(part(paper, "prea1-reading-kana-and-doorway-words")).toContain("**口** — A a mouth");
+  expect(part(paper, "prea1-reading-kana-and-doorway-words")).toContain("**め** — A a face / B an eye");
   expect(part(key, "prea1-listening-greetings-and-one-turn-details")).toMatch(/1 A; 2 B; 3 B; 4 C; 5 A/);
   for (const [file, utterance, keyedChoice] of [
     ["l01", "こんにちは", "A"], ["l02", "はい", "B"],
@@ -104,7 +109,7 @@ it("adds Japanese pre-A1 full mock 1 with separate secure four-skill packets", (
   expect(rubric).toMatch(/qualified Japanese review/i);
   expect(rubric).toMatch(/human validation/i);
   expect(paper).not.toMatch(/\b(konnichiwa|onegaishimasu|arigatou|iie|hai)\b/i);
-  for (const hiddenTarget of ["みみ", "はな", "て"]) {
+  for (const hiddenTarget of ["みみ", "はな", "て", "こんにちは", "日本語", "おねがいします", "ありがとうございます", "はい", "いいえ"]) {
     expect(examiner).toContain(hiddenTarget);
     expect(paper).not.toContain(hiddenTarget);
   }

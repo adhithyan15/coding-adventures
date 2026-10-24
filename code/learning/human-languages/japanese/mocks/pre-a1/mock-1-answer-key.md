@@ -5,7 +5,7 @@ Do not give this file to the learner. Use the matching examiner master and separ
 ## Reading
 
 <!-- mock-part:prea1-reading-kana-and-doorway-words -->
-1 B; 2 A; 3 C; 4 A; 5 B.
+1 A; 2 B; 3 C; 4 A; 5 B.
 <!-- /mock-part:prea1-reading-kana-and-doorway-words -->
 
 ## Listening
