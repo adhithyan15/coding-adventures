@@ -910,6 +910,20 @@ earlier construction depths, authenticate another link, route algorithms,
 validate the whole path, recognize or constrain trust, process name constraints
 or revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
 connection.
+A bounded construction-bound reviewed-path follow-up now consumes that
+path-length result, the authenticated terminal adjacency projected from the
+same construction, and reviewed-root selection for the terminal issuer. It
+accepts only an exact two-link target-to-intermediate-to-terminal construction:
+the first retained adjacency must be depth zero, the terminal adjacency must be
+depth one, both must retain the identical constructed-path object, and the
+terminal issuer must be the exact decoded certificate retained by the reviewed
+root evidence. Distinct non-copyable success evidence keeps all three inputs,
+including complete intermediate policy and the advanced path-length state, so
+callers cannot splice authenticated links from separately constructed paths or
+discard the reviewed terminal. The caller-supplied initial path-length state
+still is not derived from anchor policy, and this fixed-shape composition does
+not apply anchor constraints, target policy, revocation, generalized path
+validation, TLS, HTTP, OAuth transport, or network authority.
 Certificate-wide role policy can now bind caller-owned critical-extension
 recognition and algorithm-independent role semantics to the same exact decoded
 certificate. The non-copyable result prevents checking critical extensions on
