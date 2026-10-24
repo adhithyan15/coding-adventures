@@ -20,6 +20,7 @@ const BIT_STRING_TAG: u32 = 3;
 const OCTET_STRING_TAG: u32 = 4;
 const NULL_TAG: u32 = 5;
 const OBJECT_IDENTIFIER_TAG: u32 = 6;
+const ENUMERATED_TAG: u32 = 10;
 const SEQUENCE_TAG: u32 = 16;
 const SET_TAG: u32 = 17;
 const IA5_STRING_TAG: u32 = 22;
@@ -342,32 +343,58 @@ impl<'a> DerInteger<'a> {
     }
 
     pub fn to_u64(self) -> Result<u64, Asn1Error> {
-        if self.is_negative() {
-            return Err(Asn1Error::new(
-                Asn1ErrorKind::NegativeInteger,
-                self.value_offset,
-            ));
-        }
-        let magnitude = if self.bytes[0] == 0 {
-            &self.bytes[1..]
-        } else {
-            self.bytes
-        };
-        if magnitude.len() > std::mem::size_of::<u64>() {
-            return Err(Asn1Error::new(
-                Asn1ErrorKind::IntegerOverflow,
-                self.value_offset,
-            ));
-        }
-        Ok(magnitude
-            .iter()
-            .fold(0u64, |value, byte| (value << 8) | u64::from(*byte)))
+        canonical_signed_to_u64(self.bytes, self.value_offset)
     }
 }
 
 /// Validate and borrow one canonical INTEGER value.
 pub fn decode_integer(element: Asn1Element<'_>) -> Result<DerInteger<'_>, Asn1Error> {
     expect_universal_primitive(element, INTEGER_TAG)?;
+    let bytes = canonical_signed_contents(element)?;
+    Ok(DerInteger {
+        bytes,
+        value_offset: element.value_offset(),
+    })
+}
+
+/// A borrowed, already-canonical two's-complement ENUMERATED value.
+///
+/// ASN.1 permits signed ENUMERATED encodings. Schema-specific consumers decide
+/// which non-negative values they recognize; this generic DER layer preserves
+/// every canonical value and offers a checked unsigned conversion. Because
+/// X.690 applies the same signed-integer content rules to both types, content
+/// and conversion failures use the existing INTEGER error categories.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct DerEnumerated<'a> {
+    bytes: &'a [u8],
+    value_offset: usize,
+}
+
+impl<'a> DerEnumerated<'a> {
+    pub const fn signed_bytes(&self) -> &'a [u8] {
+        self.bytes
+    }
+
+    pub fn is_negative(&self) -> bool {
+        self.bytes[0] & 0x80 != 0
+    }
+
+    pub fn to_u64(self) -> Result<u64, Asn1Error> {
+        canonical_signed_to_u64(self.bytes, self.value_offset)
+    }
+}
+
+/// Validate and borrow one canonical ENUMERATED value.
+pub fn decode_enumerated(element: Asn1Element<'_>) -> Result<DerEnumerated<'_>, Asn1Error> {
+    expect_universal_primitive(element, ENUMERATED_TAG)?;
+    let bytes = canonical_signed_contents(element)?;
+    Ok(DerEnumerated {
+        bytes,
+        value_offset: element.value_offset(),
+    })
+}
+
+fn canonical_signed_contents(element: Asn1Element<'_>) -> Result<&[u8], Asn1Error> {
     let bytes = element.value();
     if bytes.is_empty() {
         return Err(Asn1Error::new(
@@ -385,10 +412,20 @@ pub fn decode_integer(element: Asn1Element<'_>) -> Result<DerInteger<'_>, Asn1Er
             ));
         }
     }
-    Ok(DerInteger {
-        bytes,
-        value_offset: element.value_offset(),
-    })
+    Ok(bytes)
+}
+
+fn canonical_signed_to_u64(bytes: &[u8], value_offset: usize) -> Result<u64, Asn1Error> {
+    if bytes[0] & 0x80 != 0 {
+        return Err(Asn1Error::new(Asn1ErrorKind::NegativeInteger, value_offset));
+    }
+    let magnitude = if bytes[0] == 0 { &bytes[1..] } else { bytes };
+    if magnitude.len() > std::mem::size_of::<u64>() {
+        return Err(Asn1Error::new(Asn1ErrorKind::IntegerOverflow, value_offset));
+    }
+    Ok(magnitude
+        .iter()
+        .fold(0u64, |value, byte| (value << 8) | u64::from(*byte)))
 }
 
 /// A borrowed BIT STRING after unused-bit and zero-padding validation.
