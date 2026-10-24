@@ -4,7 +4,7 @@
   "chapter": 536,
   "title": "Kinds and Choices",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bed299a6a4780144",
+  "sourceHash": "fnv1a64:9849a3ef243ac9d8",
   "lessons": [
     {
       "id": "BN-C536-suparish",
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a945e9aa0f0a4de",
+      "sourceHash": "fnv1a64:7cf4fcc1c8feea4c",
       "notice": null,
       "blocks": [
         {

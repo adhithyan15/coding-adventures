@@ -14,7 +14,7 @@ romanization: "bonās"
 concept_tag: BN-BETON495-BONAS
 prerequisites: [BN-C494-jog-deoya, BN-C495-beton]
 sounds: []
-roots: [english-bonus]
+roots: [bonus]
 etymology_hook: 'bonās ← English bonus'
 duration:
   max_seconds: 200

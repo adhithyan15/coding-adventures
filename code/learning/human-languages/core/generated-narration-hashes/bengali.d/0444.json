@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 444,
-  "sourceHash": "fnv1a64:0f26bfd44e1448d7",
+  "sourceHash": "fnv1a64:f4f1990a72cffd0d",
   "lessonIds": [
     "BN-C444-obhiman",
     "BN-C444-onujog",
@@ -14,6 +14,6 @@
   "text": "bengali/narration/ch444.txt",
   "json": "bengali/narration/ch444.json",
   "textHash": "fnv1a64:b9a3b2e6c59a25d7",
-  "jsonHash": "fnv1a64:dc6276e1780a0517",
+  "jsonHash": "fnv1a64:c190f74b114705c8",
   "findings": []
 }

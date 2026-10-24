@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 496,
-  "sourceHash": "fnv1a64:8b4230d02e58a5e7",
+  "sourceHash": "fnv1a64:2994e45ef66c2a9f",
   "lessonIds": [
     "BN-C496-pod",
     "BN-C496-podonnoti",
@@ -14,6 +14,6 @@
   "text": "bengali/narration/ch496.txt",
   "json": "bengali/narration/ch496.json",
   "textHash": "fnv1a64:f0044f1bef59b5a3",
-  "jsonHash": "fnv1a64:c8ef2d5637830614",
+  "jsonHash": "fnv1a64:dd3898bbd1c11463",
   "findings": []
 }

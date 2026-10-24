@@ -4,7 +4,7 @@
   "chapter": 495,
   "title": "Pay Day",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:adf98eac4edf2c53",
+  "sourceHash": "fnv1a64:cd2eca627eed427c",
   "lessons": [
     {
       "id": "BN-C495-beton",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90a5cd50b0b647d9",
+      "sourceHash": "fnv1a64:d4ed6b353f156592",
       "notice": null,
       "blocks": [
         {

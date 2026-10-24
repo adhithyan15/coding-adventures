@@ -14,7 +14,7 @@ romanization: "siniyôr"
 concept_tag: BN-PODONNOTI496-SINIYOR
 prerequisites: [BN-C496-podonnoti, BN-C496-sohokari]
 sounds: []
-roots: [english-senior]
+roots: [senior]
 etymology_hook: 'siniyôr ← English senior'
 duration:
   max_seconds: 200

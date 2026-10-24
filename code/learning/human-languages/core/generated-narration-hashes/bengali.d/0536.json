@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 536,
-  "sourceHash": "fnv1a64:bed299a6a4780144",
+  "sourceHash": "fnv1a64:9849a3ef243ac9d8",
   "lessonIds": [
     "BN-C536-suparish",
     "BN-C536-sommoti",
@@ -14,6 +14,6 @@
   "text": "bengali/narration/ch536.txt",
   "json": "bengali/narration/ch536.json",
   "textHash": "fnv1a64:d3dbd434fae3e5f4",
-  "jsonHash": "fnv1a64:aaea3aa95ca49fde",
+  "jsonHash": "fnv1a64:8273f8ff2365da9a",
   "findings": []
 }

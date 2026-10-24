@@ -14,7 +14,7 @@ romanization: "rôkôm"
 concept_tag: BN-ROKOM536-ROKOM
 prerequisites: [BN-C536-suparish, BN-C536-sommoti]
 sounds: []
-roots: [arabic-raqm]
+roots: [raqm-arabic]
 etymology_hook: 'rôkôm: usually traced to Arabic raqm ''a mark, a figure'''
 duration:
   max_seconds: 200

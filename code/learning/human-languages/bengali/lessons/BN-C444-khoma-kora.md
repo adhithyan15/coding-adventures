@@ -14,7 +14,7 @@ romanization: "khômā kôrā"
 concept_tag: BN-VERB-KHOMA-KORA
 prerequisites: [BN-C444-onujog, BN-C444-mukh-bhar-kora]
 sounds: []
-roots: [sanskrit-kshama, sanskrit-karoti]
+roots: [kshama-sanskrit, sanskrit-karoti]
 etymology_hook: 'khômā kôrā: khômā ''forgiveness'' ← Sanskrit kṣamā ''patience, forbearance'' (Monier-Williams) + kôrā ''to do'' (CDIAL 2814)'
 duration:
   max_seconds: 200

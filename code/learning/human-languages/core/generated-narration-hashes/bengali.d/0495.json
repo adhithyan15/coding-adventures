@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 495,
-  "sourceHash": "fnv1a64:adf98eac4edf2c53",
+  "sourceHash": "fnv1a64:cd2eca627eed427c",
   "lessonIds": [
     "BN-C495-beton",
     "BN-C495-bonas",
@@ -14,6 +14,6 @@
   "text": "bengali/narration/ch495.txt",
   "json": "bengali/narration/ch495.json",
   "textHash": "fnv1a64:4f6454dcd002fef5",
-  "jsonHash": "fnv1a64:f193907a5b5f0b33",
+  "jsonHash": "fnv1a64:025264c8daddaaa4",
   "findings": []
 }

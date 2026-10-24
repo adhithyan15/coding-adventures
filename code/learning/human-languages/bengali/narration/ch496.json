@@ -4,7 +4,7 @@
   "chapter": 496,
   "title": "Moving Up",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8b4230d02e58a5e7",
+  "sourceHash": "fnv1a64:2994e45ef66c2a9f",
   "lessons": [
     {
       "id": "BN-C496-pod",
@@ -433,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:472c579a9140627d",
+      "sourceHash": "fnv1a64:97eadda507b4ac24",
       "notice": null,
       "blocks": [
         {
