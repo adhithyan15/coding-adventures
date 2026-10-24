@@ -1,0 +1,15 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER parent cardinality and u entity disambiguation vertical slice",
+  "fixtures": [
+    {
+      "name": "parent-cardinality",
+      "source": "erDiagram\nPROJECT u--o{ TEAM_MEMBER : parent"
+    },
+    {
+      "name": "u-entity-name",
+      "source": "erDiagram\nu ||--|| ORDER : places\nu {\n  string id PK\n}"
+    }
+  ]
+}

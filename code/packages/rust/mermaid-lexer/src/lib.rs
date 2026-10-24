@@ -1593,6 +1593,22 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_parent_cardinality_and_u_entity_name() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nPROJECT u--o{ TEAM_MEMBER : parent\nu ||--|| ORDER : places\n",
+        );
+        let parent_tokens: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("MD_PARENT"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(parent_tokens, ["u", "u"]);
+        assert!(tokens.iter().any(|token| token.value == "PROJECT"));
+        assert!(tokens.iter().any(|token| token.value == "TEAM_MEMBER"));
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",

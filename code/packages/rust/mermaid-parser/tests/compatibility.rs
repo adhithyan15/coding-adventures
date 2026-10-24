@@ -149,6 +149,14 @@ const ER_ALIAS_ORDER_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-alias-order-11.16.1-visual-corpus.json"
 ));
+const ER_PARENT_CARDINALITY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-parent-cardinality-11.16.1-corpus.json"
+));
+const ER_PARENT_CARDINALITY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-parent-cardinality-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2439,6 +2447,38 @@ fn pinned_er_aliases_update_entities_across_declaration_order() {
     assert_eq!(supplier.label, "SUPPLIER");
     assert_eq!(supplier.compartments[0].entries, ["id: string [PK]"]);
     assert_eq!(declaration_first.relationships[0].from, "supplier");
+}
+
+#[test]
+fn pinned_er_parent_cardinality_disambiguates_u_entity_names() {
+    let syntax: Value = serde_json::from_str(ER_PARENT_CARDINALITY_CORPUS)
+        .expect("ER parent cardinality corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_PARENT_CARDINALITY_VISUAL_CORPUS)
+        .expect("ER parent cardinality visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(syntax["fixtures"].as_array().expect("ER parent fixtures").len(), 2);
+
+    let parent = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER parent cardinality source"),
+    )
+    .expect("ER parent cardinality fixture must parse");
+    assert_eq!(parent.relationships[0].from, "PROJECT");
+    assert_eq!(parent.relationships[0].to, "TEAM_MEMBER");
+    assert_eq!(parent.relationships[0].from_mult.as_deref(), Some("parent"));
+    assert_eq!(parent.relationships[0].to_mult.as_deref(), Some("0..*"));
+
+    let entity = parse_er_diagram(
+        syntax["fixtures"][1]["source"]
+            .as_str()
+            .expect("ER u entity source"),
+    )
+    .expect("ER u entity fixture must parse");
+    let u = entity.nodes.iter().find(|node| node.id == "u").expect("u entity");
+    assert_eq!(u.compartments[0].entries, ["id: string [PK]"]);
+    assert_eq!(entity.relationships[0].from, "u");
+    assert_eq!(entity.relationships[0].from_mult.as_deref(), Some("1"));
 }
 
 #[test]
