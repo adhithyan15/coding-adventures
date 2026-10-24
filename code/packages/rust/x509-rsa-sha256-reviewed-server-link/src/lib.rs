@@ -3,6 +3,8 @@
 //! This crate closes one evidence-mixing gap between target-server policy and
 //! one authenticated RSA SHA-256 issuer link terminating at a reviewed root,
 //! or to one authenticated target-to-intermediate-to-reviewed-root path. It
+//! can bind the stronger equivalent proof projected from one exact constructed
+//! path without allowing target policy from another decoded object. It
 //! also applies selected reviewed-anchor DNS constraints to the exact target
 //! certificate's Subject Alternative Name values and applies the supported
 //! critical NameConstraints subset from an exact retained intermediate. It
@@ -18,7 +20,8 @@ use x509_name_constraints::{
     ConstrainedDnsNames, DnsConstraintErrorKind, NameConstraintsErrorKind, NAME_CONSTRAINTS_OID,
 };
 use x509_rsa_sha256_reviewed_anchor_link::{
-    BoundX509RsaSha256ReviewedAnchorLink, BoundX509RsaSha256ReviewedIntermediatePath,
+    BoundX509RsaSha256ConstructedReviewedIntermediatePath, BoundX509RsaSha256ReviewedAnchorLink,
+    BoundX509RsaSha256ReviewedIntermediatePath,
 };
 use x509_server_certificate_policy::ValidatedX509ServerCertificatePolicy;
 use x509_subject_alt_name::{
@@ -230,6 +233,73 @@ impl fmt::Debug
 {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("BoundX509RsaSha256ReviewedIntermediateServerPath")
+    }
+}
+
+/// Non-copyable target policy bound to one exact constructed reviewed path.
+///
+/// The retained path is the fixed two-link construction whose two adjacencies
+/// were authenticated, whose intermediate advanced path-length state, and
+/// whose terminal issuer is the selected reviewed root. The retained target
+/// policy covers critical-extension and algorithm policy, end-entity role,
+/// SAN-only identity, explicit-time validity, and exact purpose for the same
+/// decoded target object. This wrapper does not derive initial path-length
+/// state from anchor policy, apply constraints, check revocation, generalize
+/// path validation, or grant TLS, HTTP, OAuth, or network authority.
+pub struct BoundX509RsaSha256ConstructedReviewedIntermediateServerPath<
+    'path,
+    'server_certificate,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    server_policy: ValidatedX509ServerCertificatePolicy<'server_certificate, 'target_encoded>,
+    reviewed_intermediate_path: BoundX509RsaSha256ConstructedReviewedIntermediatePath<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+}
+
+impl<'path, 'server_certificate, 'target, 'target_encoded, 'candidates, 'candidate_encoded>
+    BoundX509RsaSha256ConstructedReviewedIntermediateServerPath<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+{
+    /// Return complete policy for the construction's exact target object.
+    pub const fn server_policy(
+        &self,
+    ) -> &ValidatedX509ServerCertificatePolicy<'server_certificate, 'target_encoded> {
+        &self.server_policy
+    }
+
+    /// Return the complete authenticated construction and reviewed root.
+    pub const fn reviewed_intermediate_path(
+        &self,
+    ) -> &BoundX509RsaSha256ConstructedReviewedIntermediatePath<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.reviewed_intermediate_path
+    }
+}
+
+impl fmt::Debug
+    for BoundX509RsaSha256ConstructedReviewedIntermediateServerPath<'_, '_, '_, '_, '_, '_>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundX509RsaSha256ConstructedReviewedIntermediateServerPath")
     }
 }
 
@@ -708,6 +778,60 @@ pub fn bind_x509_rsa_sha256_reviewed_intermediate_server_path<
         server_policy,
         reviewed_intermediate_path,
     })
+}
+
+/// Bind target policy to the exact target of one authenticated construction.
+///
+/// The reviewed-path input already retains the identical constructed-path
+/// object for both authenticated adjacencies and the exact selected terminal
+/// root. This follow-up accepts complete server policy only when its decoded
+/// certificate is the construction's exact target object. Matching encoded
+/// bytes from another decode are insufficient. Success is evidence
+/// composition only and does not apply additional path or transport policy.
+pub fn bind_x509_rsa_sha256_constructed_reviewed_intermediate_server_path<
+    'path,
+    'server_certificate,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    server_policy: ValidatedX509ServerCertificatePolicy<'server_certificate, 'target_encoded>,
+    reviewed_intermediate_path: BoundX509RsaSha256ConstructedReviewedIntermediatePath<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+) -> Result<
+    BoundX509RsaSha256ConstructedReviewedIntermediateServerPath<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    X509RsaSha256ReviewedServerLinkError,
+> {
+    let constructed_target = reviewed_intermediate_path
+        .authenticated_path()
+        .authenticated_intermediate()
+        .verified_link()
+        .adjacent_link()
+        .constructed_path()
+        .target_certificate();
+    if !same_exact_object(server_policy.certificate(), constructed_target) {
+        return Err(X509RsaSha256ReviewedServerLinkError::evidence_mismatch());
+    }
+
+    Ok(
+        BoundX509RsaSha256ConstructedReviewedIntermediateServerPath {
+            server_policy,
+            reviewed_intermediate_path,
+        },
+    )
 }
 
 /// Apply supported selected-anchor DNS policy to one complete direct link.

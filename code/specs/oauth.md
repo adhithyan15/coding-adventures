@@ -924,6 +924,18 @@ discard the reviewed terminal. The caller-supplied initial path-length state
 still is not derived from anchor policy, and this fixed-shape composition does
 not apply anchor constraints, target policy, revocation, generalized path
 validation, TLS, HTTP, OAuth transport, or network authority.
+A bounded construction-bound target-policy follow-up now consumes that complete
+authenticated reviewed path together with complete validated server-certificate
+policy. It fails closed unless the server-policy certificate is the same exact
+decoded target object retained by the constructed path, then returns distinct
+non-copyable evidence retaining both complete inputs. This prevents callers
+from attaching hostname, validity, purpose, end-entity role, critical-extension,
+and algorithm policy for one certificate to a separately constructed and
+authenticated target, including a byte-equal re-decode. The result still uses
+the caller-supplied initial path-length state retained by the prior proof and
+does not apply anchor or intermediate name constraints, other anchor policy,
+revocation, generalized path validation, TLS, HTTP, OAuth transport, or network
+authority.
 Certificate-wide role policy can now bind caller-owned critical-extension
 recognition and algorithm-independent role semantics to the same exact decoded
 certificate. The non-copyable result prevents checking critical extensions on
