@@ -13,7 +13,15 @@ The package composes the repository's completed `intel8080-simulator` for the
 - the one-instruction EI delay and immediate DI behavior;
 - SID input and SOD output latches;
 - exact installed-program bounds, owned snapshots, typed atomic faults, and
-  transactional bounded runs.
+transactional bounded runs.
+
+Each retained trace owns complete before/after memory and port snapshots.
+`run_loaded()` therefore uses a memory-derived safe limit under a 16 MiB trace
+budget, and `run_loaded_with_limit()` rejects larger requests before changing
+the machine. Use `max_retained_trace_steps()` to inspect the limit. Applications
+that need longer runs can stream results by repeatedly calling `step()`.
+Unusually large host arenas that cannot fit even one complete trace under the
+budget report a maximum of zero and require that streaming path.
 
 The default checked contract rejects the ten undocumented bytes used by hidden
 8085 instructions on some physical steppings. This keeps the simulator aligned
@@ -89,11 +97,12 @@ The test suite includes:
 - EI delay, DI, priority, all four fixed vectors, INTR/RST, and HLT release;
 - exact interrupt stack byte order;
 - typed, atomic load/fetch/opcode/data/stack/INTR/run failures;
+- memory-bounded retained traces and atomic rejection of unsafe run limits;
 - reset, repeatable bounded runs, and owned full-state snapshots.
 
-Release tests, strict Clippy, strict rustdoc, and formatting pass. Coverage is
-98.89% of lines (357/361), 97.51% of regions, and 100% of functions.
+All 13 release integration tests, strict Clippy, strict rustdoc, and formatting
+pass. Coverage is 98.95% of lines (377/381), 97.71% of regions, and 100% of
+functions.
 
 See [`07af-intel-8085-simulator.md`](../../../specs/07af-intel-8085-simulator.md)
 for the complete contract and primary Intel references.
-

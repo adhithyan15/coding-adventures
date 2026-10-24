@@ -18,6 +18,11 @@ const SIM: u8 = 0x30;
 const EI: u8 = 0xFB;
 const DI: u8 = 0xF3;
 
+/// Upper bound for complete before/after snapshots retained by one run.
+const RETAINED_TRACE_BUDGET_BYTES: usize = 16 * 1024 * 1024;
+const MAX_RETAINED_TRACE_STEPS: usize = 4_096;
+const TRACE_STATE_OVERHEAD_BYTES: usize = 1_024;
+
 const UNDOCUMENTED: [u8; 10] = [0x08, 0x10, 0x18, 0x28, 0x38, 0xCB, 0xD9, 0xDD, 0xED, 0xFD];
 
 /// Per-source mask latches. A set bit suppresses that restart input.
@@ -120,6 +125,10 @@ pub enum Intel8085Error {
     UnsupportedInterruptOpcode {
         opcode: u8,
     },
+    TraceLimitTooLarge {
+        requested: usize,
+        maximum: usize,
+    },
 }
 
 impl std::fmt::Display for Intel8085Error {
@@ -170,6 +179,10 @@ impl std::fmt::Display for Intel8085Error {
             Self::UnsupportedInterruptOpcode { opcode } => write!(
                 formatter,
                 "INTR acknowledge byte {opcode:#04X} is not a RST instruction"
+            ),
+            Self::TraceLimitTooLarge { requested, maximum } => write!(
+                formatter,
+                "requested trace limit {requested} exceeds safe retained-trace maximum {maximum}"
             ),
         }
     }
@@ -309,12 +322,30 @@ impl Intel8085Simulator {
         }
     }
 
+    /// Maximum number of complete traces this machine may retain in one run.
+    ///
+    /// Each trace owns full before/after memory and port snapshots. The limit
+    /// is derived from the configured memory size so a bounded run cannot turn
+    /// a valid guest loop into unbounded host-memory growth. Long-running
+    /// callers can stream traces by repeatedly calling [`Self::step`].
+    #[must_use]
+    pub fn max_retained_trace_steps(&self) -> usize {
+        let bytes_per_state = self
+            .core
+            .mem
+            .size()
+            .saturating_add(TRACE_STATE_OVERHEAD_BYTES);
+        let bytes_per_trace = bytes_per_state.saturating_mul(2).max(1);
+        (RETAINED_TRACE_BUDGET_BYTES / bytes_per_trace).min(MAX_RETAINED_TRACE_STEPS)
+    }
+
     /// Execute a program transactionally on a fresh CPU.
     pub fn run(
         &mut self,
         program: &[u8],
         max_steps: usize,
     ) -> Result<ExecutionResult, Intel8085Error> {
+        self.validate_trace_limit(max_steps)?;
         if program.len() > self.core.mem.size() || program.len() > 65_536 {
             return Err(Intel8085Error::ProgramOutOfRange {
                 origin: 0,
@@ -331,9 +362,9 @@ impl Intel8085Simulator {
         Ok(result)
     }
 
-    /// Execute an installed program with a generous deterministic limit.
+    /// Execute an installed program with the safe retained-trace limit.
     pub fn run_loaded(&mut self) -> Result<ExecutionResult, Intel8085Error> {
-        self.run_loaded_with_limit(1_000_000)
+        self.run_loaded_with_limit(self.max_retained_trace_steps())
     }
 
     /// Execute at most `max_steps` instructions or interrupt acknowledges.
@@ -341,6 +372,7 @@ impl Intel8085Simulator {
         &mut self,
         max_steps: usize,
     ) -> Result<ExecutionResult, Intel8085Error> {
+        self.validate_trace_limit(max_steps)?;
         let mut traces = Vec::new();
         while traces.len() < max_steps {
             if self.core.halted && !self.has_serviceable_interrupt() {
@@ -355,6 +387,14 @@ impl Intel8085Simulator {
             traces,
             final_state: self.snapshot(),
         })
+    }
+
+    fn validate_trace_limit(&self, requested: usize) -> Result<(), Intel8085Error> {
+        let maximum = self.max_retained_trace_steps();
+        if requested > maximum {
+            return Err(Intel8085Error::TraceLimitTooLarge { requested, maximum });
+        }
+        Ok(())
     }
 
     /// Execute one instruction or accept one pending interrupt.

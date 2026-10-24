@@ -6,4 +6,3 @@ description = "Checked Intel 8085A functional simulator with complete documented
 
 [dependencies]
 intel8080-simulator = { path = "../intel8080-simulator" }
-

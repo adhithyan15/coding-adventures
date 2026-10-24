@@ -133,6 +133,26 @@ fn ei_waits_for_the_following_instruction_before_accepting_an_interrupt() {
 }
 
 #[test]
+fn di_disables_interrupts_immediately_and_cancels_delayed_ei() {
+    let mut enabled = Intel8085Simulator::new(65_536);
+    enabled.load_program(&[0xF3, 0x00]).unwrap(); // DI; NOP
+    enabled.core.interrupts_enabled = true;
+    assert_eq!(enabled.step().unwrap().mnemonic, "di");
+    assert!(!enabled.core.interrupts_enabled);
+
+    let mut delayed = Intel8085Simulator::new(65_536);
+    delayed.load_program(&[0xFB, 0xF3, 0x00, 0x76]).unwrap(); // EI; DI; NOP; HLT
+    delayed.restart_masks.rst75 = false;
+    delayed.request_interrupt(InterruptRequest::Rst75);
+    assert_eq!(delayed.step().unwrap().mnemonic, "ei");
+    assert_eq!(delayed.step().unwrap().mnemonic, "di");
+    assert!(!delayed.core.interrupts_enabled);
+    assert_eq!(delayed.step().unwrap().mnemonic, "nop");
+    assert!(!delayed.core.interrupts_enabled);
+    assert_eq!(delayed.core.pc, 3);
+}
+
+#[test]
 fn interrupt_priority_stack_order_and_halt_release_are_exact() {
     let mut simulator = ready_simulator();
     simulator.core.regs.sp = 0x0100;
@@ -355,6 +375,56 @@ fn short_memory_data_fault_and_oversized_run_are_atomic() {
 }
 
 #[test]
+fn retained_trace_budget_bounds_guest_loops_and_rejects_oversized_limits_atomically() {
+    let mut looping = Intel8085Simulator::new(65_536);
+    looping.load_program(&[0xC3, 0x00, 0x00]).unwrap(); // JMP 0000h
+    let maximum = looping.max_retained_trace_steps();
+    assert!(maximum > 0);
+    assert!(maximum < 1_000_000);
+
+    let result = looping.run_loaded().unwrap();
+    assert_eq!(result.steps, maximum);
+    assert_eq!(result.traces.len(), maximum);
+    assert!(!result.halted);
+    assert_eq!(result.pc, 0);
+
+    let mut rejected = Intel8085Simulator::new(65_536);
+    rejected.load_program(&[0x76]).unwrap();
+    let before = rejected.snapshot();
+    assert_eq!(
+        rejected.run_loaded_with_limit(maximum + 1),
+        Err(Intel8085Error::TraceLimitTooLarge {
+            requested: maximum + 1,
+            maximum,
+        })
+    );
+    assert_eq!(rejected.snapshot(), before);
+
+    let mut transactional = Intel8085Simulator::new(65_536);
+    let before = transactional.snapshot();
+    assert_eq!(
+        transactional.run(&[0x76], maximum + 1),
+        Err(Intel8085Error::TraceLimitTooLarge {
+            requested: maximum + 1,
+            maximum,
+        })
+    );
+    assert_eq!(transactional.snapshot(), before);
+
+    let mut oversized_arena = Intel8085Simulator::new(9 * 1024 * 1024);
+    assert_eq!(oversized_arena.max_retained_trace_steps(), 0);
+    let before = oversized_arena.snapshot();
+    assert_eq!(
+        oversized_arena.run_loaded_with_limit(1),
+        Err(Intel8085Error::TraceLimitTooLarge {
+            requested: 1,
+            maximum: 0,
+        })
+    );
+    assert_eq!(oversized_arena.snapshot(), before);
+}
+
+#[test]
 fn errors_have_stable_messages_and_core_failures_map_without_information_loss() {
     assert_eq!(RestartMasks::default(), RestartMasks::masked());
 
@@ -388,6 +458,10 @@ fn errors_have_stable_messages_and_core_failures_map_without_information_loss() 
             memory_size: 32,
         },
         Intel8085Error::UnsupportedInterruptOpcode { opcode: 0 },
+        Intel8085Error::TraceLimitTooLarge {
+            requested: 9,
+            maximum: 8,
+        },
     ];
     let rendered = errors.map(|error| error.to_string());
     assert!(rendered[0].contains("program of 2 bytes"));
@@ -398,6 +472,8 @@ fn errors_have_stable_messages_and_core_failures_map_without_information_loss() 
     assert!(rendered[5].contains("address 0x0100"));
     assert!(rendered[6].contains("stack address 0xFFFE"));
     assert!(rendered[7].contains("not a RST instruction"));
+    assert!(rendered[8].contains("trace limit 9"));
+    assert!(rendered[8].contains("maximum 8"));
 
     let mapped = [
         Intel8080Error::ProgramOutOfRange {

@@ -105,6 +105,14 @@ release HLT when IE and its mask permit it.
   undocumented opcodes, out-of-range data/stack accesses, and post-halt steps
   with typed errors and no partial mutation.
 - `run` executes on a fresh candidate machine and commits only on success.
+- retained execution traces own two complete snapshots apiece, so
+  `max_retained_trace_steps` derives a conservative limit from configured
+  memory size and a 16 MiB trace budget. `run_loaded` uses that limit, while
+  oversized explicit limits fail before execution. Callers that need longer
+  execution stream one trace at a time with `step` instead of retaining every
+  full-memory snapshot.
+- configurations so large that one complete trace exceeds the budget report a
+  maximum of zero retained steps; they remain usable through streaming `step`.
 - every successful instruction or interrupt acknowledgement returns owned
   before/after state plus exact raw bytes and mnemonic.
 - snapshots own all memory and port bytes and therefore remain stable after
@@ -121,4 +129,3 @@ The Rust package must include:
   stack byte order, transaction rollback, reset, and owned snapshots;
 - strict formatting, Clippy, rustdoc, release tests, and at least 95% line
   coverage.
-
