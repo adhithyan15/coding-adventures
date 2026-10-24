@@ -390,19 +390,24 @@ fn authenticates_the_projected_candidate_child_without_endpoint_substitution() {
 #[test]
 fn authenticates_constructed_adjacency_with_complete_exact_intermediate_policy() {
     let target_encoded = fixture();
-    let mut issuer_encoded = fixture();
-    mutate_first(&mut issuer_encoded, &[0x02, 0x01, 0x01], |serial| {
-        serial[2] = 2;
-    });
+    let mut intermediate_encoded = fixture();
+    replace_nth(
+        &mut intermediate_encoded,
+        b"fixture.example",
+        0,
+        b"root001.example",
+    );
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, b"fixture.example", 1, b"root001.example");
     let target = decode(&target_encoded);
-    let candidates = vec![decode(&issuer_encoded)];
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
     let profiles = algorithm_profiles();
     let path = construct_unique_x509_certificate_path_by(
         &target,
         &candidates,
-        1,
         2,
-        |certificate| certificate.encoded() == candidates[0].encoded(),
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
         |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
     )
     .unwrap();
@@ -466,21 +471,33 @@ fn authenticates_constructed_adjacency_with_complete_exact_intermediate_policy()
 #[test]
 fn rejects_detached_intermediate_policy_before_constructed_link_crypto() {
     let target_encoded = fixture();
-    let mut invalid_issuer_encoded = fixture();
-    mutate_first(&mut invalid_issuer_encoded, RSA_ENCRYPTION_OID_DER, |oid| {
-        oid[oid.len() - 1] = 0x0b;
-    });
-    let detached_issuer_encoded = fixture();
+    let mut detached_intermediate_encoded = fixture();
+    replace_nth(
+        &mut detached_intermediate_encoded,
+        b"fixture.example",
+        0,
+        b"root001.example",
+    );
+    let mut invalid_intermediate_encoded = detached_intermediate_encoded.clone();
+    mutate_first(
+        &mut invalid_intermediate_encoded,
+        RSA_ENCRYPTION_OID_DER,
+        |oid| {
+            oid[oid.len() - 1] = 0x0b;
+        },
+    );
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, b"fixture.example", 1, b"root001.example");
     let target = decode(&target_encoded);
-    let candidates = vec![decode(&invalid_issuer_encoded)];
-    let detached_issuer = decode(&detached_issuer_encoded);
+    let candidates = vec![decode(&invalid_intermediate_encoded), decode(&root_encoded)];
+    let detached_issuer = decode(&detached_intermediate_encoded);
     let profiles = algorithm_profiles();
     let path = construct_unique_x509_certificate_path_by(
         &target,
         &candidates,
-        1,
         2,
-        |_| true,
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
         |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
     )
     .unwrap();
