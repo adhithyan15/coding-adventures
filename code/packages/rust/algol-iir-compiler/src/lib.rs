@@ -3443,6 +3443,18 @@ impl Compiler {
                 .any(|child| self.contains_conditional_expression(child))
     }
 
+    fn conditional_expression_selectors_are_call_free(&self, node: &GrammarASTNode) -> bool {
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            return !self.contains_procedure_call(condition)
+                && self.conditional_expression_selectors_are_call_free(condition)
+                && self.conditional_expression_selectors_are_call_free(then_node)
+                && self.conditional_expression_selectors_are_call_free(else_node);
+        }
+        direct_nodes(node)
+            .into_iter()
+            .all(|child| self.conditional_expression_selectors_are_call_free(child))
+    }
+
     fn conditional_expression_selectors_are_cycle_exact(
         &self,
         node: &GrammarASTNode,
@@ -4783,6 +4795,15 @@ impl Compiler {
         let actuals = self.standard_fn_actuals(node);
         if actuals.len() != 1 {
             return None;
+        }
+        if self.conditional_expression_selectors_are_call_free(node) {
+            if let Some(value) = self.static_tracked_standard_real_value(node) {
+                if value.fract() == 0.0
+                    && value.abs() <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE as f64
+                {
+                    return Some(value as i64);
+                }
+            }
         }
         let normalized_value = |value: i64| match target_name.as_str() {
             "abs" => value.checked_abs(),
@@ -15944,13 +15965,12 @@ mod tests {
     #[test]
     fn al4_integral_tracked_real_reductions_reject_unproven_forms() {
         for source in [
-            "begin real procedure pick; pick := 3.5; real factor, result; factor := 10.5; result := entier((entier(factor) div 3) * sign(pick())); output(result) end",
             "begin real procedure pick; pick := 3.5; real factor, result; factor := 9007199254740994.0; result := entier((entier(factor) div 3) * sign(pick())); output(result) end",
             "begin real procedure pick; pick := 3.5; real factor, result; factor := pick(); result := entier((entier(factor) div 3) * sign(pick())); output(result) end",
             "begin real procedure pick; pick := 3.5; real factor, result; procedure capture; factor := factor; factor := 10.0; result := entier((entier(factor) div 3) * sign(pick())); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
-                "fractional, oversized, dynamic, and captured real values must remain outside the tracked static integer reduction proof",
+                "oversized, dynamic, and captured real values must remain outside the tracked static integer reduction proof",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
@@ -15985,7 +16005,6 @@ mod tests {
     fn al4_exact_root_integer_reductions_reject_unproven_forms() {
         for source in [
             "begin real procedure pick; pick := 3.5; real factor, result; factor := 80.0; result := entier((entier(sqrt(factor)) div 3) * sign(pick())); output(result) end",
-            "begin real procedure pick; pick := 3.5; real factor, result; factor := 6.25; result := entier((entier(sqrt(factor)) div 2) * sign(pick())); output(result) end",
             "begin real procedure pick; pick := 81.0; real factor, result; factor := pick(); result := entier((entier(sqrt(factor)) div 3) * sign(pick())); output(result) end",
             "begin real procedure sqrt(x); value x; real x; sqrt := 9.0; real factor, result; factor := 81.0; result := entier((entier(sqrt(factor)) div 3) * sign(factor)); output(result) end",
             "begin real procedure pick; pick := 3.5; real result; result := entier(entier(sqrt(10 div 3)) * sign(pick())); output(result) end",
@@ -15994,7 +16013,7 @@ mod tests {
             "begin real procedure pick; pick := 3.5; real result; result := entier(entier(sqrt(81 div 0)) * sign(pick())); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
-                "inexact, fractional, dynamic, and overridden square roots must remain outside the checked static integer reduction proof",
+                "inexact, dynamic, and overridden square roots must remain outside the checked static integer reduction proof",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
@@ -16062,6 +16081,47 @@ mod tests {
                     && instr.srcs.first().and_then(Operand::as_var)
                         == Some("__basic_print_real")
             }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_fractional_normalizer_reductions() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(entier(3.75) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real factor, result; factor := 6.25; result := entier(entier(sqrt(factor)) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := -2.25; boolean flag; real result; flag := pick() > 0; result := entier(sqrt(sign(if flag then 0.25 else 7.5)) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier(entier(abs(if flag then -3.5 else 3.5)) * sign(pick())); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "exact normalizers may reduce fractional static inputs for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_fractional_normalizer_reductions_reject_unproven_forms() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier(entier(if flag then 3.25 else 4.0) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier(sign(if flag then -0.25 else 7.5) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean procedure choose; choose := true; real result; result := entier(entier(if choose() then 3.25 else 3.75) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier(entier(if flag then pick() else 3.75) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier(abs(if flag then -3.5 else 3.5) * sign(pick())); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "unequal normalized results, calling selectors, dynamic branches, and nonintegral results must remain outside the exact reduction proof",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "unexpected error for {source:?}: {err:?}"
+            );
         }
     }
 
