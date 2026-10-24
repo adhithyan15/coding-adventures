@@ -936,6 +936,19 @@ the caller-supplied initial path-length state retained by the prior proof and
 does not apply anchor or intermediate name constraints, other anchor policy,
 revocation, generalized path validation, TLS, HTTP, OAuth transport, or network
 authority.
+A bounded construction-bound anchor-policy follow-up now consumes that exact
+target-policy result and applies the selected reviewed terminal's exact
+supported DNS constraints to the exact target certificate retained by the
+construction. Entries without out-of-band name constraints retain the complete
+construction-bound proof without DNS evidence. Constrained entries reuse the
+repository-owned bounded NameConstraints and Subject Alternative Name decoders,
+require every target dNSName to satisfy at least one permitted DNS subtree, and
+retain optional payload-free count evidence. Callers cannot substitute another
+constructed path, reviewed terminal, target certificate, or SAN collection.
+The result still retains caller-supplied initial path-length state and does not
+apply intermediate name constraints, excluded or non-DNS anchor constraints,
+other anchor policy, revocation, generalized path validation, TLS, HTTP, OAuth
+transport, or network authority.
 Certificate-wide role policy can now bind caller-owned critical-extension
 recognition and algorithm-independent role semantics to the same exact decoded
 certificate. The non-copyable result prevents checking critical extensions on
