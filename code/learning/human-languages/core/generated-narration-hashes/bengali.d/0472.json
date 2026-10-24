@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:4945b100a85eabe3",
+  "lessonIds": [
+    "BN-C472-oshudh",
+    "BN-C472-chikitsa",
+    "BN-C472-pothyo",
+    "BN-C472-tika",
+    "BN-C472-sere-otha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch472.txt",
+  "json": "bengali/narration/ch472.json",
+  "textHash": "fnv1a64:6eadc7cb07ba3d75",
+  "jsonHash": "fnv1a64:bb400332e10b8777",
+  "findings": []
+}

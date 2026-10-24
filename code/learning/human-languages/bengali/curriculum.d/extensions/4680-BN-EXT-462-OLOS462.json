@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-462-OLOS462",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether someone is lazy, industrious or messy.",
+  "prerequisites": []
+}

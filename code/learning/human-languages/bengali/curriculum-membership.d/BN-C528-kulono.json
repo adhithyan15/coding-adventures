@@ -1,0 +1,11 @@
+{
+  "id": "BN-C528-kulono",
+  "pathSegment": "BN-PATH-528-UPAY528",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-528-UPAY528",
+      "order": 3
+    }
+  ]
+}

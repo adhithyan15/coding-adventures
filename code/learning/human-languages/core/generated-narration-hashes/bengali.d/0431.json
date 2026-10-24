@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:067b9ef3504fd787",
+  "lessonIds": [
+    "BN-C431-uposagor",
+    "BN-C431-khari",
+    "BN-C431-bodvip",
+    "BN-C431-poli",
+    "BN-C431-bhorat-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch431.txt",
+  "json": "bengali/narration/ch431.json",
+  "textHash": "fnv1a64:ba96ef07fa5b4680",
+  "jsonHash": "fnv1a64:483453fe85f04a17",
+  "findings": []
+}

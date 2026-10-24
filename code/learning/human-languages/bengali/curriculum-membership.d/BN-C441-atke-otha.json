@@ -1,0 +1,11 @@
+{
+  "id": "BN-C441-atke-otha",
+  "pathSegment": "BN-PATH-441-ATONKO441",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-441-ATONKO441",
+      "order": 1
+    }
+  ]
+}

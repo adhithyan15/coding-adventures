@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:db37cc206b679e94",
+  "lessonIds": [
+    "BN-C506-tengk",
+    "BN-C506-phuto",
+    "BN-C506-upoche-pora",
+    "BN-C506-secha",
+    "BN-C506-chuiye-pora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch506.txt",
+  "json": "bengali/narration/ch506.json",
+  "textHash": "fnv1a64:9d81613e76511c22",
+  "jsonHash": "fnv1a64:908764ef48ead611",
+  "findings": []
+}

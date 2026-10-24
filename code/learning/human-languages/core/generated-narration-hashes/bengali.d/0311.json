@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:70dbfbe621881817",
+  "lessonIds": [
+    "BN-C311-nagordola",
+    "BN-C311-putulnach",
+    "BN-C311-belun",
+    "BN-C311-ghora",
+    "BN-C311-thasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch311.txt",
+  "json": "bengali/narration/ch311.json",
+  "textHash": "fnv1a64:7efa98e18867bf68",
+  "jsonHash": "fnv1a64:5bc95555400a6a91",
+  "findings": []
+}

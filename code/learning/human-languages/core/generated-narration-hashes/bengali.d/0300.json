@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:fc4a7cd1a1a9e532",
+  "lessonIds": [
+    "BN-C300-pathok",
+    "BN-C300-shrota",
+    "BN-C300-bigyopti",
+    "BN-C300-prochar-kora",
+    "BN-C300-songkhya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch300.txt",
+  "json": "bengali/narration/ch300.json",
+  "textHash": "fnv1a64:8f179c2722fc5aa6",
+  "jsonHash": "fnv1a64:c646a52595271d9e",
+  "findings": []
+}

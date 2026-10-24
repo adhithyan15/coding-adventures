@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:678971957983365b",
+  "lessonIds": [
+    "BN-C344-rashtro",
+    "BN-C344-porichalona-kora",
+    "BN-C344-proshason",
+    "BN-C344-khomota",
+    "BN-C344-jonogon"
+  ],
+  "tex": "bengali/book/chapters/ch344-who-governs.tex"
+}

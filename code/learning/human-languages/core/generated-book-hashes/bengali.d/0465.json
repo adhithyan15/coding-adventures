@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:1563123a5db05b89",
+  "lessonIds": [
+    "BN-C465-bibek",
+    "BN-C465-bichokkhon",
+    "BN-C465-medhabi",
+    "BN-C465-kritogyo",
+    "BN-C465-bibechona-kora"
+  ],
+  "tex": "bengali/book/chapters/ch465-good-sense.tex"
+}

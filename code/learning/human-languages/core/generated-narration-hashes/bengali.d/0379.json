@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:a4a102de5553fc1b",
+  "lessonIds": [
+    "BN-C379-protishruti",
+    "BN-C379-songkolpo",
+    "BN-C379-drirho",
+    "BN-C379-bhonggo-kora",
+    "BN-C379-protigya-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch379.txt",
+  "json": "bengali/narration/ch379.json",
+  "textHash": "fnv1a64:44f95e9326d9d2fa",
+  "jsonHash": "fnv1a64:76c48005df5fda73",
+  "findings": []
+}

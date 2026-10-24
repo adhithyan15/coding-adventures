@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 330,
+  "title": "Where It Came From",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d0a5114ffa6204c7",
+  "lessons": [
+    {
+      "id": "BN-C330-utso",
+      "sequence": 21000,
+      "title": "উৎস (utsô) — a source; an origin",
+      "headword": "উৎস",
+      "romanization": "utsô",
+      "gloss": "a source; an origin",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e23879bd9d6fdc17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a female singer, then the Bengali for a female dancer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উৎস",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উৎস — utsô — \"a source; an origin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই খবরের উৎস কী? ei khôbôrer utsô kī? Where did this news come from?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উৎস (utsô) is Sanskrit utsa, a spring where water rises (Monier-Williams). Bengali uses it for the place anything first flows from, news or money or a river; that wider use is a later extension of the picture."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ei khôbôrer utsô kī? — Where did this news come from?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ei khôbôrer utsô kī?* — Where did this news come from?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a female singer, then the Bengali for a female dancer, then say utsô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a female singer, then the Bengali for a female dancer, then say *utsô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উৎস (utsô) mean? (\"A source; an origin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C330-srishti-kora",
+      "sequence": 21010,
+      "title": "সৃষ্টি করা (srishṭi kôrā) — to create; to give rise to",
+      "headword": "সৃষ্টি করা",
+      "romanization": "srishṭi kôrā",
+      "gloss": "to create; to give rise to",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93a02e35ad827826",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a female dancer, then the Bengali for a source."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সৃষ্টি করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সৃষ্টি করা — srishṭi kôrā — \"to create; to give rise to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নতুন নিয়মটা অনেক ঝামেলা সৃষ্টি করল। nôtun niyômṭā ônek jhāmelā srishṭi kôrlô. The new rule caused a lot of trouble."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি একটা নতুন দল সৃষ্টি করলেন, tini ekṭā nôtun dôl srishṭi kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সৃষ্টি করা (srishṭi kôrā) is Sanskrit sṛṣṭi, creation or bringing forth (Monier-Williams), with করা 'to do'. It can make something good (a new team) or something unwelcome (trouble)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "srishṭi kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *srishṭi kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "srishṭi kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *srishṭi kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôtun niyômṭā ônek jhāmelā srishṭi kôrlô. — The new rule caused a lot of trouble.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôtun niyômṭā ônek jhāmelā srishṭi kôrlô.* — The new rule caused a lot of trouble.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a female dancer, then the Bengali for a source, then say srishṭi kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a female dancer, then the Bengali for a source, then say *srishṭi kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সৃষ্টি করা (srishṭi kôrā) mean? (\"To create; to give rise to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C330-probhab",
+      "sequence": 21020,
+      "title": "প্রভাব (prôbhāb) — an influence; an effect",
+      "headword": "প্রভাব",
+      "romanization": "prôbhāb",
+      "gloss": "an influence; an effect",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:593249e2d5b7d255",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a source, then the Bengali for to create."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রভাব",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রভাব — prôbhāb — \"an influence; an effect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার ওপর এই বইটার অনেক প্রভাব আছে। āmār opôr ei bôiṭār ônek prôbhāb āchhe. This book has had a big influence on me."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রভাব (prôbhāb) is Sanskrit prabhāva, might or power (Monier-Williams). The Bengali sense, the pull one thing has on another, is a softening of that power; the influence falls on something, so it goes with -এর ওপর."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôbhāb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôbhāb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôbhāb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôbhāb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmār opôr ei bôiṭār ônek prôbhāb āchhe. — This book has had a big influence on me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmār opôr ei bôiṭār ônek prôbhāb āchhe.* — This book has had a big influence on me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a source, then the Bengali for to create, then say prôbhāb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a source, then the Bengali for to create, then say *prôbhāb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রভাব (prôbhāb) mean? (\"An influence; an effect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C330-protikriya",
+      "sequence": 21030,
+      "title": "প্রতিক্রিয়া (prôtikriyā) — a reaction; a response",
+      "headword": "প্রতিক্রিয়া",
+      "romanization": "prôtikriyā",
+      "gloss": "a reaction; a response",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c4af80baf87dc1d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to create, then the Bengali for an influence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রতিক্রিয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রতিক্রিয়া — prôtikriyā — \"a reaction; a response\"."
+            },
+            {
+              "kind": "speech",
+              "text": "খবরটা শুনে তার প্রতিক্রিয়া কী ছিল? khôbôrṭā shune tār prôtikriyā kī chhilô? How did he react when he heard the news?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রতিক্রিয়া (prôtikriyā) is Sanskrit pratikriyā, from prati 'against, back' and kriyā 'an action': an action given back (Monier-Williams gives requital). The everyday sense 'a reaction' is a modern use of the same picture."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtikriyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtikriyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtikriyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtikriyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khôbôrṭā shune tār prôtikriyā kī chhilô? — How did he react when he heard the news?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khôbôrṭā shune tār prôtikriyā kī chhilô?* — How did he react when he heard the news?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to create, then the Bengali for an influence, then say prôtikriyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to create, then the Bengali for an influence, then say *prôtikriyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রতিক্রিয়া (prôtikriyā) mean? (\"A reaction; a response\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C330-prerona",
+      "sequence": 21040,
+      "title": "প্রেরণা (preronā) — an inspiration; a motivation",
+      "headword": "প্রেরণা",
+      "romanization": "preronā",
+      "gloss": "an inspiration; a motivation",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4f5baef06ca5a2e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an influence, then the Bengali for a reaction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রেরণা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রেরণা — preronā — \"an inspiration; a motivation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার বাবাই আমার প্রেরণা। āmār bābāi āmār preronā. My father is my inspiration."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রেরণা (preronā) is Sanskrit preraṇa, setting in motion or urging on (Monier-Williams), in the feminine form. In Bengali it is the person or idea that pushes you forward."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "preronā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *preronā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "preronā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *preronā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmār bābāi āmār preronā. — My father is my inspiration.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmār bābāi āmār preronā.* — My father is my inspiration.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an influence, then the Bengali for a reaction, then say preronā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an influence, then the Bengali for a reaction, then say *preronā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রেরণা (preronā) mean? (\"An inspiration; a motivation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

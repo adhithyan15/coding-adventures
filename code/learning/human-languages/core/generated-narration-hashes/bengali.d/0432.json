@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:68391d3a5ce3fa73",
+  "lessonIds": [
+    "BN-C432-chura",
+    "BN-C432-upotyoka",
+    "BN-C432-dhibi",
+    "BN-C432-morubhumi",
+    "BN-C432-jonggol"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch432.txt",
+  "json": "bengali/narration/ch432.json",
+  "textHash": "fnv1a64:73d6a96a3ec89512",
+  "jsonHash": "fnv1a64:66525e437f9b0ddb",
+  "findings": []
+}

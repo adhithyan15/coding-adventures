@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 424,
+  "title": "Prices Up and Down",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4476553276bd2ca4",
+  "lessons": [
+    {
+      "id": "BN-C424-sel",
+      "sequence": 26050,
+      "title": "সেল (sel) — a sale (at reduced prices)",
+      "headword": "সেল",
+      "romanization": "sel",
+      "gloss": "a sale (at reduced prices)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b5bc99620ea3257",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a size (of clothes or shoes), then the Bengali for to palm off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সেল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সেল — sel — \"a sale (at reduced prices)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পুজোর আগে দোকানে সেল চলে। pujor āge dokāne sel chôle. Before the Pujas the shops have sales on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সেল (sel) is borrowed from English sale, in the shop-window sense of prices cut for a time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sel, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sel*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pujor āge dokāne sel chôle. — Before the Pujas the shops have sales on.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pujor āge dokāne sel chôle.* — Before the Pujas the shops have sales on.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a size (of clothes or shoes), then the Bengali for to palm off, then say sel again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a size (of clothes or shoes), then the Bengali for to palm off, then say *sel* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সেল (sel) mean? (\"A sale (at reduced prices)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C424-ophar",
+      "sequence": 26060,
+      "title": "অফার (ôphār) — an offer; a special deal",
+      "headword": "অফার",
+      "romanization": "ôphār",
+      "gloss": "an offer; a special deal",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d97bf346fc8a47d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to palm off, then the Bengali for a sale (at reduced prices)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অফার",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অফার — ôphār — \"an offer; a special deal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দোকানে এই সপ্তাহে চায়ের ওপর অফার আছে। dokāne ei sôptāhe chāyer opôr ôphār āchhe. This week the shop has an offer on tea."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অফার (ôphār) is borrowed from English offer."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôphār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôphār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôphār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôphār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dokāne ei sôptāhe chāyer opôr ôphār āchhe. — This week the shop has an offer on tea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dokāne ei sôptāhe chāyer opôr ôphār āchhe.* — This week the shop has an offer on tea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to palm off, then the Bengali for a sale (at reduced prices), then say ôphār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to palm off, then the Bengali for a sale (at reduced prices), then say *ôphār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অফার (ôphār) mean? (\"An offer; a special deal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C424-monda",
+      "sequence": 26070,
+      "title": "মন্দা (môndā) — a slump; slack trade",
+      "headword": "মন্দা",
+      "romanization": "môndā",
+      "gloss": "a slump; slack trade",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0aa077ef3fcfa905",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a sale (at reduced prices), then the Bengali for an offer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মন্দা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মন্দা — môndā — \"a slump; slack trade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গত বছর ব্যবসায় মন্দা ছিল। gôtô bôchhôr bæbsāy môndā chhilô. Last year business was slack."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মন্দা (môndā) goes back to Sanskrit manda, \"slow, weak, slack\" (Monier-Williams): trade that has gone slow."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môndā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môndā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môndā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môndā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôtô bôchhôr bæbsāy môndā chhilô. — Last year business was slack.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôtô bôchhôr bæbsāy môndā chhilô.* — Last year business was slack.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a sale (at reduced prices), then the Bengali for an offer, then say môndā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a sale (at reduced prices), then the Bengali for an offer, then say *môndā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মন্দা (môndā) mean? (\"A slump; slack trade\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C424-chahida",
+      "sequence": 26080,
+      "title": "চাহিদা (chāhidā) — demand (for goods)",
+      "headword": "চাহিদা",
+      "romanization": "chāhidā",
+      "gloss": "demand (for goods)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ed15c5ecd819c5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an offer, then the Bengali for a slump."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: চাহিদা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চাহিদা — chāhidā — \"demand (for goods)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শীতে কম্বলের চাহিদা বেশি। shīte kômbôler chāhidā beshi. In winter there is more demand for blankets."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চাহিদা (chāhidā) is built on চাহ-, the old stem of চাওয়া, \"to want\", from the reconstructed cāh, \"see, desire\" (CDIAL 4775): what people want to buy."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāhidā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāhidā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāhidā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāhidā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shīte kômbôler chāhidā beshi. — In winter there is more demand for blankets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shīte kômbôler chāhidā beshi.* — In winter there is more demand for blankets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an offer, then the Bengali for a slump, then say chāhidā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an offer, then the Bengali for a slump, then say *chāhidā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does চাহিদা (chāhidā) mean? (\"Demand (for goods)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C424-othanama-kora",
+      "sequence": 26090,
+      "title": "ওঠানামা করা (oṭhānāmā kôrā) — to go up and down; to fluctuate",
+      "headword": "ওঠানামা করা",
+      "romanization": "oṭhānāmā kôrā",
+      "gloss": "to go up and down; to fluctuate",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39f161209076f947",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a slump, then the Bengali for demand (for goods)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ওঠানামা করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ওঠানামা করা — oṭhānāmā kôrā — \"to go up and down; to fluctuate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বাজারে মাছের দাম রোজ ওঠানামা করে। bājāre māchher dām roj oṭhānāmā kôre. Fish prices in the market go up and down every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই দাম ওঠানামা করল, sei dām oṭhānāmā kôrlô."
+            },
+            {
+              "kind": "speech",
+              "text": "ওঠানামা alone is the rise and fall: দামের ওঠানামা, the ups and downs of prices; সিঁড়িতে ওঠানামা, going up and down stairs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ওঠানামা করা (oṭhānāmā kôrā) pairs ওঠা, \"to rise\" (CDIAL 1900), with নামা, \"to come down\" (CDIAL 6964), and makes a verb of the pair with করা."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṭhānāmā kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṭhānāmā kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṭhānāmā kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṭhānāmā kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bājāre māchher dām roj oṭhānāmā kôre. — Fish prices in the market go up and down every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bājāre māchher dām roj oṭhānāmā kôre.* — Fish prices in the market go up and down every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a slump, then the Bengali for demand (for goods), then say oṭhānāmā kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a slump, then the Bengali for demand (for goods), then say *oṭhānāmā kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ওঠানামা করা (oṭhānāmā kôrā) mean? (\"To go up and down; to fluctuate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

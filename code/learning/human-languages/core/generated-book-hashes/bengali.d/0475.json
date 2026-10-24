@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:c5d6c66801e4415e",
+  "lessonIds": [
+    "BN-C475-khoto",
+    "BN-C475-gha",
+    "BN-C475-mochkano",
+    "BN-C475-phola",
+    "BN-C475-hochot-khaoya"
+  ],
+  "tex": "bengali/book/chapters/ch475-small-injuries.tex"
+}

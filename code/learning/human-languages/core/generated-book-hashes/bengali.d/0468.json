@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:57e4f7dae25ab263",
+  "lessonIds": [
+    "BN-C468-hritpindo",
+    "BN-C468-jokrit",
+    "BN-C468-pakostholi",
+    "BN-C468-shira",
+    "BN-C468-dhukpuk-kora"
+  ],
+  "tex": "bengali/book/chapters/ch468-inside-the-body.tex"
+}

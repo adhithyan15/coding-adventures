@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C475-hochot-khaoya",
+    "language": "bengali",
+    "chapter": 475,
+    "sequence": 28930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:998c4417389eaf4f"
+  },
+  "findings": []
+}

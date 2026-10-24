@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:8db4e7454219d058",
+  "lessonIds": [
+    "BN-C476-dom",
+    "BN-C476-hechki",
+    "BN-C476-dhekur",
+    "BN-C476-hapano",
+    "BN-C476-katrano"
+  ],
+  "tex": "bengali/book/chapters/ch476-out-of-breath.tex"
+}

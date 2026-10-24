@@ -1,0 +1,11 @@
+{
+  "id": "BN-C362-sposhto",
+  "pathSegment": "BN-PATH-362-MONOJOG362",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-362-MONOJOG362",
+      "order": 4
+    }
+  ]
+}

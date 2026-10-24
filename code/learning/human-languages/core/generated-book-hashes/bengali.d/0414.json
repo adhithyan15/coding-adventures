@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:ec32fb550baccc16",
+  "lessonIds": [
+    "BN-C414-bengk",
+    "BN-C414-kauntar",
+    "BN-C414-keshiyar",
+    "BN-C414-chek",
+    "BN-C414-nogod"
+  ],
+  "tex": "bengali/book/chapters/ch414-at-the-bank.tex"
+}

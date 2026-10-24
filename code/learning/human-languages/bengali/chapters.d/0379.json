@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "Keeping a Promise",
+  "label": "ch:bn-keeping-a-promise",
+  "canDo": "I can make a promise and say what happens if it is broken.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C379-protigya-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can make a promise and say what happens if it is broken.",
+    "assesses": [
+      "BN-LEX-C379-SONGKOLPO379-03",
+      "BN-LEX-C379-SONGKOLPO379-04",
+      "BN-LEX-C379-SONGKOLPO379-05"
+    ]
+  }
+}

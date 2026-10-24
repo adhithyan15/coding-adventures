@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C436-ongkur",
+    "language": "bengali",
+    "chapter": 436,
+    "sequence": 26660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:759d9624e8010c1d"
+  },
+  "findings": []
+}

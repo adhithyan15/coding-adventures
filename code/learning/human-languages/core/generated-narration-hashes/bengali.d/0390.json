@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:607b083e3a193b3f",
+  "lessonIds": [
+    "BN-C390-sorok",
+    "BN-C390-bak",
+    "BN-C390-gorto",
+    "BN-C390-pich",
+    "BN-C390-gorano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch390.txt",
+  "json": "bengali/narration/ch390.json",
+  "textHash": "fnv1a64:dce5ed36d4f3df65",
+  "jsonHash": "fnv1a64:6beb9dbef961f3aa",
+  "findings": []
+}

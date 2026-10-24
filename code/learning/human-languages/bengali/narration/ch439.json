@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 439,
+  "title": "Happiness and Hardship",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e5b4d4d95234c6bb",
+  "lessons": [
+    {
+      "id": "BN-C439-sukh",
+      "sequence": 27050,
+      "title": "সুখ (sukh) — happiness; comfort",
+      "headword": "সুখ",
+      "romanization": "sukh",
+      "gloss": "happiness; comfort",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:04a15209c6258606",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to feel, then the Bengali for to become aware of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সুখ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সুখ — sukh — \"happiness; comfort\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার দাদু গ্রামে সুখে আছেন। āmār dādu grāme sukhe āchhen. My grandfather lives happily in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "সুখে থাকা, to live happily."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সুখ (sukh) is a tatsama, Sanskrit sukha, \"pleasant, easy\" (CDIAL 13451), and so comfort and happiness; সুখী (taught), contented, is the adjective made from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sukh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sukh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sukh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sukh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmār dādu grāme sukhe āchhen. — My grandfather lives happily in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmār dādu grāme sukhe āchhen.* — My grandfather lives happily in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to feel, then the Bengali for to become aware of, then say sukh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to feel, then the Bengali for to become aware of, then say *sukh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সুখ (sukh) mean? (\"Happiness; comfort\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C439-koshto",
+      "sequence": 27060,
+      "title": "কষ্ট (kôshṭô) — suffering; hardship",
+      "headword": "কষ্ট",
+      "romanization": "kôshṭô",
+      "gloss": "suffering; hardship",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40c5f9d2613a5247",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to become aware of, then the Bengali for happiness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কষ্ট",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কষ্ট — kôshṭô — \"suffering; hardship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গরমে বাসে যেতে আমার কষ্ট হয়। gôrôme bāse jete āmār kôshṭô hôy. Travelling by bus in the heat is hard for me."
+            },
+            {
+              "kind": "speech",
+              "text": "কষ্ট (kôshṭô) হওয়া, to be hard for someone: আমার কষ্ট (kôshṭô) হয়. কষ্ট (kôshṭô) পাওয়া, to suffer, to be hurt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কষ্ট (kôshṭô) is a tatsama, Sanskrit kaṣṭa, \"bad, ill, painful\" (Monier-Williams); Bengali uses it as a noun, the hardship itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kôshṭô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kôshṭô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kôshṭô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kôshṭô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôrôme bāse jete āmār kôshṭô hôy. — Travelling by bus in the heat is hard for me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôrôme bāse jete āmār kôshṭô hôy.* — Travelling by bus in the heat is hard for me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to become aware of, then the Bengali for happiness, then say kôshṭô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to become aware of, then the Bengali for happiness, then say *kôshṭô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কষ্ট (kôshṭô) mean? (\"Suffering; hardship\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C439-tripti",
+      "sequence": 27070,
+      "title": "তৃপ্তি (tripti) — satisfaction; contentment",
+      "headword": "তৃপ্তি",
+      "romanization": "tripti",
+      "gloss": "satisfaction; contentment",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7571142f67574280",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for happiness, then the Bengali for suffering."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: তৃপ্তি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তৃপ্তি — tripti — \"satisfaction; contentment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দিদিমার রান্না খেয়ে আমরা তৃপ্তি পেলাম। didimār rānnā kheye āmrā tripti pelām. We ate my grandmother's cooking with real satisfaction."
+            },
+            {
+              "kind": "speech",
+              "text": "তৃপ্তি (tripti) পাওয়া, to find satisfaction; তৃপ্তি (tripti) করে খাওয়া, to eat with relish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তৃপ্তি (tripti) is a tatsama, Sanskrit tṛpti, \"satisfaction, contentment\" (Monier-Williams): the feeling of having had enough."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tripti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tripti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tripti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tripti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "didimār rānnā kheye āmrā tripti pelām. — We ate my grandmother's cooking with real satisfaction.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *didimār rānnā kheye āmrā tripti pelām.* — We ate my grandmother's cooking with real satisfaction.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for happiness, then the Bengali for suffering, then say tripti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for happiness, then the Bengali for suffering, then say *tripti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does তৃপ্তি (tripti) mean? (\"Satisfaction; contentment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C439-upobhog-kora",
+      "sequence": 27080,
+      "title": "উপভোগ করা (upôbhog kôrā) — to enjoy",
+      "headword": "উপভোগ করা",
+      "romanization": "upôbhog kôrā",
+      "gloss": "to enjoy",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f50c9681d0d3fc7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for suffering, then the Bengali for satisfaction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উপভোগ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপভোগ করা — upôbhog kôrā — \"to enjoy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমরা ছুটিটা পুরো উপভোগ করলাম। āmrā chhuṭiṭā puro upôbhog kôrlām. We enjoyed the holiday to the full."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি গানটা উপভোগ করলেন, tini gānṭā upôbhog kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপভোগ করা (upôbhog kôrā) is Sanskrit upabhoga, \"enjoyment, using\" (Monier-Williams), with kôrā, \"to do\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôbhog kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôbhog kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôbhog kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôbhog kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmrā chhuṭiṭā puro upôbhog kôrlām. — We enjoyed the holiday to the full.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmrā chhuṭiṭā puro upôbhog kôrlām.* — We enjoyed the holiday to the full.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for suffering, then the Bengali for satisfaction, then say upôbhog kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for suffering, then the Bengali for satisfaction, then say *upôbhog kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উপভোগ করা (upôbhog kôrā) mean? (\"To enjoy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C439-mete-otha",
+      "sequence": 27090,
+      "title": "মেতে ওঠা (mete oṭhā) — to get carried away; to be swept up in excitement",
+      "headword": "মেতে ওঠা",
+      "romanization": "mete oṭhā",
+      "gloss": "to get carried away; to be swept up in excitement",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd05233b77344579",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for satisfaction, then the Bengali for to enjoy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মেতে ওঠা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মেতে ওঠা — mete oṭhā — \"to get carried away; to be swept up in excitement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "খেলা দেখে ছেলেরা আনন্দে মেতে উঠল। khælā dekhe chhelerā ānônde mete uṭhlô. Watching the game, the boys got carried away with joy."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি গল্পে মেতে উঠলেন, tini gôlpe mete uṭhlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মেতে ওঠা (mete oṭhā) is mete, the -এ form of mātā, \"to be wild with excitement\", which belongs with the Bengali māt, \"delight\", that CDIAL lists under a reconstructed form (CDIAL 9753), with oṭhā, \"to rise\" (CDIAL 1793)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mete oṭhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mete oṭhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mete oṭhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mete oṭhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khælā dekhe chhelerā ānônde mete uṭhlô. — Watching the game, the boys got carried away with joy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khælā dekhe chhelerā ānônde mete uṭhlô.* — Watching the game, the boys got carried away with joy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for satisfaction, then the Bengali for to enjoy, then say mete oṭhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for satisfaction, then the Bengali for to enjoy, then say *mete oṭhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মেতে ওঠা (mete oṭhā) mean? (\"To get carried away; to be swept up in excitement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

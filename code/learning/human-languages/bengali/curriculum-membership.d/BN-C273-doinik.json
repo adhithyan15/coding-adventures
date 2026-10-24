@@ -1,0 +1,11 @@
+{
+  "id": "BN-C273-doinik",
+  "pathSegment": "BN-PATH-273-COMPARE-TIME",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "BN-EXT-273-COMPARE-TIME",
+      "order": 0
+    }
+  ]
+}

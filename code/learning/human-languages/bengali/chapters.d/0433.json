@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "Lakes, Ditches and Wetlands",
+  "label": "ch:bn-lakes-ditches-and-wetlands",
+  "canDo": "I can describe a lake, a ditch and a wetland, and water moving and murmuring.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C433-kolkol-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can describe a lake, a ditch and a wetland, and water moving and murmuring.",
+    "assesses": [
+      "BN-LEX-C433-JHIL433-03",
+      "BN-LEX-C433-JHIL433-04",
+      "BN-LEX-C433-JHIL433-05"
+    ]
+  }
+}

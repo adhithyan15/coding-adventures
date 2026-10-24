@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-537-MONOSTHIR537",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "BN-EXT-537-MONOSTHIR537"
+  ],
+  "after": []
+}

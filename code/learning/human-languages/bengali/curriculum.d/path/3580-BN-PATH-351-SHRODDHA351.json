@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-351-SHRODDHA351",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "BN-EXT-351-SHRODDHA351"
+  ],
+  "after": []
+}

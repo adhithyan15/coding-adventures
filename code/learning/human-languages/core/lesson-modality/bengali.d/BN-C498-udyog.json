@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C498-udyog",
+    "language": "bengali",
+    "chapter": 498,
+    "sequence": 30300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8835672a2f78a4d6"
+  },
+  "findings": []
+}

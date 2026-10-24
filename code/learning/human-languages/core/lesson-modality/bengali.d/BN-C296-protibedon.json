@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C296-protibedon",
+    "language": "bengali",
+    "chapter": 296,
+    "sequence": 19040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b11d9a3995a324f"
+  },
+  "findings": []
+}

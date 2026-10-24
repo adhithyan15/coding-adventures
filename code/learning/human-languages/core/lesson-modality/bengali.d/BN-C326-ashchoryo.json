@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C326-ashchoryo",
+    "language": "bengali",
+    "chapter": 326,
+    "sequence": 20560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1aecd25cb6b684cc"
+  },
+  "findings": []
+}

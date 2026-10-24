@@ -1,0 +1,911 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 545,
+  "title": "Choices",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:dc5ed2fb8f4bea45",
+  "lessons": [
+    {
+      "id": "BN-C545-onyotom",
+      "sequence": 32710,
+      "title": "অন্যতম (ônyôtôm) — one of several",
+      "headword": "অন্যতম",
+      "romanization": "ônyôtôm",
+      "gloss": "one of several",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d5197b5e7bbfff0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a scramble, then the Bengali for in a jiffy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অন্যতম",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অন্যতম — ônyôtôm — \"one of several\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ইলিশ আমার প্রিয় মাছগুলোর অন্যতম। Ilish āmār priyô māchhgulor ônyôtôm. Hilsa is one of my favourite fish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অন্যতম (ônyôtôm) is a tatsama, Sanskrit anyatama, \"any one of many\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônyôtôm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônyôtôm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônyôtôm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônyôtôm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ilish āmār priyô māchhgulor ônyôtôm. — Hilsa is one of my favourite fish.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ilish āmār priyô māchhgulor ônyôtôm.* — Hilsa is one of my favourite fish.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a scramble, then the Bengali for in a jiffy, then say ônyôtôm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a scramble, then the Bengali for in a jiffy, then say *ônyôtôm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অন্যতম (ônyôtôm) mean? (\"One of several\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C545-ogradhikar",
+      "sequence": 32720,
+      "title": "অগ্রাধিকার (ôgrādhikār) — priority",
+      "headword": "অগ্রাধিকার",
+      "romanization": "ôgrādhikār",
+      "gloss": "priority",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b604359db5d8038",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for in a jiffy, then the Bengali for one of several."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অগ্রাধিকার",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অগ্রাধিকার — ôgrādhikār — \"priority\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই হাসপাতালে শিশুরা অগ্রাধিকার পায়। Ei hāspātāle shishurā ôgrādhikār pāy. In this hospital children get priority."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অগ্রাধিকার (ôgrādhikār) joins Sanskrit agra, \"foremost\", and adhikāra, \"authority, a claim\" (Monier-Williams): the first claim."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôgrādhikār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôgrādhikār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôgrādhikār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôgrādhikār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ei hāspātāle shishurā ôgrādhikār pāy. — In this hospital children get priority.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ei hāspātāle shishurā ôgrādhikār pāy.* — In this hospital children get priority.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for in a jiffy, then the Bengali for one of several, then say ôgrādhikār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for in a jiffy, then the Bengali for one of several, then say *ôgrādhikār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অগ্রাধিকার (ôgrādhikār) mean? (\"Priority\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C545-sadhyo",
+      "sequence": 32730,
+      "title": "সাধ্য (sādhyô) — one's power; what one can manage",
+      "headword": "সাধ্য",
+      "romanization": "sādhyô",
+      "gloss": "one's power; what one can manage",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f55ce69372b8211",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for one of several, then the Bengali for priority."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সাধ্য",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাধ্য — sādhyô — \"one's power; what one can manage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার সাধ্যমতো আমি তোমাকে সাহায্য করব। Āmār sādhyômôto āmi tomāke sāhājyô kôrbô. I'll help you as much as I can."
+            },
+            {
+              "kind": "speech",
+              "text": "With -মতো: সাধ্যমতো, as far as one can."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাধ্য (sādhyô) is a tatsama, Sanskrit sādhya, \"to be accomplished, attainable\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhyô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhyô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhyô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhyô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āmār sādhyômôto āmi tomāke sāhājyô kôrbô. — I'll help you as much as I can.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āmār sādhyômôto āmi tomāke sāhājyô kôrbô.* — I'll help you as much as I can.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for one of several, then the Bengali for priority, then say sādhyô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for one of several, then the Bengali for priority, then say *sādhyô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সাধ্য (sādhyô) mean? (\"One's power; what one can manage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C545-mitobyoyi",
+      "sequence": 32740,
+      "title": "মিতব্যয়ী (mitôbyôyī) — thrifty",
+      "headword": "মিতব্যয়ী",
+      "romanization": "mitôbyôyī",
+      "gloss": "thrifty",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17b71f28205ff271",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for priority, then the Bengali for what one can manage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মিতব্যয়ী",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মিতব্যয়ী — mitôbyôyī — \"thrifty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মিতব্যয়ী (mitôbyôyī) হলে তুমি টাকা জমাতে পারবে। Mitôbyôyī hôle tumi ṭākā jômāte pārbe. If you're thrifty, you'll be able to save money."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মিতব্যয়ী (mitôbyôyī) is a tatsama, Sanskrit mitavyayin, \"spending little, frugal\" (Monier-Williams): mita, \"measured\", and vyaya, \"spending\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitôbyôyī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitôbyôyī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitôbyôyī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitôbyôyī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mitôbyôyī hôle tumi ṭākā jômāte pārbe. — If you're thrifty, you'll be able to save money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mitôbyôyī hôle tumi ṭākā jômāte pārbe.* — If you're thrifty, you'll be able to save money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for priority, then the Bengali for what one can manage, then say mitôbyôyī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for priority, then the Bengali for what one can manage, then say *mitôbyôyī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মিতব্যয়ী (mitôbyôyī) mean? (\"Thrifty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C545-thaorano",
+      "sequence": 32750,
+      "title": "ঠাওরানো (ṭhāorāno) — to make out; to work out (what is right)",
+      "headword": "ঠাওরানো",
+      "romanization": "ṭhāorāno",
+      "gloss": "to make out; to work out (what is right)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:744080b061714253",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for what one can manage, then the Bengali for thrifty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঠাওরানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঠাওরানো — ṭhāorāno — \"to make out; to work out (what is right)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অন্ধকারে আমি রাস্তাটা ঠাওরাতে পারলাম না। Ôndhôkāre āmi rāstāṭā ṭhāorāte pārlām nā. In the dark I couldn't make out the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি রাস্তাটা ঠাওরালেন, tini rāstāṭā ṭhāorālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঠাওরানো (ṭhāorāno) is a tadbhava: CDIAL lists Bengali ṭhāurāna, \"to stop, to consider, to ascertain\", under Sanskrit sthāvara, \"fixed, firm\" (CDIAL 13767)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhāorāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhāorāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhāorāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhāorāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ôndhôkāre āmi rāstāṭā ṭhāorāte pārlām nā. — In the dark I couldn't make out the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ôndhôkāre āmi rāstāṭā ṭhāorāte pārlām nā.* — In the dark I couldn't make out the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for what one can manage, then the Bengali for thrifty, then say ṭhāorāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for what one can manage, then the Bengali for thrifty, then say *ṭhāorāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঠাওরানো (ṭhāorāno) mean? (\"To make out; to work out (what is right)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R545-review-539-545",
+      "sequence": 32760,
+      "title": "Looking back: from Facing Obstacles to Choices",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Facing Obstacles to Choices",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c3f7c6889457017",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for a hindrance and persistent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hindrance, persistent, desperate, to give up hope, to get tangled up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hindrance, persistent, desperate, to give up hope, to get tangled up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fee, the price of a mistake, reassurance, armour, to finish off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fee, the price of a mistake, reassurance, armour, to finish off]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "expectation, long-lasting, reserved, a queue token, a phase",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: expectation, long-lasting, reserved, a queue token, a phase]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fall through, fruitless, in chaos, to come loose, a muddle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fall through, fruitless, in chaos, to come loose, a muddle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "accomplished, attainment, flawless, to secure, a desired goal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: accomplished, attainment, flawless, to secure, a desired goal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prompt, a respite, to draw near, a scramble, in a jiffy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: prompt, a respite, to draw near, a scramble, in a jiffy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one of several, priority, what one can manage, thrifty, to make out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one of several, priority, what one can manage, thrifty, to make out]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A hindrance? (বিঘ্ন, bighnô.) Persistent? (নাছোড়বান্দা, nāchhoṛbāndā.) Desperate? (মরিয়া, môriyā.) To give up hope? (হাল ছাড়া, hāl chhāṛā.) To get tangled up? (জড়ানো, jôṛāno.) A fee? (মাশুল, māshul.) The price of a mistake? (খেসারত, khesārôt.) Reassurance? (আশ্বাস, āshvās.) Armour? (বর্ম, bôrmô.) To finish off? (চুকানো, chukāno.) Expectation? (প্রতীক্ষা, prôtīkkhā.) Long-lasting? (দীর্ঘ, dīrghô.) Reserved? (সংরক্ষিত, sôngrôkkhit.) A queue token? (টোকেন, ṭoken.) A phase? (পর্যায়, pôrjāy.) To fall through? (ভেস্তে যাওয়া, bheste jāoyā.) Fruitless? (নিষ্ফল, nishphôl.) In chaos? (বিশৃঙ্খল, bishringkhôl.) To come loose? (খসা, khôsā.) A muddle? (গোলমাল, golmāl.) Accomplished? (কৃতী, kritī.) Attainment? (সিদ্ধি, siddhi.) Flawless? (নিখুঁত, nikhũt.) To secure? (হাসিল করা, hāsil kôrā.) A desired goal? (অভীষ্ট, ôbhīshṭô.) Prompt? (তৎপর, tôtpôr.) A respite? (অবকাশ, ôbôkāsh.) To draw near? (ঘনিয়ে আসা, ghôniye āsā.) A scramble? (হুড়োহুড়ি, huṛohuṛi.) In a jiffy? (ঝটপট, jhôṭpôṭ.) One of several? (অন্যতম, ônyôtôm.) Priority? (অগ্রাধিকার, ôgrādhikār.) What one can manage? (সাধ্য, sādhyô.) Thrifty? (মিতব্যয়ী, mitôbyôyī.) To make out? (ঠাওরানো, ṭhāorāno.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R545-review-final-545",
+      "sequence": 32770,
+      "title": "Choices — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f1b0a91fde0fbe3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for one of several and priority."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one of several, priority, what one can manage, thrifty, to make out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one of several, priority, what one can manage, thrifty, to make out]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One of several? (অন্যতম, ônyôtôm.) Priority? (অগ্রাধিকার, ôgrādhikār.) What one can manage? (সাধ্য, sādhyô.) Thrifty? (মিতব্যয়ী, mitôbyôyī.) To make out? (ঠাওরানো, ṭhāorāno.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

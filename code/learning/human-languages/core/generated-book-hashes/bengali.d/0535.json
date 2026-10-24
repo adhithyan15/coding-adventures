@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:cecc5d01524b8c55",
+  "lessonIds": [
+    "BN-C535-sitbelt",
+    "BN-C535-bima",
+    "BN-C535-geranti",
+    "BN-C535-surokkhit",
+    "BN-C535-ogninirbapok"
+  ],
+  "tex": "bengali/book/chapters/ch535-staying-safe.tex"
+}

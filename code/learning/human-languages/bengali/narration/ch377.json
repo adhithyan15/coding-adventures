@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 377,
+  "title": "Getting There",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bc294cac3effe0e0",
+  "lessons": [
+    {
+      "id": "BN-C377-unnoti",
+      "sequence": 23410,
+      "title": "উন্নতি (unnôti) — improvement; progress",
+      "headword": "উন্নতি",
+      "romanization": "unnôti",
+      "gloss": "improvement; progress",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de0114017d921284",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for successful, then the Bengali for to achieve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উন্নতি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উন্নতি — unnôti — \"improvement; progress\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রোজ পড়লে তোমার বাংলার উন্নতি হবে। roj pôṛle tomār bānglār unnôti hôbe. If you read every day, your Bengali will improve."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উন্নতি (unnôti) is Sanskrit unnati, a rising up (Monier-Williams). Bengali uses it for any getting better: a skill, a town, a patient."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unnôti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unnôti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unnôti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unnôti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roj pôṛle tomār bānglār unnôti hôbe. — If you read every day, your Bengali will improve.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roj pôṛle tomār bānglār unnôti hôbe.* — If you read every day, your Bengali will improve.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for successful, then the Bengali for to achieve, then say unnôti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for successful, then the Bengali for to achieve, then say *unnôti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উন্নতি (unnôti) mean? (\"Improvement; progress\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C377-ogrogoti",
+      "sequence": 23420,
+      "title": "অগ্রগতি (ôgrôgôti) — progress (towards a goal)",
+      "headword": "অগ্রগতি",
+      "romanization": "ôgrôgôti",
+      "gloss": "progress (towards a goal)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f57d5f600fd2773",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to achieve, then the Bengali for improvement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অগ্রগতি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অগ্রগতি — ôgrôgôti — \"progress (towards a goal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "কাজের অগ্রগতি ভালো হলে আমরা আগেই শেষ করব। kājer ôgrôgôti bhālo hôle āmrā āgei shesh kôrbô. If the work makes good progress, we'll finish early."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অগ্রগতি (ôgrôgôti) is Sanskrit agra, the front, with gati, going (Monier-Williams): going forward. It measures how far a job has come."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôgrôgôti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôgrôgôti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôgrôgôti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôgrôgôti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kājer ôgrôgôti bhālo hôle āmrā āgei shesh kôrbô. — If the work makes good progress, we'll finish early.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kājer ôgrôgôti bhālo hôle āmrā āgei shesh kôrbô.* — If the work makes good progress, we'll finish early.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to achieve, then the Bengali for improvement, then say ôgrôgôti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to achieve, then the Bengali for improvement, then say *ôgrôgôti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অগ্রগতি (ôgrôgôti) mean? (\"Progress (towards a goal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C377-goti",
+      "sequence": 23430,
+      "title": "গতি (gôti) — speed; pace",
+      "headword": "গতি",
+      "romanization": "gôti",
+      "gloss": "speed; pace",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0813b5d432424ee6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for improvement, then the Bengali for progress."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গতি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গতি — gôti — \"speed; pace\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গতি না কমালে দুর্ঘটনা হতে পারে। gôti nā kômāle durghôṭônā hôte pāre. If you don't slow down, there could be an accident."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গতি (gôti) is Sanskrit gati, going or motion (Monier-Williams): how fast something goes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôti nā kômāle durghôṭônā hôte pāre. — If you don't slow down, there could be an accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôti nā kômāle durghôṭônā hôte pāre.* — If you don't slow down, there could be an accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for improvement, then the Bengali for progress, then say gôti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for improvement, then the Bengali for progress, then say *gôti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গতি (gôti) mean? (\"Speed; pace\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C377-otikrom-kora",
+      "sequence": 23440,
+      "title": "অতিক্রম করা (ôtikrôm kôrā) — to surpass; to get past",
+      "headword": "অতিক্রম করা",
+      "romanization": "ôtikrôm kôrā",
+      "gloss": "to surpass; to get past",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:919323daebbe4a6d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for progress, then the Bengali for speed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অতিক্রম করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অতিক্রম করা — ôtikrôm kôrā — \"to surpass; to get past\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমরা যদি এই সমস্যা অতিক্রম করি, তাহলে কাজ সহজ হবে। āmrā jôdi ei sômôsyā ôtikrôm kôri, tāhôle kāj sôhôj hôbe. If we get past this problem, the work will be easier."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি সব সমস্যা অতিক্রম করলেন, tini sôb sômôsyā ôtikrôm kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অতিক্রম করা (ôtikrôm kôrā) is Sanskrit atikrama, passing over (Monier-Williams), with করা: to go beyond an obstacle, a record or a limit."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôtikrôm kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôtikrôm kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôtikrôm kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôtikrôm kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmrā jôdi ei sômôsyā ôtikrôm kôri, tāhôle kāj sôhôj hôbe. — If we get past this problem, the work will be easier.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmrā jôdi ei sômôsyā ôtikrôm kôri, tāhôle kāj sôhôj hôbe.* — If we get past this problem, the work will be easier.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for progress, then the Bengali for speed, then say ôtikrôm kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for progress, then the Bengali for speed, then say *ôtikrôm kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অতিক্রম করা (ôtikrôm kôrā) mean? (\"To surpass; to get past\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C377-sadhon-kora",
+      "sequence": 23450,
+      "title": "সাধন করা (sādhôn kôrā) — to accomplish; to bring about",
+      "headword": "সাধন করা",
+      "romanization": "sādhôn kôrā",
+      "gloss": "to accomplish; to bring about",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2e97b1b80da8779",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for speed, then the Bengali for to surpass."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সাধন করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাধন করা — sādhôn kôrā — \"to accomplish; to bring about\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সবাই একসঙ্গে কাজ করলে আমরা অনেক কিছু সাধন করতে পারব। sôbāi eksôngge kāj kôrle āmrā ônek kichhu sādhôn kôrte pārbô. If everyone works together, we can accomplish a lot."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি তাঁর লক্ষ্য সাধন করলেন, tini tā̃r lôkkhyô sādhôn kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাধন করা (sādhôn kôrā) is Sanskrit sādhana, bringing about or accomplishing (Monier-Williams), with করা."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhôn kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhôn kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhôn kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhôn kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôbāi eksôngge kāj kôrle āmrā ônek kichhu sādhôn kôrte pārbô. — If everyone works together, we can accomplish a lot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôbāi eksôngge kāj kôrle āmrā ônek kichhu sādhôn kôrte pārbô.* — If everyone works together, we can accomplish a lot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for speed, then the Bengali for to surpass, then say sādhôn kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for speed, then the Bengali for to surpass, then say *sādhôn kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সাধন করা (sādhôn kôrā) mean? (\"To accomplish; to bring about\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

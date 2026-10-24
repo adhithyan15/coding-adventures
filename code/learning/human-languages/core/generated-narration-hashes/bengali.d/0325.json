@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:3d846bfe7d03e2b5",
+  "lessonIds": [
+    "BN-C325-upodesh",
+    "BN-C325-porinam",
+    "BN-C325-pap",
+    "BN-C325-shodhrano",
+    "BN-C325-badhyo-hooya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch325.txt",
+  "json": "bengali/narration/ch325.json",
+  "textHash": "fnv1a64:fe7a5479e2b0abff",
+  "jsonHash": "fnv1a64:ba68c883d4ff6662",
+  "findings": []
+}

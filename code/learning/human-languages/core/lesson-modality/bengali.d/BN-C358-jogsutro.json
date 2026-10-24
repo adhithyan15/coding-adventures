@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C358-jogsutro",
+    "language": "bengali",
+    "chapter": 358,
+    "sequence": 22450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8810129e9b6f3a8"
+  },
+  "findings": []
+}

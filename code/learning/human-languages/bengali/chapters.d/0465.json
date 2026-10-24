@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "Good Sense",
+  "label": "ch:bn-good-sense",
+  "canDo": "I can talk about conscience, good judgement and gratitude.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C465-bibechona-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can talk about conscience, good judgement and gratitude.",
+    "assesses": [
+      "BN-LEX-C465-BIBEK465-03",
+      "BN-LEX-C465-BIBEK465-04",
+      "BN-LEX-C465-BIBEK465-05"
+    ]
+  }
+}

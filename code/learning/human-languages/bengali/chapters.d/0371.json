@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "Enough or Too Much",
+  "label": "ch:bn-enough-or-too-much",
+  "canDo": "I can say whether there is enough and where the limit is.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C371-sima",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can say whether there is enough and where the limit is.",
+    "assesses": [
+      "BN-LEX-C371-JOTHESHTO371-03",
+      "BN-LEX-C371-JOTHESHTO371-04",
+      "BN-LEX-C371-JOTHESHTO371-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:b1d7734d5e1174aa",
+  "lessonIds": [
+    "BN-C359-ojuhat",
+    "BN-C359-bhan",
+    "BN-C359-koiphiyot",
+    "BN-C359-pash-katano",
+    "BN-C359-grohonjogyo"
+  ],
+  "tex": "bengali/book/chapters/ch359-excuses.tex"
+}

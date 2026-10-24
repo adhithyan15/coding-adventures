@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C394-stiyaring",
+    "language": "bengali",
+    "chapter": 394,
+    "sequence": 24540,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a875923b107f87d0"
+  },
+  "findings": []
+}

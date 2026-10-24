@@ -1,0 +1,19 @@
+{
+  "chapter": 385,
+  "title": "Hours and Waiting",
+  "label": "ch:bn-hours-and-waiting",
+  "canDo": "I can say how long I waited on a platform bench, and hear the station clock tick.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C385-bench",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can say how long I waited on a platform bench, and hear the station clock tick.",
+    "assesses": [
+      "BN-LEX-C385-GHONTA385-03",
+      "BN-LEX-C385-GHONTA385-04",
+      "BN-LEX-C385-GHONTA385-05"
+    ]
+  }
+}

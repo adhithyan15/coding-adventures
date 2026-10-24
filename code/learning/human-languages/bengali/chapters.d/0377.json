@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "Getting There",
+  "label": "ch:bn-getting-there",
+  "canDo": "I can say how much progress has been made and what is still ahead.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C377-sadhon-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can say how much progress has been made and what is still ahead.",
+    "assesses": [
+      "BN-LEX-C377-UNNOTI377-03",
+      "BN-LEX-C377-UNNOTI377-04",
+      "BN-LEX-C377-UNNOTI377-05"
+    ]
+  }
+}

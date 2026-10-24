@@ -1,0 +1,11 @@
+{
+  "id": "BN-C314-dokhol-kora",
+  "pathSegment": "BN-PATH-314-SHOTRU314",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-314-SHOTRU314",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:6cb114483fcd1bfa",
+  "lessonIds": [
+    "BN-C419-obhab",
+    "BN-C419-opochoy",
+    "BN-C419-kipte",
+    "BN-C419-bondhok",
+    "BN-C419-sombol"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch419.txt",
+  "json": "bengali/narration/ch419.json",
+  "textHash": "fnv1a64:b869dde18618504b",
+  "jsonHash": "fnv1a64:9716d0842c8c4b80",
+  "findings": []
+}

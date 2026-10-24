@@ -1,0 +1,19 @@
+{
+  "chapter": 543,
+  "title": "Reaching the Goal",
+  "label": "ch:bn-reaching-the-goal",
+  "canDo": "I can talk about success, achievements and getting things exactly right.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C543-obhishto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 543: I can talk about success, achievements and getting things exactly right.",
+    "assesses": [
+      "BN-LEX-C543-SIDDHI543-03",
+      "BN-LEX-C543-SIDDHI543-04",
+      "BN-LEX-C543-SIDDHI543-05"
+    ]
+  }
+}

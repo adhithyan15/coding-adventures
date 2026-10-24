@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C402-dishehara",
+    "language": "bengali",
+    "chapter": 402,
+    "sequence": 24950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1835f0c60d3a7c27"
+  },
+  "findings": []
+}

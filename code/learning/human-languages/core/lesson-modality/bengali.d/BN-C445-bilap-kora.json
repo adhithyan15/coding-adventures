@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C445-bilap-kora",
+    "language": "bengali",
+    "chapter": 445,
+    "sequence": 27390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f71740ffddb7ec3"
+  },
+  "findings": []
+}

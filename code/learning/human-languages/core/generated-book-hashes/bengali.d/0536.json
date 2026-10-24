@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:a4363e731c51e4d3",
+  "lessonIds": [
+    "BN-C536-suparish",
+    "BN-C536-sommoti",
+    "BN-C536-rokom",
+    "BN-C536-dhoron",
+    "BN-C536-khap-khaoya"
+  ],
+  "tex": "bengali/book/chapters/ch536-kinds-and-choices.tex"
+}

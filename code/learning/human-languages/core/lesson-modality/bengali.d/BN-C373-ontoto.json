@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C373-ontoto",
+    "language": "bengali",
+    "chapter": 373,
+    "sequence": 23220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdb6405d221f1213"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C468-pakostholi",
+    "language": "bengali",
+    "chapter": 468,
+    "sequence": 28550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e685b97cb8d276c3"
+  },
+  "findings": []
+}

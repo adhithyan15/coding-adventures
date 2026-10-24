@@ -1,0 +1,19 @@
+{
+  "chapter": 347,
+  "title": "Public Offices",
+  "label": "ch:bn-public-offices",
+  "canDo": "I can say which office deals with what.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C347-jari-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can say which office deals with what.",
+    "assesses": [
+      "BN-LEX-C347-DOPTOR347-03",
+      "BN-LEX-C347-DOPTOR347-04",
+      "BN-LEX-C347-DOPTOR347-05"
+    ]
+  }
+}

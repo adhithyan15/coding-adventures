@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:892b70f83c3a4fab",
+  "lessonIds": [
+    "BN-C369-kina",
+    "BN-C369-emonki",
+    "BN-C369-onyothay",
+    "BN-C369-sottveo",
+    "BN-C369-nirdharon-kora",
+    "BN-R369-review-362-369"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch369.txt",
+  "json": "bengali/narration/ch369.json",
+  "textHash": "fnv1a64:a59b438838eee678",
+  "jsonHash": "fnv1a64:348cd3c1564f4c6f",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C395-ranoye",
+    "language": "bengali",
+    "chapter": 395,
+    "sequence": 24570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cf3db15d5e472d1"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C404-jirono",
+  "pathSegment": "BN-PATH-404-ARAM404",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-404-ARAM404",
+      "order": 3
+    }
+  ]
+}

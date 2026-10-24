@@ -1,0 +1,19 @@
+{
+  "chapter": 493,
+  "title": "At the Office",
+  "label": "ch:bn-at-the-office",
+  "canDo": "I can talk about desks, clerks, seals and typing in an office.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C493-taip-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can talk about desks, clerks, seals and typing in an office.",
+    "assesses": [
+      "BN-LEX-C493-OPHIS493-03",
+      "BN-LEX-C493-OPHIS493-04",
+      "BN-LEX-C493-OPHIS493-05"
+    ]
+  }
+}

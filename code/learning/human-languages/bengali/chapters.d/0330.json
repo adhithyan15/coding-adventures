@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "Where It Came From",
+  "label": "ch:bn-where-it-came-from",
+  "canDo": "I can say where something started and what it led to.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C330-prerona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can say where something started and what it led to.",
+    "assesses": [
+      "BN-LEX-C330-UTSO330-03",
+      "BN-LEX-C330-UTSO330-04",
+      "BN-LEX-C330-UTSO330-05"
+    ]
+  }
+}

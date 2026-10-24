@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:829a98cb313c0789",
+  "lessonIds": [
+    "BN-C400-thikana",
+    "BN-C400-chihno",
+    "BN-C400-ulto",
+    "BN-C400-nirdesh",
+    "BN-C400-inggit-kora"
+  ],
+  "tex": "bengali/book/chapters/ch400-addresses-and-signs.tex"
+}

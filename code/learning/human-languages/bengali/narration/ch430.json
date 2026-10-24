@@ -1,0 +1,849 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 430,
+  "title": "Fields and Farming",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:bb77f9dbcd130375",
+  "lessons": [
+    {
+      "id": "BN-C430-khet",
+      "sequence": 26350,
+      "title": "খেত (khet) — a field (of crops)",
+      "headword": "খেত",
+      "romanization": "khet",
+      "gloss": "a field (of crops)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ca98bc5b6a200bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to shake (something), then the Bengali for to bend low."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: খেত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খেত — khet — \"a field (of crops)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গ্রামের চারপাশে ধানের খেত। grāmer chārpāshe dhāner khet. All round the village are rice fields."
+            },
+            {
+              "kind": "speech",
+              "text": "মাঠ is open ground; খেত (khet) is ground that grows something: ধানের খেত (khet), a rice field."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খেত (khet) is inherited: CDIAL lists Bengali khet, \"a field\", under Sanskrit kṣḗtra, \"land\" (CDIAL 3735)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khet*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khet, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khet*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grāmer chārpāshe dhāner khet. — All round the village are rice fields.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grāmer chārpāshe dhāner khet.* — All round the village are rice fields.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to shake (something), then the Bengali for to bend low, then say khet again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to shake (something), then the Bengali for to bend low, then say *khet* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does খেত (khet) mean? (\"A field (of crops)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C430-langol",
+      "sequence": 26360,
+      "title": "লাঙল (lāngôl) — a plough",
+      "headword": "লাঙল",
+      "romanization": "lāngôl",
+      "gloss": "a plough",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03c9cddd20f003f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to bend low, then the Bengali for a field (of crops)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: লাঙল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লাঙল — lāngôl — \"a plough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গরু লাঙল টানে। gôru lāngôl ṭāne. The cattle pull the plough."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লাঙল (lāngôl) is inherited: CDIAL lists Bengali lāṅal, \"a plough\", under Sanskrit lā́ṅgala, \"a plough\" (CDIAL 11006)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāngôl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāngôl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāngôl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāngôl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôru lāngôl ṭāne. — The cattle pull the plough.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôru lāngôl ṭāne.* — The cattle pull the plough.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to bend low, then the Bengali for a field (of crops), then say lāngôl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to bend low, then the Bengali for a field (of crops), then say *lāngôl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does লাঙল (lāngôl) mean? (\"A plough\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C430-krishok",
+      "sequence": 26370,
+      "title": "কৃষক (krishôk) — a farmer",
+      "headword": "কৃষক",
+      "romanization": "krishôk",
+      "gloss": "a farmer",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6cc610af9fe9972f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a field (of crops), then the Bengali for a plough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কৃষক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কৃষক — krishôk — \"a farmer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "কৃষক ভোরে খেতে যান। krishôk bhore khete jān. The farmer goes to the field at dawn."
+            },
+            {
+              "kind": "speech",
+              "text": "A careful word, common in the news and in schoolbooks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কৃষক (krishôk) is Sanskrit kṛṣaka, \"a ploughman, a husbandman\" (Monier-Williams), from kṛṣ, to plough."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krishôk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krishôk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krishôk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krishôk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krishôk bhore khete jān. — The farmer goes to the field at dawn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krishôk bhore khete jān.* — The farmer goes to the field at dawn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a field (of crops), then the Bengali for a plough, then say krishôk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a field (of crops), then the Bengali for a plough, then say *krishôk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কৃষক (krishôk) mean? (\"A farmer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C430-sech-deoya",
+      "sequence": 26380,
+      "title": "সেচ দেওয়া (sech deoyā) — to irrigate; to water (fields)",
+      "headword": "সেচ দেওয়া",
+      "romanization": "sech deoyā",
+      "gloss": "to irrigate; to water (fields)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff539588f6ce1374",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a plough, then the Bengali for a farmer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সেচ দেওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সেচ দেওয়া — sech deoyā — \"to irrigate; to water (fields)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শুকনো দিনে কৃষক খেতে সেচ দেন। shukno dine krishôk khete sech den. On dry days the farmer irrigates the field."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি খেতে সেচ দিলেন, tini khete sech dilen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সেচ দেওয়া (sech deoyā) joins সেচ, \"irrigation\", of the family CDIAL sets under Sanskrit siñcáti, \"pours out, sprinkles\", with Bengali sẽcā, \"to irrigate, to bale out\" (CDIAL 13394), to দেওয়া, to give."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sech deoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sech deoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sech deoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sech deoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shukno dine krishôk khete sech den. — On dry days the farmer irrigates the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shukno dine krishôk khete sech den.* — On dry days the farmer irrigates the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a plough, then the Bengali for a farmer, then say sech deoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a plough, then the Bengali for a farmer, then say *sech deoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সেচ দেওয়া (sech deoyā) mean? (\"To irrigate; to water (fields)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C430-chash-kora",
+      "sequence": 26390,
+      "title": "চাষ করা (chāsh kôrā) — to farm; to grow (a crop)",
+      "headword": "চাষ করা",
+      "romanization": "chāsh kôrā",
+      "gloss": "to farm; to grow (a crop)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dcf2e2057e91f28d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a farmer, then the Bengali for to irrigate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: চাষ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চাষ করা — chāsh kôrā — \"to farm; to grow (a crop)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই গ্রামের লোকেরা ধান চাষ করে। ei grāmer lokerā dhān chāsh kôre. The people of this village grow rice."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি জমিতে সবজি চাষ করলেন, tini jômite sôbji chāsh kôrlen."
+            },
+            {
+              "kind": "speech",
+              "text": "চাষ alone is farming, the work of the fields."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চাষ করা (chāsh kôrā) joins চাষ, which CDIAL lists as Bengali cās, \"ploughing\", under the reconstructed carṣati, \"ploughs\" (CDIAL 4712), to করা, to do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāsh kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāsh kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāsh kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāsh kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ei grāmer lokerā dhān chāsh kôre. — The people of this village grow rice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ei grāmer lokerā dhān chāsh kôre.* — The people of this village grow rice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a farmer, then the Bengali for to irrigate, then say chāsh kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a farmer, then the Bengali for to irrigate, then say *chāsh kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does চাষ করা (chāsh kôrā) mean? (\"To farm; to grow (a crop)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R430-review-424-430",
+      "sequence": 26400,
+      "title": "Looking back: from Prices Up and Down to Fields and Farming",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Prices Up and Down to Fields and Farming",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c8570cbaec3e494",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for a sale (at reduced prices) and an offer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sale (at reduced prices), an offer, a slump, demand (for goods), to fluctuate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sale (at reduced prices), an offer, a slump, demand (for goods), to fluctuate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cloud, the monsoon, in torrents, a lightning strike, to spread over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cloud, the monsoon, in torrents, a lightning strike, to spread over]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cold (to the touch), snow, to freeze, bitterly cold, to melt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cold (to the touch), snow, to freeze, bitterly cold, to melt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "summer, autumn, a season (for a crop or an activity), temperature, heat (warmth)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: summer, autumn, a season (for a crop or an activity), temperature, heat (warmth)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "humid, muggy, hazy, damp (and dank), to be covered over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: humid, muggy, hazy, damp (and dank), to be covered over]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a nor'wester, hail, to roar, to shake (something), to bend low",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a nor'wester, hail, to roar, to shake (something), to bend low]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a field (of crops), a plough, a farmer, to irrigate, to farm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a field (of crops), a plough, a farmer, to irrigate, to farm]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A sale (at reduced prices)? (সেল, sel.) An offer? (অফার, ôphār.) A slump? (মন্দা, môndā.) Demand (for goods)? (চাহিদা, chāhidā.) To fluctuate? (ওঠানামা করা, oṭhānāmā kôrā.) A cloud? (মেঘ, megh.) The monsoon? (বর্ষা, bôrshā.) In torrents? (মুষলধারে, mushôldhāre.) A lightning strike? (বজ্রপাত, bôjrôpāt.) To spread over? (ছাওয়া, chhāoyā.) Cold (to the touch)? (ঠান্ডা, ṭhānḍā.) Snow? (তুষার, tushār.) To freeze? (জমে যাওয়া, jôme jāoyā.) Bitterly cold? (কনকনে, kônkône.) To melt? (গলে যাওয়া, gôle jāoyā.) Summer? (গ্রীষ্ম, grīshmô.) Autumn? (শরৎ, shôrôt.) A season (for a crop or an activity)? (মৌসুম, mousum.) Temperature? (তাপমাত্রা, tāpmātrā.) Heat (warmth)? (উত্তাপ, uttāp.) Humid? (আর্দ্র, ārdrô.) Muggy? (ভ্যাপসা, bhæpsā.) Hazy? (ঝাপসা, jhāpsā.) Damp (and dank)? (স্যাঁতসেঁতে, sæ̃tsẽte.) To be covered over? (ঢেকে যাওয়া, ḍheke jāoyā.) A nor'wester? (কালবৈশাখী, kālboishākhī.) Hail? (শিলাবৃষ্টি, shilābrishṭi.) To roar? (গর্জানো, gôrjāno.) To shake (something)? (কাঁপানো, kā̃pāno.) To bend low? (নুয়ে পড়া, nuye pôṛā.) A field (of crops)? (খেত, khet.) A plough? (লাঙল, lāngôl.) A farmer? (কৃষক, krishôk.) To irrigate? (সেচ দেওয়া, sech deoyā.) To farm? (চাষ করা, chāsh kôrā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

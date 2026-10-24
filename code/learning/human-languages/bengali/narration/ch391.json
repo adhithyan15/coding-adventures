@@ -1,0 +1,874 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 391,
+  "title": "Collisions and Close Calls",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:983869546643bfa9",
+  "lessons": [
+    {
+      "id": "BN-C391-songghorsho",
+      "sequence": 24350,
+      "title": "সংঘর্ষ (sôngghôrshô) — a collision; a clash",
+      "headword": "সংঘর্ষ",
+      "romanization": "sôngghôrshô",
+      "gloss": "a collision; a clash",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5de5507326e9af1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for tar, then the Bengali for to roll."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সংঘর্ষ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সংঘর্ষ — sôngghôrshô — \"a collision; a clash\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মোড়ে একটা বাস আর একটা ট্রাকের সংঘর্ষ হল। moṛe ekṭā bās ār ekṭā ṭrāker sôngghôrshô hôlô. A bus and a lorry collided at the crossroads."
+            },
+            {
+              "kind": "speech",
+              "text": "A word of the news: the paper reports a সংঘর্ষ (sôngghôrshô) where a witness says the two vehicles hit each other."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সংঘর্ষ (sôngghôrshô) is Sanskrit saṃgharṣa, \"rubbing together, friction, rivalry\" (Monier-Williams); the sense of two vehicles meeting is the modern use."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngghôrshô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngghôrshô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngghôrshô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngghôrshô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṛe ekṭā bās ār ekṭā ṭrāker sôngghôrshô hôlô. — A bus and a lorry collided at the crossroads.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṛe ekṭā bās ār ekṭā ṭrāker sôngghôrshô hôlô.* — A bus and a lorry collided at the crossroads.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for tar, then the Bengali for to roll, then say sôngghôrshô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for tar, then the Bengali for to roll, then say *sôngghôrshô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সংঘর্ষ (sôngghôrshô) mean? (\"A collision; a clash\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C391-tola",
+      "sequence": 24360,
+      "title": "টলা (ṭôlā) — to totter; to sway",
+      "headword": "টলা",
+      "romanization": "ṭôlā",
+      "gloss": "to totter; to sway",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7912dee24fd4b4c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to roll, then the Bengali for a collision."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: টলা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "টলা — ṭôlā — \"to totter; to sway\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ভিড়ের ধাক্কায় বুড়ো লোকটা টলে উঠল। bhiṛer dhākkāy buṛo lokṭā ṭôle uṭhlô. Jostled by the crowd, the old man tottered."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি টললেন, tini ṭôllen."
+            },
+            {
+              "kind": "speech",
+              "text": "Not তোলা, to lift: ট and ত are different letters."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "টলা (ṭôlā) is inherited: CDIAL lists Bengali ṭalan, \"staggering, slipping\", under Sanskrit ṭálati, \"moves aside, is disturbed\" (CDIAL 5450)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭôlā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭôlā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭôlā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭôlā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhiṛer dhākkāy buṛo lokṭā ṭôle uṭhlô. — Jostled by the crowd, the old man tottered.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhiṛer dhākkāy buṛo lokṭā ṭôle uṭhlô.* — Jostled by the crowd, the old man tottered.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to roll, then the Bengali for a collision, then say ṭôlā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to roll, then the Bengali for a collision, then say *ṭôlā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does টলা (ṭôlā) mean? (\"To totter; to sway\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C391-nora",
+      "sequence": 24370,
+      "title": "নড়া (nôṛā) — to budge; to stir",
+      "headword": "নড়া",
+      "romanization": "nôṛā",
+      "gloss": "to budge; to stir",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e9c4795aae80efe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a collision, then the Bengali for to totter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নড়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নড়া — nôṛā — \"to budge; to stir\"."
+            },
+            {
+              "kind": "speech",
+              "text": "যানজটে বাসটা এক ঘণ্টা নড়ল না। jānjôṭe bāsṭā ek ghônṭā nôṛlô nā. In the traffic jam the bus did not budge for an hour."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই গাড়ি নড়ল, sei gāṛi nôṛlô."
+            },
+            {
+              "kind": "speech",
+              "text": "নাড়ানো, to stir or to wave, is the causing partner."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নড়া (nôṛā) is inherited: CDIAL lists Bengali naṛā, \"to shake, to flinch, to move\", under the reconstructed naṭati (CDIAL 6934)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôṛā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôṛā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôṛā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôṛā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jānjôṭe bāsṭā ek ghônṭā nôṛlô nā. — In the traffic jam the bus did not budge for an hour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jānjôṭe bāsṭā ek ghônṭā nôṛlô nā.* — In the traffic jam the bus did not budge for an hour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a collision, then the Bengali for to totter, then say nôṛā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a collision, then the Bengali for to totter, then say *nôṛā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does নড়া (nôṛā) mean? (\"To budge; to stir\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C391-chharano",
+      "sequence": 24380,
+      "title": "ছাড়ানো (chhāṛāno) — to overtake; to get past; to peel",
+      "headword": "ছাড়ানো",
+      "romanization": "chhāṛāno",
+      "gloss": "to overtake; to get past; to peel",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9158fff7bfeec19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to totter, then the Bengali for to budge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ছাড়ানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ছাড়ানো — chhāṛāno — \"to overtake; to get past; to peel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বাসটা একটা ট্রাককে ছাড়িয়ে গেল। bāsṭā ekṭā ṭrākke chhāṛiye gelô. The bus overtook a lorry."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই বাস ট্রাকটাকে ছাড়াল, sei bās ṭrākṭāke chhāṛālô."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly in the -এ form with যাওয়া: ছাড়িয়ে যাওয়া, to go past. Also to peel: কমলা ছাড়ানো (chhāṛāno), to peel an orange."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ছাড়ানো (chhāṛāno) is the causing form of ছাড়া, \"to leave, to let go\", from Sanskrit chardayati (CDIAL 4998): to leave a vehicle behind, or a peel."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhāṛāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhāṛāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhāṛāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhāṛāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāsṭā ekṭā ṭrākke chhāṛiye gelô. — The bus overtook a lorry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāsṭā ekṭā ṭrākke chhāṛiye gelô.* — The bus overtook a lorry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to totter, then the Bengali for to budge, then say chhāṛāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to totter, then the Bengali for to budge, then say *chhāṛāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ছাড়ানো (chhāṛāno) mean? (\"To overtake; to get past; to peel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C391-kosha",
+      "sequence": 24390,
+      "title": "কষা (kôshā) — to apply (the brakes); to tighten; to work out (a sum)",
+      "headword": "কষা",
+      "romanization": "kôshā",
+      "gloss": "to apply (the brakes); to tighten; to work out (a sum)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1209db4d5c9665a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to budge, then the Bengali for to overtake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কষা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কষা — kôshā — \"to apply (the brakes); to tighten; to work out (a sum)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাস্তায় গরু দেখে চালক হঠাৎ ব্রেক কষলেন। rāstāy gôru dekhe chālôk hôṭhāt brek kôshlen. Seeing a cow on the road, the driver suddenly slammed on the brakes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি ব্রেক কষলেন, tini brek kôshlen."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to pull a knot tight or to work out a sum on paper: a verb of pressing and rubbing hard."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কষা (kôshā) probably goes back to Sanskrit kaṣ, \"to rub, to scratch, to scrape\" (Monier-Williams): brakes, knots and sums are all worked by rubbing hard."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kôshā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kôshā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kôshā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kôshā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāstāy gôru dekhe chālôk hôṭhāt brek kôshlen. — Seeing a cow on the road, the driver suddenly slammed on the brakes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāstāy gôru dekhe chālôk hôṭhāt brek kôshlen.* — Seeing a cow on the road, the driver suddenly slammed on the brakes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to budge, then the Bengali for to overtake, then say kôshā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to budge, then the Bengali for to overtake, then say *kôshā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কষা (kôshā) mean? (\"To apply (the brakes); to tighten; to work out (a sum)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R391-review-384-391",
+      "sequence": 24400,
+      "title": "Looking back: from Rails and Carriages to Collisions and Close Calls",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Rails and Carriages to Collisions and Close Calls",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f29bb2d23c0f59f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for a railway and a compartment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a railway, a compartment, a berth, a local train, to blow a whistle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a railway, a compartment, a berth, a local train, to blow a whistle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an hour, a clock, to tick (of a clock), to wait, a bench",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an hour, a clock, to tick (of a clock), to wait, a bench]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a porter, a suitcase, a trolley, to unload, to carry (a load)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a porter, a suitcase, a trolley, to unload, to carry (a load)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a path, a destination, a trip, to commute, return (of a journey)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a path, a destination, a trip, to commute, return (of a journey)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tram, the metro, an autorickshaw, a van, to race",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tram, the metro, an autorickshaw, a van, to race]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a driver, a bus conductor, a helmet, to signal, to call out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a driver, a bus conductor, a helmet, to signal, to call out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a highway, a bend, a pothole, tar, to roll",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a highway, a bend, a pothole, tar, to roll]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a collision, to totter, to budge, to overtake, to apply (the brakes)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a collision, to totter, to budge, to overtake, to apply (the brakes)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A railway? (রেল, rel.) A compartment? (কামরা, kāmrā.) A berth? (বার্থ, bārth.) A local train? (লোকাল, lokāl.) To blow a whistle? (হুইসল দেওয়া, huisôl deoyā.) An hour? (ঘণ্টা, ghônṭā.) A clock? (ঘড়ি, ghôṛi.) To tick (of a clock)? (টিকটিক করা, ṭikṭik kôrā.) To wait? (অপেক্ষা করা, ôpekkhā kôrā.) A bench? (বেঞ্চ, bench.) A porter? (কুলি, kuli.) A suitcase? (সুটকেস, suṭkes.) A trolley? (ট্রলি, ṭrôli.) To unload? (নামানো, nāmāno.) To carry (a load)? (বহন করা, bôhôn kôrā.) A path? (পথ, pôth.) A destination? (গন্তব্য, gôntôbyô.) A trip? (সফর, sôphôr.) To commute? (যাতায়াত করা, jātāyāt kôrā.) Return (of a journey)? (ফিরতি, phirti.) A tram? (ট্রাম, ṭrām.) The metro? (মেট্রো, meṭro.) An autorickshaw? (অটো, ôṭo.) A van? (ভ্যান, bhæn.) To race? (দৌড়ানো, douṛāno.) A driver? (চালক, chālôk.) A bus conductor? (কন্ডাক্টর, kônḍākṭôr.) A helmet? (হেলমেট, helmeṭ.) To signal? (ইশারা করা, ishārā kôrā.) To call out? (হাঁকা, hā̃kā.) A highway? (সড়ক, sôṛôk.) A bend? (বাঁক, bā̃k.) A pothole? (গর্ত, gôrtô.) Tar? (পিচ, pich.) To roll? (গড়ানো, gôṛāno.) A collision? (সংঘর্ষ, sôngghôrshô.) To totter? (টলা, ṭôlā.) To budge? (নড়া, nôṛā.) To overtake? (ছাড়ানো, chhāṛāno.) To apply (the brakes)? (কষা, kôshā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

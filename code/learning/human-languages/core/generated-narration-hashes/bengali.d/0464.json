@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:331f88608bae000b",
+  "lessonIds": [
+    "BN-C464-gombhir",
+    "BN-C464-sadasidhe",
+    "BN-C464-khutkhute",
+    "BN-C464-udasin",
+    "BN-C464-maniye-neoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch464.txt",
+  "json": "bengali/narration/ch464.json",
+  "textHash": "fnv1a64:77106ed4fd74a9e0",
+  "jsonHash": "fnv1a64:e094d2243ab35e05",
+  "findings": []
+}

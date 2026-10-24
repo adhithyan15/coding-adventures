@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:1e73e004978949ad",
+  "lessonIds": [
+    "BN-C293-bhumikompo",
+    "BN-C293-kompon",
+    "BN-C293-dhose-pora",
+    "BN-C293-dhvongso",
+    "BN-C293-chapa-pora"
+  ],
+  "tex": "bengali/book/chapters/ch293-when-the-earth-shook.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C482-bhagne",
+    "language": "bengali",
+    "chapter": 482,
+    "sequence": 29270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a745f6ba05e877f2"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Walls and Gates",
+  "label": "ch:bn-walls-and-gates",
+  "canDo": "I can describe the walls, gates and buildings of a street.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C412-topkano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can describe the walls, gates and buildings of a street.",
+    "assesses": [
+      "BN-LEX-C412-PANCHIL412-03",
+      "BN-LEX-C412-PANCHIL412-04",
+      "BN-LEX-C412-PANCHIL412-05"
+    ]
+  }
+}

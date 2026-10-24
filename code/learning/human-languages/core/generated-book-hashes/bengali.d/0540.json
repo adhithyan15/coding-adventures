@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:f9acc1a7f30a6f73",
+  "lessonIds": [
+    "BN-C540-mashul",
+    "BN-C540-khesarot",
+    "BN-C540-ashvas",
+    "BN-C540-bormo",
+    "BN-C540-chukano"
+  ],
+  "tex": "bengali/book/chapters/ch540-paying-the-price.tex"
+}

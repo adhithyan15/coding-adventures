@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:8d4b43f5204cbc8a",
+  "lessonIds": [
+    "BN-C304-utsob",
+    "BN-C304-pujo",
+    "BN-C304-protima",
+    "BN-C304-pendel",
+    "BN-C304-udjapon-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch304.txt",
+  "json": "bengali/narration/ch304.json",
+  "textHash": "fnv1a64:58a309ae3cfcb70b",
+  "jsonHash": "fnv1a64:ee34b018a9b77e34",
+  "findings": []
+}

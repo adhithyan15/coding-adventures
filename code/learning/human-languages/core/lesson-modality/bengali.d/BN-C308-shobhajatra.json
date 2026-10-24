@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C308-shobhajatra",
+    "language": "bengali",
+    "chapter": 308,
+    "sequence": 19670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16a4b954078b982d"
+  },
+  "findings": []
+}

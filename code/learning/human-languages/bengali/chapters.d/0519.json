@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "The Match",
+  "label": "ch:bn-the-match",
+  "canDo": "I can talk about a match, its captain, its referee and the stands.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C519-hara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can talk about a match, its captain, its referee and the stands.",
+    "assesses": [
+      "BN-LEX-C519-KHELA519-03",
+      "BN-LEX-C519-KHELA519-04",
+      "BN-LEX-C519-KHELA519-05"
+    ]
+  }
+}

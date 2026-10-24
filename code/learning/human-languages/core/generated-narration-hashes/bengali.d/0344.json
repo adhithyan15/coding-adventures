@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:8d2567808e90e248",
+  "lessonIds": [
+    "BN-C344-rashtro",
+    "BN-C344-porichalona-kora",
+    "BN-C344-proshason",
+    "BN-C344-khomota",
+    "BN-C344-jonogon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch344.txt",
+  "json": "bengali/narration/ch344.json",
+  "textHash": "fnv1a64:4a80e3c80bce45da",
+  "jsonHash": "fnv1a64:8146ae29d80e143a",
+  "findings": []
+}

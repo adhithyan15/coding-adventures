@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:d0a5114ffa6204c7",
+  "lessonIds": [
+    "BN-C330-utso",
+    "BN-C330-srishti-kora",
+    "BN-C330-probhab",
+    "BN-C330-protikriya",
+    "BN-C330-prerona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch330.txt",
+  "json": "bengali/narration/ch330.json",
+  "textHash": "fnv1a64:b752eb78c2fa530b",
+  "jsonHash": "fnv1a64:1ab0d30f2e9a9009",
+  "findings": []
+}

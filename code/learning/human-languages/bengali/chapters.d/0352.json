@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Fair for Everyone",
+  "label": "ch:bn-fair-for-everyone",
+  "canDo": "I can talk about unfairness and who is left out.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C352-ontorbhukto-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can talk about unfairness and who is left out.",
+    "assesses": [
+      "BN-LEX-C352-BOISHOMMO352-03",
+      "BN-LEX-C352-BOISHOMMO352-04",
+      "BN-LEX-C352-BOISHOMMO352-05"
+    ]
+  }
+}

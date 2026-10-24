@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:00aa14ba7f83fa14",
+  "lessonIds": [
+    "BN-C486-lalonpalon",
+    "BN-C486-proshroy-deoya",
+    "BN-C486-chosha",
+    "BN-C486-ghum-parano",
+    "BN-C486-hamaguri-deoya"
+  ],
+  "tex": "bengali/book/chapters/ch486-raising-children.tex"
+}

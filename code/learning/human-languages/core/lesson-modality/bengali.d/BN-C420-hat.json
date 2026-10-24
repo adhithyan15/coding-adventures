@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C420-hat",
+    "language": "bengali",
+    "chapter": 420,
+    "sequence": 25870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54cdb5878d892a47"
+  },
+  "findings": []
+}

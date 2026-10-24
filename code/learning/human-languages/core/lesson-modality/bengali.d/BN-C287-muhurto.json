@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C287-muhurto",
+    "language": "bengali",
+    "chapter": 287,
+    "sequence": 18560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a5dbe3171d12887"
+  },
+  "findings": []
+}

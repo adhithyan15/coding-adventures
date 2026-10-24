@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 326,
+  "title": "Wonders",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ef96fe90c5343da9",
+  "lessons": [
+    {
+      "id": "BN-C326-ashchoryo",
+      "sequence": 20560,
+      "title": "আশ্চর্য (āshchôryô) — amazing; a wonder",
+      "headword": "আশ্চর্য",
+      "romanization": "āshchôryô",
+      "gloss": "amazing; a wonder",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1aecd25cb6b684cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to mend one's ways, then the Bengali for to be forced."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আশ্চর্য",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আশ্চর্য — āshchôryô — \"amazing; a wonder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সন্ন্যাসীর গল্পটা সত্যি আশ্চর্য ছিল। sônnyāsīr gôlpoṭā sôtti āshchôryô chhilô. The holy man's story was truly amazing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আশ্চর্য (āshchôryô) is Sanskrit āścarya, 'appearing rarely, wonderful; a strange sight' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āshchôryô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āshchôryô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āshchôryô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āshchôryô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sônnyāsīr gôlpoṭā sôtti āshchôryô chhilô. — The holy man's story was truly amazing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sônnyāsīr gôlpoṭā sôtti āshchôryô chhilô.* — The holy man's story was truly amazing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to mend one's ways, then the Bengali for to be forced, then say āshchôryô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to mend one's ways, then the Bengali for to be forced, then say *āshchôryô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আশ্চর্য (āshchôryô) mean? (\"Amazing; a wonder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C326-oloukik",
+      "sequence": 20570,
+      "title": "অলৌকিক (ôloukik) — supernatural; miraculous",
+      "headword": "অলৌকিক",
+      "romanization": "ôloukik",
+      "gloss": "supernatural; miraculous",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f0ee6b3da4052ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to be forced, then the Bengali for amazing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অলৌকিক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অলৌকিক — ôloukik — \"supernatural; miraculous\"."
+            },
+            {
+              "kind": "speech",
+              "text": "লোকে বলে যে মন্দিরের পুকুরের জলে অলৌকিক শক্তি আছে। loke bôle je mondirer pukurer jôle ôloukik shôkti āchhe. People say the water of the temple pond has supernatural power."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অলৌকিক (ôloukik) is Sanskrit alaukika, 'uncommon; not of this world, supernatural' (Monier-Williams): a-, 'not', and laukika, 'worldly'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôloukik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôloukik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôloukik, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôloukik*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "loke bôle je mondirer pukurer jôle ôloukik shôkti āchhe. — People say the water of the temple pond has supernatural power.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *loke bôle je mondirer pukurer jôle ôloukik shôkti āchhe.* — People say the water of the temple pond has supernatural power.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to be forced, then the Bengali for amazing, then say ôloukik again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to be forced, then the Bengali for amazing, then say *ôloukik* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অলৌকিক (ôloukik) mean? (\"Supernatural; miraculous\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C326-kolpona-kora",
+      "sequence": 20580,
+      "title": "কল্পনা করা (kôlpônā kôrā) — to imagine",
+      "headword": "কল্পনা করা",
+      "romanization": "kôlpônā kôrā",
+      "gloss": "to imagine",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1274f5d4e4f9736",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for amazing, then the Bengali for supernatural."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কল্পনা করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কল্পনা করা — kôlpônā kôrā — \"to imagine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাতে আমি জাদুর দেশ কল্পনা করতাম। rāte āmi jādur desh kôlpônā kôrtām. At night I used to imagine a land of magic."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি একটা নতুন শহর কল্পনা করলেন, tini ekṭā nôtun shôhôr kôlpônā kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কল্পনা করা (kôlpônā kôrā) puts Sanskrit kalpanā, 'making, forming' (Monier-Williams), before করা: to form a picture in the mind."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kôlpônā kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kôlpônā kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kôlpônā kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kôlpônā kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāte āmi jādur desh kôlpônā kôrtām. — At night I used to imagine a land of magic.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāte āmi jādur desh kôlpônā kôrtām.* — At night I used to imagine a land of magic.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for amazing, then the Bengali for supernatural, then say kôlpônā kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for amazing, then the Bengali for supernatural, then say *kôlpônā kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কল্পনা করা (kôlpônā kôrā) mean? (\"To imagine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C326-guptodhon",
+      "sequence": 20590,
+      "title": "গুপ্তধন (guptôdhôn) — a hidden treasure",
+      "headword": "গুপ্তধন",
+      "romanization": "guptôdhôn",
+      "gloss": "a hidden treasure",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a901a84fd5aeca1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for supernatural, then the Bengali for to imagine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গুপ্তধন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গুপ্তধন — guptôdhôn — \"a hidden treasure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গল্পে নায়ক একটা পুরনো কুয়োর নিচে গুপ্তধন পেল। gôlpe nāyôk ekṭā purôno kuyor niche guptôdhôn pelô. In the story the hero found hidden treasure at the bottom of an old well."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গুপ্তধন (guptôdhôn) joins Sanskrit gupta, 'guarded; hidden' (Monier-Williams), to dhana, 'wealth': hidden wealth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guptôdhôn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guptôdhôn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guptôdhôn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guptôdhôn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôlpe nāyôk ekṭā purôno kuyor niche guptôdhôn pelô. — In the story the hero found hidden treasure at the bottom of an old well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôlpe nāyôk ekṭā purôno kuyor niche guptôdhôn pelô.* — In the story the hero found hidden treasure at the bottom of an old well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for supernatural, then the Bengali for to imagine, then say guptôdhôn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for supernatural, then the Bengali for to imagine, then say *guptôdhôn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গুপ্তধন (guptôdhôn) mean? (\"A hidden treasure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C326-miliye-jaoya",
+      "sequence": 20600,
+      "title": "মিলিয়ে যাওয়া (miliye jāoyā) — to vanish; to fade away",
+      "headword": "মিলিয়ে যাওয়া",
+      "romanization": "miliye jāoyā",
+      "gloss": "to vanish; to fade away",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ba79780b22de2b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to imagine, then the Bengali for a hidden treasure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মিলিয়ে যাওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মিলিয়ে যাওয়া — miliye jāoyā — \"to vanish; to fade away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এক মুহূর্তে পরীটা বাতাসে মিলিয়ে গেল। ek muhūrte pôrīṭā bātāse miliye gelô. In a moment the fairy vanished into thin air."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই আলো মিলিয়ে গেল, sei ālo miliye gelô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মিলিয়ে যাওয়া (miliye jāoyā) is the -e form of মিলানো, to blend in — CDIAL 10133, Sanskrit milati, 'meets', which lists Bengali milā — before যাওয়া: to blend into the air and be gone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miliye jāoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miliye jāoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miliye jāoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miliye jāoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek muhūrte pôrīṭā bātāse miliye gelô. — In a moment the fairy vanished into thin air.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek muhūrte pôrīṭā bātāse miliye gelô.* — In a moment the fairy vanished into thin air.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to imagine, then the Bengali for a hidden treasure, then say miliye jāoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to imagine, then the Bengali for a hidden treasure, then say *miliye jāoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মিলিয়ে যাওয়া (miliye jāoyā) mean? (\"To vanish; to fade away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

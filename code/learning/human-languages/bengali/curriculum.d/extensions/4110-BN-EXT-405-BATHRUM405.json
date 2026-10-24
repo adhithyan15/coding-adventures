@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-405-BATHRUM405",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask about the bathroom, hot water and the air conditioner, and get a room cleaned.",
+  "prerequisites": []
+}

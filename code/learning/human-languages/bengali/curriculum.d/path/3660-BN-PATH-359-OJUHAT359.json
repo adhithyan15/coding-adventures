@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-359-OJUHAT359",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "BN-EXT-359-OJUHAT359"
+  ],
+  "after": []
+}

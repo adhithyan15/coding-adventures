@@ -1,0 +1,11 @@
+{
+  "id": "BN-C270-kibhabe-jabo",
+  "pathSegment": "BN-PATH-270-ASK-WAY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-270-ASK-WAY",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:5274c96fb5402dd4",
+  "lessonIds": [
+    "BN-C388-tram",
+    "BN-C388-metro",
+    "BN-C388-oto",
+    "BN-C388-bhen",
+    "BN-C388-dourano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch388.txt",
+  "json": "bengali/narration/ch388.json",
+  "textHash": "fnv1a64:8709bb4de849577a",
+  "jsonHash": "fnv1a64:bfa09a04bf7523ec",
+  "findings": []
+}

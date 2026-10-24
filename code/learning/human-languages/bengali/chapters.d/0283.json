@@ -1,0 +1,21 @@
+{
+  "chapter": 283,
+  "title": "Crime and the Police",
+  "label": "ch:bn-crime-and-the-police",
+  "canDo": "I can talk about a crime, a complaint and an arrest.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-R283-review-276-283",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 283: I can talk about a crime, a complaint and an arrest.",
+    "assesses": [
+      "BN-LEX-C283-OPORADH283-01",
+      "BN-LEX-C283-OPORADH283-02",
+      "BN-LEX-C283-OPORADH283-03",
+      "BN-LEX-C283-OPORADH283-04",
+      "BN-LEX-C283-OPORADH283-05"
+    ]
+  }
+}

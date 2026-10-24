@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Prices Up and Down",
+  "label": "ch:bn-prices-up-and-down",
+  "canDo": "I can spot a sale or an offer, and say demand and prices go up and down.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C424-othanama-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can spot a sale or an offer, and say demand and prices go up and down.",
+    "assesses": [
+      "BN-LEX-C424-DAM424-03",
+      "BN-LEX-C424-DAM424-04",
+      "BN-LEX-C424-DAM424-05"
+    ]
+  }
+}

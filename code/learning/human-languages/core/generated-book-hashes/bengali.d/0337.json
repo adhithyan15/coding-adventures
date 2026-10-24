@@ -1,0 +1,14 @@
+{
+  "language": "bengali",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:be24567c43c4f86b",
+  "lessonIds": [
+    "BN-C337-proman",
+    "BN-C337-nishchito",
+    "BN-C337-bhitti",
+    "BN-C337-shonakto-kora",
+    "BN-C337-udghaton-kora",
+    "BN-R337-review-330-337"
+  ],
+  "tex": "bengali/book/chapters/ch337-show-me-the-proof.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:75e51315ff80d1b4",
+  "lessonIds": [
+    "BN-C529-monopputo",
+    "BN-C529-dotana",
+    "BN-C529-ruchi",
+    "BN-C529-jhoka",
+    "BN-C529-morji"
+  ],
+  "tex": "bengali/book/chapters/ch529-torn-between-two.tex"
+}

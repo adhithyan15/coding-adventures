@@ -1,0 +1,21 @@
+{
+  "chapter": 345,
+  "title": "Making Laws",
+  "label": "ch:bn-making-laws",
+  "canDo": "I can say how a law is proposed, passed or thrown out.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-R345-review-338-345",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can say how a law is proposed, passed or thrown out.",
+    "assesses": [
+      "BN-LEX-C345-SONGSOD345-01",
+      "BN-LEX-C345-SONGSOD345-02",
+      "BN-LEX-C345-SONGSOD345-03",
+      "BN-LEX-C345-SONGSOD345-04",
+      "BN-LEX-C345-SONGSOD345-05"
+    ]
+  }
+}

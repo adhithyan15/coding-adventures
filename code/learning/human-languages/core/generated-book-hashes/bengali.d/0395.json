@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:9bff0221cce4d5d6",
+  "lessonIds": [
+    "BN-C395-phlait",
+    "BN-C395-ranoye",
+    "BN-C395-kastoms",
+    "BN-C395-bidesh",
+    "BN-C395-pari-deoya"
+  ],
+  "tex": "bengali/book/chapters/ch395-flights-and-runways.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:bc294cac3effe0e0",
+  "lessonIds": [
+    "BN-C377-unnoti",
+    "BN-C377-ogrogoti",
+    "BN-C377-goti",
+    "BN-C377-otikrom-kora",
+    "BN-C377-sadhon-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch377.txt",
+  "json": "bengali/narration/ch377.json",
+  "textHash": "fnv1a64:9af5497760fe80b6",
+  "jsonHash": "fnv1a64:5cdcf45285898102",
+  "findings": []
+}

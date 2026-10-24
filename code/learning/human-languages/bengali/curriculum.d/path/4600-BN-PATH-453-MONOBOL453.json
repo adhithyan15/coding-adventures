@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-453-MONOBOL453",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "BN-EXT-453-MONOBOL453"
+  ],
+  "after": []
+}

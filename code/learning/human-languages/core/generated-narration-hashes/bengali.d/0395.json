@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:582610f4a8f6dc2a",
+  "lessonIds": [
+    "BN-C395-phlait",
+    "BN-C395-ranoye",
+    "BN-C395-kastoms",
+    "BN-C395-bidesh",
+    "BN-C395-pari-deoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch395.txt",
+  "json": "bengali/narration/ch395.json",
+  "textHash": "fnv1a64:6fe4924bb644d45e",
+  "jsonHash": "fnv1a64:d980358e1608cc53",
+  "findings": []
+}

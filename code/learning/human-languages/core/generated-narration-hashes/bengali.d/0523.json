@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:e43d110832550684",
+  "lessonIds": [
+    "BN-C523-kemp",
+    "BN-C523-durbin",
+    "BN-C523-porbotarohon",
+    "BN-C523-borshi",
+    "BN-C523-satrano",
+    "BN-R523-review-516-523"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch523.txt",
+  "json": "bengali/narration/ch523.json",
+  "textHash": "fnv1a64:81a8a66732783c6b",
+  "jsonHash": "fnv1a64:ccdb324d39f9e789",
+  "findings": []
+}

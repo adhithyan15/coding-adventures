@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C339-bhog-kora",
+    "language": "bengali",
+    "chapter": 339,
+    "sequence": 21500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc5663352e16f5c8"
+  },
+  "findings": []
+}

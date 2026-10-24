@@ -1,0 +1,11 @@
+{
+  "id": "BN-C296-shironam",
+  "pathSegment": "BN-PATH-296-SONGBAD296",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-296-SONGBAD296",
+      "order": 1
+    }
+  ]
+}

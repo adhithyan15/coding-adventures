@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 400,
+  "output": "bengali/book/chapters/ch400-addresses-and-signs.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

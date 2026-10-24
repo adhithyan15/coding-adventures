@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C346-shopoth-neoya",
+    "language": "bengali",
+    "chapter": 346,
+    "sequence": 21860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79c29b8cd58a75aa"
+  },
+  "findings": []
+}

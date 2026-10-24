@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-427-GRISHMO427",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "BN-EXT-427-GRISHMO427"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C352-ontorbhukto-kora",
+  "pathSegment": "BN-PATH-352-BOISHOMMO352",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-352-BOISHOMMO352",
+      "order": 4
+    }
+  ]
+}

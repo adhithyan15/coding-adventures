@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 373,
+  "output": "bengali/book/chapters/ch373-all-or-part.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

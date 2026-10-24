@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C411-chithi",
+    "language": "bengali",
+    "chapter": 411,
+    "sequence": 25400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0aa410e2edfe870"
+  },
+  "findings": []
+}

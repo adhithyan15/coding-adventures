@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C526-setar",
+    "language": "bengali",
+    "chapter": 526,
+    "sequence": 31740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b101eca947a2875d"
+  },
+  "findings": []
+}

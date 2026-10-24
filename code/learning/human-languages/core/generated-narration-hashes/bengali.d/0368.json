@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:e7efcfdf999199d6",
+  "lessonIds": [
+    "BN-C368-shorto",
+    "BN-C368-obostha",
+    "BN-C368-poristhiti",
+    "BN-C368-jotokkhon",
+    "BN-C368-othoba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch368.txt",
+  "json": "bengali/narration/ch368.json",
+  "textHash": "fnv1a64:aaaeaecc57d390a2",
+  "jsonHash": "fnv1a64:68802962a433577a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "Highways and Bends",
+  "label": "ch:bn-highways-and-bends",
+  "canDo": "I can describe a highway, its bends, its tar and its potholes.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C390-gorano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can describe a highway, its bends, its tar and its potholes.",
+    "assesses": [
+      "BN-LEX-C390-SOROK390-03",
+      "BN-LEX-C390-SOROK390-04",
+      "BN-LEX-C390-SOROK390-05"
+    ]
+  }
+}

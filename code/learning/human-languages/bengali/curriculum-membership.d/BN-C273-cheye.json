@@ -1,0 +1,11 @@
+{
+  "id": "BN-C273-cheye",
+  "pathSegment": "BN-PATH-273-COMPARE-TIME",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-273-COMPARE-TIME",
+      "order": 2
+    }
+  ]
+}

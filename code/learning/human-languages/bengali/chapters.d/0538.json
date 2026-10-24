@@ -1,0 +1,21 @@
+{
+  "chapter": 538,
+  "title": "Close Calls",
+  "label": "ch:bn-close-calls",
+  "canDo": "I can talk about disasters and dangers close at hand.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-R538-review-532-538",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 538: I can talk about disasters and dangers close at hand.",
+    "assesses": [
+      "BN-LEX-C538-DURJOG538-01",
+      "BN-LEX-C538-DURJOG538-02",
+      "BN-LEX-C538-DURJOG538-03",
+      "BN-LEX-C538-DURJOG538-04",
+      "BN-LEX-C538-DURJOG538-05"
+    ]
+  }
+}

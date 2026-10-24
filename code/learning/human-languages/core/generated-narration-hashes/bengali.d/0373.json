@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:4ebbb268eb0998a7",
+  "lessonIds": [
+    "BN-C373-ekebare",
+    "BN-C373-sompurno",
+    "BN-C373-ontoto",
+    "BN-C373-pray",
+    "BN-C373-angshik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch373.txt",
+  "json": "bengali/narration/ch373.json",
+  "textHash": "fnv1a64:d776c588746b5f9e",
+  "jsonHash": "fnv1a64:cc92cbd2774ed462",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C525-shis-deoya",
+    "language": "bengali",
+    "chapter": 525,
+    "sequence": 31730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a5725a0b2ed17f3"
+  },
+  "findings": []
+}

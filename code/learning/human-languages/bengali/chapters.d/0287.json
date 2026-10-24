@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "In a Split Second",
+  "label": "ch:bn-in-a-split-second",
+  "canDo": "I can tell what happened in one sudden moment.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C287-achhre-pora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 287: I can tell what happened in one sudden moment.",
+    "assesses": [
+      "BN-LEX-C287-MUHURTO287-03",
+      "BN-LEX-C287-MUHURTO287-04",
+      "BN-LEX-C287-MUHURTO287-05"
+    ]
+  }
+}

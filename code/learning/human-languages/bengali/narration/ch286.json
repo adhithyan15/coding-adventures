@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 286,
+  "title": "Strange Sights",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:25f4077feadf0ca6",
+  "lessons": [
+    {
+      "id": "BN-C286-uki-deoya",
+      "sequence": 18510,
+      "title": "উঁকি দেওয়া (ũki deoyā) — to peep; to peek",
+      "headword": "উঁকি দেওয়া",
+      "romanization": "ũki deoyā",
+      "gloss": "to peep; to peek",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:887801b9bd7decd3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to loot, then the Bengali for fraud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উঁকি দেওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উঁকি দেওয়া — ũki deoyā — \"to peep; to peek\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আওয়াজ শুনে আমি জানালা দিয়ে উঁকি দিলাম। āoyāj shune āmi jānālā diye ũki dilām. I heard a noise and peeped out of the window."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই শিশু জানালা দিয়ে উঁকি দিল, sei shishu jānālā diye ũki dilô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উঁকি দেওয়া (ũki deoyā) puts উঁকি — filed in CDIAL 1938 under Sanskrit udīkṣā, 'looking up', where a Bengali uki, 'careful watching', appears — before দেওয়া: to give a peep."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ũki deoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ũki deoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ũki deoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ũki deoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āoyāj shune āmi jānālā diye ũki dilām. — I heard a noise and peeped out of the window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āoyāj shune āmi jānālā diye ũki dilām.* — I heard a noise and peeped out of the window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to loot, then the Bengali for fraud, then say ũki deoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to loot, then the Bengali for fraud, then say *ũki deoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উঁকি দেওয়া (ũki deoyā) mean? (\"To peep; to peek\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C286-prodorshon-kora",
+      "sequence": 18520,
+      "title": "প্রদর্শন করা (prôdôrshôn kôrā) — to display; to exhibit",
+      "headword": "প্রদর্শন করা",
+      "romanization": "prôdôrshôn kôrā",
+      "gloss": "to display; to exhibit",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a1541cb39038c5f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for fraud, then the Bengali for to peep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রদর্শন করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রদর্শন করা — prôdôrshôn kôrā — \"to display; to exhibit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শিল্পী তাঁর নতুন ছবিগুলো প্রদর্শন করলেন। shilpī tā̃r nôtun chhôbigulo prôdôrshôn kôrlen. The artist put his new paintings on show."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি ছবিগুলো প্রদর্শন করলেন, tini chhôbigulo prôdôrshôn kôrlen."
+            },
+            {
+              "kind": "speech",
+              "text": "প্রদর্শনী, an exhibition, is built on the same noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রদর্শন করা (prôdôrshôn kôrā) puts প্রদর্শন — Sanskrit pradarśana, pra 'forth' with darśana 'a seeing', so a showing (Monier-Williams), taken over whole — before করা, to do: to put something on show."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôdôrshôn kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôdôrshôn kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôdôrshôn kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôdôrshôn kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shilpī tā̃r nôtun chhôbigulo prôdôrshôn kôrlen. — The artist put his new paintings on show.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shilpī tā̃r nôtun chhôbigulo prôdôrshôn kôrlen.* — The artist put his new paintings on show.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for fraud, then the Bengali for to peep, then say prôdôrshôn kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for fraud, then the Bengali for to peep, then say *prôdôrshôn kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রদর্শন করা (prôdôrshôn kôrā) mean? (\"To display; to exhibit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C286-odbhut",
+      "sequence": 18530,
+      "title": "অদ্ভুত (ôdbhut) — strange; odd",
+      "headword": "অদ্ভুত",
+      "romanization": "ôdbhut",
+      "gloss": "strange; odd",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5de21c815896e56a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to peep, then the Bengali for to exhibit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অদ্ভুত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অদ্ভুত — ôdbhut — \"strange; odd\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সেই রাতে আমরা পুকুরের পাশে একটা অদ্ভুত আলো দেখলাম। sei rāte āmrā pukurer pāshe ekṭā ôdbhut ālo dekhlām. That night we saw a strange light beside the pond."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অদ্ভুত (ôdbhut) is Sanskrit adbhuta, 'extraordinary, wonderful' (Monier-Williams); in Bengali it leans towards odd and uncanny."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôdbhut",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôdbhut*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôdbhut, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôdbhut*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sei rāte āmrā pukurer pāshe ekṭā ôdbhut ālo dekhlām. — That night we saw a strange light beside the pond.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sei rāte āmrā pukurer pāshe ekṭā ôdbhut ālo dekhlām.* — That night we saw a strange light beside the pond.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to peep, then the Bengali for to exhibit, then say ôdbhut again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to peep, then the Bengali for to exhibit, then say *ôdbhut* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অদ্ভুত (ôdbhut) mean? (\"Strange; odd\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C286-chhaya",
+      "sequence": 18540,
+      "title": "ছায়া (chhāyā) — a shadow; shade",
+      "headword": "ছায়া",
+      "romanization": "chhāyā",
+      "gloss": "a shadow; shade",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2702d524e2018ed7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to exhibit, then the Bengali for strange."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ছায়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ছায়া — chhāyā — \"a shadow; shade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাতে বারান্দায় একটা লম্বা ছায়া দেখে আমি ভয় পেলাম। rāte bārāndāy ekṭā lômbā chhāyā dekhe āmi bhôy pelām. I got scared when I saw a long shadow on the veranda at night."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ছায়া (chhāyā) is Sanskrit chāyā, 'shade, shadow' (Monier-Williams), unchanged. It is also the cool shade of a tree: গাছের ছায়ায়, in the shade of a tree."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhāyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhāyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhāyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhāyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāte bārāndāy ekṭā lômbā chhāyā dekhe āmi bhôy pelām. — I got scared when I saw a long shadow on the veranda at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāte bārāndāy ekṭā lômbā chhāyā dekhe āmi bhôy pelām.* — I got scared when I saw a long shadow on the veranda at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to exhibit, then the Bengali for strange, then say chhāyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to exhibit, then the Bengali for strange, then say *chhāyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ছায়া (chhāyā) mean? (\"A shadow; shade\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C286-lokkho-kora",
+      "sequence": 18550,
+      "title": "লক্ষ করা (lôkkhô kôrā) — to observe; to watch closely",
+      "headword": "লক্ষ করা",
+      "romanization": "lôkkhô kôrā",
+      "gloss": "to observe; to watch closely",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2596cad0dac761d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for strange, then the Bengali for a shadow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: লক্ষ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লক্ষ করা — lôkkhô kôrā — \"to observe; to watch closely\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পুলিশ অনেক দিন ধরে বাড়িটা লক্ষ করছিল। pulish ônek din dhôre bāṛiṭā lôkkhô kôrchhilô. The police had been watching the house for many days."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি লোকটাকে লক্ষ করলেন, tini lokṭāke lôkkhô kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লক্ষ করা (lôkkhô kôrā) puts Sanskrit lakṣa, 'a mark, a target' (Monier-Williams), before করা: to make something your mark, to keep your eyes on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lôkkhô kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lôkkhô kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lôkkhô kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lôkkhô kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulish ônek din dhôre bāṛiṭā lôkkhô kôrchhilô. — The police had been watching the house for many days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulish ônek din dhôre bāṛiṭā lôkkhô kôrchhilô.* — The police had been watching the house for many days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for strange, then the Bengali for a shadow, then say lôkkhô kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for strange, then the Bengali for a shadow, then say *lôkkhô kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does লক্ষ করা (lôkkhô kôrā) mean? (\"To observe; to watch closely\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

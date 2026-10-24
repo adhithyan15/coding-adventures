@@ -1,0 +1,11 @@
+{
+  "id": "BN-C440-obak-hooya",
+  "pathSegment": "BN-PATH-440-BISMOY440",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-440-BISMOY440",
+      "order": 3
+    }
+  ]
+}

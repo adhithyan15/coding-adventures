@@ -1,0 +1,829 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 538,
+  "title": "Close Calls",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:fa31301a4ed2b285",
+  "lessons": [
+    {
+      "id": "BN-C538-durjog",
+      "sequence": 32350,
+      "title": "দুর্যোগ (durjog) — a natural disaster",
+      "headword": "দুর্যোগ",
+      "romanization": "durjog",
+      "gloss": "a natural disaster",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3cd2cd046fef266e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a commitment, then the Bengali for to shrink back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দুর্যোগ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দুর্যোগ — durjog — \"a natural disaster\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দুর্যোগ (durjog) হলে আমরা স্কুলে আশ্রয় নেব। Durjog hôle āmrā skule āshrôy nebô. If disaster strikes, we will take shelter in the school."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দুর্যোগ (durjog) is Sanskrit duryoga, \"a bad contrivance\" (Monier-Williams): dur-, \"bad\", and yoga, \"joining\"; the sense \"a natural disaster\" is the modern language's own."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durjog",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durjog*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durjog, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durjog*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Durjog hôle āmrā skule āshrôy nebô. — If disaster strikes, we will take shelter in the school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Durjog hôle āmrā skule āshrôy nebô.* — If disaster strikes, we will take shelter in the school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a commitment, then the Bengali for to shrink back, then say durjog again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a commitment, then the Bengali for to shrink back, then say *durjog* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দুর্যোগ (durjog) mean? (\"A natural disaster\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C538-biporjoy",
+      "sequence": 32360,
+      "title": "বিপর্যয় (bipôrjôy) — a disaster; a calamity",
+      "headword": "বিপর্যয়",
+      "romanization": "bipôrjôy",
+      "gloss": "a disaster; a calamity",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da411b2e565a26a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to shrink back, then the Bengali for a natural disaster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিপর্যয়",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিপর্যয় — bipôrjôy — \"a disaster; a calamity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বন্যা হলে গ্রামে বড় বিপর্যয় হবে। Bônyā hôle grāme bôṛo bipôrjôy hôbe. If there is a flood, it will be a great calamity for the village."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিপর্যয় (bipôrjôy) is Sanskrit viparyaya, \"reversed, turned the wrong way\" (Monier-Williams): everything turned upside down."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bipôrjôy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bipôrjôy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bipôrjôy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bipôrjôy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Bônyā hôle grāme bôṛo bipôrjôy hôbe. — If there is a flood, it will be a great calamity for the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Bônyā hôle grāme bôṛo bipôrjôy hôbe.* — If there is a flood, it will be a great calamity for the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to shrink back, then the Bengali for a natural disaster, then say bipôrjôy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to shrink back, then the Bengali for a natural disaster, then say *bipôrjôy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিপর্যয় (bipôrjôy) mean? (\"A disaster; a calamity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C538-upokrom",
+      "sequence": 32370,
+      "title": "উপক্রম (upôkrôm) — being on the point of (something)",
+      "headword": "উপক্রম",
+      "romanization": "upôkrôm",
+      "gloss": "being on the point of (something)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a3f4a3dbb06f94a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a natural disaster, then the Bengali for a calamity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উপক্রম",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপক্রম — upôkrôm — \"being on the point of (something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আকাশ কালো, বৃষ্টি নামার উপক্রম। Ākāsh kālo, brishṭi nāmār upôkrôm. The sky is black; it's about to rain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপক্রম (upôkrôm) is a tatsama, Sanskrit upakrama, \"approach, setting about something\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôkrôm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôkrôm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôkrôm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôkrôm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ākāsh kālo, brishṭi nāmār upôkrôm. — The sky is black; it's about to rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ākāsh kālo, brishṭi nāmār upôkrôm.* — The sky is black; it's about to rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a natural disaster, then the Bengali for a calamity, then say upôkrôm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a natural disaster, then the Bengali for a calamity, then say *upôkrôm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উপক্রম (upôkrôm) mean? (\"Being on the point of (something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C538-asonno",
+      "sequence": 32380,
+      "title": "আসন্ন (āsônnô) — imminent; close at hand",
+      "headword": "আসন্ন",
+      "romanization": "āsônnô",
+      "gloss": "imminent; close at hand",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c19df82c14279e8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a calamity, then the Bengali for on the point of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আসন্ন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আসন্ন — āsônnô — \"imminent; close at hand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আসন্ন (āsônnô) ঝড়ের জন্য নৌকাগুলো ঘাটে ফিরল। Āsônnô jhôṛer jônyô noukāgulo ghāṭe phirlô. Because of the coming storm the boats returned to the landing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আসন্ন (āsônnô) is a tatsama, Sanskrit āsanna, \"set down near, close at hand\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsônnô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsônnô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsônnô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsônnô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āsônnô jhôṛer jônyô noukāgulo ghāṭe phirlô. — Because of the coming storm the boats returned to the landing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āsônnô jhôṛer jônyô noukāgulo ghāṭe phirlô.* — Because of the coming storm the boats returned to the landing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a calamity, then the Bengali for on the point of, then say āsônnô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a calamity, then the Bengali for on the point of, then say *āsônnô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আসন্ন (āsônnô) mean? (\"Imminent; close at hand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C538-apotkalin",
+      "sequence": 32390,
+      "title": "আপৎকালীন (āpôtkālīn) — for emergencies; emergency",
+      "headword": "আপৎকালীন",
+      "romanization": "āpôtkālīn",
+      "gloss": "for emergencies; emergency",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ec2a164cc981d63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for on the point of, then the Bengali for imminent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আপৎকালীন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আপৎকালীন — āpôtkālīn — \"for emergencies; emergency\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এটা হাসপাতালের আপৎকালীন দরজা। Eṭā hāspātāler āpôtkālīn dôrjā. This is the hospital's emergency door."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আপৎকালীন (āpôtkālīn) is built on Sanskrit āpatkāla, \"a time of misfortune\" (Monier-Williams), with the ending -īna, \"belonging to\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpôtkālīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpôtkālīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpôtkālīn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpôtkālīn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Eṭā hāspātāler āpôtkālīn dôrjā. — This is the hospital's emergency door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Eṭā hāspātāler āpôtkālīn dôrjā.* — This is the hospital's emergency door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for on the point of, then the Bengali for imminent, then say āpôtkālīn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for on the point of, then the Bengali for imminent, then say *āpôtkālīn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আপৎকালীন (āpôtkālīn) mean? (\"For emergencies; emergency\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R538-review-532-538",
+      "sequence": 32400,
+      "title": "Looking back: from What Lies Ahead to Close Calls",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from What Lies Ahead to Close Calls",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c71e8c617ae693a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for destiny and what is bound to happen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "destiny, what is bound to happen, to sense trouble coming, a forecast, an astrologer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: destiny, what is bound to happen, to sense trouble coming, a forecast, an astrologer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "by chance, coincidental, a lucky break, to slip away, a lottery",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: by chance, coincidental, a lucky break, to slip away, a lottery]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to bet, gambling, a coin toss, auspicious, to come true",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to bet, gambling, a coin toss, auspicious, to come true]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a seat belt, insurance, a guarantee, well protected, a fire extinguisher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a seat belt, insurance, a guarantee, well protected, a fire extinguisher]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a recommendation, consent, a kind of thing, a style, to fit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a recommendation, consent, a kind of thing, a style, to fit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to make up one's mind, with no other choice, half-willing, a commitment, to shrink back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to make up one's mind, with no other choice, half-willing, a commitment, to shrink back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a natural disaster, a calamity, on the point of, imminent, for emergencies",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a natural disaster, a calamity, on the point of, imminent, for emergencies]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Destiny? (নিয়তি, niyôti.) What is bound to happen? (ভবিতব্য, bhôbitôbyô.) To sense trouble coming? (আঁচ করা, ā̃ch kôrā.) A forecast? (পূর্বাভাস, pūrbābhās.) An astrologer? (জ্যোতিষী, jyotishī.) By chance? (দৈবাৎ, doibāt.) Coincidental? (কাকতালীয়, kāktālīyô.) A lucky break? (মওকা, môokā.) To slip away? (ফসকানো, phôskāno.) A lottery? (লটারি, lôṭāri.) To bet? (বাজি ধরা, bāji dhôrā.) Gambling? (জুয়া, juyā.) A coin toss? (টস, ṭôs.) Auspicious? (শুভ, shubhô.) To come true? (ফলা, phôlā.) A seat belt? (সিটবেল্ট, siṭbelṭ.) Insurance? (বিমা, bimā.) A guarantee? (গ্যারান্টি, gærānṭi.) Well protected? (সুরক্ষিত, surôkkhit.) A fire extinguisher? (অগ্নিনির্বাপক, ôgninirbāpôk.) A recommendation? (সুপারিশ, supārish.) Consent? (সম্মতি, sômmôti.) A kind of thing? (রকম, rôkôm.) A style? (ধরন, dhôrôn.) To fit? (খাপ খাওয়া, khāp khāoyā.) To make up one's mind? (মনস্থির করা, mônôsthir kôrā.) With no other choice? (অগত্যা, ôgôtyā.) Half-willing? (নিমরাজি, nimrāji.) A commitment? (অঙ্গীকার, ônggīkār.) To shrink back? (পিছপা হওয়া, pichhpā hôoyā.) A natural disaster? (দুর্যোগ, durjog.) A calamity? (বিপর্যয়, bipôrjôy.) On the point of? (উপক্রম, upôkrôm.) Imminent? (আসন্ন, āsônnô.) For emergencies? (আপৎকালীন, āpôtkālīn.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

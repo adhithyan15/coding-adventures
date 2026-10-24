@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:2182ee2e07a3c2ba",
+  "lessonIds": [
+    "BN-C408-basa",
+    "BN-C408-bharate",
+    "BN-C408-ogrim",
+    "BN-C408-jamanot",
+    "BN-C408-bosbas-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch408.txt",
+  "json": "bengali/narration/ch408.json",
+  "textHash": "fnv1a64:0bc6ac2624386085",
+  "jsonHash": "fnv1a64:43e21b9b6067d74c",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C490-onath",
+    "language": "bengali",
+    "chapter": 490,
+    "sequence": 29680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd0bce3f4492c659"
+  },
+  "findings": []
+}

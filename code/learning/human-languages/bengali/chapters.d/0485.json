@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "A New Baby",
+  "label": "ch:bn-a-new-baby",
+  "canDo": "I can talk about a pregnancy, a birth and a new baby.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C485-dolna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can talk about a pregnancy, a birth and a new baby.",
+    "assesses": [
+      "BN-LEX-C485-BACHCHA485-03",
+      "BN-LEX-C485-BACHCHA485-04",
+      "BN-LEX-C485-BACHCHA485-05"
+    ]
+  }
+}

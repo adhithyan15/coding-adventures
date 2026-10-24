@@ -1,0 +1,11 @@
+{
+  "id": "BN-C496-podonnoti",
+  "pathSegment": "BN-PATH-496-PODONNOTI496",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-496-PODONNOTI496",
+      "order": 1
+    }
+  ]
+}

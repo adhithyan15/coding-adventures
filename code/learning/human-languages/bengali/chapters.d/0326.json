@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "Wonders",
+  "label": "ch:bn-wonders",
+  "canDo": "I can describe wonders, miracles and hidden treasure.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C326-miliye-jaoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can describe wonders, miracles and hidden treasure.",
+    "assesses": [
+      "BN-LEX-C326-ASHCHORJO326-03",
+      "BN-LEX-C326-ASHCHORJO326-04",
+      "BN-LEX-C326-ASHCHORJO326-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C415-pasboi",
+  "pathSegment": "BN-PATH-415-SUD415",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-415-SUD415",
+      "order": 1
+    }
+  ]
+}

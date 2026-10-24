@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:fde06a0073a806b5",
+  "lessonIds": [
+    "BN-C312-onushthan",
+    "BN-C312-mala",
+    "BN-C312-sanai",
+    "BN-C312-ulu",
+    "BN-C312-borjatri"
+  ],
+  "tex": "bengali/book/chapters/ch312-a-wedding-in-the-family.tex"
+}

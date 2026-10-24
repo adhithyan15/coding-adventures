@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:3d2128500084952e",
+  "lessonIds": [
+    "BN-C331-uddeshyo",
+    "BN-C331-upokar",
+    "BN-C331-labh",
+    "BN-C331-loksan",
+    "BN-C331-upojogi"
+  ],
+  "tex": "bengali/book/chapters/ch331-what-it-is-for.tex"
+}

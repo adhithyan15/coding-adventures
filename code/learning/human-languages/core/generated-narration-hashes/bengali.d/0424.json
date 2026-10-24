@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:4476553276bd2ca4",
+  "lessonIds": [
+    "BN-C424-sel",
+    "BN-C424-ophar",
+    "BN-C424-monda",
+    "BN-C424-chahida",
+    "BN-C424-othanama-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch424.txt",
+  "json": "bengali/narration/ch424.json",
+  "textHash": "fnv1a64:d5308e164e69d879",
+  "jsonHash": "fnv1a64:d06e9a76ce54d30e",
+  "findings": []
+}

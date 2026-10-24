@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:a34aae4162a8e00d",
+  "lessonIds": [
+    "BN-C384-rel",
+    "BN-C384-kamra",
+    "BN-C384-barth",
+    "BN-C384-lokal",
+    "BN-C384-huisol-deoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch384.txt",
+  "json": "bengali/narration/ch384.json",
+  "textHash": "fnv1a64:a1c8a896782f0212",
+  "jsonHash": "fnv1a64:bf4e9165daeddfe6",
+  "findings": []
+}

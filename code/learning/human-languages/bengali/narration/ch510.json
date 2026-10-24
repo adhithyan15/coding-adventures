@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 510,
+  "title": "Cleaning Day",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5b07aedc10b871e7",
+  "lessons": [
+    {
+      "id": "BN-C510-phinail",
+      "sequence": 30920,
+      "title": "ফিনাইল (phināil) — phenyl (a floor disinfectant)",
+      "headword": "ফিনাইল",
+      "romanization": "phināil",
+      "gloss": "phenyl (a floor disinfectant)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25cc2131d5754e21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a cushion, then the Bengali for to spread out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ফিনাইল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফিনাইল — phināil — \"phenyl (a floor disinfectant)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি জলে ফিনাইল মিশিয়ে মেঝে মুছলাম। Āmi jôle phināil mishiye mejhe muchhlām. I mixed phenyl into the water and mopped the floor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফিনাইল (phināil) is borrowed from English phenyl, the name of a disinfectant used for washing floors."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phināil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phināil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phināil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phināil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āmi jôle phināil mishiye mejhe muchhlām. — I mixed phenyl into the water and mopped the floor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āmi jôle phināil mishiye mejhe muchhlām.* — I mixed phenyl into the water and mopped the floor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a cushion, then the Bengali for to spread out, then say phināil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a cushion, then the Bengali for to spread out, then say *phināil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ফিনাইল (phināil) mean? (\"Phenyl (a floor disinfectant)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C510-jhul",
+      "sequence": 30930,
+      "title": "ঝুল (jhul) — cobwebs; sooty dust",
+      "headword": "ঝুল",
+      "romanization": "jhul",
+      "gloss": "cobwebs; sooty dust",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc66538a6c68dadb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to spread out, then the Bengali for floor disinfectant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঝুল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঝুল — jhul — \"cobwebs; sooty dust\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সিলিং থেকে আমি ঝুল ঝাড়লাম। Siling theke āmi jhul jhāṛlām. I brushed the cobwebs off the ceiling."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঝুল (jhul) probably belongs with jhulyati, \"swings, hangs\" (CDIAL 5406), the root of ঝোলানো: the dust that hangs from the ceiling."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhul",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhul*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhul, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhul*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Siling theke āmi jhul jhāṛlām. — I brushed the cobwebs off the ceiling.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Siling theke āmi jhul jhāṛlām.* — I brushed the cobwebs off the ceiling.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to spread out, then the Bengali for floor disinfectant, then say jhul again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to spread out, then the Bengali for floor disinfectant, then say *jhul* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঝুল (jhul) mean? (\"Cobwebs; sooty dust\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C510-saph",
+      "sequence": 30940,
+      "title": "সাফ (sāph) — clean; cleared away",
+      "headword": "সাফ",
+      "romanization": "sāph",
+      "gloss": "clean; cleared away",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:969d56a8c8a67575",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for floor disinfectant, then the Bengali for cobwebs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সাফ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাফ — sāph — \"clean; cleared away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ঝড়ের পরে আমরা উঠোনটা সাফ করলাম। Jhôṛer pôre āmrā uṭhonṭā sāph kôrlām. After the storm we cleared the courtyard."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাফ (sāph) is usually traced to Arabic ṣāf, \"pure, clear\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāph",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāph*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāph, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāph*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Jhôṛer pôre āmrā uṭhonṭā sāph kôrlām. — After the storm we cleared the courtyard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Jhôṛer pôre āmrā uṭhonṭā sāph kôrlām.* — After the storm we cleared the courtyard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for floor disinfectant, then the Bengali for cobwebs, then say sāph again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for floor disinfectant, then the Bengali for cobwebs, then say *sāph* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সাফ (sāph) mean? (\"Clean; cleared away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C510-ningrano",
+      "sequence": 30950,
+      "title": "নিংড়ানো (ningṛāno) — to wring out",
+      "headword": "নিংড়ানো",
+      "romanization": "ningṛāno",
+      "gloss": "to wring out",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:458f7e9cddd5fe57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for cobwebs, then the Bengali for cleared away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নিংড়ানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিংড়ানো — ningṛāno — \"to wring out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি ভিজে গামছাটা নিংড়ালাম। Āmi bhije gāmchhāṭā ningṛālām. I wrung out the wet towel."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি কাপড়টা নিংড়ালেন, tini kāpṛṭā ningṛālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিংড়ানো (ningṛāno) comes from a reconstructed nirgaḍati, \"drips out\"; CDIAL lists Bengali niṅṛāna, \"to make drip, to squeeze\" (CDIAL 7293)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ningṛāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ningṛāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ningṛāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ningṛāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āmi bhije gāmchhāṭā ningṛālām. — I wrung out the wet towel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āmi bhije gāmchhāṭā ningṛālām.* — I wrung out the wet towel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for cobwebs, then the Bengali for cleared away, then say ningṛāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for cobwebs, then the Bengali for cleared away, then say *ningṛāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does নিংড়ানো (ningṛāno) mean? (\"To wring out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C510-maja",
+      "sequence": 30960,
+      "title": "মাজা (mājā) — to scour (pots); to brush (teeth)",
+      "headword": "মাজা",
+      "romanization": "mājā",
+      "gloss": "to scour (pots); to brush (teeth)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a851a48ee6b8748",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for cleared away, then the Bengali for to wring out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মাজা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মাজা — mājā — \"to scour (pots); to brush (teeth)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাতে শোয়ার আগে আমি দাঁত মাজি। Rāte shoyār āge āmi dā̃t māji. I brush my teeth at night before bed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি কড়াইটা মাজলেন, tini kôṛāiṭā mājlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মাজা (mājā) is a tadbhava: CDIAL lists Bengali mājā, \"to scour\", under Sanskrit mārjati, \"wipes clean\" (CDIAL 10080)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Rāte shoyār āge āmi dā̃t māji. — I brush my teeth at night before bed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Rāte shoyār āge āmi dā̃t māji.* — I brush my teeth at night before bed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for cleared away, then the Bengali for to wring out, then say mājā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for cleared away, then the Bengali for to wring out, then say *mājā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মাজা (mājā) mean? (\"To scour (pots); to brush (teeth)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

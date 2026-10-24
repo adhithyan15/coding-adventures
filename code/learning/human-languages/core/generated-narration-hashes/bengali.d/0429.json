@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:76ec5101c06fa321",
+  "lessonIds": [
+    "BN-C429-kalboishakhi",
+    "BN-C429-shilabrishti",
+    "BN-C429-gorjano",
+    "BN-C429-kapano",
+    "BN-C429-nuye-pora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch429.txt",
+  "json": "bengali/narration/ch429.json",
+  "textHash": "fnv1a64:889ffe4a5ccb0625",
+  "jsonHash": "fnv1a64:a9328880dd293ece",
+  "findings": []
+}

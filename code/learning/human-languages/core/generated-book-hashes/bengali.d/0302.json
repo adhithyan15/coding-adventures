@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:81b41ea823a56122",
+  "lessonIds": [
+    "BN-C302-kahini",
+    "BN-C302-shonano",
+    "BN-C302-bornona-kora",
+    "BN-C302-ghotano",
+    "BN-C302-kromosh"
+  ],
+  "tex": "bengali/book/chapters/ch302-telling-it-well.tex"
+}

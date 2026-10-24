@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C441-atongko",
+    "language": "bengali",
+    "chapter": 441,
+    "sequence": 27150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0814b11503a9f14"
+  },
+  "findings": []
+}

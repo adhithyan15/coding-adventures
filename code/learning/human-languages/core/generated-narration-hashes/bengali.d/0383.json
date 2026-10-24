@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:f8ca6795057d53fa",
+  "lessonIds": [
+    "BN-C383-sarthok",
+    "BN-C383-britha",
+    "BN-C383-sontushto",
+    "BN-C383-akkhep",
+    "BN-C383-bertho-hooya",
+    "BN-R383-review-377-383",
+    "BN-R383-review-final-383"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch383.txt",
+  "json": "bengali/narration/ch383.json",
+  "textHash": "fnv1a64:14aed070b2e9e053",
+  "jsonHash": "fnv1a64:c0e83fffcecf2cc3",
+  "findings": []
+}

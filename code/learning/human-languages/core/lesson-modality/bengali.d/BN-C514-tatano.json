@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C514-tatano",
+    "language": "bengali",
+    "chapter": 514,
+    "sequence": 31130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46a06aded52dda25"
+  },
+  "findings": []
+}

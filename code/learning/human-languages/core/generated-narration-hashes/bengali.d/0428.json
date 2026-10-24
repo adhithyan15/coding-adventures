@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:a21a493c3ed8df63",
+  "lessonIds": [
+    "BN-C428-ardro",
+    "BN-C428-bhepsa",
+    "BN-C428-jhapsa",
+    "BN-C428-setsete",
+    "BN-C428-dheke-jaoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch428.txt",
+  "json": "bengali/narration/ch428.json",
+  "textHash": "fnv1a64:b9cf57f0f521a139",
+  "jsonHash": "fnv1a64:67b9d669d4ffdcab",
+  "findings": []
+}

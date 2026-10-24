@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:2cc1da8222521e6d",
+  "lessonIds": [
+    "BN-C374-hushiyar",
+    "BN-C374-protirodh-kora",
+    "BN-C374-thekano",
+    "BN-C374-niyontron-kora",
+    "BN-C374-nojor"
+  ],
+  "tex": "bengali/book/chapters/ch374-keeping-danger-away.tex"
+}

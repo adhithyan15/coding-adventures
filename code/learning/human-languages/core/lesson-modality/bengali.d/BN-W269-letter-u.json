@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "BN-W269-letter-u",
+    "language": "bengali",
+    "chapter": 269,
+    "sequence": 16770,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ee2c77d51a1b5ecf",
+    "detachableSegments": [
+      "Script you'll notice: উ",
+      "Writing: উ — copy the printed shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

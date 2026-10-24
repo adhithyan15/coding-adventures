@@ -1,0 +1,21 @@
+{
+  "chapter": 383,
+  "title": "Worth the Effort",
+  "label": "ch:bn-worth-the-effort",
+  "canDo": "I can say whether an effort was worth it and what I would change.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-R383-review-final-383",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can say whether an effort was worth it and what I would change.",
+    "assesses": [
+      "BN-LEX-C383-SARTHOK383-01",
+      "BN-LEX-C383-SARTHOK383-02",
+      "BN-LEX-C383-SARTHOK383-03",
+      "BN-LEX-C383-SARTHOK383-04",
+      "BN-LEX-C383-SARTHOK383-05"
+    ]
+  }
+}

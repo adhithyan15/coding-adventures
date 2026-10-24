@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:70d501dcab7fec01",
+  "lessonIds": [
+    "BN-C319-dhvongsaboshesh",
+    "BN-C319-murti",
+    "BN-C319-khonon-kora",
+    "BN-C319-shilalipi",
+    "BN-C319-mudra"
+  ],
+  "tex": "bengali/book/chapters/ch319-digging-up-the-past.tex"
+}

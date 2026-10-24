@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 384,
+  "title": "Rails and Carriages",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a34aae4162a8e00d",
+  "lessons": [
+    {
+      "id": "BN-C384-rel",
+      "sequence": 24000,
+      "title": "রেল (rel) — a railway; the railways",
+      "headword": "রেল",
+      "romanization": "rel",
+      "gloss": "a railway; the railways",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03f86aad663f08fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a female singer, then the Bengali for a female dancer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: রেল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রেল — rel — \"a railway; the railways\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার বাবা রেলে কাজ করতেন। āmār bābā rele kāj kôrten. My father used to work on the railways."
+            },
+            {
+              "kind": "speech",
+              "text": "রেলে, on the railways; রেলের, of the railway: রেলের টিকিট, a railway ticket."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রেল (rel) is English rail, taken over in the age of steam for the line and then for the whole railway."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rel, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rel*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmār bābā rele kāj kôrten. — My father used to work on the railways.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmār bābā rele kāj kôrten.* — My father used to work on the railways.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a female singer, then the Bengali for a female dancer, then say rel again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a female singer, then the Bengali for a female dancer, then say *rel* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does রেল (rel) mean? (\"A railway; the railways\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C384-kamra",
+      "sequence": 24010,
+      "title": "কামরা (kāmrā) — a compartment (of a train); a chamber",
+      "headword": "কামরা",
+      "romanization": "kāmrā",
+      "gloss": "a compartment (of a train); a chamber",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1d6de4044cc670d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a female dancer, then the Bengali for a railway."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কামরা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কামরা — kāmrā — \"a compartment (of a train); a chamber\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ট্রেনের এই কামরাটা খালি। ṭrener ei kāmrāṭā khāli. This compartment of the train is empty."
+            },
+            {
+              "kind": "speech",
+              "text": "With the classifier: কামরাটা, the compartment; মহিলাদের কামরা (kāmrā), the ladies' compartment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কামরা (kāmrā) is usually traced to Portuguese câmara, \"a room, a chamber\", one of the words the Portuguese left along the Bengal coast; in Bengali it settled on the rooms of a train."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāmrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāmrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāmrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāmrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭrener ei kāmrāṭā khāli. — This compartment of the train is empty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭrener ei kāmrāṭā khāli.* — This compartment of the train is empty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a female dancer, then the Bengali for a railway, then say kāmrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a female dancer, then the Bengali for a railway, then say *kāmrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কামরা (kāmrā) mean? (\"A compartment (of a train); a chamber\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C384-barth",
+      "sequence": 24020,
+      "title": "বার্থ (bārth) — a berth (on a train)",
+      "headword": "বার্থ",
+      "romanization": "bārth",
+      "gloss": "a berth (on a train)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3eed9031cf205c00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a railway, then the Bengali for a compartment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বার্থ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বার্থ — bārth — \"a berth (on a train)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাতের ট্রেনে আমার বার্থটা ওপরে ছিল। rāter ṭrene āmār bārthṭā opôre chhilô. On the night train my berth was the upper one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বার্থ (bārth) is borrowed from English berth, a sleeping place on a ship or train; the English th is said with থ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārth*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārth, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārth*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāter ṭrene āmār bārthṭā opôre chhilô. — On the night train my berth was the upper one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāter ṭrene āmār bārthṭā opôre chhilô.* — On the night train my berth was the upper one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a railway, then the Bengali for a compartment, then say bārth again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a railway, then the Bengali for a compartment, then say *bārth* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বার্থ (bārth) mean? (\"A berth (on a train)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C384-lokal",
+      "sequence": 24030,
+      "title": "লোকাল (lokāl) — a local train; a stopping train",
+      "headword": "লোকাল",
+      "romanization": "lokāl",
+      "gloss": "a local train; a stopping train",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ba4cd6c4b41be2f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a compartment, then the Bengali for a berth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: লোকাল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লোকাল — lokāl — \"a local train; a stopping train\"."
+            },
+            {
+              "kind": "speech",
+              "text": "লোকাল ট্রেন সব স্টেশনে থামে। lokāl ṭren sôb sṭeshône thāme. The local train stops at every station."
+            },
+            {
+              "kind": "speech",
+              "text": "On its own লোকাল (lokāl) is the train: লোকালে এলাম, I came on the local."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লোকাল (lokāl) is borrowed from English local, short for local train, the slow suburban train that stops everywhere."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokāl ṭren sôb sṭeshône thāme. — The local train stops at every station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokāl ṭren sôb sṭeshône thāme.* — The local train stops at every station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a compartment, then the Bengali for a berth, then say lokāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a compartment, then the Bengali for a berth, then say *lokāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does লোকাল (lokāl) mean? (\"A local train; a stopping train\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C384-huisol-deoya",
+      "sequence": 24040,
+      "title": "হুইসল দেওয়া (huisôl deoyā) — to blow a whistle (of a train or a guard)",
+      "headword": "হুইসল দেওয়া",
+      "romanization": "huisôl deoyā",
+      "gloss": "to blow a whistle (of a train or a guard)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c713dacb01a402b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a berth, then the Bengali for a local train."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হুইসল দেওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হুইসল দেওয়া — huisôl deoyā — \"to blow a whistle (of a train or a guard)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ট্রেনটা হুইসল দিয়ে স্টেশন ছাড়ল। ṭrenṭā huisôl diye sṭeshôn chhāṛlô. The train blew its whistle and left the station."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই ট্রেন হুইসল দিল, sei ṭren huisôl dilô."
+            },
+            {
+              "kind": "speech",
+              "text": "Used of the engine's whistle and of the guard's whistle on the platform."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হুইসল দেওয়া (huisôl deoyā) joins whistle, borrowed from English, to দেওয়া, to give: you give a whistle in Bengali as you give a push."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huisôl deoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huisôl deoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huisôl deoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huisôl deoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭrenṭā huisôl diye sṭeshôn chhāṛlô. — The train blew its whistle and left the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭrenṭā huisôl diye sṭeshôn chhāṛlô.* — The train blew its whistle and left the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a berth, then the Bengali for a local train, then say huisôl deoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a berth, then the Bengali for a local train, then say *huisôl deoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হুইসল দেওয়া (huisôl deoyā) mean? (\"To blow a whistle (of a train or a guard)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

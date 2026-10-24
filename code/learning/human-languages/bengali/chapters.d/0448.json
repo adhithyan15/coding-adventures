@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "Longing",
+  "label": "ch:bn-longing",
+  "canDo": "I can talk about missing someone and longing for something.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C448-hahakar-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can talk about missing someone and longing for something.",
+    "assesses": [
+      "BN-LEX-C448-BIROHO448-03",
+      "BN-LEX-C448-BIROHO448-04",
+      "BN-LEX-C448-BIROHO448-05"
+    ]
+  }
+}

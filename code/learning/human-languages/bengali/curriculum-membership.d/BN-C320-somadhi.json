@@ -1,0 +1,11 @@
+{
+  "id": "BN-C320-somadhi",
+  "pathSegment": "BN-PATH-320-SMRITI320",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-320-SMRITI320",
+      "order": 2
+    }
+  ]
+}

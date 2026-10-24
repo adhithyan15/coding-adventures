@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:5b2d5ee4c1eafab6",
+  "lessonIds": [
+    "BN-C504-robot",
+    "BN-C504-svoyongkriyo",
+    "BN-C504-jenaretor",
+    "BN-C504-jong-dhora",
+    "BN-C504-motor"
+  ],
+  "tex": "bengali/book/chapters/ch504-machines.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-424-DAM424",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "BN-EXT-424-DAM424"
+  ],
+  "after": []
+}

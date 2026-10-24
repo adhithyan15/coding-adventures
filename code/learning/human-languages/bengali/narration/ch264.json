@@ -1,0 +1,781 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 264,
+  "title": "What Happened, and Where I Was",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:9e2084871dfd3955",
+  "lessons": [
+    {
+      "id": "BN-C264-gelam",
+      "sequence": 16500,
+      "title": "আমি গেলাম (āmi gelām) — the past, person by person",
+      "headword": "আমি গেলাম",
+      "romanization": "āmi gelām",
+      "gloss": "I went — the simple past, person by person, and the stems that change",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5ec3c4c0a1d1961",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a female singer and a female dancer. (gāyikā, nôrtôkī.) Then the line from your first meeting: আলাপ করে ভালো লাগলো, \"pleased to meet you\"."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Its last word is a past, \"it felt good\". This book now writes that ending -ল: লাগল (lāglô). You will meet -লো in print too; they sound the same."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the past, person by person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাল আমি বাজারে গেলাম। kāl āmi bājāre gelām. — \"Yesterday I went to the market.\""
+            },
+            {
+              "kind": "speech",
+              "text": "With a past, কাল is yesterday. গেলাম is যাওয়া in the past: the stem গে-, then -ল-, then the person."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি / আমরা গেলাম (gelām) — I went, we went."
+            },
+            {
+              "kind": "speech",
+              "text": "তুমি / তোমরা গেলে (gele) — you went, to a friend or to several."
+            },
+            {
+              "kind": "speech",
+              "text": "সে / তারা গেল (gelô) — he or she went; they went."
+            },
+            {
+              "kind": "speech",
+              "text": "আপনি / তিনি গেলেন (gelen) — you went, he or she went, with respect."
+            },
+            {
+              "kind": "speech",
+              "text": "They are the present's four slots: যাই, যাও, যান, and one not written before, সে যায় (she jāy), \"he or she goes\": -য় after a vowel, -এ after a consonant, সে বসে."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the past stems",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Most verbs put -ল- on the stem: বসা becomes বসলাম (bôslām), দেখা becomes দেখলাম (dekhlām), with a plain e for the æ of দেখা. An এ said e rises to ি, an ও to ু: কেনা becomes কিনলাম (kinlām), ফেরা becomes ফিরলাম (phirlām), শোনা becomes শুনলাম (shunlām)."
+            },
+            {
+              "kind": "speech",
+              "text": "Eight verbs change the stem:"
+            },
+            {
+              "kind": "speech",
+              "text": "যাওয়া becomes গেলাম (gelām) — went."
+            },
+            {
+              "kind": "speech",
+              "text": "আসা becomes এলাম (elām), সে এল (she elô) — came."
+            },
+            {
+              "kind": "speech",
+              "text": "খাওয়া becomes খেলাম (khelām) — ate, drank."
+            },
+            {
+              "kind": "speech",
+              "text": "নেওয়া becomes নিলাম (nilām) — took."
+            },
+            {
+              "kind": "speech",
+              "text": "দেওয়া (of জল দেওয়া) becomes দিলাম (dilām) — gave."
+            },
+            {
+              "kind": "speech",
+              "text": "হওয়া becomes হলাম (hôlām); কী হল? (kī hôlô?) — what happened?"
+            },
+            {
+              "kind": "speech",
+              "text": "চাওয়া becomes চাইলাম (chāilām), সে চাইল (she chāilô) — wanted, asked for."
+            },
+            {
+              "kind": "speech",
+              "text": "পাওয়া becomes পেলাম (pelām) — got, found."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Yesterday I went to the market\" — kāl āmi bājāre gelām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Yesterday I went to the market\" — *kāl āmi bājāre gelām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In the evening she came back home\" — sôndhyāy she bāṛi phirlô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In the evening she came back home\" — *sôndhyāy she bāṛi phirlô*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "BN-C264-gelam-r1",
+              "prompt": "Say that you went to the market yesterday, then that she came back home.",
+              "assesses": [
+                "BN-GRAMMAR-C264-PAST-PERSON-01",
+                "BN-GRAMMAR-C264-PAST-STEMS-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "kāl āmi bājāre gelām; she bāṛi phirlô",
+                "কাল আমি বাজারে গেলাম। সে বাড়ি ফিরল।",
+                "kāl āmi bājāre gelām; she bāṛi elô"
+              ],
+              "feedback": {
+                "correct": "gelām for I; phirlô, with the raised i, for she.",
+                "incorrect": "Stem, then -l-, then the person: ge-l-ām, phir-l-ô."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I went\"? (গেলাম.) \"He came\"? (এল.) \"You went\", with respect? (গেলেন.) \"What happened?\" (কী হল?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C264-chhilam",
+      "sequence": 16510,
+      "title": "আমি ছিলাম (āmi chhilām) — was, and was not",
+      "headword": "আমি ছিলাম",
+      "romanization": "āmi chhilām",
+      "gloss": "I was — the past of আছি, and ছিল না, was not",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6343aca6ba7bb61e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I went\" and \"she came\". (gelām, she elô.) Then আছি, \"I am, I am there\": this lesson puts it in the past."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ছিলাম",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাল আমি বাড়িতে ছিলাম। kāl āmi bāṛite chhilām. — \"Yesterday I was at home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "আছি has a past of its own, ছিলাম, with the endings of the last lesson:"
+            },
+            {
+              "kind": "speech",
+              "text": "আমি / আমরা ছিলাম (chhilām) — I was, we were."
+            },
+            {
+              "kind": "speech",
+              "text": "তুমি ছিলে (chhile) — you were."
+            },
+            {
+              "kind": "speech",
+              "text": "সে / তারা ছিল (chhilô) — he or she was; they were."
+            },
+            {
+              "kind": "speech",
+              "text": "আপনি / তিনি ছিলেন (chhilen) — with respect."
+            },
+            {
+              "kind": "speech",
+              "text": "In the present, Bengali says \"is\" with no verb at all: সে ভালো. In the past it needs one: সে ক্লান্ত ছিল (she klāntô chhilô), \"she was tired\". ছিল also says \"there was\": গ্রামে একটা বড় পুকুর ছিল (grāme ekṭā bôṛo pukur chhilô), \"there was a big pond in the village\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: ছিল না",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নেই, \"there is not\", which you know, has no past of its own. Its past is ছিল না, with না after the verb, as in the present:"
+            },
+            {
+              "kind": "speech",
+              "text": "আজ বাজারে মাছ নেই। কালও ছিল না। āj bājāre māchh nei. kālo chhilô nā. — \"There is no fish at the market today. There was none yesterday either.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Yesterday I was at home\" — kāl āmi bāṛite chhilām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Yesterday I was at home\" — *kāl āmi bāṛite chhilām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She was tired\" — she klāntô chhilô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She was tired\" — *she klāntô chhilô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"There was a pond in the village, but no river\" — grāme ekṭā pukur chhilô, kintu nôdī chhilô nā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"There was a pond in the village, but no river\" — *grāme ekṭā pukur chhilô, kintu nôdī chhilô nā*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "BN-C264-chhilam-r1",
+              "prompt": "Say that you were at home yesterday, and that he was not.",
+              "assesses": [
+                "BN-GRAMMAR-C264-WAS-01",
+                "BN-GRAMMAR-C264-WAS-NOT-01"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "kāl āmi bāṛite chhilām; she chhilô nā",
+                "কাল আমি বাড়িতে ছিলাম। সে ছিল না।",
+                "kāl āmi bāṛite chhilām, kintu she chhilô nā"
+              ],
+              "feedback": {
+                "correct": "chhilām for I; chhilô nā, was not, for he.",
+                "incorrect": "The past of āchhi is chhil-; nā comes after it."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I was\"? (ছিলাম.) \"They were\"? (ছিল.) \"There was not\"? (ছিল না.) What does the past need that the present leaves out? (The verb: সে ভালো, but সে ক্লান্ত ছিল.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C264-ghota",
+      "sequence": 16520,
+      "title": "ঘটা (ghôṭā) — to happen",
+      "headword": "ঘটা",
+      "romanization": "ghôṭā",
+      "gloss": "to happen",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab2812e1e36c1276",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ask \"What happened?\" the everyday way. (কী হল?, kī hôlô?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঘটা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘটা — ghôṭā — \"to happen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "কাল রাতে পাড়ায় কী ঘটল? kāl rāte pāṛāy kī ghôṭlô? — \"What happened in the neighbourhood last night?\""
+            },
+            {
+              "kind": "speech",
+              "text": "কী হল? is the everyday question. ঘটা (ghôṭā) is for something that takes place, an event, and it suits a story. Its past is regular: ঘটল (ghôṭlô), \"it happened\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এটা কখন ঘটল? eṭā kôkhôn ghôṭlô? — \"When did this happen?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘটা (ghôṭā) is usually traced to the Sanskrit verb ghaṭate, which CDIAL (4407) glosses \"is busy with\" and, in a later text, \"happens\". CDIAL lists no Bengali form under that entry, so the line from one to the other is the usual tracing, not a recorded row."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghôṭā, then its past, ghôṭlô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghôṭā*, then its past, *ghôṭlô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What happened in the neighbourhood last night?\" — kāl rāte pāṛāy kī ghôṭlô?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What happened in the neighbourhood last night?\" — *kāl rāte pāṛāy kī ghôṭlô?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"When did this happen?\" — eṭā kôkhôn ghôṭlô?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"When did this happen?\" — *eṭā kôkhôn ghôṭlô?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঘটা (ghôṭā) mean? (\"To happen\".) Its past? (ঘটল, ghôṭlô.) Which question is the everyday one? (কী হল?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W264-letter-gha",
+      "sequence": 16530,
+      "title": "ঘ (ghô) — the letter at the start of ঘটা (ghôṭā)",
+      "headword": "ঘ",
+      "romanization": "ghô",
+      "gloss": "the letter ঘ — ghô, the letter at the start of ঘটা",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:b1cf5aa02b77c84a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ঘ",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ঘ, Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say ঘটা (ghôṭā), \"to happen\", and its past, ঘটল. Then read ব aloud (bô); you will want its shape in a moment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ঘ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘ — ghô: a g with a breath after it, as খ (khô) is a k with a breath. It opens ঘটা (ghôṭā)."
+            },
+            {
+              "kind": "speech",
+              "text": "In the print of this book, ঘ (ghô) has the frame of ব: a headline along the top, an upright stem on the right, the full height of the letter, a pointed tip at the lower left, and a curve that joins that tip to the foot of the stem. Where ব has one straight diagonal, ঘ (ghô) has two pieces. Under the left end of the headline hangs a rounded curl, open toward the stem, its end a short point aimed up and to the right. Below the curl, a short straight piece joins it to the pointed tip."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ঘ — copy the printed shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen beside ঘ (ghô) and copy the shape you can see, slowly and large. Check the copy against the print: the headline, the stem, the curl with its point, the tip at the lower left, and the curve to the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start ঘ (ghô) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ঘ (ghô) at the front of ঘটা (ghôṭā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: ঘ at the front of **ঘটা**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ব, then ঘ (ghô), from the print, naming each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ব, then ঘ, from the print, naming each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ঘটা (ghôṭā), then ঘটল",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ঘটা**, then **ঘটল**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ঘটল aloud: ghôṭlô",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ঘটল** aloud: *ghôṭlô*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ঘ? (ghô.) Which word did it come from? (ঘটা (ghôṭā).) How is it unlike ব? (A curl hangs under its headline.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "BN-W264-letter-gha-r1",
+              "prompt": "With no model, write the letter at the start of ghôṭā, then the word.",
+              "assesses": [
+                "BN-SCRIPT-C264-GHA-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "ঘ; ঘটা"
+              ],
+              "feedback": {
+                "correct": "The curl under the headline is what makes it gh, not b.",
+                "incorrect": "Reopen ঘ, compare the curl under the headline, then write it again from memory."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R264-what-happened",
+      "sequence": 16540,
+      "title": "Review — what happened",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what happened and where you were, in the past",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f266dc800efe53bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"Yesterday I went to the market\". (kāl āmi bājāre gelām.) Then \"she came\" and \"we ate\". (she elô, āmrā khelām.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In the evening I came back home. I was tired.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In the evening I came back home. I was tired.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "What happened in the village yesterday?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: What happened in the village yesterday?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mira was at the station. Arun was not there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Mira was at the station. Arun was not there.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "There was a big tree in the neighbourhood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: There was a big tree in the neighbourhood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "We wanted tea, and we got tea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: We wanted tea, and we got tea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ঘ (ghô), then ঘটল",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ঘ, then **ঘটল**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending is I and we? (-লাম: গেলাম.) Which verbs gave এল and পেল? (আসা, পাওয়া.) \"There was not\"? (ছিল না.) Which letter opens ঘটা (ghôṭā)? (ঘ (ghô).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

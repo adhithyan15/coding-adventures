@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:64acc51645f0ea7c",
+  "lessonIds": [
+    "BN-C471-osukh",
+    "BN-C471-lokkhon",
+    "BN-C471-bhoga",
+    "BN-C471-ogyan-hooya",
+    "BN-C471-shojyashayi"
+  ],
+  "tex": "bengali/book/chapters/ch471-falling-ill.tex"
+}

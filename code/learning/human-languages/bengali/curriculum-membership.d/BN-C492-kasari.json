@@ -1,0 +1,11 @@
+{
+  "id": "BN-C492-kasari",
+  "pathSegment": "BN-PATH-492-KARIGOR492",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-492-KARIGOR492",
+      "order": 3
+    }
+  ]
+}

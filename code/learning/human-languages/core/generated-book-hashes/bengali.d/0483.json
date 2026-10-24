@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:c6dd00517eccacfd",
+  "lessonIds": [
+    "BN-C483-jamai",
+    "BN-C483-bouma",
+    "BN-C483-nonod",
+    "BN-C483-deor",
+    "BN-C483-bhashur"
+  ],
+  "tex": "bengali/book/chapters/ch483-in-laws.tex"
+}

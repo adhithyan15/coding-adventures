@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C498-ongshidar",
+    "language": "bengali",
+    "chapter": 498,
+    "sequence": 30330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20c7175e971d8a41"
+  },
+  "findings": []
+}

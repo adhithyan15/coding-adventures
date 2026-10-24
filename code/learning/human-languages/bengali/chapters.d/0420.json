@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Sales, Hawkers and Markets",
+  "label": "ch:bn-sales-hawkers-and-markets",
+  "canDo": "I can talk about selling at a village market, to a hawker or through a broker.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C420-bikono",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can talk about selling at a village market, to a hawker or through a broker.",
+    "assesses": [
+      "BN-LEX-C420-HAT420-03",
+      "BN-LEX-C420-HAT420-04",
+      "BN-LEX-C420-HAT420-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:77054adfc26a8a47",
+  "lessonIds": [
+    "BN-C511-bason",
+    "BN-C511-dekchi",
+    "BN-C511-patro",
+    "BN-C511-dhala",
+    "BN-C511-dobano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch511.txt",
+  "json": "bengali/narration/ch511.json",
+  "textHash": "fnv1a64:dbc802145fd3e99e",
+  "jsonHash": "fnv1a64:38e6eca0a793ed84",
+  "findings": []
+}

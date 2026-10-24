@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "Alike and Different",
+  "label": "ch:bn-alike-and-different",
+  "canDo": "I can say how two things are alike and how they differ.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C358-guliye-phela",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can say how two things are alike and how they differ.",
+    "assesses": [
+      "BN-LEX-C358-MIL358-03",
+      "BN-LEX-C358-MIL358-04",
+      "BN-LEX-C358-MIL358-05"
+    ]
+  }
+}

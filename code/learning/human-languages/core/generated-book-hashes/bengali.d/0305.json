@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:041f133923d084e0",
+  "lessonIds": [
+    "BN-C305-prodip",
+    "BN-C305-atoshbaji",
+    "BN-C305-alpona",
+    "BN-C305-jholmol-kora",
+    "BN-C305-phanus"
+  ],
+  "tex": "bengali/book/chapters/ch305-lights-and-fireworks.tex"
+}

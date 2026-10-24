@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:6df53d1a0e3e06a3",
+  "lessonIds": [
+    "BN-C511-bason",
+    "BN-C511-dekchi",
+    "BN-C511-patro",
+    "BN-C511-dhala",
+    "BN-C511-dobano"
+  ],
+  "tex": "bengali/book/chapters/ch511-pots-and-pouring.tex"
+}

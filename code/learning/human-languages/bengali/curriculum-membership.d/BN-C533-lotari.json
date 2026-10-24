@@ -1,0 +1,11 @@
+{
+  "id": "BN-C533-lotari",
+  "pathSegment": "BN-PATH-533-DOIBAT533",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-533-DOIBAT533",
+      "order": 4
+    }
+  ]
+}

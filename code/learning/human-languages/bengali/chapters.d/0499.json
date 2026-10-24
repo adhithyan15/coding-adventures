@@ -1,0 +1,21 @@
+{
+  "chapter": 499,
+  "title": "Goods and Supplies",
+  "label": "ch:bn-goods-and-supplies",
+  "canDo": "I can talk about what a factory makes, supplies and sells abroad.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-R499-review-492-499",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 499: I can talk about what a factory makes, supplies and sells abroad.",
+    "assesses": [
+      "BN-LEX-C499-UTPADON499-01",
+      "BN-LEX-C499-UTPADON499-02",
+      "BN-LEX-C499-UTPADON499-03",
+      "BN-LEX-C499-UTPADON499-04",
+      "BN-LEX-C499-UTPADON499-05"
+    ]
+  }
+}

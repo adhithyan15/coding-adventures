@@ -1,0 +1,11 @@
+{
+  "id": "BN-C354-tottvo",
+  "pathSegment": "BN-PATH-354-GOBESHONA354",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-354-GOBESHONA354",
+      "order": 2
+    }
+  ]
+}

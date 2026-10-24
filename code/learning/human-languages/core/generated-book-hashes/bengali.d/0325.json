@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:f9462b23ac582990",
+  "lessonIds": [
+    "BN-C325-upodesh",
+    "BN-C325-porinam",
+    "BN-C325-pap",
+    "BN-C325-shodhrano",
+    "BN-C325-badhyo-hooya"
+  ],
+  "tex": "bengali/book/chapters/ch325-a-story-s-lesson.tex"
+}

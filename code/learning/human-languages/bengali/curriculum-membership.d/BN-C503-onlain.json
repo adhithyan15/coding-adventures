@@ -1,0 +1,11 @@
+{
+  "id": "BN-C503-onlain",
+  "pathSegment": "BN-PATH-503-ONLINE503",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-503-ONLINE503",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C439-tripti",
+    "language": "bengali",
+    "chapter": 439,
+    "sequence": 27070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7571142f67574280"
+  },
+  "findings": []
+}

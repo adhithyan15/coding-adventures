@@ -1,0 +1,11 @@
+{
+  "id": "BN-C425-borsha",
+  "pathSegment": "BN-PATH-425-MEGH425",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-425-MEGH425",
+      "order": 1
+    }
+  ]
+}

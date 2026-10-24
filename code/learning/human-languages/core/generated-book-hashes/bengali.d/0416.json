@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:45d0024a387d21c4",
+  "lessonIds": [
+    "BN-C416-kisti",
+    "BN-C416-dena",
+    "BN-C416-paona",
+    "BN-C416-shodh-kora",
+    "BN-C416-metano"
+  ],
+  "tex": "bengali/book/chapters/ch416-debts-and-instalments.tex"
+}

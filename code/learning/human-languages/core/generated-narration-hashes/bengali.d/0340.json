@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:89d7eef74035dc32",
+  "lessonIds": [
+    "BN-C340-boidho",
+    "BN-C340-nishiddho",
+    "BN-C340-dhara",
+    "BN-C340-palon-kora",
+    "BN-C340-proyog-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch340.txt",
+  "json": "bengali/narration/ch340.json",
+  "textHash": "fnv1a64:ed1c2efdbd13a5ba",
+  "jsonHash": "fnv1a64:ef6cc6f2e4c2afb5",
+  "findings": []
+}

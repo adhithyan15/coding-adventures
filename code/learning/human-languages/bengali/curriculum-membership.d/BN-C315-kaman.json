@@ -1,0 +1,11 @@
+{
+  "id": "BN-C315-kaman",
+  "pathSegment": "BN-PATH-315-OSTRO315",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-315-OSTRO315",
+      "order": 4
+    }
+  ]
+}

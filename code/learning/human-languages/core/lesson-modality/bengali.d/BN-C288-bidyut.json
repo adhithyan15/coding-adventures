@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C288-bidyut",
+    "language": "bengali",
+    "chapter": 288,
+    "sequence": 18650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2afc927b6602adb1"
+  },
+  "findings": []
+}

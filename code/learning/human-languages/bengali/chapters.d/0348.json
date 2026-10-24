@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "Public Money",
+  "label": "ch:bn-public-money",
+  "canDo": "I can say how public money is raised and spent.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C348-monjur-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can say how public money is raised and spent.",
+    "assesses": [
+      "BN-LEX-C348-RAJOSHO348-03",
+      "BN-LEX-C348-RAJOSHO348-04",
+      "BN-LEX-C348-RAJOSHO348-05"
+    ]
+  }
+}

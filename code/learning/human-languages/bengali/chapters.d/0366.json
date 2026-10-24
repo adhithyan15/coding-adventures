@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "Likely or Not",
+  "label": "ch:bn-likely-or-not",
+  "canDo": "I can say how likely something is and what follows if it happens.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C366-dhore-neoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can say how likely something is and what follows if it happens.",
+    "assesses": [
+      "BN-LEX-C366-SOMBHABONA366-03",
+      "BN-LEX-C366-SOMBHABONA366-04",
+      "BN-LEX-C366-SOMBHABONA366-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C267-hothat",
+  "pathSegment": "BN-PATH-267-STORY-ORDER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-267-STORY-ORDER",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 359,
+  "title": "Excuses",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fc1a5be9056cca4c",
+  "lessons": [
+    {
+      "id": "BN-C359-ojuhat",
+      "sequence": 22480,
+      "title": "অজুহাত (ôjuhāt) — an excuse; a pretext",
+      "headword": "অজুহাত",
+      "romanization": "ôjuhāt",
+      "gloss": "an excuse; a pretext",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0a8babbb9580bc5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for ordinary, then the Bengali for to mix up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অজুহাত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অজুহাত — ôjuhāt — \"an excuse; a pretext\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দেরির অজুহাত দিও না। derir ôjuhāt dio nā. Don't make excuses for being late."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অজুহাত (ôjuhāt) is usually traced to Arabic wujūhāt, a plural meaning reasons or aspects, through Persian: a reason offered to get out of something."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôjuhāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôjuhāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôjuhāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôjuhāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "derir ôjuhāt dio nā. — Don't make excuses for being late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *derir ôjuhāt dio nā.* — Don't make excuses for being late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for ordinary, then the Bengali for to mix up, then say ôjuhāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for ordinary, then the Bengali for to mix up, then say *ôjuhāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অজুহাত (ôjuhāt) mean? (\"An excuse; a pretext\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C359-bhan",
+      "sequence": 22490,
+      "title": "ভান (bhān) — a pretence",
+      "headword": "ভান",
+      "romanization": "bhān",
+      "gloss": "a pretence",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31a9f45fb392f11e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to mix up, then the Bengali for an excuse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভান",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভান — bhān — \"a pretence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অরুণ না শোনার ভান করল। ôrun nā shonār bhān kôrlô. Arun pretended not to hear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভান (bhān) is Sanskrit bhāna, appearance (Monier-Williams; CDIAL 9451 lists Bengali bhān). Bengali uses it for a false appearance: ভান করা, to pretend."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôrun nā shonār bhān kôrlô. — Arun pretended not to hear.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôrun nā shonār bhān kôrlô.* — Arun pretended not to hear.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to mix up, then the Bengali for an excuse, then say bhān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to mix up, then the Bengali for an excuse, then say *bhān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভান (bhān) mean? (\"A pretence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C359-koiphiyot",
+      "sequence": 22500,
+      "title": "কৈফিয়ত (koiphiyôt) — a demanded explanation; an account of oneself",
+      "headword": "কৈফিয়ত",
+      "romanization": "koiphiyôt",
+      "gloss": "a demanded explanation; an account of oneself",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8132807031b1cf67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an excuse, then the Bengali for a pretence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কৈফিয়ত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কৈফিয়ত — koiphiyôt — \"a demanded explanation; an account of oneself\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ম্যানেজার দেরির জন্য কৈফিয়ত চাইলেন। mænejār derir jônyô koiphiyôt chāilen. The manager asked for an explanation for the delay."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কৈফিয়ত (koiphiyôt) is Persian kaifiyat, how things stand, an account, usually traced to Arabic kayfiyya. In Bengali it is the account you are asked to give of yourself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koiphiyôt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koiphiyôt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koiphiyôt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koiphiyôt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mænejār derir jônyô koiphiyôt chāilen. — The manager asked for an explanation for the delay.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mænejār derir jônyô koiphiyôt chāilen.* — The manager asked for an explanation for the delay.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an excuse, then the Bengali for a pretence, then say koiphiyôt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an excuse, then the Bengali for a pretence, then say *koiphiyôt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কৈফিয়ত (koiphiyôt) mean? (\"A demanded explanation; an account of oneself\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C359-pash-katano",
+      "sequence": 22510,
+      "title": "পাশ কাটানো (pāsh kāṭāno) — to sidestep; to dodge",
+      "headword": "পাশ কাটানো",
+      "romanization": "pāsh kāṭāno",
+      "gloss": "to sidestep; to dodge",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17fc76db6756dd01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a pretence, then the Bengali for a demanded explanation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পাশ কাটানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাশ কাটানো — pāsh kāṭāno — \"to sidestep; to dodge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মন্ত্রী প্রশ্নটা পাশ কাটালেন। môntrī prôshnoṭā pāsh kāṭālen. The minister sidestepped the question."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি বিষয়টা পাশ কাটালেন, tini bishôyṭā pāsh kāṭālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাশ কাটানো (pāsh kāṭāno) is পাশ, the side (CDIAL 8118 lists Bengali pās 'near'), with কাটানো, to cut: to cut past at the side, to go round a question instead of through it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāsh kāṭāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāsh kāṭāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāsh kāṭāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāsh kāṭāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môntrī prôshnoṭā pāsh kāṭālen. — The minister sidestepped the question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môntrī prôshnoṭā pāsh kāṭālen.* — The minister sidestepped the question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a pretence, then the Bengali for a demanded explanation, then say pāsh kāṭāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a pretence, then the Bengali for a demanded explanation, then say *pāsh kāṭāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পাশ কাটানো (pāsh kāṭāno) mean? (\"To sidestep; to dodge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C359-grohonjogyo",
+      "sequence": 22520,
+      "title": "গ্রহণযোগ্য (grôhônjogyô) — acceptable",
+      "headword": "গ্রহণযোগ্য",
+      "romanization": "grôhônjogyô",
+      "gloss": "acceptable",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1355ec3eb3f252cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a demanded explanation, then the Bengali for to sidestep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গ্রহণযোগ্য",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গ্রহণযোগ্য — grôhônjogyô — \"acceptable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তোমার অজুহাতটা গ্রহণযোগ্য নয়। tomār ôjuhātṭā grôhônjogyô nôy. Your excuse is not acceptable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গ্রহণযোগ্য (grôhônjogyô) is Sanskrit grahaṇa, taking or acceptance, with yogya, fit for (Monier-Williams): fit to be accepted. An excuse, a proposal or a reason can be গ্রহণযোগ্য; the compound itself is not in the dictionary."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grôhônjogyô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grôhônjogyô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grôhônjogyô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grôhônjogyô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomār ôjuhātṭā grôhônjogyô nôy. — Your excuse is not acceptable.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomār ôjuhātṭā grôhônjogyô nôy.* — Your excuse is not acceptable.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a demanded explanation, then the Bengali for to sidestep, then say grôhônjogyô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a demanded explanation, then the Bengali for to sidestep, then say *grôhônjogyô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গ্রহণযোগ্য (grôhônjogyô) mean? (\"Acceptable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

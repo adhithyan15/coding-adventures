@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 354,
+  "title": "Finding Out",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:86047430e1913906",
+  "lessons": [
+    {
+      "id": "BN-C354-gobeshona",
+      "sequence": 22230,
+      "title": "গবেষণা (gôbeshônā) — research",
+      "headword": "গবেষণা",
+      "romanization": "gôbeshônā",
+      "gloss": "research",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fdf3f38c43c9907c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for in common use, then the Bengali for to obey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গবেষণা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গবেষণা — gôbeshônā — \"research\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মীরা বিশ্ববিদ্যালয়ে গবেষণা করে। mīrā bishvôbidyālôye gôbeshônā kôre. Mira does research at the university."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গবেষণা (gôbeshônā) is Sanskrit gaveṣaṇā, beside gaveṣaṇa, seeking or searching (Monier-Williams), which files the verb gaveṣ, to seek, among the compounds of go, a cow. Bengali uses it for scholarly research."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôbeshônā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôbeshônā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôbeshônā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôbeshônā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrā bishvôbidyālôye gôbeshônā kôre. — Mira does research at the university.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrā bishvôbidyālôye gôbeshônā kôre.* — Mira does research at the university.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for in common use, then the Bengali for to obey, then say gôbeshônā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for in common use, then the Bengali for to obey, then say *gôbeshônā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গবেষণা (gôbeshônā) mean? (\"Research\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C354-porikkha",
+      "sequence": 22240,
+      "title": "পরীক্ষা (pôrīkkhā) — a test; an experiment; an exam",
+      "headword": "পরীক্ষা",
+      "romanization": "pôrīkkhā",
+      "gloss": "a test; an experiment; an exam",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cfac1792fd3ef6da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to obey, then the Bengali for research."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পরীক্ষা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পরীক্ষা — pôrīkkhā — \"a test; an experiment; an exam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বিজ্ঞানীরা একটা নতুন পরীক্ষা করলেন। bigyānīrā ekṭā nôtun pôrīkkhā kôrlen. The scientists carried out a new experiment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পরীক্ষা (pôrīkkhā) is Sanskrit parīkṣā, looking all round, inspection or test (Monier-Williams). The same word serves for a school exam and a laboratory experiment."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôrīkkhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôrīkkhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôrīkkhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôrīkkhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bigyānīrā ekṭā nôtun pôrīkkhā kôrlen. — The scientists carried out a new experiment.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bigyānīrā ekṭā nôtun pôrīkkhā kôrlen.* — The scientists carried out a new experiment.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to obey, then the Bengali for research, then say pôrīkkhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to obey, then the Bengali for research, then say *pôrīkkhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পরীক্ষা (pôrīkkhā) mean? (\"A test; an experiment; an exam\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C354-tottvo",
+      "sequence": 22250,
+      "title": "তত্ত্ব (tôttvô) — a theory",
+      "headword": "তত্ত্ব",
+      "romanization": "tôttvô",
+      "gloss": "a theory",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a284ce6393363dd0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for research, then the Bengali for an experiment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: তত্ত্ব",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তত্ত্ব — tôttvô — \"a theory\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই তত্ত্বের কোনো প্রমাণ নেই। ei tôttver kono prômān nei. There is no proof for this theory."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তত্ত্ব (tôttvô) is Sanskrit tattva, 'thatness', the true state of things (Monier-Williams). Modern Bengali uses it for a theory, an account of how things really are."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tôttvô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tôttvô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tôttvô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tôttvô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ei tôttver kono prômān nei. — There is no proof for this theory.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ei tôttver kono prômān nei.* — There is no proof for this theory.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for research, then the Bengali for an experiment, then say tôttvô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for research, then the Bengali for an experiment, then say *tôttvô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does তত্ত্ব (tôttvô) mean? (\"A theory\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C354-abishkar-kora",
+      "sequence": 22260,
+      "title": "আবিষ্কার করা (ābishkār kôrā) — to discover; to invent",
+      "headword": "আবিষ্কার করা",
+      "romanization": "ābishkār kôrā",
+      "gloss": "to discover; to invent",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6bb86cf01f2009b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an experiment, then the Bengali for a theory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আবিষ্কার করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আবিষ্কার করা — ābishkār kôrā — \"to discover; to invent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বিজ্ঞানীরা নদীতে একটা নতুন মাছ আবিষ্কার করলেন। bigyānīrā nôdīte ekṭā nôtun māchh ābishkār kôrlen. The scientists discovered a new fish in the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি একটা নতুন পদ্ধতি আবিষ্কার করলেন, tini ekṭā nôtun pôddhôti ābishkār kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আবিষ্কার করা (ābishkār kôrā) is Sanskrit āviṣkāra, from āviṣ 'openly, in sight' and kāra 'making' (Monier-Williams), with করা: to bring into view what was hidden, or to make a thing that did not exist."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ābishkār kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ābishkār kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ābishkār kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ābishkār kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bigyānīrā nôdīte ekṭā nôtun māchh ābishkār kôrlen. — The scientists discovered a new fish in the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bigyānīrā nôdīte ekṭā nôtun māchh ābishkār kôrlen.* — The scientists discovered a new fish in the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an experiment, then the Bengali for a theory, then say ābishkār kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an experiment, then the Bengali for a theory, then say *ābishkār kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আবিষ্কার করা (ābishkār kôrā) mean? (\"To discover; to invent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C354-onusondhan-kora",
+      "sequence": 22270,
+      "title": "অনুসন্ধান করা (ônusôndhān kôrā) — to investigate; to look into",
+      "headword": "অনুসন্ধান করা",
+      "romanization": "ônusôndhān kôrā",
+      "gloss": "to investigate; to look into",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72ba0ab6b74e83e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a theory, then the Bengali for to discover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অনুসন্ধান করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনুসন্ধান করা — ônusôndhān kôrā — \"to investigate; to look into\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমরা দুর্ঘটনার কারণ অনুসন্ধান করব। āmrā durghôṭônār kārôn ônusôndhān kôrbô. We will look into the cause of the accident."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি কারণটা অনুসন্ধান করলেন, tini kārônṭā ônusôndhān kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনুসন্ধান করা (ônusôndhān kôrā) is Sanskrit anusaṃdhāna, investigation or close inquiry (Monier-Williams), with করা."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônusôndhān kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônusôndhān kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônusôndhān kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônusôndhān kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmrā durghôṭônār kārôn ônusôndhān kôrbô. — We will look into the cause of the accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmrā durghôṭônār kārôn ônusôndhān kôrbô.* — We will look into the cause of the accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a theory, then the Bengali for to discover, then say ônusôndhān kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a theory, then the Bengali for to discover, then say *ônusôndhān kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অনুসন্ধান করা (ônusôndhān kôrā) mean? (\"To investigate; to look into\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

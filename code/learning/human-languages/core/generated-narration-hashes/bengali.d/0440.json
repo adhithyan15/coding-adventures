@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:c15f27101468294f",
+  "lessonIds": [
+    "BN-C440-bismoy",
+    "BN-C440-koutuhol",
+    "BN-C440-mugdho",
+    "BN-C440-obak-hooya",
+    "BN-C440-chomkano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch440.txt",
+  "json": "bengali/narration/ch440.json",
+  "textHash": "fnv1a64:5b374c357b6abe2e",
+  "jsonHash": "fnv1a64:048e90a4001c11ac",
+  "findings": []
+}

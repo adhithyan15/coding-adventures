@@ -1,0 +1,11 @@
+{
+  "id": "BN-C480-dhen",
+  "pathSegment": "BN-PATH-480-PUSHTI480",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-480-PUSHTI480",
+      "order": 1
+    }
+  ]
+}

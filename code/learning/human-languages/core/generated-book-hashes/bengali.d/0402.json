@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:c4d894404c712cd9",
+  "lessonIds": [
+    "BN-C402-majhkhan",
+    "BN-C402-ghurpoth",
+    "BN-C402-kinara",
+    "BN-C402-dishehara",
+    "BN-C402-ghurpak-khaoya"
+  ],
+  "tex": "bengali/book/chapters/ch402-middles-and-edges.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C348-aday-kora",
+    "language": "bengali",
+    "chapter": 348,
+    "sequence": 21950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04a5124a9d10388f"
+  },
+  "findings": []
+}

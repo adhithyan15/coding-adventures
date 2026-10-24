@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C265-jabo",
+    "language": "bengali",
+    "chapter": 265,
+    "sequence": 16550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1665b7d09270902"
+  },
+  "findings": []
+}

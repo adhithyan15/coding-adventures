@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-324-KOUSHOL324",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "BN-EXT-324-KOUSHOL324"
+  ],
+  "after": []
+}

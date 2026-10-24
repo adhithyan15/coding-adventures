@@ -1,0 +1,19 @@
+{
+  "chapter": 282,
+  "title": "A Theft in the Night",
+  "label": "ch:bn-a-theft-in-the-night",
+  "canDo": "I can tell how a thief got in and what was taken.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C282-poketmar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 282: I can tell how a thief got in and what was taken.",
+    "assesses": [
+      "BN-LEX-C282-CHURI282-03",
+      "BN-LEX-C282-CHURI282-04",
+      "BN-LEX-C282-CHURI282-05"
+    ]
+  }
+}

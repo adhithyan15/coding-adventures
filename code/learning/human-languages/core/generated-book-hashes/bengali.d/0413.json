@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:d89accd13e29ef7e",
+  "lessonIds": [
+    "BN-C413-nordoma",
+    "BN-C413-paip",
+    "BN-C413-dastbin",
+    "BN-C413-moyla",
+    "BN-C413-jonjal"
+  ],
+  "tex": "bengali/book/chapters/ch413-drains-and-rubbish.tex"
+}

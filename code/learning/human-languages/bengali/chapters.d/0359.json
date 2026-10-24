@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "Excuses",
+  "label": "ch:bn-excuses",
+  "canDo": "I can give an excuse and tell when one does not hold up.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C359-grohonjogyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can give an excuse and tell when one does not hold up.",
+    "assesses": [
+      "BN-LEX-C359-OJUHAT359-03",
+      "BN-LEX-C359-OJUHAT359-04",
+      "BN-LEX-C359-OJUHAT359-05"
+    ]
+  }
+}

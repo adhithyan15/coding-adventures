@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C513-makha",
+    "language": "bengali",
+    "chapter": 513,
+    "sequence": 31100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b150cb1b50d8b463"
+  },
+  "findings": []
+}

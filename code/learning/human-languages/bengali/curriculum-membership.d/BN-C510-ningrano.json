@@ -1,0 +1,11 @@
+{
+  "id": "BN-C510-ningrano",
+  "pathSegment": "BN-PATH-510-SAPHAI510",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-510-SAPHAI510",
+      "order": 3
+    }
+  ]
+}

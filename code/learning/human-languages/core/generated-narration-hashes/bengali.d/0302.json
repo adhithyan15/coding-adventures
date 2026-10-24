@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:e76d1c33aa7fc085",
+  "lessonIds": [
+    "BN-C302-kahini",
+    "BN-C302-shonano",
+    "BN-C302-bornona-kora",
+    "BN-C302-ghotano",
+    "BN-C302-kromosh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch302.txt",
+  "json": "bengali/narration/ch302.json",
+  "textHash": "fnv1a64:3126dbcd3519db1f",
+  "jsonHash": "fnv1a64:b1e556280d3b70d4",
+  "findings": []
+}

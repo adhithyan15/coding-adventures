@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "Before It Is Too Late",
+  "label": "ch:bn-before-it-is-too-late",
+  "canDo": "I can talk about deadlines, delays and getting ready in time.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C378-tagada-deoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can talk about deadlines, delays and getting ready in time.",
+    "assesses": [
+      "BN-LEX-C378-AYOJON378-03",
+      "BN-LEX-C378-AYOJON378-04",
+      "BN-LEX-C378-AYOJON378-05"
+    ]
+  }
+}

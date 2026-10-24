@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-355-NOMUNA355",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "BN-EXT-355-NOMUNA355"
+  ],
+  "after": []
+}

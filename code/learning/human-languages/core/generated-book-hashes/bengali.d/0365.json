@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:954452b28e51f330",
+  "lessonIds": [
+    "BN-C365-motbhed",
+    "BN-C365-somjhota",
+    "BN-C365-nishpotti",
+    "BN-C365-manano",
+    "BN-C365-sorbosommoto"
+  ],
+  "tex": "bengali/book/chapters/ch365-coming-to-terms.tex"
+}

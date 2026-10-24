@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:3e7e93924e21bad9",
+  "lessonIds": [
+    "BN-C517-laphdori",
+    "BN-C517-dhaoya-kora",
+    "BN-C517-bedminton",
+    "BN-C517-lukochuri",
+    "BN-C517-marbel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch517.txt",
+  "json": "bengali/narration/ch517.json",
+  "textHash": "fnv1a64:0be14867db3a2c4f",
+  "jsonHash": "fnv1a64:b1744256af34ead2",
+  "findings": []
+}

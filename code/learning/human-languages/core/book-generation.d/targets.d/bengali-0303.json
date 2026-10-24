@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 303,
+  "output": "bengali/book/chapters/ch303-long-ago.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

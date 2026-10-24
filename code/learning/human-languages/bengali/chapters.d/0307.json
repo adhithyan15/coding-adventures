@@ -1,0 +1,21 @@
+{
+  "chapter": 307,
+  "title": "Drums and Incense",
+  "label": "ch:bn-drums-and-incense",
+  "canDo": "I can describe the drums, gongs and incense of a puja evening.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-R307-review-300-307",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can describe the drums, gongs and incense of a puja evening.",
+    "assesses": [
+      "BN-LEX-C307-DHAK307-01",
+      "BN-LEX-C307-DHAK307-02",
+      "BN-LEX-C307-DHAK307-03",
+      "BN-LEX-C307-DHAK307-04",
+      "BN-LEX-C307-DHAK307-05"
+    ]
+  }
+}

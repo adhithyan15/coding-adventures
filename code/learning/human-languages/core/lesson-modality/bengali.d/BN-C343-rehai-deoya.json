@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C343-rehai-deoya",
+    "language": "bengali",
+    "chapter": 343,
+    "sequence": 21700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99f03358cbbd48e0"
+  },
+  "findings": []
+}

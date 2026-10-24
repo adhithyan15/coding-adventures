@@ -1,0 +1,11 @@
+{
+  "id": "BN-C353-procholito",
+  "pathSegment": "BN-PATH-353-RITI353",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-353-RITI353",
+      "order": 3
+    }
+  ]
+}

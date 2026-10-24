@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C282-goyna",
+    "language": "bengali",
+    "chapter": 282,
+    "sequence": 18310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:639ac1ac18d7d2e2"
+  },
+  "findings": []
+}

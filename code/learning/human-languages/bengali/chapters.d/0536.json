@@ -1,0 +1,19 @@
+{
+  "chapter": 536,
+  "title": "Kinds and Choices",
+  "label": "ch:bn-kinds-and-choices",
+  "canDo": "I can talk about kinds, styles, recommendations and what fits.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C536-khap-khaoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 536: I can talk about kinds, styles, recommendations and what fits.",
+    "assesses": [
+      "BN-LEX-C536-ROKOM536-03",
+      "BN-LEX-C536-ROKOM536-04",
+      "BN-LEX-C536-ROKOM536-05"
+    ]
+  }
+}

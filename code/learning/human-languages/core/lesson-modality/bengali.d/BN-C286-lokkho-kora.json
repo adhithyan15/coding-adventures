@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C286-lokkho-kora",
+    "language": "bengali",
+    "chapter": 286,
+    "sequence": 18550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2596cad0dac761d3"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C291-dan-kora",
+    "language": "bengali",
+    "chapter": 291,
+    "sequence": 18800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8cae8f3f3a827d8"
+  },
+  "findings": []
+}

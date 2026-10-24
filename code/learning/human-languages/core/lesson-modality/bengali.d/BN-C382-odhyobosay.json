@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C382-odhyobosay",
+    "language": "bengali",
+    "chapter": 382,
+    "sequence": 23670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ebd5b9e2f73327d"
+  },
+  "findings": []
+}

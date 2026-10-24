@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C408-basa",
+    "language": "bengali",
+    "chapter": 408,
+    "sequence": 25230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0147d8f6282177b4"
+  },
+  "findings": []
+}

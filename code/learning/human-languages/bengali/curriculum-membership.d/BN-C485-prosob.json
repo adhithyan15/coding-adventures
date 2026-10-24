@@ -1,0 +1,11 @@
+{
+  "id": "BN-C485-prosob",
+  "pathSegment": "BN-PATH-485-BACHCHA485",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-485-BACHCHA485",
+      "order": 1
+    }
+  ]
+}

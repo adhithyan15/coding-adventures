@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:cc9b2d6457a5aec7",
+  "lessonIds": [
+    "BN-C350-adorsho",
+    "BN-C350-mulyobodh",
+    "BN-C350-sohishnuta",
+    "BN-C350-sotyobadi",
+    "BN-C350-nejyo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch350.txt",
+  "json": "bengali/narration/ch350.json",
+  "textHash": "fnv1a64:44eaab59fb3d10d1",
+  "jsonHash": "fnv1a64:7caabe14ad223568",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "Ghats and Ferries",
+  "label": "ch:bn-ghats-and-ferries",
+  "canDo": "I can cross a river by ferry from one ghat to the other bank.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C397-bherano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can cross a river by ferry from one ghat to the other bank.",
+    "assesses": [
+      "BN-LEX-C397-GHAT397-03",
+      "BN-LEX-C397-GHAT397-04",
+      "BN-LEX-C397-GHAT397-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:8dae8099b528a5ea",
+  "lessonIds": [
+    "BN-C385-ghonta",
+    "BN-C385-ghori",
+    "BN-C385-tiktik-kora",
+    "BN-C385-opekkha-kora",
+    "BN-C385-bench"
+  ],
+  "tex": "bengali/book/chapters/ch385-hours-and-waiting.tex"
+}

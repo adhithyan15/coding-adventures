@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "Cold, Frost and Thaw",
+  "label": "ch:bn-cold-frost-and-thaw",
+  "canDo": "I can say it is bitterly cold, that water froze and ice melted.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C426-gole-jaoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can say it is bitterly cold, that water froze and ice melted.",
+    "assesses": [
+      "BN-LEX-C426-THANDA426-03",
+      "BN-LEX-C426-THANDA426-04",
+      "BN-LEX-C426-THANDA426-05"
+    ]
+  }
+}

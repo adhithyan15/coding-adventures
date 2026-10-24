@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-484-SONTAN484",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "BN-EXT-484-SONTAN484"
+  ],
+  "after": []
+}

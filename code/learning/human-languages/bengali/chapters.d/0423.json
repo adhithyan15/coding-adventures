@@ -1,0 +1,21 @@
+{
+  "chapter": 423,
+  "title": "Bags, Wrappers and Sizes",
+  "label": "ch:bn-bags-wrappers-and-sizes",
+  "canDo": "I can talk about bags and wrappers, ask for my size and say I was palmed off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-R423-review-416-423",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can talk about bags and wrappers, ask for my size and say I was palmed off.",
+    "assesses": [
+      "BN-LEX-C423-THONGA423-01",
+      "BN-LEX-C423-THONGA423-02",
+      "BN-LEX-C423-THONGA423-03",
+      "BN-LEX-C423-THONGA423-04",
+      "BN-LEX-C423-THONGA423-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 265,
+  "title": "What Will Happen, and the End",
+  "label": "ch:bn-what-will-happen-and-the-end",
+  "canDo": "I can say what will happen and what I will do (jābô, jābe, jāben, hôbe), say what I won't do, and read and write ষ in শেষ.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "BN-R265-what-will-happen",
+    "kind": "production",
+    "summary": "Complete BN-R265-what-will-happen: say what will happen, what you will do and what you won't.",
+    "assesses": [
+      "BN-GRAMMAR-C265-FUTURE-PERSON-01",
+      "BN-GRAMMAR-C265-FUTURE-NOT-01",
+      "BN-LEX-C265-SHESH-01",
+      "BN-SCRIPT-C265-MURDHANYA-SHA-01"
+    ]
+  }
+}

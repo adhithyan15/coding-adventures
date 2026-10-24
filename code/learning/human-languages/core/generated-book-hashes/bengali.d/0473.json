@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:32ec0017b03cdfc3",
+  "lessonIds": [
+    "BN-C473-songkromon",
+    "BN-C473-jibanu",
+    "BN-C473-chhoyache",
+    "BN-C473-mohamari",
+    "BN-C473-akranto-hooya"
+  ],
+  "tex": "bengali/book/chapters/ch473-germs-and-infection.tex"
+}

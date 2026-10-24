@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C488-bere-otha",
+    "language": "bengali",
+    "chapter": 488,
+    "sequence": 29600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a93d699c9f2bd6f4"
+  },
+  "findings": []
+}

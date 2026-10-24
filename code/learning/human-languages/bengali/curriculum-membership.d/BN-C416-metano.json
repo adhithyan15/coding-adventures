@@ -1,0 +1,11 @@
+{
+  "id": "BN-C416-metano",
+  "pathSegment": "BN-PATH-416-KISTI416",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-416-KISTI416",
+      "order": 4
+    }
+  ]
+}

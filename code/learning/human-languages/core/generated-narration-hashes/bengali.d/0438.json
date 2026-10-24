@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:2455c95385ebca3a",
+  "lessonIds": [
+    "BN-C438-monobhab",
+    "BN-C438-onubhuti",
+    "BN-C438-abeg",
+    "BN-C438-onubhob-kora",
+    "BN-C438-ter-paoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch438.txt",
+  "json": "bengali/narration/ch438.json",
+  "textHash": "fnv1a64:fc652d53d35c6b3a",
+  "jsonHash": "fnv1a64:ba3565a6ce260301",
+  "findings": []
+}

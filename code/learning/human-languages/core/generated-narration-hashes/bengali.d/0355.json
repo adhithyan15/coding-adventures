@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:31f25c990f25de10",
+  "lessonIds": [
+    "BN-C355-porisongkhyan",
+    "BN-C355-nomuna",
+    "BN-C355-jorip",
+    "BN-C355-songgroho-kora",
+    "BN-C355-bishleshon-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch355.txt",
+  "json": "bengali/narration/ch355.json",
+  "textHash": "fnv1a64:31df07531285205c",
+  "jsonHash": "fnv1a64:ee87371556424cb0",
+  "findings": []
+}

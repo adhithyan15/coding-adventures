@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C512-khunti",
+    "language": "bengali",
+    "chapter": 512,
+    "sequence": 31030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ea03374dbf5bfe4"
+  },
+  "findings": []
+}

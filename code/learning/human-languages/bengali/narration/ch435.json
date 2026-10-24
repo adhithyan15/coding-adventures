@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 435,
+  "title": "Grass, Creepers and Wood",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0ae0967b043e1cee",
+  "lessons": [
+    {
+      "id": "BN-C435-ghas",
+      "sequence": 26610,
+      "title": "ঘাস (ghās) — grass",
+      "headword": "ঘাস",
+      "romanization": "ghās",
+      "gloss": "grass",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1746b27677284ad7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to spoil, then the Bengali for to conserve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঘাস",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘাস — ghās — \"grass\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সকালে মাঠের ঘাস শিশিরে ভেজা। sôkāle māṭher ghās shishire bhejā. In the morning the grass on the field is wet with dew."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘাস (ghās) is inherited: CDIAL lists Bengali ghās, \"grass\", under Sanskrit ghāsá, \"fodder, grass\" (CDIAL 4471)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôkāle māṭher ghās shishire bhejā. — In the morning the grass on the field is wet with dew.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôkāle māṭher ghās shishire bhejā.* — In the morning the grass on the field is wet with dew.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to spoil, then the Bengali for to conserve, then say ghās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to spoil, then the Bengali for to conserve, then say *ghās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঘাস (ghās) mean? (\"Grass\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C435-lota",
+      "sequence": 26620,
+      "title": "লতা (lôtā) — a creeper; a climbing plant",
+      "headword": "লতা",
+      "romanization": "lôtā",
+      "gloss": "a creeper; a climbing plant",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6466d279698ef249",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to conserve, then the Bengali for grass."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: লতা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লতা — lôtā — \"a creeper; a climbing plant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমাদের বারান্দায় একটা ফুলের লতা আছে। āmāder bārāndāy ekṭā phuler lôtā āchhe. There is a flowering creeper on our veranda."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "লতা (lôtā) is Sanskrit latā, \"a creeper, any twining plant\" (Monier-Williams), taken over whole."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lôtā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lôtā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lôtā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lôtā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmāder bārāndāy ekṭā phuler lôtā āchhe. — There is a flowering creeper on our veranda.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmāder bārāndāy ekṭā phuler lôtā āchhe.* — There is a flowering creeper on our veranda.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to conserve, then the Bengali for grass, then say lôtā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to conserve, then the Bengali for grass, then say *lôtā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does লতা (lôtā) mean? (\"A creeper; a climbing plant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C435-shakha",
+      "sequence": 26630,
+      "title": "শাখা (shākhā) — a branch (of a tree, a bank or a river)",
+      "headword": "শাখা",
+      "romanization": "shākhā",
+      "gloss": "a branch (of a tree, a bank or a river)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:078c78152f97d77c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for grass, then the Bengali for a creeper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শাখা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শাখা — shākhā — \"a branch (of a tree, a bank or a river)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমাদের ব্যাংকের একটা শাখা স্টেশনের কাছে। āmāder bængker ekṭā shākhā sṭeshôner kāchhe. Our bank has a branch near the station."
+            },
+            {
+              "kind": "speech",
+              "text": "On a tree people mostly say ডাল, which sounds like ডাল, lentils; শাখা (shākhā) is the careful word, and the only one for a bank or a river."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শাখা (shākhā) is Sanskrit śākhā, \"a branch\" (Monier-Williams), taken over whole; a bank's branch is the same image."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shākhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shākhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shākhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shākhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmāder bængker ekṭā shākhā sṭeshôner kāchhe. — Our bank has a branch near the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmāder bængker ekṭā shākhā sṭeshôner kāchhe.* — Our bank has a branch near the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for grass, then the Bengali for a creeper, then say shākhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for grass, then the Bengali for a creeper, then say *shākhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does শাখা (shākhā) mean? (\"A branch (of a tree, a bank or a river)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C435-kath",
+      "sequence": 26640,
+      "title": "কাঠ (kāṭh) — wood; timber",
+      "headword": "কাঠ",
+      "romanization": "kāṭh",
+      "gloss": "wood; timber",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd7fd3b1a8cc3fe8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a creeper, then the Bengali for a branch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কাঠ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাঠ — kāṭh — \"wood; timber\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শীতে আমরা কাঠ জ্বালালাম। shīte āmrā kāṭh jvālālām. In winter we burned wood."
+            },
+            {
+              "kind": "speech",
+              "text": "ঠ, the breathy partner of ট, closes the word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাঠ (kāṭh) is inherited: CDIAL lists Bengali kāṭh, \"wood\", under Sanskrit kāṣṭhá, \"a piece of wood\" (CDIAL 3120)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṭh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṭh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṭh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṭh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shīte āmrā kāṭh jvālālām. — In winter we burned wood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shīte āmrā kāṭh jvālālām.* — In winter we burned wood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a creeper, then the Bengali for a branch, then say kāṭh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a creeper, then the Bengali for a branch, then say *kāṭh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কাঠ (kāṭh) mean? (\"Wood; timber\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C435-chhata",
+      "sequence": 26650,
+      "title": "ছাঁটা (chhā̃ṭā) — to trim; to prune; to cut back",
+      "headword": "ছাঁটা",
+      "romanization": "chhā̃ṭā",
+      "gloss": "to trim; to prune; to cut back",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b676b9624c58d42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a branch, then the Bengali for wood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ছাঁটা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ছাঁটা — chhā̃ṭā — \"to trim; to prune; to cut back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মালি বাগানের গাছগুলো ছাঁটলেন। māli bāgāner gāchhgulo chhā̃ṭlen. The gardener trimmed the plants in the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি গাছ ছাঁটলেন, tini gāchh chhā̃ṭlen."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of hair and of staff: চুল ছাঁটা (chhā̃ṭā), to trim hair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ছাঁটা (chhā̃ṭā) is inherited: CDIAL lists Bengali chā̃ṭā, \"to lop\", under the reconstructed chāṇṭ, \"cut\" (CDIAL 5013)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhā̃ṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhā̃ṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhā̃ṭā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhā̃ṭā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māli bāgāner gāchhgulo chhā̃ṭlen. — The gardener trimmed the plants in the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māli bāgāner gāchhgulo chhā̃ṭlen.* — The gardener trimmed the plants in the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a branch, then the Bengali for wood, then say chhā̃ṭā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a branch, then the Bengali for wood, then say *chhā̃ṭā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ছাঁটা (chhā̃ṭā) mean? (\"To trim; to prune; to cut back\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

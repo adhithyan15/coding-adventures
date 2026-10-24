@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C369-nirdharon-kora",
+    "language": "bengali",
+    "chapter": 369,
+    "sequence": 23030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:826d44c1b7bb79c1"
+  },
+  "findings": []
+}

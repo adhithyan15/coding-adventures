@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:044915d16374ada1",
+  "lessonIds": [
+    "BN-C468-hritpindo",
+    "BN-C468-jokrit",
+    "BN-C468-pakostholi",
+    "BN-C468-shira",
+    "BN-C468-dhukpuk-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch468.txt",
+  "json": "bengali/narration/ch468.json",
+  "textHash": "fnv1a64:9211e5977b8cf9ed",
+  "jsonHash": "fnv1a64:d823b7c1482ca82a",
+  "findings": []
+}

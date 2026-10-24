@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:a7faccd9a55d09f5",
+  "lessonIds": [
+    "BN-C437-bagh",
+    "BN-C437-horin",
+    "BN-C437-shikar-kora",
+    "BN-C437-chora",
+    "BN-C437-gungun-kora",
+    "BN-R437-review-431-437",
+    "BN-R437-review-final-437"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch437.txt",
+  "json": "bengali/narration/ch437.json",
+  "textHash": "fnv1a64:6530a105e97f820b",
+  "jsonHash": "fnv1a64:13b5324d76a51044",
+  "findings": []
+}

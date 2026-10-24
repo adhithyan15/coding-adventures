@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C447-onushochona",
+    "language": "bengali",
+    "chapter": 447,
+    "sequence": 27470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd317684d46b8705"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:cf2d0ea1ea2a5915",
+  "lessonIds": [
+    "BN-C433-jhil",
+    "BN-C433-nala",
+    "BN-C433-jolabhumi",
+    "BN-C433-dol-khaoya",
+    "BN-C433-kolkol-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch433.txt",
+  "json": "bengali/narration/ch433.json",
+  "textHash": "fnv1a64:71ab140186dce781",
+  "jsonHash": "fnv1a64:94450d28e9b067fc",
+  "findings": []
+}

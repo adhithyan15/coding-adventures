@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:38b0f836fb740e46",
+  "lessonIds": [
+    "BN-C424-sel",
+    "BN-C424-ophar",
+    "BN-C424-monda",
+    "BN-C424-chahida",
+    "BN-C424-othanama-kora"
+  ],
+  "tex": "bengali/book/chapters/ch424-prices-up-and-down.tex"
+}

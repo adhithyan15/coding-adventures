@@ -1,0 +1,11 @@
+{
+  "id": "BN-C422-porokh-kora",
+  "pathSegment": "BN-PATH-422-PORAKH422",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-422-PORAKH422",
+      "order": 4
+    }
+  ]
+}

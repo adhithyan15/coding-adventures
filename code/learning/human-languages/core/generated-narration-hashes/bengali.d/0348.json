@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:1fc3eda9bf253bc2",
+  "lessonIds": [
+    "BN-C348-rajosvo",
+    "BN-C348-bajet",
+    "BN-C348-koshagar",
+    "BN-C348-aday-kora",
+    "BN-C348-monjur-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch348.txt",
+  "json": "bengali/narration/ch348.json",
+  "textHash": "fnv1a64:acaa69ae0e069534",
+  "jsonHash": "fnv1a64:4ec74189b1a4ad55",
+  "findings": []
+}

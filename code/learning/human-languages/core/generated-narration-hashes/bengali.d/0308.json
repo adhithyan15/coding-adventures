@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:dc5ee67676b286f2",
+  "lessonIds": [
+    "BN-C308-bisorjon",
+    "BN-C308-bhasano",
+    "BN-C308-biday",
+    "BN-C308-shobhajatra",
+    "BN-C308-kolakuli-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch308.txt",
+  "json": "bengali/narration/ch308.json",
+  "textHash": "fnv1a64:724bf5c5f52a083f",
+  "jsonHash": "fnv1a64:8578215d1e5b79bb",
+  "findings": []
+}

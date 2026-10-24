@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:ef96fe90c5343da9",
+  "lessonIds": [
+    "BN-C326-ashchoryo",
+    "BN-C326-oloukik",
+    "BN-C326-kolpona-kora",
+    "BN-C326-guptodhon",
+    "BN-C326-miliye-jaoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch326.txt",
+  "json": "bengali/narration/ch326.json",
+  "textHash": "fnv1a64:945cc48536fd50b4",
+  "jsonHash": "fnv1a64:86ddf563d4ad214c",
+  "findings": []
+}

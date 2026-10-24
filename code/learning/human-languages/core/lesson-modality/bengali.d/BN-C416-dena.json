@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C416-dena",
+    "language": "bengali",
+    "chapter": 416,
+    "sequence": 25650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54118dcbe29b3b08"
+  },
+  "findings": []
+}

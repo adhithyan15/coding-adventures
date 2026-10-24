@@ -1,0 +1,19 @@
+{
+  "chapter": 365,
+  "title": "Coming to Terms",
+  "label": "ch:bn-coming-to-terms",
+  "canDo": "I can say how a disagreement was settled.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C365-sorbosommoto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can say how a disagreement was settled.",
+    "assesses": [
+      "BN-LEX-C365-SOMJHOTA365-03",
+      "BN-LEX-C365-SOMJHOTA365-04",
+      "BN-LEX-C365-SOMJHOTA365-05"
+    ]
+  }
+}

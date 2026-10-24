@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "Going Up and Down",
+  "label": "ch:bn-going-up-and-down",
+  "canDo": "I can say what rises, what falls and by how much.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C372-poriman",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can say what rises, what falls and by how much.",
+    "assesses": [
+      "BN-LEX-C372-BARA372-03",
+      "BN-LEX-C372-BARA372-04",
+      "BN-LEX-C372-BARA372-05"
+    ]
+  }
+}

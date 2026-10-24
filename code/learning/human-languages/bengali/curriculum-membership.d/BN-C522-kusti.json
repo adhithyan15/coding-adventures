@@ -1,0 +1,11 @@
+{
+  "id": "BN-C522-kusti",
+  "pathSegment": "BN-PATH-522-BYAYAM522",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-522-BYAYAM522",
+      "order": 4
+    }
+  ]
+}

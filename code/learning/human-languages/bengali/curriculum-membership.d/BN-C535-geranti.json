@@ -1,0 +1,11 @@
+{
+  "id": "BN-C535-geranti",
+  "pathSegment": "BN-PATH-535-SURAKSHA535",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-535-SURAKSHA535",
+      "order": 2
+    }
+  ]
+}

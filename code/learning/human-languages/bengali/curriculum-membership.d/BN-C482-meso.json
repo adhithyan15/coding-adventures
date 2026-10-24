@@ -1,0 +1,11 @@
+{
+  "id": "BN-C482-meso",
+  "pathSegment": "BN-PATH-482-JETHA482",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-482-JETHA482",
+      "order": 1
+    }
+  ]
+}

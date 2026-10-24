@@ -1,0 +1,850 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 423,
+  "title": "Bags, Wrappers and Sizes",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b75affe5589f9a5e",
+  "lessons": [
+    {
+      "id": "BN-C423-thonga",
+      "sequence": 25990,
+      "title": "ঠোঙা (ṭhongā) — a paper bag; a paper cone",
+      "headword": "ঠোঙা",
+      "romanization": "ṭhongā",
+      "gloss": "a paper bag; a paper cone",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:edf7490b8b4f2c1b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a customer (formal), then the Bengali for to test (by trying)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঠোঙা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঠোঙা — ṭhongā — \"a paper bag; a paper cone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মুদি একটা ঠোঙায় মুড়ি দিলেন। mudi ekṭā ṭhongāy muṛi dilen. The grocer gave me puffed rice in a paper bag."
+            },
+            {
+              "kind": "speech",
+              "text": "Folded and pasted from old newspaper, the ঠোঙা (ṭhongā) holds roasted nuts, puffed rice and sweets."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঠোঙা (ṭhongā) is the paper bag of every Bengal shop; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhongā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhongā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhongā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhongā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mudi ekṭā ṭhongāy muṛi dilen. — The grocer gave me puffed rice in a paper bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mudi ekṭā ṭhongāy muṛi dilen.* — The grocer gave me puffed rice in a paper bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a customer (formal), then the Bengali for to test (by trying), then say ṭhongā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a customer (formal), then the Bengali for to test (by trying), then say *ṭhongā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঠোঙা (ṭhongā) mean? (\"A paper bag; a paper cone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C423-morok",
+      "sequence": 26000,
+      "title": "মোড়ক (moṛôk) — a wrapper; packaging",
+      "headword": "মোড়ক",
+      "romanization": "moṛôk",
+      "gloss": "a wrapper; packaging",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa779820acc023a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to test (by trying), then the Bengali for a paper bag."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মোড়ক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মোড়ক — moṛôk — \"a wrapper; packaging\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি উপহারের মোড়ক খুললাম। āmi uphārer moṛôk khullām. I opened the wrapping of the present."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মোড়ক (moṛôk) is built on মোড়া, \"to wrap\", which CDIAL sets beside mōṭati, \"twists\" (CDIAL 10186), with the noun ending -ক: the thing that wraps."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṛôk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṛôk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṛôk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṛôk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmi uphārer moṛôk khullām. — I opened the wrapping of the present.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmi uphārer moṛôk khullām.* — I opened the wrapping of the present.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to test (by trying), then the Bengali for a paper bag, then say moṛôk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to test (by trying), then the Bengali for a paper bag, then say *moṛôk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মোড়ক (moṛôk) mean? (\"A wrapper; packaging\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C423-keribyag",
+      "sequence": 26010,
+      "title": "ক্যারিব্যাগ (kæribyāg) — a carrier bag; a plastic bag",
+      "headword": "ক্যারিব্যাগ",
+      "romanization": "kæribyāg",
+      "gloss": "a carrier bag; a plastic bag",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:327cd85fedd77beb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a paper bag, then the Bengali for a wrapper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ক্যারিব্যাগ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ক্যারিব্যাগ — kæribyāg — \"a carrier bag; a plastic bag\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দোকানদার একটা ক্যারিব্যাগে জিনিসগুলো দিলেন। dokāndār ekṭā kæribyāge jinisgulo dilen. The shopkeeper gave me the things in a carrier bag."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ক্যারিব্যাগ (kæribyāg) is borrowed from English carry bag, the Indian English name for a shop's plastic bag, written as one word; ব্যাগ inside it is already taught."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kæribyāg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kæribyāg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kæribyāg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kæribyāg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dokāndār ekṭā kæribyāge jinisgulo dilen. — The shopkeeper gave me the things in a carrier bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dokāndār ekṭā kæribyāge jinisgulo dilen.* — The shopkeeper gave me the things in a carrier bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a paper bag, then the Bengali for a wrapper, then say kæribyāg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a paper bag, then the Bengali for a wrapper, then say *kæribyāg* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ক্যারিব্যাগ (kæribyāg) mean? (\"A carrier bag; a plastic bag\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C423-saij",
+      "sequence": 26020,
+      "title": "সাইজ (sāij) — a size (of clothes or shoes)",
+      "headword": "সাইজ",
+      "romanization": "sāij",
+      "gloss": "a size (of clothes or shoes)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53b36a7fd04517dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a wrapper, then the Bengali for a carrier bag."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সাইজ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাইজ — sāij — \"a size (of clothes or shoes)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই জুতোটা আমার সাইজের নয়। ei jutoṭā āmār sāijer nôy. These shoes are not my size."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাইজ (sāij) is borrowed from English size; the English z is said with জ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāij",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāij*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāij, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāij*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ei jutoṭā āmār sāijer nôy. — These shoes are not my size.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ei jutoṭā āmār sāijer nôy.* — These shoes are not my size.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a wrapper, then the Bengali for a carrier bag, then say sāij again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a wrapper, then the Bengali for a carrier bag, then say *sāij* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সাইজ (sāij) mean? (\"A size (of clothes or shoes)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C423-gochhano",
+      "sequence": 26030,
+      "title": "গছানো (gôchhāno) — to palm off; to foist (something on someone)",
+      "headword": "গছানো",
+      "romanization": "gôchhāno",
+      "gloss": "to palm off; to foist (something on someone)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c1d01e086f144d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a carrier bag, then the Bengali for a size (of clothes or shoes)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গছানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গছানো — gôchhāno — \"to palm off; to foist (something on someone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দোকানদার আমাকে একটা পচা আম গছাল। dokāndār āmāke ekṭā pôchā ām gôchhālô. The shopkeeper palmed off a rotten mango on me."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি পুরনো মাল গছালেন, tini purôno māl gôchhālen."
+            },
+            {
+              "kind": "speech",
+              "text": "The person who is landed with it takes -কে: আমাকে গছাল, foisted it on me."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গছানো (gôchhāno) probably belongs with Sanskrit gácchati, \"goes, falls to the share of\" (CDIAL 3955), under which CDIAL lists Bengali gachāna, \"to take a deposit\"; to palm off is to make a thing fall to someone else's share."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôchhāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôchhāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôchhāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôchhāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dokāndār āmāke ekṭā pôchā ām gôchhālô. — The shopkeeper palmed off a rotten mango on me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dokāndār āmāke ekṭā pôchā ām gôchhālô.* — The shopkeeper palmed off a rotten mango on me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a carrier bag, then the Bengali for a size (of clothes or shoes), then say gôchhāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a carrier bag, then the Bengali for a size (of clothes or shoes), then say *gôchhāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গছানো (gôchhāno) mean? (\"To palm off; to foist (something on someone)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R423-review-416-423",
+      "sequence": 26040,
+      "title": "Looking back: from Debts and Instalments to Bags, Wrappers and Sizes",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Debts and Instalments to Bags, Wrappers and Sizes",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14d1206a7b6b89a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for an instalment and a debt (owed)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an instalment, a debt (owed), money owed to one, to pay off, to settle (a bill)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an instalment, a debt (owed), money owed to one, to pay off, to settle (a bill)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a banknote, a cash machine, a (bank) balance, to transfer (money), a contribution (to a fund)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a banknote, a cash machine, a (bank) balance, to transfer (money), a contribution (to a fund)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "profit (in trade), a duty (tax), land tax, a moneylender, the rest (remaining)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: profit (in trade), a duty (tax), land tax, a moneylender, the rest (remaining)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "want (lack), waste (of something useful), stingy, a pledge (for a loan), one's means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: want (lack), waste (of something useful), stingy, a pledge (for a loan), one's means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sale (selling), a hawker, a broker, a village market, to be sold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sale (selling), a hawker, a broker, a village market, to be sold]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goods, a warehouse, an order (for goods or food), wholesale, to stock up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: goods, a warehouse, an order (for goods or food), wholesale, to stock up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pair of scales, pure (unmixed), a shopping list, a customer (formal), to test (by trying)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pair of scales, pure (unmixed), a shopping list, a customer (formal), to test (by trying)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a paper bag, a wrapper, a carrier bag, a size (of clothes or shoes), to palm off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a paper bag, a wrapper, a carrier bag, a size (of clothes or shoes), to palm off]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An instalment? (কিস্তি, kisti.) A debt (owed)? (দেনা, denā.) Money owed to one? (পাওনা, pāonā.) To pay off? (শোধ করা, shodh kôrā.) To settle (a bill)? (মেটানো, meṭāno.) A banknote? (নোট, noṭ.) A cash machine? (এটিএম, eṭiem.) A (bank) balance? (ব্যালান্স, bælāns.) To transfer (money)? (ট্রান্সফার করা, ṭrānsphār kôrā.) A contribution (to a fund)? (চাঁদা, chā̃dā.) Profit (in trade)? (মুনাফা, munāphā.) A duty (tax)? (শুল্ক, shulkô.) Land tax? (খাজনা, khājnā.) A moneylender? (মহাজন, môhājôn.) The rest (remaining)? (বাকি, bāki.) Want (lack)? (অভাব, ôbhāb.) Waste (of something useful)? (অপচয়, ôpôchôy.) Stingy? (কিপটে, kipṭe.) A pledge (for a loan)? (বন্ধক, bôndhôk.) One's means? (সম্বল, sômbôl.) A sale (selling)? (বিক্রি, bikri.) A hawker? (ফেরিওয়ালা, pherioyālā.) A broker? (দালাল, dālāl.) A village market? (হাট, hāṭ.) To be sold? (বিকোনো, bikono.) Goods? (মাল, māl.) A warehouse? (গুদাম, gudām.) An order (for goods or food)? (অর্ডার, ôrḍār.) Wholesale? (পাইকারি, pāikāri.) To stock up? (মজুত করা, môjut kôrā.) A pair of scales? (দাঁড়িপাল্লা, dā̃ṛipāllā.) Pure (unmixed)? (খাঁটি, khā̃ṭi.) A shopping list? (ফর্দ, phôrdô.) A customer (formal)? (গ্রাহক, grāhôk.) To test (by trying)? (পরখ করা, pôrôkh kôrā.) A paper bag? (ঠোঙা, ṭhongā.) A wrapper? (মোড়ক, moṛôk.) A carrier bag? (ক্যারিব্যাগ, kæribyāg.) A size (of clothes or shoes)? (সাইজ, sāij.) To palm off? (গছানো, gôchhāno.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

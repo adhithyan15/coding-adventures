@@ -1,0 +1,11 @@
+{
+  "id": "BN-C307-aroti",
+  "pathSegment": "BN-PATH-307-DHAK307",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-307-DHAK307",
+      "order": 3
+    }
+  ]
+}

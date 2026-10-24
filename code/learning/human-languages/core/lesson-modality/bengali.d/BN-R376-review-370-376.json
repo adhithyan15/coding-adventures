@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R376-review-370-376",
+    "language": "bengali",
+    "chapter": 376,
+    "sequence": 23400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c734534739d0f2e3"
+  },
+  "findings": []
+}

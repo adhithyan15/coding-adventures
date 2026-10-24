@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C364-songkot",
+    "language": "bengali",
+    "chapter": 364,
+    "sequence": 22750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0961c072b20308cf"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:7bda6ddcb6939f5c",
+  "lessonIds": [
+    "BN-C375-badhyotamulok",
+    "BN-C375-onumoti",
+    "BN-C375-betikrom",
+    "BN-C375-chapano",
+    "BN-C375-shithil-kora"
+  ],
+  "tex": "bengali/book/chapters/ch375-must-and-may.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R268-opinion-and-reason",
+    "language": "bengali",
+    "chapter": 268,
+    "sequence": 16750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14d3c41de8e6fd91"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 351,
+  "title": "Respect and Neglect",
+  "label": "ch:bn-respect-and-neglect",
+  "canDo": "I can say whom I respect and what is neglected.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C351-khatir-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can say whom I respect and what is neglected.",
+    "assesses": [
+      "BN-LEX-C351-SHRODDHA351-03",
+      "BN-LEX-C351-SHRODDHA351-04",
+      "BN-LEX-C351-SHRODDHA351-05"
+    ]
+  }
+}

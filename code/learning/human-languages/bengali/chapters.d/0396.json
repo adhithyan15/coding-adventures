@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "Boats and Boatmen",
+  "label": "ch:bn-boats-and-boatmen",
+  "canDo": "I can talk about a boatman, his oars and anchor, and rowing across.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C396-baoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can talk about a boatman, his oars and anchor, and rowing across.",
+    "assesses": [
+      "BN-LEX-C396-MAJHI396-03",
+      "BN-LEX-C396-MAJHI396-04",
+      "BN-LEX-C396-MAJHI396-05"
+    ]
+  }
+}

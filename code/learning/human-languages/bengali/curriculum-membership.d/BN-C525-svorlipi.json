@@ -1,0 +1,11 @@
+{
+  "id": "BN-C525-svorlipi",
+  "pathSegment": "BN-PATH-525-SUR525",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-525-SUR525",
+      "order": 2
+    }
+  ]
+}

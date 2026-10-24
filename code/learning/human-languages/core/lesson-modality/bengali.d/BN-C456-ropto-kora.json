@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C456-ropto-kora",
+    "language": "bengali",
+    "chapter": 456,
+    "sequence": 27960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f4c5e6b3cc03d0a"
+  },
+  "findings": []
+}

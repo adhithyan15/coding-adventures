@@ -1,0 +1,11 @@
+{
+  "id": "BN-C410-chotvor",
+  "pathSegment": "BN-PATH-410-MATH410",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-410-MATH410",
+      "order": 3
+    }
+  ]
+}

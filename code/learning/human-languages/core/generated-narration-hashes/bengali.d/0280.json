@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:5abc318d0cbd6ead",
+  "lessonIds": [
+    "BN-C280-pouchhano",
+    "BN-C280-uddhar-kora",
+    "BN-C280-moi",
+    "BN-C280-sairen",
+    "BN-C280-ashroy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch280.txt",
+  "json": "bengali/narration/ch280.json",
+  "textHash": "fnv1a64:29d5a49a4878cdea",
+  "jsonHash": "fnv1a64:feb170f2aca22872",
+  "findings": []
+}

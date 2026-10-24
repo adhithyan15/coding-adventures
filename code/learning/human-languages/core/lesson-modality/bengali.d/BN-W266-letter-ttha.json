@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "BN-W266-letter-ttha",
+    "language": "bengali",
+    "chapter": 266,
+    "sequence": 16620,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a87a950fd003a749",
+    "detachableSegments": [
+      "Script you'll notice: ঠ",
+      "Writing: ঠ — copy the printed shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

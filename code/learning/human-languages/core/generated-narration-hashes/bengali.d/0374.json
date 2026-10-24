@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:5c5eade9fa3b70c8",
+  "lessonIds": [
+    "BN-C374-hushiyar",
+    "BN-C374-protirodh-kora",
+    "BN-C374-thekano",
+    "BN-C374-niyontron-kora",
+    "BN-C374-nojor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch374.txt",
+  "json": "bengali/narration/ch374.json",
+  "textHash": "fnv1a64:8eeaba93afb5adbd",
+  "jsonHash": "fnv1a64:ba229a0429d9f570",
+  "findings": []
+}

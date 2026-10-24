@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C449-maya",
+    "language": "bengali",
+    "chapter": 449,
+    "sequence": 27570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8802240266c6d67d"
+  },
+  "findings": []
+}

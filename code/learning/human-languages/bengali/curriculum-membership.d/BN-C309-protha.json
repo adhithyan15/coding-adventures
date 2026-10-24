@@ -1,0 +1,11 @@
+{
+  "id": "BN-C309-protha",
+  "pathSegment": "BN-PATH-309-GHURI309",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-309-GHURI309",
+      "order": 4
+    }
+  ]
+}

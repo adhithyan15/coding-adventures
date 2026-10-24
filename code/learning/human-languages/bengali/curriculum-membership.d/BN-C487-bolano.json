@@ -1,0 +1,11 @@
+{
+  "id": "BN-C487-bolano",
+  "pathSegment": "BN-PATH-487-SOMPORKO487",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-487-SOMPORKO487",
+      "order": 4
+    }
+  ]
+}

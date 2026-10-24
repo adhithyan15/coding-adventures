@@ -1,0 +1,11 @@
+{
+  "id": "BN-C406-gesthaus",
+  "pathSegment": "BN-PATH-406-THAI406",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "BN-EXT-406-THAI406",
+      "order": 0
+    }
+  ]
+}

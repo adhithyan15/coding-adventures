@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C490-dottok-neoya",
+    "language": "bengali",
+    "chapter": 490,
+    "sequence": 29690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d386ddf479a63e7"
+  },
+  "findings": []
+}

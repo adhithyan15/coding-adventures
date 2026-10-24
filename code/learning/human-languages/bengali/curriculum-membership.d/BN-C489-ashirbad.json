@@ -1,0 +1,11 @@
+{
+  "id": "BN-C489-ashirbad",
+  "pathSegment": "BN-PATH-489-SONGSAR489",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-489-SONGSAR489",
+      "order": 3
+    }
+  ]
+}

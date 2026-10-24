@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:4fa1789e66b3c839",
+  "lessonIds": [
+    "BN-C418-munapha",
+    "BN-C418-shulko",
+    "BN-C418-khajna",
+    "BN-C418-mohajon",
+    "BN-C418-baki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch418.txt",
+  "json": "bengali/narration/ch418.json",
+  "textHash": "fnv1a64:8ae0a66e3d8a72cc",
+  "jsonHash": "fnv1a64:97e4d14ffd59b413",
+  "findings": []
+}

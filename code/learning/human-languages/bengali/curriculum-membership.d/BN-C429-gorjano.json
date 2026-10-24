@@ -1,0 +1,11 @@
+{
+  "id": "BN-C429-gorjano",
+  "pathSegment": "BN-PATH-429-KALBOISHAKHI429",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-429-KALBOISHAKHI429",
+      "order": 2
+    }
+  ]
+}

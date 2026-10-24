@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:e0b0451e05cb4cf6",
+  "lessonIds": [
+    "BN-C312-onushthan",
+    "BN-C312-mala",
+    "BN-C312-sanai",
+    "BN-C312-ulu",
+    "BN-C312-borjatri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch312.txt",
+  "json": "bengali/narration/ch312.json",
+  "textHash": "fnv1a64:aefd41180fcb27bf",
+  "jsonHash": "fnv1a64:9073c0ad55cdbfc3",
+  "findings": []
+}

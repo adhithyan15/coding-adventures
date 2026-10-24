@@ -1,0 +1,11 @@
+{
+  "id": "BN-C474-kensar",
+  "pathSegment": "BN-PATH-474-HANPANI474",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-474-HANPANI474",
+      "order": 3
+    }
+  ]
+}

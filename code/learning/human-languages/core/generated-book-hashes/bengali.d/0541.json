@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:0f3fa18a251c4b6d",
+  "lessonIds": [
+    "BN-C541-protikkha",
+    "BN-C541-dirgho",
+    "BN-C541-songrokkhit",
+    "BN-C541-token",
+    "BN-C541-porjay"
+  ],
+  "tex": "bengali/book/chapters/ch541-waiting-your-turn.tex"
+}

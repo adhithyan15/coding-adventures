@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-271-TICKET-TROUBLE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "BN-EXT-271-TICKET-TROUBLE"
+  ],
+  "after": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:d5e5f3db0a69f74b",
+  "lessonIds": [
+    "BN-C353-reoyaj",
+    "BN-C353-riti",
+    "BN-C353-songskar",
+    "BN-C353-procholito",
+    "BN-C353-mana",
+    "BN-R353-review-346-353"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch353.txt",
+  "json": "bengali/narration/ch353.json",
+  "textHash": "fnv1a64:4f92eeb593ebfa2d",
+  "jsonHash": "fnv1a64:80abfe719073ee2c",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:48cc2de5d0e38869",
+  "lessonIds": [
+    "BN-C349-protibad-kora",
+    "BN-C349-oborodh",
+    "BN-C349-jonomot",
+    "BN-C349-niti",
+    "BN-C349-jonosongkhya"
+  ],
+  "tex": "bengali/book/chapters/ch349-raising-a-voice.tex"
+}

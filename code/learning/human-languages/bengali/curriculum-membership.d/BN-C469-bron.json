@@ -1,0 +1,11 @@
+{
+  "id": "BN-C469-bron",
+  "pathSegment": "BN-PATH-469-GHAM469",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-469-GHAM469",
+      "order": 1
+    }
+  ]
+}

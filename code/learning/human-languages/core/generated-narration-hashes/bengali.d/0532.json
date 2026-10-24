@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:ae08047e5fa83f1f",
+  "lessonIds": [
+    "BN-C532-niyoti",
+    "BN-C532-bhobitobyo",
+    "BN-C532-ach-kora",
+    "BN-C532-purbabhas",
+    "BN-C532-jyotishi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch532.txt",
+  "json": "bengali/narration/ch532.json",
+  "textHash": "fnv1a64:bf913eff2a1d3898",
+  "jsonHash": "fnv1a64:34f5070967426cbf",
+  "findings": []
+}

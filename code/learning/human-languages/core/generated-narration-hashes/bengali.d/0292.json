@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:7aef3d812987bd40",
+  "lessonIds": [
+    "BN-C292-khora",
+    "BN-C292-durbhikkho",
+    "BN-C292-onahar",
+    "BN-C292-phata",
+    "BN-C292-jholse-jaoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch292.txt",
+  "json": "bengali/narration/ch292.json",
+  "textHash": "fnv1a64:13a2669736f75385",
+  "jsonHash": "fnv1a64:718991e27a1c3f13",
+  "findings": []
+}

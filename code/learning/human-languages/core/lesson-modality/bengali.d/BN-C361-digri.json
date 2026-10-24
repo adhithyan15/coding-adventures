@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C361-digri",
+    "language": "bengali",
+    "chapter": 361,
+    "sequence": 22610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ba64c3b01cae2e0"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 317,
+  "title": "Courage and Sacrifice",
+  "label": "ch:bn-courage-and-sacrifice",
+  "canDo": "I can talk about heroes, martyrs, surrender and defeat.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C317-porajoy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can talk about heroes, martyrs, surrender and defeat.",
+    "assesses": [
+      "BN-LEX-C317-BIR317-03",
+      "BN-LEX-C317-BIR317-04",
+      "BN-LEX-C317-BIR317-05"
+    ]
+  }
+}

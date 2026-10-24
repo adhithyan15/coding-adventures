@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-350-ADORSHO350",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "BN-EXT-350-ADORSHO350"
+  ],
+  "after": []
+}

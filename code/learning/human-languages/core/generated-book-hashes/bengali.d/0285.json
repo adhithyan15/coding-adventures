@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:8cebd174cedef279",
+  "lessonIds": [
+    "BN-C285-shasano",
+    "BN-C285-ghush",
+    "BN-C285-phasano",
+    "BN-C285-lut-kora",
+    "BN-C285-protarona"
+  ],
+  "tex": "bengali/book/chapters/ch285-threats-and-tricks.tex"
+}

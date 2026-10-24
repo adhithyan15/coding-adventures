@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C484-jomoj",
+    "language": "bengali",
+    "chapter": 484,
+    "sequence": 29360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bfbc02c858e59dde"
+  },
+  "findings": []
+}

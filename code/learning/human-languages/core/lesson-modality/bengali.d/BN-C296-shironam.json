@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C296-shironam",
+    "language": "bengali",
+    "chapter": 296,
+    "sequence": 19030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd4c8e9593899fb0"
+  },
+  "findings": []
+}

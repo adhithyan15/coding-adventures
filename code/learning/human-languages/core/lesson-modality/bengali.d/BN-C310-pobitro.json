@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C310-pobitro",
+    "language": "bengali",
+    "chapter": 310,
+    "sequence": 19780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d5f12acb49bd2ce"
+  },
+  "findings": []
+}

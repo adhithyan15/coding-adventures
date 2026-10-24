@@ -1,0 +1,11 @@
+{
+  "id": "BN-C421-mojut-kora",
+  "pathSegment": "BN-PATH-421-GUDAM421",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-421-GUDAM421",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C465-bichokkhon",
+  "pathSegment": "BN-PATH-465-BIBEK465",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-465-BIBEK465",
+      "order": 1
+    }
+  ]
+}

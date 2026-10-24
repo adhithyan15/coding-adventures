@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:0ec35abe4afe3c7b",
+  "lessonIds": [
+    "BN-C301-protyokkhodorshi",
+    "BN-C301-biboron",
+    "BN-C301-bhidio",
+    "BN-C301-bistarit",
+    "BN-C301-jachai-kora"
+  ],
+  "tex": "bengali/book/chapters/ch301-eyewitness-accounts.tex"
+}

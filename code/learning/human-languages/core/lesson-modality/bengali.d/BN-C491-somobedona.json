@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C491-somobedona",
+    "language": "bengali",
+    "chapter": 491,
+    "sequence": 29740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8566ce6a2f21385b"
+  },
+  "findings": []
+}

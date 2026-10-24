@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Rest and Comfort",
+  "label": "ch:bn-rest-and-comfort",
+  "canDo": "I can say a room is comfortable, take breakfast and rest a while.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C404-helan-deoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can say a room is comfortable, take breakfast and rest a while.",
+    "assesses": [
+      "BN-LEX-C404-ARAM404-03",
+      "BN-LEX-C404-ARAM404-04",
+      "BN-LEX-C404-ARAM404-05"
+    ]
+  }
+}

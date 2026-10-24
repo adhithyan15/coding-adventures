@@ -1,0 +1,11 @@
+{
+  "id": "BN-C396-dar",
+  "pathSegment": "BN-PATH-396-MAJHI396",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-396-MAJHI396",
+      "order": 1
+    }
+  ]
+}

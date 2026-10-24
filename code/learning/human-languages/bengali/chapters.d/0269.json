@@ -1,0 +1,22 @@
+{
+  "chapter": 269,
+  "title": "Ought To, Have To, and So",
+  "label": "ch:bn-ought-to-have-to-and-so",
+  "canDo": "I can say what someone ought to do with uchit and has to do with -te hôbe, draw a result with tāi and sejônyô, and read and write উ in উচিত.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-R269-advice-and-result",
+    "kind": "production",
+    "summary": "Complete BN-R269-advice-and-result: give advice, a duty and a result.",
+    "assesses": [
+      "BN-GRAMMAR-C269-UCHIT-SHOULD-01",
+      "BN-GRAMMAR-C269-TAI-01",
+      "BN-LEX-C269-UCHIT-01",
+      "BN-SCRIPT-C269-U-01",
+      "BN-GRAMMAR-C269-TE-HOBE-01",
+      "BN-GRAMMAR-C269-SEJONNO-01"
+    ]
+  }
+}

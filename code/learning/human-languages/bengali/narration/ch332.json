@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 332,
+  "title": "One Thing Leads to Another",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:dc1a280532b42f69",
+  "lessons": [
+    {
+      "id": "BN-C332-sutorang",
+      "sequence": 21100,
+      "title": "সুতরাং (sutôrāng) — therefore; and so",
+      "headword": "সুতরাং",
+      "romanization": "sutôrāng",
+      "gloss": "therefore; and so",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01b52814e30fd72c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a financial loss, then the Bengali for useful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সুতরাং",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সুতরাং — sutôrāng — \"therefore; and so\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বাস নেই, সুতরাং আমরা হেঁটে যাব। bās nei, sutôrāng āmrā hẽṭe jābô. There is no bus, so we will walk."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সুতরাং (sutôrāng) is Sanskrit sutarām, 'all the more' (Monier-Williams), with its final m heard as ng. The sense 'therefore' is not one the dictionary gives; in Bengali the word draws the conclusion from what was said before."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sutôrāng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sutôrāng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sutôrāng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sutôrāng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bās nei, sutôrāng āmrā hẽṭe jābô. — There is no bus, so we will walk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bās nei, sutôrāng āmrā hẽṭe jābô.* — There is no bus, so we will walk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a financial loss, then the Bengali for useful, then say sutôrāng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a financial loss, then the Bengali for useful, then say *sutôrāng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সুতরাং (sutôrāng) mean? (\"Therefore; and so\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C332-tachhara",
+      "sequence": 21110,
+      "title": "তাছাড়া (tāchhāṛā) — besides; apart from that",
+      "headword": "তাছাড়া",
+      "romanization": "tāchhāṛā",
+      "gloss": "besides; apart from that",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:faa93c0b306b9011",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for useful, then the Bengali for therefore."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: তাছাড়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তাছাড়া — tāchhāṛā — \"besides; apart from that\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আজ আমি ক্লান্ত, তাছাড়া আমার অনেক কাজ আছে। āj āmi klāntô, tāchhāṛā āmār ônek kāj āchhe. I'm tired today, and besides, I have a lot of work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তাছাড়া (tāchhāṛā) is তা 'that' with ছাড়া 'apart from' (CDIAL 5612 and 4998 list Bengali tā and chāṛā): 'apart from that'. It adds a second reason to the first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāchhāṛā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāchhāṛā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāchhāṛā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāchhāṛā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj āmi klāntô, tāchhāṛā āmār ônek kāj āchhe. — I'm tired today, and besides, I have a lot of work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj āmi klāntô, tāchhāṛā āmār ônek kāj āchhe.* — I'm tired today, and besides, I have a lot of work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for useful, then the Bengali for therefore, then say tāchhāṛā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for useful, then the Bengali for therefore, then say *tāchhāṛā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does তাছাড়া (tāchhāṛā) mean? (\"Besides; apart from that\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C332-othoch",
+      "sequence": 21120,
+      "title": "অথচ (ôthôch) — and yet; even so",
+      "headword": "অথচ",
+      "romanization": "ôthôch",
+      "gloss": "and yet; even so",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:edf860caaab9ebfc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for therefore, then the Bengali for besides."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অথচ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অথচ — ôthôch — \"and yet; even so\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মীরা অনেক পড়ল, অথচ পাস করল না। mīrā ônek pôṛlô, ôthôch pās kôrlô nā. Mira studied a lot, and yet she did not pass."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অথচ (ôthôch) is Sanskrit atha ca, 'and moreover' (Monier-Williams). The Bengali sense, 'and yet', which links a result you would not expect, is not one the dictionary gives."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôthôch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôthôch*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôthôch, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôthôch*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrā ônek pôṛlô, ôthôch pās kôrlô nā. — Mira studied a lot, and yet she did not pass.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrā ônek pôṛlô, ôthôch pās kôrlô nā.* — Mira studied a lot, and yet she did not pass.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for therefore, then the Bengali for besides, then say ôthôch again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for therefore, then the Bengali for besides, then say *ôthôch* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অথচ (ôthôch) mean? (\"And yet; even so\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C332-oboshyo",
+      "sequence": 21130,
+      "title": "অবশ্য (ôbôshyô) — of course; mind you",
+      "headword": "অবশ্য",
+      "romanization": "ôbôshyô",
+      "gloss": "of course; mind you",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bad185cc78457122",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for besides, then the Bengali for and yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অবশ্য",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অবশ্য — ôbôshyô — \"of course; mind you\"."
+            },
+            {
+              "kind": "speech",
+              "text": "হোটেলটা দামি, অবশ্য খাবার দুর্দান্ত। hoṭelṭā dāmi, ôbôshyô khābār durdāntô. The hotel is expensive, though mind you, the food is excellent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অবশ্য (ôbôshyô) is Sanskrit avaśyam, 'necessarily' (Monier-Williams). Bengali uses it to grant a point while keeping your own: 'of course', 'mind you'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbôshyô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbôshyô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbôshyô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbôshyô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoṭelṭā dāmi, ôbôshyô khābār durdāntô. — The hotel is expensive, though mind you, the food is excellent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoṭelṭā dāmi, ôbôshyô khābār durdāntô.* — The hotel is expensive, though mind you, the food is excellent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for besides, then the Bengali for and yet, then say ôbôshyô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for besides, then the Bengali for and yet, then say *ôbôshyô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অবশ্য (ôbôshyô) mean? (\"Of course; mind you\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C332-khata",
+      "sequence": 21140,
+      "title": "খাটা (khāṭā) — to hold good; to apply (of a rule); to toil",
+      "headword": "খাটা",
+      "romanization": "khāṭā",
+      "gloss": "to hold good; to apply (of a rule); to toil",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6e2673614a259b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for and yet, then the Bengali for mind you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: খাটা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খাটা — khāṭā — \"to hold good; to apply (of a rule); to toil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই নিয়মটা এখানে খাটে না। ei niyômṭā ekhāne khāṭe nā. This rule doesn't apply here."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই নিয়মটা খাটল না, sei niyômṭā khāṭlô nā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খাটা (khāṭā) is listed by CDIAL 3779 (khaṭṭáyati) with the senses 'to work' and 'to apply'. A person খাটে when working hard; a rule or a reason খাটে when it holds in a case."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāṭā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāṭā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ei niyômṭā ekhāne khāṭe nā. — This rule doesn't apply here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ei niyômṭā ekhāne khāṭe nā.* — This rule doesn't apply here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for and yet, then the Bengali for mind you, then say khāṭā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for and yet, then the Bengali for mind you, then say *khāṭā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does খাটা (khāṭā) mean? (\"To hold good; to apply (of a rule); to toil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

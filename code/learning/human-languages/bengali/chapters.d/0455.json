@@ -1,0 +1,19 @@
+{
+  "chapter": 455,
+  "title": "Patience and Eagerness",
+  "label": "ch:bn-patience-and-eagerness",
+  "canDo": "I can talk about patience and about being eager for something.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C455-tor-sooya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can talk about patience and about being eager for something.",
+    "assesses": [
+      "BN-LEX-C455-DHOIRJO455-03",
+      "BN-LEX-C455-DHOIRJO455-04",
+      "BN-LEX-C455-DHOIRJO455-05"
+    ]
+  }
+}

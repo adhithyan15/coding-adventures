@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C306-bhoj",
+    "language": "bengali",
+    "chapter": 306,
+    "sequence": 19550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e196bf51257b5c28"
+  },
+  "findings": []
+}

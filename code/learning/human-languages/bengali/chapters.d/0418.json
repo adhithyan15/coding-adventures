@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "Profit, Taxes and Moneylenders",
+  "label": "ch:bn-profit-taxes-and-moneylenders",
+  "canDo": "I can talk about profit, duty and land tax, a moneylender and what is left to pay.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C418-baki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can talk about profit, duty and land tax, a moneylender and what is left to pay.",
+    "assesses": [
+      "BN-LEX-C418-MUNAFA418-03",
+      "BN-LEX-C418-MUNAFA418-04",
+      "BN-LEX-C418-MUNAFA418-05"
+    ]
+  }
+}

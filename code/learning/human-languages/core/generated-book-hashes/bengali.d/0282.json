@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:120d819c063b8924",
+  "lessonIds": [
+    "BN-C282-churi-kora",
+    "BN-C282-goyna",
+    "BN-C282-pakrano",
+    "BN-C282-thela",
+    "BN-C282-poketmar"
+  ],
+  "tex": "bengali/book/chapters/ch282-a-theft-in-the-night.tex"
+}

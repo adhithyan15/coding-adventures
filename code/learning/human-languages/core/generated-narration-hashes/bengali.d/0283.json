@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:075d88963592c7fe",
+  "lessonIds": [
+    "BN-C283-oporadh",
+    "BN-C283-obhijog",
+    "BN-C283-grephtar-kora",
+    "BN-C283-todonto",
+    "BN-C283-daroga",
+    "BN-R283-review-276-283"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch283.txt",
+  "json": "bengali/narration/ch283.json",
+  "textHash": "fnv1a64:968b730ad0444d1b",
+  "jsonHash": "fnv1a64:c8d4638350a52cbc",
+  "findings": []
+}

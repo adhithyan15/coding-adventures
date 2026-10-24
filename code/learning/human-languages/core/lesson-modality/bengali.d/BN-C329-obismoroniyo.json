@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C329-obismoroniyo",
+    "language": "bengali",
+    "chapter": 329,
+    "sequence": 20740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16498772e5fe58ab"
+  },
+  "findings": []
+}
