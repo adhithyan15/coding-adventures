@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 430,
-  "sourceHash": "fnv1a64:88c2267ebfa446eb",
+  "sourceHash": "fnv1a64:785476785460d804",
   "lessonIds": [
     "ML-C430-alimati",
     "ML-C430-kaikkuli",
@@ -14,6 +14,6 @@
   "text": "malayalam/narration/ch430.txt",
   "json": "malayalam/narration/ch430.json",
   "textHash": "fnv1a64:d18786e88a238fcf",
-  "jsonHash": "fnv1a64:ad139aa608a27071",
+  "jsonHash": "fnv1a64:08a2d74675bbeaa6",
   "findings": []
 }

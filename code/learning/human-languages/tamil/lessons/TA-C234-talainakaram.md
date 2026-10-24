@@ -14,7 +14,7 @@ romanization: "talainakaram"
 concept_tag: TA-IDAM234-TALAINAKARAM
 prerequisites: [TA-C234-nakaram, TA-C234-natu]
 sounds: []
-roots: [dravidian-talai-kai, dravidian-nakar-town]
+roots: [dravidian-talai-head, dravidian-nakar-town]
 etymology_hook: "தலைநகரம் — talai 'head' (DEDR 3103) + nakaram 'city' (DEDR 3568): 'the head city'"
 duration:
   max_seconds: 200

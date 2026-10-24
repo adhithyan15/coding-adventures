@@ -14,7 +14,7 @@ romanization: "kaimāṟuka"
 concept_tag: ML-VERB-KAIMARUKA
 prerequisites: [ML-C267-jayikkuka, ML-C267-tolkkuka]
 sounds: []
-roots: [dravidian-tala-kai, dravidian-maru-change]
+roots: [dravidian-kai-hand, dravidian-maru-change]
 etymology_hook: "kaimāṟuka: native Dravidian, 'change hands': kai (DEDR 2023) + māṟuka (DEDR 4834)"
 duration:
   max_seconds: 200

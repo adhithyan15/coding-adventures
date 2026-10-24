@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 261,
-  "sourceHash": "fnv1a64:bb025644a0014a9b",
+  "sourceHash": "fnv1a64:fc7d09a0a14218d2",
   "lessonIds": [
     "TA-C261-carkkarai-noy",
     "TA-C261-utarpayirci",
@@ -14,6 +14,6 @@
   "text": "tamil/narration/ch261.txt",
   "json": "tamil/narration/ch261.json",
   "textHash": "fnv1a64:74d2c1eb0ff4f317",
-  "jsonHash": "fnv1a64:1c22c65d1a6609ec",
+  "jsonHash": "fnv1a64:27bf9798fb32095b",
   "findings": []
 }

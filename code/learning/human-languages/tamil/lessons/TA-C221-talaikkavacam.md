@@ -14,7 +14,7 @@ romanization: "talaikkavacam"
 concept_tag: TA-PORUL221-TALAIKKAVACAM
 prerequisites: [TA-C220-nikalcci, TA-C220-tiraippatam]
 sounds: []
-roots: [dravidian-talai-kai, sanskrit-kavaca]
+roots: [dravidian-talai-head, sanskrit-kavaca]
 etymology_hook: "தலைக்கவசம் — native talai 'head' (DEDR 3103) + kavacam ← Sanskrit kavaca 'armour' (CDIAL 2957)"
 duration:
   max_seconds: 200

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 237,
-  "sourceHash": "fnv1a64:ed8a9653c0deeccd",
+  "sourceHash": "fnv1a64:e38dda31759101e4",
   "lessonIds": [
     "ML-C237-pakal",
     "ML-C237-ennenkilum",
@@ -14,6 +14,6 @@
   "text": "malayalam/narration/ch237.txt",
   "json": "malayalam/narration/ch237.json",
   "textHash": "fnv1a64:056b49d2842c2c6a",
-  "jsonHash": "fnv1a64:d69c67107ca6fc78",
+  "jsonHash": "fnv1a64:6850438d3cd0dde4",
   "findings": []
 }

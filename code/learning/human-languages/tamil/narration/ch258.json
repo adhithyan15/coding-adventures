@@ -4,7 +4,7 @@
   "chapter": 258,
   "title": "To melt, To pick, To bark, To comfort, To shake hands",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:71cbf820a45706d4",
+  "sourceHash": "fnv1a64:57535c29a791fd5f",
   "lessons": [
     {
       "id": "TA-C258-uruku",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a8bfc346e45a8e1",
+      "sourceHash": "fnv1a64:71b0700c25d8df71",
       "notice": null,
       "blocks": [
         {

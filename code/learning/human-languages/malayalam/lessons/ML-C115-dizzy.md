@@ -11,7 +11,7 @@ romanization: "talakaṟakkaṁ"
 concept_tag: ML-UNWELL-DIZZY
 prerequisites: [ML-C115-headache, ML-C115-rest]
 sounds: []
-roots: [dravidian-tala-kai, dravidian-karangu-whirl]
+roots: [dravidian-talai-head, dravidian-karangu-whirl]
 etymology_hook: "talakaṟakkaṁ: native Dravidian, tala 'head' (DEDR 3103) + a noun from the verb 'to whirl' (DEDR 1387)"
 duration:
   max_seconds: 200

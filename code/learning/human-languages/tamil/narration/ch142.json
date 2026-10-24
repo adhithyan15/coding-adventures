@@ -4,7 +4,7 @@
   "chapter": 142,
   "title": "Camel, Duck, Cheek, Wrist, Elbow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3d5e064c9d5e8908",
+  "sourceHash": "fnv1a64:fd4383d7a856783c",
   "lessons": [
     {
       "id": "TA-C142-ottakam",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a65ca2c5bca0a74",
+      "sourceHash": "fnv1a64:dcb939985da8cfcc",
       "notice": null,
       "blocks": [
         {

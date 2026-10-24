@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 267,
-  "sourceHash": "fnv1a64:57006e2d3e48f8b9",
+  "sourceHash": "fnv1a64:0c534b34830b219b",
   "lessonIds": [
     "ML-C267-parisilikkuka",
     "ML-C267-jayikkuka",
@@ -14,6 +14,6 @@
   "text": "malayalam/narration/ch267.txt",
   "json": "malayalam/narration/ch267.json",
   "textHash": "fnv1a64:02f049bd8415a941",
-  "jsonHash": "fnv1a64:038e72b82b87aa96",
+  "jsonHash": "fnv1a64:5a06c9634ed52689",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 430,
   "title": "Corruption",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:88c2267ebfa446eb",
+  "sourceHash": "fnv1a64:785476785460d804",
   "lessons": [
     {
       "id": "ML-C430-alimati",
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1147898ec825eb35",
+      "sourceHash": "fnv1a64:02f6657bee289080",
       "notice": null,
       "blocks": [
         {

@@ -14,7 +14,7 @@ romanization: "kaikkūli"
 concept_tag: ML-AZHIMATI430-KAIKKULI
 prerequisites: [ML-C429-vitaranam-ceyyuka, ML-C430-alimati]
 sounds: []
-roots: [dravidian-tala-kai, dravidian-kuli-wage]
+roots: [dravidian-kai-hand, dravidian-kuli-wage]
 etymology_hook: 'kaikkūli: native, kai ''hand'' (DEDR 2023) + kūli ''wages'' (DEDR 1905): DEDR has ''bribe'''
 duration:
   max_seconds: 200

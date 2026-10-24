@@ -14,7 +14,7 @@ romanization: "muḻaṅkai"
 concept_tag: TA-THINGS142-MULANKAI
 prerequisites: [TA-C142-kannam, TA-C142-manikkattu]
 sounds: []
-roots: [dravidian-muzham-cubit, dravidian-talai-kai]
+roots: [dravidian-muzham-cubit, dravidian-kai-hand]
 etymology_hook: "முழங்கை — native: DEDR 4990 lists it, built on muḻam 'joint, cubit' + kai 'arm'"
 duration:
   max_seconds: 200

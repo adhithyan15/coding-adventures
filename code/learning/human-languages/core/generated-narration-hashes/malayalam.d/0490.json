@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 490,
-  "sourceHash": "fnv1a64:2959220119b30744",
+  "sourceHash": "fnv1a64:70d62220eb3995cf",
   "lessonIds": [
     "ML-C490-tapalppetti",
     "ML-C490-koriyar",
@@ -14,6 +14,6 @@
   "text": "malayalam/narration/ch490.txt",
   "json": "malayalam/narration/ch490.json",
   "textHash": "fnv1a64:ea91d7677912a8fc",
-  "jsonHash": "fnv1a64:fa4ce9c3f9cfe7e8",
+  "jsonHash": "fnv1a64:cd051d1d9ffa0dd2",
   "findings": []
 }

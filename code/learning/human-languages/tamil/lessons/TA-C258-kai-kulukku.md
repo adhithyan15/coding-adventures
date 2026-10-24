@@ -14,7 +14,7 @@ romanization: "kai kulukku"
 concept_tag: TA-VERB-KAI-KULUKKU
 prerequisites: [TA-C258-kurai, TA-C258-terru]
 sounds: []
-roots: [dravidian-talai-kai, dravidian-kulukku-shake]
+roots: [dravidian-kai-hand, dravidian-kulukku-shake]
 etymology_hook: "கை குலுக்கு — native: kai 'hand' (DEDR 2023) + kulukku 'to shake' (DEDR 1806)"
 duration:
   max_seconds: 200

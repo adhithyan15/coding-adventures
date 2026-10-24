@@ -4,7 +4,7 @@
   "chapter": 137,
   "title": "Ring, Bangle, Sock, Glove, Class",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:33dcab49f6c75b07",
+  "sourceHash": "fnv1a64:628babf332667901",
   "lessons": [
     {
       "id": "TA-C137-motiram",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16c1b1399c1fc64d",
+      "sourceHash": "fnv1a64:8e1b2cab3d85ef43",
       "notice": null,
       "blocks": [
         {

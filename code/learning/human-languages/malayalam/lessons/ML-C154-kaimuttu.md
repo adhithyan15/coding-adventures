@@ -14,7 +14,7 @@ romanization: "kaimuṭṭŭ"
 concept_tag: ML-THINGS154-KAIMUTTU
 prerequisites: [ML-C153-kotuku, ML-C153-tol]
 sounds: []
-roots: [dravidian-tala-kai, dravidian-muttu-joint]
+roots: [dravidian-kai-hand, dravidian-muttu-joint]
 etymology_hook: "kaimuṭṭŭ: native Dravidian, 'arm joint': kai (DEDR 2023) + muṭṭŭ 'joint, knee' (DEDR 4935)"
 duration:
   max_seconds: 200

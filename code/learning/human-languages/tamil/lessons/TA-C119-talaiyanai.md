@@ -14,7 +14,7 @@ romanization: "talaiyaṇai"
 concept_tag: TA-THINGS119-TALAIYANAI
 prerequisites: [TA-C119-puttu, TA-C119-tuntu]
 sounds: []
-roots: [dravidian-talai-kai, dravidian-anai-support]
+roots: [dravidian-talai-head, dravidian-anai-support]
 etymology_hook: "தலையணை — native: talai 'head' (DEDR 3103) + aṇai 'support' (DEDR 123; Malayalam aṇa 'pillow')"
 duration:
   max_seconds: 200
