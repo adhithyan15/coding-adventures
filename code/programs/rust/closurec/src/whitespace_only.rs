@@ -6404,7 +6404,15 @@ fn member_list_positions(kept: &[&lexer::token::Token]) -> Vec<bool> {
             };
             let next = kept.get(k + 1);
             let named = next.is_some_and(|n| is_plain_identifier(n)) && opens_head(kept.get(k + 2));
-            if opens_head(next) || named {
+            // Directly in a class body or object literal, a class expression
+            // can only follow `=` (a field initialiser) or `:` (a property
+            // value). Otherwise `class` is a member name, and
+            // `class C{class⏎extends(){…}}` must not arm.
+            let in_members = matches!(stack.last(), Some(Open::Brace { member_list: true }));
+            let value_position = k
+                .checked_sub(1)
+                .is_some_and(|p| is_structural_punct(kept[p], "=") || is_structural_punct(kept[p], ":"));
+            if (opens_head(next) || named) && (!in_members || value_position) {
                 pending_class = Some(stack.len());
             }
         }
@@ -11236,5 +11244,9 @@ mod tests {
         assert_eq!(marks("x=()=>{if(a){}}"), vec![false]);
         assert_eq!(marks("x={m(){if(a){}}}"), vec![false]);
         assert_eq!(marks("class C{m(){if(a){}}}"), vec![false]);
+        // A field named `class`, then a method named `extends`: no class head.
+        assert_eq!(marks("class C{class;extends(){if(a){}}}"), vec![false]);
+        // A class expression as a field initialiser still has a member list.
+        assert_eq!(marks("class C{x=class{if(){}}}"), vec![true]);
     }
 }
