@@ -101,6 +101,9 @@ These limits remain after the concurrent scheduler milestone:
   of every source plus the pipeline sink set
 - Optional FM02 `PluginStageLoader` resolution of `StageRef`s before config
   validation; unresolved references remain a hard error without a host
+- Covariant extension-kind widening through the host's immutable validated
+  registry for default, stream, and named-port edges; generic producers never
+  narrow into specialized consumers
 
 ## Coverage
 

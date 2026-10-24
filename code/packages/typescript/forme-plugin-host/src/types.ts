@@ -2,7 +2,7 @@ import type { Readable, Writable } from "node:stream";
 import type { Capability } from "@coding-adventures/forme-capability";
 import type { Manifest, StageContribution } from "@coding-adventures/forme-manifest";
 import type { Stage, StageContext } from "@coding-adventures/forme-stage";
-import type { KindDescriptor } from "@coding-adventures/forme-types";
+import type { KindDescriptor, KindRegistry } from "@coding-adventures/forme-types";
 import type { StageRef } from "@coding-adventures/forme-pipeline-config";
 import type { Logger } from "@coding-adventures/forme-stage";
 
@@ -64,6 +64,8 @@ export interface PluginProcessFactory {
 }
 
 export interface PluginStageLoader {
+  /** Immutable kind meanings used while typechecking resolved stages. */
+  readonly kindRegistry?: KindRegistry;
   loadStage(
     ref: StageRef,
     instanceId?: string,
@@ -74,6 +76,7 @@ export interface PluginStageLoader {
 
 export interface PluginHost extends PluginStageLoader {
   readonly plugins: ReadonlyMap<string, DiscoveredPlugin>;
+  readonly kindRegistry: KindRegistry;
   dispose(): Promise<void>;
 }
 

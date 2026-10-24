@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Thread the plugin host's immutable kind registry through DAG construction.
+  Registered extension producers may widen through direct or transitive
+  parents, while narrowing, registry drift, incompatible ancestry versions,
+  stream-shape mismatches, and named-port mismatches remain fail-closed.
+
 ## 1.0.0 — 2026-10-05
 
 - Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.

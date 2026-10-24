@@ -3,7 +3,8 @@
  *
  * Implements the four rules from the spec:
  *
- *   1. Name match (or extension subtype — TODO when ext: kinds land).
+ *   1. Name match, or covariant widening through the immutable extension-kind
+ *      registry supplied by the plugin host.
  *   2. Major-version match; minor-version compatibility (newer-minor
  *      producer can feed older-minor consumer).
  *   3. Discriminant equality if both declare one.
@@ -17,7 +18,7 @@
  * iterates and invokes the consumer once per yielded value).
  */
 
-import type { KindDescriptor } from "@coding-adventures/forme-types";
+import type { KindDescriptor, KindRegistry } from "@coding-adventures/forme-types";
 
 /**
  * Test whether a producer's `produces` descriptor is compatible with
@@ -27,11 +28,12 @@ import type { KindDescriptor } from "@coding-adventures/forme-types";
 export function areKindsCompatible(
   produces: KindDescriptor,
   consumes: KindDescriptor,
+  registry?: KindRegistry,
 ): boolean {
   // Stream-of-X can feed a single-X consumer (the executor iterates).
   if (produces.name === "Stream" && consumes.name !== "Stream") {
     if (!produces.inner) return false;
-    return areKindsCompatible(produces.inner, consumes);
+    return areKindsCompatible(produces.inner, consumes, registry);
   }
   // A single-X producer cannot feed a Stream-of-X consumer (the
   // consumer expects multiple values; producer yields exactly one).
@@ -41,10 +43,40 @@ export function areKindsCompatible(
   // Stream<X> → Stream<Y> requires inner compatibility.
   if (produces.name === "Stream" && consumes.name === "Stream") {
     if (!produces.inner || !consumes.inner) return false;
-    return areKindsCompatible(produces.inner, consumes.inner);
+    return areKindsCompatible(produces.inner, consumes.inner, registry);
   }
   // Both are non-stream descriptors.
-  if (produces.name !== consumes.name) return false;
+  if (produces.name === consumes.name) {
+    return areDescriptorsCompatible(produces, consumes);
+  }
+  if (registry === undefined || !produces.name.startsWith("ext:")) return false;
+
+  const seen = new Set<string>();
+  let current = produces;
+  while (current.name.startsWith("ext:")) {
+    if (seen.has(current.name)) return false;
+    seen.add(current.name);
+
+    const registration = registry.lookup(current.name);
+    if (registration === undefined
+        || registration.descriptor.version !== current.version
+        || registration.descriptor.discriminant !== current.discriminant
+        || registration.parent === null
+        || !areDescriptorsCompatible(current, registration.parent)) {
+      return false;
+    }
+    current = registration.parent;
+    if (current.name === consumes.name) {
+      return areDescriptorsCompatible(current, consumes);
+    }
+  }
+  return false;
+}
+
+function areDescriptorsCompatible(
+  produces: KindDescriptor,
+  consumes: KindDescriptor,
+): boolean {
   if (!areVersionsCompatible(produces.version, consumes.version)) return false;
   if (!areDiscriminantsCompatible(produces.discriminant, consumes.discriminant)) return false;
   // Constraints are advisory at this layer.

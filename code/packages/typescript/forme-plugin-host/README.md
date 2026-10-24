@@ -35,6 +35,12 @@ const stage = await host.loadStage({
 }, "parse-posts");
 ```
 
+Host creation also collects every contributed `ext:` kind into one immutable
+registry. Duplicate global names, missing subtype parents, and direct or
+transitive cycles reject the host before plugin code can run. Stage kind
+references and downstream DAG typechecking share those exact frozen
+descriptor/version snapshots, including cross-plugin references.
+
 `loadPersistentGrants` reads the host-owned `grants.toml` beside each exact
 discovery snapshot and is mutually exclusive with injected `grants`. Missing
 or stale authority grants nothing; malformed files abort host creation.

@@ -12,7 +12,7 @@ See [code/specs/FM01-forme-kernel.md](../../../specs/FM01-forme-kernel.md) §2 f
 | ------------- | ------------------------------------------------------------------------ |
 | `utility.ts`  | `JsonValue`, `ReadonlyRecord`                                            |
 | `identity.ts` | `LogicalId`, `RevisionId` branded type aliases                           |
-| `kinds.ts`    | `KIND` constants, `KindDescriptor`, canonical `Kinds` object, `streamOf` |
+| `kinds.ts`    | `KIND` constants, descriptors, canonical `Kinds`, `streamOf`, and the read-only extension-kind registry contract |
 | `shapes.ts`   | TypeScript interfaces for built-in kinds + leaf-level style/interactivity compatibility envelopes |
 | `payload.ts`  | `KindPayload<K>` mapped type — descriptor → value type                    |
 
@@ -56,6 +56,11 @@ const parser = {
   // ...
 };
 ```
+
+Third-party kind ancestry is exposed through the deliberately read-only
+`KindRegistry.lookup()` contract. The plugin host owns construction and
+validation; consumers receive frozen descriptor/parent snapshots and cannot
+replace a kind after pipeline typechecking begins.
 
 ### Branded ID types
 
