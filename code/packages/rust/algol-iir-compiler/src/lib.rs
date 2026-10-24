@@ -4692,8 +4692,9 @@ impl Compiler {
 
     /// Evaluate one tracked local, path-independent conditional, or built-in
     /// integer-valued standard function inside a checked static integer
-    /// reduction. Tracked locals must retain a straight-line exact snapshot;
-    /// real snapshots must also be integral and within binary64's exact integer
+    /// reduction. An exact built-in square root may also supply an integral
+    /// leaf. Tracked locals must retain a straight-line exact snapshot; real
+    /// snapshots must also be integral and within binary64's exact integer
     /// range. Globals and by-name actuals remain runtime values. A conditional
     /// selector may read state but may not call a procedure, and both branches
     /// must independently have the same exact value. User declarations shadow
@@ -4752,6 +4753,12 @@ impl Compiler {
             .value
             .clone();
         let target_name = self.resolve_procedure_identity(&name);
+        if target_name == "sqrt" && !self.proc_sigs.contains_key(&target_name) {
+            let value = self.static_tracked_standard_real_value(node)?;
+            return (value.fract() == 0.0
+                && value.abs() <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE as f64)
+                .then_some(value as i64);
+        }
         if self.proc_sigs.contains_key(&target_name)
             || !matches!(target_name.as_str(), "abs" | "sign" | "entier")
         {
@@ -15908,6 +15915,44 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "fractional, oversized, dynamic, and captured real values must remain outside the tracked static integer reduction proof",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "unexpected error for {source:?}: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_exact_root_integer_reductions() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real factor, result; factor := 81.0; result := entier((entier(sqrt(factor)) div 3) * ((2 * sign(pick())) + 2)); output(result) end",
+            "begin real procedure pick; pick := -2.25; real factor, result; factor := 144.0; result := entier(abs(entier(sqrt(factor)) mod 5) * sign(pick())); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "an exact square root of a checked integral tracked-real reduction remains exact around a sign-rooted transform for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_exact_root_integer_reductions_reject_unproven_forms() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real factor, result; factor := 80.0; result := entier((entier(sqrt(factor)) div 3) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real factor, result; factor := 6.25; result := entier((entier(sqrt(factor)) div 2) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 81.0; real factor, result; factor := pick(); result := entier((entier(sqrt(factor)) div 3) * sign(pick())); output(result) end",
+            "begin real procedure sqrt(x); value x; real x; sqrt := 9.0; real factor, result; factor := 81.0; result := entier((entier(sqrt(factor)) div 3) * sign(factor)); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "inexact, fractional, dynamic, and overridden square roots must remain outside the checked static integer reduction proof",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),

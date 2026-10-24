@@ -1,0 +1,6 @@
+# Windows: this demo loads typescript/conduit's native N-API addon, and
+# typescript/conduit's own BUILD_windows skips building that addon on Windows
+# (see its comment). With no conduit_native_node.node to load, every test here
+# would fail, so skip this program on Windows too. Linux and macOS cover it.
+# Remove this stub together with conduit's once the addon builds on Windows.
+echo Skipping typescript/programs/conduit-hello on Windows — depends on conduit's native addon, which is not built there
