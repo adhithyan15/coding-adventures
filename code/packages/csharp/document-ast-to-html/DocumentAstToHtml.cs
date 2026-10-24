@@ -26,6 +26,7 @@ public static class DocumentAstToHtml
     private const int MaxRenderDepth = 256;
     private const int MaxRenderNodes = 100_000;
     private const int MaxOutputCharacters = 1_000_000;
+    private const int MaxUrlInputCharacters = 1_000_000;
 
     /// <summary>Render a document to a newly owned HTML string.</summary>
     public static string ToHtml(DocumentNode document, RenderOptions? options = null)
@@ -75,6 +76,7 @@ public static class DocumentAstToHtml
     {
         private readonly StringBuilder _output = new();
         private int _nodes;
+        private int _urlInputCharacters;
 
         public string Finish() => _output.ToString();
 
@@ -419,6 +421,21 @@ public static class DocumentAstToHtml
             }
         }
 
+        private string SanitizeUrl(string value)
+        {
+            // Normalization can discard an entire destination. Its work is
+            // therefore not bounded by the resulting HTML size. Charge every
+            // visit before allocation or scanning, including repeated aliases
+            // and URLs that will later be rejected as unsafe.
+            if (value.Length > MaxUrlInputCharacters - _urlInputCharacters)
+            {
+                throw new InvalidOperationException($"URL normalization exceeds the supported limit of {MaxUrlInputCharacters} input characters.");
+            }
+
+            _urlInputCharacters += value.Length;
+            return StripUnsafeUrl(value);
+        }
+
         private void AppendTitle(string? title)
         {
             if (title is null)
@@ -474,13 +491,8 @@ public static class DocumentAstToHtml
         }
     }
 
-    private static string SanitizeUrl(string value)
+    private static string StripUnsafeUrl(string value)
     {
-        if (value.Length > MaxOutputCharacters)
-        {
-            throw new InvalidOperationException($"URL exceeds the supported limit of {MaxOutputCharacters} characters.");
-        }
-
         var stripped = new StringBuilder(value.Length);
         foreach (var rune in value.EnumerateRunes())
         {
