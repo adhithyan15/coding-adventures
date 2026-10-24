@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C497-culat",
+    "language": "marathi",
+    "chapter": 497,
+    "sequence": 28440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:535cb0bc20c850e9"
+  },
+  "findings": []
+}

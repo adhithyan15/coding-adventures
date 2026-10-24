@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:939be64e97d57d2f",
+  "lessonIds": [
+    "MR-C392-kalam",
+    "MR-C392-vatap-karne",
+    "MR-C392-davalne",
+    "MR-C392-anusarne",
+    "MR-C392-angikarne"
+  ],
+  "tex": "marathi/book/chapters/ch392-rules-in-practice.tex"
+}

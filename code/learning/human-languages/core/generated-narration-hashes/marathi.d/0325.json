@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:02aea4649973e499",
+  "lessonIds": [
+    "MR-C325-raja",
+    "MR-C325-rani",
+    "MR-C325-rajvada",
+    "MR-C325-darbar",
+    "MR-C325-rajya-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch325.txt",
+  "json": "marathi/narration/ch325.json",
+  "textHash": "fnv1a64:433193361647806b",
+  "jsonHash": "fnv1a64:7a8167f8bbf83246",
+  "findings": []
+}

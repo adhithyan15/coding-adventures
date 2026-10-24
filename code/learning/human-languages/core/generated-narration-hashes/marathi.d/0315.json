@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:e91a8213460588ef",
+  "lessonIds": [
+    "MR-C315-pratyaksadarsi",
+    "MR-C315-mahitipat",
+    "MR-C315-ank",
+    "MR-C315-nondavne",
+    "MR-C315-bhatakne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch315.txt",
+  "json": "marathi/narration/ch315.json",
+  "textHash": "fnv1a64:4bc47e7907d59463",
+  "jsonHash": "fnv1a64:06851d568d0c7ddd",
+  "findings": []
+}

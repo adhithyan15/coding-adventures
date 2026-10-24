@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:20026477f427d5ec",
+  "lessonIds": [
+    "MR-C320-sajavne",
+    "MR-C320-utsav",
+    "MR-C320-sohla",
+    "MR-C320-yatra",
+    "MR-C320-muhurta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch320.txt",
+  "json": "marathi/narration/ch320.json",
+  "textHash": "fnv1a64:f32a7cee61452d81",
+  "jsonHash": "fnv1a64:13d570e2a1dc43d5",
+  "findings": []
+}

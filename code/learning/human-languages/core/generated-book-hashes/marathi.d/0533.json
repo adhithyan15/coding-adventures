@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:7a1bdf94c50fd954",
+  "lessonIds": [
+    "MR-C533-kasrat",
+    "MR-C533-yogasan",
+    "MR-C533-sitti",
+    "MR-C533-vakne",
+    "MR-C533-jhepavne"
+  ],
+  "tex": "marathi/book/chapters/ch533-keeping-fit.tex"
+}

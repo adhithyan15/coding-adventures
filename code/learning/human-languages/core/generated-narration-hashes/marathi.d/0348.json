@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:227bfb5c6ac67d12",
+  "lessonIds": [
+    "MR-C348-sambandh",
+    "MR-C348-samya",
+    "MR-C348-sandarbha",
+    "MR-C348-nigdit",
+    "MR-C348-yaulat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch348.txt",
+  "json": "marathi/narration/ch348.json",
+  "textHash": "fnv1a64:1a8a0bea536bc821",
+  "jsonHash": "fnv1a64:8ec08a9e3efef053",
+  "findings": []
+}

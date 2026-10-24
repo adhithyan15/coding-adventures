@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:7633b1b01410d514",
+  "lessonIds": [
+    "MR-C474-nitnetka",
+    "MR-C474-gabala",
+    "MR-C474-vendhla",
+    "MR-C474-pasara",
+    "MR-C474-sista"
+  ],
+  "tex": "marathi/book/chapters/ch474-tidy-and-scatterbrained.tex"
+}

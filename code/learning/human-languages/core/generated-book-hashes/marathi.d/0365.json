@@ -1,0 +1,14 @@
+{
+  "language": "marathi",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:36c8f6a74dff7103",
+  "lessonIds": [
+    "MR-C365-vataghati-karne",
+    "MR-C365-vad-ghalne",
+    "MR-C365-retne",
+    "MR-C365-mitavne",
+    "MR-C365-sangharsa-karne",
+    "MR-R365-review-358-365"
+  ],
+  "tex": "marathi/book/chapters/ch365-settling-disputes.tex"
+}

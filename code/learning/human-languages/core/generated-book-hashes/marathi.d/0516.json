@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:e5c9ae1cd0a60570",
+  "lessonIds": [
+    "MR-C516-sanganak",
+    "MR-C516-bhramandhvani",
+    "MR-C516-durdhvani",
+    "MR-C516-citraphit",
+    "MR-C516-vaparne"
+  ],
+  "tex": "marathi/book/chapters/ch516-screens-and-phones.tex"
+}

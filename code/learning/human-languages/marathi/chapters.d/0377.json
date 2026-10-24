@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "Influence and Pressure",
+  "label": "ch:mr-influence-and-pressure",
+  "canDo": "I can talk about influence, pressure and encouragement.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C377-khatakne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can talk about influence, pressure and encouragement.",
+    "assesses": [
+      "MR-LEX-C377-PRABHAV377-03",
+      "MR-LEX-C377-PRABHAV377-04",
+      "MR-LEX-C377-PRABHAV377-05"
+    ]
+  }
+}

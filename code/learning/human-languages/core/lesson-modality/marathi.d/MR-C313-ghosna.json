@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C313-ghosna",
+    "language": "marathi",
+    "chapter": 313,
+    "sequence": 18300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc0943f88e1ca072"
+  },
+  "findings": []
+}

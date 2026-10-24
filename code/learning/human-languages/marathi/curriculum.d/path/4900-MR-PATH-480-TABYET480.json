@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-480-TABYET480",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-480-TABYET480"
+  ],
+  "after": []
+}

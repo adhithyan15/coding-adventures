@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "Rumour and Sensation",
+  "label": "ch:mr-rumour-and-sensation",
+  "canDo": "I can talk about rumours, announcements and a stir in town.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C313-pukarne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can talk about rumours, announcements and a stir in town.",
+    "assesses": [
+      "MR-LEX-C313-AFVA313-03",
+      "MR-LEX-C313-AFVA313-04",
+      "MR-LEX-C313-AFVA313-05"
+    ]
+  }
+}

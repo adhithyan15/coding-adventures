@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C497-dhakta",
+    "language": "marathi",
+    "chapter": 497,
+    "sequence": 28410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f5262500680bc71"
+  },
+  "findings": []
+}

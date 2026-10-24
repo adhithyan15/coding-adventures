@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:761c115e2c14ef7f",
+  "lessonIds": [
+    "MR-C486-ija",
+    "MR-C486-khapli",
+    "MR-C486-kharcatne",
+    "MR-C486-murgalne",
+    "MR-C486-sujne"
+  ],
+  "tex": "marathi/book/chapters/ch486-small-injuries.tex"
+}

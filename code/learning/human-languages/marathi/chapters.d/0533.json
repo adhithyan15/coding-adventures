@@ -1,0 +1,19 @@
+{
+  "chapter": 533,
+  "title": "Keeping Fit",
+  "label": "ch:mr-keeping-fit",
+  "canDo": "I can talk about workouts, yoga and moving the body.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C533-jhepavne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can talk about workouts, yoga and moving the body.",
+    "assesses": [
+      "MR-LEX-C533-TANDURUSTI533-03",
+      "MR-LEX-C533-TANDURUSTI533-04",
+      "MR-LEX-C533-TANDURUSTI533-05"
+    ]
+  }
+}

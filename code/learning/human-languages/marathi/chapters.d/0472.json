@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "Stubborn and Hasty",
+  "label": "ch:mr-stubborn-and-hasty",
+  "canDo": "I can describe a stubborn, moody, hasty or impatient person.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C472-adhir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can describe a stubborn, moody, hasty or impatient person.",
+    "assesses": [
+      "MR-LEX-C472-HATTI472-03",
+      "MR-LEX-C472-HATTI472-04",
+      "MR-LEX-C472-HATTI472-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:9a3be157feb613c8",
+  "lessonIds": [
+    "MR-C485-madhumeh",
+    "MR-C485-raktadab",
+    "MR-C485-dama",
+    "MR-C485-kavil",
+    "MR-C485-kanjinya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch485.txt",
+  "json": "marathi/narration/ch485.json",
+  "textHash": "fnv1a64:9d5307c66cf808b0",
+  "jsonHash": "fnv1a64:7fba898a4f32cd5f",
+  "findings": []
+}

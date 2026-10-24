@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "Digging Up the Past",
+  "label": "ch:mr-digging-up-the-past",
+  "canDo": "I can talk about excavations, ruins and carvings.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C335-korne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can talk about excavations, ruins and carvings.",
+    "assesses": [
+      "MR-LEX-C335-UTKHANAN335-03",
+      "MR-LEX-C335-UTKHANAN335-04",
+      "MR-LEX-C335-UTKHANAN335-05"
+    ]
+  }
+}

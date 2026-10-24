@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:36e5f8765cb9e6f9",
+  "lessonIds": [
+    "MR-C425-taraju",
+    "MR-C425-mapne",
+    "MR-C425-assal",
+    "MR-C425-banavat",
+    "MR-C425-nakkal"
+  ],
+  "tex": "marathi/book/chapters/ch425-weights-and-measures.tex"
+}

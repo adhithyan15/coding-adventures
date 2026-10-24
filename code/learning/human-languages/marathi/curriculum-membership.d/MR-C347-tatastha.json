@@ -1,0 +1,11 @@
+{
+  "id": "MR-C347-tatastha",
+  "pathSegment": "MR-PATH-347-VIRODH347",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-347-VIRODH347",
+      "order": 3
+    }
+  ]
+}

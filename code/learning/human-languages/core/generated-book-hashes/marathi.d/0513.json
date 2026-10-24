@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:8536c4fe336027ec",
+  "lessonIds": [
+    "MR-C513-karyasala",
+    "MR-C513-ades",
+    "MR-C513-vibhag",
+    "MR-C513-sadar-karne",
+    "MR-C513-sutrasancalan-karne"
+  ],
+  "tex": "marathi/book/chapters/ch513-workshops-and-orders.tex"
+}

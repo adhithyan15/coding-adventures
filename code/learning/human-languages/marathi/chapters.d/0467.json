@@ -1,0 +1,19 @@
+{
+  "chapter": 467,
+  "title": "Bearing It",
+  "label": "ch:mr-bearing-it",
+  "canDo": "I can talk about torment, writhing, pity and wavering.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C467-dagmagne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can talk about torment, writhing, pity and wavering.",
+    "assesses": [
+      "MR-LEX-C467-YATANA467-03",
+      "MR-LEX-C467-YATANA467-04",
+      "MR-LEX-C467-YATANA467-05"
+    ]
+  }
+}

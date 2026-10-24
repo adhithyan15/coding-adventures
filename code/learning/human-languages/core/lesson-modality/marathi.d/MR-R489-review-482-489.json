@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R489-review-482-489",
+    "language": "marathi",
+    "chapter": 489,
+    "sequence": 28040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ea127e639d159ee"
+  },
+  "findings": []
+}

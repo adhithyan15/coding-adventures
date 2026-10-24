@@ -1,0 +1,11 @@
+{
+  "id": "MR-C494-parivar",
+  "pathSegment": "MR-PATH-494-NATE494",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-494-NATE494",
+      "order": 2
+    }
+  ]
+}

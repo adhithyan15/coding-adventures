@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C277-janar-ahe",
+    "language": "marathi",
+    "chapter": 277,
+    "sequence": 16050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a6db101916bffe8"
+  },
+  "findings": []
+}

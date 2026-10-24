@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 549,
+  "sourceHash": "fnv1a64:1e2fe64472d331de",
+  "lessonIds": [
+    "MR-C549-bharpai-dene",
+    "MR-C549-mukne",
+    "MR-C549-kavac",
+    "MR-C549-samraksan",
+    "MR-C549-bharavsa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch549.txt",
+  "json": "marathi/narration/ch549.json",
+  "textHash": "fnv1a64:6720010c72f819cb",
+  "jsonHash": "fnv1a64:e9ef3a4b9fd3af01",
+  "findings": []
+}

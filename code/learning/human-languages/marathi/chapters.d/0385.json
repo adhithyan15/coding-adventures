@@ -1,0 +1,19 @@
+{
+  "chapter": 385,
+  "title": "When Things Get Worse",
+  "label": "ch:mr-when-things-get-worse",
+  "canDo": "I can say that a quarrel flared up, worsened or calmed down.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C385-samore-jane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can say that a quarrel flared up, worsened or calmed down.",
+    "assesses": [
+      "MR-LEX-C385-CHIGHALNE385-03",
+      "MR-LEX-C385-CHIGHALNE385-04",
+      "MR-LEX-C385-CHIGHALNE385-05"
+    ]
+  }
+}

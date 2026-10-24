@@ -1,0 +1,869 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 442,
+  "title": "Peaks and Valleys",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:09984b4e61dcbc1d",
+  "lessons": [
+    {
+      "id": "MR-C442-sikhar",
+      "sequence": 25350,
+      "title": "शिखर (śikhar) — a peak; a summit",
+      "headword": "शिखर",
+      "romanization": "śikhar",
+      "gloss": "a peak; a summit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b67c575202c2b8a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to set, then the Marathi for to shine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शिखर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिखर — śikhar — \"a peak; a summit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आम्ही पहाटे शिखरावर पोहोचलो. āmhī pahāṭe śikharāvar pohoclo. We reached the summit at dawn."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the top of a temple, and the height of success: यशाचं शिखर (śikhar)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिखर (śikhar) is a tatsama, taken from Sanskrit śikhara, \"a peak, a summit, a pinnacle\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikhar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikhar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikhar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikhar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmhī pahāṭe śikharāvar pohoclo. — We reached the summit at dawn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmhī pahāṭe śikharāvar pohoclo.* — We reached the summit at dawn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to set, then the Marathi for to shine, then say śikhar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to set, then the Marathi for to shine, then say *śikhar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शिखर (śikhar) mean? (\"A peak; a summit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C442-dari",
+      "sequence": 25360,
+      "title": "दरी (darī) — a valley; a gorge",
+      "headword": "दरी",
+      "romanization": "darī",
+      "gloss": "a valley; a gorge",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57238287b4577e62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to shine, then the Marathi for a peak."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दरी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दरी — darī — \"a valley; a gorge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शिखरावरून खाली खोल दरी दिसते. śikharāvarūn khālī khol darī diste. From the summit you can see a deep valley below."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "खोल दरी (darī), a deep valley."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दरी (darī) is inherited: CDIAL lists Marathi darī, \"chasm\", under Sanskrit dara, darī, \"a cleft, a cave\" (CDIAL 6188)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikharāvarūn khālī khol darī diste. — From the summit you can see a deep valley below.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikharāvarūn khālī khol darī diste.* — From the summit you can see a deep valley below.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to shine, then the Marathi for a peak, then say darī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to shine, then the Marathi for a peak, then say *darī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दरी (darī) mean? (\"A valley; a gorge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C442-kada",
+      "sequence": 25370,
+      "title": "कडा (kaḍā) — a cliff; an edge",
+      "headword": "कडा",
+      "romanization": "kaḍā",
+      "gloss": "a cliff; an edge",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:337bc4bfc47c82be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a peak, then the Marathi for a valley."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कडा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कडा — kaḍā — \"a cliff; an edge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कड्यावरून धबधबा खाली पडतो. kaḍyāvarūn dhabdhabā khālī paḍto. The waterfall drops down from the cliff."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Before an ending कडा (kaḍā) becomes कड्या-: कड्यावरून, from the cliff."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कडा (kaḍā) is inherited: CDIAL lists Marathi kaḍā, \"precipice\", under Sanskrit kaḍāra (CDIAL 2655)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḍā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḍā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḍā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḍā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḍyāvarūn dhabdhabā khālī paḍto. — The waterfall drops down from the cliff.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḍyāvarūn dhabdhabā khālī paḍto.* — The waterfall drops down from the cliff.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a peak, then the Marathi for a valley, then say kaḍā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a peak, then the Marathi for a valley, then say *kaḍā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कडा (kaḍā) mean? (\"A cliff; an edge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C442-paytha",
+      "sequence": 25380,
+      "title": "पायथा (pāythā) — a foothill; the foot of a hill",
+      "headword": "पायथा",
+      "romanization": "pāythā",
+      "gloss": "a foothill; the foot of a hill",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70312a3baec68c30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a valley, then the Marathi for a cliff."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पायथा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पायथा — pāythā — \"a foothill; the foot of a hill\"."
+            },
+            {
+              "kind": "speech",
+              "text": "डोंगराच्या पायथ्याशी एक लहान गाव आहे. ḍoṅgarācyā pāyathyāśī ek lahān gāv āhe. There is a small village at the foot of the hill."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "पायथ्याशी, at the foot; the opposite is the शिखर (śikhar)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पायथा (pāythā) is inherited: CDIAL lists Marathi pāythā, \"extremity of the feet\", under Sanskrit pādānta, \"the end at the feet\" (CDIAL 8072)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāythā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāythā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāythā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāythā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍoṅgarācyā pāyathyāśī ek lahān gāv āhe. — There is a small village at the foot of the hill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍoṅgarācyā pāyathyāśī ek lahān gāv āhe.* — There is a small village at the foot of the hill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a valley, then the Marathi for a cliff, then say pāythā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a valley, then the Marathi for a cliff, then say *pāythā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पायथा (pāythā) mean? (\"A foothill; the foot of a hill\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C442-dongarrang",
+      "sequence": 25390,
+      "title": "डोंगररांग (ḍoṅgarrāṅg) — a mountain range",
+      "headword": "डोंगररांग",
+      "romanization": "ḍoṅgarrāṅg",
+      "gloss": "a mountain range",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ceac8cf24c66bec9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a cliff, then the Marathi for a foothill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: डोंगररांग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डोंगररांग — ḍoṅgarrāṅg — \"a mountain range\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पश्चिमेला एक मोठी डोंगररांग आहे. paścimelā ek moṭhī ḍoṅgarrāṅg āhe. There is a great mountain range to the west."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "डोंगर, a hill, and रांग, a row."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डोंगररांग (ḍoṅgarrāṅg) is built from डोंगर, \"a hill\", and रांग, \"a row, a line\", both of uncertain origin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍoṅgarrāṅg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍoṅgarrāṅg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍoṅgarrāṅg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍoṅgarrāṅg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paścimelā ek moṭhī ḍoṅgarrāṅg āhe. — There is a great mountain range to the west.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paścimelā ek moṭhī ḍoṅgarrāṅg āhe.* — There is a great mountain range to the west.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a cliff, then the Marathi for a foothill, then say ḍoṅgarrāṅg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a cliff, then the Marathi for a foothill, then say *ḍoṅgarrāṅg* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does डोंगररांग (ḍoṅgarrāṅg) mean? (\"A mountain range\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R442-review-436-442",
+      "sequence": 25400,
+      "title": "Looking back: from Heat and Humidity to Peaks and Valleys",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Heat and Humidity to Peaks and Valleys",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a643eee06484264b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for the atmosphere and great heat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the atmosphere, great heat, sultry heat, humid, to blaze",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the atmosphere, great heat, sultry heat, humid, to blaze]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coolness, a snowfall, to sting, to freeze, to melt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: coolness, a snowfall, to sting, to freeze, to melt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a drizzle, torrential, a pre-monsoon storm, to pour down, to get wet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a drizzle, torrential, a pre-monsoon storm, to pour down, to get wet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cyclone, a whirlwind, a rumble of thunder, to howl, to crackle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cyclone, a whirlwind, a rumble of thunder, to howl, to crackle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a drought, a cloudburst, a severe spell, to lash, to recede",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a drought, a cloudburst, a severe spell, to lash, to recede]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the horizon, moonlight, to rise, to set, to shine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the horizon, moonlight, to rise, to set, to shine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a peak, a valley, a cliff, a foothill, a mountain range",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a peak, a valley, a cliff, a foothill, a mountain range]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The atmosphere? (वातावरण, vātāvaraṇ.) Great heat? (उष्णता, uṣṇatā.) Sultry heat? (उकाडा, ukāḍā.) Humid? (दमट, damaṭ.) To blaze? (तळपणे, taḷapṇe.) Coolness? (गारवा, gārvā.) A snowfall? (हिमवर्षाव, himvarṣāv.) To sting? (झोंबणे, jhombṇe.) To freeze? (गोठणे, goṭhṇe.) To melt? (वितळणे, vitaḷṇe.) A drizzle? (रिमझिम, rimjhim.) Torrential? (मुसळधार, musaḷdhār.) A pre-monsoon storm? (वळीव, vaḷīv.) To pour down? (बरसणे, barasṇe.) To get wet? (भिजणे, bhijṇe.) A cyclone? (चक्रीवादळ, cakrīvādaḷ.) A whirlwind? (वावटळ, vāvṭaḷ.) A rumble of thunder? (गडगडाट, gaḍgaḍāṭ.) To howl? (घोंगावणे, ghoṅgāvṇe.) To crackle? (कडाडणे, kaḍāḍṇe.) A drought? (दुष्काळ, duṣkāḷ.) A cloudburst? (ढगफुटी, ḍhagphuṭī.) A severe spell? (कडाका, kaḍākā.) To lash? (झोडपणे, jhoḍapṇe.) To recede? (ओसरणे, osarṇe.) The horizon? (क्षितिज, kṣitij.) Moonlight? (चांदणे, cāndṇe.) To rise? (उगवणे, ugavṇe.) To set? (मावळणे, māvaḷṇe.) To shine? (चमकणे, camakṇe.) A peak? (शिखर, śikhar.) A valley? (दरी, darī.) A cliff? (कडा, kaḍā.) A foothill? (पायथा, pāythā.) A mountain range? (डोंगररांग, ḍoṅgarrāṅg.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

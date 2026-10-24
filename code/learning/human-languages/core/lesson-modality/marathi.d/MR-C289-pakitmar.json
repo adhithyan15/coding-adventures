@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C289-pakitmar",
+    "language": "marathi",
+    "chapter": 289,
+    "sequence": 17080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a4eceea3926b731"
+  },
+  "findings": []
+}

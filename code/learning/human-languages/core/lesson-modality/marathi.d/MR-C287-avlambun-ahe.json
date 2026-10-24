@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C287-avlambun-ahe",
+    "language": "marathi",
+    "chapter": 287,
+    "sequence": 16440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f55c26787b6452d"
+  },
+  "findings": []
+}

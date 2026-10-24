@@ -1,0 +1,19 @@
+{
+  "chapter": 521,
+  "title": "Cracks and Repairs",
+  "label": "ch:mr-cracks-and-repairs",
+  "canDo": "I can talk about cracks, glue and simple repairs.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C521-limpne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 521: I can talk about cracks, glue and simple repairs.",
+    "assesses": [
+      "MR-LEX-C521-DURUSTI521-03",
+      "MR-LEX-C521-DURUSTI521-04",
+      "MR-LEX-C521-DURUSTI521-05"
+    ]
+  }
+}

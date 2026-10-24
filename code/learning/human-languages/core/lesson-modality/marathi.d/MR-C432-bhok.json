@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C432-bhok",
+    "language": "marathi",
+    "chapter": 432,
+    "sequence": 24840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e5ed99640d97cb4"
+  },
+  "findings": []
+}

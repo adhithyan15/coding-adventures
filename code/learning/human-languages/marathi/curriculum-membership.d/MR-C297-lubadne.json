@@ -1,0 +1,11 @@
+{
+  "id": "MR-C297-lubadne",
+  "pathSegment": "MR-PATH-297-CHOR297",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-297-CHOR297",
+      "order": 4
+    }
+  ]
+}

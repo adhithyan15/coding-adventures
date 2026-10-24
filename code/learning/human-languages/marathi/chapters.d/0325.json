@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "A King and His Court",
+  "label": "ch:mr-a-king-and-his-court",
+  "canDo": "I can tell about a king, a queen and their palace.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C325-rajya-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can tell about a king, a queen and their palace.",
+    "assesses": [
+      "MR-LEX-C325-RAJA325-03",
+      "MR-LEX-C325-RAJA325-04",
+      "MR-LEX-C325-RAJA325-05"
+    ]
+  }
+}

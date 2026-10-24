@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:007746f7f8584d31",
+  "lessonIds": [
+    "MR-C299-jhadti-ghene",
+    "MR-C299-pancnama",
+    "MR-C299-japta-karne",
+    "MR-C299-kabul-karne",
+    "MR-C299-dakhal-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch299.txt",
+  "json": "marathi/narration/ch299.json",
+  "textHash": "fnv1a64:4a798d5ccbde93f1",
+  "jsonHash": "fnv1a64:d6d18049a04a05c5",
+  "findings": []
+}

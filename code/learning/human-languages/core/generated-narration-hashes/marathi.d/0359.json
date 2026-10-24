@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:472a14446aa38ce0",
+  "lessonIds": [
+    "MR-C359-vakil",
+    "MR-C359-khatla",
+    "MR-C359-sunavni",
+    "MR-C359-nivada",
+    "MR-C359-dava"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch359.txt",
+  "json": "marathi/narration/ch359.json",
+  "textHash": "fnv1a64:4511d16399626e58",
+  "jsonHash": "fnv1a64:ac2781d16a318d03",
+  "findings": []
+}

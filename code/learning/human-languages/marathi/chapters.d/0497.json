@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "Elder and Younger",
+  "label": "ch:mr-elder-and-younger",
+  "canDo": "I can say who is younger or elder, an only child, a cousin or a step-relation.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C497-savatra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can say who is younger or elder, an only child, a cousin or a step-relation.",
+    "assesses": [
+      "MR-LEX-C497-THORLA497-03",
+      "MR-LEX-C497-THORLA497-04",
+      "MR-LEX-C497-THORLA497-05"
+    ]
+  }
+}

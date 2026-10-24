@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 437,
+  "title": "A Biting Chill",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ba305f5464e031ea",
+  "lessons": [
+    {
+      "id": "MR-C437-garva",
+      "sequence": 25100,
+      "title": "गारवा (gārvā) — coolness; a chill",
+      "headword": "गारवा",
+      "romanization": "gārvā",
+      "gloss": "coolness; a chill",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe9962846af41ca3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for humid, then the Marathi for to blaze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गारवा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गारवा — gārvā — \"coolness; a chill\"."
+            },
+            {
+              "kind": "speech",
+              "text": "संध्याकाळी हवेत गारवा आला. sandhyākāḷī havet gārvā ālā. In the evening a chill came into the air."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "A pleasant coolness; गारवा (gārvā) येणे."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गारवा (gārvā) is built on gār, \"cool, cold\", with a noun ending; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gārvā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gārvā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gārvā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gārvā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandhyākāḷī havet gārvā ālā. — In the evening a chill came into the air.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandhyākāḷī havet gārvā ālā.* — In the evening a chill came into the air.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for humid, then the Marathi for to blaze, then say gārvā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for humid, then the Marathi for to blaze, then say *gārvā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गारवा (gārvā) mean? (\"Coolness; a chill\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C437-himvarsav",
+      "sequence": 25110,
+      "title": "हिमवर्षाव (himvarṣāv) — a snowfall",
+      "headword": "हिमवर्षाव",
+      "romanization": "himvarṣāv",
+      "gloss": "a snowfall",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59de5f7426894cb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to blaze, then the Marathi for coolness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हिमवर्षाव",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिमवर्षाव — himvarṣāv — \"a snowfall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "डोंगरावर रात्रभर हिमवर्षाव झाला. ḍoṅgarāvar rātrabhar himvarṣāv jhālā. It snowed on the mountain all night."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "हिम, snow, and वर्षाव, a shower."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिमवर्षाव (himvarṣāv) is built from Sanskrit hima, \"snow\" (Monier-Williams), and वर्षाव, \"a shower\", from the family of varṣati, \"rains\" (CDIAL 11394)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "himvarṣāv",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *himvarṣāv*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "himvarṣāv, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *himvarṣāv*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍoṅgarāvar rātrabhar himvarṣāv jhālā. — It snowed on the mountain all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍoṅgarāvar rātrabhar himvarṣāv jhālā.* — It snowed on the mountain all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to blaze, then the Marathi for coolness, then say himvarṣāv again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to blaze, then the Marathi for coolness, then say *himvarṣāv* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हिमवर्षाव (himvarṣāv) mean? (\"A snowfall\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C437-jhombne",
+      "sequence": 25120,
+      "title": "झोंबणे (jhombṇe) — to sting; to nip",
+      "headword": "झोंबणे",
+      "romanization": "jhombṇe",
+      "gloss": "to sting; to nip",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a736320750bcfa4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for coolness, then the Marathi for a snowfall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झोंबणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झोंबणे — jhombṇe — \"to sting; to nip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पहाटेचा थंड वारा अंगाला झोंबला. pahāṭecā thaṇḍ vārā aṅgālā jhomblā. The cold dawn wind stung my body."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो झोंबला, to jhomblā."
+            },
+            {
+              "kind": "speech",
+              "text": "What is stung takes -ला: अंगाला, कानाला झोंबणे (jhombṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झोंबणे (jhombṇe) is a Marathi verb for cold, smoke or spice that stings; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhombṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhombṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhombṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhombṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahāṭecā thaṇḍ vārā aṅgālā jhomblā. — The cold dawn wind stung my body.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahāṭecā thaṇḍ vārā aṅgālā jhomblā.* — The cold dawn wind stung my body.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for coolness, then the Marathi for a snowfall, then say jhombṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for coolness, then the Marathi for a snowfall, then say *jhombṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झोंबणे (jhombṇe) mean? (\"To sting; to nip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C437-gothne",
+      "sequence": 25130,
+      "title": "गोठणे (goṭhṇe) — to freeze",
+      "headword": "गोठणे",
+      "romanization": "goṭhṇe",
+      "gloss": "to freeze",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28ac17c2de038a84",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a snowfall, then the Marathi for to sting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गोठणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गोठणे — goṭhṇe — \"to freeze\"."
+            },
+            {
+              "kind": "speech",
+              "text": "थंडीत तळ्याचं पाणी गोठलं. thaṇḍīt taḷyācaṁ pāṇī goṭhlaṁ. In the cold the water of the pond froze."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो गोठला, to goṭhlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Water and blood गोठतात; not the same word as गोठा, a cowshed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गोठणे (goṭhṇe) is a Marathi verb for water turning to ice; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goṭhṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goṭhṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goṭhṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goṭhṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thaṇḍīt taḷyācaṁ pāṇī goṭhlaṁ. — In the cold the water of the pond froze.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thaṇḍīt taḷyācaṁ pāṇī goṭhlaṁ.* — In the cold the water of the pond froze.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a snowfall, then the Marathi for to sting, then say goṭhṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a snowfall, then the Marathi for to sting, then say *goṭhṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गोठणे (goṭhṇe) mean? (\"To freeze\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C437-vitalne",
+      "sequence": 25140,
+      "title": "वितळणे (vitaḷṇe) — to melt",
+      "headword": "वितळणे",
+      "romanization": "vitaḷṇe",
+      "gloss": "to melt",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8b2e6c8437773b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to sting, then the Marathi for to freeze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वितळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वितळणे — vitaḷṇe — \"to melt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उन्हात बर्फ लवकर वितळतो. unhāt barpha lavkar vitaḷto. Ice melts quickly in the sun."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो वितळला, to vitaḷlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Ice, butter and wax वितळतात."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वितळणे (vitaḷṇe) is a Marathi verb for something solid turning liquid; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vitaḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vitaḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vitaḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vitaḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unhāt barpha lavkar vitaḷto. — Ice melts quickly in the sun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unhāt barpha lavkar vitaḷto.* — Ice melts quickly in the sun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to sting, then the Marathi for to freeze, then say vitaḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to sting, then the Marathi for to freeze, then say *vitaḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वितळणे (vitaḷṇe) mean? (\"To melt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

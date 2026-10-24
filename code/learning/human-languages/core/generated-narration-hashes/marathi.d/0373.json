@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:7bf3cfc28e654570",
+  "lessonIds": [
+    "MR-C373-sarveksan",
+    "MR-C373-namuna",
+    "MR-C373-akdevari",
+    "MR-C373-vislesan",
+    "MR-C373-paddhat",
+    "MR-R373-review-366-373"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch373.txt",
+  "json": "marathi/narration/ch373.json",
+  "textHash": "fnv1a64:e11c2cc0d43f424a",
+  "jsonHash": "fnv1a64:9a4636f3592ec3bf",
+  "findings": []
+}

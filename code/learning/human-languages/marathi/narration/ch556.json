@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 556,
+  "title": "Favourable or Not",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ee3d6d37c8d0ef33",
+  "lessons": [
+    {
+      "id": "MR-C556-anukul",
+      "sequence": 31660,
+      "title": "अनुकूल (anukūl) — favourable",
+      "headword": "अनुकूल",
+      "romanization": "anukūl",
+      "gloss": "favourable",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25f17d5175f13e19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a rush, then the Marathi for a scramble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनुकूल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुकूल — anukūl — \"favourable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हवामान अनुकूल असेल तर आम्ही उद्या निघू. havāmān anukūl asel tar āmhī udyā nighū. If the weather is favourable we will set out tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुकूल (anukūl) is a tatsama, taken from Sanskrit anukūla, \"following the bank or slope\" (Monier-Williams), so going with the stream."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anukūl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anukūl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anukūl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anukūl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "havāmān anukūl asel tar āmhī udyā nighū. — If the weather is favourable we will set out tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *havāmān anukūl asel tar āmhī udyā nighū.* — If the weather is favourable we will set out tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a rush, then the Marathi for a scramble, then say anukūl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a rush, then the Marathi for a scramble, then say *anukūl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनुकूल (anukūl) mean? (\"Favourable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C556-pratikul",
+      "sequence": 31670,
+      "title": "प्रतिकूल (pratikūl) — unfavourable; adverse",
+      "headword": "प्रतिकूल",
+      "romanization": "pratikūl",
+      "gloss": "unfavourable; adverse",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8dda67d1c96d8513",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a scramble, then the Marathi for favourable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रतिकूल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिकूल — pratikūl — \"unfavourable; adverse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रतिकूल परिस्थितीतही ती शिकत राहिली. pratikūl paristhitīthī tī śikat rāhilī. Even in adverse circumstances she kept on studying."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिकूल (pratikūl) is a tatsama, taken from Sanskrit pratikūla, \"against the bank, adverse\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratikūl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratikūl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratikūl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratikūl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratikūl paristhitīthī tī śikat rāhilī. — Even in adverse circumstances she kept on studying.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratikūl paristhitīthī tī śikat rāhilī.* — Even in adverse circumstances she kept on studying.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a scramble, then the Marathi for favourable, then say pratikūl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a scramble, then the Marathi for favourable, then say *pratikūl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रतिकूल (pratikūl) mean? (\"Unfavourable; adverse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C556-ghol",
+      "sequence": 31680,
+      "title": "घोळ (ghoḷ) — a muddle; a mess",
+      "headword": "घोळ",
+      "romanization": "ghoḷ",
+      "gloss": "a muddle; a mess",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32dc79710c4dc57c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for favourable, then the Marathi for unfavourable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घोळ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घोळ — ghoḷ — \"a muddle; a mess\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तिकिटांच्या आरक्षणात मोठा घोळ झाला. tikiṭāñcyā ārakṣaṇāt moṭhā ghoḷ jhālā. There was a big muddle in the ticket booking."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "घोळ (ghoḷ) होणे, things get into a muddle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घोळ (ghoḷ) is built on घोळणे, \"to stir about\"; CDIAL lists Marathi ghoḷṇẽ under Sanskrit ghōlayati, \"mixes, stirs together\" (CDIAL 4526)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghoḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghoḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghoḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghoḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tikiṭāñcyā ārakṣaṇāt moṭhā ghoḷ jhālā. — There was a big muddle in the ticket booking.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tikiṭāñcyā ārakṣaṇāt moṭhā ghoḷ jhālā.* — There was a big muddle in the ticket booking.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for favourable, then the Marathi for unfavourable, then say ghoḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for favourable, then the Marathi for unfavourable, then say *ghoḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घोळ (ghoḷ) mean? (\"A muddle; a mess\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C556-bikat",
+      "sequence": 31690,
+      "title": "बिकट (bikaṭ) — dire; critical",
+      "headword": "बिकट",
+      "romanization": "bikaṭ",
+      "gloss": "dire; critical",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e3f0f5b48349479",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for unfavourable, then the Marathi for a muddle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बिकट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बिकट — bikaṭ — \"dire; critical\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पुरामुळे गावातली परिस्थिती बिकट झाली. purāmuḷe gāvātlī paristhitī bikaṭ jhālī. Because of the flood, things in the village became dire."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly of a situation or a road: बिकट (bikaṭ) परिस्थिती, बिकट (bikaṭ) वाट."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बिकट (bikaṭ) is usually traced to Sanskrit vikaṭa, \"dreadful, monstrous, of unusual size\" (Monier-Williams), with the v- said as b-; CDIAL lists no Marathi बिकट, so the path is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bikaṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bikaṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bikaṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bikaṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purāmuḷe gāvātlī paristhitī bikaṭ jhālī. — Because of the flood, things in the village became dire.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purāmuḷe gāvātlī paristhitī bikaṭ jhālī.* — Because of the flood, things in the village became dire.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for unfavourable, then the Marathi for a muddle, then say bikaṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for unfavourable, then the Marathi for a muddle, then say *bikaṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बिकट (bikaṭ) mean? (\"Dire; critical\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C556-sambhram",
+      "sequence": 31700,
+      "title": "संभ्रम (sambhram) — confusion; doubt",
+      "headword": "संभ्रम",
+      "romanization": "sambhram",
+      "gloss": "confusion; doubt",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b409b0ffe282975",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a muddle, then the Marathi for dire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संभ्रम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संभ्रम — sambhram — \"confusion; doubt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दोन वेगळ्या सूचनांमुळे सगळ्यांच्या मनात संभ्रम होता. don vegaḷyā sūcanāmmuḷe sagḷyāñcyā manāt sambhram hotā. Because of two different instructions, everyone was confused."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संभ्रम (sambhram) is a tatsama, taken from Sanskrit sambhrama, \"whirling round, confusion\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "don vegaḷyā sūcanāmmuḷe sagḷyāñcyā manāt sambhram hotā. — Because of two different instructions, everyone was confused.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *don vegaḷyā sūcanāmmuḷe sagḷyāñcyā manāt sambhram hotā.* — Because of two different instructions, everyone was confused.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a muddle, then the Marathi for dire, then say sambhram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a muddle, then the Marathi for dire, then say *sambhram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संभ्रम (sambhram) mean? (\"Confusion; doubt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

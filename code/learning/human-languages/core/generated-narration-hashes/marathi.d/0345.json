@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:b8072dbca7d0736a",
+  "lessonIds": [
+    "MR-C345-niskarsa",
+    "MR-C345-anuman-kadhne",
+    "MR-C345-adhar",
+    "MR-C345-sarams",
+    "MR-C345-thodkyat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch345.txt",
+  "json": "marathi/narration/ch345.json",
+  "textHash": "fnv1a64:cbe03a57fd0a4676",
+  "jsonHash": "fnv1a64:c1bebb501eb83ab9",
+  "findings": []
+}

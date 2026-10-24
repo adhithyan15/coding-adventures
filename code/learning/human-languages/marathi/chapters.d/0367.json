@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Customs and Ways of Thinking",
+  "label": "ch:mr-customs-and-ways-of-thinking",
+  "canDo": "I can talk about customs, ideologies and tendencies.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C367-samajik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can talk about customs, ideologies and tendencies.",
+    "assesses": [
+      "MR-LEX-C367-PRATHA367-03",
+      "MR-LEX-C367-PRATHA367-04",
+      "MR-LEX-C367-PRATHA367-05"
+    ]
+  }
+}

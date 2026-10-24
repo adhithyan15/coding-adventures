@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:b9b75550cf80ce00",
+  "lessonIds": [
+    "MR-C439-cakrivadal",
+    "MR-C439-vavtal",
+    "MR-C439-gadgadat",
+    "MR-C439-ghongavne",
+    "MR-C439-kadadne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch439.txt",
+  "json": "marathi/narration/ch439.json",
+  "textHash": "fnv1a64:bd0bf9f62bb1fd57",
+  "jsonHash": "fnv1a64:ab9aafcfd2ef1e83",
+  "findings": []
+}

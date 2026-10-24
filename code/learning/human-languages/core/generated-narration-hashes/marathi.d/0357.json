@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:a25736f0b8471db3",
+  "lessonIds": [
+    "MR-C357-prasasan",
+    "MR-C357-samsad",
+    "MR-C357-mantri",
+    "MR-C357-neta",
+    "MR-C357-nemne",
+    "MR-R357-review-350-357"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch357.txt",
+  "json": "marathi/narration/ch357.json",
+  "textHash": "fnv1a64:b75c445337e6bbe5",
+  "jsonHash": "fnv1a64:a7f86aed35ea3b99",
+  "findings": []
+}

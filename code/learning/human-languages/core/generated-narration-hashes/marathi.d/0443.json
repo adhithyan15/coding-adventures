@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:90f422076a56b7af",
+  "lessonIds": [
+    "MR-C443-odha",
+    "MR-C443-kalva",
+    "MR-C443-dharan",
+    "MR-C443-sarovar",
+    "MR-C443-khalkhalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch443.txt",
+  "json": "marathi/narration/ch443.json",
+  "textHash": "fnv1a64:ba6b2bd874ba6a9e",
+  "jsonHash": "fnv1a64:91571698c8eccc46",
+  "findings": []
+}

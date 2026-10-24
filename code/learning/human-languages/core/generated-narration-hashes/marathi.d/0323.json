@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:117e06b18dee9b50",
+  "lessonIds": [
+    "MR-C323-nirop",
+    "MR-C323-nivrtti",
+    "MR-C323-grhapraves",
+    "MR-C323-vardhapandin",
+    "MR-C323-samarop"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch323.txt",
+  "json": "marathi/narration/ch323.json",
+  "textHash": "fnv1a64:c2317880bdd71d48",
+  "jsonHash": "fnv1a64:7de7a848c42f85a0",
+  "findings": []
+}

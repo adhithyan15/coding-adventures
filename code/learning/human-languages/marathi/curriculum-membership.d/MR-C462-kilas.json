@@ -1,0 +1,11 @@
+{
+  "id": "MR-C462-kilas",
+  "pathSegment": "MR-PATH-462-HEVA462",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-462-HEVA462",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C379-kiman",
+    "language": "marathi",
+    "chapter": 379,
+    "sequence": 21900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fc67d9ca0b281c6"
+  },
+  "findings": []
+}

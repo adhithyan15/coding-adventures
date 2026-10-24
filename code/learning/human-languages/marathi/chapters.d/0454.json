@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "Sulking and Making Up",
+  "label": "ch:mr-sulking-and-making-up",
+  "canDo": "I can talk about a sulk, a misunderstanding and making up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C454-hirmusne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can talk about a sulk, a misunderstanding and making up.",
+    "assesses": [
+      "MR-LEX-C454-RUSVA454-03",
+      "MR-LEX-C454-RUSVA454-04",
+      "MR-LEX-C454-RUSVA454-05"
+    ]
+  }
+}

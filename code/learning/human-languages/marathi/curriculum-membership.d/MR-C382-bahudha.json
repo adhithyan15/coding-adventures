@@ -1,0 +1,11 @@
+{
+  "id": "MR-C382-bahudha",
+  "pathSegment": "MR-PATH-382-SHAKYA382",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-382-SHAKYA382",
+      "order": 1
+    }
+  ]
+}

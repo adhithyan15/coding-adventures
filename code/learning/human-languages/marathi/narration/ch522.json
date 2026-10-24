@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 522,
+  "title": "Rooms of the House",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:183d3f08f433cd08",
+  "lessons": [
+    {
+      "id": "MR-C522-divankhana",
+      "sequence": 29920,
+      "title": "दिवाणखाना (divāṇkhānā) — a living room",
+      "headword": "दिवाणखाना",
+      "romanization": "divāṇkhānā",
+      "gloss": "a living room",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:785cb97e35125e86",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a saw, then the Marathi for to plaster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दिवाणखाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिवाणखाना — divāṇkhānā — \"a living room\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पाहुणे दिवाणखान्यात बसले होते. pāhuṇe divāṇkhānyāt basle hote. The guests were sitting in the living room."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "The oblique is दिवाणखान्या-: दिवाणखान्यात."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिवाणखाना (divāṇkhānā) is a loan from Persian dīvān-khāna, \"the hall where guests are received\", from dīvān, \"court\", and khāna, \"house\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "divāṇkhānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *divāṇkhānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "divāṇkhānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *divāṇkhānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāhuṇe divāṇkhānyāt basle hote. — The guests were sitting in the living room.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāhuṇe divāṇkhānyāt basle hote.* — The guests were sitting in the living room.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a saw, then the Marathi for to plaster, then say divāṇkhānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a saw, then the Marathi for to plaster, then say *divāṇkhānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दिवाणखाना (divāṇkhānā) mean? (\"A living room\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C522-sayangrh",
+      "sequence": 29930,
+      "title": "शयनगृह (śayangṛh) — a bedroom",
+      "headword": "शयनगृह",
+      "romanization": "śayangṛh",
+      "gloss": "a bedroom",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cce696f1ab41ca6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to plaster, then the Marathi for a living room."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शयनगृह",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शयनगृह — śayangṛh — \"a bedroom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आमच्या घरात दोन शयनगृहं आहेत. āmcyā gharāt don śayangṛhaṁ āhet. There are two bedrooms in our house."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter. Plural: शयनगृहं, śayangṛhaṁ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शयनगृह (śayangṛh) is a tatsama compound of Sanskrit śayana, \"lying down, sleeping\", and gṛha, \"house\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śayangṛh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śayangṛh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śayangṛh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śayangṛh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmcyā gharāt don śayangṛhaṁ āhet. — There are two bedrooms in our house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmcyā gharāt don śayangṛhaṁ āhet.* — There are two bedrooms in our house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to plaster, then the Marathi for a living room, then say śayangṛh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to plaster, then the Marathi for a living room, then say *śayangṛh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शयनगृह (śayangṛh) mean? (\"A bedroom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C522-gacci",
+      "sequence": 29940,
+      "title": "गच्ची (gaccī) — a terrace; a flat roof",
+      "headword": "गच्ची",
+      "romanization": "gaccī",
+      "gloss": "a terrace; a flat roof",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b45df9a1e7b32994",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a living room, then the Marathi for a bedroom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गच्ची",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गच्ची — gaccī — \"a terrace; a flat roof\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उन्हाळ्यात आम्ही गच्चीवर झोपायचो. unhāḷyāt āmhī gaccīvar jhopāyco. In summer we used to sleep on the terrace."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गच्ची (gaccī) is the word for a flat roof or terrace; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaccī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaccī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaccī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaccī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unhāḷyāt āmhī gaccīvar jhopāyco. — In summer we used to sleep on the terrace.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unhāḷyāt āmhī gaccīvar jhopāyco.* — In summer we used to sleep on the terrace.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a living room, then the Marathi for a bedroom, then say gaccī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a living room, then the Marathi for a bedroom, then say *gaccī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गच्ची (gaccī) mean? (\"A terrace; a flat roof\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C522-pharsi",
+      "sequence": 29950,
+      "title": "फरशी (pharśī) — a floor tile; a stone floor",
+      "headword": "फरशी",
+      "romanization": "pharśī",
+      "gloss": "a floor tile; a stone floor",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d300e6f1f1ad656",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a bedroom, then the Marathi for a terrace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फरशी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फरशी — pharśī — \"a floor tile; a stone floor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नवीन घरात पांढरी फरशी आहे. navīn gharāt pāṇḍhrī pharśī āhe. The new house has a white tiled floor."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फरशी (pharśī) is usually traced to Persian farš, \"carpet, floor\", which goes back to Arabic farš."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pharśī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pharśī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pharśī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pharśī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "navīn gharāt pāṇḍhrī pharśī āhe. — The new house has a white tiled floor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *navīn gharāt pāṇḍhrī pharśī āhe.* — The new house has a white tiled floor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a bedroom, then the Marathi for a terrace, then say pharśī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a bedroom, then the Marathi for a terrace, then say *pharśī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फरशी (pharśī) mean? (\"A floor tile; a stone floor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C522-tangne",
+      "sequence": 29960,
+      "title": "टांगणे (ṭāṅgṇe) — to hang up",
+      "headword": "टांगणे",
+      "romanization": "ṭāṅgṇe",
+      "gloss": "to hang up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1c952c632c48a21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a terrace, then the Marathi for a floor tile."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: टांगणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टांगणे — ṭāṅgṇe — \"to hang up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मी दिवाणखान्याच्या भिंतीवर एक चित्र टांगलं. mī divāṇkhānyācyā bhintīvar ek citra ṭāṅglaṁ. I hung a picture on the living room wall."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने चित्र टांगलं, tyāne citra ṭāṅglaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The place takes -वर: भिंतीवर टांगणे (ṭāṅgṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टांगणे (ṭāṅgṇe) is inherited: CDIAL lists Marathi ṭā̃gṇẽ, \"to hang up\", under ṭaṅg, \"hang up\" (CDIAL 5436)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭāṅgṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭāṅgṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭāṅgṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭāṅgṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī divāṇkhānyācyā bhintīvar ek citra ṭāṅglaṁ. — I hung a picture on the living room wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī divāṇkhānyācyā bhintīvar ek citra ṭāṅglaṁ.* — I hung a picture on the living room wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a terrace, then the Marathi for a floor tile, then say ṭāṅgṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a terrace, then the Marathi for a floor tile, then say *ṭāṅgṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does टांगणे (ṭāṅgṇe) mean? (\"To hang up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

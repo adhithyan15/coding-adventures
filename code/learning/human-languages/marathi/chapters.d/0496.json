@@ -1,0 +1,21 @@
+{
+  "chapter": 496,
+  "title": "In-Laws",
+  "label": "ch:mr-in-laws",
+  "canDo": "I can name in-laws on a husband's or a wife's side.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-R496-review-490-496",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can name in-laws on a husband's or a wife's side.",
+    "assesses": [
+      "MR-LEX-C496-SASAR496-01",
+      "MR-LEX-C496-SASAR496-02",
+      "MR-LEX-C496-SASAR496-03",
+      "MR-LEX-C496-SASAR496-04",
+      "MR-LEX-C496-SASAR496-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C426-cillar",
+  "pathSegment": "MR-PATH-426-ROKAD426",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-426-ROKAD426",
+      "order": 2
+    }
+  ]
+}

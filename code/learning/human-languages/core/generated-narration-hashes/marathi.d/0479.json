@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:4de33ca787e87222",
+  "lessonIds": [
+    "MR-C479-nadi",
+    "MR-C479-nas",
+    "MR-C479-ghasa",
+    "MR-C479-pesi",
+    "MR-C479-kalij"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch479.txt",
+  "json": "marathi/narration/ch479.json",
+  "textHash": "fnv1a64:1ea5393d606dd95d",
+  "jsonHash": "fnv1a64:dfca56acbbf4331f",
+  "findings": []
+}

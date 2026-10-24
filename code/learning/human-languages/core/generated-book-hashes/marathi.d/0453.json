@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:0be87cc81dd27a4e",
+  "lessonIds": [
+    "MR-C453-tapat",
+    "MR-C453-santapne",
+    "MR-C453-cidne",
+    "MR-C453-khekasne",
+    "MR-C453-kurkurne"
+  ],
+  "tex": "marathi/book/chapters/ch453-losing-your-temper.tex"
+}

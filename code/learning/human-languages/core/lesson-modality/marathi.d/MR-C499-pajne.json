@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C499-pajne",
+    "language": "marathi",
+    "chapter": 499,
+    "sequence": 28550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c88b3199eecb17d3"
+  },
+  "findings": []
+}

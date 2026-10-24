@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-451-MOOD451",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether someone is cheerful, gloomy, pleased or upset.",
+  "prerequisites": []
+}

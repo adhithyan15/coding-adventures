@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C517-sandes",
+    "language": "marathi",
+    "chapter": 517,
+    "sequence": 29680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77337dc13b38abfc"
+  },
+  "findings": []
+}

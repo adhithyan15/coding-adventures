@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:588f283bca3048b5",
+  "lessonIds": [
+    "MR-C501-sparsa",
+    "MR-C501-mithi-marne",
+    "MR-C501-gonjarne",
+    "MR-C501-thopatne",
+    "MR-C501-kurvalne"
+  ],
+  "tex": "marathi/book/chapters/ch501-hugs-and-pats.tex"
+}

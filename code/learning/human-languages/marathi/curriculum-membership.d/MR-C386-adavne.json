@@ -1,0 +1,11 @@
+{
+  "id": "MR-C386-adavne",
+  "pathSegment": "MR-PATH-386-PRATIBANDH386",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-386-PRATIBANDH386",
+      "order": 2
+    }
+  ]
+}

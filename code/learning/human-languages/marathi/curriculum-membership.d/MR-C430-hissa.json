@@ -1,0 +1,11 @@
+{
+  "id": "MR-C430-hissa",
+  "pathSegment": "MR-PATH-430-MOBADLA430",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-430-MOBADLA430",
+      "order": 3
+    }
+  ]
+}

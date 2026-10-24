@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C340-thararak",
+    "language": "marathi",
+    "chapter": 340,
+    "sequence": 19690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b5c564f21e3a719"
+  },
+  "findings": []
+}

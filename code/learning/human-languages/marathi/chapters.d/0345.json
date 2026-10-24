@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "Reaching Conclusions",
+  "label": "ch:mr-reaching-conclusions",
+  "canDo": "I can reach a conclusion and sum things up.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C345-thodkyat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can reach a conclusion and sum things up.",
+    "assesses": [
+      "MR-LEX-C345-NISHKARSH345-03",
+      "MR-LEX-C345-NISHKARSH345-04",
+      "MR-LEX-C345-NISHKARSH345-05"
+    ]
+  }
+}

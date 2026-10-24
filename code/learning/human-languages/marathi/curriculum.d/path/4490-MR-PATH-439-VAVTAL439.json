@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-439-VAVTAL439",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "MR-EXT-439-VAVTAL439"
+  ],
+  "after": []
+}

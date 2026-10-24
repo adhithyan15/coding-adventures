@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Burns and Rashes",
+  "label": "ch:mr-burns-and-rashes",
+  "canDo": "I can talk about a burn, a boil, a rash and an itch.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C487-khajavne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can talk about a burn, a boil, a rash and an itch.",
+    "assesses": [
+      "MR-LEX-C487-CATKA487-03",
+      "MR-LEX-C487-CATKA487-04",
+      "MR-LEX-C487-CATKA487-05"
+    ]
+  }
+}

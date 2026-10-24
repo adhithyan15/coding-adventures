@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C390-ekun",
+    "language": "marathi",
+    "chapter": 390,
+    "sequence": 22460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db14bedd2439cb96"
+  },
+  "findings": []
+}

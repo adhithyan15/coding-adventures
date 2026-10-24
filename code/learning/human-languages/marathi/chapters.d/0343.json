@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "Making a Case",
+  "label": "ch:mr-making-a-case",
+  "canDo": "I can put forward a view and back it with reasons.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C343-purava",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can put forward a view and back it with reasons.",
+    "assesses": [
+      "MR-LEX-C343-MUDDA343-03",
+      "MR-LEX-C343-MUDDA343-04",
+      "MR-LEX-C343-MUDDA343-05"
+    ]
+  }
+}

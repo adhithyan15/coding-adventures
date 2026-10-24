@@ -1,0 +1,11 @@
+{
+  "id": "MR-C550-paij-lavne",
+  "pathSegment": "MR-PATH-550-NASHIB550",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-550-NASHIB550",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C537-abhinay",
+    "language": "marathi",
+    "chapter": 537,
+    "sequence": 30690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efb5a61a29598b49"
+  },
+  "findings": []
+}

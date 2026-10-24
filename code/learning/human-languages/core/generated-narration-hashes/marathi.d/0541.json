@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:c0390b47a0fe8b8b",
+  "lessonIds": [
+    "MR-C541-savadhgiri",
+    "MR-C541-khabardari",
+    "MR-C541-daksata",
+    "MR-C541-satark",
+    "MR-C541-isara-dene"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch541.txt",
+  "json": "marathi/narration/ch541.json",
+  "textHash": "fnv1a64:4e69b63330a939e9",
+  "jsonHash": "fnv1a64:2ee4c140afe0e83f",
+  "findings": []
+}

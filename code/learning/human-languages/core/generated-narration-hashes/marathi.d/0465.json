@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:43a8f5d6dd4eb3bb",
+  "lessonIds": [
+    "MR-C465-naval",
+    "MR-C465-kutuhal",
+    "MR-C465-bharavne",
+    "MR-C465-cakravne",
+    "MR-C465-thakka-hone",
+    "MR-R465-review-458-465"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch465.txt",
+  "json": "marathi/narration/ch465.json",
+  "textHash": "fnv1a64:e13483f8537a5c2d",
+  "jsonHash": "fnv1a64:7f54d85f71020dae",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C302-dacakne",
+    "language": "marathi",
+    "chapter": 302,
+    "sequence": 17710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09d3a376ac1eb93d"
+  },
+  "findings": []
+}

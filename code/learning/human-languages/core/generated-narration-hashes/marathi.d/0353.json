@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:fdbd6533295aa63d",
+  "lessonIds": [
+    "MR-C353-pusti-karne",
+    "MR-C353-dujora-dene",
+    "MR-C353-khandan-karne",
+    "MR-C353-vastavik",
+    "MR-C353-pratikriya-dene"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "marathi/narration/ch353.txt",
+  "json": "marathi/narration/ch353.json",
+  "textHash": "fnv1a64:c1d0bb77ad86a08f",
+  "jsonHash": "fnv1a64:e21f06360794d1f7",
+  "findings": []
+}

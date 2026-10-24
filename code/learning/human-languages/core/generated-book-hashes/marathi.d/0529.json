@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:60585b7a2b8377bb",
+  "lessonIds": [
+    "MR-C529-samna",
+    "MR-C529-karnadhar",
+    "MR-C529-panc",
+    "MR-C529-maidan",
+    "MR-C529-mat-karne"
+  ],
+  "tex": "marathi/book/chapters/ch529-a-day-at-the-match.tex"
+}

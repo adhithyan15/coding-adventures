@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C343-tarka",
+    "language": "marathi",
+    "chapter": 343,
+    "sequence": 20060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8439fbdd4c02197"
+  },
+  "findings": []
+}

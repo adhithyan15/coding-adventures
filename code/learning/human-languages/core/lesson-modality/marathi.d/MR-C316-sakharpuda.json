@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C316-sakharpuda",
+    "language": "marathi",
+    "chapter": 316,
+    "sequence": 18440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed77421404adea1c"
+  },
+  "findings": []
+}

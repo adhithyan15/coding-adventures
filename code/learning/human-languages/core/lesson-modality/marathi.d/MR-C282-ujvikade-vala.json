@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C282-ujvikade-vala",
+    "language": "marathi",
+    "chapter": 282,
+    "sequence": 16260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc52dd9611db1737"
+  },
+  "findings": []
+}

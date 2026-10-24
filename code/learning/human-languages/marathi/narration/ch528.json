@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 528,
+  "title": "Hobbies and Leisure",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:eef5241cda599d9e",
+  "lessons": [
+    {
+      "id": "MR-C528-chand",
+      "sequence": 30230,
+      "title": "छंद (chand) — a hobby",
+      "headword": "छंद",
+      "romanization": "chand",
+      "gloss": "a hobby",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3fac6406ae0b605b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to stir, then the Marathi for to get burnt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छंद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छंद — chand — \"a hobby\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माझ्या बहिणीला नाणी गोळा करण्याचा छंद आहे. mājhyā bahiṇīlā nāṇī goḷā karṇyācā chand āhe. My sister's hobby is collecting coins."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "The person takes -ला: तिला छंद (chand) आहे."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छंद (chand) is a tatsama, taken from Sanskrit chanda, \"pleasure, wish\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chand*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chand, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chand*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhyā bahiṇīlā nāṇī goḷā karṇyācā chand āhe. — My sister's hobby is collecting coins.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhyā bahiṇīlā nāṇī goḷā karṇyācā chand āhe.* — My sister's hobby is collecting coins.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to stir, then the Marathi for to get burnt, then say chand again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to stir, then the Marathi for to get burnt, then say *chand* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छंद (chand) mean? (\"A hobby\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C528-virangula",
+      "sequence": 30240,
+      "title": "विरंगुळा (viraṅguḷā) — a pastime; a pleasant break",
+      "headword": "विरंगुळा",
+      "romanization": "viraṅguḷā",
+      "gloss": "a pastime; a pleasant break",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d977a9461a435ba7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to get burnt, then the Marathi for a hobby."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विरंगुळा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विरंगुळा — viraṅguḷā — \"a pastime; a pleasant break\"."
+            },
+            {
+              "kind": "speech",
+              "text": "संध्याकाळी बागेत काम करणं हा माझा विरंगुळा आहे. sandhyākāḷī bāget kām karṇaṁ hā mājhā viraṅguḷā āhe. Working in the garden in the evening is my pastime."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विरंगुळा (viraṅguḷā) is a Marathi word for something that takes the mind off work; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viraṅguḷā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viraṅguḷā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viraṅguḷā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viraṅguḷā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandhyākāḷī bāget kām karṇaṁ hā mājhā viraṅguḷā āhe. — Working in the garden in the evening is my pastime.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandhyākāḷī bāget kām karṇaṁ hā mājhā viraṅguḷā āhe.* — Working in the garden in the evening is my pastime.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to get burnt, then the Marathi for a hobby, then say viraṅguḷā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to get burnt, then the Marathi for a hobby, then say *viraṅguḷā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विरंगुळा (viraṅguḷā) mean? (\"A pastime; a pleasant break\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C528-phursat",
+      "sequence": 30250,
+      "title": "फुरसत (phursat) — free time; leisure",
+      "headword": "फुरसत",
+      "romanization": "phursat",
+      "gloss": "free time; leisure",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6b07e97fc588d9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a hobby, then the Marathi for a pastime."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फुरसत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फुरसत — phursat — \"free time; leisure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज मला अजिबात फुरसत नाही. āj malā ajibāt phursat nāhī. I have no free time at all today."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फुरसत (phursat) is a loan from Persian fursat, \"leisure\", usually traced to Arabic furṣa, \"occasion\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phursat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phursat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phursat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phursat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj malā ajibāt phursat nāhī. — I have no free time at all today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj malā ajibāt phursat nāhī.* — I have no free time at all today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a hobby, then the Marathi for a pastime, then say phursat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a hobby, then the Marathi for a pastime, then say *phursat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फुरसत (phursat) mean? (\"Free time; leisure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C528-karamnuk",
+      "sequence": 30260,
+      "title": "करमणूक (karamṇūk) — entertainment",
+      "headword": "करमणूक",
+      "romanization": "karamṇūk",
+      "gloss": "entertainment",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1eee2a9e267e3243",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a pastime, then the Marathi for free time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: करमणूक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "करमणूक — karamṇūk — \"entertainment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जत्रेत मुलांच्या करमणुकीसाठी खूप खेळ होते. jatret mulāñcyā karamṇukīsāṭhī khūp kheḷ hote. At the fair there were lots of games to entertain the children."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "The oblique is करमणुकी-: करमणुकीसाठी."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "करमणूक (karamṇūk) is built on करमणे, \"to be diverted, to pass the time\"; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karamṇūk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karamṇūk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karamṇūk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karamṇūk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jatret mulāñcyā karamṇukīsāṭhī khūp kheḷ hote. — At the fair there were lots of games to entertain the children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jatret mulāñcyā karamṇukīsāṭhī khūp kheḷ hote.* — At the fair there were lots of games to entertain the children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a pastime, then the Marathi for free time, then say karamṇūk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a pastime, then the Marathi for free time, then say *karamṇūk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does करमणूक (karamṇūk) mean? (\"Entertainment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C528-dang-hone",
+      "sequence": 30270,
+      "title": "दंग होणे (daṅg hoṇe) — to be absorbed",
+      "headword": "दंग होणे",
+      "romanization": "daṅg hoṇe",
+      "gloss": "to be absorbed",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3f3c05c3acd7eef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for free time, then the Marathi for entertainment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दंग होणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दंग होणे — daṅg hoṇe — \"to be absorbed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पुस्तक वाचण्यात अरुण इतका दंग झाला की जेवायला विसरला. pustak vācṇyāt aruṇ itkā daṅg jhālā kī jevāylā visarlā. Arun was so absorbed in his book that he forgot to eat."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो खेळात दंग झाला, to kheḷāt daṅg jhālā."
+            },
+            {
+              "kind": "speech",
+              "text": "What absorbs takes -त: खेळात दंग होणे (daṅg hoṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दंग होणे (daṅg hoṇe) is दंग, usually traced to Persian dang, \"astonished, lost\", with होणे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṅg hoṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṅg hoṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṅg hoṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṅg hoṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pustak vācṇyāt aruṇ itkā daṅg jhālā kī jevāylā visarlā. — Arun was so absorbed in his book that he forgot to eat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pustak vācṇyāt aruṇ itkā daṅg jhālā kī jevāylā visarlā.* — Arun was so absorbed in his book that he forgot to eat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for free time, then the Marathi for entertainment, then say daṅg hoṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for free time, then the Marathi for entertainment, then say *daṅg hoṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दंग होणे (daṅg hoṇe) mean? (\"To be absorbed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

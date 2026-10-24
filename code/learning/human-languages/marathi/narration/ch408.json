@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 408,
+  "title": "Boats and Oars",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:87d94c941fe5f37e",
+  "lessons": [
+    {
+      "id": "MR-C408-navadi",
+      "sequence": 23610,
+      "title": "नावाडी (nāvāḍī) — a boatman",
+      "headword": "नावाडी",
+      "romanization": "nāvāḍī",
+      "gloss": "a boatman",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2a9bc53af937989",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a signpost, then the Marathi for a long trudge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नावाडी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नावाडी — nāvāḍī — \"a boatman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नावाड्याने आम्हाला नदीपलीकडे नेलं. nāvāḍyāne āmhālā nadīpalīkaḍe nelaṁ. The boatman took us across the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on नाव, a boat; before an ending it becomes नावाड्या-."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नावाडी (nāvāḍī) is inherited: CDIAL lists Marathi nāvāḍī, \"boatman\", under Sanskrit nāvā, \"boat\" (CDIAL 7081)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāvāḍī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāvāḍī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāvāḍī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāvāḍī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāvāḍyāne āmhālā nadīpalīkaḍe nelaṁ. — The boatman took us across the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāvāḍyāne āmhālā nadīpalīkaḍe nelaṁ.* — The boatman took us across the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a signpost, then the Marathi for a long trudge, then say nāvāḍī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a signpost, then the Marathi for a long trudge, then say *nāvāḍī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नावाडी (nāvāḍī) mean? (\"A boatman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C408-valhe",
+      "sequence": 23620,
+      "title": "वल्हे (valhe) — an oar",
+      "headword": "वल्हे",
+      "romanization": "valhe",
+      "gloss": "an oar",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f54516775cdada07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a long trudge, then the Marathi for a boatman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वल्हे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वल्हे — valhe — \"an oar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "होडीत दोन वल्ही होती. hoḍīt don valhī hotī. There were two oars in the boat."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter. Plural: वल्ही, valhī."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun: one वल्हे (valhe), two वल्ही."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वल्हे (valhe) is a Marathi word for an oar; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valhe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valhe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoḍīt don valhī hotī. — There were two oars in the boat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoḍīt don valhī hotī.* — There were two oars in the boat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a long trudge, then the Marathi for a boatman, then say valhe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a long trudge, then the Marathi for a boatman, then say *valhe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वल्हे (valhe) mean? (\"An oar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C408-valhavne",
+      "sequence": 23630,
+      "title": "वल्हवणे (valhavṇe) — to row",
+      "headword": "वल्हवणे",
+      "romanization": "valhavṇe",
+      "gloss": "to row",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:079480754b642029",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a boatman, then the Marathi for an oar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वल्हवणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वल्हवणे — valhavṇe — \"to row\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नावाडी हळूहळू होडी वल्हवत होता. nāvāḍī haḷūhaḷū hoḍī valhavat hotā. The boatman was slowly rowing the boat."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने वल्हवलं, tyāne valhavlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on वल्हे (valhe), an oar: होडी वल्हवणे (valhavṇe), to row a boat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वल्हवणे (valhavṇe) is a Marathi verb built on वल्हे (valhe), \"an oar\", with the ending -वणे; the origin of the noun is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valhavṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valhavṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valhavṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valhavṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāvāḍī haḷūhaḷū hoḍī valhavat hotā. — The boatman was slowly rowing the boat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāvāḍī haḷūhaḷū hoḍī valhavat hotā.* — The boatman was slowly rowing the boat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a boatman, then the Marathi for an oar, then say valhavṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a boatman, then the Marathi for an oar, then say *valhavṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वल्हवणे (valhavṇe) mean? (\"To row\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C408-helkavne",
+      "sequence": 23640,
+      "title": "हेलकावणे (helkāvṇe) — to toss about; to rock",
+      "headword": "हेलकावणे",
+      "romanization": "helkāvṇe",
+      "gloss": "to toss about; to rock",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ff04f91a810925f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an oar, then the Marathi for to row."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हेलकावणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हेलकावणे — helkāvṇe — \"to toss about; to rock\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वादळात होडी हेलकावत होती. vādaḷāt hoḍī helkāvat hotī. The boat was tossing about in the storm."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो हेलकावला, to helkāvlā."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun हेलकावा is one toss: हेलकावे खाणे, to be tossed about."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हेलकावणे (helkāvṇe) is a Marathi verb for a boat or a load swinging from side to side; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "helkāvṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *helkāvṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "helkāvṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *helkāvṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vādaḷāt hoḍī helkāvat hotī. — The boat was tossing about in the storm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vādaḷāt hoḍī helkāvat hotī.* — The boat was tossing about in the storm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an oar, then the Marathi for to row, then say helkāvṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an oar, then the Marathi for to row, then say *helkāvṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हेलकावणे (helkāvṇe) mean? (\"To toss about; to rock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C408-nangar",
+      "sequence": 23650,
+      "title": "नांगर (nāṅgar) — an anchor; a plough",
+      "headword": "नांगर",
+      "romanization": "nāṅgar",
+      "gloss": "an anchor; a plough",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:978def8164acb7dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to row, then the Marathi for to toss about."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नांगर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नांगर — nāṅgar — \"an anchor; a plough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जहाजाने बंदरात नांगर टाकला. jahājāne bandarāt nāṅgar ṭāklā. The ship dropped anchor in the harbour."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "नांगर (nāṅgar) टाकणे, to drop anchor; on a farm the same word is the plough."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नांगर (nāṅgar) is inherited in the sense \"plough\": CDIAL lists Marathi nā̃gar under Sanskrit lāṅgala, \"plough\" (CDIAL 11006); how the word also came to mean a ship's anchor is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṅgar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṅgar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṅgar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṅgar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jahājāne bandarāt nāṅgar ṭāklā. — The ship dropped anchor in the harbour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jahājāne bandarāt nāṅgar ṭāklā.* — The ship dropped anchor in the harbour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to row, then the Marathi for to toss about, then say nāṅgar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to row, then the Marathi for to toss about, then say *nāṅgar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नांगर (nāṅgar) mean? (\"An anchor; a plough\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C528-chand",
+    "language": "marathi",
+    "chapter": 528,
+    "sequence": 30230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3fac6406ae0b605b"
+  },
+  "findings": []
+}

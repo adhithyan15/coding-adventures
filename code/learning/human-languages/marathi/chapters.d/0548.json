@@ -1,0 +1,19 @@
+{
+  "chapter": 548,
+  "title": "Obstacles",
+  "label": "ch:mr-obstacles",
+  "canDo": "I can talk about obstacles and how people get through them.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C548-dalmalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 548: I can talk about obstacles and how people get through them.",
+    "assesses": [
+      "MR-LEX-C548-ADTHALA548-03",
+      "MR-LEX-C548-ADTHALA548-04",
+      "MR-LEX-C548-ADTHALA548-05"
+    ]
+  }
+}

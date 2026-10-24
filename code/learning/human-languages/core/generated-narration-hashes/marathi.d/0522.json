@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:183d3f08f433cd08",
+  "lessonIds": [
+    "MR-C522-divankhana",
+    "MR-C522-sayangrh",
+    "MR-C522-gacci",
+    "MR-C522-pharsi",
+    "MR-C522-tangne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch522.txt",
+  "json": "marathi/narration/ch522.json",
+  "textHash": "fnv1a64:040bcca3449937e6",
+  "jsonHash": "fnv1a64:25b4bc9fc4615530",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C358-samvidhan",
+    "language": "marathi",
+    "chapter": 358,
+    "sequence": 20820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6fc3ef2527e9315a"
+  },
+  "findings": []
+}

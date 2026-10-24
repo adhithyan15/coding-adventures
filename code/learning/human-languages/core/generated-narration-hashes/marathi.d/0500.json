@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:01f6a5a1007f66b6",
+  "lessonIds": [
+    "MR-C500-sangopan",
+    "MR-C500-sambhalne",
+    "MR-C500-jopasne",
+    "MR-C500-lad-karne",
+    "MR-C500-dattak-ghene"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch500.txt",
+  "json": "marathi/narration/ch500.json",
+  "textHash": "fnv1a64:2198916f2cde4a63",
+  "jsonHash": "fnv1a64:b0a3d25b8093e7f2",
+  "findings": []
+}

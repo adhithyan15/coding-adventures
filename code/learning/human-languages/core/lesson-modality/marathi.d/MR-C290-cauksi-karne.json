@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C290-cauksi-karne",
+    "language": "marathi",
+    "chapter": 290,
+    "sequence": 17120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16946b89a98efbcd"
+  },
+  "findings": []
+}

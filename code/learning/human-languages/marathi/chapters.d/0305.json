@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "Last Year and Before",
+  "label": "ch:mr-last-year-and-before",
+  "canDo": "I can place events in the past: last year, before that, in time.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C305-lotne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can place events in the past: last year, before that, in time.",
+    "assesses": [
+      "MR-LEX-C305-GATVARSH305-03",
+      "MR-LEX-C305-GATVARSH305-04",
+      "MR-LEX-C305-GATVARSH305-05"
+    ]
+  }
+}

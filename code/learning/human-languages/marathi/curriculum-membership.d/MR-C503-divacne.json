@@ -1,0 +1,11 @@
+{
+  "id": "MR-C503-divacne",
+  "pathSegment": "MR-PATH-503-MAPH503",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-503-MAPH503",
+      "order": 2
+    }
+  ]
+}

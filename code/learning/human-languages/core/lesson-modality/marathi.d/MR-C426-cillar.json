@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C426-cillar",
+    "language": "marathi",
+    "chapter": 426,
+    "sequence": 24550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:191f572e7c58e75a"
+  },
+  "findings": []
+}

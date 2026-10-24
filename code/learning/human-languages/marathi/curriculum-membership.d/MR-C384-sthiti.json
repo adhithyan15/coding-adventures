@@ -1,0 +1,11 @@
+{
+  "id": "MR-C384-sthiti",
+  "pathSegment": "MR-PATH-384-PARISTHITI384",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-384-PARISTHITI384",
+      "order": 1
+    }
+  ]
+}

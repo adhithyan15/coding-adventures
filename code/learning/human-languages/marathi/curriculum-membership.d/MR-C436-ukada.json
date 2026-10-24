@@ -1,0 +1,11 @@
+{
+  "id": "MR-C436-ukada",
+  "pathSegment": "MR-PATH-436-UKADA436",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-436-UKADA436",
+      "order": 2
+    }
+  ]
+}

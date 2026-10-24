@@ -1,0 +1,21 @@
+{
+  "chapter": 319,
+  "title": "Lights and Colours",
+  "label": "ch:mr-lights-and-colours",
+  "canDo": "I can describe festive lights, rangoli and fireworks.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-R319-review-312-319",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can describe festive lights, rangoli and fireworks.",
+    "assesses": [
+      "MR-LEX-C319-ROSHNAI319-01",
+      "MR-LEX-C319-ROSHNAI319-02",
+      "MR-LEX-C319-ROSHNAI319-03",
+      "MR-LEX-C319-ROSHNAI319-04",
+      "MR-LEX-C319-ROSHNAI319-05"
+    ]
+  }
+}

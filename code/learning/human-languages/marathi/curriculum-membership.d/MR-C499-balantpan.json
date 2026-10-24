@@ -1,0 +1,11 @@
+{
+  "id": "MR-C499-balantpan",
+  "pathSegment": "MR-PATH-499-BAL499",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-499-BAL499",
+      "order": 1
+    }
+  ]
+}

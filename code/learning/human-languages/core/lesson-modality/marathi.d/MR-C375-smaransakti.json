@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C375-smaransakti",
+    "language": "marathi",
+    "chapter": 375,
+    "sequence": 21700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fcf498e3aa4dd19b"
+  },
+  "findings": []
+}

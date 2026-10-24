@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C422-vardal",
+    "language": "marathi",
+    "chapter": 422,
+    "sequence": 24370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4432d3ea83c8e402"
+  },
+  "findings": []
+}

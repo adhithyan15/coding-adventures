@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:48c6af8b4af59a02",
+  "lessonIds": [
+    "MR-C532-buddhibal",
+    "MR-C532-songti",
+    "MR-C532-phasa",
+    "MR-C532-sabdakode",
+    "MR-C532-lapachpi"
+  ],
+  "tex": "marathi/book/chapters/ch532-games-at-home.tex"
+}

@@ -1,0 +1,14 @@
+{
+  "language": "marathi",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:07c51c549a2dcaf0",
+  "lessonIds": [
+    "MR-C457-khed",
+    "MR-C457-pascattap",
+    "MR-C457-hundka",
+    "MR-C457-halhalne",
+    "MR-C457-musmusne",
+    "MR-R457-review-450-457"
+  ],
+  "tex": "marathi/book/chapters/ch457-regret-and-tears.tex"
+}

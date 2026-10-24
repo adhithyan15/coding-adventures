@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Tidy and Scatterbrained",
+  "label": "ch:mr-tidy-and-scatterbrained",
+  "canDo": "I can describe a tidy, sloppy or scatterbrained person, a mess and discipline.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C474-sista",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can describe a tidy, sloppy or scatterbrained person, a mess and discipline.",
+    "assesses": [
+      "MR-LEX-C474-SHISTA474-03",
+      "MR-LEX-C474-SHISTA474-04",
+      "MR-LEX-C474-SHISTA474-05"
+    ]
+  }
+}

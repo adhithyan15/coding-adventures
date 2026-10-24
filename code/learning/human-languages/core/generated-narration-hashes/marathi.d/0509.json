@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:f14006fdb64afb45",
+  "lessonIds": [
+    "MR-C509-padonnati",
+    "MR-C509-pad",
+    "MR-C509-varistha",
+    "MR-C509-kanistha",
+    "MR-C509-jhatne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch509.txt",
+  "json": "marathi/narration/ch509.json",
+  "textHash": "fnv1a64:7dd13926d592a8a3",
+  "jsonHash": "fnv1a64:8530bf604d412f36",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:1ca626a6ee69a6a0",
+  "lessonIds": [
+    "MR-C415-suvidha",
+    "MR-C415-bichana",
+    "MR-C415-ghongdi",
+    "MR-C415-antharne",
+    "MR-C415-pangharne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch415.txt",
+  "json": "marathi/narration/ch415.json",
+  "textHash": "fnv1a64:9b0a7ad10b37fa1a",
+  "jsonHash": "fnv1a64:3f0a103287b3194b",
+  "findings": []
+}

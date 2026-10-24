@@ -1,0 +1,11 @@
+{
+  "id": "MR-C321-snehsammelan",
+  "pathSegment": "MR-PATH-321-PANGAT321",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-321-PANGAT321",
+      "order": 2
+    }
+  ]
+}

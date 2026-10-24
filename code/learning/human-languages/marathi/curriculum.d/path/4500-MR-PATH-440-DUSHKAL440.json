@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-440-DUSHKAL440",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "MR-EXT-440-DUSHKAL440"
+  ],
+  "after": []
+}

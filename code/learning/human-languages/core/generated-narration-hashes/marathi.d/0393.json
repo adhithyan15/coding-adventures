@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:a28b54cfb8a83b7a",
+  "lessonIds": [
+    "MR-C393-sabab",
+    "MR-C393-bahana",
+    "MR-C393-dhudkavne",
+    "MR-C393-vinanti-karne",
+    "MR-C393-pathpurava-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch393.txt",
+  "json": "marathi/narration/ch393.json",
+  "textHash": "fnv1a64:cc845f0b2d66f3d4",
+  "jsonHash": "fnv1a64:2210e033d1d8afeb",
+  "findings": []
+}

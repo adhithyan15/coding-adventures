@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:6bcf881fef326a69",
+  "lessonIds": [
+    "MR-C288-ghatna",
+    "MR-C288-apghat",
+    "MR-C288-cori",
+    "MR-C288-budne",
+    "MR-C288-kirkol"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch288.txt",
+  "json": "marathi/narration/ch288.json",
+  "textHash": "fnv1a64:1ac88d2b3858c720",
+  "jsonHash": "fnv1a64:9438bf7b73753d9f",
+  "findings": []
+}

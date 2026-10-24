@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:cabf817a9fc2d510",
+  "lessonIds": [
+    "MR-C532-buddhibal",
+    "MR-C532-songti",
+    "MR-C532-phasa",
+    "MR-C532-sabdakode",
+    "MR-C532-lapachpi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch532.txt",
+  "json": "marathi/narration/ch532.json",
+  "textHash": "fnv1a64:c4ccf15ead944641",
+  "jsonHash": "fnv1a64:f1e936269e454d1e",
+  "findings": []
+}

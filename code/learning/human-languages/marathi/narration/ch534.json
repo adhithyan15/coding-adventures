@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 534,
+  "title": "Into the Outdoors",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:aeafd9ee88d49e3b",
+  "lessons": [
+    {
+      "id": "MR-C534-giryarohan",
+      "sequence": 30530,
+      "title": "गिर्यारोहण (giryārohaṇ) — mountaineering",
+      "headword": "गिर्यारोहण",
+      "romanization": "giryārohaṇ",
+      "gloss": "mountaineering",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:602601e9a3ee3515",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to bend, then the Marathi for to leap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गिर्यारोहण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गिर्यारोहण — giryārohaṇ — \"mountaineering\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माझ्या भावाला गिर्यारोहणाची आवड आहे. mājhyā bhāvālā giryārohaṇācī āvaḍ āhe. My brother loves mountaineering."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गिर्यारोहण (giryārohaṇ) is a tatsama compound of Sanskrit giri, \"mountain\", and ārohaṇa, \"climbing\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "giryārohaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *giryārohaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "giryārohaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *giryārohaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhyā bhāvālā giryārohaṇācī āvaḍ āhe. — My brother loves mountaineering.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhyā bhāvālā giryārohaṇācī āvaḍ āhe.* — My brother loves mountaineering.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to bend, then the Marathi for to leap, then say giryārohaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to bend, then the Marathi for to leap, then say *giryārohaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गिर्यारोहण (giryārohaṇ) mean? (\"Mountaineering\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C534-jaltaran",
+      "sequence": 30540,
+      "title": "जलतरण (jaltaraṇ) — swimming as a sport",
+      "headword": "जलतरण",
+      "romanization": "jaltaraṇ",
+      "gloss": "swimming as a sport",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29acef341d17df8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to leap, then the Marathi for mountaineering."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जलतरण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जलतरण — jaltaraṇ — \"swimming as a sport\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जलतरणाच्या स्पर्धेत मीरा पहिली आली. jaltaraṇācyā spardhet mīrā pahilī ālī. Meera came first in the swimming competition."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जलतरण (jaltaraṇ) is a tatsama compound of Sanskrit jala, \"water\", and taraṇa, \"crossing\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaltaraṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaltaraṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaltaraṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaltaraṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaltaraṇācyā spardhet mīrā pahilī ālī. — Meera came first in the swimming competition.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaltaraṇācyā spardhet mīrā pahilī ālī.* — Meera came first in the swimming competition.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to leap, then the Marathi for mountaineering, then say jaltaraṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to leap, then the Marathi for mountaineering, then say *jaltaraṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जलतरण (jaltaraṇ) mean? (\"Swimming as a sport\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C534-sibir",
+      "sequence": 30550,
+      "title": "शिबिर (śibir) — a camp",
+      "headword": "शिबिर",
+      "romanization": "śibir",
+      "gloss": "a camp",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec0d4c427f77142e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for mountaineering, then the Marathi for swimming as a sport."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शिबिर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिबिर — śibir — \"a camp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सुट्टीत मुलांसाठी जंगलात शिबिर होतं. suṭṭīt mulāṁsāṭhī jaṅglāt śibir hotaṁ. In the holidays there was a camp in the forest for children."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिबिर (śibir) is a tatsama, taken from Sanskrit śibira, \"a camp, a tent\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śibir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śibir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śibir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śibir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suṭṭīt mulāṁsāṭhī jaṅglāt śibir hotaṁ. — In the holidays there was a camp in the forest for children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suṭṭīt mulāṁsāṭhī jaṅglāt śibir hotaṁ.* — In the holidays there was a camp in the forest for children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for mountaineering, then the Marathi for swimming as a sport, then say śibir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for mountaineering, then the Marathi for swimming as a sport, then say *śibir* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शिबिर (śibir) mean? (\"A camp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C534-tambu",
+      "sequence": 30560,
+      "title": "तंबू (tambū) — a tent",
+      "headword": "तंबू",
+      "romanization": "tambū",
+      "gloss": "a tent",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c787a7c209d5b263",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for swimming as a sport, then the Marathi for a camp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तंबू",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तंबू — tambū — \"a tent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शिबिरात आम्ही तंबूत झोपलो. śibirāt āmhī tambūt jhoplo. At the camp we slept in a tent."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तंबू (tambū) is usually traced to Persian; the exact path into Marathi is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tambū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tambū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tambū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tambū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śibirāt āmhī tambūt jhoplo. — At the camp we slept in a tent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śibirāt āmhī tambūt jhoplo.* — At the camp we slept in a tent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for swimming as a sport, then the Marathi for a camp, then say tambū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for swimming as a sport, then the Marathi for a camp, then say *tambū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तंबू (tambū) mean? (\"A tent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C534-sekoti",
+      "sequence": 30570,
+      "title": "शेकोटी (śekoṭī) — a campfire; a bonfire",
+      "headword": "शेकोटी",
+      "romanization": "śekoṭī",
+      "gloss": "a campfire; a bonfire",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25632ccddea8e6f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a camp, then the Marathi for a tent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शेकोटी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शेकोटी — śekoṭī — \"a campfire; a bonfire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात्री सगळे शेकोटीभोवती बसले. rātrī sagḷe śekoṭībhovtī basle. At night everyone sat around the campfire."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शेकोटी (śekoṭī) is built on शेकणे, \"to warm oneself at a fire\": CDIAL lists Marathi śekṇẽ under sēkk, \"heat, foment, roast\" (CDIAL 13581). The ending -ओटी is not explained there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śekoṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śekoṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śekoṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śekoṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātrī sagḷe śekoṭībhovtī basle. — At night everyone sat around the campfire.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātrī sagḷe śekoṭībhovtī basle.* — At night everyone sat around the campfire.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a camp, then the Marathi for a tent, then say śekoṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a camp, then the Marathi for a tent, then say *śekoṭī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शेकोटी (śekoṭī) mean? (\"A campfire; a bonfire\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

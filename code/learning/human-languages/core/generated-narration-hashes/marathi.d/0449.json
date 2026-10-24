@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:78168ea6545cf6f7",
+  "lessonIds": [
+    "MR-C449-nisarga",
+    "MR-C449-samvardhan",
+    "MR-C449-vrksaropan",
+    "MR-C449-jangaltod",
+    "MR-C449-namses-hone",
+    "MR-R449-review-443-449",
+    "MR-R449-review-final-449"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch449.txt",
+  "json": "marathi/narration/ch449.json",
+  "textHash": "fnv1a64:52399ff51b04d1c4",
+  "jsonHash": "fnv1a64:cd9b66986e6ce4a0",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:a32cf585730df2ea",
+  "lessonIds": [
+    "MR-C520-nal",
+    "MR-C520-galne",
+    "MR-C520-galti",
+    "MR-C520-gatar",
+    "MR-C520-tumbne"
+  ],
+  "tex": "marathi/book/chapters/ch520-pipes-and-leaks.tex"
+}

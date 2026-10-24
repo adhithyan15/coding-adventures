@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "Making the Bed",
+  "label": "ch:mr-making-the-bed",
+  "canDo": "I can talk about amenities, bedding and blankets, and making up a bed.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C415-pangharne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can talk about amenities, bedding and blankets, and making up a bed.",
+    "assesses": [
+      "MR-LEX-C415-BICHANA415-03",
+      "MR-LEX-C415-BICHANA415-04",
+      "MR-LEX-C415-BICHANA415-05"
+    ]
+  }
+}

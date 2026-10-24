@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "Heroes and Villains",
+  "label": "ch:mr-heroes-and-villains",
+  "canDo": "I can talk about the characters in a story.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C339-savkar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can talk about the characters in a story.",
+    "assesses": [
+      "MR-LEX-C339-NAYAK339-03",
+      "MR-LEX-C339-NAYAK339-04",
+      "MR-LEX-C339-NAYAK339-05"
+    ]
+  }
+}

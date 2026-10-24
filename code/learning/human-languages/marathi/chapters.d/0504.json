@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Trades of the Town",
+  "label": "ch:mr-trades-of-the-town",
+  "canDo": "I can name some trades of the town and say what they do.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C504-thokne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can name some trades of the town and say what they do.",
+    "assesses": [
+      "MR-LEX-C504-KAMGAR504-03",
+      "MR-LEX-C504-KAMGAR504-04",
+      "MR-LEX-C504-KAMGAR504-05"
+    ]
+  }
+}

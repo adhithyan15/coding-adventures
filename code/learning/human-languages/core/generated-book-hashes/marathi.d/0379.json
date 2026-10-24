@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:f7a048c435c26718",
+  "lessonIds": [
+    "MR-C379-maryada",
+    "MR-C379-kiman",
+    "MR-C379-kamal",
+    "MR-C379-sithil-karne",
+    "MR-C379-jhepne"
+  ],
+  "tex": "marathi/book/chapters/ch379-limits.tex"
+}

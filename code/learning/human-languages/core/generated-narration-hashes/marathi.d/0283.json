@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:c8096599895a6445",
+  "lessonIds": [
+    "MR-C283-tikit",
+    "MR-C283-tikit-dya",
+    "MR-C283-haravli",
+    "MR-R283-at-the-station"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch283.txt",
+  "json": "marathi/narration/ch283.json",
+  "textHash": "fnv1a64:d03c23446b24b744",
+  "jsonHash": "fnv1a64:8320197f13768535",
+  "findings": []
+}

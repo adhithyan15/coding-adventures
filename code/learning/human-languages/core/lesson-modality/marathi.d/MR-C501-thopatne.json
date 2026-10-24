@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C501-thopatne",
+    "language": "marathi",
+    "chapter": 501,
+    "sequence": 28640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17327253cd4b2ee7"
+  },
+  "findings": []
+}

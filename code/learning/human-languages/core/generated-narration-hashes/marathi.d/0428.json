@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:fbea9be5a28aa71e",
+  "lessonIds": [
+    "MR-C428-udhalne",
+    "MR-C428-sillak",
+    "MR-C428-guntavnuk",
+    "MR-C428-aipat",
+    "MR-C428-kiphayatsir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch428.txt",
+  "json": "marathi/narration/ch428.json",
+  "textHash": "fnv1a64:81c62df93c25a463",
+  "jsonHash": "fnv1a64:371750e556ec6901",
+  "findings": []
+}

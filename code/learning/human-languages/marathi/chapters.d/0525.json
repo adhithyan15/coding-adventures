@@ -1,0 +1,19 @@
+{
+  "chapter": 525,
+  "title": "Pouring and Rinsing",
+  "label": "ch:mr-pouring-and-rinsing",
+  "canDo": "I can talk about water pots and pouring, spilling and rinsing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C525-visalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can talk about water pots and pouring, spilling and rinsing.",
+    "assesses": [
+      "MR-LEX-C525-BHANDI525-03",
+      "MR-LEX-C525-BHANDI525-04",
+      "MR-LEX-C525-BHANDI525-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C369-sulka",
+  "pathSegment": "MR-PATH-369-VIDYAPITH369",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-369-VIDYAPITH369",
+      "order": 3
+    }
+  ]
+}

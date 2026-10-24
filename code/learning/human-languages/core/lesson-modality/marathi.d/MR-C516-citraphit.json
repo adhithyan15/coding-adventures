@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C516-citraphit",
+    "language": "marathi",
+    "chapter": 516,
+    "sequence": 29640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4dc585a6da1d41c1"
+  },
+  "findings": []
+}

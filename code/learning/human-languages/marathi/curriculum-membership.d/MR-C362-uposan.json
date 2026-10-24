@@ -1,0 +1,11 @@
+{
+  "id": "MR-C362-uposan",
+  "pathSegment": "MR-PATH-362-ANDOLAN362",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-362-ANDOLAN362",
+      "order": 2
+    }
+  ]
+}

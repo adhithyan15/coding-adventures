@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:9bde2d7316417567",
+  "lessonIds": [
+    "MR-C445-ankur",
+    "MR-C445-rujne",
+    "MR-C445-phulne",
+    "MR-C445-baharne",
+    "MR-C445-komejne"
+  ],
+  "tex": "marathi/book/chapters/ch445-blossom-and-fall.tex"
+}

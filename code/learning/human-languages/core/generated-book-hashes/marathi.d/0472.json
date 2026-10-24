@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:5128ccbceee3fcaa",
+  "lessonIds": [
+    "MR-C472-hatti",
+    "MR-C472-admutha",
+    "MR-C472-lahri",
+    "MR-C472-utavla",
+    "MR-C472-adhir"
+  ],
+  "tex": "marathi/book/chapters/ch472-stubborn-and-hasty.tex"
+}

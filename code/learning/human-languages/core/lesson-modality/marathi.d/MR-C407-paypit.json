@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C407-paypit",
+    "language": "marathi",
+    "chapter": 407,
+    "sequence": 23600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d75febd80da6091"
+  },
+  "findings": []
+}

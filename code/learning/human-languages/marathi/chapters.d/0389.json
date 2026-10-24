@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "How Much and How Often",
+  "label": "ch:mr-how-much-and-how-often",
+  "canDo": "I can say partly, completely, merely and usually.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C389-sahsa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can say partly, completely, merely and usually.",
+    "assesses": [
+      "MR-LEX-C389-PRAMANE389-03",
+      "MR-LEX-C389-PRAMANE389-04",
+      "MR-LEX-C389-PRAMANE389-05"
+    ]
+  }
+}

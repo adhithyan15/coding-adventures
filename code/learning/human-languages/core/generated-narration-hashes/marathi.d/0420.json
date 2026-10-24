@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:0f9c031225e9a728",
+  "lessonIds": [
+    "MR-C420-dutavas",
+    "MR-C420-tarangan",
+    "MR-C420-pranisangrahalay",
+    "MR-C420-rahivasi",
+    "MR-C420-parisar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch420.txt",
+  "json": "marathi/narration/ch420.json",
+  "textHash": "fnv1a64:14e1d671090ae5aa",
+  "jsonHash": "fnv1a64:b577c13cf84e0053",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-365-VATAGHATI365",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "MR-EXT-365-VATAGHATI365"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C430-mobadla",
+    "language": "marathi",
+    "chapter": 430,
+    "sequence": 24740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5e4b66741f545ec"
+  },
+  "findings": []
+}

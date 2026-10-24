@@ -1,0 +1,11 @@
+{
+  "id": "MR-C349-adcan",
+  "pathSegment": "MR-PATH-349-UPAY349",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-349-UPAY349",
+      "order": 1
+    }
+  ]
+}

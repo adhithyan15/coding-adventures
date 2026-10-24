@@ -1,0 +1,11 @@
+{
+  "id": "MR-C436-usnata",
+  "pathSegment": "MR-PATH-436-UKADA436",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-436-UKADA436",
+      "order": 1
+    }
+  ]
+}

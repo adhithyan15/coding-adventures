@@ -1,0 +1,11 @@
+{
+  "id": "MR-C455-talmalne",
+  "pathSegment": "MR-PATH-455-DHASTI455",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-455-DHASTI455",
+      "order": 3
+    }
+  ]
+}

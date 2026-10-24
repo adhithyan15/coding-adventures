@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-555-GHAI555",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "MR-EXT-555-GHAI555"
+  ],
+  "after": []
+}

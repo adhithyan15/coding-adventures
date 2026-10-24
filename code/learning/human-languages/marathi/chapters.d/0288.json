@@ -1,0 +1,19 @@
+{
+  "chapter": 288,
+  "title": "Something Happened",
+  "label": "ch:mr-something-happened",
+  "canDo": "I can say that something happened: an incident, an accident, a theft.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C288-kirkol",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: I can say that something happened: an incident, an accident, a theft.",
+    "assesses": [
+      "MR-LEX-C288-GHATANA288-03",
+      "MR-LEX-C288-GHATANA288-04",
+      "MR-LEX-C288-GHATANA288-05"
+    ]
+  }
+}

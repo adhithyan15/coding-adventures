@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:049799f861119078",
+  "lessonIds": [
+    "MR-C396-aggadi",
+    "MR-C396-rul",
+    "MR-C396-lohmarga",
+    "MR-C396-malgadi",
+    "MR-C396-khadkhadne"
+  ],
+  "tex": "marathi/book/chapters/ch396-trains-and-rails.tex"
+}

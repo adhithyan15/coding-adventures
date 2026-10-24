@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C529-samna",
+    "language": "marathi",
+    "chapter": 529,
+    "sequence": 30280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ac1a7eadb5df3b7"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "Payments and Donations",
+  "label": "ch:mr-payments-and-donations",
+  "canDo": "I can talk about payment for work, donations, contributions and shares, and what is left over.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C430-urne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can talk about payment for work, donations, contributions and shares, and what is left over.",
+    "assesses": [
+      "MR-LEX-C430-MOBADLA430-03",
+      "MR-LEX-C430-MOBADLA430-04",
+      "MR-LEX-C430-MOBADLA430-05"
+    ]
+  }
+}

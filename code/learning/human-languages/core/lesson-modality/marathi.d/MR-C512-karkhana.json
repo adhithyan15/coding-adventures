@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C512-karkhana",
+    "language": "marathi",
+    "chapter": 512,
+    "sequence": 29410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d941350a8e87854"
+  },
+  "findings": []
+}

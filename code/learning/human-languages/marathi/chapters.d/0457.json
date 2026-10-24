@@ -1,0 +1,21 @@
+{
+  "chapter": 457,
+  "title": "Regret and Tears",
+  "label": "ch:mr-regret-and-tears",
+  "canDo": "I can talk about regret, remorse and quiet tears.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-R457-review-450-457",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can talk about regret, remorse and quiet tears.",
+    "assesses": [
+      "MR-LEX-C457-KHED457-01",
+      "MR-LEX-C457-KHED457-02",
+      "MR-LEX-C457-KHED457-03",
+      "MR-LEX-C457-KHED457-04",
+      "MR-LEX-C457-KHED457-05"
+    ]
+  }
+}

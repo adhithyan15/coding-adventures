@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:64a03b33dde2cb8e",
+  "lessonIds": [
+    "MR-C354-nagarik",
+    "MR-C354-janta",
+    "MR-C354-sarvasamanya",
+    "MR-C354-loksankhya",
+    "MR-C354-gramin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch354.txt",
+  "json": "marathi/narration/ch354.json",
+  "textHash": "fnv1a64:1decd9c19bbbc4ec",
+  "jsonHash": "fnv1a64:ebe8db295f9bcc2c",
+  "findings": []
+}

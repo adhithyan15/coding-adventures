@@ -1,0 +1,21 @@
+{
+  "chapter": 465,
+  "title": "Wonder and Bafflement",
+  "label": "ch:mr-wonder-and-bafflement",
+  "canDo": "I can talk about wonder, curiosity and being baffled.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-R465-review-458-465",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can talk about wonder, curiosity and being baffled.",
+    "assesses": [
+      "MR-LEX-C465-NAVAL465-01",
+      "MR-LEX-C465-NAVAL465-02",
+      "MR-LEX-C465-NAVAL465-03",
+      "MR-LEX-C465-NAVAL465-04",
+      "MR-LEX-C465-NAVAL465-05"
+    ]
+  }
+}

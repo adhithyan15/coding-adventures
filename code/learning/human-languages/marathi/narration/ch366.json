@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 366,
+  "title": "Values",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cb0f6ba285a44c94",
+  "lessons": [
+    {
+      "id": "MR-C366-mulya",
+      "sequence": 21230,
+      "title": "मूल्य (mūlya) — a value",
+      "headword": "मूल्य",
+      "romanization": "mūlya",
+      "gloss": "a value",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab7272498f37694e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to resolve, then the Marathi for to fight for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मूल्य",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मूल्य — mūlya — \"a value\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आईवडिलांनी आम्हाला चांगली मूल्यं शिकवली. āīvḍilānnī āmhālā cāṅglī mūlyaṁ śikavlī. Our parents taught us good values."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter. Plural: मूल्यं, mūlyaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Also price, in formal use: वस्तूचं मूल्य (mūlya)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मूल्य (mūlya) is a tatsama, taken from Sanskrit mūlya, \"original value, price\" (CDIAL 10257)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūlya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūlya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūlya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūlya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āīvḍilānnī āmhālā cāṅglī mūlyaṁ śikavlī. — Our parents taught us good values.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āīvḍilānnī āmhālā cāṅglī mūlyaṁ śikavlī.* — Our parents taught us good values.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to resolve, then the Marathi for to fight for, then say mūlya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to resolve, then the Marathi for to fight for, then say *mūlya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मूल्य (mūlya) mean? (\"A value\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C366-naitikta",
+      "sequence": 21240,
+      "title": "नैतिकता (naitiktā) — morality; ethics",
+      "headword": "नैतिकता",
+      "romanization": "naitiktā",
+      "gloss": "morality; ethics",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61afee0ad2a3c7db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to fight for, then the Marathi for a value."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नैतिकता",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नैतिकता — naitiktā — \"morality; ethics\"."
+            },
+            {
+              "kind": "speech",
+              "text": "व्यापारातही नैतिकता पाळली पाहिजे. vyāpārāthī naitiktā pāḷlī pāhije. Ethics should be observed in trade too."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "नैतिक, moral, + -ता."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नैतिकता (naitiktā) is a learned word built on Sanskrit nīti, \"conduct, guidance\" (CDIAL 7546), through the adjective नैतिक, \"moral\", with -tā, \"-ness\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naitiktā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naitiktā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naitiktā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naitiktā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyāpārāthī naitiktā pāḷlī pāhije. — Ethics should be observed in trade too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyāpārāthī naitiktā pāḷlī pāhije.* — Ethics should be observed in trade too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to fight for, then the Marathi for a value, then say naitiktā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to fight for, then the Marathi for a value, then say *naitiktā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नैतिकता (naitiktā) mean? (\"Morality; ethics\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C366-sacoti",
+      "sequence": 21250,
+      "title": "सचोटी (sacoṭī) — integrity; honesty",
+      "headword": "सचोटी",
+      "romanization": "sacoṭī",
+      "gloss": "integrity; honesty",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b6ced70fba2270d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a value, then the Marathi for morality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सचोटी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सचोटी — sacoṭī — \"integrity; honesty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तो दुकानदार सचोटीने व्यवहार करतो. to dukāndār sacoṭīne vyavhār karto. That shopkeeper deals with integrity."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "सचोटीने, honestly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सचोटी (sacoṭī) is a tadbhava: CDIAL lists Marathi saċoṭī, \"honesty\", under Sanskrit satyavṛtti, \"devotion to truth\" (CDIAL 13115)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sacoṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sacoṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sacoṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sacoṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to dukāndār sacoṭīne vyavhār karto. — That shopkeeper deals with integrity.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *to dukāndār sacoṭīne vyavhār karto.* — That shopkeeper deals with integrity.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a value, then the Marathi for morality, then say sacoṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a value, then the Marathi for morality, then say *sacoṭī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सचोटी (sacoṭī) mean? (\"Integrity; honesty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C366-tyag",
+      "sequence": 21260,
+      "title": "त्याग (tyāg) — renunciation; a sacrifice",
+      "headword": "त्याग",
+      "romanization": "tyāg",
+      "gloss": "renunciation; a sacrifice",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c53be37f275cfff7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for morality, then the Marathi for integrity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: त्याग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "त्याग — tyāg — \"renunciation; a sacrifice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मुलांसाठी आईने खूप त्याग केला. mulāṁsāṭhī āīne khūp tyāg kelā. The mother made many sacrifices for her children."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "त्याग (tyāg) करणे, to give up: सुखाचा त्याग (tyāg)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "त्याग (tyāg) is a tatsama, taken from Sanskrit tyāga, \"abandonment, liberality\" (CDIAL 5985)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyāg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyāg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyāg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyāg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mulāṁsāṭhī āīne khūp tyāg kelā. — The mother made many sacrifices for her children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mulāṁsāṭhī āīne khūp tyāg kelā.* — The mother made many sacrifices for her children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for morality, then the Marathi for integrity, then say tyāg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for morality, then the Marathi for integrity, then say *tyāg* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does त्याग (tyāg) mean? (\"Renunciation; a sacrifice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C366-hit",
+      "sequence": 21270,
+      "title": "हित (hit) — welfare; good",
+      "headword": "हित",
+      "romanization": "hit",
+      "gloss": "welfare; good",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f36c314e3ab3ffc2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for integrity, then the Marathi for renunciation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हित",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हित — hit — \"welfare; good\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हा निर्णय सगळ्यांच्या हिताचा आहे. hā nirṇay sagaḷyāñcyā hitācā āhe. This decision is for everyone's good."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "X च्या हिताचा, in X's interest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हित (hit) is a tatsama, taken from Sanskrit hita, \"beneficial; welfare, good\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hit*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hit, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hit*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hā nirṇay sagaḷyāñcyā hitācā āhe. — This decision is for everyone's good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hā nirṇay sagaḷyāñcyā hitācā āhe.* — This decision is for everyone's good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for integrity, then the Marathi for renunciation, then say hit again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for integrity, then the Marathi for renunciation, then say *hit* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हित (hit) mean? (\"Welfare; good\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

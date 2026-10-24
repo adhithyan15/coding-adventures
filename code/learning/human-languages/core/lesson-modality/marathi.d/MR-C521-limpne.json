@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C521-limpne",
+    "language": "marathi",
+    "chapter": 521,
+    "sequence": 29910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a7a5f458ba7e60b9"
+  },
+  "findings": []
+}

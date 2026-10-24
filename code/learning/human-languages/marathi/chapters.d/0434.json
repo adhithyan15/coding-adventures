@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Mix-ups and Fiascos",
+  "label": "ch:mr-mix-ups-and-fiascos",
+  "canDo": "I can talk about inconvenience, missed meetings and fiascos, and finding a way through.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C434-marga-kadhne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can talk about inconvenience, missed meetings and fiascos, and finding a way through.",
+    "assesses": [
+      "MR-LEX-C434-GAIRSOY434-03",
+      "MR-LEX-C434-GAIRSOY434-04",
+      "MR-LEX-C434-GAIRSOY434-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C534-tambu",
+  "pathSegment": "MR-PATH-534-BAHER534",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-534-BAHER534",
+      "order": 3
+    }
+  ]
+}

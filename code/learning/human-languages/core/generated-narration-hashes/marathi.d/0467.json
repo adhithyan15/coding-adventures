@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:9beb3108a8fcde60",
+  "lessonIds": [
+    "MR-C467-yatna",
+    "MR-C467-tadphadne",
+    "MR-C467-kalvalne",
+    "MR-C467-jagne-live",
+    "MR-C467-dagmagne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch467.txt",
+  "json": "marathi/narration/ch467.json",
+  "textHash": "fnv1a64:36b5be1b7b95936b",
+  "jsonHash": "fnv1a64:e04caa58aa009e9c",
+  "findings": []
+}

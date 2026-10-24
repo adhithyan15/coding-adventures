@@ -1,0 +1,878 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 349,
+  "title": "Problems and Solutions",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b3aacad125e4a8d1",
+  "lessons": [
+    {
+      "id": "MR-C349-samasya",
+      "sequence": 20350,
+      "title": "समस्या (samasyā) — a problem",
+      "headword": "समस्या",
+      "romanization": "samasyā",
+      "gloss": "a problem",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c2330059964eccf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for linked, then the Marathi for on the contrary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: समस्या",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समस्या — samasyā — \"a problem\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शहरात पाण्याची समस्या गंभीर आहे. śahrāt pāṇyācī samasyā gambhīr āhe. The water problem in the city is serious."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; in speech प्रश्न also means an issue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समस्या (samasyā) is a tatsama, taken from Sanskrit samasyā, \"joining together; a half-verse set to be completed\" (Monier-Williams). Marathi uses it for any problem to be solved."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samasyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samasyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samasyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samasyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śahrāt pāṇyācī samasyā gambhīr āhe. — The water problem in the city is serious.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śahrāt pāṇyācī samasyā gambhīr āhe.* — The water problem in the city is serious.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for linked, then the Marathi for on the contrary, then say samasyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for linked, then the Marathi for on the contrary, then say *samasyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does समस्या (samasyā) mean? (\"A problem\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C349-adcan",
+      "sequence": 20360,
+      "title": "अडचण (aḍcaṇ) — a difficulty; a snag",
+      "headword": "अडचण",
+      "romanization": "aḍcaṇ",
+      "gloss": "a difficulty; a snag",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:291f86a34b60678b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for on the contrary, then the Marathi for a problem."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अडचण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अडचण — aḍcaṇ — \"a difficulty; a snag\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नव्या शहरात सुरुवातीला खूप अडचणी आल्या. navyā śahrāt suruvātīlā khūp aḍcaṇī ālyā. There were many difficulties at first in the new city."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Plural: अडचणी, aḍcaṇī."
+            },
+            {
+              "kind": "speech",
+              "text": "अडचण (aḍcaṇ) येणे, a difficulty comes up; अडचणीत असणे, to be in trouble."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अडचण (aḍcaṇ) is usually traced to the root aḍḍ-, \"obstruct, stop\", under which CDIAL lists Marathi aḍṇẽ, \"to be stopped\" (CDIAL 188)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḍcaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḍcaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḍcaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḍcaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "navyā śahrāt suruvātīlā khūp aḍcaṇī ālyā. — There were many difficulties at first in the new city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *navyā śahrāt suruvātīlā khūp aḍcaṇī ālyā.* — There were many difficulties at first in the new city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for on the contrary, then the Marathi for a problem, then say aḍcaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for on the contrary, then the Marathi for a problem, then say *aḍcaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अडचण (aḍcaṇ) mean? (\"A difficulty; a snag\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C349-upay",
+      "sequence": 20370,
+      "title": "उपाय (upāy) — a remedy; a solution",
+      "headword": "उपाय",
+      "romanization": "upāy",
+      "gloss": "a remedy; a solution",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4031b4291f84a058",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a problem, then the Marathi for a difficulty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उपाय",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपाय — upāy — \"a remedy; a solution\"."
+            },
+            {
+              "kind": "speech",
+              "text": "या प्रश्नावर एकच उपाय आहे. yā praśnāvar ekac upāy āhe. There is only one remedy for this problem."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "X वर उपाय (upāy), a remedy for X; उपाय (upāy) करणे, to take measures."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपाय (upāy) is a tatsama, taken from Sanskrit upāya, \"approach, means, stratagem\" (CDIAL 2308)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upāy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upāy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yā praśnāvar ekac upāy āhe. — There is only one remedy for this problem.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yā praśnāvar ekac upāy āhe.* — There is only one remedy for this problem.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a problem, then the Marathi for a difficulty, then say upāy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a problem, then the Marathi for a difficulty, then say *upāy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उपाय (upāy) mean? (\"A remedy; a solution\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C349-paryay",
+      "sequence": 20380,
+      "title": "पर्याय (paryāy) — an alternative; an option",
+      "headword": "पर्याय",
+      "romanization": "paryāy",
+      "gloss": "an alternative; an option",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9da90d0c780a7611",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a difficulty, then the Marathi for a remedy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पर्याय",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पर्याय — paryāy — \"an alternative; an option\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आमच्याकडे दुसरा पर्याय नव्हता. āmacyākaḍe dusrā paryāy navhatā. We had no other option."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "X ला पर्याय (paryāy) नाही, there is no alternative to X."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पर्याय (paryāy) is a tatsama, taken from Sanskrit paryāya, \"turning round; succession, turn\" (Monier-Williams). A turn taken in place of another became an alternative."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paryāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paryāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paryāy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paryāy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmacyākaḍe dusrā paryāy navhatā. — We had no other option.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmacyākaḍe dusrā paryāy navhatā.* — We had no other option.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a difficulty, then the Marathi for a remedy, then say paryāy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a difficulty, then the Marathi for a remedy, then say *paryāy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पर्याय (paryāy) mean? (\"An alternative; an option\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C349-ukalne",
+      "sequence": 20390,
+      "title": "उकलणे (ukalṇe) — to unravel; to solve (a puzzle)",
+      "headword": "उकलणे",
+      "romanization": "ukalṇe",
+      "gloss": "to unravel; to solve (a puzzle)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1dad54c2b7a9e038",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a remedy, then the Marathi for an alternative."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उकलणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उकलणे — ukalṇe — \"to unravel; to solve (a puzzle)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मुलाने ते कोडं दहा मिनिटांत उकललं. mulāne te koḍaṁ dahā miniṭānt ukallaṁ. The boy solved the puzzle in ten minutes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने कोडं उकललं, tyāne koḍaṁ ukallaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Also intransitive: गाठ उकलली, the knot came undone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उकलणे (ukalṇe) is inherited: CDIAL lists Marathi ukalṇẽ, \"to be loosened, be disentangled\", under utkalati, \"goes out\", beside Sanskrit utkalayati, \"loosens\" (CDIAL 1716)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukalṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukalṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukalṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukalṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mulāne te koḍaṁ dahā miniṭānt ukallaṁ. — The boy solved the puzzle in ten minutes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mulāne te koḍaṁ dahā miniṭānt ukallaṁ.* — The boy solved the puzzle in ten minutes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a remedy, then the Marathi for an alternative, then say ukalṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a remedy, then the Marathi for an alternative, then say *ukalṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उकलणे (ukalṇe) mean? (\"To unravel; to solve (a puzzle)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R349-review-342-349",
+      "sequence": 20400,
+      "title": "Looking back on reasons, arguments and proof",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Why Things Happen to Problems and Solutions",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd37c28e731ceab9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for a motive and a purpose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a motive, a purpose, a consequence, an explanation, to come about",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a motive, a purpose, a consequence, an explanation, to come about]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a point at issue, logic, a reasoned argument, to put forward, proof",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a point at issue, logic, a reasoned argument, to put forward, proof]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a disagreement, to agree, to object, an inconsistency, a standpoint",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a disagreement, to agree, to object, an inconsistency, a standpoint]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a conclusion, to infer, a basis, a summary, in short",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a conclusion, to infer, a basis, a summary, in short]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to entertain, to elucidate, certainty, to verify, to reject",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to entertain, to elucidate, certainty, to verify, to reject]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to oppose, to support, to justify, neutral, against",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to oppose, to support, to justify, neutral, against]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a connection, a similarity, a context, linked, on the contrary",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a connection, a similarity, a context, linked, on the contrary]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a problem, a difficulty, a remedy, an alternative, to unravel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a problem, a difficulty, a remedy, an alternative, to unravel]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A motive? (हेतू, hetū.) A purpose? (उद्देश, uddeś.) A consequence? (परिणाम, pariṇām.) An explanation? (स्पष्टीकरण, spaṣṭīkaraṇ.) To come about? (निर्माण होणे, nirmāṇ hoṇe.) A point at issue? (मुद्दा, muddā.) Logic? (तर्क, tarka.) A reasoned argument? (युक्तिवाद, yuktivād.) To put forward? (मांडणे, māṇḍṇe.) Proof? (पुरावा, purāvā.) A disagreement? (मतभेद, matbhed.) To agree? (सहमत होणे, sahmat hoṇe.) To object? (आक्षेप घेणे, ākṣep gheṇe.) An inconsistency? (विसंगती, visaṅgtī.) A standpoint? (दृष्टिकोन, dṛṣṭikon.) A conclusion? (निष्कर्ष, niṣkarṣa.) To infer? (अनुमान काढणे, anumān kāḍhṇe.) A basis? (आधार, ādhār.) A summary? (सारांश, sārāṁś.) In short? (थोडक्यात, thoḍkyāt.) To entertain? (बाळगणे, bāḷagṇe.) To elucidate? (विशद करणे, viśad karṇe.) Certainty? (खात्री, khātrī.) To verify? (पडताळणे, paḍtāḷṇe.) To reject? (फेटाळणे, pheṭāḷṇe.) To oppose? (विरोध करणे, virodh karṇe.) To support? (पाठिंबा देणे, pāṭhimbā deṇe.) To justify? (समर्थन करणे, samarthan karṇe.) Neutral? (तटस्थ, taṭastha.) Against? (विरुद्ध, viruddha.) A connection? (संबंध, sambandh.) A similarity? (साम्य, sāmya.) A context? (संदर्भ, sandarbha.) Linked? (निगडित, nigḍit.) On the contrary? (याउलट, yāulaṭ.) A problem? (समस्या, samasyā.) A difficulty? (अडचण, aḍcaṇ.) A remedy? (उपाय, upāy.) An alternative? (पर्याय, paryāy.) To unravel? (उकलणे, ukalṇe.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

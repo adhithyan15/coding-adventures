@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C360-saksarta",
+    "language": "marathi",
+    "chapter": 360,
+    "sequence": 20960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e35e3956945df37d"
+  },
+  "findings": []
+}

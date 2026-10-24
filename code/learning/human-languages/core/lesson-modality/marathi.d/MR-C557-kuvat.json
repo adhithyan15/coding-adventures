@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C557-kuvat",
+    "language": "marathi",
+    "chapter": 557,
+    "sequence": 31710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:827fb8a5e97a15a2"
+  },
+  "findings": []
+}

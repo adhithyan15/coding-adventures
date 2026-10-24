@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:1a2987d5478fb5d9",
+  "lessonIds": [
+    "MR-C291-nisatne",
+    "MR-C291-sutka",
+    "MR-C291-sukhrup",
+    "MR-C291-bepatta",
+    "MR-C291-dhundalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch291.txt",
+  "json": "marathi/narration/ch291.json",
+  "textHash": "fnv1a64:fddd500a89bcfbbd",
+  "jsonHash": "fnv1a64:0fd1594bea06e51c",
+  "findings": []
+}

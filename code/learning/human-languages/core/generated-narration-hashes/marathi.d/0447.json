@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:bbbca8dd2ea3fd8c",
+  "lessonIds": [
+    "MR-C447-bagla",
+    "MR-C447-ghar",
+    "MR-C447-gidhad",
+    "MR-C447-kilbilne",
+    "MR-C447-sthalantar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch447.txt",
+  "json": "marathi/narration/ch447.json",
+  "textHash": "fnv1a64:b913a381cf7a7fc4",
+  "jsonHash": "fnv1a64:cd38e0d008e3b978",
+  "findings": []
+}

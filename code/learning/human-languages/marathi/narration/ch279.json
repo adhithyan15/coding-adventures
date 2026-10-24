@@ -1,0 +1,883 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 279,
+  "title": "Telling It in Order",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:25ab455ef23189e6",
+  "lessons": [
+    {
+      "id": "MR-C279-tyanantar",
+      "sequence": 16110,
+      "title": "त्यानंतर (tyānantar) — first, then, after that, in the end",
+      "headword": "त्यानंतर",
+      "romanization": "tyānantar",
+      "gloss": "after that — the words that keep a story in order",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccead3370fb82045",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"then\" and \"after\". (mag, nantar.) Then \"I used to go\". (mī jāyco.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: first, then, after that",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आधी मी चहा घेतला. मग मी पुस्तक वाचलं. ādhī mī cahā ghetlā. mag mī pustak vāclaṁ. — \"First I had tea. Then I read a book.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A story keeps its events in order with four words:"
+            },
+            {
+              "kind": "speech",
+              "text": "आधी — first."
+            },
+            {
+              "kind": "speech",
+              "text": "मग — then."
+            },
+            {
+              "kind": "speech",
+              "text": "त्यानंतर (tyānantar) — after that: त्या, \"that\", and नंतर, \"after\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शेवटी — in the end."
+            },
+            {
+              "kind": "speech",
+              "text": "Each one opens its sentence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: -नंतर after a noun",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शाळेनंतर मी घरी आलो. śāḷenantar mī gharī ālo. — \"After school I came home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "नंतर also stands after a noun, in its bent form: शाळा becomes शाळेनंतर (śāḷenantar), \"after school\". त्यानंतर (tyānantar) is the same thing done to तो."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"First I had tea. Then I read a book.\" — ādhī mī cahā ghetlā. mag mī pustak vāclaṁ.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"First I had tea. Then I read a book.\" — *ādhī mī cahā ghetlā. mag mī pustak vāclaṁ.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"After that, suddenly, it rained\" — tyānantar acānak pāūs paḍlā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"After that, suddenly, it rained\" — *tyānantar acānak pāūs paḍlā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"After school I came home\" — śāḷenantar mī gharī ālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"After school I came home\" — *śāḷenantar mī gharī ālo*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C279-tyanantar-r1",
+              "prompt": "Say three things you did yesterday, in order, with ādhī, mag and śevṭī.",
+              "assesses": [
+                "MR-GRAMMAR-C279-FIRST-THEN-01"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "ādhī ..., mag ..., śevṭī ...",
+                "आधी मी चहा घेतला. मग मी पुस्तक वाचलं. शेवटी मी झोपलो."
+              ],
+              "feedback": {
+                "correct": "Each word opened its sentence.",
+                "incorrect": "Put ādhī, mag, śevṭī at the front, one per event."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"First\"? (आधी.) \"After that\"? (त्यानंतर (tyānantar).) \"In the end\"? (शेवटी.) \"After school\"? (शाळेनंतर.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C279-karun",
+      "sequence": 16120,
+      "title": "करून (karūn) — having done it, and then",
+      "headword": "करून",
+      "romanization": "karūn",
+      "gloss": "having done — the -ऊन form that joins two actions into one sentence",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4bcb344150b27ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"pleased to meet you\". (bheṭūn ānand jhālā.) भेटून is \"having met\": the form this lesson teaches has been in your mouth since the first meeting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -ऊन, 'having done'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मी घरी जाऊन झोपलो. mī gharī jāūn jhoplo. — \"I went home and slept.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Take -णे off and put -ऊन on: करणे becomes करून (karūn), बसणे becomes बसून (basūn), पाहणे becomes पाहून (pāhūn). A stem ending in a vowel keeps it: जाणे becomes जाऊन (jāūn), येणे becomes येऊन (yeūn), घेणे becomes घेऊन (gheūn)."
+            },
+            {
+              "kind": "speech",
+              "text": "The tense comes once, at the end: जाऊन झोपलो is \"went and slept\". तो चहा घेऊन आला (to cahā gheūn ālā), \"having taken tea he came\", is how Marathi says \"he brought tea\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: -ऊन or -ल्यावर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घरी पोहोचल्यावर मी झोपलो. gharī pohocalyāvar mī jhoplo. — \"After I reached home, I slept.\""
+            },
+            {
+              "kind": "speech",
+              "text": "-ऊन joins two actions of one doer, one after the other. -ल्यावर says \"after\", and the doer can change: मी घरी पोहोचल्यावर आई आली (mī gharī pohocalyāvar āī ālī), \"after I reached home, Mother came\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I went home and slept\" — mī gharī jāūn jhoplo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I went home and slept\" — *mī gharī jāūn jhoplo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"He brought tea\" — to cahā gheūn ālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"He brought tea\" — *to cahā gheūn ālā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"After I reached home, Mother came\" — mī gharī pohocalyāvar āī ālī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"After I reached home, Mother came\" — *mī gharī pohocalyāvar āī ālī*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C279-karun-r1",
+              "prompt": "Say that you went home and slept, in one sentence.",
+              "assesses": [
+                "MR-GRAMMAR-C279-CONJUNCTIVE-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "mī gharī jāūn jhoplo",
+                "मी घरी जाऊन झोपलो."
+              ],
+              "feedback": {
+                "correct": "One tense, at the end.",
+                "incorrect": "jāṇe becomes jāūn, then the past once: jhoplo."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Having done\"? (करून (karūn).) \"Having gone\"? (जाऊन.) \"He brought tea\"? (तो चहा घेऊन आला.) Which joins two doers? (-ल्यावर.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C279-rtu",
+      "sequence": 16130,
+      "title": "ऋतू (ṛtū) — a season",
+      "headword": "ऋतू",
+      "romanization": "ṛtū",
+      "gloss": "a season",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4c3a2768fa18ea8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the summer, the monsoon and the winter. (unhāḷā, pāvsāḷā, hivāḷā.) Each of them is one of these."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ऋतू",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऋतू — ṛtū — \"a season\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मला पावसाळा हा ऋतू खूप आवडतो. malā pāvsāḷā hā ṛtū khūp āvaḍto. — \"I like the monsoon season very much.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Its first letter is the vowel you know as the sign ृ in नृत्य, standing on its own. Marathi says it ru: ऋतू (ṛtū) is said rutū."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऋतू (ṛtū) is a tatsama: Sanskrit ṛtu, \"a fixed time, a season\" (Monier-Williams). CDIAL has no entry for it. Everyday Marathi names three seasons; the Sanskrit calendar counts six, and वसंत, \"springtime\", is one of them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṛtū, said rutū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṛtū*, said *rutū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I like the monsoon season very much\" — malā pāvsāḷā hā ṛtū khūp āvaḍto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I like the monsoon season very much\" — *malā pāvsāḷā hā ṛtū khūp āvaḍto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three seasons, one after another",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three seasons, one after another]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ऋतू (ṛtū) mean? (\"A season\".) How is it said? (rutū.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-W279-letter-vocalic-r",
+      "sequence": 16140,
+      "title": "ऋ (ṛ (Marathi ru)) — the vowel letter at the start of ऋतू (ṛtū)",
+      "headword": "ऋ",
+      "romanization": "ṛ (Marathi ru)",
+      "gloss": "the independent vowel ऋ — the letter at the start of ऋतू",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7e1ed6d06d0d93b1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ऋतू (ṛtū), \"a season\". Then find the sign ृ in नृत्य, \"dance\", and say its sound: ru."
+            },
+            {
+              "kind": "speech",
+              "text": "One new character comes next: the first letter of ऋतू (ṛtū)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऋ (ṛ (Marathi ru))."
+            },
+            {
+              "kind": "speech",
+              "text": "ऋ (ṛ (Marathi ru)) is the standing form of the sign ृ. The sign hangs on a consonant (नृत्य, हृदय); the letter starts a word (ऋतू (ṛtū)). Its careful transliteration is ṛ; Marathi says it ru. Keep it apart from र, the consonant ra: ऋ (ṛ (Marathi ru)) is a vowel letter, and it stands alone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ऋ — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ऋ (ṛ (Marathi ru)) in front of you for this first pass."
+            },
+            {
+              "kind": "speech",
+              "text": "1. start at the open upper-left tip, sweep right through the short shoulder, then turn down-left through the diagonal hook."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift at the middle body's left edge, loop anticlockwise round its little ball, then run down to the right and swing the lower bowl left, round the bottom, and out to the right without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the right stem top-to-bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 3. This is one sourced learner order; hands and teachers vary. Source: Saurmandal, ‘Devanagari ऋ (ṛ (Marathi ru)) stroke order.svg’, panels 1–4, Wikimedia Commons, 5 August 2023."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Copy ऋ (ṛ (Marathi ru)) twice beside the model, saying ru as you finish each one. Then write ऋतू (ṛtū) once."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter starts ऋतू (ṛtū)? (ऋ (ṛ (Marathi ru)).) How does Marathi say it? (ru.) Where does its sign ृ stand? (On a consonant: नृत्य.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "MR-W279-letter-vocalic-r-r1",
+              "prompt": "With no model, write the vowel letter at the start of ṛtū, then the word.",
+              "assesses": [
+                "MR-SCRIPT-VOCALIC-R-01",
+                "MR-SCRIPT-RU-MATRA-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "ऋ; ऋतू"
+              ],
+              "feedback": {
+                "correct": "The letter starts the word; its sign rides a consonant.",
+                "incorrect": "Reopen ऋ, repair the first stroke that differs, then write it again from memory."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C279-pavsalyatla-divas",
+      "sequence": 16150,
+      "title": "(reading) (gelyā varṣī pāvsāḷyāt mī gāvālā gelo.) — a monsoon day in the village",
+      "headword": "(reading)",
+      "romanization": "gelyā varṣī pāvsāḷyāt mī gāvālā gelo.",
+      "gloss": "a monsoon day in the village, in eighty-six words, told with every past",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "reading-type"
+      ],
+      "sourceHash": "fnv1a64:89c0aa6402b843dc",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Eighty-six words, every one met before or glossed after it. The writer is Arun. He says मला पावसाळा हा ऋतू (ṛtū) खूप आवडतो, and then he tells you why."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गेल्या वर्षी पावसाळ्यात मी गावाला गेलो. मला पावसाळा हा ऋतू (ṛtū) खूप आवडतो. आधी मी बसने स्टेशनला गेलो. मग गाडीने गावाला निघालो. गाडीत मी पुस्तक वाचत होतो. अचानक खूप पाऊस आला. डोंगर हिरवे होते. संध्याकाळी गावाला पोहोचल्यावर मी नदीवर गेलो. नदी भरलेली होती. लहान असताना मी रोज इथे यायचो. मग मी घरी आलो. आई चहा करत होती. आम्ही चहा घेऊन अंगणात बसलो. पाऊस पडत होता. आईने मला एक गोष्ट सांगितली. त्यानंतर (tyānantar) आम्ही भाकरी खाल्ली. रात्रभर पाऊस पडत होता. शेवटी मी लवकर झोपलो. तो दिवस खूप चांगला होता."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again, and sort every verb: event, scene or habit",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again, and sort every verb: event, scene or habit]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "New forms: गेल्या वर्षी (gelyā varṣī, \"last year\"), the \"gone\" year; घरी (gharī, \"home\"); बसने (basne, \"by bus\"), with the -ने of a tool; and पाऊस आला, \"rain came\", which is how Marathi says a downpour began."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The scene is वाचत होतो, करत होती and पडत होता; the habit is यायचो. आईने … सांगितली and आम्ही भाकरी खाल्ली follow the thing: a story, a bhakri. The plain होते, होती and होता describe; every other past verb is an event."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what Arun was doing on the train when the rain came",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what Arun was doing on the train when the rain came]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what Mother was doing when he came home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what Mother was doing when he came home]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which season Arun likes, with ऋतू (ṛtū)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which season Arun likes, with **ऋतू**]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C279-pavsalyatla-divas-r1",
+              "prompt": "What did Arun use to do every day when he was small?",
+              "assesses": [
+                "MR-SKILL-C279-READ-STORY-01",
+                "MR-GRAMMAR-C278-HABITUAL-PAST-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "he used to go to the river",
+                "लहान असताना मी रोज इथे यायचो",
+                "nadīvar yāyco"
+              ],
+              "feedback": {
+                "correct": "yāyco: a habit.",
+                "incorrect": "Find the sentence with lahān astānā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is पडत होता in the scene form? (The rain was going on while they sat.) Which word starts the last event? (शेवटी.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R279-a-story-in-order",
+      "sequence": 16160,
+      "title": "Review — a story in order",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "a story in order, with -ऊन, after that, and the letter ऋ",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed6de4670d7ba457",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"when I came home, Mother was making tea\" and \"I used to go\". (mī gharī ālo, tevhā āī cahā karat hotī, mī jāyco.) Then say ऋतू (ṛtū) and name its first letter: ऋ (ṛ (Marathi ru)), said ru."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "First I went to the station. Then I set out for the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: First I went to the station. Then I set out for the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "After that I went home and slept.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: After that I went home and slept.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "He brought tea. After school I came home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: He brought tea. After school I came home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I like the monsoon season very much, with ऋतू (ṛtū)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I like the monsoon season very much, with **ऋतू**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Arun's monsoon day, in four sentences, with आधी, मग, त्यानंतर (tyānantar) and शेवटी",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Arun's monsoon day, in four sentences, with **आधी**, **मग**, **त्यानंतर** and **शेवटी**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"After that\"? (त्यानंतर (tyānantar).) \"Having gone\"? (जाऊन.) Which joins two doers? (-ल्यावर.) A season? (ऋतू, ṛtū, said rutū.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

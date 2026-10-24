@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C423-sauda",
+    "language": "marathi",
+    "chapter": 423,
+    "sequence": 24390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5dc1677124a04567"
+  },
+  "findings": []
+}

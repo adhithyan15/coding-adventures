@@ -1,0 +1,23 @@
+{
+  "chapter": 279,
+  "title": "Telling It in Order",
+  "label": "ch:mr-telling-it-in-order",
+  "canDo": "I can tell a story in order with ādhī, mag, tyānantar and śevṭī, join actions with -ūn, and read and write ऋ in ṛtū.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-R279-a-story-in-order",
+    "kind": "production",
+    "summary": "Complete MR-R279-a-story-in-order: tell a short story in order, after reading Arun's monsoon day.",
+    "assesses": [
+      "MR-SCRIPT-VOCALIC-R-01",
+      "MR-GRAMMAR-C279-FIRST-THEN-01",
+      "MR-GRAMMAR-C279-NANTAR-POSTP-01",
+      "MR-GRAMMAR-C279-CONJUNCTIVE-01",
+      "MR-GRAMMAR-C279-SAME-DOER-01",
+      "MR-LEX-C279-RTU-01",
+      "MR-SKILL-C279-READ-STORY-01"
+    ]
+  }
+}

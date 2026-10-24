@@ -1,0 +1,874 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 303,
+  "title": "Once Upon a Time",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:95d9032e25d271a5",
+  "lessons": [
+    {
+      "id": "MR-C303-ekekali",
+      "sequence": 17760,
+      "title": "एकेकाळी (ekekāḷī) — once upon a time; at one time",
+      "headword": "एकेकाळी",
+      "romanization": "ekekāḷī",
+      "gloss": "once upon a time; at one time",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb2cd6e1f0b5c19d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for at that very moment, then the Marathi for immediately."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: एकेकाळी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "एकेकाळी — ekekāḷī — \"once upon a time; at one time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एकेकाळी या डोंगरावर एक मोठा किल्ला होता. ekekāḷī yā ḍoṅgrāvar ek moṭhā killā hotā. Once upon a time there was a big fort on this hill."
+            },
+            {
+              "kind": "speech",
+              "text": "Built from एक, one, and काळ, time, with -ई: at one time. Stories open with it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "एकेकाळी (ekekāḷī) is built from ek, 'one', and kāḷ, 'time', which CDIAL lists under Sanskrit kāla, 'time' (CDIAL 3084), in the locative: at one time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekekāḷī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekekāḷī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekekāḷī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekekāḷī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekekāḷī yā ḍoṅgrāvar ek moṭhā killā hotā. — Once upon a time there was a big fort on this hill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekekāḷī yā ḍoṅgrāvar ek moṭhā killā hotā.* — Once upon a time there was a big fort on this hill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for at that very moment, then the Marathi for immediately, then say ekekāḷī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for at that very moment, then the Marathi for immediately, then say *ekekāḷī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does एकेकाळी (ekekāḷī) mean? (\"Once upon a time; at one time\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C303-katha",
+      "sequence": 17770,
+      "title": "कथा (kathā) — a short story; a story",
+      "headword": "कथा",
+      "romanization": "kathā",
+      "gloss": "a short story; a story",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f05786e090826e14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for immediately, then the Marathi for once upon a time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कथा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कथा — kathā — \"a short story; a story\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आजी रोज रात्री मुलांना एक कथा सांगते. ājī roj rātrī mulānnā ek kathā sāṅgte. Every night Grandma tells the children a story."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural कथा (kathā). गोष्ट is the everyday word; कथा (kathā) is the written, literary one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कथा (kathā) is a tatsama, taken from Sanskrit kathā, 'a talk, a tale' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kathā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kathā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kathā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kathā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ājī roj rātrī mulānnā ek kathā sāṅgte. — Every night Grandma tells the children a story.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ājī roj rātrī mulānnā ek kathā sāṅgte.* — Every night Grandma tells the children a story.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for immediately, then the Marathi for once upon a time, then say kathā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for immediately, then the Marathi for once upon a time, then say *kathā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कथा (kathā) mean? (\"A short story; a story\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C303-kahani",
+      "sequence": 17780,
+      "title": "कहाणी (kahāṇī) — a tale",
+      "headword": "कहाणी",
+      "romanization": "kahāṇī",
+      "gloss": "a tale",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6076ed887b232553",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for once upon a time, then the Marathi for a short story."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कहाणी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कहाणी — kahāṇī — \"a tale\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्या जुन्या घराची कहाणी फार दुःखाची आहे. tyā junyā gharācī kahāṇī phār duḥkhācī āhe. The tale of that old house is very sad."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Plural: कहाण्या, kahāṇyā."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural कहाण्या."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कहाणी (kahāṇī) is a tadbhava: CDIAL lists Marathi kahāṇī, 'a tale', under Sanskrit kathānaka, 'a little tale' (CDIAL 2705)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kahāṇī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kahāṇī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kahāṇī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kahāṇī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyā junyā gharācī kahāṇī phār duḥkhācī āhe. — The tale of that old house is very sad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyā junyā gharācī kahāṇī phār duḥkhācī āhe.* — The tale of that old house is very sad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for once upon a time, then the Marathi for a short story, then say kahāṇī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for once upon a time, then the Marathi for a short story, then say *kahāṇī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कहाणी (kahāṇī) mean? (\"A tale\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C303-kissa",
+      "sequence": 17790,
+      "title": "किस्सा (kissā) — an anecdote",
+      "headword": "किस्सा",
+      "romanization": "kissā",
+      "gloss": "an anecdote",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90f1fb1229c1179b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a short story, then the Marathi for a tale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: किस्सा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किस्सा — kissā — \"an anecdote\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बाबांनी त्यांच्या लहानपणीचा एक मजेदार किस्सा सांगितला. bābānnī tyāñcyā lahānapṇīcā ek majedār kissā sāṅgitlā. Dad told a funny anecdote from his childhood."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Plural: किस्से, kisse."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural किस्से."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किस्सा (kissā) is a loan from Persian qissa, usually traced to Arabic qiṣṣa, 'a story, a narrative'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kissā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kissā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kissā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kissā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bābānnī tyāñcyā lahānapṇīcā ek majedār kissā sāṅgitlā. — Dad told a funny anecdote from his childhood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bābānnī tyāñcyā lahānapṇīcā ek majedār kissā sāṅgitlā.* — Dad told a funny anecdote from his childhood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a short story, then the Marathi for a tale, then say kissā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a short story, then the Marathi for a tale, then say *kissā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does किस्सा (kissā) mean? (\"An anecdote\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C303-kathan-karne",
+      "sequence": 17800,
+      "title": "कथन करणे (kathan karṇe) — to narrate; to recount",
+      "headword": "कथन करणे",
+      "romanization": "kathan karṇe",
+      "gloss": "to narrate; to recount",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:561d6b06185c866c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a tale, then the Marathi for an anecdote."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कथन करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कथन करणे — kathan karṇe — \"to narrate; to recount\"."
+            },
+            {
+              "kind": "speech",
+              "text": "साक्षीदाराने घडलेली घटना न्यायालयात कथन केली. sākṣīdārāne ghaḍlelī ghaṭnā nyāyālayāt kathan kelī. The witness recounted the event in court."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने कथन केलं, tyāne kathan kelaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; in speech सांगणे. What is told agrees: घटना कथन केली."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कथन करणे (kathan karṇe) joins kathan, 'a telling', a tatsama taken from Sanskrit kathana, 'narration' (Monier-Williams), to karṇe, 'to do'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kathan karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kathan karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kathan karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kathan karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sākṣīdārāne ghaḍlelī ghaṭnā nyāyālayāt kathan kelī. — The witness recounted the event in court.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sākṣīdārāne ghaḍlelī ghaṭnā nyāyālayāt kathan kelī.* — The witness recounted the event in court.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a tale, then the Marathi for an anecdote, then say kathan karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a tale, then the Marathi for an anecdote, then say *kathan karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कथन करणे (kathan karṇe) mean? (\"To narrate; to recount\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R303-review-296-303",
+      "sequence": 17810,
+      "title": "Looking back: from A Crash on the Road to Once Upon a Time",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from A Crash on the Road to Once Upon a Time",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ec7b1dd71c52a31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for to collide and to slam into."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to collide, to slam into, unconscious, to recover, to be missed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to collide, to slam into, unconscious, to recover, to be missed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to barge in, to break open, to snatch, to loot, to fleece",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to barge in, to break open, to snatch, to loot, to fleece]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to scream, commotion, havoc, a mob, to whisper",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to scream, commotion, havoc, a mob, to whisper]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to search a place, a scene report, to confiscate, to confess, to file",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to search a place, a scene report, to confiscate, to confess, to file]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to threaten, a bribe, a punishment, to flee, to shut in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to threaten, a bribe, a punishment, to flee, to shut in]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be seen, to be found, to come across, to peep, to observe closely",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be seen, to be found, to come across, to peep, to observe closely]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be startled, to stop short, a moment, at that very moment, immediately",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be startled, to stop short, a moment, at that very moment, immediately]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "once upon a time, a short story, a tale, an anecdote, to narrate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: once upon a time, a short story, a tale, an anecdote, to narrate]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To collide? (धडकणे, dhaḍakṇe.) To slam into? (आदळणे, ādaḷṇe.) Unconscious? (बेशुद्ध, beśuddha.) To recover? (सावरणे, sāvarṇe.) To be missed? (हुकणे, hukṇe.) To barge in? (घुसणे, ghusṇe.) To break open? (फोडणे, phoḍṇe.) To snatch? (हिसकावणे, hiskāvṇe.) To loot? (लुटणे, luṭṇe.) To fleece? (लुबाडणे, lubāḍṇe.) To scream? (किंचाळणे, kiñcāḷṇe.) Commotion? (गोंधळ, gondhaḷ.) Havoc? (हाहाकार, hāhākār.) A mob? (जमाव, jamāv.) To whisper? (कुजबुजणे, kujbujṇe.) To search a place? (झडती घेणे, jhaḍtī gheṇe.) A scene report? (पंचनामा, pañcnāmā.) To confiscate? (जप्त करणे, japta karṇe.) To confess? (कबूल करणे, kabūl karṇe.) To file? (दाखल करणे, dākhal karṇe.) To threaten? (धमकावणे, dhamkāvṇe.) A bribe? (लाच, lāc.) A punishment? (शिक्षा, śikṣā.) To flee? (पळ काढणे, paḷ kāḍhṇe.) To shut in? (कोंडणे, koṇḍṇe.) To be seen? (दिसणे, disṇe.) To be found? (सापडणे, sāpaḍṇe.) To come across? (आढळणे, āḍhaḷṇe.) To peep? (डोकावणे, ḍokāvṇe.) To observe closely? (निरखणे, nirakhṇe.) To be startled? (दचकणे, dacakṇe.) To stop short? (थबकणे, thabakṇe.) A moment? (क्षण, kṣaṇ.) At that very moment? (तेवढ्यात, tevaḍhyāt.) Immediately? (ताबडतोब, tābaḍtob.) Once upon a time? (एकेकाळी, ekekāḷī.) A short story? (कथा, kathā.) A tale? (कहाणी, kahāṇī.) An anecdote? (किस्सा, kissā.) To narrate? (कथन करणे, kathan karṇe.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C468-samvedansil",
+    "language": "marathi",
+    "chapter": 468,
+    "sequence": 26950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bceb74836a03330d"
+  },
+  "findings": []
+}

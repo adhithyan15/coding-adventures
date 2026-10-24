@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C318-janma",
+    "language": "marathi",
+    "chapter": 318,
+    "sequence": 18530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8878fa4f0f62dbc"
+  },
+  "findings": []
+}

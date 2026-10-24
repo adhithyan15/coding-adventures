@@ -1,0 +1,21 @@
+{
+  "chapter": 503,
+  "title": "Wounds and Forgiveness",
+  "label": "ch:mr-wounds-and-forgiveness",
+  "canDo": "I can talk about a betrayal, words that rankle, a rebuke and forgiving.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-R503-review-final-503",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can talk about a betrayal, words that rankle, a rebuke and forgiving.",
+    "assesses": [
+      "MR-LEX-C503-MAPH503-01",
+      "MR-LEX-C503-MAPH503-02",
+      "MR-LEX-C503-MAPH503-03",
+      "MR-LEX-C503-MAPH503-04",
+      "MR-LEX-C503-MAPH503-05"
+    ]
+  }
+}

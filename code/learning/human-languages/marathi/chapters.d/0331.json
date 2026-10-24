@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "The Siege",
+  "label": "ch:mr-the-siege",
+  "canDo": "I can describe a fort under siege: the moat, the walls, the towers.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C331-buruj",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can describe a fort under siege: the moat, the walls, the towers.",
+    "assesses": [
+      "MR-LEX-C331-VEDHA331-03",
+      "MR-LEX-C331-VEDHA331-04",
+      "MR-LEX-C331-VEDHA331-05"
+    ]
+  }
+}

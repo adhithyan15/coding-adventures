@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:590950130a276410",
+  "lessonIds": [
+    "MR-C432-bhok",
+    "MR-C432-chidra",
+    "MR-C432-dag",
+    "MR-C432-viskatne",
+    "MR-C432-pajharne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch432.txt",
+  "json": "marathi/narration/ch432.json",
+  "textHash": "fnv1a64:f76f5e53db89a9e4",
+  "jsonHash": "fnv1a64:1319b1a6bd8a4ecc",
+  "findings": []
+}

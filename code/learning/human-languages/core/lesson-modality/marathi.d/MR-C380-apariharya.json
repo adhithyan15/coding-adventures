@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C380-apariharya",
+    "language": "marathi",
+    "chapter": 380,
+    "sequence": 21960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5be5864f41b8eba4"
+  },
+  "findings": []
+}

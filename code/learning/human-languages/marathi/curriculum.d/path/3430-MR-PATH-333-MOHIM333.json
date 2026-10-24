@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-333-MOHIM333",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "MR-EXT-333-MOHIM333"
+  ],
+  "after": []
+}

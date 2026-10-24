@@ -1,0 +1,14 @@
+{
+  "language": "marathi",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:5143feeb1ca3aced",
+  "lessonIds": [
+    "MR-C311-vartahar",
+    "MR-C311-sampadak",
+    "MR-C311-lekh",
+    "MR-C311-agralekh",
+    "MR-C311-prakasit-karne",
+    "MR-R311-review-304-311"
+  ],
+  "tex": "marathi/book/chapters/ch311-who-makes-the-news.tex"
+}

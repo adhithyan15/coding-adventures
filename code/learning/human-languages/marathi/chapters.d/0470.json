@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Trust and Trickery",
+  "label": "ch:mr-trust-and-trickery",
+  "canDo": "I can describe a sly, hypocritical, naive or innocent person.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C470-thakavne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can describe a sly, hypocritical, naive or innocent person.",
+    "assesses": [
+      "MR-LEX-C470-LABAD470-03",
+      "MR-LEX-C470-LABAD470-04",
+      "MR-LEX-C470-LABAD470-05"
+    ]
+  }
+}

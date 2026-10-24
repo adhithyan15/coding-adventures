@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:1cae0712cfcb37df",
+  "lessonIds": [
+    "MR-C380-anivarya",
+    "MR-C380-aicchik",
+    "MR-C380-apariharya",
+    "MR-C380-ladne",
+    "MR-C380-tartud"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch380.txt",
+  "json": "marathi/narration/ch380.json",
+  "textHash": "fnv1a64:2fbf2a9875cbe9c8",
+  "jsonHash": "fnv1a64:cdb7ace4896999fe",
+  "findings": []
+}

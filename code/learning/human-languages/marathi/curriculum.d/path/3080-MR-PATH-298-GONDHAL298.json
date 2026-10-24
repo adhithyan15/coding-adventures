@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-298-GONDHAL298",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "MR-EXT-298-GONDHAL298"
+  ],
+  "after": []
+}

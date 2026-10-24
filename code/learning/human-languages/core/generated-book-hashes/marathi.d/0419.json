@@ -1,0 +1,14 @@
+{
+  "language": "marathi",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:856790fee87e85b7",
+  "lessonIds": [
+    "MR-C419-vasti",
+    "MR-C419-vasahat",
+    "MR-C419-peth",
+    "MR-C419-bol",
+    "MR-C419-cal",
+    "MR-R419-review-412-419"
+  ],
+  "tex": "marathi/book/chapters/ch419-neighbourhoods.tex"
+}

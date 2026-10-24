@@ -1,0 +1,19 @@
+{
+  "chapter": 407,
+  "title": "Distance and Speed",
+  "label": "ch:mr-distance-and-speed",
+  "canDo": "I can talk about a distance, speed, brakes, signposts and a long walk.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C407-paypit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can talk about a distance, speed, brakes, signposts and a long walk.",
+    "assesses": [
+      "MR-LEX-C407-VEG407-03",
+      "MR-LEX-C407-VEG407-04",
+      "MR-LEX-C407-VEG407-05"
+    ]
+  }
+}

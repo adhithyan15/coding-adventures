@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:9c12c869c9e5b661",
+  "lessonIds": [
+    "MR-C406-padpath",
+    "MR-C406-padcari",
+    "MR-C406-phalak",
+    "MR-C406-uddanpul",
+    "MR-C406-nyahalne"
+  ],
+  "tex": "marathi/book/chapters/ch406-walking-in-town.tex"
+}

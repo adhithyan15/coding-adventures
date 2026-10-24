@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 461,
+  "title": "Hurt Feelings",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e60a1609234c3f32",
+  "lessons": [
+    {
+      "id": "MR-C461-apman",
+      "sequence": 26560,
+      "title": "अपमान (apmān) — an insult; humiliation",
+      "headword": "अपमान",
+      "romanization": "apmān",
+      "gloss": "an insult; humiliation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51cc7ece18f1f653",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for closeness, then the Marathi for beloved."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अपमान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अपमान — apmān — \"an insult; humiliation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सगळ्यांसमोर झालेला अपमान तो विसरला नाही. sagḷyāṁsamor jhālelā apmān to visarlā nāhī. He did not forget being humiliated in front of everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "अपमान (apmān) करणे, to insult; अपमान (apmān) होणे, to be humiliated."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अपमान (apmān) is a tatsama, taken from Sanskrit apamāna, \"disrespect, disgrace\" (CDIAL 433)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apmān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apmān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apmān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apmān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sagḷyāṁsamor jhālelā apmān to visarlā nāhī. — He did not forget being humiliated in front of everyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sagḷyāṁsamor jhālelā apmān to visarlā nāhī.* — He did not forget being humiliated in front of everyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for closeness, then the Marathi for beloved, then say apmān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for closeness, then the Marathi for beloved, then say *apmān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अपमान (apmān) mean? (\"An insult; humiliation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C461-tomna",
+      "sequence": 26570,
+      "title": "टोमणा (ṭomṇā) — a taunt; a dig",
+      "headword": "टोमणा",
+      "romanization": "ṭomṇā",
+      "gloss": "a taunt; a dig",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0de4e632f4cb976",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for beloved, then the Marathi for an insult."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: टोमणा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टोमणा — ṭomṇā — \"a taunt; a dig\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शेजारच्या बाईंनी आईला टोमणा मारला. śejārcyā bāīnnī āīlā ṭomṇā mārlā. The lady next door made a dig at Mother."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "टोमणा (ṭomṇā) मारणे, to make a dig: the target takes -ला."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टोमणा (ṭomṇā) is a Marathi noun whose origin is not settled; CDIAL lists a Marathi ṭumṇī, \"goading\", under trumpati (CDIAL 6070), but does not list this word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭomṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭomṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭomṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭomṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śejārcyā bāīnnī āīlā ṭomṇā mārlā. — The lady next door made a dig at Mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śejārcyā bāīnnī āīlā ṭomṇā mārlā.* — The lady next door made a dig at Mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for beloved, then the Marathi for an insult, then say ṭomṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for beloved, then the Marathi for an insult, then say *ṭomṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does टोमणा (ṭomṇā) mean? (\"A taunt; a dig\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C461-tiraskar",
+      "sequence": 26580,
+      "title": "तिरस्कार (tiraskār) — contempt",
+      "headword": "तिरस्कार",
+      "romanization": "tiraskār",
+      "gloss": "contempt",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d990aaa80aee9cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an insult, then the Marathi for a taunt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तिरस्कार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तिरस्कार — tiraskār — \"contempt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्याला खोटेपणाचा तिरस्कार वाटतो. tyālā khoṭepaṇācā tiraskār vāṭto. He feels contempt for dishonesty."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "तिरस्कार (tiraskār) वाटणे, to feel contempt, with the dative; तिरस्कार (tiraskār) करणे, to scorn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तिरस्कार (tiraskār) is a tatsama, taken from Sanskrit tiraskāra, \"placing aside, concealment\" (Monier-Williams); in Marathi it is contempt."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiraskār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiraskār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiraskār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiraskār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyālā khoṭepaṇācā tiraskār vāṭto. — He feels contempt for dishonesty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyālā khoṭepaṇācā tiraskār vāṭto.* — He feels contempt for dishonesty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an insult, then the Marathi for a taunt, then say tiraskār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an insult, then the Marathi for a taunt, then say *tiraskār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तिरस्कार (tiraskār) mean? (\"Contempt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C461-dukhavne",
+      "sequence": 26590,
+      "title": "दुखावणे (dukhāvṇe) — to hurt someone's feelings",
+      "headword": "दुखावणे",
+      "romanization": "dukhāvṇe",
+      "gloss": "to hurt someone's feelings",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a182e92d8b51a23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a taunt, then the Marathi for contempt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दुखावणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुखावणे — dukhāvṇe — \"to hurt someone's feelings\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माझ्या बोलण्याने मी तिला दुखावलं. mājhyā bolṇyāne mī tilā dukhāvlaṁ. I hurt her feelings with what I said."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने तिला दुखावलं, tyāne tilā dukhāvlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The one hurt takes -ला; मन दुखावलं, feelings were hurt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुखावणे (dukhāvṇe) is a tadbhava: CDIAL lists Marathi dukhāviṇẽ under Sanskrit duḥkhati, \"pains\" (CDIAL 6376)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukhāvṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukhāvṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukhāvṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukhāvṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhyā bolṇyāne mī tilā dukhāvlaṁ. — I hurt her feelings with what I said.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhyā bolṇyāne mī tilā dukhāvlaṁ.* — I hurt her feelings with what I said.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a taunt, then the Marathi for contempt, then say dukhāvṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a taunt, then the Marathi for contempt, then say *dukhāvṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दुखावणे (dukhāvṇe) mean? (\"To hurt someone's feelings\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C461-hinavne",
+      "sequence": 26600,
+      "title": "हिणवणे (hiṇavṇe) — to belittle",
+      "headword": "हिणवणे",
+      "romanization": "hiṇavṇe",
+      "gloss": "to belittle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:419d712461c8df8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for contempt, then the Marathi for to hurt someone's feelings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हिणवणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिणवणे — hiṇavṇe — \"to belittle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दारिद्र्यावरून कोणालाही हिणवू नये. dāridryāvarūn koṇālāhī hiṇvū naye. No one should be belittled for being poor."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने तिला हिणवलं, tyāne tilā hiṇavlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The one belittled takes -ला; the reason takes -वरून."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिणवणे (hiṇavṇe) is a tadbhava: CDIAL lists Marathi hiṇaviṇẽ, \"to lower in estimation\", under hīnayati, \"depreciates\", built on Sanskrit hīna, \"low\" (CDIAL 14126a)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiṇavṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiṇavṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiṇavṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiṇavṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāridryāvarūn koṇālāhī hiṇvū naye. — No one should be belittled for being poor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāridryāvarūn koṇālāhī hiṇvū naye.* — No one should be belittled for being poor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for contempt, then the Marathi for to hurt someone's feelings, then say hiṇavṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for contempt, then the Marathi for to hurt someone's feelings, then say *hiṇavṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हिणवणे (hiṇavṇe) mean? (\"To belittle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

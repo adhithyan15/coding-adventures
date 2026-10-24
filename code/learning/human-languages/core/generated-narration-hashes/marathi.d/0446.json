@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:122e8644e243b473",
+  "lessonIds": [
+    "MR-C446-vanyajiv",
+    "MR-C446-abhayaranya",
+    "MR-C446-bibatya",
+    "MR-C446-darkali-phodne",
+    "MR-C446-carne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch446.txt",
+  "json": "marathi/narration/ch446.json",
+  "textHash": "fnv1a64:fc913a2e3973a467",
+  "jsonHash": "fnv1a64:c103fa9c6aefd181",
+  "findings": []
+}

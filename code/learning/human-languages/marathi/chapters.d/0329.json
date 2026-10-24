@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "Swords and Cannons",
+  "label": "ch:mr-swords-and-cannons",
+  "canDo": "I can name old weapons and the horsemen who carried them.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C329-ghoddal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can name old weapons and the horsemen who carried them.",
+    "assesses": [
+      "MR-LEX-C329-SHASTRA329-03",
+      "MR-LEX-C329-SHASTRA329-04",
+      "MR-LEX-C329-SHASTRA329-05"
+    ]
+  }
+}

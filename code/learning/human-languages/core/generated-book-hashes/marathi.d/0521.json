@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:2d5e108ce06850a4",
+  "lessonIds": [
+    "MR-C521-bheg",
+    "MR-C521-tadakne",
+    "MR-C521-gond",
+    "MR-C521-karvat",
+    "MR-C521-limpne"
+  ],
+  "tex": "marathi/book/chapters/ch521-cracks-and-repairs.tex"
+}

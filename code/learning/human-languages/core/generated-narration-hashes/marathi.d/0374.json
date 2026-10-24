@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:4eae901c5fabb9e3",
+  "lessonIds": [
+    "MR-C374-prakriya",
+    "MR-C374-tappa",
+    "MR-C374-sutra",
+    "MR-C374-vyakhya",
+    "MR-C374-sastra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch374.txt",
+  "json": "marathi/narration/ch374.json",
+  "textHash": "fnv1a64:73018aa5938e7805",
+  "jsonHash": "fnv1a64:7e6f9b92dbaafa3a",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:e7483b0025c2a853",
+  "lessonIds": [
+    "MR-C400-vahan",
+    "MR-C400-ducaki",
+    "MR-C400-riksa",
+    "MR-C400-trak",
+    "MR-C400-kombne"
+  ],
+  "tex": "marathi/book/chapters/ch400-two-wheels-and-three.tex"
+}

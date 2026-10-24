@@ -1,0 +1,19 @@
+{
+  "chapter": 383,
+  "title": "Predicting and Assuming",
+  "label": "ch:mr-predicting-and-assuming",
+  "canDo": "I can make a forecast, an assumption and a good guess.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C383-tadne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can make a forecast, an assumption and a good guess.",
+    "assesses": [
+      "MR-LEX-C383-BHAKIT383-03",
+      "MR-LEX-C383-BHAKIT383-04",
+      "MR-LEX-C383-BHAKIT383-05"
+    ]
+  }
+}

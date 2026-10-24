@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C323-nirop",
+    "language": "marathi",
+    "chapter": 323,
+    "sequence": 18790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7279b07140719d4"
+  },
+  "findings": []
+}

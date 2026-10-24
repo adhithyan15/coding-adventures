@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:0de820292a76992b",
+  "lessonIds": [
+    "MR-C423-kharedi-karne",
+    "MR-C423-sauda",
+    "MR-C423-kimmat",
+    "MR-C423-bhav-karne",
+    "MR-C423-vikat-ghene"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch423.txt",
+  "json": "marathi/narration/ch423.json",
+  "textHash": "fnv1a64:e9f16d6f5ade545f",
+  "jsonHash": "fnv1a64:4072fd71c34920fe",
+  "findings": []
+}

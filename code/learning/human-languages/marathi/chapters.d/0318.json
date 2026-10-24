@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "A New Baby",
+  "label": "ch:mr-a-new-baby",
+  "canDo": "I can talk about births, naming days and birthdays.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C318-patrika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can talk about births, naming days and birthdays.",
+    "assesses": [
+      "MR-LEX-C318-BARSE318-03",
+      "MR-LEX-C318-BARSE318-04",
+      "MR-LEX-C318-BARSE318-05"
+    ]
+  }
+}

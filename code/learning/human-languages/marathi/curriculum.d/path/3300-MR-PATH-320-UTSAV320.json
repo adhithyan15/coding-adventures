@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-320-UTSAV320",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "MR-EXT-320-UTSAV320"
+  ],
+  "after": []
+}

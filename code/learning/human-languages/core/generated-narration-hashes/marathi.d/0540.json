@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:01db7887252ca333",
+  "lessonIds": [
+    "MR-C540-vima",
+    "MR-C540-jokhim",
+    "MR-C540-hami",
+    "MR-C540-hapta",
+    "MR-C540-parvadne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch540.txt",
+  "json": "marathi/narration/ch540.json",
+  "textHash": "fnv1a64:536fcb707b414bf8",
+  "jsonHash": "fnv1a64:dd606d8acf392e54",
+  "findings": []
+}

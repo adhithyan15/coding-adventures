@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:6809e398f10bcde9",
+  "lessonIds": [
+    "MR-C460-maya",
+    "MR-C460-jivhala",
+    "MR-C460-apulki",
+    "MR-C460-javlik",
+    "MR-C460-ladka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch460.txt",
+  "json": "marathi/narration/ch460.json",
+  "textHash": "fnv1a64:10398da0cc55336d",
+  "jsonHash": "fnv1a64:2ecc4a7c6c6b7ba8",
+  "findings": []
+}

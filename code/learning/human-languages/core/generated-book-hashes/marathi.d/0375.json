@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:2cbb52c16ee6d82e",
+  "lessonIds": [
+    "MR-C375-buddhi",
+    "MR-C375-smaransakti",
+    "MR-C375-ekagrata",
+    "MR-C375-akalan-hone",
+    "MR-C375-sarav-karne"
+  ],
+  "tex": "marathi/book/chapters/ch375-the-mind-at-work.tex"
+}

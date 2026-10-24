@@ -1,0 +1,11 @@
+{
+  "id": "MR-C381-toparyant",
+  "pathSegment": "MR-PATH-381-JOPARYANT381",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-381-JOPARYANT381",
+      "order": 1
+    }
+  ]
+}

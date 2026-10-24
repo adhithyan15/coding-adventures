@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:79949b4f06c9784b",
+  "lessonIds": [
+    "MR-C514-karya",
+    "MR-C514-kamkaj",
+    "MR-C514-pali",
+    "MR-C514-urakne",
+    "MR-C514-dhadpadne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch514.txt",
+  "json": "marathi/narration/ch514.json",
+  "textHash": "fnv1a64:2a85be6fafbf6d03",
+  "jsonHash": "fnv1a64:e3c1205ff4771832",
+  "findings": []
+}

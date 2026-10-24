@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:330af5f2b4284733",
+  "lessonIds": [
+    "MR-C526-segdi",
+    "MR-C526-ota",
+    "MR-C526-polpat",
+    "MR-C526-malne",
+    "MR-C526-kisne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch526.txt",
+  "json": "marathi/narration/ch526.json",
+  "textHash": "fnv1a64:b7cb6671478e87df",
+  "jsonHash": "fnv1a64:9fae14b3ed7326dd",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "Building Sites and Boundaries",
+  "label": "ch:mr-building-sites-and-boundaries",
+  "canDo": "I can talk about construction, floors, slums, a village gate and a boundary.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C421-hadda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can talk about construction, floors, slums, a village gate and a boundary.",
+    "assesses": [
+      "MR-LEX-C421-BANDHKAM421-03",
+      "MR-LEX-C421-BANDHKAM421-04",
+      "MR-LEX-C421-BANDHKAM421-05"
+    ]
+  }
+}

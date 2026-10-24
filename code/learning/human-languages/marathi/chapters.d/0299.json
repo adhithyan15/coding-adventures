@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "The Investigation",
+  "label": "ch:mr-the-investigation",
+  "canDo": "I can say how the police searched, seized and took a confession.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C299-dakhal-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can say how the police searched, seized and took a confession.",
+    "assesses": [
+      "MR-LEX-C299-TAPAS299-03",
+      "MR-LEX-C299-TAPAS299-04",
+      "MR-LEX-C299-TAPAS299-05"
+    ]
+  }
+}

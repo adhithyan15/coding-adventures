@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "Threats and Bribes",
+  "label": "ch:mr-threats-and-bribes",
+  "canDo": "I can talk about threats, bribes and punishment.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C300-kondne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can talk about threats, bribes and punishment.",
+    "assesses": [
+      "MR-LEX-C300-LACH300-03",
+      "MR-LEX-C300-LACH300-04",
+      "MR-LEX-C300-LACH300-05"
+    ]
+  }
+}

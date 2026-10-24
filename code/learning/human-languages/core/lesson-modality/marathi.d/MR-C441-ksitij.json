@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C441-ksitij",
+    "language": "marathi",
+    "chapter": 441,
+    "sequence": 25300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08060a07222eb28e"
+  },
+  "findings": []
+}

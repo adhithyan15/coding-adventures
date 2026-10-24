@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:ee8618de18377c14",
+  "lessonIds": [
+    "MR-C435-tancai",
+    "MR-C435-tutvada",
+    "MR-C435-korda",
+    "MR-C435-atne",
+    "MR-C435-nasne",
+    "MR-R435-review-428-435"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch435.txt",
+  "json": "marathi/narration/ch435.json",
+  "textHash": "fnv1a64:b51262c0c9e295a4",
+  "jsonHash": "fnv1a64:bd059027df4d8921",
+  "findings": []
+}

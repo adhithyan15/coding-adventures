@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C321-snehsammelan",
+    "language": "marathi",
+    "chapter": 321,
+    "sequence": 18710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:858a59a1782c21ff"
+  },
+  "findings": []
+}

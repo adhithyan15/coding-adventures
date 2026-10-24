@@ -1,0 +1,11 @@
+{
+  "id": "MR-C289-pakitmar",
+  "pathSegment": "MR-PATH-289-GUNHA289",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-289-GUNHA289",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C353-pratikriya-dene",
+  "pathSegment": "MR-PATH-353-PUSHTI353",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-353-PUSHTI353",
+      "order": 4
+    }
+  ]
+}

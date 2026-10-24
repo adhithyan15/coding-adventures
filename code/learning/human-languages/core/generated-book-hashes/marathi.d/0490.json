@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:b31e355d73c99611",
+  "lessonIds": [
+    "MR-C490-pathya",
+    "MR-C490-nirogi",
+    "MR-C490-pratikarsakti",
+    "MR-C490-sekne",
+    "MR-C490-colne"
+  ],
+  "tex": "marathi/book/chapters/ch490-staying-healthy.tex"
+}

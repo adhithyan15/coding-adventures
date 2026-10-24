@@ -1,0 +1,11 @@
+{
+  "id": "MR-C510-nivrtta-hone",
+  "pathSegment": "MR-PATH-510-SODNE510",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-510-SODNE510",
+      "order": 3
+    }
+  ]
+}

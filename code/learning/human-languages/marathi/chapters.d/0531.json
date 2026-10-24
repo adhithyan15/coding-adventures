@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "Players and Plays",
+  "label": "ch:mr-players-and-plays",
+  "canDo": "I can talk about batsmen, bowlers, runners and catches.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C531-jhelne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can talk about batsmen, bowlers, runners and catches.",
+    "assesses": [
+      "MR-LEX-C531-KHELADU531-03",
+      "MR-LEX-C531-KHELADU531-04",
+      "MR-LEX-C531-KHELADU531-05"
+    ]
+  }
+}

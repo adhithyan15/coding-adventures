@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 458,
+  "title": "Comfort and Relief",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f273284470ca6977",
+  "lessons": [
+    {
+      "id": "MR-C458-dilasa",
+      "sequence": 26410,
+      "title": "दिलासा (dilāsā) — comfort; reassurance",
+      "headword": "दिलासा",
+      "romanization": "dilāsā",
+      "gloss": "comfort; reassurance",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a6575045f7d8d68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to feel sorry, then the Marathi for to sob quietly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दिलासा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिलासा — dilāsā — \"comfort; reassurance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मित्राच्या फोनने मला खूप दिलासा मिळाला. mitrācyā phonne malā khūp dilāsā miḷālā. My friend's phone call was a great comfort to me."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "दिलासा (dilāsā) देणे, to reassure; दिलासा (dilāsā) मिळणे, to be reassured, with the dative."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिलासा (dilāsā) is a loan from Persian dilāsā, \"consolation\", built on dil, \"heart\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dilāsā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dilāsā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dilāsā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dilāsā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitrācyā phonne malā khūp dilāsā miḷālā. — My friend's phone call was a great comfort to me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitrācyā phonne malā khūp dilāsā miḷālā.* — My friend's phone call was a great comfort to me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to feel sorry, then the Marathi for to sob quietly, then say dilāsā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to feel sorry, then the Marathi for to sob quietly, then say *dilāsā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दिलासा (dilāsā) mean? (\"Comfort; reassurance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C458-dhir",
+      "sequence": 26420,
+      "title": "धीर (dhīr) — fortitude; heart",
+      "headword": "धीर",
+      "romanization": "dhīr",
+      "gloss": "fortitude; heart",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af61bff2e0a27282",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to sob quietly, then the Marathi for comfort."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धीर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धीर — dhīr — \"fortitude; heart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आईने धीर दिला म्हणून मी पुन्हा प्रयत्न केला. āīne dhīr dilā mhaṇūn mī punhā prayatna kelā. Mother gave me heart, so I tried again."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "धीर (dhīr) देणे, to give someone heart; धीर (dhīr) धरणे, to be patient."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धीर (dhīr) is a tatsama, Sanskrit dhīra, \"wise; steady, resolute\"; CDIAL lists Marathi dhīr, \"patience\" (CDIAL 6817)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhīr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhīr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhīr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhīr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āīne dhīr dilā mhaṇūn mī punhā prayatna kelā. — Mother gave me heart, so I tried again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āīne dhīr dilā mhaṇūn mī punhā prayatna kelā.* — Mother gave me heart, so I tried again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to sob quietly, then the Marathi for comfort, then say dhīr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to sob quietly, then the Marathi for comfort, then say *dhīr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धीर (dhīr) mean? (\"Fortitude; heart\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C458-santvan-karne",
+      "sequence": 26430,
+      "title": "सांत्वन करणे (sāntvan karṇe) — to console",
+      "headword": "सांत्वन करणे",
+      "romanization": "sāntvan karṇe",
+      "gloss": "to console",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1af942cfa85cc6b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for comfort, then the Marathi for fortitude."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सांत्वन करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सांत्वन करणे — sāntvan karṇe — \"to console\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मित्रांनी आजीचं सांत्वन केलं. mitrānnī ājīcaṁ sāntvan kelaṁ. Friends consoled Grandmother."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने तिचं सांत्वन केलं, tyāne ticaṁ sāntvan kelaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The one consoled takes the genitive: मित्राचं सांत्वन करणे (sāntvan karṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सांत्वन करणे (sāntvan karṇe) is the tatsama सांत्वन, Sanskrit sāntvana, \"soothing with kind words\" (Monier-Williams), with the light verb करणे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāntvan karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāntvan karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāntvan karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāntvan karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitrānnī ājīcaṁ sāntvan kelaṁ. — Friends consoled Grandmother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitrānnī ājīcaṁ sāntvan kelaṁ.* — Friends consoled Grandmother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for comfort, then the Marathi for fortitude, then say sāntvan karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for comfort, then the Marathi for fortitude, then say *sāntvan karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सांत्वन करणे (sāntvan karṇe) mean? (\"To console\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C458-hayse-vatne",
+      "sequence": 26440,
+      "title": "हायसे वाटणे (hāyse vāṭṇe) — to feel relieved",
+      "headword": "हायसे वाटणे",
+      "romanization": "hāyse vāṭṇe",
+      "gloss": "to feel relieved",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e2632d9c770c2af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for fortitude, then the Marathi for to console."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हायसे वाटणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हायसे वाटणे — hāyse vāṭṇe — \"to feel relieved\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मुलगा सुखरूप घरी आला तेव्हा आईला हायसं वाटलं. mulgā sukhrūp gharī ālā tevhā āīlā hāysaṁ vāṭlaṁ. Mother felt relieved when her son came home safe."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (to him …): त्याला हायसं वाटलं, tyālā hāysaṁ vāṭlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Dative, like वाटणे: मला हायसं वाटलं. Sentences write the neuter as हायसं."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हायसे वाटणे (hāyse vāṭṇe) is a Marathi phrase built on हायसे, \"eased\", whose origin is not settled, with the verb वाटणे, \"to feel\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāyse vāṭṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāyse vāṭṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāyse vāṭṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāyse vāṭṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mulgā sukhrūp gharī ālā tevhā āīlā hāysaṁ vāṭlaṁ. — Mother felt relieved when her son came home safe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mulgā sukhrūp gharī ālā tevhā āīlā hāysaṁ vāṭlaṁ.* — Mother felt relieved when her son came home safe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for fortitude, then the Marathi for to console, then say hāyse vāṭṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for fortitude, then the Marathi for to console, then say *hāyse vāṭṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हायसे वाटणे (hāyse vāṭṇe) mean? (\"To feel relieved\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C458-gahivarne",
+      "sequence": 26450,
+      "title": "गहिवरणे (gahivarṇe) — to be choked up; to be overcome with emotion",
+      "headword": "गहिवरणे",
+      "romanization": "gahivarṇe",
+      "gloss": "to be choked up; to be overcome with emotion",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63711c5f21d75a26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to console, then the Marathi for to feel relieved."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गहिवरणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गहिवरणे — gahivarṇe — \"to be choked up; to be overcome with emotion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मुलीचं भाषण ऐकून वडील गहिवरले. mulīcaṁ bhāṣaṇ aikūn vaḍīl gahivarle. Father was choked with emotion listening to his daughter's speech."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो गहिवरला, to gahivarlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Tears near, voice thick: गहिवरून येणे, to be overcome."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गहिवरणे (gahivarṇe) is a Marathi verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gahivarṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gahivarṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gahivarṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gahivarṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mulīcaṁ bhāṣaṇ aikūn vaḍīl gahivarle. — Father was choked with emotion listening to his daughter's speech.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mulīcaṁ bhāṣaṇ aikūn vaḍīl gahivarle.* — Father was choked with emotion listening to his daughter's speech.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to console, then the Marathi for to feel relieved, then say gahivarṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to console, then the Marathi for to feel relieved, then say *gahivarṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गहिवरणे (gahivarṇe) mean? (\"To be choked up; to be overcome with emotion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

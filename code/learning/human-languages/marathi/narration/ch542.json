@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 542,
+  "title": "Rules and Defiance",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:17187e5cb324a802",
+  "lessons": [
+    {
+      "id": "MR-C542-niyamavali",
+      "sequence": 30940,
+      "title": "नियमावली (niyamāvalī) — a rulebook",
+      "headword": "नियमावली",
+      "romanization": "niyamāvalī",
+      "gloss": "a rulebook",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2324eb0239359e95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for alert, then the Marathi for to issue a warning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नियमावली",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नियमावली — niyamāvalī — \"a rulebook\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शाळेने सगळ्या पालकांना नियमावली दिली. śāḷene sagḷyā pālkānnā niyamāvalī dilī. The school gave all the parents a rulebook."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नियमावली (niyamāvalī) is a tatsama compound of Sanskrit niyama, \"rule\", and āvali, \"a row\" (Monier-Williams): a row of rules."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyamāvalī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyamāvalī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyamāvalī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyamāvalī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāḷene sagḷyā pālkānnā niyamāvalī dilī. — The school gave all the parents a rulebook.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāḷene sagḷyā pālkānnā niyamāvalī dilī.* — The school gave all the parents a rulebook.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for alert, then the Marathi for to issue a warning, then say niyamāvalī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for alert, then the Marathi for to issue a warning, then say *niyamāvalī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नियमावली (niyamāvalī) mean? (\"A rulebook\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C542-niyantran",
+      "sequence": 30950,
+      "title": "नियंत्रण (niyantraṇ) — control",
+      "headword": "नियंत्रण",
+      "romanization": "niyantraṇ",
+      "gloss": "control",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:980c0a51fa864504",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to issue a warning, then the Marathi for a rulebook."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नियंत्रण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नियंत्रण — niyantraṇ — \"control\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आग लवकरच नियंत्रणात आली. āg lavkarac niyantraṇāt ālī. The fire was soon brought under control."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "नियंत्रणात येणे, to come under control."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नियंत्रण (niyantraṇ) is a tatsama, taken from Sanskrit niyantraṇa, \"restraining, governing\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyantraṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyantraṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyantraṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyantraṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āg lavkarac niyantraṇāt ālī. — The fire was soon brought under control.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āg lavkarac niyantraṇāt ālī.* — The fire was soon brought under control.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to issue a warning, then the Marathi for a rulebook, then say niyantraṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to issue a warning, then the Marathi for a rulebook, then say *niyantraṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नियंत्रण (niyantraṇ) mean? (\"Control\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C542-takid",
+      "sequence": 30960,
+      "title": "ताकीद (tākīd) — a stern warning; a reprimand",
+      "headword": "ताकीद",
+      "romanization": "tākīd",
+      "gloss": "a stern warning; a reprimand",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3327f1ab6d8a84b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a rulebook, then the Marathi for control."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ताकीद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ताकीद — tākīd — \"a stern warning; a reprimand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उशिरा आल्यामुळे व्यवस्थापकाने त्याला ताकीद दिली. uśirā ālyāmuḷe vyavasthāpakāne tyālā tākīd dilī. Because he came late, the manager gave him a stern warning."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "ताकीद (tākīd) देणे, to warn sternly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ताकीद (tākīd) is a loan through Persian usually traced to Arabic taʾkīd, \"emphasis, insistence\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tākīd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tākīd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tākīd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tākīd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uśirā ālyāmuḷe vyavasthāpakāne tyālā tākīd dilī. — Because he came late, the manager gave him a stern warning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uśirā ālyāmuḷe vyavasthāpakāne tyālā tākīd dilī.* — Because he came late, the manager gave him a stern warning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a rulebook, then the Marathi for control, then say tākīd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a rulebook, then the Marathi for control, then say *tākīd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ताकीद (tākīd) mean? (\"A stern warning; a reprimand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C542-jumanne",
+      "sequence": 30970,
+      "title": "जुमानणे (jumānṇe) — to heed; to care about",
+      "headword": "जुमानणे",
+      "romanization": "jumānṇe",
+      "gloss": "to heed; to care about",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71a46ce22b8b3fbe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for control, then the Marathi for a stern warning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जुमानणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जुमानणे — jumānṇe — \"to heed; to care about\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तो कोणाचाच सल्ला जुमानत नाही. to koṇācāc sallā jumānat nāhī. He heeds nobody's advice."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने आदेश जुमानला, tyāne ādeś jumānlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly with नाही: तो कोणालाच जुमानत नाही, he heeds no one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जुमानणे (jumānṇe) is a Marathi verb heard mostly with a negative; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jumānṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jumānṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jumānṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jumānṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to koṇācāc sallā jumānat nāhī. — He heeds nobody's advice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *to koṇācāc sallā jumānat nāhī.* — He heeds nobody's advice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for control, then the Marathi for a stern warning, then say jumānṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for control, then the Marathi for a stern warning, then say *jumānṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जुमानणे (jumānṇe) mean? (\"To heed; to care about\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C542-jhugarne",
+      "sequence": 30980,
+      "title": "झुगारणे (jhugārṇe) — to defy; to throw off",
+      "headword": "झुगारणे",
+      "romanization": "jhugārṇe",
+      "gloss": "to defy; to throw off",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7253587b0af32db1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a stern warning, then the Marathi for to heed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झुगारणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झुगारणे — jhugārṇe — \"to defy; to throw off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "काही लोकांनी नियम झुगारले आणि दंड भरला. kāhī lokānnī niyam jhugārle āṇi daṇḍ bharlā. Some people defied the rules and paid a fine."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने नियम झुगारले, tyāne niyam jhugārle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झुगारणे (jhugārṇe) is a Marathi verb for throwing off a rule or a burden; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhugārṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhugārṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhugārṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhugārṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāhī lokānnī niyam jhugārle āṇi daṇḍ bharlā. — Some people defied the rules and paid a fine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāhī lokānnī niyam jhugārle āṇi daṇḍ bharlā.* — Some people defied the rules and paid a fine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a stern warning, then the Marathi for to heed, then say jhugārṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a stern warning, then the Marathi for to heed, then say *jhugārṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झुगारणे (jhugārṇe) mean? (\"To defy; to throw off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

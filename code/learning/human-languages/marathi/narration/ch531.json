@@ -1,0 +1,730 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 531,
+  "title": "Players and Plays",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:c8b7f89f14b0b31d",
+  "lessons": [
+    {
+      "id": "MR-C531-phalandaj",
+      "sequence": 30380,
+      "title": "फलंदाज (phalandāj) — a batsman; a batter",
+      "headword": "फलंदाज",
+      "romanization": "phalandāj",
+      "gloss": "a batsman; a batter",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5685ae75484223ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a contestant, then the Marathi for to carry off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फलंदाज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फलंदाज — phalandāj — \"a batsman; a batter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "फलंदाजाने चेंडू मैदानाबाहेर मारला. phalandājāne ceṇḍū maidānābāher mārlā. The batsman hit the ball out of the ground."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फलंदाज (phalandāj) is a Marathi coinage made on the pattern of गोलंदाज (golandāj), the bowler, whose -अंदाज is Persian andāz, \"thrower\". The first part is probably Sanskrit phala, glossed also as a blade (Monier-Williams): the flat face of the bat. That reading is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phalandāj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phalandāj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phalandāj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phalandāj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phalandājāne ceṇḍū maidānābāher mārlā. — The batsman hit the ball out of the ground.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phalandājāne ceṇḍū maidānābāher mārlā.* — The batsman hit the ball out of the ground.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a contestant, then the Marathi for to carry off, then say phalandāj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a contestant, then the Marathi for to carry off, then say *phalandāj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फलंदाज (phalandāj) mean? (\"A batsman; a batter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C531-golandaj",
+      "sequence": 30390,
+      "title": "गोलंदाज (golandāj) — a bowler",
+      "headword": "गोलंदाज",
+      "romanization": "golandāj",
+      "gloss": "a bowler",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90c8d68bfab7a91a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to carry off, then the Marathi for a batsman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गोलंदाज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गोलंदाज — golandāj — \"a bowler\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गोलंदाजाने खूप वेगाने चेंडू टाकला. golandājāne khūp vegāne ceṇḍū ṭāklā. The bowler bowled the ball very fast."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गोलंदाज (golandāj) is a loan from Persian golandāz, \"gunner\", from gola, \"a ball\", and andāz, \"thrower\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "golandāj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *golandāj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "golandāj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *golandāj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "golandājāne khūp vegāne ceṇḍū ṭāklā. — The bowler bowled the ball very fast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *golandājāne khūp vegāne ceṇḍū ṭāklā.* — The bowler bowled the ball very fast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to carry off, then the Marathi for a batsman, then say golandāj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to carry off, then the Marathi for a batsman, then say *golandāj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गोलंदाज (golandāj) mean? (\"A bowler\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C531-dhavpatu",
+      "sequence": 30400,
+      "title": "धावपटू (dhāvpaṭū) — a runner; an athlete",
+      "headword": "धावपटू",
+      "romanization": "dhāvpaṭū",
+      "gloss": "a runner; an athlete",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce93f47207ba71dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a batsman, then the Marathi for a bowler."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धावपटू",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धावपटू — dhāvpaṭū — \"a runner; an athlete\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तो धावपटू रोज सकाळी मैदानावर धावतो. to dhāvpaṭū roj sakāḷī maidānāvar dhāvto. That runner runs on the ground every morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धावपटू (dhāvpaṭū) is built from धाव, \"a run\", from धावणे, and the Sanskrit paṭu, \"skilful\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāvpaṭū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāvpaṭū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāvpaṭū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāvpaṭū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to dhāvpaṭū roj sakāḷī maidānāvar dhāvto. — That runner runs on the ground every morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *to dhāvpaṭū roj sakāḷī maidānāvar dhāvto.* — That runner runs on the ground every morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a batsman, then the Marathi for a bowler, then say dhāvpaṭū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a batsman, then the Marathi for a bowler, then say *dhāvpaṭū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धावपटू (dhāvpaṭū) mean? (\"A runner; an athlete\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C531-tolavne",
+      "sequence": 30410,
+      "title": "टोलवणे (ṭolavṇe) — to hit away; to fend off",
+      "headword": "टोलवणे",
+      "romanization": "ṭolavṇe",
+      "gloss": "to hit away; to fend off",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44ce41c6f8da3b5f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a bowler, then the Marathi for a runner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: टोलवणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टोलवणे — ṭolavṇe — \"to hit away; to fend off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "फलंदाजाने पहिला चेंडू लांब टोलवला. phalandājāne pahilā ceṇḍū lāmb ṭolavlā. The batsman hit the first ball a long way."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने चेंडू टोलवला, tyāne ceṇḍū ṭolavlā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टोलवणे (ṭolavṇe) is a Marathi verb for knocking something away; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭolavṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭolavṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭolavṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭolavṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phalandājāne pahilā ceṇḍū lāmb ṭolavlā. — The batsman hit the first ball a long way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phalandājāne pahilā ceṇḍū lāmb ṭolavlā.* — The batsman hit the first ball a long way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a bowler, then the Marathi for a runner, then say ṭolavṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a bowler, then the Marathi for a runner, then say *ṭolavṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does टोलवणे (ṭolavṇe) mean? (\"To hit away; to fend off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C531-jhelne",
+      "sequence": 30420,
+      "title": "झेलणे (jhelṇe) — to catch a ball",
+      "headword": "झेलणे",
+      "romanization": "jhelṇe",
+      "gloss": "to catch a ball",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:cd68b6639d24e5af",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a runner, then the Marathi for to hit away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झेलणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झेलणे — jhelṇe — \"to catch a ball\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीराने एका हाताने चेंडू झेलला. mīrāne ekā hātāne ceṇḍū jhellā. Meera caught the ball with one hand."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने चेंडू झेलला, tyāne ceṇḍū jhellā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झेलणे (jhelṇe) is inherited: CDIAL lists Marathi jhelṇẽ, \"to catch\", under jhēlati, \"undergoes\" (CDIAL 5413)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhelṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhelṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhelṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhelṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrāne ekā hātāne ceṇḍū jhellā. — Meera caught the ball with one hand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrāne ekā hātāne ceṇḍū jhellā.* — Meera caught the ball with one hand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a runner, then the Marathi for to hit away, then say jhelṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a runner, then the Marathi for to hit away, then say *jhelṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झेलणे (jhelṇe) mean? (\"To catch a ball\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

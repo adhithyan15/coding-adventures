@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C480-malmalne",
+    "language": "marathi",
+    "chapter": 480,
+    "sequence": 27570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c25e129222bbbc17"
+  },
+  "findings": []
+}

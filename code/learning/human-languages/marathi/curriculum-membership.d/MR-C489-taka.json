@@ -1,0 +1,11 @@
+{
+  "id": "MR-C489-taka",
+  "pathSegment": "MR-PATH-489-LAS489",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-489-LAS489",
+      "order": 3
+    }
+  ]
+}

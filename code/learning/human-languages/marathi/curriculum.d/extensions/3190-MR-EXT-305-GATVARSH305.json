@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-305-GATVARSH305",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can place events in the past: last year, before that, in time.",
+  "prerequisites": []
+}

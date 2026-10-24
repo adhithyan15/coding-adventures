@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C353-pusti-karne",
+    "language": "marathi",
+    "chapter": 353,
+    "sequence": 20560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19bb5f41e023de92"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C304-varnan-karne",
+    "language": "marathi",
+    "chapter": 304,
+    "sequence": 17820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39864e2b57dee048"
+  },
+  "findings": []
+}

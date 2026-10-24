@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:d3235bb4b505b7d6",
+  "lessonIds": [
+    "MR-C523-galica",
+    "MR-C523-rajai",
+    "MR-C523-macchardani",
+    "MR-C523-catai",
+    "MR-C523-gundalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch523.txt",
+  "json": "marathi/narration/ch523.json",
+  "textHash": "fnv1a64:06d5ac23a224094c",
+  "jsonHash": "fnv1a64:8200660ba6f8edc7",
+  "findings": []
+}

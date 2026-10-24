@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "Puddles and Seepage",
+  "label": "ch:mr-puddles-and-seepage",
+  "canDo": "I can talk about puddles, silt and muddy water, and say water seeped or overflowed.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C444-osandne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can talk about puddles, silt and muddy water, and say water seeped or overflowed.",
+    "assesses": [
+      "MR-LEX-C444-DABKE444-03",
+      "MR-LEX-C444-DABKE444-04",
+      "MR-LEX-C444-DABKE444-05"
+    ]
+  }
+}

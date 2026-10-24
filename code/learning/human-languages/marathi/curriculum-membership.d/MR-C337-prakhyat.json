@@ -1,0 +1,11 @@
+{
+  "id": "MR-C337-prakhyat",
+  "pathSegment": "MR-PATH-337-DANTKATHA337",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-337-DANTKATHA337",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C461-dukhavne",
+    "language": "marathi",
+    "chapter": 461,
+    "sequence": 26590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a182e92d8b51a23"
+  },
+  "findings": []
+}

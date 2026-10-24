@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:a0531cb73c29db9c",
+  "lessonIds": [
+    "MR-C387-vagalne",
+    "MR-C387-samavista-karne",
+    "MR-C387-visambne",
+    "MR-C387-tharne",
+    "MR-C387-patne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch387.txt",
+  "json": "marathi/narration/ch387.json",
+  "textHash": "fnv1a64:908fe989c70014d9",
+  "jsonHash": "fnv1a64:c19fb7044eb41e3a",
+  "findings": []
+}

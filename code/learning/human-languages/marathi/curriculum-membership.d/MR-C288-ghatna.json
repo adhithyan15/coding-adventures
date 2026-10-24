@@ -1,0 +1,11 @@
+{
+  "id": "MR-C288-ghatna",
+  "pathSegment": "MR-PATH-288-GHATANA288",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-288-GHATANA288",
+      "order": 0
+    }
+  ]
+}

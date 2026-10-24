@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "Streams and Dams",
+  "label": "ch:mr-streams-and-dams",
+  "canDo": "I can talk about streams, canals, dams and lakes, and the sound of running water.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C443-khalkhalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can talk about streams, canals, dams and lakes, and the sound of running water.",
+    "assesses": [
+      "MR-LEX-C443-ODHA443-03",
+      "MR-LEX-C443-ODHA443-04",
+      "MR-LEX-C443-ODHA443-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Finding the Way",
+  "label": "ch:mr-finding-the-way",
+  "canDo": "I can talk about directions, a compass, landmarks, and getting lost.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C412-ghutmalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can talk about directions, a compass, landmarks, and getting lost.",
+    "assesses": [
+      "MR-LEX-C412-DISHA412-03",
+      "MR-LEX-C412-DISHA412-04",
+      "MR-LEX-C412-DISHA412-05"
+    ]
+  }
+}

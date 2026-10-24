@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:da2a37a30a5c2e50",
+  "lessonIds": [
+    "MR-C368-palan-karne",
+    "MR-C368-ullanghan-karne",
+    "MR-C368-bajavne",
+    "MR-C368-sopavne",
+    "MR-C368-hatalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch368.txt",
+  "json": "marathi/narration/ch368.json",
+  "textHash": "fnv1a64:d5274165f40dbbbb",
+  "jsonHash": "fnv1a64:5233f486c533c847",
+  "findings": []
+}

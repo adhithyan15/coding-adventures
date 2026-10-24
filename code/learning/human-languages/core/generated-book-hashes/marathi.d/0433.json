@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:af6bda34f2a299d7",
+  "lessonIds": [
+    "MR-C433-orakhda",
+    "MR-C433-tada",
+    "MR-C433-ganjne",
+    "MR-C433-cepne",
+    "MR-C433-band-padne"
+  ],
+  "tex": "marathi/book/chapters/ch433-rust-and-dents.tex"
+}

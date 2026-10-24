@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C534-sekoti",
+    "language": "marathi",
+    "chapter": 534,
+    "sequence": 30570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25632ccddea8e6f0"
+  },
+  "findings": []
+}

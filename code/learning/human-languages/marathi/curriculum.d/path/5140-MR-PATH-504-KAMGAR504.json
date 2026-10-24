@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-504-KAMGAR504",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-504-KAMGAR504"
+  ],
+  "after": []
+}

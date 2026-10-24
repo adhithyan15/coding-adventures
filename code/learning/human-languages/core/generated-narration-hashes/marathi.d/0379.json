@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:3d556eb6b8a1be85",
+  "lessonIds": [
+    "MR-C379-maryada",
+    "MR-C379-kiman",
+    "MR-C379-kamal",
+    "MR-C379-sithil-karne",
+    "MR-C379-jhepne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch379.txt",
+  "json": "marathi/narration/ch379.json",
+  "textHash": "fnv1a64:cb07d31c1ab8e792",
+  "jsonHash": "fnv1a64:87e5986b52548df8",
+  "findings": []
+}

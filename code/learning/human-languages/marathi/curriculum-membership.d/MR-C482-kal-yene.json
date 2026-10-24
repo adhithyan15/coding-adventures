@@ -1,0 +1,11 @@
+{
+  "id": "MR-C482-kal-yene",
+  "pathSegment": "MR-PATH-482-DUKH482",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-482-DUKH482",
+      "order": 2
+    }
+  ]
+}

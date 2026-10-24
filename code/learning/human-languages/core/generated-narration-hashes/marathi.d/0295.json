@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:619bc22be6413e62",
+  "lessonIds": [
+    "MR-C295-nuksan",
+    "MR-C295-durghatna",
+    "MR-C295-apatti",
+    "MR-C295-sankat",
+    "MR-C295-bhisan",
+    "MR-R295-review-288-295"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch295.txt",
+  "json": "marathi/narration/ch295.json",
+  "textHash": "fnv1a64:f1b8a031d0798279",
+  "jsonHash": "fnv1a64:883661355bd18b47",
+  "findings": []
+}

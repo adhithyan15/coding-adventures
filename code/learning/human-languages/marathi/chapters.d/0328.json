@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "War Comes",
+  "label": "ch:mr-war-comes",
+  "canDo": "I can tell of an enemy, an attack and a battle.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C328-ranangan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can tell of an enemy, an attack and a battle.",
+    "assesses": [
+      "MR-LEX-C328-LADHAI328-03",
+      "MR-LEX-C328-LADHAI328-04",
+      "MR-LEX-C328-LADHAI328-05"
+    ]
+  }
+}

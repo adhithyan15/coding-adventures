@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C340-jhagadne",
+    "language": "marathi",
+    "chapter": 340,
+    "sequence": 19700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ee2f69f7eb6224a"
+  },
+  "findings": []
+}

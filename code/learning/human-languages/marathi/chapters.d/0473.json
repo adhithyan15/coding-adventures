@@ -1,0 +1,21 @@
+{
+  "chapter": 473,
+  "title": "Mischief and Fun",
+  "label": "ch:mr-mischief-and-fun",
+  "canDo": "I can describe mischief, fun and teasing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-R473-review-466-473",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can describe mischief, fun and teasing.",
+    "assesses": [
+      "MR-LEX-C473-KHODKAR473-01",
+      "MR-LEX-C473-KHODKAR473-02",
+      "MR-LEX-C473-KHODKAR473-03",
+      "MR-LEX-C473-KHODKAR473-04",
+      "MR-LEX-C473-KHODKAR473-05"
+    ]
+  }
+}

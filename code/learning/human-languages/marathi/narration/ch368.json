@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 368,
+  "title": "Duties and Rules",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:da2a37a30a5c2e50",
+  "lessons": [
+    {
+      "id": "MR-C368-palan-karne",
+      "sequence": 21330,
+      "title": "पालन करणे (pālan karṇe) — to comply with; to observe",
+      "headword": "पालन करणे",
+      "romanization": "pālan karṇe",
+      "gloss": "to comply with; to observe",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f219ee127ba08e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a tendency, then the Marathi for social."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पालन करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पालन करणे — pālan karṇe — \"to comply with; to observe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सगळ्यांनी वाहतुकीच्या नियमांचं पालन केलं पाहिजे. sagaḷyānnī vāhtukīcyā niymāñcaṁ pālan kelaṁ pāhije. Everyone must observe the traffic rules."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने पालन केलं, tyāne pālan kelaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The rule takes -चं: नियमांचं पालन करणे (pālan karṇe); also to bring up: मुलांचं पालन."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पालन करणे (pālan karṇe) joins the tatsama पालन, Sanskrit pālana, \"protecting, keeping\" (CDIAL 8128), to करणे, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pālan karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pālan karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pālan karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pālan karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sagaḷyānnī vāhtukīcyā niymāñcaṁ pālan kelaṁ pāhije. — Everyone must observe the traffic rules.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sagaḷyānnī vāhtukīcyā niymāñcaṁ pālan kelaṁ pāhije.* — Everyone must observe the traffic rules.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a tendency, then the Marathi for social, then say pālan karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a tendency, then the Marathi for social, then say *pālan karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पालन करणे (pālan karṇe) mean? (\"To comply with; to observe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C368-ullanghan-karne",
+      "sequence": 21340,
+      "title": "उल्लंघन करणे (ullaṅghan karṇe) — to violate; to break (a rule)",
+      "headword": "उल्लंघन करणे",
+      "romanization": "ullaṅghan karṇe",
+      "gloss": "to violate; to break (a rule)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c989f6d66d933869",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for social, then the Marathi for to comply with."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उल्लंघन करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उल्लंघन करणे — ullaṅghan karṇe — \"to violate; to break (a rule)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्याने नियमांचं उल्लंघन केलं, म्हणून त्याला दंड झाला. tyāne niymāñcaṁ ullaṅghan kelaṁ, mhaṇūn tyālā daṇḍ jhālā. He broke the rules, so he was fined."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने उल्लंघन केलं, tyāne ullaṅghan kelaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The rule takes -चं: कायद्याचं उल्लंघन."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उल्लंघन करणे (ullaṅghan karṇe) joins the tatsama उल्लंघन, Sanskrit ullaṅghana, \"leaping over\" (CDIAL 2365), to करणे, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ullaṅghan karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ullaṅghan karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ullaṅghan karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ullaṅghan karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyāne niymāñcaṁ ullaṅghan kelaṁ, mhaṇūn tyālā daṇḍ jhālā. — He broke the rules, so he was fined.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyāne niymāñcaṁ ullaṅghan kelaṁ, mhaṇūn tyālā daṇḍ jhālā.* — He broke the rules, so he was fined.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for social, then the Marathi for to comply with, then say ullaṅghan karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for social, then the Marathi for to comply with, then say *ullaṅghan karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उल्लंघन करणे (ullaṅghan karṇe) mean? (\"To violate; to break (a rule)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C368-bajavne",
+      "sequence": 21350,
+      "title": "बजावणे (bajāvṇe) — to discharge (a duty)",
+      "headword": "बजावणे",
+      "romanization": "bajāvṇe",
+      "gloss": "to discharge (a duty)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f720a619af49625c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to comply with, then the Marathi for to violate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बजावणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बजावणे — bajāvṇe — \"to discharge (a duty)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पोलिसाने आपलं कर्तव्य प्रामाणिकपणे बजावलं. polisāne āplaṁ kartavya prāmāṇikpaṇe bajāvlaṁ. The policeman did his duty honestly."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने कर्तव्य बजावलं, tyāne kartavya bajāvlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "कर्तव्य बजावणे (bajāvṇe), to do one's duty; also to warn sternly: त्याला बजावलं."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बजावणे (bajāvṇe) is a Marathi verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bajāvṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bajāvṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bajāvṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bajāvṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polisāne āplaṁ kartavya prāmāṇikpaṇe bajāvlaṁ. — The policeman did his duty honestly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polisāne āplaṁ kartavya prāmāṇikpaṇe bajāvlaṁ.* — The policeman did his duty honestly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to comply with, then the Marathi for to violate, then say bajāvṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to comply with, then the Marathi for to violate, then say *bajāvṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बजावणे (bajāvṇe) mean? (\"To discharge (a duty)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C368-sopavne",
+      "sequence": 21360,
+      "title": "सोपवणे (sopavṇe) — to entrust; to hand over",
+      "headword": "सोपवणे",
+      "romanization": "sopavṇe",
+      "gloss": "to entrust; to hand over",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da4830f3ad32f97b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to violate, then the Marathi for to discharge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सोपवणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सोपवणे — sopavṇe — \"to entrust; to hand over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आईने घराची जबाबदारी मोठ्या मुलीवर सोपवली. āīne gharācī jabābdārī moṭhyā mulīvar sopavlī. Mother entrusted the running of the house to her elder daughter."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने सोपवलं, tyāne sopavlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The person entrusted takes -वर or -कडे."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सोपवणे (sopavṇe) is built on an older verb, Marathi sõpṇẽ, \"hands over\", which CDIAL lists under Sanskrit samarpayati, \"delivers over\" (CDIAL 13192)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sopavṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sopavṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sopavṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sopavṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āīne gharācī jabābdārī moṭhyā mulīvar sopavlī. — Mother entrusted the running of the house to her elder daughter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āīne gharācī jabābdārī moṭhyā mulīvar sopavlī.* — Mother entrusted the running of the house to her elder daughter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to violate, then the Marathi for to discharge, then say sopavṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to violate, then the Marathi for to discharge, then say *sopavṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सोपवणे (sopavṇe) mean? (\"To entrust; to hand over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C368-hatalne",
+      "sequence": 21370,
+      "title": "हाताळणे (hātāḷṇe) — to handle",
+      "headword": "हाताळणे",
+      "romanization": "hātāḷṇe",
+      "gloss": "to handle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b90e7f3f95ebb13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to discharge, then the Marathi for to entrust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हाताळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हाताळणे — hātāḷṇe — \"to handle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीराने तो प्रश्न शांतपणे हाताळला. mīrāne to praśna śāntpaṇe hātāḷlā. Meera handled the issue calmly."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने हाताळलं, tyāne hātāḷlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on हात, hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हाताळणे (hātāḷṇe) is a Marathi verb built on हात, \"hand\", which is inherited from Sanskrit hasta, \"hand\" (CDIAL 14024)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hātāḷṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hātāḷṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hātāḷṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hātāḷṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrāne to praśna śāntpaṇe hātāḷlā. — Meera handled the issue calmly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrāne to praśna śāntpaṇe hātāḷlā.* — Meera handled the issue calmly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to discharge, then the Marathi for to entrust, then say hātāḷṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to discharge, then the Marathi for to entrust, then say *hātāḷṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हाताळणे (hātāḷṇe) mean? (\"To handle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

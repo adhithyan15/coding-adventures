@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:07839a24a296150a",
+  "lessonIds": [
+    "MR-C300-dhamkavne",
+    "MR-C300-lac",
+    "MR-C300-siksa",
+    "MR-C300-pal-kadhne",
+    "MR-C300-kondne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch300.txt",
+  "json": "marathi/narration/ch300.json",
+  "textHash": "fnv1a64:e994970eb732edb9",
+  "jsonHash": "fnv1a64:e787a8ce9ed3b217",
+  "findings": []
+}

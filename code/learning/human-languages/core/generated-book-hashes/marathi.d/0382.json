@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:7ce580dcf1cc6789",
+  "lessonIds": [
+    "MR-C382-sambhavya",
+    "MR-C382-bahudha",
+    "MR-C382-sahjikac",
+    "MR-C382-niscit",
+    "MR-C382-bhasne"
+  ],
+  "tex": "marathi/book/chapters/ch382-likely-or-certain.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:f41be62fe31557c8",
+  "lessonIds": [
+    "MR-C329-talvar",
+    "MR-C329-dhal",
+    "MR-C329-sastra",
+    "MR-C329-toph",
+    "MR-C329-ghoddal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch329.txt",
+  "json": "marathi/narration/ch329.json",
+  "textHash": "fnv1a64:b66acc6425bf2916",
+  "jsonHash": "fnv1a64:47a48b529919c8e4",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C492-dhekar-dene",
+    "language": "marathi",
+    "chapter": 492,
+    "sequence": 28160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:366e48a2308366ab"
+  },
+  "findings": []
+}

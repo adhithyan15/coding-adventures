@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 495,
+  "title": "Nephews and Grandchildren",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:747f47f0ba023193",
+  "lessons": [
+    {
+      "id": "MR-C495-putanya",
+      "sequence": 28300,
+      "title": "पुतण्या (putaṇyā) — a brother's son",
+      "headword": "पुतण्या",
+      "romanization": "putaṇyā",
+      "gloss": "a brother's son",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c48496e34ac0f7cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an orphan, then the Marathi for full-blood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पुतण्या",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुतण्या — putaṇyā — \"a brother's son\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माझा पुतण्या पुण्यात शिकतो. mājhā putaṇyā puṇyāt śikto. My nephew studies in Pune."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "A brother's son; a brother's daughter is पुतणी."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुतण्या (putaṇyā) is inherited: CDIAL lists Marathi putṇyā, \"brother's son\", under the reconstructed pitriyajāni, \"wife of one of the father's family\" (CDIAL 8189)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putaṇyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putaṇyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putaṇyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putaṇyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhā putaṇyā puṇyāt śikto. — My nephew studies in Pune.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhā putaṇyā puṇyāt śikto.* — My nephew studies in Pune.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an orphan, then the Marathi for full-blood, then say putaṇyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an orphan, then the Marathi for full-blood, then say *putaṇyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पुतण्या (putaṇyā) mean? (\"A brother's son\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C495-bhaca",
+      "sequence": 28310,
+      "title": "भाचा (bhācā) — a sister's son",
+      "headword": "भाचा",
+      "romanization": "bhācā",
+      "gloss": "a sister's son",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:deeaf3c76bef16df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for full-blood, then the Marathi for a brother's son."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भाचा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भाचा — bhācā — \"a sister's son\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सुट्टीत माझा भाचा आमच्याकडे राहायला आला. suṭṭīt mājhā bhācā āmcyākaḍe rāhāylā ālā. My nephew came to stay with us in the holidays."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "A sister's son; भाची, a sister's daughter. To the child, the mother's brother is मामा."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भाचा (bhācā) is filed by CDIAL under bhrātrya, \"pertaining to a brother\", together with Prakrit bhacca, \"sister's son\" (CDIAL 9673); how a brother's word came to name a sister's son is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhācā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhācā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhācā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhācā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suṭṭīt mājhā bhācā āmcyākaḍe rāhāylā ālā. — My nephew came to stay with us in the holidays.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suṭṭīt mājhā bhācā āmcyākaḍe rāhāylā ālā.* — My nephew came to stay with us in the holidays.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for full-blood, then the Marathi for a brother's son, then say bhācā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for full-blood, then the Marathi for a brother's son, then say *bhācā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भाचा (bhācā) mean? (\"A sister's son\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C495-natu",
+      "sequence": 28320,
+      "title": "नातू (nātū) — a grandson",
+      "headword": "नातू",
+      "romanization": "nātū",
+      "gloss": "a grandson",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2995371279efb8df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a brother's son, then the Marathi for a sister's son."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नातू",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नातू — nātū — \"a grandson\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आजोबा नातवाबरोबर बागेत फिरतात. ājobā nātvābarobar bāget phirtāt. Grandfather walks in the garden with his grandson."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Oblique नातव-: नातवाला. नात, a granddaughter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नातू (nātū) is a tadbhava, inherited from Sanskrit naptṛ, \"grandson\"; CDIAL lists Marathi nātū (CDIAL 6955b)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nātū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nātū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nātū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nātū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ājobā nātvābarobar bāget phirtāt. — Grandfather walks in the garden with his grandson.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ājobā nātvābarobar bāget phirtāt.* — Grandfather walks in the garden with his grandson.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a brother's son, then the Marathi for a sister's son, then say nātū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a brother's son, then the Marathi for a sister's son, then say *nātū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नातू (nātū) mean? (\"A grandson\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C495-panjoba",
+      "sequence": 28330,
+      "title": "पणजोबा (paṇjobā) — a great-grandfather",
+      "headword": "पणजोबा",
+      "romanization": "paṇjobā",
+      "gloss": "a great-grandfather",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81aa370fe208a65b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a sister's son, then the Marathi for a grandson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पणजोबा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पणजोबा — paṇjobā — \"a great-grandfather\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माझे पणजोबा शंभर वर्षं जगले. mājhe paṇjobā śambhar varṣaṁ jagle. My great-grandfather lived a hundred years."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Built like आजोबा; पणजी, a great-grandmother."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पणजोबा (paṇjobā) is a Marathi kin word with the prefix पण-, \"great-\", the one CDIAL shows in Marathi paṇtū, \"great-grandson\", under praṇaptṛ (CDIAL 8523); the rest of the word is usually traced to the family of आजोबा."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇjobā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇjobā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇjobā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇjobā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhe paṇjobā śambhar varṣaṁ jagle. — My great-grandfather lived a hundred years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhe paṇjobā śambhar varṣaṁ jagle.* — My great-grandfather lived a hundred years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a sister's son, then the Marathi for a grandson, then say paṇjobā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a sister's son, then the Marathi for a grandson, then say *paṇjobā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पणजोबा (paṇjobā) mean? (\"A great-grandfather\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C495-atya",
+      "sequence": 28340,
+      "title": "आत्या (ātyā) — a father's sister",
+      "headword": "आत्या",
+      "romanization": "ātyā",
+      "gloss": "a father's sister",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d640706d2fc368f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a grandson, then the Marathi for a great-grandfather."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आत्या",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आत्या — ātyā — \"a father's sister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माझी आत्या गावात राहते. mājhī ātyā gāvāt rāhte. My father's sister lives in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "A father's sister; a mother's sister is मावशी."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आत्या (ātyā) is inherited: CDIAL lists Marathi āt, ātū and āte, \"father's sister\", under Sanskrit attā, \"mother, elder sister\" (CDIAL 222), a word usually traced to Dravidian, as CDIAL does: Tamil attai, \"aunt\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhī ātyā gāvāt rāhte. — My father's sister lives in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhī ātyā gāvāt rāhte.* — My father's sister lives in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a grandson, then the Marathi for a great-grandfather, then say ātyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a grandson, then the Marathi for a great-grandfather, then say *ātyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आत्या (ātyā) mean? (\"A father's sister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

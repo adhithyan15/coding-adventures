@@ -1,0 +1,11 @@
+{
+  "id": "MR-C465-kutuhal",
+  "pathSegment": "MR-PATH-465-NAVAL465",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-465-NAVAL465",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C555-tatdi",
+  "pathSegment": "MR-PATH-555-GHAI555",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-555-GHAI555",
+      "order": 2
+    }
+  ]
+}

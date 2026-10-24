@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Situations",
+  "label": "ch:mr-situations",
+  "canDo": "I can describe a situation, a state of things and a dilemma.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C384-kasoti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can describe a situation, a state of things and a dilemma.",
+    "assesses": [
+      "MR-LEX-C384-PARISTHITI384-03",
+      "MR-LEX-C384-PARISTHITI384-04",
+      "MR-LEX-C384-PARISTHITI384-05"
+    ]
+  }
+}

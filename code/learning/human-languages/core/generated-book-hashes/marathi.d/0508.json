@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:c400233ffbbcf8ca",
+  "lessonIds": [
+    "MR-C508-vetan",
+    "MR-C508-majuri",
+    "MR-C508-mandhan",
+    "MR-C508-pagarvadh",
+    "MR-C508-kamavne"
+  ],
+  "tex": "marathi/book/chapters/ch508-wages-and-earnings.tex"
+}

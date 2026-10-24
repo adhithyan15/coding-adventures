@@ -1,0 +1,19 @@
+{
+  "chapter": 534,
+  "title": "Into the Outdoors",
+  "label": "ch:mr-into-the-outdoors",
+  "canDo": "I can talk about climbing, swimming and camping.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C534-sekoti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 534: I can talk about climbing, swimming and camping.",
+    "assesses": [
+      "MR-LEX-C534-BAHER534-03",
+      "MR-LEX-C534-BAHER534-04",
+      "MR-LEX-C534-BAHER534-05"
+    ]
+  }
+}

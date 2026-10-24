@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:5447401e17f7cb89",
+  "lessonIds": [
+    "MR-C452-dhakka",
+    "MR-C452-sahara",
+    "MR-C452-dhasakne",
+    "MR-C452-bitharne",
+    "MR-C452-habakne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch452.txt",
+  "json": "marathi/narration/ch452.json",
+  "textHash": "fnv1a64:442074ddcaa9dd87",
+  "jsonHash": "fnv1a64:f3f224eab9204cb0",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C393-bahana",
+  "pathSegment": "MR-PATH-393-SABAB393",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-393-SABAB393",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 281,
+  "title": "Must, Must Not, and Because",
+  "label": "ch:mr-must-must-not-and-because",
+  "canDo": "I can say what someone must do (jāylā pāhije) and shouldn't do (jāū nayes), give a reason with -muḷe and kāraṇ, and read and write ञ in jñān.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-R281-advice-and-reasons",
+    "kind": "production",
+    "summary": "Complete MR-R281-advice-and-reasons: give advice and reasons, after meeting ज्ञान and its letter ञ.",
+    "assesses": [
+      "MR-GRAMMAR-C281-AYLA-PAHIJE-01",
+      "MR-GRAMMAR-C281-U-NAYE-01",
+      "MR-GRAMMAR-C281-MULE-01",
+      "MR-GRAMMAR-C281-REASON-ORDER-01",
+      "MR-LEX-C281-JNAN-01",
+      "MR-SCRIPT-NYA-01"
+    ]
+  }
+}

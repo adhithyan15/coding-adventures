@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:09984b4e61dcbc1d",
+  "lessonIds": [
+    "MR-C442-sikhar",
+    "MR-C442-dari",
+    "MR-C442-kada",
+    "MR-C442-paytha",
+    "MR-C442-dongarrang",
+    "MR-R442-review-436-442"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch442.txt",
+  "json": "marathi/narration/ch442.json",
+  "textHash": "fnv1a64:6e38c7beaeb40ef2",
+  "jsonHash": "fnv1a64:4b55ff484252f75c",
+  "findings": []
+}

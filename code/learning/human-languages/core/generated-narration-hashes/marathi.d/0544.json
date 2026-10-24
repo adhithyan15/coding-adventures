@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:e48c4aad385da218",
+  "lessonIds": [
+    "MR-C544-arakhda",
+    "MR-C544-masuda",
+    "MR-C544-niyojan-karne",
+    "MR-C544-lambnivar-takne",
+    "MR-C544-tadis-nene"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch544.txt",
+  "json": "marathi/narration/ch544.json",
+  "textHash": "fnv1a64:a017278e6298022b",
+  "jsonHash": "fnv1a64:8f150b18dd624df6",
+  "findings": []
+}

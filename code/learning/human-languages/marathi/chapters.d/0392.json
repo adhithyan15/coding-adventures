@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "Rules in Practice",
+  "label": "ch:mr-rules-in-practice",
+  "canDo": "I can talk about clauses, allocations and following a method.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-C392-angikarne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can talk about clauses, allocations and following a method.",
+    "assesses": [
+      "MR-LEX-C392-KALAM392-03",
+      "MR-LEX-C392-KALAM392-04",
+      "MR-LEX-C392-KALAM392-05"
+    ]
+  }
+}

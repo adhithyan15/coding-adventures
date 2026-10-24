@@ -1,0 +1,11 @@
+{
+  "id": "MR-C312-durdarsan",
+  "pathSegment": "MR-PATH-312-VAHINI312",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-312-VAHINI312",
+      "order": 1
+    }
+  ]
+}

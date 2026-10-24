@@ -1,0 +1,11 @@
+{
+  "id": "MR-C335-khodne",
+  "pathSegment": "MR-PATH-335-UTKHANAN335",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-335-UTKHANAN335",
+      "order": 3
+    }
+  ]
+}

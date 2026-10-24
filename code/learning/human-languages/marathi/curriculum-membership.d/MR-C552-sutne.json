@@ -1,0 +1,11 @@
+{
+  "id": "MR-C552-sutne",
+  "pathSegment": "MR-PATH-552-BIGHADNE552",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-552-BIGHADNE552",
+      "order": 4
+    }
+  ]
+}

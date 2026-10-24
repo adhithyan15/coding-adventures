@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "Hands and Legs",
+  "label": "ch:mr-hands-and-legs",
+  "canDo": "I can name the palm, a fist, the thigh, the calf and the ankle.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C477-ghota",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can name the palm, a fist, the thigh, the calf and the ankle.",
+    "assesses": [
+      "MR-LEX-C477-HAT477-03",
+      "MR-LEX-C477-HAT477-04",
+      "MR-LEX-C477-HAT477-05"
+    ]
+  }
+}

@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 379,
+  "title": "Limits",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3d556eb6b8a1be85",
+  "lessons": [
+    {
+      "id": "MR-C379-maryada",
+      "sequence": 21890,
+      "title": "मर्यादा (maryādā) — a limit",
+      "headword": "मर्यादा",
+      "romanization": "maryādā",
+      "gloss": "a limit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e85587883924e2c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a criterion, then the Marathi for to fulfil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मर्यादा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मर्यादा — maryādā — \"a limit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रत्येक गोष्टीला एक मर्यादा असते. pratyek goṣṭīlā ek maryādā aste. Everything has a limit."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "मर्यादा (maryādā) घालणे, to set a limit; मर्यादा (maryādā) ओलांडणे, to overstep it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मर्यादा (maryādā) is a tatsama, taken from Sanskrit maryādā, \"region, boundary\" (CDIAL 9895)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maryādā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maryādā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maryādā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maryādā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratyek goṣṭīlā ek maryādā aste. — Everything has a limit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratyek goṣṭīlā ek maryādā aste.* — Everything has a limit.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a criterion, then the Marathi for to fulfil, then say maryādā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a criterion, then the Marathi for to fulfil, then say *maryādā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मर्यादा (maryādā) mean? (\"A limit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C379-kiman",
+      "sequence": 21900,
+      "title": "किमान (kimān) — minimum; at least",
+      "headword": "किमान",
+      "romanization": "kimān",
+      "gloss": "minimum; at least",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fc67d9ca0b281c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to fulfil, then the Marathi for a limit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: किमान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किमान — kimān — \"minimum; at least\"."
+            },
+            {
+              "kind": "speech",
+              "text": "या कामासाठी किमान दोन दिवस लागतील. yā kāmāsāṭhī kimān don divas lāgtīl. This work will take at least two days."
+            },
+            {
+              "kind": "speech",
+              "text": "Before a number, at least: किमान (kimān) दोन, at least two."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किमान (kimān) is a Marathi word whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kimān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kimān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kimān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kimān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yā kāmāsāṭhī kimān don divas lāgtīl. — This work will take at least two days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yā kāmāsāṭhī kimān don divas lāgtīl.* — This work will take at least two days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to fulfil, then the Marathi for a limit, then say kimān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to fulfil, then the Marathi for a limit, then say *kimān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does किमान (kimān) mean? (\"Minimum; at least\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C379-kamal",
+      "sequence": 21910,
+      "title": "कमाल (kamāl) — maximum",
+      "headword": "कमाल",
+      "romanization": "kamāl",
+      "gloss": "maximum",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2267e1319bd1ee1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a limit, then the Marathi for minimum."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कमाल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कमाल — kamāl — \"maximum\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आज कमाल तापमान चाळीस अंश होतं. āj kamāl tāpmān cāḷīs aṁś hotaṁ. Today's maximum temperature was forty degrees."
+            },
+            {
+              "kind": "speech",
+              "text": "In speech also amazing: कमाल (kamāl) आहे!"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कमाल (kamāl) is a loan from Persian, usually traced to Arabic kamāl, \"perfection, completeness\": the fullest amount."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj kamāl tāpmān cāḷīs aṁś hotaṁ. — Today's maximum temperature was forty degrees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj kamāl tāpmān cāḷīs aṁś hotaṁ.* — Today's maximum temperature was forty degrees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a limit, then the Marathi for minimum, then say kamāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a limit, then the Marathi for minimum, then say *kamāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कमाल (kamāl) mean? (\"Maximum\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C379-sithil-karne",
+      "sequence": 21920,
+      "title": "शिथिल करणे (śithil karṇe) — to relax (a rule)",
+      "headword": "शिथिल करणे",
+      "romanization": "śithil karṇe",
+      "gloss": "to relax (a rule)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54dc571f16637c18",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for minimum, then the Marathi for maximum."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शिथिल करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिथिल करणे — śithil karṇe — \"to relax (a rule)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पाऊस थांबल्यावर प्रशासनाने निर्बंध शिथिल केले. pāūs thāmbalyāvar praśāsnāne nirbandh śithil kele. When the rain stopped, the administration relaxed the restrictions."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने नियम शिथिल केला, tyāne niyam śithil kelā."
+            },
+            {
+              "kind": "speech",
+              "text": "शिथिल, slack, loose; शिथिल होणे, to slacken."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिथिल करणे (śithil karṇe) joins the tatsama शिथिल, Sanskrit śithila, \"loose, slack\" (Monier-Williams), to करणे, \"to make\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śithil karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śithil karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śithil karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śithil karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāūs thāmbalyāvar praśāsnāne nirbandh śithil kele. — When the rain stopped, the administration relaxed the restrictions.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāūs thāmbalyāvar praśāsnāne nirbandh śithil kele.* — When the rain stopped, the administration relaxed the restrictions.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for minimum, then the Marathi for maximum, then say śithil karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for minimum, then the Marathi for maximum, then say *śithil karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शिथिल करणे (śithil karṇe) mean? (\"To relax (a rule)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C379-jhepne",
+      "sequence": 21930,
+      "title": "झेपणे (jhepṇe) — to be manageable (for someone)",
+      "headword": "झेपणे",
+      "romanization": "jhepṇe",
+      "gloss": "to be manageable (for someone)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1dd958169162ffff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for maximum, then the Marathi for to relax."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झेपणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झेपणे — jhepṇe — \"to be manageable (for someone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एवढं काम मला एकट्याला झेपणार नाही. evḍhaṁ kām malā ekaṭyālā jhepṇār nāhī. I won't be able to manage so much work alone."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (to him …): त्याला झेपलं, tyālā jheplaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Dative: मला झेपतं, I can cope; mostly with नाही."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झेपणे (jhepṇe) is a Marathi verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhepṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhepṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhepṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhepṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "evḍhaṁ kām malā ekaṭyālā jhepṇār nāhī. — I won't be able to manage so much work alone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *evḍhaṁ kām malā ekaṭyālā jhepṇār nāhī.* — I won't be able to manage so much work alone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for maximum, then the Marathi for to relax, then say jhepṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for maximum, then the Marathi for to relax, then say *jhepṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झेपणे (jhepṇe) mean? (\"To be manageable (for someone)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

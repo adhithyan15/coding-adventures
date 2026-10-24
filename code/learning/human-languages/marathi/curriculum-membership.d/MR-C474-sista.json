@@ -1,0 +1,11 @@
+{
+  "id": "MR-C474-sista",
+  "pathSegment": "MR-PATH-474-SHISTA474",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-474-SHISTA474",
+      "order": 4
+    }
+  ]
+}

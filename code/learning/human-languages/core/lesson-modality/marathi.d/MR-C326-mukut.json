@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C326-mukut",
+    "language": "marathi",
+    "chapter": 326,
+    "sequence": 18960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f8f58fb77dcd4df"
+  },
+  "findings": []
+}

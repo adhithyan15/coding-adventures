@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:5ea0a5f3eb773784",
+  "lessonIds": [
+    "MR-C415-suvidha",
+    "MR-C415-bichana",
+    "MR-C415-ghongdi",
+    "MR-C415-antharne",
+    "MR-C415-pangharne"
+  ],
+  "tex": "marathi/book/chapters/ch415-making-the-bed.tex"
+}

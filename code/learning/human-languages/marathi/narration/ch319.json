@@ -1,0 +1,878 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 319,
+  "title": "Lights and Colours",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:1a590e39427047a6",
+  "lessons": [
+    {
+      "id": "MR-C319-rosnai",
+      "sequence": 18580,
+      "title": "रोषणाई (roṣṇāī) — festive lights; illuminations",
+      "headword": "रोषणाई",
+      "romanization": "roṣṇāī",
+      "gloss": "festive lights; illuminations",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2284cd1059405a90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a thread ceremony, then the Marathi for an invitation card."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रोषणाई",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रोषणाई — roṣṇāī — \"festive lights; illuminations\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सणाला संपूर्ण गल्लीत रोषणाई केली होती. saṇālā sampūrṇa gallīt roṣṇāī kelī hotī. For the festival the whole lane had been lit up."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "रोषणाई (roṣṇāī) करणे, to put up lights. The letter ऋ opens ऋतू, a season; every ऋतू has its festival."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रोषणाई (roṣṇāī) is a loan from Persian rošanā'ī, 'brightness, light', built on rošan, 'bright'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roṣṇāī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roṣṇāī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roṣṇāī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roṣṇāī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṇālā sampūrṇa gallīt roṣṇāī kelī hotī. — For the festival the whole lane had been lit up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṇālā sampūrṇa gallīt roṣṇāī kelī hotī.* — For the festival the whole lane had been lit up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a thread ceremony, then the Marathi for an invitation card, then say roṣṇāī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a thread ceremony, then the Marathi for an invitation card, then say *roṣṇāī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रोषणाई (roṣṇāī) mean? (\"Festive lights; illuminations\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C319-rangoli",
+      "sequence": 18590,
+      "title": "रांगोळी (rāṅgoḷī) — rangoli; a floor pattern",
+      "headword": "रांगोळी",
+      "romanization": "rāṅgoḷī",
+      "gloss": "rangoli; a floor pattern",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80073b26a8153b97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an invitation card, then the Marathi for festive lights."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रांगोळी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रांगोळी — rāṅgoḷī — \"rangoli; a floor pattern\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आईने दारासमोर सुंदर रांगोळी काढली. āīne dārāsamor sundar rāṅgoḷī kāḍhlī. Mother made a beautiful rangoli in front of the door."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "रांगोळी (rāṅgoḷī) काढणे, to make one with coloured powder."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रांगोळी (rāṅgoḷī) is the Marathi word for a pattern of coloured powder on the floor; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāṅgoḷī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāṅgoḷī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāṅgoḷī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāṅgoḷī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āīne dārāsamor sundar rāṅgoḷī kāḍhlī. — Mother made a beautiful rangoli in front of the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āīne dārāsamor sundar rāṅgoḷī kāḍhlī.* — Mother made a beautiful rangoli in front of the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an invitation card, then the Marathi for festive lights, then say rāṅgoḷī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an invitation card, then the Marathi for festive lights, then say *rāṅgoḷī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रांगोळी (rāṅgoḷī) mean? (\"Rangoli; a floor pattern\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C319-toran",
+      "sequence": 18600,
+      "title": "तोरण (toraṇ) — a door garland",
+      "headword": "तोरण",
+      "romanization": "toraṇ",
+      "gloss": "a door garland",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d45593f197f5ac36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for festive lights, then the Marathi for rangoli."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तोरण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तोरण — toraṇ — \"a door garland\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सणाच्या दिवशी दाराला आंब्याच्या पानांचं तोरण लावलं. saṇācyā divśī dārālā āmbyācyā pānāñcaṁ toraṇ lāvlaṁ. On the festival day a garland of mango leaves was hung on the door."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "दाराला तोरण (toraṇ) बांधणे, to hang a festoon over the door."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तोरण (toraṇ) is a tatsama, taken from Sanskrit toraṇa, 'an arched doorway, a festive gateway' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toraṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toraṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toraṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toraṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṇācyā divśī dārālā āmbyācyā pānāñcaṁ toraṇ lāvlaṁ. — On the festival day a garland of mango leaves was hung on the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṇācyā divśī dārālā āmbyācyā pānāñcaṁ toraṇ lāvlaṁ.* — On the festival day a garland of mango leaves was hung on the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for festive lights, then the Marathi for rangoli, then say toraṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for festive lights, then the Marathi for rangoli, then say *toraṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तोरण (toraṇ) mean? (\"A door garland\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C319-phataka",
+      "sequence": 18610,
+      "title": "फटाका (phaṭākā) — a firecracker",
+      "headword": "फटाका",
+      "romanization": "phaṭākā",
+      "gloss": "a firecracker",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e6d603675efcd64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for rangoli, then the Marathi for a door garland."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फटाका",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फटाका — phaṭākā — \"a firecracker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात्री मुलांनी खूप फटाके फोडले. rātrī mulānnī khūp phaṭāke phoḍle. At night the children set off lots of firecrackers."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Plural: फटाके, phaṭāke."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural फटाके; फटाके फोडणे, to set off crackers."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फटाका (phaṭākā) is a Marathi word that seems built on the sound phaṭ, a bang; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phaṭākā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phaṭākā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phaṭākā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phaṭākā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātrī mulānnī khūp phaṭāke phoḍle. — At night the children set off lots of firecrackers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātrī mulānnī khūp phaṭāke phoḍle.* — At night the children set off lots of firecrackers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for rangoli, then the Marathi for a door garland, then say phaṭākā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for rangoli, then the Marathi for a door garland, then say *phaṭākā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फटाका (phaṭākā) mean? (\"A firecracker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C319-atasbaji",
+      "sequence": 18620,
+      "title": "आतषबाजी (ātaṣbājī) — fireworks",
+      "headword": "आतषबाजी",
+      "romanization": "ātaṣbājī",
+      "gloss": "fireworks",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f613da94019d978",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a door garland, then the Marathi for a firecracker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आतषबाजी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आतषबाजी — ātaṣbājī — \"fireworks\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जत्रेच्या शेवटी आकाशात आतषबाजी झाली. jatrecyā śevṭī ākāśāt ātaṣbājī jhālī. At the end of the fair there were fireworks in the sky."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "आतषबाजी (ātaṣbājī) करणे, to put on fireworks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आतषबाजी (ātaṣbājī) is a loan from Persian ātaš-bāzī, built from ātaš, 'fire', and bāzī, 'play'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātaṣbājī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātaṣbājī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātaṣbājī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātaṣbājī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jatrecyā śevṭī ākāśāt ātaṣbājī jhālī. — At the end of the fair there were fireworks in the sky.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jatrecyā śevṭī ākāśāt ātaṣbājī jhālī.* — At the end of the fair there were fireworks in the sky.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a door garland, then the Marathi for a firecracker, then say ātaṣbājī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a door garland, then the Marathi for a firecracker, then say *ātaṣbājī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आतषबाजी (ātaṣbājī) mean? (\"Fireworks\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R319-review-312-319",
+      "sequence": 18630,
+      "title": "Looking back: from On the Air to Lights and Colours",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from On the Air to Lights and Colours",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3425fde948cd33e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for radio and television."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "radio, television, a channel, a newsreader, to broadcast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: radio, television, a channel, a newsreader, to broadcast]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rumour, a sensation, an announcement, prominent, to proclaim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rumour, a sensation, an announcement, prominent, to proclaim]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a reader, a viewer, a listener, a title, a front page",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a reader, a viewer, a listener, a title, a front page]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an eyewitness, a documentary, a magazine issue, to register, to wander",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an eyewitness, a documentary, a magazine issue, to register, to wander]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wedding, an engagement, henna, a wedding procession, a marquee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wedding, an engagement, henna, a wedding procession, a marquee]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wedding gift, a blessing, blessing rice, a shehnai, a rhyming couplet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wedding gift, a blessing, blessing rice, a shehnai, a rhyming couplet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "birth, a naming ceremony, a birthday, a thread ceremony, an invitation card",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: birth, a naming ceremony, a birthday, a thread ceremony, an invitation card]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "festive lights, rangoli, a door garland, a firecracker, fireworks",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: festive lights, rangoli, a door garland, a firecracker, fireworks]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Radio? (आकाशवाणी, ākāśvāṇī.) Television? (दूरदर्शन, dūrdarśan.) A channel? (वाहिनी, vāhinī.) A newsreader? (निवेदक, nivedak.) To broadcast? (प्रसारित करणे, prasārit karṇe.) A rumour? (अफवा, aphvā.) A sensation? (खळबळ, khaḷbaḷ.) An announcement? (घोषणा, ghoṣṇā.) Prominent? (ठळक, ṭhaḷak.) To proclaim? (पुकारणे, pukārṇe.) A reader? (वाचक, vācak.) A viewer? (प्रेक्षक, prekṣak.) A listener? (श्रोता, śrotā.) A title? (शीर्षक, śīrṣak.) A front page? (मुखपृष्ठ, mukhpṛṣṭha.) An eyewitness? (प्रत्यक्षदर्शी, pratyakṣadarśī.) A documentary? (माहितीपट, māhitīpaṭ.) A magazine issue? (अंक, aṅk.) To register? (नोंदवणे, nondavṇe.) To wander? (भटकणे, bhaṭakṇe.) A wedding? (लग्न, lagna.) An engagement? (साखरपुडा, sākharpuḍā.) Henna? (मेंदी, mendī.) A wedding procession? (वरात, varāt.) A marquee? (मंडप, maṇḍap.) A wedding gift? (आहेर, āher.) A blessing? (आशीर्वाद, āśīrvād.) Blessing rice? (अक्षता, akṣatā.) A shehnai? (सनई, sanaī.) A rhyming couplet? (उखाणा, ukhāṇā.) Birth? (जन्म, janma.) A naming ceremony? (बारसे, bārse.) A birthday? (वाढदिवस, vāḍhdivas.) A thread ceremony? (मुंज, muñj.) An invitation card? (पत्रिका, patrikā.) Festive lights? (रोषणाई, roṣṇāī.) Rangoli? (रांगोळी, rāṅgoḷī.) A door garland? (तोरण, toraṇ.) A firecracker? (फटाका, phaṭākā.) Fireworks? (आतषबाजी, ātaṣbājī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

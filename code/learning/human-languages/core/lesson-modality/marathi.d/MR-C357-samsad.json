@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C357-samsad",
+    "language": "marathi",
+    "chapter": 357,
+    "sequence": 20770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd6655dcfbb3abe9"
+  },
+  "findings": []
+}

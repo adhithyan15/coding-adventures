@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:308fa7ad52817ce6",
+  "lessonIds": [
+    "MR-C476-bubul",
+    "MR-C476-nakpudi",
+    "MR-C476-hirdi",
+    "MR-C476-dadhi",
+    "MR-C476-misi"
+  ],
+  "tex": "marathi/book/chapters/ch476-the-face-up-close.tex"
+}

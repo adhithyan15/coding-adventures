@@ -1,0 +1,11 @@
+{
+  "id": "MR-C304-ulgadne",
+  "pathSegment": "MR-PATH-304-VARNAN304",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-304-VARNAN304",
+      "order": 2
+    }
+  ]
+}

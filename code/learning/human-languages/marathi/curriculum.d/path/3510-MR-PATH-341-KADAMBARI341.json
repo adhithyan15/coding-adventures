@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-341-KADAMBARI341",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "MR-EXT-341-KADAMBARI341"
+  ],
+  "after": []
+}

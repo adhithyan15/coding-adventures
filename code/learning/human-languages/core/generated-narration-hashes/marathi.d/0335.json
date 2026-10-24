@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:b8fe29b2580599a4",
+  "lessonIds": [
+    "MR-C335-utkhanan",
+    "MR-C335-avases",
+    "MR-C335-puratan",
+    "MR-C335-khodne",
+    "MR-C335-korne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch335.txt",
+  "json": "marathi/narration/ch335.json",
+  "textHash": "fnv1a64:deab6e284bd0a8a6",
+  "jsonHash": "fnv1a64:2e823174c49f0420",
+  "findings": []
+}

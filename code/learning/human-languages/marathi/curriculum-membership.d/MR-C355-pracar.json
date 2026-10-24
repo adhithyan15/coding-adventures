@@ -1,0 +1,11 @@
+{
+  "id": "MR-C355-pracar",
+  "pathSegment": "MR-PATH-355-MATDAN355",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-355-MATDAN355",
+      "order": 3
+    }
+  ]
+}

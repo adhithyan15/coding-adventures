@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-428-SHILLAK428",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "MR-EXT-428-SHILLAK428"
+  ],
+  "after": []
+}

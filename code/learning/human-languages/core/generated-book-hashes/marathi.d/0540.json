@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:f964923ecf3493b3",
+  "lessonIds": [
+    "MR-C540-vima",
+    "MR-C540-jokhim",
+    "MR-C540-hami",
+    "MR-C540-hapta",
+    "MR-C540-parvadne"
+  ],
+  "tex": "marathi/book/chapters/ch540-insurance-and-risk.tex"
+}

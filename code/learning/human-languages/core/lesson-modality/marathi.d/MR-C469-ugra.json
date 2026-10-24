@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C469-ugra",
+    "language": "marathi",
+    "chapter": 469,
+    "sequence": 27000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52938929a4b3e72a"
+  },
+  "findings": []
+}

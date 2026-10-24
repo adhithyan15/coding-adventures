@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C310-chapne",
+    "language": "marathi",
+    "chapter": 310,
+    "sequence": 18160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eab8904d9f6b28e7"
+  },
+  "findings": []
+}

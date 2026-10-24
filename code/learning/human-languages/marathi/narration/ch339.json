@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 339,
+  "title": "Heroes and Villains",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:99f7812ba8e4159c",
+  "lessons": [
+    {
+      "id": "MR-C339-nayak",
+      "sequence": 19610,
+      "title": "नायक (nāyak) — a protagonist; the hero of a story",
+      "headword": "नायक",
+      "romanization": "nāyak",
+      "gloss": "a protagonist; the hero of a story",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7dbbb856d889cb3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a witch, then the Marathi for a curse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नायक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नायक — nāyak — \"a protagonist; the hero of a story\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चित्रपटाचा नायक एक साधा शिक्षक आहे. citrapaṭācā nāyak ek sādhā śikṣak āhe. The hero of the film is an ordinary teacher."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "A heroine is नायिका."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नायक (nāyak) is a tatsama, taken from Sanskrit nāyaka, 'a guide, a leader; the hero of a drama' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāyak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāyak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāyak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāyak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citrapaṭācā nāyak ek sādhā śikṣak āhe. — The hero of the film is an ordinary teacher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citrapaṭācā nāyak ek sādhā śikṣak āhe.* — The hero of the film is an ordinary teacher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a witch, then the Marathi for a curse, then say nāyak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a witch, then the Marathi for a curse, then say *nāyak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नायक (nāyak) mean? (\"A protagonist; the hero of a story\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C339-khalnayak",
+      "sequence": 19620,
+      "title": "खलनायक (khalnāyak) — a villain",
+      "headword": "खलनायक",
+      "romanization": "khalnāyak",
+      "gloss": "a villain",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e85c9d1a9910153",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a curse, then the Marathi for a protagonist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खलनायक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खलनायक — khalnāyak — \"a villain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शेवटी खलनायकाला शिक्षा झाली. śevṭī khalnāyakālā śikṣā jhālī. In the end the villain was punished."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "खल, wicked, + नायक (nāyak), a lead."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खलनायक (khalnāyak) is a modern compound built from Sanskrit khala, 'a wicked man', and nāyaka, 'a leader; the hero of a drama' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khalnāyak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khalnāyak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khalnāyak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khalnāyak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śevṭī khalnāyakālā śikṣā jhālī. — In the end the villain was punished.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śevṭī khalnāyakālā śikṣā jhālī.* — In the end the villain was punished.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a curse, then the Marathi for a protagonist, then say khalnāyak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a curse, then the Marathi for a protagonist, then say *khalnāyak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खलनायक (khalnāyak) mean? (\"A villain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C339-patra",
+      "sequence": 19630,
+      "title": "पात्र (pātra) — a character",
+      "headword": "पात्र",
+      "romanization": "pātra",
+      "gloss": "a character",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73455291a8324cf9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a protagonist, then the Marathi for a villain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पात्र",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पात्र — pātra — \"a character\"."
+            },
+            {
+              "kind": "speech",
+              "text": "या नाटकात फक्त तीन पात्रं आहेत. yā nāṭkāt phakta tīn pātraṁ āhet. There are only three characters in this play."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural पात्रं. It also means a vessel, and eligible."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पात्र (pātra) is a tatsama, taken from Sanskrit pātra, 'a vessel; a fit person; an actor' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yā nāṭkāt phakta tīn pātraṁ āhet. — There are only three characters in this play.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yā nāṭkāt phakta tīn pātraṁ āhet.* — There are only three characters in this play.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a protagonist, then the Marathi for a villain, then say pātra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a protagonist, then the Marathi for a villain, then say *pātra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पात्र (pātra) mean? (\"A character\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C339-sadhu",
+      "sequence": 19640,
+      "title": "साधू (sādhū) — a holy man; an ascetic",
+      "headword": "साधू",
+      "romanization": "sādhū",
+      "gloss": "a holy man; an ascetic",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f0dd5081f6812904",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a villain, then the Marathi for a character."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: साधू",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साधू — sādhū — \"a holy man; an ascetic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जंगलात एक म्हातारा साधू राहत होता. jaṅglāt ek mhātārā sādhū rāhat hotā. An old holy man lived in the forest."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural साधू (sādhū)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साधू (sādhū) is a tatsama, taken from Sanskrit sādhu, 'straight, good; a holy man' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaṅglāt ek mhātārā sādhū rāhat hotā. — An old holy man lived in the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaṅglāt ek mhātārā sādhū rāhat hotā.* — An old holy man lived in the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a villain, then the Marathi for a character, then say sādhū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a villain, then the Marathi for a character, then say *sādhū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does साधू (sādhū) mean? (\"A holy man; an ascetic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C339-savkar",
+      "sequence": 19650,
+      "title": "सावकार (sāvkār) — a moneylender",
+      "headword": "सावकार",
+      "romanization": "sāvkār",
+      "gloss": "a moneylender",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14784a9b6f2e57ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a character, then the Marathi for a holy man."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सावकार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सावकार — sāvkār — \"a moneylender\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गोष्टीतला सावकार गरीब लोकांना फार त्रास द्यायचा. goṣṭītlā sāvkār garīb lokānnā phār trās dyāycā. The moneylender in the story used to give poor people a lot of trouble."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "सावकाराकडून कर्ज घेणे, to borrow from a moneylender."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सावकार (sāvkār) is built on sāv, 'a banker', which CDIAL lists under Sanskrit sādhu, 'good' (CDIAL 13337), with the ending -kār, 'one who does'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāvkār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāvkār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāvkār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāvkār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goṣṭītlā sāvkār garīb lokānnā phār trās dyāycā. — The moneylender in the story used to give poor people a lot of trouble.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goṣṭītlā sāvkār garīb lokānnā phār trās dyāycā.* — The moneylender in the story used to give poor people a lot of trouble.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a character, then the Marathi for a holy man, then say sāvkār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a character, then the Marathi for a holy man, then say *sāvkār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सावकार (sāvkār) mean? (\"A moneylender\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

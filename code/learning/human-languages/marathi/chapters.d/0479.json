@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "Pulse and Breath",
+  "label": "ch:mr-pulse-and-breath",
+  "canDo": "I can name the pulse, a vein, the throat, a cell and the heart as the seat of feeling.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C479-kalij",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can name the pulse, a vein, the throat, a cell and the heart as the seat of feeling.",
+    "assesses": [
+      "MR-LEX-C479-NADI479-03",
+      "MR-LEX-C479-NADI479-04",
+      "MR-LEX-C479-NADI479-05"
+    ]
+  }
+}

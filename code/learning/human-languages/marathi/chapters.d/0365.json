@@ -1,0 +1,21 @@
+{
+  "chapter": 365,
+  "title": "Settling Disputes",
+  "label": "ch:mr-settling-disputes",
+  "canDo": "I can talk about arguing, negotiating and settling a quarrel.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-R365-review-358-365",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can talk about arguing, negotiating and settling a quarrel.",
+    "assesses": [
+      "MR-LEX-C365-VATAGHATI365-01",
+      "MR-LEX-C365-VATAGHATI365-02",
+      "MR-LEX-C365-VATAGHATI365-03",
+      "MR-LEX-C365-VATAGHATI365-04",
+      "MR-LEX-C365-VATAGHATI365-05"
+    ]
+  }
+}

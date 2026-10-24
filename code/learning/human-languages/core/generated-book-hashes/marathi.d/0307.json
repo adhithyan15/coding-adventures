@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:f0c2d4ea8b799cc8",
+  "lessonIds": [
+    "MR-C307-prarambh",
+    "MR-C307-ant",
+    "MR-C307-akher",
+    "MR-C307-kalkhand",
+    "MR-C307-smrti"
+  ],
+  "tex": "marathi/book/chapters/ch307-beginnings-and-endings.tex"
+}

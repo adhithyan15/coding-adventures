@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 333,
+  "output": "marathi/book/chapters/ch333-campaigns.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

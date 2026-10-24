@@ -386,6 +386,12 @@ describe("the gate that would have caught the A2 claim", () => {
     // and the unreal -இருந்தால் … -இருப்பேன், realizing all five B1 nodes,
     // plus a letter lesson for ஈ) and chapters 294-558 (1,325 headwords, 399
     // verbs), which moved it from the A2 row of HELD to B1.
+    // Marathi followed as the fourteenth, with chapters 276-287 (the B1 core: the
+    // past with the ergative -ने, the future, -त होतो and -ायचो, reasons,
+    // travel, comparison with -पेक्षा, and जर … तर / -ल्यास with the unreal
+    // past + असतो, realizing all five B1 nodes, plus letter lessons for ऋ and
+    // ञ) and chapters 288-557 (1,350 headwords, 408 verbs), which moved it from
+    // the A2 row of HELD to B1.
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

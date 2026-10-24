@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:129f39435412d692",
+  "lessonIds": [
+    "MR-C477-talhat",
+    "MR-C477-muth",
+    "MR-C477-mandi",
+    "MR-C477-potri",
+    "MR-C477-ghota"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch477.txt",
+  "json": "marathi/narration/ch477.json",
+  "textHash": "fnv1a64:d9fe04a9544e2c94",
+  "jsonHash": "fnv1a64:1bedc00ec0db7f18",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-284-FEELINGS-HOPES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-284-FEELINGS-HOPES"
+  ],
+  "after": []
+}

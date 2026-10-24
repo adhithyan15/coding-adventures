@@ -1,0 +1,11 @@
+{
+  "id": "MR-C310-saptahik",
+  "pathSegment": "MR-PATH-310-VRUTTAPATRA310",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-310-VRUTTAPATRA310",
+      "order": 2
+    }
+  ]
+}

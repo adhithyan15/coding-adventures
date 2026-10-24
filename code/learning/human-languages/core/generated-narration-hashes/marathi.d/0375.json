@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:0a47df35a69f2607",
+  "lessonIds": [
+    "MR-C375-buddhi",
+    "MR-C375-smaransakti",
+    "MR-C375-ekagrata",
+    "MR-C375-akalan-hone",
+    "MR-C375-sarav-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch375.txt",
+  "json": "marathi/narration/ch375.json",
+  "textHash": "fnv1a64:7f1aa6cd4b457074",
+  "jsonHash": "fnv1a64:8c035ee2f70be501",
+  "findings": []
+}

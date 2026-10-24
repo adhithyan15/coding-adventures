@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:0bfdf30fb7c97281",
+  "lessonIds": [
+    "MR-C431-bighad",
+    "MR-C431-nikami",
+    "MR-C431-tutne",
+    "MR-C431-phutne",
+    "MR-C431-phatne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch431.txt",
+  "json": "marathi/narration/ch431.json",
+  "textHash": "fnv1a64:b64726bd3f73b35b",
+  "jsonHash": "fnv1a64:32745e6bd3bff8bb",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "Organizations",
+  "label": "ch:mr-organizations",
+  "canDo": "I can talk about institutions, committees and the people in them.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C364-karyakarta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can talk about institutions, committees and the people in them.",
+    "assesses": [
+      "MR-LEX-C364-SANSTHA364-03",
+      "MR-LEX-C364-SANSTHA364-04",
+      "MR-LEX-C364-SANSTHA364-05"
+    ]
+  }
+}

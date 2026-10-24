@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 545,
+  "title": "Guessing the Future",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5c9b701a32591723",
+  "lessons": [
+    {
+      "id": "MR-C545-bhavitavya",
+      "sequence": 31100,
+      "title": "भवितव्य (bhavitavya) — destiny; what lies ahead",
+      "headword": "भवितव्य",
+      "romanization": "bhavitavya",
+      "gloss": "destiny; what lies ahead",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f9c4c4e6a7e0325",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to postpone, then the Marathi for to see through."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भवितव्य",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भवितव्य — bhavitavya — \"destiny; what lies ahead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मुलांचं भवितव्य शिक्षणावर अवलंबून असतं. mulāñcaṁ bhavitavya śikṣaṇāvar avlambūn astaṁ. Children's future depends on their education."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भवितव्य (bhavitavya) is a tatsama, taken from Sanskrit bhavitavya, \"what is to be\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhavitavya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhavitavya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhavitavya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhavitavya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mulāñcaṁ bhavitavya śikṣaṇāvar avlambūn astaṁ. — Children's future depends on their education.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mulāñcaṁ bhavitavya śikṣaṇāvar avlambūn astaṁ.* — Children's future depends on their education.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to postpone, then the Marathi for to see through, then say bhavitavya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to postpone, then the Marathi for to see through, then say *bhavitavya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भवितव्य (bhavitavya) mean? (\"Destiny; what lies ahead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C545-suvarnasandhi",
+      "sequence": 31110,
+      "title": "सुवर्णसंधी (suvarṇasandhī) — a golden chance",
+      "headword": "सुवर्णसंधी",
+      "romanization": "suvarṇasandhī",
+      "gloss": "a golden chance",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0cb25748d354a4a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to see through, then the Marathi for destiny."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सुवर्णसंधी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुवर्णसंधी — suvarṇasandhī — \"a golden chance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ही नोकरी माझ्यासाठी सुवर्णसंधी आहे. hī nokrī mājhyāsāṭhī suvarṇasandhī āhe. This job is a golden chance for me."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुवर्णसंधी (suvarṇasandhī) is a compound built from Sanskrit suvarṇa, \"gold\" (Monier-Williams), and संधी, \"a chance\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suvarṇasandhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suvarṇasandhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suvarṇasandhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suvarṇasandhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hī nokrī mājhyāsāṭhī suvarṇasandhī āhe. — This job is a golden chance for me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hī nokrī mājhyāsāṭhī suvarṇasandhī āhe.* — This job is a golden chance for me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to see through, then the Marathi for destiny, then say suvarṇasandhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to see through, then the Marathi for destiny, then say *suvarṇasandhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सुवर्णसंधी (suvarṇasandhī) mean? (\"A golden chance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C545-soy",
+      "sequence": 31120,
+      "title": "सोय (soy) — a convenience; an arrangement",
+      "headword": "सोय",
+      "romanization": "soy",
+      "gloss": "a convenience; an arrangement",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:271ea05a97ab4f0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for destiny, then the Marathi for a golden chance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सोय",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सोय — soy — \"a convenience; an arrangement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गावात राहण्याची चांगली सोय आहे. gāvāt rāhṇyācī cāṅglī soy āhe. There are good arrangements for staying in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "सोय (soy) करणे, to make arrangements."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सोय (soy) is a tadbhava: CDIAL lists Marathi soy, \"comfortableness\", under Sanskrit saukhya, \"comfort, welfare\" (CDIAL 13612)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāvāt rāhṇyācī cāṅglī soy āhe. — There are good arrangements for staying in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāvāt rāhṇyācī cāṅglī soy āhe.* — There are good arrangements for staying in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for destiny, then the Marathi for a golden chance, then say soy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for destiny, then the Marathi for a golden chance, then say *soy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सोय (soy) mean? (\"A convenience; an arrangement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C545-atkal-bandhne",
+      "sequence": 31130,
+      "title": "अटकळ बांधणे (aṭkaḷ bāndhṇe) — to conjecture; to guess",
+      "headword": "अटकळ बांधणे",
+      "romanization": "aṭkaḷ bāndhṇe",
+      "gloss": "to conjecture; to guess",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:858ff6e0e38643ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a golden chance, then the Marathi for a convenience."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अटकळ बांधणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अटकळ बांधणे — aṭkaḷ bāndhṇe — \"to conjecture; to guess\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ढग पाहून आजोबांनी पावसाची अटकळ बांधली. ḍhag pāhūn ājobānnī pāvsācī aṭkaḷ bāndhlī. Seeing the clouds, Grandfather guessed it would rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने अटकळ बांधली, tyāne aṭkaḷ bāndhlī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अटकळ बांधणे (aṭkaḷ bāndhṇe) is अटकळ, inherited: CDIAL lists Marathi aṭkaḷ, \"conjecture\", under aṭṭakkalā, \"guess\" (CDIAL 183), with बांधणे, \"to tie\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭkaḷ bāndhṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭkaḷ bāndhṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭkaḷ bāndhṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭkaḷ bāndhṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhag pāhūn ājobānnī pāvsācī aṭkaḷ bāndhlī. — Seeing the clouds, Grandfather guessed it would rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhag pāhūn ājobānnī pāvsācī aṭkaḷ bāndhlī.* — Seeing the clouds, Grandfather guessed it would rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a golden chance, then the Marathi for a convenience, then say aṭkaḷ bāndhṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a golden chance, then the Marathi for a convenience, then say *aṭkaḷ bāndhṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अटकळ बांधणे (aṭkaḷ bāndhṇe) mean? (\"To conjecture; to guess\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C545-vartavne",
+      "sequence": 31140,
+      "title": "वर्तवणे (vartavṇe) — to forecast; to predict",
+      "headword": "वर्तवणे",
+      "romanization": "vartavṇe",
+      "gloss": "to forecast; to predict",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d75ac550515703c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a convenience, then the Marathi for to conjecture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वर्तवणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वर्तवणे — vartavṇe — \"to forecast; to predict\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हवामान विभागाने उद्या पावसाचा अंदाज वर्तवला. havāmān vibhāgāne udyā pāvsācā andāj vartavlā. The weather department forecast rain for tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने अंदाज वर्तवला, tyāne andāj vartavlā."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly with अंदाज or भाकीत: अंदाज वर्तवणे (vartavṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वर्तवणे (vartavṇe) is a learned Marathi verb, usually traced to the Sanskrit stem vart-, \"to turn, to set going\", as in vartana, \"setting in motion\" (Monier-Williams). How it came to mean \"to forecast\" is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vartavṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vartavṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vartavṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vartavṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "havāmān vibhāgāne udyā pāvsācā andāj vartavlā. — The weather department forecast rain for tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *havāmān vibhāgāne udyā pāvsācā andāj vartavlā.* — The weather department forecast rain for tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a convenience, then the Marathi for to conjecture, then say vartavṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a convenience, then the Marathi for to conjecture, then say *vartavṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वर्तवणे (vartavṇe) mean? (\"To forecast; to predict\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

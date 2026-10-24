@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C326-samrat",
+    "language": "marathi",
+    "chapter": 326,
+    "sequence": 18940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da4cda7ae91c6b19"
+  },
+  "findings": []
+}

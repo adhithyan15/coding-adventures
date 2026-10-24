@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C522-pharsi",
+    "language": "marathi",
+    "chapter": 522,
+    "sequence": 29950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d300e6f1f1ad656"
+  },
+  "findings": []
+}

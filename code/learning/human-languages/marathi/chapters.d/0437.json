@@ -1,0 +1,19 @@
+{
+  "chapter": 437,
+  "title": "A Biting Chill",
+  "label": "ch:mr-a-biting-chill",
+  "canDo": "I can talk about coolness and snowfall, and say the wind nipped, water froze and snow melted.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C437-vitalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can talk about coolness and snowfall, and say the wind nipped, water froze and snow melted.",
+    "assesses": [
+      "MR-LEX-C437-GARVA437-03",
+      "MR-LEX-C437-GARVA437-04",
+      "MR-LEX-C437-GARVA437-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C471-sahana",
+    "language": "marathi",
+    "chapter": 471,
+    "sequence": 27070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7a722e4ab4c2536"
+  },
+  "findings": []
+}

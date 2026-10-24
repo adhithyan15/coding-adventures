@@ -1,0 +1,21 @@
+{
+  "chapter": 527,
+  "title": "At the Stove",
+  "label": "ch:mr-at-the-stove",
+  "canDo": "I can say how food is chopped, boiled, fried and stirred.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-R527-review-520-527",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can say how food is chopped, boiled, fried and stirred.",
+    "assesses": [
+      "MR-LEX-C527-SHIJAVNE527-01",
+      "MR-LEX-C527-SHIJAVNE527-02",
+      "MR-LEX-C527-SHIJAVNE527-03",
+      "MR-LEX-C527-SHIJAVNE527-04",
+      "MR-LEX-C527-SHIJAVNE527-05"
+    ]
+  }
+}

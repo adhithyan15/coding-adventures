@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C300-pal-kadhne",
+    "language": "marathi",
+    "chapter": 300,
+    "sequence": 17640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab3962ace8ae325b"
+  },
+  "findings": []
+}

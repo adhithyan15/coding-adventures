@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:4f8d9f93c516ff2a",
+  "lessonIds": [
+    "MR-C444-dabke",
+    "MR-C444-gal",
+    "MR-C444-gadhul",
+    "MR-C444-jhirapne",
+    "MR-C444-osandne"
+  ],
+  "tex": "marathi/book/chapters/ch444-puddles-and-seepage.tex"
+}

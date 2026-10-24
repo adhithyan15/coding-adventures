@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C279-pavsalyatla-divas",
+    "language": "marathi",
+    "chapter": 279,
+    "sequence": 16150,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:89c0aa6402b843dc"
+  },
+  "findings": []
+}

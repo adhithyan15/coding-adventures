@@ -1,0 +1,19 @@
+{
+  "chapter": 291,
+  "title": "A Lucky Escape",
+  "label": "ch:mr-a-lucky-escape",
+  "canDo": "I can say that someone escaped, was rescued, or went missing.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C291-dhundalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can say that someone escaped, was rescued, or went missing.",
+    "assesses": [
+      "MR-LEX-C291-SUTKA291-03",
+      "MR-LEX-C291-SUTKA291-04",
+      "MR-LEX-C291-SUTKA291-05"
+    ]
+  }
+}

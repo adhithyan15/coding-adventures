@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:9e64fa92f0d342c9",
+  "lessonIds": [
+    "MR-C492-ucki-lagne",
+    "MR-C492-dhekar-dene",
+    "MR-C492-thunkne",
+    "MR-C492-dhap-lagne",
+    "MR-C492-thaska-lagne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch492.txt",
+  "json": "marathi/narration/ch492.json",
+  "textHash": "fnv1a64:16679517bbdd6680",
+  "jsonHash": "fnv1a64:ff076f96cb01e587",
+  "findings": []
+}

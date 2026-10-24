@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:e810862028cde391",
+  "lessonIds": [
+    "MR-C352-ullekh-karne",
+    "MR-C352-namud-karne",
+    "MR-C352-bhar-dene",
+    "MR-C352-visesatah",
+    "MR-C352-pramukh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch352.txt",
+  "json": "marathi/narration/ch352.json",
+  "textHash": "fnv1a64:2800b3326c86ddde",
+  "jsonHash": "fnv1a64:7bab2c8b176b6609",
+  "findings": []
+}

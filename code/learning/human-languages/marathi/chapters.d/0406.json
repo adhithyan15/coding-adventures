@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "Walking in Town",
+  "label": "ch:mr-walking-in-town",
+  "canDo": "I can talk about a pavement, pedestrians, signboards and a flyover.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C406-nyahalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can talk about a pavement, pedestrians, signboards and a flyover.",
+    "assesses": [
+      "MR-LEX-C406-PADPATH406-03",
+      "MR-LEX-C406-PADPATH406-04",
+      "MR-LEX-C406-PADPATH406-05"
+    ]
+  }
+}

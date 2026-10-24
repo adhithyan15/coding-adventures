@@ -1,0 +1,19 @@
+{
+  "chapter": 455,
+  "title": "Dread and Restless Nights",
+  "label": "ch:mr-dread-and-restless-nights",
+  "canDo": "I can talk about dread, a hectic rush and a restless night.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C455-ghusmatne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can talk about dread, a hectic rush and a restless night.",
+    "assesses": [
+      "MR-LEX-C455-DHASTI455-03",
+      "MR-LEX-C455-DHASTI455-04",
+      "MR-LEX-C455-DHASTI455-05"
+    ]
+  }
+}

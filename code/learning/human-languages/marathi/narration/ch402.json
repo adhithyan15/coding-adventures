@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 402,
+  "title": "Mountain Roads",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:354070b746ea756f",
+  "lessons": [
+    {
+      "id": "MR-C402-ghat",
+      "sequence": 23300,
+      "title": "घाट (ghāṭ) — a ghat road; a mountain pass",
+      "headword": "घाट",
+      "romanization": "ghāṭ",
+      "gloss": "a ghat road; a mountain pass",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6891889c9af9440d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a puncture, then the Marathi for to run out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घाट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घाट — ghāṭ — \"a ghat road; a mountain pass\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बस हळूहळू घाट चढत होती. bas haḷūhaḷū ghāṭ caḍhat hotī. The bus was slowly climbing the ghat."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "In the western hills a घाट (ghāṭ) is the steep road up the slope; on a river it is a flight of steps to the water."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घाट (ghāṭ) is inherited: CDIAL lists Marathi ghāṭ, \"mountain pass, landing place\", under Sanskrit ghaṭṭa, \"landing place, quay\" (CDIAL 4414), and notes a possible Dravidian source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghāṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghāṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghāṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghāṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bas haḷūhaḷū ghāṭ caḍhat hotī. — The bus was slowly climbing the ghat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bas haḷūhaḷū ghāṭ caḍhat hotī.* — The bus was slowly climbing the ghat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a puncture, then the Marathi for to run out, then say ghāṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a puncture, then the Marathi for to run out, then say *ghāṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घाट (ghāṭ) mean? (\"A ghat road; a mountain pass\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C402-khind",
+      "sequence": 23310,
+      "title": "खिंड (khiṇḍ) — a narrow pass; a gap",
+      "headword": "खिंड",
+      "romanization": "khiṇḍ",
+      "gloss": "a narrow pass; a gap",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09fe5d17bc2777a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to run out, then the Marathi for a ghat road."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खिंड",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खिंड — khiṇḍ — \"a narrow pass; a gap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "किल्ल्याच्या मागे एक अरुंद खिंड आहे. killyācyā māge ek arund khiṇḍ āhe. Behind the fort there is a narrow pass."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "A gap between two hills, narrower than a घाट (ghāṭ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खिंड (khiṇḍ) is a Marathi word for a narrow gap between hills; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khiṇḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khiṇḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khiṇḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khiṇḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "killyācyā māge ek arund khiṇḍ āhe. — Behind the fort there is a narrow pass.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *killyācyā māge ek arund khiṇḍ āhe.* — Behind the fort there is a narrow pass.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to run out, then the Marathi for a ghat road, then say khiṇḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to run out, then the Marathi for a ghat road, then say *khiṇḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खिंड (khiṇḍ) mean? (\"A narrow pass; a gap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C402-utar",
+      "sequence": 23320,
+      "title": "उतार (utār) — a downhill slope",
+      "headword": "उतार",
+      "romanization": "utār",
+      "gloss": "a downhill slope",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4be04f0ddba20b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a ghat road, then the Marathi for a narrow pass."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उतार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उतार — utār — \"a downhill slope\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उतारावरून सायकल लवकर खाली येते. utārāvarūn sāykal lavkar khālī yete. On a downhill slope a bicycle comes down quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "The opposite is चढ, the way up; उतारावर, on the slope."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उतार (utār) is inherited: CDIAL lists Marathi utār, \"ford, ferry fare\", under Sanskrit uttāra, \"crossing over, landing\" (CDIAL 1791); in Marathi today it is mostly a slope going down."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utārāvarūn sāykal lavkar khālī yete. — On a downhill slope a bicycle comes down quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utārāvarūn sāykal lavkar khālī yete.* — On a downhill slope a bicycle comes down quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a ghat road, then the Marathi for a narrow pass, then say utār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a ghat road, then the Marathi for a narrow pass, then say *utār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उतार (utār) mean? (\"A downhill slope\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C402-nagmodi",
+      "sequence": 23330,
+      "title": "नागमोडी (nāgmoḍī) — winding; zigzag",
+      "headword": "नागमोडी",
+      "romanization": "nāgmoḍī",
+      "gloss": "winding; zigzag",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ea39ab3abf21743",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a narrow pass, then the Marathi for a downhill slope."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नागमोडी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नागमोडी — nāgmoḍī — \"winding; zigzag\"."
+            },
+            {
+              "kind": "speech",
+              "text": "घाटातला नागमोडी रस्ता सुंदर दिसतो. ghāṭātlā nāgmoḍī rastā sundar disto. The winding road through the ghat looks beautiful."
+            },
+            {
+              "kind": "speech",
+              "text": "It does not change for gender: नागमोडी (nāgmoḍī) रस्ता, नागमोडी (nāgmoḍī) वाट."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नागमोडी (nāgmoḍī) is a Marathi compound: नाग, \"a snake\", a tatsama from Sanskrit nāga (Monier-Williams), and moḍī, usually linked with मोडणे, \"to bend, to break\": a road that bends like a snake. How the second part was formed is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāgmoḍī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāgmoḍī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāgmoḍī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāgmoḍī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghāṭātlā nāgmoḍī rastā sundar disto. — The winding road through the ghat looks beautiful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghāṭātlā nāgmoḍī rastā sundar disto.* — The winding road through the ghat looks beautiful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a narrow pass, then the Marathi for a downhill slope, then say nāgmoḍī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a narrow pass, then the Marathi for a downhill slope, then say *nāgmoḍī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नागमोडी (nāgmoḍī) mean? (\"Winding; zigzag\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C402-sulka",
+      "sequence": 23340,
+      "title": "सुळका (suḷkā) — a rock pinnacle",
+      "headword": "सुळका",
+      "romanization": "suḷkā",
+      "gloss": "a rock pinnacle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30f4d6b2cdd128b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a downhill slope, then the Marathi for winding."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सुळका",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुळका — suḷkā — \"a rock pinnacle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "डोंगरावर एक उंच सुळका दिसतो. ḍoṅgarāvar ek uñc suḷkā disto. A tall rock pinnacle stands out on the hill."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "A tall, thin peak of bare rock, loved by rock climbers."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुळका (suḷkā) is a Marathi word for a tall spike of rock; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suḷkā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suḷkā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suḷkā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suḷkā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍoṅgarāvar ek uñc suḷkā disto. — A tall rock pinnacle stands out on the hill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍoṅgarāvar ek uñc suḷkā disto.* — A tall rock pinnacle stands out on the hill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a downhill slope, then the Marathi for winding, then say suḷkā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a downhill slope, then the Marathi for winding, then say *suḷkā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सुळका (suḷkā) mean? (\"A rock pinnacle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

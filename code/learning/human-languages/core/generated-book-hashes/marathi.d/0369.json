@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:6d0c808b4a35e62a",
+  "lessonIds": [
+    "MR-C369-pradhyapak",
+    "MR-C369-abhyasakram",
+    "MR-C369-sisyavrtti",
+    "MR-C369-sulka",
+    "MR-C369-vasatigrh"
+  ],
+  "tex": "marathi/book/chapters/ch369-at-university.tex"
+}

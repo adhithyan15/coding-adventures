@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C348-nigdit",
+    "language": "marathi",
+    "chapter": 348,
+    "sequence": 20330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0c3f2306683e223"
+  },
+  "findings": []
+}

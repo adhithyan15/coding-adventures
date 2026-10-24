@@ -1,0 +1,19 @@
+{
+  "chapter": 539,
+  "title": "Books, Shows and Applause",
+  "label": "ch:mr-books-shows-and-applause",
+  "canDo": "I can talk about publishers, exhibitions, directors and applause.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C539-dad-dene",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 539: I can talk about publishers, exhibitions, directors and applause.",
+    "assesses": [
+      "MR-LEX-C539-DAD539-03",
+      "MR-LEX-C539-DAD539-04",
+      "MR-LEX-C539-DAD539-05"
+    ]
+  }
+}

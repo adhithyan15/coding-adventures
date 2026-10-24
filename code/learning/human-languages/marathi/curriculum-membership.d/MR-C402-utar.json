@@ -1,0 +1,11 @@
+{
+  "id": "MR-C402-utar",
+  "pathSegment": "MR-PATH-402-GHAT402",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-402-GHAT402",
+      "order": 2
+    }
+  ]
+}

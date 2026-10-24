@@ -1,0 +1,19 @@
+{
+  "chapter": 425,
+  "title": "Weights and Measures",
+  "label": "ch:mr-weights-and-measures",
+  "canDo": "I can talk about scales and measuring, and say what is genuine, fake or a copy.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C425-nakkal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can talk about scales and measuring, and say what is genuine, fake or a copy.",
+    "assesses": [
+      "MR-LEX-C425-TARAJU425-03",
+      "MR-LEX-C425-TARAJU425-04",
+      "MR-LEX-C425-TARAJU425-05"
+    ]
+  }
+}

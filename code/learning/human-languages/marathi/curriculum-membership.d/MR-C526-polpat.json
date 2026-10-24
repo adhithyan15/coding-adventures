@@ -1,0 +1,11 @@
+{
+  "id": "MR-C526-polpat",
+  "pathSegment": "MR-PATH-526-OTA526",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-526-OTA526",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:e0f685628bd4aea6",
+  "lessonIds": [
+    "MR-C547-anibani",
+    "MR-C547-agnisamak",
+    "MR-C547-gajar-alarm",
+    "MR-C547-suraksaraksak",
+    "MR-C547-atokyat-anne"
+  ],
+  "tex": "marathi/book/chapters/ch547-emergencies.tex"
+}

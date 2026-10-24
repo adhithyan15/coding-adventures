@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Mentioning and Stressing",
+  "label": "ch:mr-mentioning-and-stressing",
+  "canDo": "I can mention something and stress what matters most.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C352-pramukh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can mention something and stress what matters most.",
+    "assesses": [
+      "MR-LEX-C352-ULLEKH352-03",
+      "MR-LEX-C352-ULLEKH352-04",
+      "MR-LEX-C352-ULLEKH352-05"
+    ]
+  }
+}

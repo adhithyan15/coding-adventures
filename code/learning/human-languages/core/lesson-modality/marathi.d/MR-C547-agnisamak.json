@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C547-agnisamak",
+    "language": "marathi",
+    "chapter": 547,
+    "sequence": 31210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f5cf219b55f3a30"
+  },
+  "findings": []
+}

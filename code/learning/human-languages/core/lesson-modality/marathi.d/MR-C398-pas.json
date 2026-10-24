@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C398-pas",
+    "language": "marathi",
+    "chapter": 398,
+    "sequence": 23110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c749c3d930cb366a"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:13c1a30a6b3e59a9",
+  "lessonIds": [
+    "MR-C391-ghatne",
+    "MR-C391-tikne",
+    "MR-C391-takka",
+    "MR-C391-praman",
+    "MR-C391-star"
+  ],
+  "tex": "marathi/book/chapters/ch391-rising-and-falling.tex"
+}

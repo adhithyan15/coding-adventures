@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C466-khulne",
+    "language": "marathi",
+    "chapter": 466,
+    "sequence": 26860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:443e245323bba07d"
+  },
+  "findings": []
+}

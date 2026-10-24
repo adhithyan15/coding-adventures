@@ -1,0 +1,11 @@
+{
+  "id": "MR-C422-gajbajlela",
+  "pathSegment": "MR-PATH-422-MANDAI422",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-422-MANDAI422",
+      "order": 3
+    }
+  ]
+}

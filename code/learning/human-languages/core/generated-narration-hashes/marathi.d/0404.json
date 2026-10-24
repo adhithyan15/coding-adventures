@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:a54db085739c63df",
+  "lessonIds": [
+    "MR-C404-valsa",
+    "MR-C404-rahdari",
+    "MR-C404-signal",
+    "MR-C404-khetne",
+    "MR-C404-datne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch404.txt",
+  "json": "marathi/narration/ch404.json",
+  "textHash": "fnv1a64:1559695068ce3d3f",
+  "jsonHash": "fnv1a64:7122af336433d94c",
+  "findings": []
+}

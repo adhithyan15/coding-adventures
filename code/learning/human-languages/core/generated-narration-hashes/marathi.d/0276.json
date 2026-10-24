@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:778fc2545df2fa79",
+  "lessonIds": [
+    "MR-C276-gelo",
+    "MR-C276-tyane-kela",
+    "MR-C276-hota",
+    "MR-R276-what-happened"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch276.txt",
+  "json": "marathi/narration/ch276.json",
+  "textHash": "fnv1a64:150ad859f4bab5e9",
+  "jsonHash": "fnv1a64:83198e72ccd8b8ca",
+  "findings": []
+}

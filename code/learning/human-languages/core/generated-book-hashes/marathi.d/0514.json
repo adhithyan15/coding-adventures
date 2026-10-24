@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:6248b02e4d4f8ef8",
+  "lessonIds": [
+    "MR-C514-karya",
+    "MR-C514-kamkaj",
+    "MR-C514-pali",
+    "MR-C514-urakne",
+    "MR-C514-dhadpadne"
+  ],
+  "tex": "marathi/book/chapters/ch514-getting-it-done.tex"
+}

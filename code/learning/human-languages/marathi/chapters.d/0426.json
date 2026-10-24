@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "Cash and Cheques",
+  "label": "ch:mr-cash-and-cheques",
+  "canDo": "I can talk about cash, cheques, small change and sums of money, and paying money in.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C426-jama-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can talk about cash, cheques, small change and sums of money, and paying money in.",
+    "assesses": [
+      "MR-LEX-C426-ROKAD426-03",
+      "MR-LEX-C426-ROKAD426-04",
+      "MR-LEX-C426-ROKAD426-05"
+    ]
+  }
+}

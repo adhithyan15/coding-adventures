@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C427-phedne",
+    "language": "marathi",
+    "chapter": 427,
+    "sequence": 24620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ab4c66dc064049d"
+  },
+  "findings": []
+}

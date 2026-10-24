@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C425-nakkal",
+    "language": "marathi",
+    "chapter": 425,
+    "sequence": 24520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b344fb566aca0f2c"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-500-SANGOPAN500",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-500-SANGOPAN500"
+  ],
+  "after": []
+}

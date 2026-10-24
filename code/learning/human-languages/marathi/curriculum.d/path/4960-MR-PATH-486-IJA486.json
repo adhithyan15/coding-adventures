@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-486-IJA486",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-486-IJA486"
+  ],
+  "after": []
+}

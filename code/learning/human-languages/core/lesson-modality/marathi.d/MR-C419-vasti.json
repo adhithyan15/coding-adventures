@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C419-vasti",
+    "language": "marathi",
+    "chapter": 419,
+    "sequence": 24170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94dd46cc79668e4f"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "Power and Its Abuse",
+  "label": "ch:mr-power-and-its-abuse",
+  "canDo": "I can talk about power, corruption and self-interest.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C363-cithavne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can talk about power, corruption and self-interest.",
+    "assesses": [
+      "MR-LEX-C363-SATTA363-03",
+      "MR-LEX-C363-SATTA363-04",
+      "MR-LEX-C363-SATTA363-05"
+    ]
+  }
+}

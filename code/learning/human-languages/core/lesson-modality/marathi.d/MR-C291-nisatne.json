@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C291-nisatne",
+    "language": "marathi",
+    "chapter": 291,
+    "sequence": 17150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8510fbe02872a107"
+  },
+  "findings": []
+}

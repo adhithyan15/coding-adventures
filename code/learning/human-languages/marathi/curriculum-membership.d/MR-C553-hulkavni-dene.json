@@ -1,0 +1,11 @@
+{
+  "id": "MR-C553-hulkavni-dene",
+  "pathSegment": "MR-PATH-553-DHYEY553",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-553-DHYEY553",
+      "order": 1
+    }
+  ]
+}

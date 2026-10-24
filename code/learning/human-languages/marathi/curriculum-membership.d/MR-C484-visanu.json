@@ -1,0 +1,11 @@
+{
+  "id": "MR-C484-visanu",
+  "pathSegment": "MR-PATH-484-ROG484",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-484-ROG484",
+      "order": 3
+    }
+  ]
+}

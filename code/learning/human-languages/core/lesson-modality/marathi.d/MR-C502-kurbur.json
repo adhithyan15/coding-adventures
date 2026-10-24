@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C502-kurbur",
+    "language": "marathi",
+    "chapter": 502,
+    "sequence": 28670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:295751a51a4818cf"
+  },
+  "findings": []
+}

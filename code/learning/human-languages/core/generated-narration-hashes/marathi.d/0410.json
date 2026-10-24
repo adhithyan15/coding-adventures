@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:01ecef92400ecd10",
+  "lessonIds": [
+    "MR-C410-kinarpatti",
+    "MR-C410-khadi",
+    "MR-C410-dipgrh",
+    "MR-C410-dvipkalpa",
+    "MR-C410-caupati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch410.txt",
+  "json": "marathi/narration/ch410.json",
+  "textHash": "fnv1a64:99cee834ad1045b7",
+  "jsonHash": "fnv1a64:3515279d6f4b4ca6",
+  "findings": []
+}

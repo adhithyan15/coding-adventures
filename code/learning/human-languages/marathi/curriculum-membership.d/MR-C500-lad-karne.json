@@ -1,0 +1,11 @@
+{
+  "id": "MR-C500-lad-karne",
+  "pathSegment": "MR-PATH-500-SANGOPAN500",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-500-SANGOPAN500",
+      "order": 3
+    }
+  ]
+}

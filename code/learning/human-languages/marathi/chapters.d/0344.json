@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "Agreeing and Disagreeing",
+  "label": "ch:mr-agreeing-and-disagreeing",
+  "canDo": "I can say that I agree, object or see things differently.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C344-drstikon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can say that I agree, object or see things differently.",
+    "assesses": [
+      "MR-LEX-C344-MATBHED344-03",
+      "MR-LEX-C344-MATBHED344-04",
+      "MR-LEX-C344-MATBHED344-05"
+    ]
+  }
+}

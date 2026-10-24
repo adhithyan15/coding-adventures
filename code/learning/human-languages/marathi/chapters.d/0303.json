@@ -1,0 +1,21 @@
+{
+  "chapter": 303,
+  "title": "Once Upon a Time",
+  "label": "ch:mr-once-upon-a-time",
+  "canDo": "I can start a story and say who told it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-R303-review-296-303",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can start a story and say who told it.",
+    "assesses": [
+      "MR-LEX-C303-KATHA303-01",
+      "MR-LEX-C303-KATHA303-02",
+      "MR-LEX-C303-KATHA303-03",
+      "MR-LEX-C303-KATHA303-04",
+      "MR-LEX-C303-KATHA303-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C551-pratiksa",
+    "language": "marathi",
+    "chapter": 551,
+    "sequence": 31410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2afbe5dd9ba4edca"
+  },
+  "findings": []
+}

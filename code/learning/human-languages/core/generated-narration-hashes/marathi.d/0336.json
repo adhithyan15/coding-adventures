@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:dc7262e2b6bf4a6f",
+  "lessonIds": [
+    "MR-C336-leni",
+    "MR-C336-guha",
+    "MR-C336-gupta",
+    "MR-C336-bhuyar",
+    "MR-C336-khajina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch336.txt",
+  "json": "marathi/narration/ch336.json",
+  "textHash": "fnv1a64:0e7e3f36ec96a100",
+  "jsonHash": "fnv1a64:8e29794e11e8d524",
+  "findings": []
+}

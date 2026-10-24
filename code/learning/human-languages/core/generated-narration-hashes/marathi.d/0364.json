@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:00bb8a7d3877fe58",
+  "lessonIds": [
+    "MR-C364-samstha",
+    "MR-C364-samiti",
+    "MR-C364-sabha",
+    "MR-C364-pravakta",
+    "MR-C364-karyakarta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch364.txt",
+  "json": "marathi/narration/ch364.json",
+  "textHash": "fnv1a64:2fcf044391d8f5c8",
+  "jsonHash": "fnv1a64:dc6eda3ba912bedb",
+  "findings": []
+}

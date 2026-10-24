@@ -1,0 +1,943 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 449,
+  "title": "Keeping Nature Green",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:78168ea6545cf6f7",
+  "lessons": [
+    {
+      "id": "MR-C449-nisarga",
+      "sequence": 25710,
+      "title": "निसर्ग (nisarga) — nature",
+      "headword": "निसर्ग",
+      "romanization": "nisarga",
+      "gloss": "nature",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6755587398139123",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to rot, then the Marathi for to decay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निसर्ग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निसर्ग — nisarga — \"nature\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मला निसर्गात फिरायला आवडतं. malā nisargāt phirāylā āvaḍtaṁ. I like walking out in nature."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "निसर्गरम्य, beautiful with nature, is a common word for scenery."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निसर्ग (nisarga) is a tatsama, taken from Sanskrit nisarga, \"giving forth; the natural state\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nisarga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nisarga*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nisarga, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nisarga*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malā nisargāt phirāylā āvaḍtaṁ. — I like walking out in nature.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malā nisargāt phirāylā āvaḍtaṁ.* — I like walking out in nature.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to rot, then the Marathi for to decay, then say nisarga again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to rot, then the Marathi for to decay, then say *nisarga* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निसर्ग (nisarga) mean? (\"Nature\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C449-samvardhan",
+      "sequence": 25720,
+      "title": "संवर्धन (saṁvardhan) — conservation",
+      "headword": "संवर्धन",
+      "romanization": "saṁvardhan",
+      "gloss": "conservation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a975bba9207f5471",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to decay, then the Marathi for nature."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संवर्धन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संवर्धन — saṁvardhan — \"conservation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वाघांच्या संवर्धनासाठी हे अभयारण्य आहे. vāghāñcyā saṁvardhanāsāṭhī he abhayāraṇya āhe. This sanctuary is for the conservation of tigers."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "संवर्धन (saṁvardhan) करणे, to conserve and help grow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संवर्धन (saṁvardhan) is a tatsama, taken from Sanskrit saṁvardhana, \"growing up, promoting, rearing\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁvardhan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁvardhan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁvardhan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁvardhan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāghāñcyā saṁvardhanāsāṭhī he abhayāraṇya āhe. — This sanctuary is for the conservation of tigers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāghāñcyā saṁvardhanāsāṭhī he abhayāraṇya āhe.* — This sanctuary is for the conservation of tigers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to decay, then the Marathi for nature, then say saṁvardhan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to decay, then the Marathi for nature, then say *saṁvardhan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संवर्धन (saṁvardhan) mean? (\"Conservation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C449-vrksaropan",
+      "sequence": 25730,
+      "title": "वृक्षारोपण (vṛkṣāropaṇ) — tree planting",
+      "headword": "वृक्षारोपण",
+      "romanization": "vṛkṣāropaṇ",
+      "gloss": "tree planting",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9f3d1bc22d9b002",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for nature, then the Marathi for conservation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वृक्षारोपण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वृक्षारोपण — vṛkṣāropaṇ — \"tree planting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शाळेने वृक्षारोपणाचा कार्यक्रम घेतला. śāḷene vṛkṣāropaṇācā kāryakram ghetlā. The school held a tree planting event."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "वृक्ष, a tree, and आरोपण, planting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वृक्षारोपण (vṛkṣāropaṇ) is a tatsama, taken from Sanskrit vṛkṣāropaṇa, \"planting trees\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛkṣāropaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛkṣāropaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛkṣāropaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛkṣāropaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāḷene vṛkṣāropaṇācā kāryakram ghetlā. — The school held a tree planting event.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāḷene vṛkṣāropaṇācā kāryakram ghetlā.* — The school held a tree planting event.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for nature, then the Marathi for conservation, then say vṛkṣāropaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for nature, then the Marathi for conservation, then say *vṛkṣāropaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वृक्षारोपण (vṛkṣāropaṇ) mean? (\"Tree planting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C449-jangaltod",
+      "sequence": 25740,
+      "title": "जंगलतोड (jaṅgaltoḍ) — deforestation",
+      "headword": "जंगलतोड",
+      "romanization": "jaṅgaltoḍ",
+      "gloss": "deforestation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a032a7e475d5f269",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for conservation, then the Marathi for tree planting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जंगलतोड",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जंगलतोड — jaṅgaltoḍ — \"deforestation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जंगलतोडीमुळे पाऊस कमी झाला. jaṅgaltoḍīmuḷe pāūs kamī jhālā. The rain has decreased because of deforestation."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Before an ending जंगलतोडी-: जंगलतोडीमुळे."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जंगलतोड (jaṅgaltoḍ) is built from जंगल, \"a forest\", from the family of Sanskrit jāṅgala, \"arid land\", where Hindi has jaṅgal, \"forest\" (CDIAL 5177), and toḍ, \"cutting\", from तोडणे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaṅgaltoḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaṅgaltoḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaṅgaltoḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaṅgaltoḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaṅgaltoḍīmuḷe pāūs kamī jhālā. — The rain has decreased because of deforestation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaṅgaltoḍīmuḷe pāūs kamī jhālā.* — The rain has decreased because of deforestation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for conservation, then the Marathi for tree planting, then say jaṅgaltoḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for conservation, then the Marathi for tree planting, then say *jaṅgaltoḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जंगलतोड (jaṅgaltoḍ) mean? (\"Deforestation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C449-namses-hone",
+      "sequence": 25750,
+      "title": "नामशेष होणे (nāmśeṣ hoṇe) — to die out",
+      "headword": "नामशेष होणे",
+      "romanization": "nāmśeṣ hoṇe",
+      "gloss": "to die out",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a90f45638cfad413",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for tree planting, then the Marathi for deforestation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नामशेष होणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नामशेष होणे — nāmśeṣ hoṇe — \"to die out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हा पक्षी आता नामशेष झाला आहे. hā pakṣī ātā nāmśeṣ jhālā āhe. This bird has now died out."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो नामशेष झाला, to nāmśeṣ jhālā."
+            },
+            {
+              "kind": "speech",
+              "text": "नाम, the name, and शेष, what is left: only the name remains."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नामशेष होणे (nāmśeṣ hoṇe) joins nāmaśeṣa, \"of whom only the name is left\", built from Sanskrit nāman, \"name\", and śeṣa, \"remainder\" (Monier-Williams), to होणे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāmśeṣ hoṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāmśeṣ hoṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāmśeṣ hoṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāmśeṣ hoṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hā pakṣī ātā nāmśeṣ jhālā āhe. — This bird has now died out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hā pakṣī ātā nāmśeṣ jhālā āhe.* — This bird has now died out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for tree planting, then the Marathi for deforestation, then say nāmśeṣ hoṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for tree planting, then the Marathi for deforestation, then say *nāmśeṣ hoṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नामशेष होणे (nāmśeṣ hoṇe) mean? (\"To die out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R449-review-443-449",
+      "sequence": 25760,
+      "title": "Looking Back on the Wild",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Streams and Dams to Keeping Nature Green",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75e8827cbef39c16",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for a stream and a canal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a stream, a canal, a dam, a large lake, to gurgle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a stream, a canal, a dam, a large lake, to gurgle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a puddle, silt, muddy, to seep, to overflow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a puddle, silt, muddy, to seep, to overflow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sprout, to take root, to bloom, to blossom, to wither",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sprout, to take root, to bloom, to blossom, to wither]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wildlife, a sanctuary, a leopard, to roar, to graze",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wildlife, a sanctuary, a leopard, to roar, to graze]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a heron, a black kite, a vulture, to chirp, migration",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a heron, a black kite, a vulture, to chirp, migration]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waste water, a stench, polluted, to rot, to decay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: waste water, a stench, polluted, to rot, to decay]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nature, conservation, tree planting, deforestation, to die out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: nature, conservation, tree planting, deforestation, to die out]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A stream? (ओढा, oḍhā.) A canal? (कालवा, kālvā.) A dam? (धरण, dharaṇ.) A large lake? (सरोवर, sarovar.) To gurgle? (खळखळणे, khaḷkhaḷṇe.) A puddle? (डबके, ḍabke.) Silt? (गाळ, gāḷ.) Muddy? (गढूळ, gaḍhūḷ.) To seep? (झिरपणे, jhirapṇe.) To overflow? (ओसंडणे, osaṇḍṇe.) A sprout? (अंकुर, aṅkur.) To take root? (रुजणे, rujṇe.) To bloom? (फुलणे, phulṇe.) To blossom? (बहरणे, baharṇe.) To wither? (कोमेजणे, komejṇe.) Wildlife? (वन्यजीव, vanyajīv.) A sanctuary? (अभयारण्य, abhayāraṇya.) A leopard? (बिबट्या, bibaṭyā.) To roar? (डरकाळी फोडणे, ḍarkāḷī phoḍṇe.) To graze? (चरणे, carṇe.) A heron? (बगळा, bagḷā.) A black kite? (घार, ghār.) A vulture? (गिधाड, gidhāḍ.) To chirp? (किलबिलणे, kilbilṇe.) Migration? (स्थलांतर, sthalāntar.) Waste water? (सांडपाणी, sāṇḍpāṇī.) A stench? (दुर्गंधी, durgandhī.) Polluted? (प्रदूषित, pradūṣit.) To rot? (कुजणे, kujṇe.) To decay? (सडणे, saḍṇe.) Nature? (निसर्ग, nisarga.) Conservation? (संवर्धन, saṁvardhan.) Tree planting? (वृक्षारोपण, vṛkṣāropaṇ.) Deforestation? (जंगलतोड, jaṅgaltoḍ.) To die out? (नामशेष होणे, nāmśeṣ hoṇe.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R449-review-final-449",
+      "sequence": 25770,
+      "title": "Keeping Nature Green — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d072850a349aff0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Marathi for nature and conservation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nature, conservation, tree planting, deforestation, to die out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: nature, conservation, tree planting, deforestation, to die out]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nature? (निसर्ग, nisarga.) Conservation? (संवर्धन, saṁvardhan.) Tree planting? (वृक्षारोपण, vṛkṣāropaṇ.) Deforestation? (जंगलतोड, jaṅgaltoḍ.) To die out? (नामशेष होणे, nāmśeṣ hoṇe.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

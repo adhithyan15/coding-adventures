@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:7dbc7da189d6bded",
+  "lessonIds": [
+    "MR-C284-rag",
+    "MR-C284-bhiti",
+    "MR-C284-rag-ala",
+    "MR-C284-dhyey",
+    "MR-C284-vhaycha-ahe",
+    "MR-R284-feelings-and-hopes"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch284.txt",
+  "json": "marathi/narration/ch284.json",
+  "textHash": "fnv1a64:89b503d762940fa4",
+  "jsonHash": "fnv1a64:2dc100c2db2f712b",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "Raising Children",
+  "label": "ch:mr-raising-children",
+  "canDo": "I can talk about bringing up, looking after, pampering and adopting a child.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C500-dattak-ghene",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can talk about bringing up, looking after, pampering and adopting a child.",
+    "assesses": [
+      "MR-LEX-C500-SANGOPAN500-03",
+      "MR-LEX-C500-SANGOPAN500-04",
+      "MR-LEX-C500-SANGOPAN500-05"
+    ]
+  }
+}

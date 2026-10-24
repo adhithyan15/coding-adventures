@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C377-protsahan-dene",
+    "language": "marathi",
+    "chapter": 377,
+    "sequence": 21810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c503fd733c0f8d3f"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C471-buddhiman",
+    "language": "marathi",
+    "chapter": 471,
+    "sequence": 27090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc6d33d6a182c71e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C367-rudhi",
+    "language": "marathi",
+    "chapter": 367,
+    "sequence": 21290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3849d8a9e1a76bbd"
+  },
+  "findings": []
+}

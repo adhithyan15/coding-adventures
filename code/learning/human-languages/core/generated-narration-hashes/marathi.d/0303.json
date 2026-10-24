@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:95d9032e25d271a5",
+  "lessonIds": [
+    "MR-C303-ekekali",
+    "MR-C303-katha",
+    "MR-C303-kahani",
+    "MR-C303-kissa",
+    "MR-C303-kathan-karne",
+    "MR-R303-review-296-303"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch303.txt",
+  "json": "marathi/narration/ch303.json",
+  "textHash": "fnv1a64:ea9a5a5ab8040152",
+  "jsonHash": "fnv1a64:486c898e2002a898",
+  "findings": []
+}

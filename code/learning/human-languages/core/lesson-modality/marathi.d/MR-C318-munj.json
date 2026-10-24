@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C318-munj",
+    "language": "marathi",
+    "chapter": 318,
+    "sequence": 18560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ce4dd2d228c4120"
+  },
+  "findings": []
+}

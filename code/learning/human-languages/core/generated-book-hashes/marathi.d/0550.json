@@ -1,0 +1,14 @@
+{
+  "language": "marathi",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:6cc3a5d26420544f",
+  "lessonIds": [
+    "MR-C550-yogayog",
+    "MR-C550-jugar",
+    "MR-C550-bhagya",
+    "MR-C550-nanephek",
+    "MR-C550-paij-lavne",
+    "MR-R550-review-544-550"
+  ],
+  "tex": "marathi/book/chapters/ch550-luck-and-chance.tex"
+}

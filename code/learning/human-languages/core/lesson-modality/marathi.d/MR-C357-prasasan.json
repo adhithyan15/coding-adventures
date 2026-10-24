@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C357-prasasan",
+    "language": "marathi",
+    "chapter": 357,
+    "sequence": 20760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:895bb9a6ea8bcaa4"
+  },
+  "findings": []
+}

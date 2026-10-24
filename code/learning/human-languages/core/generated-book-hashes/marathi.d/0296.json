@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:9ecbb0211dc1821d",
+  "lessonIds": [
+    "MR-C296-dhadakne",
+    "MR-C296-adalne",
+    "MR-C296-besuddha",
+    "MR-C296-savarne",
+    "MR-C296-hukne"
+  ],
+  "tex": "marathi/book/chapters/ch296-a-crash-on-the-road.tex"
+}

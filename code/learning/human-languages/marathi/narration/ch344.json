@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 344,
+  "title": "Agreeing and Disagreeing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e52ea08ee9cc0e2a",
+  "lessons": [
+    {
+      "id": "MR-C344-matbhed",
+      "sequence": 20100,
+      "title": "मतभेद (matbhed) — a disagreement",
+      "headword": "मतभेद",
+      "romanization": "matbhed",
+      "gloss": "a disagreement",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7817ffbc06443127",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to put forward, then the Marathi for proof."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मतभेद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मतभेद — matbhed — \"a disagreement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भावांमध्ये पैशांवरून मतभेद झाले. bhāvāmmadhye paiśāṁvarūn matbhed jhāle. The brothers disagreed over money."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly plural: मतभेद (matbhed) होणे, to disagree; मत + भेद, opinion + split."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मतभेद (matbhed) is built from two tatsamas, Sanskrit mata, \"thought, opinion\", and bheda, \"splitting, difference\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "matbhed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *matbhed*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "matbhed, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *matbhed*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāvāmmadhye paiśāṁvarūn matbhed jhāle. — The brothers disagreed over money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāvāmmadhye paiśāṁvarūn matbhed jhāle.* — The brothers disagreed over money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to put forward, then the Marathi for proof, then say matbhed again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to put forward, then the Marathi for proof, then say *matbhed* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मतभेद (matbhed) mean? (\"A disagreement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C344-sahmat-hone",
+      "sequence": 20110,
+      "title": "सहमत होणे (sahmat hoṇe) — to agree",
+      "headword": "सहमत होणे",
+      "romanization": "sahmat hoṇe",
+      "gloss": "to agree",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50b0933596718ddc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for proof, then the Marathi for a disagreement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सहमत होणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहमत होणे — sahmat hoṇe — \"to agree\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मी तुमच्या मताशी सहमत आहे. mī tumacyā matāśī sahmat āhe. I agree with your view."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो सहमत झाला, to sahmat jhālā."
+            },
+            {
+              "kind": "speech",
+              "text": "The person or view agreed with takes -शी: तुमच्याशी सहमत."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहमत होणे (sahmat hoṇe) joins सहमत, built from Sanskrit saha, \"together\", and mata, \"opinion\" (Monier-Williams), to होणे, \"to become\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahmat hoṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahmat hoṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahmat hoṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahmat hoṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī tumacyā matāśī sahmat āhe. — I agree with your view.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī tumacyā matāśī sahmat āhe.* — I agree with your view.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for proof, then the Marathi for a disagreement, then say sahmat hoṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for proof, then the Marathi for a disagreement, then say *sahmat hoṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सहमत होणे (sahmat hoṇe) mean? (\"To agree\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C344-aksep-ghene",
+      "sequence": 20120,
+      "title": "आक्षेप घेणे (ākṣep gheṇe) — to object",
+      "headword": "आक्षेप घेणे",
+      "romanization": "ākṣep gheṇe",
+      "gloss": "to object",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:621a8dc08528113b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a disagreement, then the Marathi for to agree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आक्षेप घेणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आक्षेप घेणे — ākṣep gheṇe — \"to object\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुणने या योजनेवर आक्षेप घेतला. aruṇne yā yojnevar ākṣep ghetlā. Arun objected to this plan."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने आक्षेप घेतला, tyāne ākṣep ghetlā."
+            },
+            {
+              "kind": "speech",
+              "text": "What is objected to takes -वर: योजनेवर आक्षेप घेणे (ākṣep gheṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आक्षेप घेणे (ākṣep gheṇe) joins the tatsama आक्षेप, Sanskrit ākṣepa, \"throwing at; objection\" (Monier-Williams), to घेणे, \"to take\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākṣep gheṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākṣep gheṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākṣep gheṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākṣep gheṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aruṇne yā yojnevar ākṣep ghetlā. — Arun objected to this plan.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aruṇne yā yojnevar ākṣep ghetlā.* — Arun objected to this plan.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a disagreement, then the Marathi for to agree, then say ākṣep gheṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a disagreement, then the Marathi for to agree, then say *ākṣep gheṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आक्षेप घेणे (ākṣep gheṇe) mean? (\"To object\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C344-visangti",
+      "sequence": 20130,
+      "title": "विसंगती (visaṅgtī) — an inconsistency",
+      "headword": "विसंगती",
+      "romanization": "visaṅgtī",
+      "gloss": "an inconsistency",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa48b41fa29db74c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to agree, then the Marathi for to object."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विसंगती",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विसंगती — visaṅgtī — \"an inconsistency\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्याच्या दोन उत्तरांत विसंगती होती. tyācyā don uttarānt visaṅgtī hotī. There was an inconsistency between his two answers."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine; the adjective is विसंगत, inconsistent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विसंगती (visaṅgtī) is a learned word built from Sanskrit vi-, \"apart\", and saṁgati, \"coming together\" (Monier-Williams): things that do not fit together."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "visaṅgtī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *visaṅgtī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "visaṅgtī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *visaṅgtī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyācyā don uttarānt visaṅgtī hotī. — There was an inconsistency between his two answers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyācyā don uttarānt visaṅgtī hotī.* — There was an inconsistency between his two answers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to agree, then the Marathi for to object, then say visaṅgtī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to agree, then the Marathi for to object, then say *visaṅgtī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विसंगती (visaṅgtī) mean? (\"An inconsistency\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C344-drstikon",
+      "sequence": 20140,
+      "title": "दृष्टिकोन (dṛṣṭikon) — a standpoint; an outlook",
+      "headword": "दृष्टिकोन",
+      "romanization": "dṛṣṭikon",
+      "gloss": "a standpoint; an outlook",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3528d0cb66f15517",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to object, then the Marathi for an inconsistency."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दृष्टिकोन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दृष्टिकोन — dṛṣṭikon — \"a standpoint; an outlook\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रत्येकाचा दृष्टिकोन वेगळा असतो. pratyekācā dṛṣṭikon vegḷā asto. Everyone's outlook is different."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "दृष्टी + कोन, sight + angle: the angle one looks from."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दृष्टिकोन (dṛṣṭikon) is a learned compound built from Sanskrit dṛṣṭi, \"sight, view\", and koṇa, \"corner, angle\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dṛṣṭikon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dṛṣṭikon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dṛṣṭikon, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dṛṣṭikon*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratyekācā dṛṣṭikon vegḷā asto. — Everyone's outlook is different.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratyekācā dṛṣṭikon vegḷā asto.* — Everyone's outlook is different.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to object, then the Marathi for an inconsistency, then say dṛṣṭikon again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to object, then the Marathi for an inconsistency, then say *dṛṣṭikon* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दृष्टिकोन (dṛṣṭikon) mean? (\"A standpoint; an outlook\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

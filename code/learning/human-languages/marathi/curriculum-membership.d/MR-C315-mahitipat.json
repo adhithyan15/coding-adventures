@@ -1,0 +1,11 @@
+{
+  "id": "MR-C315-mahitipat",
+  "pathSegment": "MR-PATH-315-ANK315",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-315-ANK315",
+      "order": 1
+    }
+  ]
+}

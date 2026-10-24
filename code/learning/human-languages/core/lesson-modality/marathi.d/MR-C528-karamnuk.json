@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C528-karamnuk",
+    "language": "marathi",
+    "chapter": 528,
+    "sequence": 30260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1eee2a9e267e3243"
+  },
+  "findings": []
+}

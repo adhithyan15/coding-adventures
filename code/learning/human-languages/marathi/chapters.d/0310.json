@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "The Morning Paper",
+  "label": "ch:mr-the-morning-paper",
+  "canDo": "I can talk about newspapers, headlines and printing.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C310-chapne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can talk about newspapers, headlines and printing.",
+    "assesses": [
+      "MR-LEX-C310-VRUTTAPATRA310-03",
+      "MR-LEX-C310-VRUTTAPATRA310-04",
+      "MR-LEX-C310-VRUTTAPATRA310-05"
+    ]
+  }
+}

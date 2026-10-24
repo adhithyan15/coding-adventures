@@ -1,0 +1,21 @@
+{
+  "chapter": 519,
+  "title": "Light at Home",
+  "label": "ch:mr-light-at-home",
+  "canDo": "I can talk about light and darkness at home.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-R519-review-512-519",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can talk about light and darkness at home.",
+    "assesses": [
+      "MR-LEX-C519-UJED519-01",
+      "MR-LEX-C519-UJED519-02",
+      "MR-LEX-C519-UJED519-03",
+      "MR-LEX-C519-UJED519-04",
+      "MR-LEX-C519-UJED519-05"
+    ]
+  }
+}

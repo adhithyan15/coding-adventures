@@ -1,0 +1,581 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 287,
+  "title": "It Depends, and What Would Have Been",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:1cd5fea6ee091a5f",
+  "lessons": [
+    {
+      "id": "MR-C287-avlambun-ahe",
+      "sequence": 16440,
+      "title": "हवामानावर अवलंबून आहे (havāmānāvar avlambūn āhe) — it depends",
+      "headword": "हवामानावर अवलंबून आहे",
+      "romanization": "havāmānāvar avlambūn āhe",
+      "gloss": "it depends on the weather — saying what something depends on",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f55c26787b6452d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"to depend\". (avlambūn asṇe.) Then \"if it rains, I will stay at home\". (pāūs paḍlā tar mī gharī rāhīn.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: … -वर अवलंबून आहे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आम्ही उद्या जाऊ का? ते हवामानावर अवलंबून आहे. āmhī udyā jāū kā? te havāmānāvar avlambūn āhe. — \"Will we go tomorrow? It depends on the weather.\""
+            },
+            {
+              "kind": "speech",
+              "text": "What it depends on takes -वर, \"on\": हवामानावर (havāmānāvar), तुमच्यावर (tumcyāvar), \"on you\". The verb is असणे, so the tense goes there: ते हवामानावर अवलंबून असेल (te havāmānāvar avlambūn asel), \"it will depend on the weather\". To ask: with कशावर (kaśāvar, \"on what\"): कशावर अवलंबून आहे? (kaśāvar avlambūn āhe?)"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It depends on the weather\" — te havāmānāvar avlambūn āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It depends on the weather\" — *te havāmānāvar avlambūn āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It depends on you\" — te tumcyāvar avlambūn āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It depends on you\" — *te tumcyāvar avlambūn āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What does it depend on?\" — kaśāvar avlambūn āhe?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What does it depend on?\" — *kaśāvar avlambūn āhe?*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C287-avlambun-ahe-r1",
+              "prompt": "Someone asks if you will go tomorrow. Say it depends on the weather.",
+              "assesses": [
+                "MR-GRAMMAR-C287-DEPENDS-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "te havāmānāvar avlambūn āhe",
+                "ते हवामानावर अवलंबून आहे."
+              ],
+              "feedback": {
+                "correct": "-var on the weather, then avlambūn āhe.",
+                "incorrect": "What it depends on takes -var: havāmānāvar."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It depends on the weather\"? (ते हवामानावर अवलंबून आहे (havāmānāvar avlambūn āhe).) \"On you\"? (तुमच्यावर.) \"What does it depend on?\" (कशावर अवलंबून आहे?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C287-gelo-asto",
+      "sequence": 16450,
+      "title": "मी गेलो असतो (mī gelo asto) — what would have been",
+      "headword": "मी गेलो असतो",
+      "romanization": "mī gelo asto",
+      "gloss": "I would have gone — what would have been, and the if that did not happen",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7158f5329425355c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"it depends on the weather\". (te havāmānāvar avlambūn āhe.) Then \"If it rains tomorrow, I will stay at home\". (jar udyā pāūs paḍlā, tar mī gharī rāhīn.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That looks ahead at what may still happen. This lesson looks back at what did not."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -लो असतो, 'would have'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मी गेलो असतो. mī gelo asto. — \"I would have gone.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The past, गेलो, then असतो (asto), which takes the same endings: तो गेला असता (to gelā astā), ती गेली असती (tī gelī astī), आम्ही आलो असतो (āmhī ālo asto). A woman says मी गेले असते (mī gele aste)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the if that did not happen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जर मला वेळ असता, तर मी आलो असतो. jar malā veḷ astā, tar mī ālo asto. — \"If I had had time, I would have come.\""
+            },
+            {
+              "kind": "speech",
+              "text": "In the condition, असता (astā) alone says \"had been\"; with a verb, the past comes first: जर पाऊस पडला नसता (jar pāūs paḍlā nastā), \"if it had not rained\", with नसता (nastā, \"had not been\"). Both halves wear असता, and that is how a listener knows it did not happen: जर तू आला असतास, तर आम्ही बोललो असतो (jar tū ālā astās, tar āmhī bollo asto), \"if you had come, we would have talked\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I would have gone\" — mī gelo asto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I would have gone\" — *mī gelo asto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If I had had time, I would have come\" — jar malā veḷ astā, tar mī ālo asto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If I had had time, I would have come\" — *jar malā veḷ astā, tar mī ālo asto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If it had not rained, we would have gone\" — jar pāūs paḍlā nastā, tar āmhī gelo asto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If it had not rained, we would have gone\" — *jar pāūs paḍlā nastā, tar āmhī gelo asto*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C287-gelo-asto-r1",
+              "prompt": "Say that if you had had time, you would have come.",
+              "assesses": [
+                "MR-GRAMMAR-C287-WOULD-01",
+                "MR-GRAMMAR-C287-UNREAL-IF-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "jar malā veḷ astā, tar mī ālo asto",
+                "जर मला वेळ असता, तर मी आलो असतो.",
+                "jar malā veḷ astā, tar mī āle aste"
+              ],
+              "feedback": {
+                "correct": "astā in the if, ālo asto in the result.",
+                "incorrect": "Both halves wear asto / astā: it did not happen."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I would have gone\"? (मी गेलो असतो (mī gelo asto).) \"She would have come\"? (ती आली असती.) \"If I had had time\"? (जर मला वेळ असता.) How do you know it did not happen? (Both halves wear असता.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-W287-six-lines",
+      "sequence": 16460,
+      "title": "Six lines about a trip",
+      "headword": "(six lines)",
+      "romanization": "",
+      "gloss": "six connected lines about a trip in the past, with a reason, a feeling and a would-have",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:2e323b704b82eb79",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The A1 message asked for a few practised lines to Meera. This task asks for six lines, and they tell a story: a trip, to a village or anywhere else."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pick one reader: Meera, or a friend, by name. Say ऋतू and ज्ञान aloud; both will go in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A told story is not a list of events. It has a scene, in -त होतो or असताना. It has events in the plain past, kept in order with आधी, मग, त्यानंतर and शेवटी, and joined with -ऊन. It has a reason, with म्हणून or कारण, and a feeling, with मला … आला or वाटलं."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A good one ends by looking at what might have been: जर …, तर मी … गेलो असतो."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "On paper, in Devanagari, write six lines to your reader about a trip, real or invented, one line for each of these:"
+            },
+            {
+              "kind": "speech",
+              "text": "the scene: which season it was, with ऋतू, and what you were doing as it began, with -त होतो or … तेव्हा;"
+            },
+            {
+              "kind": "speech",
+              "text": "the first thing that happened, with आधी, and buying a ticket, with तिकीट;"
+            },
+            {
+              "kind": "speech",
+              "text": "what happened next, with मग or a -ऊन form, and one thing that went wrong: हरवली or चुकली;"
+            },
+            {
+              "kind": "speech",
+              "text": "why, with म्हणून, कारण or -मुळे;"
+            },
+            {
+              "kind": "speech",
+              "text": "how it ended and how you felt, with शेवटी and मला … आला, वाटलं or झालं;"
+            },
+            {
+              "kind": "speech",
+              "text": "what might have been, with … असतो, and one thing the trip taught you, with ज्ञान."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "There is no model in this lesson. Use only words you already write. The work is choosing the right past for each line, and joining them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now read your lines as you read Arun's monsoon day. Mark every verb s for scene, e for event. Line one should be mostly s; lines two and three mostly e."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then three checks. A verb with an object in the plain past follows the thing: -ने on he, she or a name. ऋतू starts with the letter ऋ, not र. ज्ञान starts with ज्ञ, with ञ inside it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last, read line six alone. Do both halves of the if wear असता or असतो?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R287-depends-and-would",
+      "sequence": 16470,
+      "title": "Review — it depends, and what would have been",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what it depends on, and what would have been",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:3a667b30e87b9124",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"leave early, otherwise you'll miss the train\". (lavkar nighā, nāhītar gāḍī cukel.) Then \"I like the monsoon season most\". (malā pāvsāḷā hā ṛtū sarvāt jāsta āvaḍto.) Then read aloud a line of yours with ज्ञान."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Will we go tomorrow? It depends on the weather.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Will we go tomorrow? It depends on the weather.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It depends on you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It depends on you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If I had had time, I would have come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If I had had time, I would have come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If it had not rained, we would have gone to the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If it had not rained, we would have gone to the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one trip that depends on something, and one that would have gone better, if …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one trip that depends on something, and one that would have gone better, if …]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It depends on\"? (… -वर अवलंबून आहे.) \"I would have gone\"? (मी गेलो असतो (mī gelo asto).) \"If I had had time\"? (जर मला वेळ असता.) Which letters did ऋतू and ज्ञान bring? (ऋ and ञ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

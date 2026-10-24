@@ -1,0 +1,11 @@
+{
+  "id": "MR-C313-ghosna",
+  "pathSegment": "MR-PATH-313-AFVA313",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-313-AFVA313",
+      "order": 2
+    }
+  ]
+}

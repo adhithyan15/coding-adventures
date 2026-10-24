@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Hiccups and Gasps",
+  "label": "ch:mr-hiccups-and-gasps",
+  "canDo": "I can talk about hiccups, burps, spitting and being out of breath.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C492-thaska-lagne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can talk about hiccups, burps, spitting and being out of breath.",
+    "assesses": [
+      "MR-LEX-C492-UCAKI492-03",
+      "MR-LEX-C492-UCAKI492-04",
+      "MR-LEX-C492-UCAKI492-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C308-vams",
+  "pathSegment": "MR-PATH-308-PIDHI308",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-308-PIDHI308",
+      "order": 3
+    }
+  ]
+}

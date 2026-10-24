@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MR-W279-letter-vocalic-r",
+    "language": "marathi",
+    "chapter": 279,
+    "sequence": 16140,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7e1ed6d06d0d93b1",
+    "detachableSegments": [
+      "Script",
+      "Writing: ऋ — guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

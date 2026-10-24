@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:2d2b1c1fbed3f9d4",
+  "lessonIds": [
+    "MR-C332-vir",
+    "MR-C332-parakram",
+    "MR-C332-saurya",
+    "MR-C332-balidan",
+    "MR-C332-saran-jane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch332.txt",
+  "json": "marathi/narration/ch332.json",
+  "textHash": "fnv1a64:e8ab19b4f101a9c1",
+  "jsonHash": "fnv1a64:86f87acceb8bff5f",
+  "findings": []
+}

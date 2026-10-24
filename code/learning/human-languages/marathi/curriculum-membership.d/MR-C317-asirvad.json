@@ -1,0 +1,11 @@
+{
+  "id": "MR-C317-asirvad",
+  "pathSegment": "MR-PATH-317-AHER317",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-317-AHER317",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:573a36b03593888d",
+  "lessonIds": [
+    "MR-C326-samrat",
+    "MR-C326-simhasan",
+    "MR-C326-mukut",
+    "MR-C326-rajkanya",
+    "MR-C326-pradhan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch326.txt",
+  "json": "marathi/narration/ch326.json",
+  "textHash": "fnv1a64:b72e2bdbedeb9b7b",
+  "jsonHash": "fnv1a64:6ab9651ab14fc4c5",
+  "findings": []
+}

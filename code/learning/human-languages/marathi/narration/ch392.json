@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 392,
+  "title": "Rules in Practice",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:72709f209a6f3404",
+  "lessons": [
+    {
+      "id": "MR-C392-kalam",
+      "sequence": 22560,
+      "title": "कलम (kalam) — a clause; a section (of a law)",
+      "headword": "कलम",
+      "romanization": "kalam",
+      "gloss": "a clause; a section (of a law)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9297e2296989145c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a proportion, then the Marathi for a level."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कलम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कलम — kalam — \"a clause; a section (of a law)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "करारातील हे कलम मला मान्य नाही. karārātīl he kalam malā mānya nāhī. I do not accept this clause in the contract."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter: हे कलम (kalam)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कलम (kalam) is a loan from Persian, usually traced to Arabic qalam, \"pen\": an item set down in writing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karārātīl he kalam malā mānya nāhī. — I do not accept this clause in the contract.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karārātīl he kalam malā mānya nāhī.* — I do not accept this clause in the contract.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a proportion, then the Marathi for a level, then say kalam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a proportion, then the Marathi for a level, then say *kalam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कलम (kalam) mean? (\"A clause; a section (of a law)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C392-vatap-karne",
+      "sequence": 22570,
+      "title": "वाटप करणे (vāṭap karṇe) — to allocate; to distribute",
+      "headword": "वाटप करणे",
+      "romanization": "vāṭap karṇe",
+      "gloss": "to allocate; to distribute",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77c4dc57482b7472",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a level, then the Marathi for a clause."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वाटप करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाटप करणे — vāṭap karṇe — \"to allocate; to distribute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "संस्थेने पूरग्रस्तांना अन्नाचं वाटप केलं. saṁsthene pūragrastānnā annācaṁ vāṭap kelaṁ. The organization distributed food to the flood victims."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने वाटप केलं, tyāne vāṭap kelaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is shared out takes -चं: अन्नाचं वाटप."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाटप करणे (vāṭap karṇe) joins वाटप, \"a sharing out\", built on the verb वाटणे, \"to share out\" (CDIAL 11238 lists Marathi vā̃ṭṇẽ under Sanskrit vaṇṭati, \"shares\"), to करणे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāṭap karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāṭap karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāṭap karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāṭap karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁsthene pūragrastānnā annācaṁ vāṭap kelaṁ. — The organization distributed food to the flood victims.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁsthene pūragrastānnā annācaṁ vāṭap kelaṁ.* — The organization distributed food to the flood victims.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a level, then the Marathi for a clause, then say vāṭap karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a level, then the Marathi for a clause, then say *vāṭap karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वाटप करणे (vāṭap karṇe) mean? (\"To allocate; to distribute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C392-davalne",
+      "sequence": 22580,
+      "title": "डावलणे (ḍāvalṇe) — to pass over; to sideline",
+      "headword": "डावलणे",
+      "romanization": "ḍāvalṇe",
+      "gloss": "to pass over; to sideline",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75e8897c78ca7641",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a clause, then the Marathi for to allocate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: डावलणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डावलणे — ḍāvalṇe — \"to pass over; to sideline\"."
+            },
+            {
+              "kind": "speech",
+              "text": "निवड करताना त्यांनी अनुभवी लोकांना डावललं. nivaḍ kartānā tyānnī anubhvī lokānnā ḍāvallaṁ. While choosing, they passed over experienced people."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने डावललं, tyāne ḍāvallaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The one passed over takes -ला."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डावलणे (ḍāvalṇe) is a Marathi verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍāvalṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍāvalṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍāvalṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍāvalṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivaḍ kartānā tyānnī anubhvī lokānnā ḍāvallaṁ. — While choosing, they passed over experienced people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivaḍ kartānā tyānnī anubhvī lokānnā ḍāvallaṁ.* — While choosing, they passed over experienced people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a clause, then the Marathi for to allocate, then say ḍāvalṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a clause, then the Marathi for to allocate, then say *ḍāvalṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does डावलणे (ḍāvalṇe) mean? (\"To pass over; to sideline\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C392-anusarne",
+      "sequence": 22590,
+      "title": "अनुसरणे (anusarṇe) — to follow (a method)",
+      "headword": "अनुसरणे",
+      "romanization": "anusarṇe",
+      "gloss": "to follow (a method)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0603a494a2a17085",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to allocate, then the Marathi for to pass over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनुसरणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुसरणे — anusarṇe — \"to follow (a method)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आम्ही शिक्षकांनी सांगितलेली पद्धत अनुसरली. āmhī śikṣakānnī sāṅgitlelī paddhat anusarlī. We followed the method the teacher described."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने अनुसरलं, tyāne anusarlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Transitive: the past agrees with what is followed, पद्धत अनुसरली."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुसरणे (anusarṇe) is a learned verb built on Sanskrit anusarati, \"runs to, runs after\" (CDIAL 338), with the Marathi ending -णे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anusarṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anusarṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anusarṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anusarṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmhī śikṣakānnī sāṅgitlelī paddhat anusarlī. — We followed the method the teacher described.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmhī śikṣakānnī sāṅgitlelī paddhat anusarlī.* — We followed the method the teacher described.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to allocate, then the Marathi for to pass over, then say anusarṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to allocate, then the Marathi for to pass over, then say *anusarṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनुसरणे (anusarṇe) mean? (\"To follow (a method)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C392-angikarne",
+      "sequence": 22600,
+      "title": "अंगीकारणे (aṅgīkārṇe) — to embrace; to adopt",
+      "headword": "अंगीकारणे",
+      "romanization": "aṅgīkārṇe",
+      "gloss": "to embrace; to adopt",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c703cb169c7e73b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to pass over, then the Marathi for to follow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अंगीकारणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंगीकारणे — aṅgīkārṇe — \"to embrace; to adopt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गावाने स्वच्छतेचा नवा मार्ग अंगीकारला. gāvāne svacchatecā navā mārga aṅgīkārlā. The village embraced a new way of keeping clean."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने अंगीकारलं, tyāne aṅgīkārlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; अंगीकार, adoption."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंगीकारणे (aṅgīkārṇe) is built on the tatsama अंगीकार, Sanskrit aṅgīkāra, \"agreement, promise\" (Monier-Williams), built on aṅga, \"limb, body\", with the verb ending -णे."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅgīkārṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅgīkārṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅgīkārṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅgīkārṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāvāne svacchatecā navā mārga aṅgīkārlā. — The village embraced a new way of keeping clean.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāvāne svacchatecā navā mārga aṅgīkārlā.* — The village embraced a new way of keeping clean.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to pass over, then the Marathi for to follow, then say aṅgīkārṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to pass over, then the Marathi for to follow, then say *aṅgīkārṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अंगीकारणे (aṅgīkārṇe) mean? (\"To embrace; to adopt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C356-janmat",
+    "language": "marathi",
+    "chapter": 356,
+    "sequence": 20740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a323bf6df1b601b9"
+  },
+  "findings": []
+}

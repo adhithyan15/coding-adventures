@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C413-dharmasala",
+    "language": "marathi",
+    "chapter": 413,
+    "sequence": 23880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:657a651f5d5e33e2"
+  },
+  "findings": []
+}

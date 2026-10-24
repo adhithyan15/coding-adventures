@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 506,
+  "title": "Office Life",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2b2a29215fa32ee2",
+  "lessons": [
+    {
+      "id": "MR-C506-lipik",
+      "sequence": 29100,
+      "title": "लिपिक (lipik) — a clerk",
+      "headword": "लिपिक",
+      "romanization": "lipik",
+      "gloss": "a clerk",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0a5d27f75e08c45",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a weaver, then the Marathi for to set up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लिपिक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लिपिक — lipik — \"a clerk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लिपिकाने माझा अर्ज वाचला. lipikāne mājhā arja vāclā. The clerk read my application."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लिपिक (lipik) is a tatsama, taken from Sanskrit lipika, \"a scribe, a clerk\" (Monier-Williams), built on lipi, \"writing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lipik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lipik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lipik, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lipik*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lipikāne mājhā arja vāclā. — The clerk read my application.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lipikāne mājhā arja vāclā.* — The clerk read my application.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a weaver, then the Marathi for to set up, then say lipik again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a weaver, then the Marathi for to set up, then say *lipik* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लिपिक (lipik) mean? (\"A clerk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C506-sipai",
+      "sequence": 29110,
+      "title": "शिपाई (śipāī) — an office attendant; a peon",
+      "headword": "शिपाई",
+      "romanization": "śipāī",
+      "gloss": "an office attendant; a peon",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f9fc4edb86c85f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to set up, then the Marathi for a clerk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शिपाई",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिपाई — śipāī — \"an office attendant; a peon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शिपायाने सगळ्यांना चहा आणून दिला. śipāyāne sagḷyānnā cahā āṇūn dilā. The office attendant brought everyone tea."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "The oblique is शिपाया-: शिपायाने, शिपायाला."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिपाई (śipāī) is a loan from Persian sipāhī, \"soldier\"; in a Marathi office it names the attendant who carries files and tea."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śipāī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śipāī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śipāī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śipāī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śipāyāne sagḷyānnā cahā āṇūn dilā. — The office attendant brought everyone tea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śipāyāne sagḷyānnā cahā āṇūn dilā.* — The office attendant brought everyone tea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to set up, then the Marathi for a clerk, then say śipāī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to set up, then the Marathi for a clerk, then say *śipāī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शिपाई (śipāī) mean? (\"An office attendant; a peon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C506-sikka",
+      "sequence": 29120,
+      "title": "शिक्का (śikkā) — a rubber stamp; a seal",
+      "headword": "शिक्का",
+      "romanization": "śikkā",
+      "gloss": "a rubber stamp; a seal",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:120b03072df945f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a clerk, then the Marathi for an office attendant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शिक्का",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिक्का — śikkā — \"a rubber stamp; a seal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लिपिकाने कागदावर शिक्का मारला. lipikāne kāgdāvar śikkā mārlā. The clerk stamped the paper."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "शिक्का (śikkā) मारणे, to stamp: the stamp is struck."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिक्का (śikkā) is a loan from Persian sikka, \"a stamp, a coin die\", usually traced to Arabic sikka."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikkā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikkā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikkā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikkā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lipikāne kāgdāvar śikkā mārlā. — The clerk stamped the paper.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lipikāne kāgdāvar śikkā mārlā.* — The clerk stamped the paper.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a clerk, then the Marathi for an office attendant, then say śikkā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a clerk, then the Marathi for an office attendant, then say *śikkā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शिक्का (śikkā) mean? (\"A rubber stamp; a seal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C506-kagadpatra",
+      "sequence": 29130,
+      "title": "कागदपत्र (kāgadpatra) — a document; papers",
+      "headword": "कागदपत्र",
+      "romanization": "kāgadpatra",
+      "gloss": "a document; papers",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11640c876b95de10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an office attendant, then the Marathi for a rubber stamp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कागदपत्र",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कागदपत्र — kāgadpatra — \"a document; papers\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीराने सगळी कागदपत्रं एका पिशवीत ठेवली. mīrāne sagḷī kāgadpatraṁ ekā piśvīt ṭhevlī. Meera kept all the papers in one bag."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter. Plural: कागदपत्रं, kāgadpatraṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly in the plural, कागदपत्रं, the papers for a task."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कागदपत्र (kāgadpatra) is a Marathi compound of कागद, \"paper\", a loan from Persian kāghaz, and पत्र, \"a leaf, a letter\", from Sanskrit patra (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāgadpatra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāgadpatra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāgadpatra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāgadpatra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrāne sagḷī kāgadpatraṁ ekā piśvīt ṭhevlī. — Meera kept all the papers in one bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrāne sagḷī kāgadpatraṁ ekā piśvīt ṭhevlī.* — Meera kept all the papers in one bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an office attendant, then the Marathi for a rubber stamp, then say kāgadpatra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an office attendant, then the Marathi for a rubber stamp, then say *kāgadpatra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कागदपत्र (kāgadpatra) mean? (\"A document; papers\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C506-channi-karne",
+      "sequence": 29140,
+      "title": "छाननी करणे (chānnī karṇe) — to scrutinize",
+      "headword": "छाननी करणे",
+      "romanization": "chānnī karṇe",
+      "gloss": "to scrutinize",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac819bd56d8e90d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a rubber stamp, then the Marathi for a document."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छाननी करणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छाननी करणे — chānnī karṇe — \"to scrutinize\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लिपिकाने सगळ्या कागदपत्रांची छाननी केली. lipikāne sagḷyā kāgadpatrāñcī chānnī kelī. The clerk scrutinized all the papers."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने अर्जाची छाननी केली, tyāne arjācī chānnī kelī."
+            },
+            {
+              "kind": "speech",
+              "text": "What is checked takes -ची: अर्जाची छाननी करणे (chānnī karṇe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छाननी करणे (chānnī karṇe) is छाननी, \"close sifting, scrutiny\", with करणे; the origin of छाननी is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chānnī karṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chānnī karṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chānnī karṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chānnī karṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lipikāne sagḷyā kāgadpatrāñcī chānnī kelī. — The clerk scrutinized all the papers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lipikāne sagḷyā kāgadpatrāñcī chānnī kelī.* — The clerk scrutinized all the papers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a rubber stamp, then the Marathi for a document, then say chānnī karṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a rubber stamp, then the Marathi for a document, then say *chānnī karṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छाननी करणे (chānnī karṇe) mean? (\"To scrutinize\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "Envy and Greed",
+  "label": "ch:mr-envy-and-greed",
+  "canDo": "I can talk about envy, hatred, disgust, temptation and greed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C462-lobh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can talk about envy, hatred, disgust, temptation and greed.",
+    "assesses": [
+      "MR-LEX-C462-HEVA462-03",
+      "MR-LEX-C462-HEVA462-04",
+      "MR-LEX-C462-HEVA462-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:d294860805c6492c",
+  "lessonIds": [
+    "MR-C396-aggadi",
+    "MR-C396-rul",
+    "MR-C396-lohmarga",
+    "MR-C396-malgadi",
+    "MR-C396-khadkhadne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch396.txt",
+  "json": "marathi/narration/ch396.json",
+  "textHash": "fnv1a64:bc7979827b2af307",
+  "jsonHash": "fnv1a64:1980eceb7fcee012",
+  "findings": []
+}

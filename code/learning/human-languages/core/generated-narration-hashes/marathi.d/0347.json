@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:e0d942dc006e317e",
+  "lessonIds": [
+    "MR-C347-virodh-karne",
+    "MR-C347-pathimba-dene",
+    "MR-C347-samarthan-karne",
+    "MR-C347-tatastha",
+    "MR-C347-viruddha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch347.txt",
+  "json": "marathi/narration/ch347.json",
+  "textHash": "fnv1a64:28d56293b968907f",
+  "jsonHash": "fnv1a64:a8ab035ab2015723",
+  "findings": []
+}

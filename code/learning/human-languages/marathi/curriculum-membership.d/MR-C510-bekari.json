@@ -1,0 +1,11 @@
+{
+  "id": "MR-C510-bekari",
+  "pathSegment": "MR-PATH-510-SODNE510",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-510-SODNE510",
+      "order": 1
+    }
+  ]
+}

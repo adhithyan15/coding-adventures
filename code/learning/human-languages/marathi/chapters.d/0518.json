@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Machines and Devices",
+  "label": "ch:mr-machines-and-devices",
+  "canDo": "I can talk about machines, devices and robots.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C518-phavarne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can talk about machines, devices and robots.",
+    "assesses": [
+      "MR-LEX-C518-YANTRA518-03",
+      "MR-LEX-C518-YANTRA518-04",
+      "MR-LEX-C518-YANTRA518-05"
+    ]
+  }
+}

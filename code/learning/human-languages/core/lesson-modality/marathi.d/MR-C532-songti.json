@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C532-songti",
+    "language": "marathi",
+    "chapter": 532,
+    "sequence": 30440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6fd2d7f93fd51bfe"
+  },
+  "findings": []
+}

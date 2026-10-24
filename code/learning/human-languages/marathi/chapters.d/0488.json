@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "At the Clinic",
+  "label": "ch:mr-at-the-clinic",
+  "canDo": "I can talk about a patient, a nurse, a physician, a diagnosis and treatment.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-C488-upcar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can talk about a patient, a nurse, a physician, a diagnosis and treatment.",
+    "assesses": [
+      "MR-LEX-C488-RUGNA488-03",
+      "MR-LEX-C488-RUGNA488-04",
+      "MR-LEX-C488-RUGNA488-05"
+    ]
+  }
+}

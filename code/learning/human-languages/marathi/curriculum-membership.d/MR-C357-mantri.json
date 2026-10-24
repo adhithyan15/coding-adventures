@@ -1,0 +1,11 @@
+{
+  "id": "MR-C357-mantri",
+  "pathSegment": "MR-PATH-357-SHASAN357",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-357-SHASAN357",
+      "order": 2
+    }
+  ]
+}

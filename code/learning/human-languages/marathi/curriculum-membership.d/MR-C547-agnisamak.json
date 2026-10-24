@@ -1,0 +1,11 @@
+{
+  "id": "MR-C547-agnisamak",
+  "pathSegment": "MR-PATH-547-ANIBANI547",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-547-ANIBANI547",
+      "order": 1
+    }
+  ]
+}

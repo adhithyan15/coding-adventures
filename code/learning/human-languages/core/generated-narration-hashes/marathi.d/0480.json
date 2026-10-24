@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:9bc40758fa7ff78f",
+  "lessonIds": [
+    "MR-C480-tabyet",
+    "MR-C480-laksan",
+    "MR-C480-thakva",
+    "MR-C480-asakta",
+    "MR-C480-malmalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch480.txt",
+  "json": "marathi/narration/ch480.json",
+  "textHash": "fnv1a64:80fc60f0df4d9b48",
+  "jsonHash": "fnv1a64:cb7830069ccebcd4",
+  "findings": []
+}

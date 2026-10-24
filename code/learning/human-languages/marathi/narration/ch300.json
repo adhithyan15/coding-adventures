@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 300,
+  "title": "Threats and Bribes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:07839a24a296150a",
+  "lessons": [
+    {
+      "id": "MR-C300-dhamkavne",
+      "sequence": 17610,
+      "title": "धमकावणे (dhamkāvṇe) — to threaten",
+      "headword": "धमकावणे",
+      "romanization": "dhamkāvṇe",
+      "gloss": "to threaten",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba20d7b43180e279",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to confess, then the Marathi for to file."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धमकावणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धमकावणे — dhamkāvṇe — \"to threaten\"."
+            },
+            {
+              "kind": "speech",
+              "text": "त्या गुंडाने दुकानदाराला धमकावलं. tyā guṇḍāne dukāndārālā dhamkāvlaṁ. That thug threatened the shopkeeper."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने धमकावलं, tyāne dhamkāvlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The person threatened takes -ला; the noun is धमकी, a threat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धमकावणे (dhamkāvṇe) is inherited: CDIAL lists Marathi dhamkāvṇe, 'to threaten', under dhammakka, 'a threat' (CDIAL 6736)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhamkāvṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhamkāvṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhamkāvṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhamkāvṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tyā guṇḍāne dukāndārālā dhamkāvlaṁ. — That thug threatened the shopkeeper.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tyā guṇḍāne dukāndārālā dhamkāvlaṁ.* — That thug threatened the shopkeeper.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to confess, then the Marathi for to file, then say dhamkāvṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to confess, then the Marathi for to file, then say *dhamkāvṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धमकावणे (dhamkāvṇe) mean? (\"To threaten\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C300-lac",
+      "sequence": 17620,
+      "title": "लाच (lāc) — a bribe",
+      "headword": "लाच",
+      "romanization": "lāc",
+      "gloss": "a bribe",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7da21ce8a9655d12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to file, then the Marathi for to threaten."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लाच",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लाच — lāc — \"a bribe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लाच घेताना एका कारकुनाला पकडलं. lāc ghetānā ekā kārkunālā pakaḍlaṁ. A clerk was caught taking a bribe."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "लाच (lāc) घेणे, to take a bribe; लाच (lāc) देणे, to give one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लाच (lāc) is a tadbhava, inherited from Sanskrit lañcā, 'a present, a bribe' (CDIAL 10914)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāc",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāc*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāc, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāc*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāc ghetānā ekā kārkunālā pakaḍlaṁ. — A clerk was caught taking a bribe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāc ghetānā ekā kārkunālā pakaḍlaṁ.* — A clerk was caught taking a bribe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to file, then the Marathi for to threaten, then say lāc again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to file, then the Marathi for to threaten, then say *lāc* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लाच (lāc) mean? (\"A bribe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C300-siksa",
+      "sequence": 17630,
+      "title": "शिक्षा (śikṣā) — a punishment; a sentence",
+      "headword": "शिक्षा",
+      "romanization": "śikṣā",
+      "gloss": "a punishment; a sentence",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55ce1dc22b64ff15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to threaten, then the Marathi for a bribe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शिक्षा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिक्षा — śikṣā — \"a punishment; a sentence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "न्यायालयाने त्याला तीन वर्षांची शिक्षा दिली. nyāyālayāne tyālā tīn varṣāñcī śikṣā dilī. The court sentenced him to three years."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "शिक्षा (śikṣā) देणे, to sentence; शिक्षा (śikṣā) होणे, to be punished. In Marathi it means punishment, not teaching."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिक्षा (śikṣā) is a tatsama, taken from Sanskrit śikṣā, 'learning, teaching; also chastisement, punishment' (Monier-Williams); Marathi keeps the last sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikṣā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikṣā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikṣā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikṣā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyāyālayāne tyālā tīn varṣāñcī śikṣā dilī. — The court sentenced him to three years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyāyālayāne tyālā tīn varṣāñcī śikṣā dilī.* — The court sentenced him to three years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to threaten, then the Marathi for a bribe, then say śikṣā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to threaten, then the Marathi for a bribe, then say *śikṣā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शिक्षा (śikṣā) mean? (\"A punishment; a sentence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C300-pal-kadhne",
+      "sequence": 17640,
+      "title": "पळ काढणे (paḷ kāḍhṇe) — to flee; to take to one's heels",
+      "headword": "पळ काढणे",
+      "romanization": "paḷ kāḍhṇe",
+      "gloss": "to flee; to take to one's heels",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab3962ace8ae325b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a bribe, then the Marathi for a punishment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पळ काढणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पळ काढणे — paḷ kāḍhṇe — \"to flee; to take to one's heels\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पोलिसांना पाहिल्यावर चोराने पळ काढला. polisānnā pāhilyāvar corāne paḷ kāḍhlā. When he saw the police, the thief fled."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने पळ काढला, tyāne paḷ kāḍhlā."
+            },
+            {
+              "kind": "speech",
+              "text": "The agent takes -ने and पळ is masculine: चोराने पळ काढला. Plainer: पळून जाणे."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पळ काढणे (paḷ kāḍhṇe) is built from paḷ, 'flight', of the family of Sanskrit palāyate, 'flees' (CDIAL 7955), and kāḍhṇe, 'to take out'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḷ kāḍhṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḷ kāḍhṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḷ kāḍhṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḷ kāḍhṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polisānnā pāhilyāvar corāne paḷ kāḍhlā. — When he saw the police, the thief fled.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polisānnā pāhilyāvar corāne paḷ kāḍhlā.* — When he saw the police, the thief fled.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a bribe, then the Marathi for a punishment, then say paḷ kāḍhṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a bribe, then the Marathi for a punishment, then say *paḷ kāḍhṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पळ काढणे (paḷ kāḍhṇe) mean? (\"To flee; to take to one's heels\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C300-kondne",
+      "sequence": 17650,
+      "title": "कोंडणे (koṇḍṇe) — to shut in; to lock up",
+      "headword": "कोंडणे",
+      "romanization": "koṇḍṇe",
+      "gloss": "to shut in; to lock up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b6ed44323f7ccec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a punishment, then the Marathi for to flee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कोंडणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोंडणे — koṇḍṇe — \"to shut in; to lock up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चोरांनी चौकीदाराला खोलीत कोंडलं. corānnī caukīdārālā kholīt koṇḍlaṁ. The thieves locked the watchman in a room."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने कोंडलं, tyāne koṇḍlaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The place takes -त: खोलीत कोंडणे (koṇḍṇe); कोंडून ठेवणे, to keep shut in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोंडणे (koṇḍṇe) is a Marathi verb of shutting in; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṇḍṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṇḍṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṇḍṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṇḍṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "corānnī caukīdārālā kholīt koṇḍlaṁ. — The thieves locked the watchman in a room.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *corānnī caukīdārālā kholīt koṇḍlaṁ.* — The thieves locked the watchman in a room.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a punishment, then the Marathi for to flee, then say koṇḍṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a punishment, then the Marathi for to flee, then say *koṇḍṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कोंडणे (koṇḍṇe) mean? (\"To shut in; to lock up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

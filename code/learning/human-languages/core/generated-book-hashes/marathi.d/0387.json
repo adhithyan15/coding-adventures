@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:858ce063fca5509f",
+  "lessonIds": [
+    "MR-C387-vagalne",
+    "MR-C387-samavista-karne",
+    "MR-C387-visambne",
+    "MR-C387-tharne",
+    "MR-C387-patne"
+  ],
+  "tex": "marathi/book/chapters/ch387-what-counts.tex"
+}

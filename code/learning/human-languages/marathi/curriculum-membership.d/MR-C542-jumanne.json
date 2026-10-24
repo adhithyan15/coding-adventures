@@ -1,0 +1,11 @@
+{
+  "id": "MR-C542-jumanne",
+  "pathSegment": "MR-PATH-542-NIYAM542",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-542-NIYAM542",
+      "order": 3
+    }
+  ]
+}

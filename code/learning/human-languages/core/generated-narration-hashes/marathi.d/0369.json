@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:bfdd2ffa3e8c30c6",
+  "lessonIds": [
+    "MR-C369-pradhyapak",
+    "MR-C369-abhyasakram",
+    "MR-C369-sisyavrtti",
+    "MR-C369-sulka",
+    "MR-C369-vasatigrh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch369.txt",
+  "json": "marathi/narration/ch369.json",
+  "textHash": "fnv1a64:7172290aff046b1e",
+  "jsonHash": "fnv1a64:98a48ad6f339e217",
+  "findings": []
+}

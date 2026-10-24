@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:75c33fde49b549ba",
+  "lessonIds": [
+    "MR-C402-ghat",
+    "MR-C402-khind",
+    "MR-C402-utar",
+    "MR-C402-nagmodi",
+    "MR-C402-sulka"
+  ],
+  "tex": "marathi/book/chapters/ch402-mountain-roads.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:87912a33e26d9339",
+  "lessonIds": [
+    "MR-C425-taraju",
+    "MR-C425-mapne",
+    "MR-C425-assal",
+    "MR-C425-banavat",
+    "MR-C425-nakkal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch425.txt",
+  "json": "marathi/narration/ch425.json",
+  "textHash": "fnv1a64:77290caf522bb967",
+  "jsonHash": "fnv1a64:72bf7698e42fb384",
+  "findings": []
+}

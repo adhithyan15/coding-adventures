@@ -1,0 +1,11 @@
+{
+  "id": "MR-C370-vakta",
+  "pathSegment": "MR-PATH-370-VYAKHYAN370",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-370-VYAKHYAN370",
+      "order": 4
+    }
+  ]
+}

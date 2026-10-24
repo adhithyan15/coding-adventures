@@ -1,0 +1,11 @@
+{
+  "id": "MR-C367-samajik",
+  "pathSegment": "MR-PATH-367-PRATHA367",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-367-PRATHA367",
+      "order": 4
+    }
+  ]
+}

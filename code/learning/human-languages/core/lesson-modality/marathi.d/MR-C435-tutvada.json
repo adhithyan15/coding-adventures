@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C435-tutvada",
+    "language": "marathi",
+    "chapter": 435,
+    "sequence": 25000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1039053afbb85c4"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "marathi",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:012a7fad166e305a",
+  "lessonIds": [
+    "MR-C543-manjuri",
+    "MR-C543-sammati",
+    "MR-C543-hokar",
+    "MR-C543-vaidh",
+    "MR-C543-olakhpatra",
+    "MR-R543-review-536-543"
+  ],
+  "tex": "marathi/book/chapters/ch543-yes-or-no.tex"
+}

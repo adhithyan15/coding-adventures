@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C389-sahsa",
+    "language": "marathi",
+    "chapter": 389,
+    "sequence": 22450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc46da8966d08a17"
+  },
+  "findings": []
+}

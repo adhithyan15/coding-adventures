@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "The Army in Camp",
+  "label": "ch:mr-the-army-in-camp",
+  "canDo": "I can talk about commanders, foot soldiers and guards.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C330-jhunjne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can talk about commanders, foot soldiers and guards.",
+    "assesses": [
+      "MR-LEX-C330-SENAPATI330-03",
+      "MR-LEX-C330-SENAPATI330-04",
+      "MR-LEX-C330-SENAPATI330-05"
+    ]
+  }
+}

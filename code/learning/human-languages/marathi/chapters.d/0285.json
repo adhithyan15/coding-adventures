@@ -1,0 +1,20 @@
+{
+  "chapter": 285,
+  "title": "Bigger, Biggest, and How Long",
+  "label": "ch:mr-bigger-biggest-and-how-long",
+  "canDo": "I can compare two things with -pekṣā and jāsta, say the most with sarvāt, and say how long with -pāsūn, -paryant and -bhar.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-R285-comparing-and-time",
+    "kind": "production",
+    "summary": "Complete MR-R285-comparing-and-time: compare things and say how long something has gone on.",
+    "assesses": [
+      "MR-GRAMMAR-C285-PEKSHA-01",
+      "MR-GRAMMAR-C285-SARVAT-01",
+      "MR-GRAMMAR-C285-PASUN-SPAN-01",
+      "MR-GRAMMAR-C285-FROM-UNTIL-01"
+    ]
+  }
+}

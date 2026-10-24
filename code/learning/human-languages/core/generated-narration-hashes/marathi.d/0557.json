@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 557,
+  "sourceHash": "fnv1a64:e81299cd5689cf48",
+  "lessonIds": [
+    "MR-C557-kuvat",
+    "MR-C557-avaka",
+    "MR-C557-katkasar",
+    "MR-C557-purvasucana",
+    "MR-C557-anumati",
+    "MR-R557-review-551-557",
+    "MR-R557-review-final-557"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch557.txt",
+  "json": "marathi/narration/ch557.json",
+  "textHash": "fnv1a64:8377b072f3d5429d",
+  "jsonHash": "fnv1a64:be67fff8191b80ae",
+  "findings": []
+}

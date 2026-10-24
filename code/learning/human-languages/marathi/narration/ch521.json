@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 521,
+  "title": "Cracks and Repairs",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:55c9c972849e0457",
+  "lessons": [
+    {
+      "id": "MR-C521-bheg",
+      "sequence": 29870,
+      "title": "भेग (bheg) — a fissure; a crack in the ground",
+      "headword": "भेग",
+      "romanization": "bheg",
+      "gloss": "a fissure; a crack in the ground",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95b89fff7362ed2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a drain, then the Marathi for to get blocked."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भेग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भेग — bheg — \"a fissure; a crack in the ground\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उन्हाळ्यात शेतात मोठ्या भेगा पडल्या. unhāḷyāt śetāt moṭhyā bhegā paḍlyā. In the summer big cracks opened in the field."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Plural: भेगा, bhegā."
+            },
+            {
+              "kind": "speech",
+              "text": "भेग (bheg) पडणे, a crack opens."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भेग (bheg) is the word for a split in dry earth or a wall; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bheg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bheg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bheg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bheg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unhāḷyāt śetāt moṭhyā bhegā paḍlyā. — In the summer big cracks opened in the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unhāḷyāt śetāt moṭhyā bhegā paḍlyā.* — In the summer big cracks opened in the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a drain, then the Marathi for to get blocked, then say bheg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a drain, then the Marathi for to get blocked, then say *bheg* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भेग (bheg) mean? (\"A fissure; a crack in the ground\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C521-tadakne",
+      "sequence": 29880,
+      "title": "तडकणे (taḍakṇe) — to crack",
+      "headword": "तडकणे",
+      "romanization": "taḍakṇe",
+      "gloss": "to crack",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dfb2db5a10312f23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to get blocked, then the Marathi for a fissure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तडकणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तडकणे — taḍakṇe — \"to crack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "खाली पडल्यावर आरसा तडकला. khālī paḍlyāvar ārsā taḍaklā. The mirror cracked when it fell."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): तो आरसा तडकला, to ārsā taḍaklā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तडकणे (taḍakṇe) is inherited: CDIAL lists Marathi taḍakṇẽ, \"to crack\", with the sound word traṭ, \"crackle\" (CDIAL 5988)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍakṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍakṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍakṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍakṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khālī paḍlyāvar ārsā taḍaklā. — The mirror cracked when it fell.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khālī paḍlyāvar ārsā taḍaklā.* — The mirror cracked when it fell.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to get blocked, then the Marathi for a fissure, then say taḍakṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to get blocked, then the Marathi for a fissure, then say *taḍakṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तडकणे (taḍakṇe) mean? (\"To crack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C521-gond",
+      "sequence": 29890,
+      "title": "गोंद (gond) — glue; gum",
+      "headword": "गोंद",
+      "romanization": "gond",
+      "gloss": "glue; gum",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:123c2dd0faa302a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a fissure, then the Marathi for to crack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गोंद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गोंद — gond — \"glue; gum\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मी तुटलेलं खेळणं गोंदाने चिकटवलं. mī tuṭlelaṁ kheḷṇaṁ gondāne cikṭavlaṁ. I stuck the broken toy together with glue."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गोंद (gond) is inherited: CDIAL lists Marathi gõd, \"gum\", beside Hindi gõd, under Sanskrit gundra, the name of a reed (CDIAL 4199). How a reed's name came to mean gum is not explained there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gond",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gond*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gond, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gond*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī tuṭlelaṁ kheḷṇaṁ gondāne cikṭavlaṁ. — I stuck the broken toy together with glue.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī tuṭlelaṁ kheḷṇaṁ gondāne cikṭavlaṁ.* — I stuck the broken toy together with glue.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a fissure, then the Marathi for to crack, then say gond again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a fissure, then the Marathi for to crack, then say *gond* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गोंद (gond) mean? (\"Glue; gum\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C521-karvat",
+      "sequence": 29900,
+      "title": "करवत (karvat) — a saw",
+      "headword": "करवत",
+      "romanization": "karvat",
+      "gloss": "a saw",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b96704e38c9f384",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to crack, then the Marathi for glue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: करवत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "करवत — karvat — \"a saw\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सुताराने करवतीने लाकूड कापलं. sutārāne karavtīne lākūḍ kāplaṁ. The carpenter cut the wood with a saw."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            },
+            {
+              "kind": "speech",
+              "text": "The oblique is करवती-: करवतीने, with a saw."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "करवत (karvat) is a tadbhava, inherited from Sanskrit karapattra, \"saw\" (CDIAL 2795)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karvat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karvat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karvat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karvat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sutārāne karavtīne lākūḍ kāplaṁ. — The carpenter cut the wood with a saw.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sutārāne karavtīne lākūḍ kāplaṁ.* — The carpenter cut the wood with a saw.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to crack, then the Marathi for glue, then say karvat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to crack, then the Marathi for glue, then say *karvat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does करवत (karvat) mean? (\"A saw\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C521-limpne",
+      "sequence": 29910,
+      "title": "लिंपणे (limpṇe) — to plaster; to smear over",
+      "headword": "लिंपणे",
+      "romanization": "limpṇe",
+      "gloss": "to plaster; to smear over",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7a5f458ba7e60b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for glue, then the Marathi for a saw."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लिंपणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लिंपणे — limpṇe — \"to plaster; to smear over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गवंड्याने भिंतीतली भेग मातीने लिंपली. gavaṇḍyāne bhintītlī bheg mātīne limplī. The mason plastered the crack in the wall with mud."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with -ने (he …): त्याने भिंत लिंपली, tyāne bhint limplī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लिंपणे (limpṇe) is a tadbhava, inherited from Sanskrit limpati, \"smears\" (CDIAL 11066)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "limpṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *limpṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "limpṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *limpṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gavaṇḍyāne bhintītlī bheg mātīne limplī. — The mason plastered the crack in the wall with mud.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gavaṇḍyāne bhintītlī bheg mātīne limplī.* — The mason plastered the crack in the wall with mud.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for glue, then the Marathi for a saw, then say limpṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for glue, then the Marathi for a saw, then say *limpṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लिंपणे (limpṇe) mean? (\"To plaster; to smear over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

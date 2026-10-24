@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-536-GAYAN536",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "MR-EXT-536-GAYAN536"
+  ],
+  "after": []
+}

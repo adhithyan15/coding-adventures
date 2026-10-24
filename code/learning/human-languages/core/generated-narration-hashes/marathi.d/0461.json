@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:e60a1609234c3f32",
+  "lessonIds": [
+    "MR-C461-apman",
+    "MR-C461-tomna",
+    "MR-C461-tiraskar",
+    "MR-C461-dukhavne",
+    "MR-C461-hinavne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch461.txt",
+  "json": "marathi/narration/ch461.json",
+  "textHash": "fnv1a64:6cf1bf0e3ea5278d",
+  "jsonHash": "fnv1a64:1626589ddeca42ad",
+  "findings": []
+}

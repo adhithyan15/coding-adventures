@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:15398bb0a10d5dd4",
+  "lessonIds": [
+    "MR-C313-aphva",
+    "MR-C313-khalbal",
+    "MR-C313-ghosna",
+    "MR-C313-thalak",
+    "MR-C313-pukarne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch313.txt",
+  "json": "marathi/narration/ch313.json",
+  "textHash": "fnv1a64:2ee31b0f7c50331e",
+  "jsonHash": "fnv1a64:c5539c1f27c93f1c",
+  "findings": []
+}

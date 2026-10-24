@@ -318,6 +318,20 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "MR-W279-letter-vocalic-r",
+      "sourceHash": "fnv1a64:da1e1bdbcb32e71f",
+      "svgHash": "fnv1a64:1705eb2212ce2097",
+      "svg": "marathi/book/figures/MR-W279-letter-vocalic-r-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W281-letter-nya",
+      "sourceHash": "fnv1a64:a09ca0ce707c8e3e",
+      "svgHash": "fnv1a64:7cfcd3f0709bdfd6",
+      "svg": "marathi/book/figures/MR-W281-letter-nya-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "MR-W39-tha",
       "sourceHash": "fnv1a64:e139721b94619ccf",
       "svgHash": "fnv1a64:fddb7c279859c7e4",

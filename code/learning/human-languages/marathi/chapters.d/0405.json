@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "Planes and Runways",
+  "label": "ch:mr-planes-and-runways",
+  "canDo": "I can talk about a plane, a flight, a runway, customs and a visa.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "MR-C405-vhisa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can talk about a plane, a flight, a runway, customs and a visa.",
+    "assesses": [
+      "MR-LEX-C405-VIMAN405-03",
+      "MR-LEX-C405-VIMAN405-04",
+      "MR-LEX-C405-VIMAN405-05"
+    ]
+  }
+}

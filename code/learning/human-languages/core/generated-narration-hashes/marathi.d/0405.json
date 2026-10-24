@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:3213f2b7cc862889",
+  "lessonIds": [
+    "MR-C405-viman",
+    "MR-C405-uddan",
+    "MR-C405-dhavpatti",
+    "MR-C405-simasulka",
+    "MR-C405-vhisa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch405.txt",
+  "json": "marathi/narration/ch405.json",
+  "textHash": "fnv1a64:c6608d70d4f2655c",
+  "jsonHash": "fnv1a64:869422a78f44997b",
+  "findings": []
+}

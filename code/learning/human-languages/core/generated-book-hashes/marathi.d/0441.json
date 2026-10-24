@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:c6f8e47bc84bf9d9",
+  "lessonIds": [
+    "MR-C441-ksitij",
+    "MR-C441-candne",
+    "MR-C441-ugavne",
+    "MR-C441-mavalne",
+    "MR-C441-camakne"
+  ],
+  "tex": "marathi/book/chapters/ch441-sunrise-and-moonlight.tex"
+}

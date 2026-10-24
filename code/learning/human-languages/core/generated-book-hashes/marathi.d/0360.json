@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:ce4637e132c38b14",
+  "lessonIds": [
+    "MR-C360-samanta",
+    "MR-C360-bhedbhav",
+    "MR-C360-visamta",
+    "MR-C360-daridrya",
+    "MR-C360-saksarta"
+  ],
+  "tex": "marathi/book/chapters/ch360-fair-and-unfair.tex"
+}

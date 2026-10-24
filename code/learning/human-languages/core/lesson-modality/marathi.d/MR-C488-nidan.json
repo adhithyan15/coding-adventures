@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C488-nidan",
+    "language": "marathi",
+    "chapter": 488,
+    "sequence": 27970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a96a1bb346baf702"
+  },
+  "findings": []
+}

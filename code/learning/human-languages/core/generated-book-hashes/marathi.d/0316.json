@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:a09475a14fa7603b",
+  "lessonIds": [
+    "MR-C316-lagna",
+    "MR-C316-sakharpuda",
+    "MR-C316-mendi",
+    "MR-C316-varat",
+    "MR-C316-mandap"
+  ],
+  "tex": "marathi/book/chapters/ch316-a-wedding.tex"
+}

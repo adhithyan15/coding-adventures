@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C442-dari",
+    "language": "marathi",
+    "chapter": 442,
+    "sequence": 25360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57238287b4577e62"
+  },
+  "findings": []
+}

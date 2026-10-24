@@ -1,0 +1,21 @@
+{
+  "chapter": 395,
+  "title": "Useful or Not",
+  "label": "ch:mr-useful-or-not",
+  "canDo": "I can say whether something is useful, tricky, direct or unclear.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "MR-R395-review-final-395",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can say whether something is useful, tricky, direct or unclear.",
+    "assesses": [
+      "MR-LEX-C395-UPAYUKTA395-01",
+      "MR-LEX-C395-UPAYUKTA395-02",
+      "MR-LEX-C395-UPAYUKTA395-03",
+      "MR-LEX-C395-UPAYUKTA395-04",
+      "MR-LEX-C395-UPAYUKTA395-05"
+    ]
+  }
+}

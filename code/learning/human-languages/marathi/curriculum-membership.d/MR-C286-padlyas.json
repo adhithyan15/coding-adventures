@@ -1,0 +1,11 @@
+{
+  "id": "MR-C286-padlyas",
+  "pathSegment": "MR-PATH-286-IF-OTHERWISE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-286-IF-OTHERWISE",
+      "order": 1
+    }
+  ]
+}

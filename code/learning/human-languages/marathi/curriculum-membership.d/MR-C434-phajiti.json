@@ -1,0 +1,11 @@
+{
+  "id": "MR-C434-phajiti",
+  "pathSegment": "MR-PATH-434-GAIRSOY434",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-434-GAIRSOY434",
+      "order": 2
+    }
+  ]
+}

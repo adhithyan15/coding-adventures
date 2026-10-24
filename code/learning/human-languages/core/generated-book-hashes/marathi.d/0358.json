@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:f20b14c3533d5b59",
+  "lessonIds": [
+    "MR-C358-samvidhan",
+    "MR-C358-dhoran",
+    "MR-C358-lagu-karne",
+    "MR-C358-radda-karne",
+    "MR-C358-bahal-karne"
+  ],
+  "tex": "marathi/book/chapters/ch358-making-laws.tex"
+}

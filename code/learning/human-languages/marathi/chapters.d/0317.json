@@ -1,0 +1,19 @@
+{
+  "chapter": 317,
+  "title": "Gifts and Blessings",
+  "label": "ch:mr-gifts-and-blessings",
+  "canDo": "I can talk about wedding gifts, blessings and music.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "MR-C317-ukhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can talk about wedding gifts, blessings and music.",
+    "assesses": [
+      "MR-LEX-C317-AHER317-03",
+      "MR-LEX-C317-AHER317-04",
+      "MR-LEX-C317-AHER317-05"
+    ]
+  }
+}

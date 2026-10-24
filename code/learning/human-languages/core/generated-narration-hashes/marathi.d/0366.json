@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:cb0f6ba285a44c94",
+  "lessonIds": [
+    "MR-C366-mulya",
+    "MR-C366-naitikta",
+    "MR-C366-sacoti",
+    "MR-C366-tyag",
+    "MR-C366-hit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch366.txt",
+  "json": "marathi/narration/ch366.json",
+  "textHash": "fnv1a64:dba54805b6c7607b",
+  "jsonHash": "fnv1a64:3a16d9ed9593d4fa",
+  "findings": []
+}

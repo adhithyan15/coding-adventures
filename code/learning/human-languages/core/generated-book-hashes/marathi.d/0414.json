@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:06f2ba6dd8c3c13b",
+  "lessonIds": [
+    "MR-C414-atithi",
+    "MR-C414-adaratithya",
+    "MR-C414-svagatkaksa",
+    "MR-C414-vicarpus-karne",
+    "MR-C414-phirakne"
+  ],
+  "tex": "marathi/book/chapters/ch414-guests-and-hosts.tex"
+}

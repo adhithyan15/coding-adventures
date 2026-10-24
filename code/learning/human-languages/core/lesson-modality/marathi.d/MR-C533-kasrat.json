@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C533-kasrat",
+    "language": "marathi",
+    "chapter": 533,
+    "sequence": 30480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb92db7a6fd8c5ac"
+  },
+  "findings": []
+}
