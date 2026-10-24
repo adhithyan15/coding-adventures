@@ -1001,9 +1001,9 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         }
         // A class *value* binds its own name (if named) and each method
         // value's name (if named) and params at their boundaries; record
-        // them so an inline never captures or collides with them — mirroring
-        // the `FunctionExpression` arm, which records boundary bindings but
-        // does NOT recurse into the (nested-scope) function bodies. The
+        // them so an inline never captures or collides with them, mirroring
+        // the `FunctionExpression` arm. Like that arm, it also walks each
+        // method body's free names (#18134, `collect_nested_function_body`). The
         // `extends` operand, however, is evaluated in the ENCLOSING scope
         // (like a callee), so recurse into it as this walk does for other
         // operand-position sub-expressions. A method KEY is a property name,
@@ -1138,6 +1138,19 @@ fn collect_nested_function_body(body: &[Statement], out: &mut HashSet<String>) {
         names.remove(own);
     }
     out.extend(names);
+}
+
+/// Record a parameter list's bound names, and the names its default values
+/// read (`a = SOME_NAME`), for the declaration arms of `collect_used_idents_decl`
+/// (#18134). The expression arms of `collect_binding_idents_expr` do the same
+/// inline.
+fn collect_param_names_and_defaults(params: &[coding_adventures_javascript_ast::FunctionParam], out: &mut HashSet<String>) {
+    for p in params {
+        out.insert(p.binding_identifier().name.clone());
+        if let Some(def) = p.default_value() {
+            collect_binding_idents_expr(def, out);
+        }
+    }
 }
 
 fn collect_binding_idents_member(
@@ -4474,6 +4487,10 @@ fn collect_used_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
             }
         }
         Declaration::FunctionDeclaration(fd) => {
+            // #18134: parameter defaults read names too
+            // (`function h(a=y){}`), like the `FunctionExpression` arm's.
+            out.insert(fd.id.name.clone());
+            collect_param_names_and_defaults(&fd.params, out);
             for s in &fd.body.body {
                 collect_used_idents_stmt(s, out);
             }
@@ -4498,6 +4515,8 @@ fn collect_used_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
                         if let PropertyKey::Expression(e) = &m.key {
                             collect_binding_idents_expr(e, out);
                         }
+                        // #18134: so are parameter defaults' names.
+                        collect_param_names_and_defaults(&m.value.params, out);
                         for s in &m.value.body.body {
                             collect_used_idents_stmt(s, out);
                         }
@@ -6148,10 +6167,11 @@ mod tests {
         for src in [
             "var y=1;function t(){return function(){return y}}function g(){var y=2;return t()()}log(g());",
             "var y=1;function t(){return class{m(){return y}}}function g(){var y=2;return t()}log(g());",
+            // A nested declaration's parameter default reads `y` too.
+            "var y=1;function t(h,a){return function(){function h(a=y){return a}return h()}}function g(){var y=2;return t(0,0)()}log(g());",
+            "var y=1;function t(K,m,a){return function(){class K{m(a=y){return a}}return (new K).m()}}function g(){var y=2;return t(0,0,0)()}log(g());",
         ] {
-            let out = inline_source(src);
-            assert!(out.contains("function t()"), "t was spliced: {out}");
-            assert!(out.contains("return t()"), "t was spliced: {out}");
+            assert_eq!(inline_source(src), src, "t was spliced");
         }
     }
 

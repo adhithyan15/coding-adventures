@@ -19,7 +19,9 @@ recorded a nested `function` expression's name and parameters but never its
 body, so its free names were invisible. Class method bodies had the same
 gap.
 
-`collect_nested_function_body` now walks those bodies. It keeps every name
+`collect_nested_function_body` now walks those bodies, and
+`collect_used_idents_decl` now walks the parameter defaults of nested
+function and class-method declarations (`function h(a=y){}`). It keeps every name
 they use, and drops only the nested function's own `this`, `super`,
 `new.target` and `arguments`. The nested body's own locals are
 over-collected too, which can only cost an inline. A helper whose nested

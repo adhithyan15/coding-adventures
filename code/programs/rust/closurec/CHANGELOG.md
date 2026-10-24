@@ -108,7 +108,7 @@ prints `1`. ADVANCED spliced `t` into `g`, so the returned function read
 0.32.0: its capture guards now see the free names of nested `function` and
 method bodies.
 
-`tests/regression_inline_nested_capture.rs` checks with `node` that four
+`tests/regression_inline_nested_capture.rs` checks with `node` that seven
 programs print the same after SIMPLE and ADVANCED as before.
 
 ### Fixed - long expression chains fail cleanly instead of aborting (#16009, CLOC42)

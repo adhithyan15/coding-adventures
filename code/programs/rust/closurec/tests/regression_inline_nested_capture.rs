@@ -26,6 +26,11 @@ const PROGRAMS: &[&str] = &[
     "var y=1;function t(){return class{m(){return y}}}function g(){var y=2;return new(t())().m()}console.log(g())",
     // The nested function declares its own `y`: no capture either way.
     "var y=1;function t(){return function(){var y=3;return y}}function g(){var y=2;return t()()}console.log(g())",
+    // A nested declaration's parameter default reads `y` (security review).
+    "var y=1;function t(h,a){return function(){function h(a=y){return a}return h()}}function g(){var y=2;return t(0,0)()}console.log(g())",
+    "var y=1;function t(K,m,a){return function(){class K{m(a=y){return a}}return new K().m()}}function g(){var y=2;return t(0,0,0)()}console.log(g())",
+    // The statement inliner, through the same gap.
+    "var y=1;function t(h,a){let f=function(){function h(a=y){return a}return h()};console.log(f())}function g(){var y=2;t(0,0);return y}console.log(g())",
     // A self-contained nested function is still inlined.
     "function t(){return function(){return 7}}console.log(t()())",
 ];
