@@ -221,6 +221,14 @@ const ER_LEADING_ASTERISK_ATTRIBUTES_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-leading-asterisk-attributes-11.16.1-visual-corpus.json"
 ));
+const ER_MIXED_RELATIONSHIP_OPERATORS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-mixed-relationship-operators-11.16.1-corpus.json"
+));
+const ER_MIXED_RELATIONSHIP_OPERATORS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-mixed-relationship-operators-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2742,6 +2750,32 @@ fn pinned_er_leading_asterisk_attributes_reach_semantic_ir() {
         diagram.nodes[0].compartments[0].entries,
         ["*title: string", "*the_Primary_Key: id [PK]"]
     );
+}
+
+#[test]
+fn pinned_er_mixed_relationship_operators_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_MIXED_RELATIONSHIP_OPERATORS_CORPUS)
+        .expect("ER mixed relationship operator corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_MIXED_RELATIONSHIP_OPERATORS_VISUAL_CORPUS)
+        .expect("ER mixed relationship operator visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER mixed relationship operator source"),
+    )
+    .expect("ER mixed relationship operator fixture must parse");
+
+    assert_eq!(diagram.nodes.len(), 2);
+    assert_eq!(diagram.relationships.len(), 3);
+    assert_eq!(diagram.relationships[0].kind, diagram_ir::RelKind::Dependency);
+    assert_eq!(diagram.relationships[1].kind, diagram_ir::RelKind::Dependency);
+    assert_eq!(diagram.relationships[2].kind, diagram_ir::RelKind::Association);
+    assert!(diagram.relationships.iter().all(|relationship| {
+        relationship.from_mult.as_deref() == Some("1")
+            && relationship.to_mult.as_deref() == Some("1..*")
+    }));
 }
 
 #[test]
