@@ -70,6 +70,8 @@ pub struct CortexM3State {
     pub memory: Vec<u8>,
     pub halted: bool,
     pub sleeping: bool,
+    /// True only while a sleeping core is blocked in WFE rather than WFI.
+    pub waiting_for_event: bool,
     pub event_registered: bool,
     /// Address held by the local exclusive monitor.
     pub exclusive_address: Option<u32>,
@@ -96,6 +98,7 @@ impl Default for CortexM3State {
             memory: vec![0; MEMORY_SIZE],
             halted: false,
             sleeping: false,
+            waiting_for_event: false,
             event_registered: false,
             exclusive_address: None,
             loaded_origin: 0,
@@ -119,6 +122,7 @@ pub enum CortexM3Error {
     MisalignedData { address: u32, width: usize },
     DataOutOfRange { address: u32, width: usize },
     InvalidThumbTarget { target: u32 },
+    UnsupportedExceptionReturn { target: u32 },
     UnknownInstruction16 { raw: u16, pc: u32 },
     UnknownInstruction32 { first: u16, second: u16, pc: u32 },
     UnsupportedBreakpoint { immediate: u8, pc: u32 },
@@ -171,6 +175,10 @@ impl fmt::Display for CortexM3Error {
                     "branch target {target:#010x} does not select Thumb state"
                 )
             }
+            Self::UnsupportedExceptionReturn { target } => write!(
+                formatter,
+                "exception-return target {target:#010x} is outside this core boundary"
+            ),
             Self::UnknownInstruction16 { raw, pc } => {
                 write!(formatter, "unknown instruction {raw:#06x} at {pc:#010x}")
             }
@@ -286,8 +294,19 @@ impl CortexM3Simulator {
     }
 
     pub fn signal_event(&mut self) {
-        self.state.event_registered = true;
+        if self.state.sleeping && self.state.waiting_for_event {
+            self.state.sleeping = false;
+            self.state.waiting_for_event = false;
+            self.state.event_registered = false;
+        } else {
+            self.state.event_registered = true;
+        }
+    }
+
+    /// Wake a core blocked in WFI or WFE to model an accepted interrupt.
+    pub fn signal_interrupt(&mut self) {
         self.state.sleeping = false;
+        self.state.waiting_for_event = false;
     }
 
     pub fn step(&mut self) -> Result<StepTrace, CortexM3Error> {
@@ -499,6 +518,7 @@ fn try_clone_state(state: &CortexM3State) -> Result<CortexM3State, CortexM3Error
         memory,
         halted: state.halted,
         sleeping: state.sleeping,
+        waiting_for_event: state.waiting_for_event,
         event_registered: state.event_registered,
         exclusive_address: state.exclusive_address,
         loaded_origin: state.loaded_origin,
@@ -558,6 +578,11 @@ fn validate_state(state: &CortexM3State) -> Result<(), CortexM3Error> {
             reason: "reserved status bits are set",
         });
     }
+    if !matches!(state.ipsr, 0 | 2..=6 | 11..=12 | 14..=15 | 16..=u8::MAX) {
+        return Err(CortexM3Error::InvalidState {
+            reason: "IPSR contains a reserved exception number",
+        });
+    }
     if state.handler_mode != (state.ipsr != 0) {
         return Err(CortexM3Error::InvalidState {
             reason: "mode and IPSR disagree",
@@ -566,6 +591,16 @@ fn validate_state(state: &CortexM3State) -> Result<(), CortexM3Error> {
     if state.handler_mode && state.control & 2 != 0 {
         return Err(CortexM3Error::InvalidState {
             reason: "handler mode cannot select the process stack",
+        });
+    }
+    if state.waiting_for_event && (!state.sleeping || state.event_registered) {
+        return Err(CortexM3Error::InvalidState {
+            reason: "event-wait state is inconsistent",
+        });
+    }
+    if state.halted && state.sleeping {
+        return Err(CortexM3Error::InvalidState {
+            reason: "a core cannot be halted and sleeping",
         });
     }
     if let Some(address) = state.exclusive_address {
@@ -1078,6 +1113,13 @@ fn branch_exchange(state: &mut CortexM3State, target: u32) -> Result<(), CortexM
     Ok(())
 }
 
+fn bx_write_pc(state: &mut CortexM3State, target: u32) -> Result<(), CortexM3Error> {
+    if state.handler_mode && target >> 28 == 0xf {
+        return Err(CortexM3Error::UnsupportedExceptionReturn { target });
+    }
+    branch_exchange(state, target)
+}
+
 fn branch_write_pc(state: &mut CortexM3State, target: u32) {
     state.pc = target & !1;
 }
@@ -1106,7 +1148,11 @@ fn execute_special(
         if link {
             state.lr = state.pc | 1;
         }
-        branch_exchange(state, target)?;
+        if link {
+            branch_exchange(state, target)?;
+        } else {
+            bx_write_pc(state, target)?;
+        }
         return Ok(if link { "blx" } else { "bx" });
     }
     if operation == 1 && (rd < 8 && rm < 8 || matches!(rd, PC) || matches!(rm, PC))
@@ -1340,7 +1386,7 @@ fn execute_miscellaneous(
         if include_pc {
             let target = read_memory(state, address, 4)?;
             address = address.wrapping_add(4);
-            branch_exchange(state, target)?;
+            bx_write_pc(state, target)?;
         }
         set_active_sp(state, address);
         return Ok("pop");
@@ -1370,7 +1416,7 @@ fn execute_miscellaneous(
             if raw & 2 != 0 {
                 state.primask = disabled;
             }
-            if raw & 1 != 0 {
+            if raw & 1 != 0 && (!disabled || can_raise_faultmask(state)) {
                 state.faultmask = disabled;
             }
         }
@@ -1402,11 +1448,13 @@ fn execute_miscellaneous(
                     state.event_registered = false;
                 } else {
                     state.sleeping = true;
+                    state.waiting_for_event = true;
                 }
                 Ok("wfe")
             }
             0x30 => {
                 state.sleeping = true;
+                state.waiting_for_event = false;
                 Ok("wfi")
             }
             0x40 => {
@@ -1783,6 +1831,10 @@ fn read_special(state: &CortexM3State, sysm: u8) -> Option<u32> {
     }
 }
 
+fn can_raise_faultmask(state: &CortexM3State) -> bool {
+    !state.handler_mode || !matches!(state.ipsr, 2 | 3)
+}
+
 fn execute_special_register(
     state: &mut CortexM3State,
     first: u16,
@@ -1798,8 +1850,12 @@ fn execute_special_register(
         let Some(mut value) = read_special(state, sysm) else {
             return Err(CortexM3Error::UnknownInstruction32 { first, second, pc });
         };
-        if state.control & 1 != 0 && !state.handler_mode && !matches!(sysm, 0 | 20) {
-            value = 0;
+        if state.control & 1 != 0 && !state.handler_mode {
+            value = match sysm {
+                0..=3 => state.apsr,
+                20 => value,
+                _ => 0,
+            };
         }
         state.registers[rd as usize] = value;
         return Ok("mrs");
@@ -1827,7 +1883,12 @@ fn execute_special_register(
                 state.basepri = requested;
             }
         }
-        19 => state.faultmask = value & 1 != 0,
+        19 => {
+            let requested = value & 1 != 0;
+            if !requested || can_raise_faultmask(state) {
+                state.faultmask = requested;
+            }
+        }
         _ => {
             let requested = value as u8 & 3;
             state.control = if state.handler_mode {

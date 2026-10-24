@@ -57,6 +57,7 @@ fn reset_load_and_restore_expose_complete_state() {
     assert_eq!(state.itstate, 0);
     assert_eq!(state.basepri, 0);
     assert!(!state.faultmask);
+    assert!(!state.waiting_for_event);
     assert_eq!(state.exclusive_address, None);
 
     let simulator = loaded(&[nop(), bkpt(0)]);
@@ -111,7 +112,33 @@ fn load_and_restore_validation_are_atomic() {
             exclusive_address: Some(3),
             ..before.clone()
         },
+        CortexM3State {
+            waiting_for_event: true,
+            ..before.clone()
+        },
+        CortexM3State {
+            sleeping: true,
+            waiting_for_event: true,
+            event_registered: true,
+            ..before.clone()
+        },
+        CortexM3State {
+            halted: true,
+            sleeping: true,
+            ..before.clone()
+        },
     ] {
+        assert!(matches!(
+            simulator.restore(invalid),
+            Err(CortexM3Error::InvalidState { .. })
+        ));
+        assert_eq!(simulator.get_state(), before);
+    }
+
+    for ipsr in [1, 7, 8, 9, 10, 13] {
+        let mut invalid = before.clone();
+        invalid.ipsr = ipsr;
+        invalid.handler_mode = true;
         assert!(matches!(
             simulator.restore(invalid),
             Err(CortexM3Error::InvalidState { .. })
@@ -371,6 +398,34 @@ fn invalid_thumb_targets_and_exceptions_are_typed_and_atomic() {
     ));
     assert_eq!(malformed_bx.get_state(), before);
 
+    for raw in [0x4770, 0xbd00] {
+        let mut exception_return = loaded(&[raw]);
+        let mut state = exception_return.get_state();
+        state.handler_mode = true;
+        state.ipsr = 11;
+        state.lr = 0xffff_fff9;
+        state.msp = 0x300;
+        state.memory[0x300..0x304].copy_from_slice(&0xffff_fff9_u32.to_le_bytes());
+        exception_return.restore(state).unwrap();
+        let before = exception_return.get_state();
+        assert_eq!(
+            exception_return.step(),
+            Err(CortexM3Error::UnsupportedExceptionReturn {
+                target: 0xffff_fff9,
+            })
+        );
+        assert_eq!(exception_return.get_state(), before);
+    }
+
+    let mut handler_blx = loaded(&[0x47f0]);
+    let mut state = handler_blx.get_state();
+    state.handler_mode = true;
+    state.ipsr = 11;
+    state.lr = 0xffff_fff9;
+    handler_blx.restore(state).unwrap();
+    assert_eq!(handler_blx.step().unwrap().mnemonic, "blx");
+    assert_eq!(handler_blx.get_state().pc, 0xffff_fff8);
+
     for (raw, expected) in [
         (
             0xbe01,
@@ -440,6 +495,32 @@ fn barriers_special_registers_and_privilege_execute() {
     unprivileged.step().unwrap();
     assert_eq!(unprivileged.get_state().ipsr, 0);
 
+    let composite_reads = [mrs(0, 1), mrs(1, 2), mrs(2, 3)];
+    let mut words = Vec::new();
+    for read in composite_reads {
+        words.extend(read);
+    }
+    let mut unprivileged_composites = loaded(&words);
+    let mut state = unprivileged_composites.get_state();
+    state.control = 1;
+    state.apsr = 0xa800_0000;
+    unprivileged_composites.restore(state).unwrap();
+    for _ in 0..3 {
+        unprivileged_composites.step().unwrap();
+    }
+    assert_eq!(
+        unprivileged_composites.read_register(0).unwrap(),
+        0xa800_0000
+    );
+    assert_eq!(
+        unprivileged_composites.read_register(1).unwrap(),
+        0xa800_0000
+    );
+    assert_eq!(
+        unprivileged_composites.read_register(2).unwrap(),
+        0xa800_0000
+    );
+
     let reads = [
         mrs(0, 1),
         mrs(1, 2),
@@ -455,18 +536,18 @@ fn barriers_special_registers_and_privilege_execute() {
     let mut handler = loaded(&words);
     let mut state = handler.get_state();
     state.handler_mode = true;
-    state.ipsr = 7;
+    state.ipsr = 11;
     state.apsr = 0x5000_0000;
     handler.restore(state).unwrap();
     for _ in 0..6 {
         handler.step().unwrap();
     }
-    assert_eq!(handler.read_register(0).unwrap(), 0x5000_0007);
+    assert_eq!(handler.read_register(0).unwrap(), 0x5000_000b);
     assert_eq!(handler.read_register(1).unwrap(), 0x5000_0000);
-    assert_eq!(handler.read_register(2).unwrap(), 0x5000_0007);
-    assert_eq!(handler.read_register(3).unwrap(), 7);
+    assert_eq!(handler.read_register(2).unwrap(), 0x5000_000b);
+    assert_eq!(handler.read_register(3).unwrap(), 11);
     assert_eq!(handler.read_register(4).unwrap(), 0);
-    assert_eq!(handler.read_register(5).unwrap(), 7);
+    assert_eq!(handler.read_register(5).unwrap(), 11);
 
     let set_control = msr(0, 20);
     let get_control = mrs(1, 20);
@@ -476,7 +557,7 @@ fn barriers_special_registers_and_privilege_execute() {
     let mut handler_control = loaded(&words);
     let mut state = handler_control.get_state();
     state.handler_mode = true;
-    state.ipsr = 1;
+    state.ipsr = 11;
     state.registers[0] = 2;
     handler_control.restore(state).unwrap();
     handler_control.step().unwrap();
@@ -499,6 +580,22 @@ fn cps_and_low_power_hints_track_interrupt_event_and_sleep_state() {
     unprivileged.restore(state).unwrap();
     unprivileged.step().unwrap();
     assert!(!unprivileged.get_state().primask);
+
+    for ipsr in [2, 3] {
+        let set_faultmask = msr(0, 19);
+        let mut words = vec![0xb671];
+        words.extend(set_faultmask);
+        let mut protected = loaded(&words);
+        let mut state = protected.get_state();
+        state.handler_mode = true;
+        state.ipsr = ipsr;
+        state.registers[0] = 1;
+        protected.restore(state).unwrap();
+        protected.step().unwrap();
+        assert!(!protected.get_state().faultmask);
+        protected.step().unwrap();
+        assert!(!protected.get_state().faultmask);
+    }
     unprivileged.step().unwrap();
     assert!(!unprivileged.get_state().primask);
     assert_eq!(unprivileged.step().unwrap().mnemonic, "nop");
@@ -511,9 +608,22 @@ fn cps_and_low_power_hints_track_interrupt_event_and_sleep_state() {
     assert!(!event.get_state().sleeping);
     event.step().unwrap();
     assert!(event.get_state().sleeping);
+    assert!(!event.get_state().waiting_for_event);
     assert_eq!(event.step(), Err(CortexM3Error::Sleeping));
     event.signal_event();
+    assert!(event.get_state().sleeping);
+    assert!(event.get_state().event_registered);
+    event.signal_interrupt();
     assert!(!event.get_state().sleeping);
+
+    let mut waiting = loaded(&[0xbf20, nop()]);
+    waiting.step().unwrap();
+    assert!(waiting.get_state().sleeping);
+    assert!(waiting.get_state().waiting_for_event);
+    waiting.signal_event();
+    assert!(!waiting.get_state().sleeping);
+    assert!(!waiting.get_state().waiting_for_event);
+    assert!(!waiting.get_state().event_registered);
 }
 
 #[test]
@@ -915,6 +1025,9 @@ fn every_error_has_display_text() {
         CortexM3Error::InvalidRegister { index: 16 },
         CortexM3Error::MisalignedFetch { pc: 1 },
         CortexM3Error::UnknownInstruction16 { raw: 0, pc: 0 },
+        CortexM3Error::UnsupportedExceptionReturn {
+            target: 0xffff_fff9,
+        },
         CortexM3Error::AllocationFailed,
     ];
     for error in errors {

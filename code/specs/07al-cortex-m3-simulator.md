@@ -30,8 +30,10 @@ The package models one deterministic Cortex-M3 core with:
   R0-R12/SP bases, TBB/TBH, word
   LDREX/STREX, CLREX, BASEPRI, FAULTMASK, barriers, and the corresponding
   Armv7-M status views; and
-- exact raw bytes, width, conventional mnemonic, and complete before/after
-  snapshots for every committed instruction.
+- exact raw bytes, width, mnemonic, and complete before/after snapshots for
+  every committed instruction. Executed instructions use conventional
+  mnemonics; a condition-failed IT member uses the explicit synthetic
+  `it-skip` marker.
 
 This cell does not claim a particular MCU. NVIC arbitration, exception entry
 and return, SysTick, MPU regions, debug/trace, WIC, AHB timing, bit-band bus
@@ -48,9 +50,10 @@ surface expansion, independently of the core/SoC boundary completed here.
 
 Reset enters privileged Thread mode, selects MSP, clears integer and status
 state, sets EPSR.T, initializes MSP and PSP to the top of memory, clears the
-exclusive monitor, and has no installed program. PC is authoritative; R15 is
-not independently restorable. The public snapshot owns all memory and
-installation metadata.
+exclusive monitor, event register, and WFE/WFI sleep cause, and has no installed
+program. PC is authoritative; R15 is not independently restorable. The public
+snapshot owns all memory and installation metadata. Events wake and are
+consumed by WFE, but do not wake WFI; accepted interrupts wake either form.
 
 Instruction fetches are halfword aligned and wholly inside the installed
 image. Data accesses must fit inside owned memory and never wrap. Byte,
@@ -71,9 +74,16 @@ commits. Unknown, reserved, unsupported, out-of-range, breakpoint, SVC, and
 halted conditions preserve the entire prior state. Architecturally ignored
 unprivileged special-register writes commit as no-ops.
 
+Exception-return encodings reached through BX or POP in Handler mode are a
+typed atomic unsupported boundary; exception stacking and return remain in the
+later interrupt-controller/SoC composition layer. BLX retains its ordinary
+branch-and-link semantics and never invokes exception return.
+
 The IT state applies conditions to the following one-to-four instructions and
 advances after every committed member instruction. A failed member preserves
-the IT state. Branches clear IT state. LDREX records an aligned word address;
+the IT state. A condition-failed member commits an `it-skip` trace marker
+without executing the instruction. Branches clear IT state. LDREX records an
+aligned word address;
 STREX succeeds only for the matching address and always clears the monitor;
 CLREX clears it explicitly. Ordinary writes conservatively clear the monitor.
 
@@ -93,7 +103,7 @@ The cell is complete only when it has:
    accesses, control flow, special registers, and typed atomic faults;
 3. transactional load, restore, step, run, execute, fetch, bounds, and
    retention tests;
-4. release line coverage above 80% (completion baseline: 85.80%,
-   1,299/1,514 lines); and
+4. release line coverage above 80% (completion baseline: 86.35%,
+   1,348/1,561 lines); and
 5. Rustfmt, strict Clippy, rustdoc, release tests, BUILD integration, lessons
    validation, affected-package checks, and security review before publication.
