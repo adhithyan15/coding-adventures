@@ -43,6 +43,10 @@ built-in `sqrt`; non-square, negative, dynamic, and overridden roots fail
 closed. Their radicands may contain checked integer `div`/`mod`, bounded powers,
 and supported exact built-in normalizers while the complete reduction remains
 within `2^53`.
+Exact built-in real identities `sin(0)`, `arctan(0)`, `cos(0)`, `exp(0)`, and
+`ln(1)` may also supply checked integer leaves, including when their arguments
+are checked reductions. Non-identity, dynamic, and user-overridden calls fail
+closed.
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
 boolean array through a rank-aware value formal with two non-unit lower bounds.
