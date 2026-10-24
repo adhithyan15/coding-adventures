@@ -2720,6 +2720,7 @@ pub fn whitespace_only_minify(
                 if non_empty
                     && !has_nested_brace
                     && !has_blocking_keyword
+                    && !starts_lexical_declaration(&kept, body_open + 1)
                     && (top_semis == 0 || terminated_single)
                 {
                     if let Some(semi) = synth_semi.as_ref() {
@@ -2839,6 +2840,7 @@ pub fn whitespace_only_minify(
                 if non_empty
                     && !has_nested_brace
                     && !has_blocking_keyword
+                    && !starts_lexical_declaration(&kept, body_open + 1)
                     && top_semis == 0
                 {
                     if let Some(semi) = synth_semi.as_ref() {
@@ -2957,6 +2959,7 @@ pub fn whitespace_only_minify(
                 if non_empty
                     && !has_nested_brace
                     && !has_blocking_keyword
+                    && !starts_lexical_declaration(&kept, body_open + 1)
                     && top_semis == 0
                 {
                     if let Some(semi) = synth_semi.as_ref() {
@@ -3531,6 +3534,7 @@ pub fn whitespace_only_minify(
                 };
                 let eligible = !has_nested_brace
                     && !has_blocking_keyword
+                    && !starts_lexical_declaration(&kept, idx + 1)
                     && semi_count == 1
                     && last_before_close == ";";
                 if eligible {
@@ -6267,6 +6271,45 @@ fn wraps_only_this_function(
     let body_open = params_close + 1;
     kept.get(body_open).is_some_and(|t| is_structural_punct(t, "{"))
         && partners[body_open] == body_close
+}
+
+/// #18124: does the statement starting at `kept[at]` declare a lexical
+/// binding (`let`, `const`, `using`)?
+///
+/// A body slot (`if(…) S`, `while(…) S`, `else S`, `do S while…`, `with(…) S`)
+/// takes a *Statement*, and a lexical declaration is not one. So the body
+/// flatten passes must keep the braces around a lone declaration:
+///
+/// | Source                 | Upstream v20260915        | Flattened (invalid) |
+/// |------------------------|---------------------------|---------------------|
+/// | `if(a){let x=1;}`      | `if(a){let x=1};`         | `if(a)let x=1;`     |
+/// | `while(o){const x=1;}` | `while(o){const x=1};`    | `while(o)const x=1;`|
+///
+/// `class` and `function` are already caught by each pass's blocking-keyword
+/// scan. `const` is reserved, so it always declares. `let` and `using` are
+/// also identifiers in sloppy code (`let = 1`, `using(x)`), so they declare
+/// only when a binding follows: an identifier, or `[`/`{` for `let`
+/// destructuring. A wrong "yes" just keeps a block's braces, which is valid.
+fn starts_lexical_declaration(kept: &[&lexer::token::Token], at: usize) -> bool {
+    let Some(first) = kept.get(at) else {
+        return false;
+    };
+    if is_string_literal(first) || !is_word_like(first) {
+        return false;
+    }
+    let next = kept.get(at + 1);
+    let binding_follows = next.is_some_and(|n| is_plain_identifier(n) || n.value == "yield" || n.value == "await");
+    match first.value.as_str() {
+        "const" => true,
+        "let" => {
+            binding_follows
+                || next.is_some_and(|n| is_structural_punct(n, "[") || is_structural_punct(n, "{"))
+        }
+        "using" => binding_follows,
+        // `await using x = …`
+        "await" => next.is_some_and(|n| !is_string_literal(n) && n.value == "using"),
+        _ => false,
+    }
 }
 
 /// #17883: is the `;` at `idx` the empty-statement body of `with(…)`?
@@ -11052,6 +11095,26 @@ mod tests {
             minify("var{a}=tag`hi`;"),
             "var {a}=tag`hi`;"
         );
+    }
+
+    // ---- #18124: a lone lexical declaration keeps its block ------------
+
+    #[test]
+    fn issue18124_lexical_declaration_body_keeps_its_braces() {
+        // Upstream v20260915 bytes.
+        assert_eq!(minify("if(a){let x=1;}"), "if(a){let x=1};");
+        assert_eq!(minify("while(o){let x=1;}"), "while(o){let x=1};");
+        assert_eq!(minify("with(o){const x=1;}"), "with(o){const x=1};");
+        assert_eq!(minify("if(a){}else{let x=1;}"), "if(a);else{let x=1};");
+        assert_eq!(minify("do{let x=1;}while(a)"), "do{let x=1}while(a);");
+        assert_eq!(minify("if(a){let [x]=b;}"), "if(a){let [x]=b};");
+    }
+
+    #[test]
+    fn issue18124_other_single_statements_still_flatten() {
+        assert_eq!(minify("if(a){b()}"), "if(a)b();");
+        assert_eq!(minify("if(a){using(b);}"), "if(a)using(b);");
+        assert_eq!(minify("while(o){x++}"), "while(o)x++;");
     }
 
     // ---- #17883: an empty-statement body keeps its `;` before `}` ---

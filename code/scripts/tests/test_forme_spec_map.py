@@ -344,7 +344,11 @@ class FormeSpecMapTests(unittest.TestCase):
             roadmap,
         )
         self.assertIn(
-            "| 73 | FM-B074 | active | Enforce plugin extension-kind subtype compatibility |",
+            "| 73 | FM-B074 | done | Enforce plugin extension-kind subtype compatibility |",
+            roadmap,
+        )
+        self.assertIn(
+            "| 74 | FM-B075 | active | Reconcile plugin-manifest kernel-kind recognition |",
             roadmap,
         )
 

@@ -140,6 +140,27 @@ export interface KindDescriptor {
   readonly inner?: KindDescriptor;
 }
 
+/**
+ * One immutable entry in the pipeline-wide extension-kind registry.
+ *
+ * `parent` is the exact descriptor snapshot selected while FM02 builds the
+ * registry. Keeping the descriptor rather than only the parent's name binds
+ * subtype traversal to both identity and version.
+ */
+export interface RegisteredKind {
+  readonly descriptor: KindDescriptor;
+  readonly parent: KindDescriptor | null;
+}
+
+/**
+ * The deliberately tiny read-only registry surface shared by FM02 and FM03.
+ * Construction maps remain private to the plugin host, so callers cannot
+ * replace a kind after DAG typechecking has begun.
+ */
+export interface KindRegistry {
+  lookup(name: KindName): RegisteredKind | undefined;
+}
+
 // ─── Canonical descriptors ────────────────────────────────────────────────
 
 /**

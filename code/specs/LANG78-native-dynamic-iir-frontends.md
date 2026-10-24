@@ -67,7 +67,8 @@ and `compile_ast` APIs. Read the typed AST from `javascript-parser`; do not
 round-trip through Semantic IR. (Superseded by LANG84 phase 6c: since
 `javascript-iir-compiler` 0.3.0 the compiler reads the generic
 `GrammarASTNode` from `parse_javascript_cst_division_only` and `compile_ast`
-takes that tree; the emitted IIR and the errors are unchanged.) Compile JavaScript numeric literals as
+takes that tree; the emitted IIR and the errors are unchanged. Since phase 6a,
+`javascript-iir-compiler` 0.4.0, that entry is `parse_javascript_cst_bounded`.) Compile JavaScript numeric literals as
 `Operand::Float` even when their spelling has no decimal point. The first
 accepted source subset is expression statements containing numeric literals,
 parentheses, unary minus, and binary `+`, `-`, `*`, `/`, plus
@@ -179,6 +180,14 @@ retaining prior output, the early duplicate error, and initializer budgets;
 Node remains only an output oracle.
 
 ### Native numeric source division goal
+
+(Superseded by LANG84 phase 6a: the division goal is now the edition's F10
+regex/division mode table, not a restricted entry. `javascript-parser`
+0.65.0's `parse_javascript_cst_bounded` lexes with the ordinary moded lexer,
+which reads a `/` after a value as division and a real `/re/` as one `REGEX`
+token that the subset check rejects; deleting `REGEX` from a compiled grammar
+is grammar surgery, which LANG84 C2 forbids. The rejection behaviour below,
+empty output for regex-shaped input, is unchanged.)
 
 The native numeric frontend must use an explicitly restricted division-only
 tokenizer/parser entry. Remove `REGEX` and `BAD_REGEX` rules from the selected

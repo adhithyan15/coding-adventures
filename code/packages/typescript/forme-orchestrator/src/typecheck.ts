@@ -3,7 +3,8 @@
  *
  * Implements the four rules from the spec:
  *
- *   1. Name match (or extension subtype — TODO when ext: kinds land).
+ *   1. Name match, or covariant widening through the immutable extension-kind
+ *      registry supplied by the plugin host.
  *   2. Major-version match; minor-version compatibility (newer-minor
  *      producer can feed older-minor consumer).
  *   3. Discriminant equality if both declare one.
@@ -17,7 +18,9 @@
  * iterates and invokes the consumer once per yielded value).
  */
 
-import type { KindDescriptor } from "@coding-adventures/forme-types";
+import type { KindDescriptor, KindRegistry } from "@coding-adventures/forme-types";
+
+const STREAM_VERSION = "1.0";
 
 /**
  * Test whether a producer's `produces` descriptor is compatible with
@@ -27,11 +30,12 @@ import type { KindDescriptor } from "@coding-adventures/forme-types";
 export function areKindsCompatible(
   produces: KindDescriptor,
   consumes: KindDescriptor,
+  registry?: KindRegistry,
 ): boolean {
   // Stream-of-X can feed a single-X consumer (the executor iterates).
   if (produces.name === "Stream" && consumes.name !== "Stream") {
-    if (!produces.inner) return false;
-    return areKindsCompatible(produces.inner, consumes);
+    if (!isCanonicalStreamWrapper(produces) || !produces.inner) return false;
+    return areKindsCompatible(produces.inner, consumes, registry);
   }
   // A single-X producer cannot feed a Stream-of-X consumer (the
   // consumer expects multiple values; producer yields exactly one).
@@ -40,11 +44,63 @@ export function areKindsCompatible(
   }
   // Stream<X> → Stream<Y> requires inner compatibility.
   if (produces.name === "Stream" && consumes.name === "Stream") {
-    if (!produces.inner || !consumes.inner) return false;
-    return areKindsCompatible(produces.inner, consumes.inner);
+    if (!isCanonicalStreamWrapper(produces)
+        || !isCanonicalStreamWrapper(consumes)
+        || !produces.inner
+        || !consumes.inner) return false;
+    return areKindsCompatible(produces.inner, consumes.inner, registry);
   }
   // Both are non-stream descriptors.
-  if (produces.name !== consumes.name) return false;
+  if (!isBoundExtensionDescriptor(produces, registry)
+      || !isBoundExtensionDescriptor(consumes, registry)) return false;
+  if (produces.name === consumes.name) {
+    return areDescriptorsCompatible(produces, consumes);
+  }
+  if (registry === undefined || !produces.name.startsWith("ext:")) return false;
+
+  const seen = new Set<string>();
+  let current = produces;
+  while (current.name.startsWith("ext:")) {
+    if (seen.has(current.name)) return false;
+    seen.add(current.name);
+
+    const registration = registry.lookup(current.name);
+    if (registration === undefined
+        || registration.descriptor.version !== current.version
+        || registration.descriptor.discriminant !== current.discriminant
+        || registration.parent === null
+        || !areDescriptorsCompatible(current, registration.parent)) {
+      return false;
+    }
+    current = registration.parent;
+    if (current.name === consumes.name) {
+      return areDescriptorsCompatible(current, consumes);
+    }
+  }
+  return false;
+}
+
+function isCanonicalStreamWrapper(descriptor: KindDescriptor): boolean {
+  return descriptor.version === STREAM_VERSION && descriptor.discriminant === undefined;
+}
+
+function isBoundExtensionDescriptor(
+  descriptor: KindDescriptor,
+  registry?: KindRegistry,
+): boolean {
+  if (!descriptor.name.startsWith("ext:")) return true;
+  const registered = registry?.lookup(descriptor.name)?.descriptor;
+  return registered !== undefined
+    && registered.name === descriptor.name
+    && registered.version === descriptor.version
+    && registered.discriminant === descriptor.discriminant
+    && descriptor.inner === undefined;
+}
+
+function areDescriptorsCompatible(
+  produces: KindDescriptor,
+  consumes: KindDescriptor,
+): boolean {
   if (!areVersionsCompatible(produces.version, consumes.version)) return false;
   if (!areDiscriminantsCompatible(produces.discriminant, consumes.discriminant)) return false;
   // Constraints are advisory at this layer.
@@ -65,14 +121,24 @@ function areVersionsCompatible(produces: string, consumes: string): boolean {
     // exotic version strings just need to match exactly.
     return produces === consumes;
   }
-  if (p.major !== c.major) return false;
-  return p.minor >= c.minor;
+  if (compareUnsignedDecimal(p.major, c.major) !== 0) return false;
+  return compareUnsignedDecimal(p.minor, c.minor) >= 0;
 }
 
-function parseSemver(v: string): { major: number; minor: number } | null {
-  const m = /^(\d+)\.(\d+)/.exec(v);
+function parseSemver(v: string): { major: string; minor: string } | null {
+  const m = /^(\d+)\.(\d+)(?:\.\d+)?(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/.exec(v);
   if (!m) return null;
-  return { major: Number(m[1]), minor: Number(m[2]) };
+  return { major: normalizeDecimal(m[1]!), minor: normalizeDecimal(m[2]!) };
+}
+
+function normalizeDecimal(value: string): string {
+  const normalized = value.replace(/^0+(?=\d)/, "");
+  return normalized.length === 0 ? "0" : normalized;
+}
+
+function compareUnsignedDecimal(left: string, right: string): number {
+  if (left.length !== right.length) return left.length < right.length ? -1 : 1;
+  return left < right ? -1 : left > right ? 1 : 0;
 }
 
 function areDiscriminantsCompatible(
