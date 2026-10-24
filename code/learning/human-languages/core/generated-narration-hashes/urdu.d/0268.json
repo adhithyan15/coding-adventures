@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 268,
-  "sourceHash": "fnv1a64:0be950e0eeeb76c8",
+  "sourceHash": "fnv1a64:83def0f6a3abde89",
   "lessonIds": [
     "UR-C268-lagna",
     "UR-C268-khayal",
@@ -15,7 +15,7 @@
   "drivablePrefix": 3,
   "text": "urdu/narration/ch268.txt",
   "json": "urdu/narration/ch268.json",
-  "textHash": "fnv1a64:a0869884f1f5e834",
-  "jsonHash": "fnv1a64:f9d0b09354b3718c",
+  "textHash": "fnv1a64:fffcba137c296abc",
+  "jsonHash": "fnv1a64:b727afd1e35e0391",
   "findings": []
 }

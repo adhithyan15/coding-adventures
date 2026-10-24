@@ -14,7 +14,7 @@ romanization: "daurān"
 concept_tag: UR-NARR266-DAURAN
 prerequisites: [UR-C266-parh-raha-tha, UR-C87-safar, UR-C15-barish, UR-C46-khana, UR-C264-voh-gaya]
 sounds: []
-roots: [arabic-dawran]
+roots: [arabic-dawaran]
 etymology_hook: 'daurān: usually traced, through Persian, to Arabic dawarān ''a turning round'''
 duration:
   max_seconds: 150
@@ -54,7 +54,7 @@ It stands after its noun, with **کے** (*ke*) in front of it, as in **کے لی
 >
 > *khāne ke daurān voh āyā.* — "He came during the meal."
 
-**کھانا** (*khānā*) becomes **کھانے** (*khāne*) before **کے**, as every noun in -ا does.
+**کھانا** (*khānā*) becomes **کھانے** (*khāne*) before **کے**, as most masculine nouns in -ا do.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

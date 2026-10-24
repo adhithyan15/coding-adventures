@@ -4,7 +4,7 @@
   "chapter": 265,
   "title": "Who Did It, and What Will Happen",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:8390606e29d44280",
+  "sourceHash": "fnv1a64:31bee306598a6e03",
   "lessons": [
     {
       "id": "UR-C265-us-ne-khaya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5561be81b74fd0d",
+      "sourceHash": "fnv1a64:c19d72bf8e6e594a",
       "notice": null,
       "blocks": [
         {
@@ -96,7 +96,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Four pasts are short: کیا (kiyā), \"did\", from کرنا; دیا (diyā), \"gave\"; لیا (liyā), \"took\"; کہا (kahā), \"said\". کیا kiyā is spelled like کیا kyā, \"what\": the romanization tells them apart."
+              "text": "Four common pasts: کیا (kiyā), \"did\", from کرنا; دیا (diyā), \"gave\"; لیا (liyā), \"took\"; کہا (kahā), \"said\". کیا kiyā is spelled like کیا kyā, \"what\": the romanization tells them apart."
             },
             {
               "kind": "speech",
@@ -121,6 +121,14 @@
             {
               "kind": "speech",
               "text": "اس نے مجھے پانی دیا۔ us ne mujhe pānī diyā. — \"He gave me water.\""
+            },
+            {
+              "kind": "speech",
+              "text": "One verb with an object goes the other way: لانا (lānā), \"to bring\", takes no نے, like آنا (ānā):"
+            },
+            {
+              "kind": "speech",
+              "text": "وہ پانی لایا۔ voh pānī lāyā. — \"He brought water.\""
             }
           ]
         },
@@ -390,10 +398,10 @@
     {
       "id": "UR-W265-waw-hamza",
       "sequence": 16150,
-      "title": "ؤ (vāo hamza) — vāo wearing the hamza, inside جاؤں",
+      "title": "ؤ (vāʾo hamza) — vāʾo wearing the hamza, inside جاؤں",
       "headword": "ؤ",
-      "romanization": "vāo hamza",
-      "gloss": "vāo hamza — vāo wearing the hamza, the letter inside جاؤں",
+      "romanization": "vāʾo hamza",
+      "gloss": "vāʾo hamza — vāʾo wearing the hamza, the letter inside جاؤں",
       "script": "urdu-nastaliq",
       "modality": "pen",
       "derivedModality": "pen",
@@ -403,7 +411,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:e5478dbddac80fb0",
+      "sourceHash": "fnv1a64:ce4b9878048e45f4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -432,7 +440,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: write و and ئ once each, and name them. (vāo, hamza.)"
+              "text": "Before the new one: write و and ئ once each, and name them. (vāʾo, hamza.)"
             },
             {
               "kind": "pause",
@@ -453,11 +461,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ؤ — vāo hamza."
+              "text": "ؤ — vāʾo hamza."
             },
             {
               "kind": "speech",
-              "text": "It is inside جاؤں (jāūṅ) and آؤ (āo). Say jā-ūṅ: two vowels side by side. ؤ (vāo hamza) is و wearing the same small hamza you wrote on ئ: there it sat on a tooth, here it sits on و. It marks the place where one vowel ends and the next begins. Like و, it does not join the letter after it."
+              "text": "It is inside جاؤں (jāūṅ) and آؤ (āo). Say jā-ūṅ: two vowels side by side. ؤ (vāʾo hamza) is و wearing the same small hamza you wrote on ئ: there it sat on a tooth, here it sits on و. It marks the place where one vowel ends and the next begins. Like و, it does not join the letter after it."
             }
           ]
         },
@@ -468,7 +476,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ؤ (vāo hamza) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on ؤ (vāʾo hamza) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -490,7 +498,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at جاؤں and point at ؤ (vāo hamza) inside it",
+              "instruction": "at جاؤں and point at ؤ (vāʾo hamza) inside it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -499,7 +507,7 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "ؤ (vāo hamza) three times, saying jā-ūṅ as you finish each one",
+              "instruction": "ؤ (vāʾo hamza) three times, saying jā-ūṅ as you finish each one",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -508,7 +516,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "جاؤں once, joined, with ؤ (vāo hamza) in its place",
+              "instruction": "جاؤں once, joined, with ؤ (vāʾo hamza) in its place",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -538,7 +546,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter is this — ؤ? (vāo hamza, jā-ūṅ.) Which word did it come from? (جاؤں, jāūṅ, in میں جاؤں گا (maiṅ jāūṅ gā).)"
+              "text": "Which letter is this — ؤ? (vāʾo hamza, jā-ūṅ.) Which word did it come from? (جاؤں, jāūṅ, in میں جاؤں گا (maiṅ jāūṅ gā).)"
             }
           ]
         }
@@ -557,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6ecf6ef02966dda",
+      "sourceHash": "fnv1a64:bcea1abbf53776d0",
       "notice": null,
       "blocks": [
         {
@@ -657,7 +665,7 @@
             },
             {
               "kind": "speech",
-              "text": "In سارا نے خط لکھا, which word sets لکھا? (خط.) Put کتاب in place of خط: does the verb change? (Yes: پڑھی, لکھی.) Now the other way round, the future: \"she will go\"? (وہ جائے گی.) \"We will go\"? (ہم جائیں گے.)"
+              "text": "In سارا نے خط لکھا, which word sets لکھا? (خط.) Put کتاب in place of خط: does the verb change? (Yes: سارا نے کتاب لکھی.) Now the other way round, the future: \"she will go\"? (وہ جائے گی.) \"We will go\"? (ہم جائیں گے.)"
             }
           ]
         }

@@ -59,12 +59,12 @@ The first action keeps only its stem, **کھا** (*khā*), and takes **کر** (*
 >
 > *ham khā kar jāeṅ ge.* — "We'll eat, then go."
 
-You have said one for a long time: **مل کر** (*mil kar*), "having met", in the greeting **خوشی ہوئی** closes.
+You have said one for a long time: **مل کر** (*mil kar*), "having met", in the greeting that ends with **خوشی ہوئی**.
 
 ## You'll want to know: کر کے, and the last verb
 <!-- hl-knowledge: introduces=[UR-GRAMMAR-C267-KAR-02]; assesses=[UR-LEX-KAAM, UR-LEX-CHAI, UR-LEX-C46-FAMILY46-03] -->
 
-**کرنا** (*karnā*) makes **کر کے** (*kar ke*), never a doubled **کر**:
+**کرنا** (*karnā*) makes **کر کے** (*kar ke*), not a doubled **کر**:
 
 > **کام کر کے میں گھر آیا۔**
 >

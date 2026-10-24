@@ -4,7 +4,7 @@
   "chapter": 267,
   "title": "A Story in Order",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:edf093c4f09d245d",
+  "sourceHash": "fnv1a64:8d2f1a48b1534b73",
   "lessons": [
     {
       "id": "UR-C267-bad",
@@ -148,7 +148,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:1edc7cb4b2e65a15",
+      "sourceHash": "fnv1a64:22c9e03b8940b095",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -177,7 +177,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: write ؤ once, and name it. (vāo hamza.)"
+              "text": "Before the new one: write ؤ once, and name it. (vāʾo hamza.)"
             },
             {
               "kind": "pause",
@@ -302,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba7c397170fdf82f",
+      "sourceHash": "fnv1a64:a339851cc05b484b",
       "notice": null,
       "blocks": [
         {
@@ -349,7 +349,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have said one for a long time: مل کر (mil kar), \"having met\", in the greeting خوشی ہوئی closes."
+              "text": "You have said one for a long time: مل کر (mil kar), \"having met\", in the greeting that ends with خوشی ہوئی."
             }
           ]
         },
@@ -360,7 +360,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "کرنا (karnā) makes کر کے (kar ke), never a doubled کر:"
+              "text": "کرنا (karnā) makes کر کے (kar ke), not a doubled کر:"
             },
             {
               "kind": "speech",

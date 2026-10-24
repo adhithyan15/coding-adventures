@@ -49,7 +49,7 @@ reviews_of: [UR-C69-bara, UR-C70-chhota, UR-C272-main-khush-hun]
 >
 > *yih ghar us ghar se baṛā hai.* — "This house is bigger than that one."
 
-Urdu has no "-er". **سے** (*se*), "from, than", goes after the thing compared, and the word stays as it is:
+Urdu adds no "-er" here. **سے** (*se*), "from, than", goes after the thing compared, and the word stays as it is:
 
 > **بس ٹیکسی سے سستی ہے۔**
 >

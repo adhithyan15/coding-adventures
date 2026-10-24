@@ -37,7 +37,7 @@ reviews_of: [UR-C42-bhuk, UR-C41-pyas, UR-C267-kha-kar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-C42-HEALTH42-01, UR-LEX-C41-HEALTH41-05, UR-GRAMMAR-C267-KAR-01] -->
 
-[PAUSE 2s] Before the new one: say "hunger" and "thirst". (*bhūk*, *pyās*.) Urdu does not say "I am hungry". It says that hunger has struck you.
+[PAUSE 2s] Before the new one: say "hunger" and "thirst". (*bhūk*, *pyās*.) Urdu usually says "I am hungry" another way: hunger has struck you.
 
 ## You'll want to know: لگنا
 <!-- hl-knowledge: introduces=[UR-LEX-C268-LAGNA-01]; assesses=[UR-LEX-C42-HEALTH42-01, UR-LEX-C228-CHIZ228-04, UR-LEX-C70-ADJ70-03, UR-GRAMMAR-C264-PAST-01] -->

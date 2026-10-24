@@ -51,4 +51,4 @@ reviews_of: [UR-C265-us-ne-khaya, UR-C265-main-jaun-ga, UR-W265-waw-hamza]
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-GRAMMAR-C265-ERGATIVE-01, UR-GRAMMAR-C265-ERGATIVE-02, UR-GRAMMAR-C265-FUTURE-01, UR-GRAMMAR-C265-FUTURE-02] -->
 
-[PAUSE 3s] In **سارا نے خط لکھا**, which word sets **لکھا**? (**خط**.) Put **کتاب** in place of **خط**: does the verb change? (Yes: **پڑھی**, **لکھی**.) Now the other way round, the future: "she will go"? (**وہ جائے گی**.) "We will go"? (**ہم جائیں گے**.)
+[PAUSE 3s] In **سارا نے خط لکھا**, which word sets **لکھا**? (**خط**.) Put **کتاب** in place of **خط**: does the verb change? (Yes: **سارا نے کتاب لکھی**.) Now the other way round, the future: "she will go"? (**وہ جائے گی**.) "We will go"? (**ہم جائیں گے**.)

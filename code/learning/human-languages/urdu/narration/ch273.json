@@ -4,7 +4,7 @@
   "chapter": 273,
   "title": "Comparing, and How Long",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:dd01924aba0d7987",
+  "sourceHash": "fnv1a64:3679b83ae7725be9",
   "lessons": [
     {
       "id": "UR-C273-se-bara",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c7fedd4177382fe",
+      "sourceHash": "fnv1a64:f883e3a9044d180e",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Urdu has no \"-er\". سے (se), \"from, than\", goes after the thing compared, and the word stays as it is:"
+              "text": "Urdu adds no \"-er\" here. سے (se), \"from, than\", goes after the thing compared, and the word stays as it is:"
             },
             {
               "kind": "speech",

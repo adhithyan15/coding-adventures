@@ -12,17 +12,17 @@ headword: "اس نے کھایا"
 gloss: "he ate — ne after the doer of a past with an object, and the verb follows the thing"
 romanization: "us ne khāyā"
 concept_tag: UR-GRAMMAR-PAST-ERGATIVE
-prerequisites: [UR-C264-voh-gaya, UR-C264-voh-yahan-tha, UR-C46-khana, UR-C12-roti, UR-C113-khat, UR-C07-likhna, UR-C61-kitab, UR-C07-parhna, UR-C17-kaam, UR-C46-dekhna, UR-C48-dena, UR-C12-pani, UR-C22-kahna, UR-C12-chai, UR-C46-pina]
+prerequisites: [UR-C264-voh-gaya, UR-C264-voh-yahan-tha, UR-C46-khana, UR-C12-roti, UR-C113-khat, UR-C07-likhna, UR-C61-kitab, UR-C07-parhna, UR-C17-kaam, UR-C46-dekhna, UR-C48-dena, UR-C12-pani, UR-C22-kahna, UR-C51-lana, UR-C12-chai, UR-C46-pina]
 sounds: []
 roots: []
 duration:
-  max_seconds: 255
+  max_seconds: 270
 requires:
-  knowledge: [UR-GRAMMAR-C264-PAST-01, UR-GRAMMAR-C264-WAS-01, UR-LEX-C46-FAMILY46-02, UR-LEX-ROTI, UR-LEX-C113-THINGS113-03, UR-LEX-LIKHNA, UR-LEX-C61-HOME61-02, UR-LEX-PARHNA, UR-LEX-KAAM, UR-LEX-C46-FAMILY46-04, UR-LEX-C48-VERBS48-04, UR-LEX-PANI, UR-LEX-KAHNA, UR-LEX-CHAI, UR-LEX-C46-FAMILY46-03]
+  knowledge: [UR-GRAMMAR-C264-PAST-01, UR-GRAMMAR-C264-WAS-01, UR-LEX-C46-FAMILY46-02, UR-LEX-ROTI, UR-LEX-C113-THINGS113-03, UR-LEX-LIKHNA, UR-LEX-C61-HOME61-02, UR-LEX-PARHNA, UR-LEX-KAAM, UR-LEX-C46-FAMILY46-04, UR-LEX-C48-VERBS48-04, UR-LEX-PANI, UR-LEX-KAHNA, UR-LEX-C51-VERBS51-03, UR-LEX-CHAI, UR-LEX-C46-FAMILY46-03]
 introduces:
   knowledge: [UR-GRAMMAR-C265-ERGATIVE-01, UR-GRAMMAR-C265-ERGATIVE-02]
 practises:
-  knowledge: [UR-GRAMMAR-C265-ERGATIVE-01, UR-GRAMMAR-C265-ERGATIVE-02, UR-GRAMMAR-C264-PAST-01, UR-GRAMMAR-C264-WAS-01, UR-LEX-C46-FAMILY46-02, UR-LEX-ROTI, UR-LEX-C113-THINGS113-03, UR-LEX-LIKHNA, UR-LEX-C61-HOME61-02, UR-LEX-PARHNA, UR-LEX-KAAM, UR-LEX-C46-FAMILY46-04, UR-LEX-C48-VERBS48-04, UR-LEX-PANI, UR-LEX-KAHNA, UR-LEX-CHAI, UR-LEX-C46-FAMILY46-03]
+  knowledge: [UR-GRAMMAR-C265-ERGATIVE-01, UR-GRAMMAR-C265-ERGATIVE-02, UR-GRAMMAR-C264-PAST-01, UR-GRAMMAR-C264-WAS-01, UR-LEX-C46-FAMILY46-02, UR-LEX-ROTI, UR-LEX-C113-THINGS113-03, UR-LEX-LIKHNA, UR-LEX-C61-HOME61-02, UR-LEX-PARHNA, UR-LEX-KAAM, UR-LEX-C46-FAMILY46-04, UR-LEX-C48-VERBS48-04, UR-LEX-PANI, UR-LEX-KAHNA, UR-LEX-C51-VERBS51-03, UR-LEX-CHAI, UR-LEX-C46-FAMILY46-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -71,9 +71,9 @@ With a verb that has an object, the doer takes **نے** (*ne*), and the verb fol
 | **وہ**, several | **انہوں نے** (*unhoṅ ne*) |
 
 ## You'll want to know: کیا, دیا, لیا, کہا, and مجھے
-<!-- hl-knowledge: introduces=[UR-GRAMMAR-C265-ERGATIVE-02]; assesses=[UR-LEX-KAAM, UR-LEX-C46-FAMILY46-04, UR-LEX-C48-VERBS48-04, UR-LEX-PANI, UR-LEX-KAHNA] -->
+<!-- hl-knowledge: introduces=[UR-GRAMMAR-C265-ERGATIVE-02]; assesses=[UR-LEX-KAAM, UR-LEX-C46-FAMILY46-04, UR-LEX-C48-VERBS48-04, UR-LEX-PANI, UR-LEX-KAHNA, UR-LEX-C51-VERBS51-03] -->
 
-Four pasts are short: **کیا** (*kiyā*), "did", from **کرنا**; **دیا** (*diyā*), "gave"; **لیا** (*liyā*), "took"; **کہا** (*kahā*), "said". **کیا** *kiyā* is spelled like **کیا** *kyā*, "what": the romanization tells them apart.
+Four common pasts: **کیا** (*kiyā*), "did", from **کرنا**; **دیا** (*diyā*), "gave"; **لیا** (*liyā*), "took"; **کہا** (*kahā*), "said". **کیا** *kiyā* is spelled like **کیا** *kyā*, "what": the romanization tells them apart.
 
 > **میں نے کام کیا۔**
 >
@@ -94,6 +94,12 @@ When the thing is a person with **کو** (*ko*), the verb stays masculine singul
 > **اس نے مجھے پانی دیا۔**
 >
 > *us ne mujhe pānī diyā.* — "He gave me water."
+
+One verb with an object goes the other way: **لانا** (*lānā*), "to bring", takes no **نے**, like **آنا** (*ānā*):
+
+> **وہ پانی لایا۔**
+>
+> *voh pānī lāyā.* — "He brought water."
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-GRAMMAR-C265-ERGATIVE-01, UR-GRAMMAR-C265-ERGATIVE-02, UR-LEX-CHAI, UR-LEX-C46-FAMILY46-03] -->

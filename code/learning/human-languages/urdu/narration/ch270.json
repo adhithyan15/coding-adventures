@@ -4,7 +4,7 @@
   "chapter": 270,
   "title": "Asking the Way",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:4197ff21d8f85e46",
+  "sourceHash": "fnv1a64:e8531a3bb93bdf25",
   "lessons": [
     {
       "id": "UR-C270-kitna",
@@ -418,7 +418,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aad674de8f30f4ec",
+      "sourceHash": "fnv1a64:4c8d5d9bac47cfda",
       "notice": null,
       "blocks": [
         {
@@ -488,7 +488,7 @@
             },
             {
               "kind": "speech",
-              "text": "سنیے (suniye), \"listen\", opens a question to a stranger: \"excuse me\". Three verbs bend the stem: دیجیے (dījiye) from دینا, لیجیے (lījiye) from لینا, کیجیے (kījiye) from کرنا."
+              "text": "سنیے (suniye), \"listen\", opens a question to a stranger: \"excuse me\". A few verbs bend the stem, among them دیجیے (dījiye) from دینا, لیجیے (lījiye) from لینا, کیجیے (kījiye) from کرنا."
             }
           ]
         },

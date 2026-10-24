@@ -4,7 +4,7 @@
   "chapter": 268,
   "title": "What I Think, and Why",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:0be950e0eeeb76c8",
+  "sourceHash": "fnv1a64:83def0f6a3abde89",
   "lessons": [
     {
       "id": "UR-C268-lagna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05610c22598c965e",
+      "sourceHash": "fnv1a64:8273a4a54323fc24",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say \"hunger\" and \"thirst\". (bhūk, pyās.) Urdu does not say \"I am hungry\". It says that hunger has struck you."
+              "text": "Before the new one: say \"hunger\" and \"thirst\". (bhūk, pyās.) Urdu usually says \"I am hungry\" another way: hunger has struck you."
             }
           ]
         },

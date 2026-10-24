@@ -77,7 +77,7 @@ reviews_of: [UR-C159-is-liye, UR-C268-ki-vajah-se, UR-C269-chunanche]
 [PAUSE 1s]
 - [YOU SAY: "I was ill, so I stayed at home" — *maiṅ bīmār thā, is liye maiṅ ghar par rahā*]
 - [YOU SAY: "It was raining, so I stayed at home" — *bārish ho rahī thī, is liye maiṅ ghar par rahā*]
-- [YOU SAY: "It was late, so I stayed at home" — *der ho rahī thī, is liye maiṅ ghar par rahā*]
+- [YOU SAY: "It was getting late, so I stayed at home" — *der ho rahī thī, is liye maiṅ ghar par rahā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-GRAMMAR-C269-SO-01, UR-GRAMMAR-C269-SO-02] -->

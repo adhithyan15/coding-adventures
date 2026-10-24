@@ -107,7 +107,7 @@ both of which already have rows.
 
 | Letter | Sound | Anchor word | Shape |
 |---|---|---|---|
-| **ؤ** *vāo hamza* | marks the break between two vowels | **جاؤں** *jāūṅ* | **و** wearing the small hamza that sits on **ئ** |
+| **ؤ** *vāʾo hamza* | marks the break between two vowels | **جاؤں** *jāūṅ* | **و** wearing the small hamza that sits on **ئ** |
 | **ع** *ain* | no sound of its own; it colours or lengthens the vowel beside it | **بعد** *bād* | a small closed loop inside a word; alone, an open head over a deep bowl |
 | **غ** *ghain* | *gh*, made far back in the throat | **غلط** *ghalat* | **ع** with one dot above |
 | **ذ** *zāl* | *z*, as **ز** **ض** **ظ** | **ذرا** *zarā* | **د** with one dot above; it does not join forward |

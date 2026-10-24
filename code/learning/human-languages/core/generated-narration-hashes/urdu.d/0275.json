@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 275,
-  "sourceHash": "fnv1a64:cef90fe6f52f8c5f",
+  "sourceHash": "fnv1a64:e8ae12099fa4e9f3",
   "lessonIds": [
     "UR-C275-munhasir",
     "UR-C275-par-munhasir-hai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "urdu/narration/ch275.txt",
   "json": "urdu/narration/ch275.json",
-  "textHash": "fnv1a64:82c5115b6bbd1217",
-  "jsonHash": "fnv1a64:9c609b66958801b8",
+  "textHash": "fnv1a64:eb942b47a759bc70",
+  "jsonHash": "fnv1a64:09764687cc71352a",
   "findings": []
 }

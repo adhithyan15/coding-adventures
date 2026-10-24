@@ -16,7 +16,7 @@ prerequisites: [UR-C274-agar-to, UR-C274-agar-barish-hui, UR-C275-par-munhasir-h
 sounds: []
 roots: []
 duration:
-  max_seconds: 225
+  max_seconds: 230
 requires:
   knowledge: [UR-GRAMMAR-C274-IF-01, UR-GRAMMAR-C274-REAL-01, UR-GRAMMAR-C275-DEPENDS-01, UR-GRAMMAR-C275-DEPENDS-02, UR-LEX-C78-TIME78-01, UR-LEX-ANA, UR-LEX-JANA, UR-GRAMMAR-NA-NA, UR-LEX-C77-TIME77-03, UR-LEX-C47-VERBS47-03, UR-LEX-C271-CHHUTNA-01]
 introduces:
@@ -45,7 +45,7 @@ reviews_of: [UR-C274-agar-to, UR-C274-agar-barish-hui, UR-C275-par-munhasir-hai]
 >
 > *maiṅ ātā.* — "I would come."
 
-Alone, with no **ہوں** (*hūṅ*) after it, **آتا** (*ātā*) is not "I come": it is "I would come", or "I would have come".
+Here, with no **ہوں** (*hūṅ*) after it and no **نہیں** before it, **آتا** (*ātā*) is not "I come": it is "I would come", or "I would have come".
 
 > **اگر وقت ہوتا،**
 >

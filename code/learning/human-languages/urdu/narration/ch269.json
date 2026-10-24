@@ -4,7 +4,7 @@
   "chapter": 269,
   "title": "Should, Must, and So",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:547b6aeb41b70c99",
+  "sourceHash": "fnv1a64:41d470ac497df958",
   "lessons": [
     {
       "id": "UR-C269-jana-chahiye",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09709ba1b7a4a5dd",
+      "sourceHash": "fnv1a64:bf6817dba0de1c6d",
       "notice": null,
       "blocks": [
         {
@@ -397,11 +397,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"It was late, so I stayed at home\" — der ho rahī thī, is liye maiṅ ghar par rahā",
+              "instruction": "\"It was getting late, so I stayed at home\" — der ho rahī thī, is liye maiṅ ghar par rahā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"It was late, so I stayed at home\" — *der ho rahī thī, is liye maiṅ ghar par rahā*]"
+              "source": "[YOU SAY: \"It was getting late, so I stayed at home\" — *der ho rahī thī, is liye maiṅ ghar par rahā*]"
             },
             {
               "kind": "activity",

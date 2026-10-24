@@ -4,7 +4,7 @@
   "chapter": 275,
   "title": "It Depends, and What Would Have Been",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:cef90fe6f52f8c5f",
+  "sourceHash": "fnv1a64:e8ae12099fa4e9f3",
   "lessons": [
     {
       "id": "UR-C275-munhasir",
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:138b58fdd39a65b1",
+      "sourceHash": "fnv1a64:e4338c92c81cbd8f",
       "notice": null,
       "blocks": [
         {
@@ -326,7 +326,7 @@
             },
             {
               "kind": "speech",
-              "text": "Alone, with no ہوں (hūṅ) after it, آتا (ātā) is not \"I come\": it is \"I would come\", or \"I would have come\"."
+              "text": "Here, with no ہوں (hūṅ) after it and no نہیں before it, آتا (ātā) is not \"I come\": it is \"I would come\", or \"I would have come\"."
             },
             {
               "kind": "speech",

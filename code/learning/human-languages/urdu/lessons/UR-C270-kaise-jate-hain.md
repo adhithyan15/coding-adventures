@@ -76,7 +76,7 @@ Word for word, "how do people go to the station?": the plural **جاتے ہیں*
 >
 > *zarā batāiye, bāzār kahāṅ hai?* — "Could you tell me where the market is?"
 
-**سنیے** (*suniye*), "listen", opens a question to a stranger: "excuse me". Three verbs bend the stem: **دیجیے** (*dījiye*) from **دینا**, **لیجیے** (*lījiye*) from **لینا**, **کیجیے** (*kījiye*) from **کرنا**.
+**سنیے** (*suniye*), "listen", opens a question to a stranger: "excuse me". A few verbs bend the stem, among them **دیجیے** (*dījiye*) from **دینا**, **لیجیے** (*lījiye*) from **لینا**, **کیجیے** (*kījiye*) from **کرنا**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-GRAMMAR-C270-DIRECTION-01, UR-GRAMMAR-C270-DIRECTION-02] -->

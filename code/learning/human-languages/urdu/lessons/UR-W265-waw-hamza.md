@@ -10,8 +10,8 @@ chapter: 265
 delivery: script
 type: writing
 headword: "ؤ"
-gloss: "vāo hamza — vāo wearing the hamza, the letter inside جاؤں"
-romanization: "vāo hamza"
+gloss: "vāʾo hamza — vāʾo wearing the hamza, the letter inside جاؤں"
+romanization: "vāʾo hamza"
 prerequisites: [UR-W08-vao, UR-W37-hamza-seat, UR-C265-main-jaun-ga]
 sounds: []
 roots: []
@@ -31,19 +31,19 @@ variety: contemporary-standard-urdu
 reviews_of: [UR-W08-vao, UR-W37-hamza-seat, UR-C265-main-jaun-ga]
 ---
 
-# ؤ (vāo hamza) — vāo wearing the hamza, inside جاؤں
+# ؤ (vāʾo hamza) — vāʾo wearing the hamza, inside جاؤں
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-VAO-01, UR-SCRIPT-C37-HAMZA-SEAT-01, UR-GRAMMAR-C265-FUTURE-01] -->
 
-[PAUSE 2s] Before the new one: write **و** and **ئ** once each, and name them. (*vāo*, *hamza*.)
+[PAUSE 2s] Before the new one: write **و** and **ئ** once each, and name them. (*vāʾo*, *hamza*.)
 
 [PAUSE 2s] Now say **میں جاؤں گا** (*maiṅ jāūṅ gā*), "I will go". You have read **جاؤں** (*jāūṅ*) in every person's future. This lesson takes one letter out of it and puts it in your hand.
 
 ## Script you'll notice: ؤ
 <!-- hl-knowledge: introduces=[UR-SCRIPT-C265-WAW-HAMZA-01]; assesses=[] -->
 
-**ؤ** — *vāo hamza*.
+**ؤ** — *vāʾo hamza*.
 
 It is inside **جاؤں** (*jāūṅ*) and **آؤ** (*āo*). Say *jā-ūṅ*: two vowels side by side. **ؤ** is **و** wearing the same small **hamza** you wrote on **ئ**: there it sat on a tooth, here it sits on **و**. It marks the place where one vowel ends and the next begins. Like **و**, it does not join the letter after it.
 
@@ -69,4 +69,4 @@ Put your pen on ؤ and follow its line. Copy the shape you can see — slowly, a
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-C265-WAW-HAMZA-01] -->
 
-[PAUSE 3s] Which letter is this — ؤ? (**vāo hamza**, *jā-ūṅ*.) Which word did it come from? (**جاؤں**, *jāūṅ*, in **میں جاؤں گا**.)
+[PAUSE 3s] Which letter is this — ؤ? (**vāʾo hamza**, *jā-ūṅ*.) Which word did it come from? (**جاؤں**, *jāūṅ*, in **میں جاؤں گا**.)

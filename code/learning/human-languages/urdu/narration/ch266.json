@@ -4,7 +4,7 @@
   "chapter": 266,
   "title": "What Was Going On",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:40c76332c844a584",
+  "sourceHash": "fnv1a64:44f70b43e88ffe57",
   "lessons": [
     {
       "id": "UR-C266-parh-raha-tha",
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71429342b22e7088",
+      "sourceHash": "fnv1a64:df6066994d3f464f",
       "notice": null,
       "blocks": [
         {
@@ -245,7 +245,7 @@
             },
             {
               "kind": "speech",
-              "text": "کھانا (khānā) becomes کھانے (khāne) before کے, as every noun in -ا does."
+              "text": "کھانا (khānā) becomes کھانے (khāne) before کے, as most masculine nouns in -ا do."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 266,
-  "sourceHash": "fnv1a64:40c76332c844a584",
+  "sourceHash": "fnv1a64:44f70b43e88ffe57",
   "lessonIds": [
     "UR-C266-parh-raha-tha",
     "UR-C266-dauran",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "urdu/narration/ch266.txt",
   "json": "urdu/narration/ch266.json",
-  "textHash": "fnv1a64:81407949a37b756b",
-  "jsonHash": "fnv1a64:aebb48716e65fd37",
+  "textHash": "fnv1a64:4420bd1bcf033541",
+  "jsonHash": "fnv1a64:57c5d5f525d74bd3",
   "findings": []
 }

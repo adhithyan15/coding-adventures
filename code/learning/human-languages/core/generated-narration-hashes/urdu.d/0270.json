@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 270,
-  "sourceHash": "fnv1a64:4197ff21d8f85e46",
+  "sourceHash": "fnv1a64:e8531a3bb93bdf25",
   "lessonIds": [
     "UR-C270-kitna",
     "UR-C270-zara",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "urdu/narration/ch270.txt",
   "json": "urdu/narration/ch270.json",
-  "textHash": "fnv1a64:5b9a575513657250",
-  "jsonHash": "fnv1a64:fa77a1d75deed3cd",
+  "textHash": "fnv1a64:078cbafd4673b4b3",
+  "jsonHash": "fnv1a64:460ae2ae347fca6c",
   "findings": []
 }

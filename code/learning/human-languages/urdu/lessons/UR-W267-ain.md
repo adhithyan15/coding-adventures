@@ -36,7 +36,7 @@ reviews_of: [UR-W265-waw-hamza, UR-C267-bad]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-C265-WAW-HAMZA-01, UR-LEX-C267-BAD-01] -->
 
-[PAUSE 2s] Before the new one: write ؤ once, and name it. (*vāo hamza*.)
+[PAUSE 2s] Before the new one: write ؤ once, and name it. (*vāʾo hamza*.)
 
 [PAUSE 2s] Now say **بعد** (*bād*), "after". This lesson takes one letter out of it and puts it in your hand.
 
