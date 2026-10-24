@@ -1,6 +1,7 @@
 namespace CodingAdventures.DocumentAstToHtml.FSharp.Tests
 
 open System
+open System.Globalization
 open CodingAdventures.DocumentAst.FSharp
 open CodingAdventures.DocumentAstToHtml.FSharp
 open Xunit
@@ -195,6 +196,14 @@ module DocumentAstToHtmlTests =
             let tree = document [ paragraph [ LinkNode(destination, None, [ text "click" ]) ] ]
             Assert.Equal("<p><a href=\"\">click</a></p>\n", DocumentAstToHtml.render tree)
 
+        let image = document [ paragraph [ ImageNode("data:image/svg+xml,bad", None, "alt") ] ]
+        let autolink = document [ paragraph [ AutolinkNode("java\tscript:alert(1)", false) ] ]
+        Assert.Equal("<p><img src=\"\" alt=\"alt\" /></p>\n", DocumentAstToHtml.render image)
+
+        Assert.Equal(
+            "<p><a href=\"\">java\tscript:alert(1)</a></p>\n",
+            DocumentAstToHtml.render autolink)
+
     [<Fact>]
     let ``render preserves safe absolute and relative destinations`` () =
         let vectors =
@@ -209,6 +218,7 @@ module DocumentAstToHtmlTests =
     [<Fact>]
     let ``escapeHtml escapes metacharacters and enforces its bound`` () =
         Assert.Equal("&amp;&lt;&gt;&quot;'", DocumentAstToHtml.escapeHtml "&<>\"'")
+        Assert.Equal("line\n", DocumentAstToHtml.escapeHtml "line\n")
         Assert.Throws<ArgumentNullException>(fun () -> DocumentAstToHtml.escapeHtml null |> ignore)
         |> ignore
 
@@ -251,6 +261,7 @@ module DocumentAstToHtmlTests =
                       [],
                       [ for _ in 0..100_000 ->
                             ({ IsHeader = false; Children = [] } : TableRowNode) ]) ]
+        let oversizedAlignment = document [ TableNode(List.replicate 100_001 None, []) ]
 
         Assert.Throws<InvalidOperationException>(fun () -> DocumentAstToHtml.render oversizedOutput |> ignore)
         |> ignore
@@ -259,6 +270,9 @@ module DocumentAstToHtmlTests =
         |> ignore
 
         Assert.Throws<InvalidOperationException>(fun () -> DocumentAstToHtml.render oversizedTable |> ignore)
+        |> ignore
+
+        Assert.Throws<InvalidOperationException>(fun () -> DocumentAstToHtml.render oversizedAlignment |> ignore)
         |> ignore
 
     [<Fact>]
@@ -270,6 +284,29 @@ module DocumentAstToHtmlTests =
 
         Assert.Throws<ArgumentNullException>(fun () -> DocumentAstToHtml.render Unchecked.defaultof<DocumentNode> |> ignore)
         |> ignore
+
+        Assert.Throws<ArgumentNullException>(fun () ->
+            DocumentAstToHtml.renderWithOptions Unchecked.defaultof<RenderOptions> (document [])
+            |> ignore)
+        |> ignore
+
+    [<Fact>]
+    let ``render is culture invariant`` () =
+        let originalCulture = CultureInfo.CurrentCulture
+
+        try
+            CultureInfo.CurrentCulture <- CultureInfo("ar-SA")
+
+            let tree =
+                document
+                    [ HeadingNode(2, [ text "heading" ])
+                      ListNode(true, Some 42, true, [ ListItemNode [ paragraph [ text "item" ] ] ]) ]
+
+            Assert.Equal(
+                "<h2>heading</h2>\n<ol start=\"42\">\n<li>item</li>\n</ol>\n",
+                DocumentAstToHtml.render tree)
+        finally
+            CultureInfo.CurrentCulture <- originalCulture
 
     [<Fact>]
     let ``render is deterministic and leaves its immutable input unchanged`` () =
