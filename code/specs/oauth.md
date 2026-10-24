@@ -1252,6 +1252,23 @@ role or critical-extension policy, decide freshness or revocation, fetch or
 cache data, read a clock, or grant path, trust, TLS, HTTP, OAuth transport, or
 network authority. Concrete HTTPS remains unavailable.
 
+A bounded `x509-ocsp-response` prerequisite decodes exactly one RFC 6960
+`OCSPResponse` SEQUENCE under a shared caller-owned DER depth, element,
+length, and OID-arc budget. It recognizes only the assigned
+`OCSPResponseStatus` values 0, 1, 2, 3, 5, and 6; rejects negative,
+non-canonical, unassigned, and oversized ENUMERATED values; requires a
+successful response to carry one terminal `[0] EXPLICIT ResponseBytes`; and
+requires every error response to omit that field. `ResponseBytes` retains one
+generic response-type OBJECT IDENTIFIER and the borrowed contents of one OCTET
+STRING without interpreting either. Success retains the exact complete outer
+response encoding without reserialization. This structural layer does not
+recognize `id-pkix-ocsp-basic`, decode the OCTET STRING as a
+`BasicOCSPResponse`, select or enable an algorithm, verify a signature,
+authorize a responder, bind status to a certificate or constructed path,
+interpret extensions, decide freshness or revocation, fetch or cache data,
+read a clock, or grant path, trust, TLS, HTTP, OAuth transport, or network
+authority. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
