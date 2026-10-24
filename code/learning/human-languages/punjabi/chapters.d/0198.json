@@ -1,0 +1,18 @@
+{
+  "chapter": 198,
+  "title": "This Is a Message",
+  "label": "ch:pa-a2-suneha",
+  "canDo": "I can recognise and use the noun for a message in one bounded identity frame.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C198-payoff",
+    "kind": "production",
+    "summary": "Recognise and produce the message noun in one bounded identity frame through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-LEX-SUNEHA-198"
+    ],
+    "note": "This twenty-first Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

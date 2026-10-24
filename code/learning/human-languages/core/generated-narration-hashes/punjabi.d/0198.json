@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:01ef105a20ec3600",
+  "lessonIds": [
+    "PA-C198-message-return",
+    "PA-C198-suneha",
+    "PA-C198-suneha-review",
+    "PA-C198-message-label",
+    "PA-C198-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch198.txt",
+  "json": "punjabi/narration/ch198.json",
+  "textHash": "fnv1a64:501d6ebd915483bb",
+  "jsonHash": "fnv1a64:cf7d9f78cb8bc007",
+  "findings": []
+}
