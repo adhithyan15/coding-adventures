@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { KINDS } from "@coding-adventures/forme-types";
 import {
   parseManifest,
   validateManifest,
@@ -81,6 +82,26 @@ subtypeOf = "ContentNode"
           id: "stream-stage",
           consumes: "Stream<ContentSource>",
           produces: "Stream<ContentNode>",
+        }],
+        kinds: [],
+      },
+    };
+    expect(() => validateManifest(m)).not.toThrow();
+  });
+
+  it("recognises exactly the kernel's exported built-in kind roster", () => {
+    expect([...RESERVED_KIND_NAMES].sort()).toEqual([...KINDS].sort());
+  });
+
+  it("accepts the shipped TerminalBuffer kind in plugin stages", () => {
+    const v = valid();
+    const m: Manifest = {
+      ...v,
+      contributes: {
+        stages: [{
+          id: "terminal-renderer",
+          consumes: "ContentNode",
+          produces: "TerminalBuffer",
         }],
         kinds: [],
       },
