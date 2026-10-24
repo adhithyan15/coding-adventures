@@ -434,8 +434,24 @@ fn require_spr_privilege(
     word: u32,
     pc: u32,
 ) -> Result<(), OpenRisc1000Error> {
-    let user_accessible = matches!(address, SPR_MACLO | SPR_MACHI);
-    if state.sr & SR_SM == 0 && !user_accessible {
+    let supervisor_only = matches!(
+        address,
+        SPR_VR
+            | SPR_UPR
+            | SPR_CPUCFGR
+            | 3..=9
+            | SPR_AVR
+            | SPR_NPC
+            | SPR_SR
+            | SPR_PPC
+            | SPR_EPCR0
+            | SPR_EEAR0
+            | SPR_ESR0
+            | SPR_COREID
+            | SPR_NUMCORES
+            | SPR_GPR_BASE..=1055
+    );
+    if state.sr & SR_SM == 0 && supervisor_only {
         return Err(OpenRisc1000Error::PrivilegedInstruction { word, pc });
     }
     Ok(())

@@ -706,6 +706,18 @@ fn mac_special_registers_remain_available_in_user_mode() {
 }
 
 #[test]
+fn unimplemented_special_registers_keep_zero_noop_semantics_in_user_mode() {
+    let mut simulator = loaded(&[imm(0x2d, 3, 0, 0x2803), mtspr(0, 2, 0x2803), HALT]);
+    let mut state = simulator.get_state();
+    state.sr &= !SR_SM;
+    state.gpr[2] = 0xfeed_face;
+    simulator.restore(state).unwrap();
+    assert_eq!(simulator.step().unwrap().mnemonic, "l.mfspr");
+    assert_eq!(simulator.read_register(3).unwrap(), 0);
+    assert_eq!(simulator.step().unwrap().mnemonic, "l.mtspr");
+}
+
+#[test]
 fn public_validation_and_reset_cover_all_boundaries() {
     let mut simulator = loaded(&[HALT]);
     assert!(matches!(

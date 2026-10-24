@@ -118,6 +118,6 @@ Completion requires:
 2. behavioral witnesses for both branch outcomes, signed/unsigned data,
    carry/overflow, jumps/links, exceptions, atomics, and memory widths;
 3. lifecycle, restore, rollback, malformed-word, and bounded-execution tests;
-4. line coverage above 80% (completion baseline: 94.10%, 749/796); and
+4. line coverage above 80% (completion baseline: 94.12%, 752/799); and
 5. Rustfmt, strict Clippy, rustdoc, release tests, BUILD integration, lessons
    validation, affected-package checks, and security review before publication.
