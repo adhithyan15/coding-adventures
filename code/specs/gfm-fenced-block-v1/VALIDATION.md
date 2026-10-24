@@ -22,9 +22,9 @@ not complete GFM or all-language qualification.
   selector function is 98.8%, with all added fixture-routing blocks exercised.
 - Security rereview finds no actionable issues; all 23 changed production/fixture
   files are byte-identical to the earlier complete corrected-diff review.
-- The collision-checked inventory finds 1,532 implementation identities and
-  4,814 package slots across 15 established lanes; zero collisions/unknown buckets.
-  OCaml remains emerging. Nine newly merged Rust roots are registered for
+- The collision-checked inventory finds 1,533 implementation identities and
+  4,815 package slots across 15 established lanes; zero collisions/unknown buckets.
+  OCaml remains emerging. Ten newly merged Rust roots are registered for
   documentary classification, without native or exception credit.
 
 ## Downstream closure limits
@@ -56,3 +56,8 @@ The landing-page build/tests, journal-app build/tests, desktop-shell build and
 118-target structured result, per-step exit codes, logs and coverage outputs are
 retained in the local task evidence directory. Subsequent final-head CI is
 required; no native consumer-complete or all-language claim follows from this PR.
+
+The final rebase onto `ec0d8fbe3dd2bc1bea3d22d21647a1472d8f29ba` adds
+only unrelated ALGOL and OCSP main changes. All 23 reviewed production/fixture
+files retain exactly the validated bytes; the additional structural OCSP root
+is classified under the pending OCSP owner. Final inventory: zero collisions.

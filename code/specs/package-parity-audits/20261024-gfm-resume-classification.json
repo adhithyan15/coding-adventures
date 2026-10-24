@@ -61,16 +61,16 @@
   ],
   "dependency_policy": "Classifier dependencies are empty for documentary applicability review only; no native readiness or reviewed exception inferred.",
   "inventory": {
-    "revision": "0bf46aac85cc62de387fe7f297dff4095feec3b9",
+    "revision": "2a0365e356839e22652717fb213499c4454cb972",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1532,
-    "implementation_package_slots": 4814,
-    "all_reported_identities": 1574,
+    "implementation_identities": 1533,
+    "implementation_package_slots": 4815,
+    "all_reported_identities": 1575,
     "completion_bands": {
       "1": {
-        "missing_slots": 14700,
-        "packages": 1050
+        "missing_slots": 14714,
+        "packages": 1051
       },
       "10-15": {
         "missing_slots": 250,
@@ -89,7 +89,7 @@
     "unknown_language_buckets": 0,
     "ocaml_packages": 5,
     "evidence": "code/specs/package-parity-audits/20261024-gfm-resume-classification.json",
-    "audit_notes": "Fresh main rebase: nine new Rust roots assigned to pending documentary classifiers (five existing memberships, three new classifiers). No native qualification or exception; OCaml remains emerging."
+    "audit_notes": "Final main ec0d8fbe refresh: ten newly merged Rust roots assigned to pending documentary classifiers. Four pending follow-ups registered including Node source-export declaration ownership; no new implementation selection, native qualification or exception."
   },
   "baseline_gap_ownership": {
     "existing_owner_notes": {
@@ -101,6 +101,15 @@
     "depends_on": [
       "typescript-node-builtin-type-declarations"
     ],
+    "qualification_credit": false
+  },
+  "final_main": "ec0d8fbe3dd2bc1bea3d22d21647a1472d8f29ba",
+  "final_main_single_response_extension": {
+    "owner": "x509-ocsp-structural-components-profile-classification",
+    "package_paths": [
+      "code/packages/rust/x509-ocsp-single-response"
+    ],
+    "scope": "Review RFC6960 CertID structural composition with generic AlgorithmIdentifier/opaque hashes/positive serial, and CertStatus good/unknown/revoked CHOICE with clock-free GeneralizedTime and optional CRLReason. Preserve shared DER budgets, offsets and transactional payload-free failures. Exclude larger OCSP response containers, hash computation/policy, authentication, responder authorization, certificate/path binding, freshness or revocation decisions. Documentary applicability review only; future fixture/native children require exact proven prerequisites. No clocks, network, trust acquisition, TLS/HTTP/OAuth/native authority, qualification or reviewed exception. Finalmain ec0d8fbe adds x509-ocsp-single-response: classify exact SingleResponse CertID/CertStatus/thisUpdate composition, ordered optional EXPLICIT nextUpdate/singleExtensions, exact framing/trailing rejection, nonempty uniqueOID genericExtensions capped64, shared DER budgets, borrowed outputs/local offsets and payload-free failures. Review consumed decoder-budget state on failure explicitly; do not assume whole-operation rollback. SingleResponse syntax is included, but larger response containers, authentication, authorization, hash policy, certificate/path binding, extension interpretation, freshness/revocation decisions and ambient authority remain excluded.",
     "qualification_credit": false
   }
 }

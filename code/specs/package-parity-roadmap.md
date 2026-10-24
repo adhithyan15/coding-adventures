@@ -17668,3 +17668,9 @@ follow-up depends on the merged direct-provider repair and owns the smallest
 Node source-export consumer declaration boundary. Windows permission/readiness
 failures are validation limits; they do not become security implementation work
 for this portable parity loop. See the bounded fixture validation receipt.
+
+Final publication refresh at `ec0d8fbe` adds the newly merged structural OCSP
+SingleResponse root to the same pending OCSP owner, explicitly keeping larger
+response containers and authentication out of scope. The regenerated inventory
+now has 1,533 identities / 4,815 slots in the same 15 established lanes, with
+zero collisions or unknown buckets. No new implementation is selected.
