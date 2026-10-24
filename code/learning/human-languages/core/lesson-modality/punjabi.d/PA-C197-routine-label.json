@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C197-routine-label",
+    "language": "punjabi",
+    "chapter": 197,
+    "sequence": 10750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20427ca0512f6a36"
+  },
+  "findings": []
+}

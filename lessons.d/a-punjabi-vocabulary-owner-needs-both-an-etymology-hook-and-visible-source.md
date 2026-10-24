@@ -1,0 +1,39 @@
+---
+category: Testing & coverage
+---
+
+# A Punjabi vocabulary owner needs both an etymology hook and visible source history even when the word stays whole
+
+Punjabi chapter 197's new vocabulary owner had verified sources for its
+present-day meaning but deliberately omitted etymology rather than infer an
+unsupported derivation. The Punjabi wrapper, focused integration suite, and
+all generated-artifact checks passed. The full package suite then rejected one
+word lesson without `etymology_hook` and one without learner-visible etymology;
+Punjabi pins both counts at zero under HL24 section 9.
+
+Every new Punjabi vocabulary owner must say where the word comes from in two
+places: a concise `etymology_hook` and a visible, cited learner block. If the
+history is unknown or disputed, say that plainly instead of inventing it. If a
+source only supports a matching historical form, describe exactly that narrow
+comparison and do not turn it into a productive modern decomposition. Run
+`tests/root-ledger.test.ts` before the full suite because language wrappers do
+not exercise this corpus-wide pin.
+
+The first correction still failed the visible-etymology pin because “matching
+Sanskrit source form” stated a comparison, not an origin. That does not justify
+upgrading the comparison into a borrowing claim. When no source establishes a
+transmission route, say explicitly that the deeper origin is not established,
+then label any matching historical form as a memory comparison only. The
+coverage rule recognizes that honest uncertainty, and the lesson keeps the
+productive-decomposition boundary separate.
+
+The first uncertainty wording, “origin is not established by the sources used
+here,” was semantically accurate but still invisible to the measured rule. Use
+the rule's equally accurate explicit uncertainty shape — for example, “the
+Punjabi origin remains unknown in the sources used here” — and pin the
+non-transmission boundary in the focused regression. Put that statement under
+the repository's parsed etymology heading, “The word, taken apart” (optionally
+qualified with “where the trail runs out”); uncertainty is a deliberately
+looser signal inside that block, not a corpus-wide prose signal. An arbitrary
+origin-sounding heading may satisfy the coverage heuristic yet fail book
+generation as an unknown body block.

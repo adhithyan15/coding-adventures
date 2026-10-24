@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-197-A2-DINCHARIYA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can recognise and use the noun for a daily routine in one bounded identity frame.",
+  "prerequisites": [
+    "PA-EXT-196-A2-SHURU"
+  ]
+}
