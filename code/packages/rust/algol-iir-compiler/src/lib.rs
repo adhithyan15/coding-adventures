@@ -4784,10 +4784,7 @@ impl Compiler {
         if actuals.len() != 1 {
             return None;
         }
-        let value = exact_static_integer_reduction_value_with(actuals[0], &|candidate| {
-            self.exact_static_integer_reduction_leaf_value(candidate)
-        })?;
-        match target_name.as_str() {
+        let normalized_value = |value: i64| match target_name.as_str() {
             "abs" => value.checked_abs(),
             "sign" => Some(value.signum()),
             "entier" => Some(value),
@@ -4795,7 +4792,27 @@ impl Compiler {
             "cos" | "exp" if value == 0 => Some(1),
             "ln" if value == 1 => Some(0),
             _ => None,
+        };
+        if let Some((condition, then_node, else_node)) =
+            self.conditional_expression_parts(actuals[0])
+        {
+            if self.contains_procedure_call(condition) {
+                return None;
+            }
+            let branch_value = |branch: &GrammarASTNode| {
+                let value = exact_static_integer_reduction_value_with(branch, &|candidate| {
+                    self.exact_static_integer_reduction_leaf_value(candidate)
+                })?;
+                normalized_value(value)
+            };
+            let then_value = branch_value(then_node)?;
+            let else_value = branch_value(else_node)?;
+            return (then_value == else_value).then_some(then_value);
         }
+        let value = exact_static_integer_reduction_value_with(actuals[0], &|candidate| {
+            self.exact_static_integer_reduction_leaf_value(candidate)
+        })?;
+        normalized_value(value)
     }
 
     /// Recognize an exact-integer transform rooted in one built-in `sign` call
@@ -16020,6 +16037,44 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "non-identity, dynamic, and overridden standard-function calls must remain outside the checked static integer reduction proof",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "unexpected error for {source:?}: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_normalized_conditional_reductions() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier(abs(if flag then -3 else 3) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := -2.25; boolean flag; real result; flag := pick() > 0; result := entier(entier(sqrt(sign(if flag then 2 else 7))) * sign(pick())); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "path-independent normalized conditional reductions remain exact for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_normalized_conditional_reductions_reject_unproven_forms() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier(abs(if flag then -3 else 4) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier(sign(if flag then -2 else 3) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean procedure choose; choose := true; real result; result := entier(abs(if choose() then -3 else 3) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean flag; integer factor; real result; flag := pick() > 0; factor := entier(pick()); result := entier(abs(if flag then factor else 3) * sign(pick())); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "unequal normalized results, calling selectors, and dynamic branches must remain outside the checked static integer reduction proof",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
