@@ -6362,9 +6362,11 @@ fn is_label_body(kept: &[&lexer::token::Token], idx: usize) -> bool {
 ///
 /// One stack pass classifies each `{`:
 ///
-/// - **Class body:** the first `{` at the same bracket depth after a `class`
-///   keyword (not a property, `x.class` or `{class:1}`), past any
-///   `extends` expression.
+/// - **Class body:** the first `{` at the same bracket depth after a class
+///   head (`class {`, `class extends`, `class Name {`, `class Name
+///   extends`), past any `extends` expression. A `function` keyword at that
+///   depth (a function expression in `extends`) cancels the wait, since its
+///   own body `{` would come first.
 /// - **Object literal:** a `{` whose previous token puts it in expression
 ///   position. That is an operator or punctuator other than `)` `]` `}` `;`
 ///   `{` `:` `=>` `++` `--`, or one of `return typeof void delete in of
@@ -6394,10 +6396,28 @@ fn member_list_positions(kept: &[&lexer::token::Token]) -> Vec<bool> {
     for (k, t) in kept.iter().enumerate() {
         out[k] = matches!(stack.last(), Some(Open::Brace { member_list: true }));
         if is_word_like(t) && t.value == "class" && !after_dot(k) {
-            let next = kept.get(k + 1).map(|n| n.value.as_str());
-            if !matches!(next, Some(":" | "(" | "=" | "," | ";" | "}" | ")")) {
+            // A class head is `class {`, `class extends`, `class Name {` or
+            // `class Name extends`. Anything else (a field or key named
+            // `class`) arms nothing.
+            let opens_head = |n: Option<&&lexer::token::Token>| {
+                n.is_some_and(|n| is_structural_punct(n, "{") || (is_word_like(n) && n.value == "extends"))
+            };
+            let next = kept.get(k + 1);
+            let named = next.is_some_and(|n| is_plain_identifier(n)) && opens_head(kept.get(k + 2));
+            if opens_head(next) || named {
                 pending_class = Some(stack.len());
             }
+        }
+        // A `function` expression in an `extends` clause has its own body
+        // `{` at the class's depth (`class A extends function(){…}{…}`).
+        // Stop waiting rather than take that body for the class's: a missed
+        // class body only costs a member list.
+        if is_word_like(t)
+            && t.value == "function"
+            && !after_dot(k)
+            && pending_class == Some(stack.len())
+        {
+            pending_class = None;
         }
         if is_structural_punct(t, "{") {
             let class_body = pending_class == Some(stack.len());

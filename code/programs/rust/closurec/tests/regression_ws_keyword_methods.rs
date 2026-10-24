@@ -10,7 +10,8 @@
 //! `closure-compiler-v20260915` jar under Java 21.0.10 with
 //! `--compilation_level WHITESPACE_ONLY`. The list also holds real statements
 //! inside blocks, labels, `case` clauses, arrow and method bodies, which must
-//! still flatten. When `node` is on `PATH`, each output must also parse.
+//! still flatten, and function expressions in an `extends` clause, whose
+//! bodies are not the class body. When `node` is on `PATH`, each output must also parse.
 
 use std::process::Command;
 
@@ -18,6 +19,27 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 
 /// `(source, upstream WHITESPACE_ONLY output)`.
 const CASES: &[(&str, &str)] = &[
+    // A function expression in `extends` is not the class body (review).
+    (
+        "class A extends function(){if(a);}{}",
+        "class A extends function(){if(a);}{};",
+    ),
+    (
+        "class A extends function(){while(a);}{}",
+        "class A extends function(){while(a);}{};",
+    ),
+    (
+        "x=class extends function(){for(;;);}{}",
+        "x=class extends function(){for(;;);}{};",
+    ),
+    (
+        "class A extends function*(){if(a);}{}",
+        "class A extends function*(){if(a);}{};",
+    ),
+    (
+        "class A extends new function(){if(a);}{}",
+        "class A extends new function(){if(a);}{};",
+    ),
     ("class C{with(a){return a}}", "class C{with(a){return a}};"),
     ("x={while(a){c=a;}}", "x={while(a){c=a}};"),
     ("class C{if(){}}", "class C{if(){}};"),

@@ -158,7 +158,7 @@ class body or object literal. A keyword there is a member name, so neither
 rule fires. The classification errs towards "block", so a real `if`
 statement is never disarmed.
 
-`tests/regression_ws_keyword_methods.rs` pins 21 shapes to the jar's bytes,
+`tests/regression_ws_keyword_methods.rs` pins 26 shapes to the jar's bytes,
 real statements included, and checks with `node` that each output parses.
 Three unit tests cover the rule and the classification.
 

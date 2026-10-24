@@ -374,8 +374,11 @@ historical context with status `RESOLVED` and a link to the fix PR.
   member list would disarm a real `if`, so every rule errs towards
   "block".
 - **Tests.** Three unit tests, and
-  `closurec/tests/regression_ws_keyword_methods.rs` (21 shapes pinned to the
-  jar, node parse check).
+  `closurec/tests/regression_ws_keyword_methods.rs` (26 shapes pinned to the
+  jar, node parse check). A `function` keyword at the class head's depth
+  cancels the wait for the class body, since a function expression in
+  `extends` opens its own `{` first; and only a real class head
+  (`class {`, `class extends`, `class Name {|extends`) arms it.
 
 ### gap-036 — switch statement trailing `;` after `}`
 
