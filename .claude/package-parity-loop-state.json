@@ -19805,21 +19805,23 @@
     {
       "id": "commonmark-html-csharp-lane-prerequisites",
       "title": "Port CommonMark parser and document AST HTML renderer to C#",
-      "status": "in-progress",
+      "status": "pending",
       "depends_on": [
-        "gfm-fenced-block-ast-and-consumer-contract-repair"
+        "document-ast-to-html-csharp-lane-parity",
+        "commonmark-parser-csharp-652-reconciliation",
+        "commonmark-csharp-facade-lane-parity"
       ],
-      "branch": "codex/parity-csharp-commonmark-html-20261024",
+      "branch": null,
       "pr_number": null,
-      "notes": "Two missing portable C# roots in the 9/15 CommonMark and document-ast-to-html families; consume shared parser/renderer fixtures before GFM extensions.",
-      "classification_refresh": "Current inventory commonmark and document-ast-to-html are actual missing nine-lane facade/renderer families; commonmark-parser is present12including this lane. Qualify existing parser where required, deliver actual owned CommonMark facade and HTML renderer with upstream fixtures; do not invent absent parser root or add duplicate facade/renderer owner. No native tests/merged receipt in this refresh.",
+      "delivery_class": "aggregate",
+      "selection_blocked": true,
+      "notes": "Selection-blocked aggregate retained for historical dependency references. Its concrete children separately own the missing renderer, the measured 233/652 parser reconciliation, and the facade that follows both; do not select this aggregate as one implementation PR.",
+      "classification_refresh": "Current inventory commonmark and document-ast-to-html are actual missing nine-lane facade/renderer families; commonmark-parser is present12including this lane. Native execution on 2026-10-24 ran all652official0.31.2 records through the public parser/renderer seam:233exact matches,419 mismatches. This is qualification evidence, not conformance. Ownership is split across three exact children to avoid a renderer PR growing into a parser rewrite or shipping a misleading facade.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/commonmark-html-csharp-lane-prerequisites"
       ],
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited.",
-      "started_at": "2026-10-24T18:13:58Z",
-      "base_revision": "ce1fe9b5c62e3fe2d05960d3946dce719cb272a7",
-      "selection_notes": "Selected as an independent dependency-ready lane prerequisite after PR #18105 merged. Preserve the existing substantive C# commonmark-parser root, add only the missing document-ast-to-html and commonmark roots, run all 652 official CommonMark 0.31.2 facade records, and keep GFM adoption separate."
+      "split_at": "2026-10-24T18:13:58Z"
     },
     {
       "id": "commonmark-html-fsharp-lane-prerequisites",
@@ -25784,6 +25786,57 @@
         "code/packages/typescript/commonmark/tests/fixtures/spec.json"
       ],
       "notes": "The official CommonMark 0.31.2 652-case corpus is duplicated under established language packages, while renderer vectors remain package-local. Specify one provenance-pinned, bounded language-neutral parser/facade corpus plus independently authored AST-to-HTML vectors and exact native-reader CI routing. This is not required for the C# lane tranche, does not replace its vendored fixture, and must not absorb the separate GFM extension corpus."
+    },
+    {
+      "id": "document-ast-to-html-csharp-lane-parity",
+      "title": "Add the document AST HTML renderer to C#",
+      "status": "in-progress",
+      "depends_on": [],
+      "branch": "codex/parity-csharp-commonmark-html-20261024",
+      "pr_number": null,
+      "delivery_class": "portable-lane-adoption",
+      "selection_blocked": false,
+      "started_at": "2026-10-24T18:13:58Z",
+      "base_revision": "ce1fe9b5c62e3fe2d05960d3946dce719cb272a7",
+      "package_paths": [
+        "code/packages/csharp/document-ast-to-html"
+      ],
+      "notes": "Deliver the missing pure C# renderer root through its public TE00 API with independently authored vectors for every existing C# AST node, raw routing, URL hardening, ownership/resource limits, native coverage and Unix/Windows build fronts. Rendering extension-shaped AST data does not claim GFM parser adoption."
+    },
+    {
+      "id": "commonmark-parser-csharp-652-reconciliation",
+      "title": "Reconcile the C# parser with all 652 CommonMark 0.31.2 examples",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "portable-lane-reconciliation",
+      "selection_blocked": false,
+      "registered_at": "2026-10-24T18:13:58Z",
+      "discovered_revision": "ce1fe9b5c62e3fe2d05960d3946dce719cb272a7",
+      "package_paths": [
+        "code/packages/csharp/commonmark-parser"
+      ],
+      "notes": "Native qualification executed every official CommonMark0.31.2 record through the current public C# parser and TE00 renderer:233/652 exact HTML matches and419 mismatches. Reconcile the existing substantive parser without a fixture lookup, third-party engine, external process or cross-language bridge; preserve current resource guards and qualify the full corpus plus production coverage before claiming conformance."
+    },
+    {
+      "id": "commonmark-csharp-facade-lane-parity",
+      "title": "Add the thin CommonMark facade to C#",
+      "status": "pending",
+      "depends_on": [
+        "commonmark-parser-csharp-652-reconciliation",
+        "document-ast-to-html-csharp-lane-parity"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "portable-lane-adoption",
+      "selection_blocked": false,
+      "registered_at": "2026-10-24T18:13:58Z",
+      "discovered_revision": "ce1fe9b5c62e3fe2d05960d3946dce719cb272a7",
+      "package_paths": [
+        "code/packages/csharp/commonmark"
+      ],
+      "notes": "Add only the thin public parse/to-HTML composition package after the C# parser passes all652official cases and the renderer merges. Re-run all652 through the facade, preserve AST access and raw-HTML security documentation, and do not absorb GFM adoption."
     }
   ]
 }

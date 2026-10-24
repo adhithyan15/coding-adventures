@@ -70,23 +70,12 @@ The first tranche is successful when:
 - GFM-only constructs live behind `gfm-parser`, not inside the AST consumer API
 - tests demonstrate the same baseline document behaviour in C# and F#
 
-## C# CommonMark And HTML Tranche
+## C# HTML Renderer Tranche
 
-The next C# tranche completes the base CommonMark pipeline without duplicating
-the already-substantive `commonmark-parser` package:
-
-1. qualify `commonmark-parser` through the repository's vendored CommonMark
-   0.31.2 corpus,
-2. add `document-ast-to-html` as a pure renderer over the public
-   `document-ast` types, and
-3. add `commonmark` as the thin public facade that exposes the parser and
-   renderer entry points.
-
-The facade corpus is the same 652-record `spec.json` used by the established
-TypeScript and Rust facades. The C# copy must record its upstream URL, version,
-SHA-256 digest, and exact case count. Tests load the records dynamically and
-assert that every record ran through `Commonmark.Parse` followed by
-`Commonmark.ToHtml`; a hand-selected subset does not qualify this tranche.
+The next C# tranche adds only `document-ast-to-html` as a pure renderer over
+the public `document-ast` types. It does not duplicate or silently promote the
+already-substantive `commonmark-parser` package, and it does not add the thin
+`commonmark` facade before its parser prerequisite is qualified.
 
 Renderer tests are independently authored from the TE00 public contract. They
 exercise every C# `document-ast` node through `DocumentAstToHtml.ToHtml`,
@@ -98,10 +87,13 @@ the AST does not claim that C# consumes the GFM conformance corpus.
 ### Public API
 
 ```csharp
-using CodingAdventures.Commonmark;
+using CodingAdventures.DocumentAst;
+using CodingAdventures.DocumentAstToHtml;
 
-var document = Commonmark.Parse("# Hello\n");
-var html = Commonmark.ToHtml(document);
+var document = new DocumentNode([
+    new HeadingNode(1, [new TextNode("Hello")]),
+]);
+var html = DocumentAstToHtml.ToHtml(document);
 ```
 
 `CodingAdventures.DocumentAstToHtml.DocumentAstToHtml.ToHtml` accepts a
@@ -125,13 +117,28 @@ removes browser-ignored control and zero-width characters before rejecting
 
 ### Package And Build Evidence
 
-Both new roots require normal NuGet metadata, `README.md`, `CHANGELOG.md`,
-`required_capabilities.json`, Unix `BUILD`, and Windows `BUILD_windows` fronts.
-The build fronts run native .NET tests with production line coverage above the
-repository's 80% floor. The facade declares both direct project references;
-the renderer declares only `document-ast`; and test-only dependencies remain
-in test projects rather than production package metadata.
+The new renderer root requires normal NuGet metadata, `README.md`,
+`CHANGELOG.md`, `required_capabilities.json`, Unix `BUILD`, and Windows
+`BUILD_windows` fronts. The build fronts run native .NET tests with production
+line coverage above the repository's 80% floor. The renderer declares only
+`document-ast`; test-only dependencies remain in the test project.
 
-This tranche does not implement or qualify `gfm`, consume the GFM extension
+### Discovered Parser And Facade Sequence
+
+Executing the existing C# parser and new renderer against every record in the
+official CommonMark 0.31.2 corpus produced 233 exact matches out of 652. That
+is useful qualification evidence, but it is not CommonMark conformance and
+must not be hidden behind a facade that implies parity.
+
+The remaining C# pipeline therefore has two separately owned steps:
+
+1. `commonmark-parser-csharp-652-reconciliation` reconciles the existing parser
+   against all 652 official cases without using a fixture lookup, external
+   process, cross-language bridge, or third-party Markdown engine.
+2. `commonmark-csharp-facade-lane-parity` adds the thin facade only after both
+   the parser reconciliation and this renderer package have merged.
+
+This renderer tranche does not implement or qualify `commonmark-parser`, add
+the `commonmark` facade, implement or qualify `gfm`, consume the GFM extension
 fixture, centralize the repository's duplicated CommonMark corpus, or claim
 sanitization policy beyond the renderer's documented raw-node and URL rules.

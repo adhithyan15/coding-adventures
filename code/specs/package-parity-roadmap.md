@@ -17675,21 +17675,32 @@ response containers and authentication out of scope. The regenerated inventory
 now has 1,533 identities / 4,815 slots in the same 15 established lanes, with
 zero collisions or unknown buckets. No new implementation is selected.
 
-## C# CommonMark pipeline prerequisite selection (2026-10-24)
+## C# CommonMark prerequisite split and renderer selection (2026-10-24)
 
 PR #18105 merged the fenced-block contract prerequisite as
 `8908cd9ef8113340b9ce6ec5dc9ea87b77dcc738`. The independent C# lane audit
 confirms that `commonmark-parser` is already a substantive package root, while
 `document-ast-to-html` and the thin `commonmark` facade are the two actual
-missing C# identities. Select only
-`commonmark-html-csharp-lane-prerequisites` on branch
+missing C# identities. Native qualification executed every official CommonMark
+0.31.2 example through the public parser/renderer seam: 233 of 652 outputs
+matched exactly and 419 did not. That evidence forbids a facade conformance
+claim and makes a full parser rewrite too broad for the renderer tranche.
+
+Split the former `commonmark-html-csharp-lane-prerequisites` owner into three
+dependency-shaped children and retain the former owner only as a
+selection-blocked aggregate:
+
+- `document-ast-to-html-csharp-lane-parity` owns the missing renderer root;
+- `commonmark-parser-csharp-652-reconciliation` owns the measured parser gap;
+- `commonmark-csharp-facade-lane-parity` depends on both and owns the facade.
+
+Select only `document-ast-to-html-csharp-lane-parity` on branch
 `codex/parity-csharp-commonmark-html-20261024` from `ce1fe9b5`.
 
-This tranche qualifies the existing parser through the same provenance-pinned
-652-case CommonMark 0.31.2 corpus used by established facades, adds a pure C#
-TE00 renderer with independent public-API vectors, and composes both through a
-real facade. It does not duplicate `commonmark-parser`, adopt the GFM fixture,
-or claim sanitizer/browser authority.
+This tranche adds a pure C# TE00 renderer with independent public-API vectors,
+bounded traversal/output, raw-node routing, URL hardening, coverage and both
+platform build fronts. It leaves the existing parser untouched and adds no
+facade. It does not adopt the GFM fixture or claim sanitizer/browser authority.
 
 The audit also discovered that CommonMark corpora and renderer vectors remain
 duplicated inside language packages rather than owned by a central neutral
