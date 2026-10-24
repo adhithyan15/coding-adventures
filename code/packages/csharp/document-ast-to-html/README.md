@@ -47,6 +47,11 @@ HTML passthrough deliberately preserves caller-supplied markup.
 The renderer borrows the input tree and never mutates it. It returns a newly
 owned string and rejects trees deeper than 256 nodes, trees containing more
 than 100,000 rendered nodes, and output beyond 1,000,000 UTF-16 characters.
+Each call also admits at most 1,000,000 aggregate UTF-16 code units of raw link,
+image, and autolink destinations. Every visit counts before normalization,
+including repeated aliases and URLs that normalize empty or are rejected.
+This bounds work that does not appear in the output; the budget resets on
+each call.
 Limit failures throw `InvalidOperationException` and return no partial result.
 
 ## Development

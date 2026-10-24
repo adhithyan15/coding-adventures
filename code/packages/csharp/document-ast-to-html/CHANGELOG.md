@@ -14,3 +14,11 @@ All notable changes to this package will be documented in this file.
 - Bounded depth, node count, URL normalization, and output size with no
   partial result returned after a resource-limit failure.
 - Native xUnit coverage plus Unix and Windows repository build fronts.
+
+### Fixed
+
+- Charge repeated and discarded URL destinations against one per-render input
+  budget before normalization allocates or scans, preventing aggregate work
+  from bypassing the node and output ceilings.
+- Execute Windows native tests and coverage even when setup directories
+  already exist, rather than returning success without running the build.

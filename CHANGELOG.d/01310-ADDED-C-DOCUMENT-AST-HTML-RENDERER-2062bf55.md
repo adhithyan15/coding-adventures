@@ -7,3 +7,6 @@
   reconciliation, and facade owners after all 652 official examples exposed a
   233-pass/419-gap parser baseline. No facade or CommonMark conformance claim is
   included in this renderer tranche.
+- Bound aggregate URL normalization before scanning or allocation, including
+  aliases and destinations discarded by sanitization. Repeated Windows builds
+  also execute native tests and measured coverage when setup directories exist.
