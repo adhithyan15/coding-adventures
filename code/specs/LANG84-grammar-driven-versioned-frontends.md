@@ -1358,6 +1358,51 @@ Divergences from this spec in 5b/7b slice 2:
    as unsupported.
 4. **6d.** Add the `ecmascript/releases.csv` rows and make `EsVersion`
    selection real (`compile_source_at`). Remove the hard-coded `Es2020`.
+
+   **6d plan (2026-10-24).**
+   - *Releases.* The ECMAScript inventory names one row per published
+     edition (`es1` … `es2026`) plus the Netscape/Mozilla `js1.x` versions.
+     A release ID is the row's `release` cell exactly; it is also the
+     `EsVersion::as_str()` spelling of the edition whose pair it selects
+     (`es2017` → `es2017.tokens`/`es2017.grammar`). `js1.x`, `es2`, `es5.1`
+     and `es2026` have no pair and stay `grammar_stage none`.
+   - *Claiming rows.* `es2015` … `es2025` claim `es-number-log`: grammar
+     status `partial`, stage `P`, `iir_status` `es-number-log`, profile
+     `ecmascript`. These eleven editions have the F10 regex/division table
+     (phase 6a), so the subset's `8 / 2 / 2` lexes as division in each.
+     `backend_status` stays `-`: the nine backends are phase 6e.
+   - *Not selectable yet.* `es1`, `es3` and `es5` keep `grammar_stage none`.
+     es1 needs no table (it has no regex literal), but its grammar lacks
+     `let`/`const` and the subset's corpus is written against them; es3
+     and es5 still lack the F10 table (6a's divergence). Their `.tokens` are
+     embedded in the Swift `ecmascript-es{3,5}-lexer` packages, which
+     `swift/grammar-tools/regen-embedded-grammars.sh --check` pins in CI,
+     and Swift `grammar-tools` has no `start_mode`/`transitions` support, so
+     the table cannot be added without first porting F10 to Swift. A
+     request for any of these rows is `ReleaseNotAvailable`, never a
+     fallback to a neighbouring edition (C4).
+   - *Default.* `DEFAULT_RELEASE` is `es2020`, the edition the IIR path has
+     always parsed, so `compile_source` keeps its exact behaviour. It is an
+     inventory ID that claims `es-number-log` (C4.4).
+   - *Profile.* One profile, `ecmascript`: the subset has no edition-varying
+     semantics (Numbers are IEEE doubles and `console.log` formats them the
+     same way in every edition). Editions differ only in what they *lex*:
+     numeric separators (`1_000`) are ES2021, so that case carries
+     `.reject@<release>` overrides for es2015–es2020 and the sweep finds
+     two IIR-identity classes.
+   - *API* (`javascript-iir-compiler`): `compile_source_at(source,
+     Option<&str>, module_name)` returning a typed `FrontendError`
+     (`UnknownRelease`, `ReleaseNotAvailable`, `Budget`, `Lex`, `Parse`,
+     `Unsupported`); `run_source_at`; `supported_releases()`;
+     `DEFAULT_RELEASE`; `SUBSET`. The module records `IIRModule.release`.
+     `compile_source`/`run_source` keep their `String` errors and messages
+     and select `DEFAULT_RELEASE` through the same path.
+   - *Proof.* `javascript-parser` `release_probes` (stage P: positive,
+     negative and hostile probes through each claiming edition's compiled
+     tables), `javascript-iir-compiler` `release_subsets` (stage I: every
+     corpus case under every claiming release, outcomes checked against
+     host `node` where it is installed) and `release_sweep`
+     (`release_classes.csv`).
 5. **6e.** Add `Language::JavaScript` to lang-aot, with matrix rows. JS numbers
    are `f64`, so B(S) for a printing subset depends on LANG83's `f64`
    formatting ops (`f64_to_str_js` / `write_f64_js`, LANG83 PR6). Until then,
