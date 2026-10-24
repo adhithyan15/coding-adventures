@@ -8,4 +8,3 @@ license = "MIT"
 [lib]
 name = "openrisc1000_simulator"
 path = "src/lib.rs"
-
