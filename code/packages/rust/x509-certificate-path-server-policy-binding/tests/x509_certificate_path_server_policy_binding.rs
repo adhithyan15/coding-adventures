@@ -4,8 +4,10 @@ use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_path_construction::{
     construct_unique_x509_certificate_path_by, ConstructedX509CertificatePath,
 };
+use x509_certificate_path_reviewed_anchor_binding::bind_constructed_x509_certificate_path_to_reviewed_anchor;
 use x509_certificate_path_server_policy_binding::{
     bind_constructed_x509_certificate_path_to_server_policy,
+    bind_reviewed_constructed_x509_certificate_path_to_server_policy,
     X509CertificatePathServerPolicyBindingErrorKind,
 };
 use x509_certificate_policy::{
@@ -17,6 +19,8 @@ use x509_server_certificate_policy::{
     validate_x509_server_certificate_policy, ValidatedX509ServerCertificatePolicy,
 };
 use x509_time::{decode_x509_time, X509Time};
+use x509_webpki_root_anchor_selection::select_reviewed_webpki_root_anchor;
+use x509_webpki_roots_snapshot::{reviewed_webpki_roots, TrustAnchor};
 
 const SIGNATURE_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b];
 const SIGNATURE_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 11];
@@ -65,20 +69,22 @@ fn extension(oid: &[u8], critical: bool, value: &[u8]) -> Vec<u8> {
     der(0x30, &fields)
 }
 
-fn certificate(issuer: &[u8], subject: &[u8], extensions: &[Vec<u8>]) -> Vec<u8> {
+fn certificate_from_der_parts(
+    issuer: &[u8],
+    subject: &[u8],
+    subject_public_key_info: &[u8],
+    extensions: &[Vec<u8>],
+) -> Vec<u8> {
     let mut validity = der(0x17, b"260101000000Z");
     validity.extend(der(0x17, b"270101000000Z"));
-
-    let mut subject_public_key_info = algorithm(KEY_OID_DER);
-    subject_public_key_info.extend(der(0x03, &[0x00, 0x30, 0x00]));
 
     let mut tbs = der(0xa0, &der(0x02, &[0x02]));
     tbs.extend(der(0x02, &[0x01]));
     tbs.extend(algorithm(SIGNATURE_OID_DER));
-    tbs.extend(name(issuer));
+    tbs.extend(issuer);
     tbs.extend(der(0x30, &validity));
-    tbs.extend(name(subject));
-    tbs.extend(der(0x30, &subject_public_key_info));
+    tbs.extend(subject);
+    tbs.extend(subject_public_key_info);
     if !extensions.is_empty() {
         tbs.extend(der(0xa3, &der(0x30, &extensions.concat())));
     }
@@ -89,24 +95,75 @@ fn certificate(issuer: &[u8], subject: &[u8], extensions: &[Vec<u8>]) -> Vec<u8>
     der(0x30, &fields)
 }
 
-fn server_certificate() -> Vec<u8> {
-    certificate(
-        b"issuer.example",
-        b"api.example.test",
-        &[
-            extension(KEY_USAGE_OID_DER, true, &der(0x03, &[0x07, 0x80])),
-            extension(
-                EXTENDED_KEY_USAGE_OID_DER,
-                false,
-                &der(0x30, &der(0x06, SERVER_AUTH_OID_DER)),
-            ),
-            extension(
-                SUBJECT_ALT_NAME_OID_DER,
-                false,
-                &der(0x30, &der(0x82, b"api.example.test")),
-            ),
-        ],
+fn certificate(issuer: &[u8], subject: &[u8], extensions: &[Vec<u8>]) -> Vec<u8> {
+    let mut subject_public_key_info = algorithm(KEY_OID_DER);
+    subject_public_key_info.extend(der(0x03, &[0x00, 0x30, 0x00]));
+    certificate_from_der_parts(
+        &name(issuer),
+        &name(subject),
+        &der(0x30, &subject_public_key_info),
+        extensions,
     )
+}
+
+fn server_extensions() -> [Vec<u8>; 3] {
+    [
+        extension(KEY_USAGE_OID_DER, true, &der(0x03, &[0x07, 0x80])),
+        extension(
+            EXTENDED_KEY_USAGE_OID_DER,
+            false,
+            &der(0x30, &der(0x06, SERVER_AUTH_OID_DER)),
+        ),
+        extension(
+            SUBJECT_ALT_NAME_OID_DER,
+            false,
+            &der(0x30, &der(0x82, b"api.example.test")),
+        ),
+    ]
+}
+
+fn server_certificate() -> Vec<u8> {
+    certificate(b"issuer.example", b"api.example.test", &server_extensions())
+}
+
+fn server_certificate_for_reviewed_anchor(anchor: &TrustAnchor<'_>) -> Vec<u8> {
+    let mut subject_public_key_info = algorithm(KEY_OID_DER);
+    subject_public_key_info.extend(der(0x03, &[0x00, 0x30, 0x00]));
+    certificate_from_der_parts(
+        &der(0x30, anchor.subject()),
+        &name(b"api.example.test"),
+        &der(0x30, &subject_public_key_info),
+        &server_extensions(),
+    )
+}
+
+fn reviewed_root_certificate(anchor: &TrustAnchor<'_>) -> Vec<u8> {
+    certificate_from_der_parts(
+        &der(0x30, anchor.subject()),
+        &der(0x30, anchor.subject()),
+        &der(0x30, anchor.subject_public_key_info()),
+        &[],
+    )
+}
+
+fn first_reviewed_anchor() -> TrustAnchor<'static> {
+    reviewed_webpki_roots().iter().next().unwrap().unwrap()
+}
+
+fn reviewed_server_path<'target, 'target_encoded, 'candidates, 'candidate_encoded>(
+    target: &'target X509Certificate<'target_encoded>,
+    candidates: &'candidates [X509Certificate<'candidate_encoded>],
+) -> x509_certificate_path_reviewed_anchor_binding::BoundConstructedX509CertificatePathToReviewedAnchor<
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'candidates,
+    'candidate_encoded,
+>{
+    let path = constructed_path(target, candidates);
+    let reviewed_anchor = select_reviewed_webpki_root_anchor(&candidates[0]).unwrap();
+    bind_constructed_x509_certificate_path_to_reviewed_anchor(path, reviewed_anchor).unwrap()
 }
 
 fn issuer_certificate() -> Vec<u8> {
@@ -213,6 +270,73 @@ fn rejects_byte_equal_server_policy_for_a_distinct_target_decode() {
 
     let error = bind_constructed_x509_certificate_path_to_server_policy(path, wrong_policy)
         .expect_err("byte-equal certificates from distinct decodes must not bind");
+
+    assert_eq!(
+        error.kind(),
+        X509CertificatePathServerPolicyBindingErrorKind::EvidenceMismatch
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 certificate path server-policy binding error EvidenceMismatch"
+    );
+    assert!(!error.to_string().contains("api.example.test"));
+}
+
+#[test]
+fn binds_reviewed_terminal_and_server_policy_to_one_constructed_path() {
+    let anchor = first_reviewed_anchor();
+    let target_encoded = server_certificate_for_reviewed_anchor(&anchor);
+    let root_encoded = reviewed_root_certificate(&anchor);
+    let target = decode_x509_certificate(&target_encoded, Asn1Limits::default()).unwrap();
+    let candidates = [decode_x509_certificate(&root_encoded, Asn1Limits::default()).unwrap()];
+    let reviewed_path = reviewed_server_path(&target, &candidates);
+    let policy = server_policy(&target);
+
+    let bound =
+        bind_reviewed_constructed_x509_certificate_path_to_server_policy(reviewed_path, policy)
+            .unwrap();
+
+    assert!(std::ptr::eq(
+        bound
+            .reviewed_path()
+            .constructed_path()
+            .target_certificate(),
+        bound.server_policy().certificate()
+    ));
+    assert!(std::ptr::eq(
+        bound
+            .reviewed_path()
+            .constructed_path()
+            .issuer_certificate(0)
+            .unwrap(),
+        bound
+            .reviewed_path()
+            .reviewed_anchor()
+            .candidate_certificate()
+    ));
+    assert_eq!(
+        format!("{bound:?}"),
+        "BoundReviewedConstructedX509CertificatePathToServerPolicy"
+    );
+}
+
+#[test]
+fn reviewed_terminal_binding_rejects_byte_equal_policy_for_another_target_decode() {
+    let anchor = first_reviewed_anchor();
+    let target_encoded = server_certificate_for_reviewed_anchor(&anchor);
+    let root_encoded = reviewed_root_certificate(&anchor);
+    let target = decode_x509_certificate(&target_encoded, Asn1Limits::default()).unwrap();
+    let independently_decoded_target =
+        decode_x509_certificate(&target_encoded, Asn1Limits::default()).unwrap();
+    let candidates = [decode_x509_certificate(&root_encoded, Asn1Limits::default()).unwrap()];
+    let reviewed_path = reviewed_server_path(&target, &candidates);
+    let wrong_policy = server_policy(&independently_decoded_target);
+
+    let error = bind_reviewed_constructed_x509_certificate_path_to_server_policy(
+        reviewed_path,
+        wrong_policy,
+    )
+    .expect_err("byte-equal target policy from another decode must not bind");
 
     assert_eq!(
         error.kind(),

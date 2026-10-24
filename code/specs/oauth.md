@@ -842,6 +842,16 @@ chain. The binding does not authenticate any path link, validate an issuer or
 trust anchor, apply path-length or name constraints, check revocation, or
 provide complete path validation, TLS, HTTP, OAuth transport, or network
 authority.
+A bounded reviewed-endpoints follow-up now consumes the reviewed-terminal-bound
+constructed path together with complete validated server-certificate policy.
+It fails closed unless that policy retains the same exact decoded target object
+as the constructed path, then returns one distinct non-copyable result retaining
+the reviewed terminal, constructed candidate pool and indices, and complete
+target policy. This prevents the two endpoint proofs from requiring separate
+consumption of the non-copyable path or allowing either endpoint to be silently
+discarded. The composition does not authenticate path links, apply issuer,
+anchor, path-length, or name-constraint policy, check revocation, or provide
+complete path validation, TLS, HTTP, OAuth transport, or network authority.
 The RSA SHA-256 issuer-link composition can now consume that non-copyable
 selection evidence directly. It derives the exact child and selected candidate
 from the evidence, then performs issuing-CA role, caller-owned RSA key-policy,
