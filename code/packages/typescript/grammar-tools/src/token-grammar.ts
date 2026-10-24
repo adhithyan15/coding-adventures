@@ -430,7 +430,10 @@ function rejectDefinitionGuard(
   name: string,
   lineNumber: number,
 ): void {
-  const guard = alias.split(/\s+/).find((word) => word.startsWith("@"));
+  // Any `@` counts, not only a word that starts with one: `->Y@line_start`
+  // (no space) would otherwise make the alias `Y@line_start`. An alias names
+  // a token type and never contains `@`.
+  const guard = alias.split(/\s+/).find((word) => word.includes("@"));
   if (guard !== undefined) {
     throw new TokenGrammarError(
       `Definition guards ('${guard}', LANG84 E1) are not implemented by the ` +
@@ -568,8 +571,13 @@ function splitInGuard(head: string): [string, string | undefined] {
 }
 
 /**
- * Whether a transition head has an ` if ` outside any parenthesised token set
- * and outside a `KEYWORD="..."` value (LANG84 E8).
+ * Whether a transition head has the word `if` outside any parenthesised token
+ * set and outside a `KEYWORD="..."` value (LANG84 E8).
+ *
+ * `if` is a whitespace-delimited word: whitespace (space or tab) before it,
+ * and whitespace or the end of the head after it. So `X\tif c` and a bare
+ * trailing `X if` are found too, rather than read as the never-matching
+ * token name `X if`.
  */
 function hasTopLevelIf(head: string): boolean {
   let depth = 0;
@@ -584,8 +592,11 @@ function hasTopLevelIf(head: string): boolean {
       depth += 1;
     } else if (ch === ")") {
       depth -= 1;
-    } else if (ch === " " && depth === 0 && head.startsWith(" if ", i)) {
-      return true;
+    } else if (/\s/.test(ch) && depth === 0 && head.startsWith("if", i + 1)) {
+      const after = head.charAt(i + 3);
+      if (after === "" || /\s/.test(after)) {
+        return true;
+      }
     }
   }
   return false;

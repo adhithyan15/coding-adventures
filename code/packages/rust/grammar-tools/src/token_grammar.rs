@@ -679,6 +679,20 @@ fn parse_alias(after_pattern: &str, line_number: usize) -> Result<Option<String>
                 line_number,
             });
         }
+        // `-> ALIAS@line_start` (no space before the guard) used to make the
+        // alias `ALIAS@line_start` and drop the guard, so the token matched
+        // everywhere (security review L3). An alias names a token type and
+        // never contains `@`, so refuse it rather than guess.
+        if alias_name.contains('@') {
+            return Err(TokenGrammarError {
+                message: format!(
+                    "Alias '{}' contains '@'; separate a guard from the alias with a space \
+                     (e.g. '-> NAME @line_start')",
+                    alias_name
+                ),
+                line_number,
+            });
+        }
         Ok(Some(alias_name.to_string()))
     } else {
         Ok(None)
@@ -1112,7 +1126,14 @@ fn parse_transition(line: &str, line_number: usize) -> Result<ModeTransition, To
 
     // Optional `if COND [&& COND ...]` list (LANG84 E8). It is the last part
     // of the head, so split it off before looking for the `in MODE` guard.
-    let (head, conditions) = match split_top_level(head, " if ") {
+    //
+    // `if` is a whitespace-delimited *word* (spaces or tabs on its left, any
+    // whitespace or the end of the head on its right), not the literal
+    // `" if "`: with the literal, `on X if -> refuse` and `on X\tif …` were
+    // not split, the trigger token became `X if`, and the rule silently never
+    // fired (security review L1). A bare `if` reaches `parse_conditions` with
+    // an empty list, which is an error.
+    let (head, conditions) = match split_top_level_word(head, "if") {
         Some((before, conds)) => (before.trim(), parse_conditions(conds, line, line_number)?),
         None => (head, Vec::new()),
     };
@@ -1252,10 +1273,21 @@ fn parse_conditions(
     Ok(conditions)
 }
 
-/// Split `head` at the first occurrence of `separator` that is outside any
-/// parenthesised token set and outside any `"…"` keyword value, returning the
-/// text before and after it.
-fn split_top_level<'h>(head: &'h str, separator: &str) -> Option<(&'h str, &'h str)> {
+/// Split `head` at the first occurrence of the *word* `word` that is outside
+/// any parenthesised token set and outside any `"…"` keyword value, returning
+/// the text before and after it.
+///
+/// A word occurrence has whitespace (space, tab, …) immediately before it and
+/// whitespace or the end of `head` immediately after it:
+///
+/// | head                         | split?                         |
+/// |------------------------------|--------------------------------|
+/// | `X if space_before`          | yes: `X` / `space_before`      |
+/// | `X\tif space_before`         | yes (tab before the word)      |
+/// | `X if`                       | yes: `X` / `` (then an error)  |
+/// | `KEYWORD="if"`               | no (inside quotes)             |
+/// | `IFX` / `X ifx`              | no (not a whole word)          |
+fn split_top_level_word<'h>(head: &'h str, word: &str) -> Option<(&'h str, &'h str)> {
     let mut depth = 0i32;
     let mut in_quotes = false;
     for (i, c) in head.char_indices() {
@@ -1263,8 +1295,13 @@ fn split_top_level<'h>(head: &'h str, separator: &str) -> Option<(&'h str, &'h s
             '"' => in_quotes = !in_quotes,
             '(' if !in_quotes => depth += 1,
             ')' if !in_quotes => depth -= 1,
-            _ if depth == 0 && !in_quotes && head[i..].starts_with(separator) => {
-                return Some((&head[..i], &head[i + separator.len()..]));
+            _ if depth == 0 && !in_quotes && c.is_whitespace() => {
+                let rest = &head[i + c.len_utf8()..];
+                if let Some(after) = rest.strip_prefix(word) {
+                    if after.is_empty() || after.starts_with(char::is_whitespace) {
+                        return Some((&head[..i], after));
+                    }
+                }
             }
             _ => {}
         }
@@ -1473,7 +1510,53 @@ pub fn validate_token_grammar(grammar: &TokenGrammar) -> Vec<String> {
         ));
     }
 
+    // LANG84 E8 rules only take effect where transitions run. The indentation
+    // tokenizer never applies the transition table, so a `refuse` rule or an
+    // `if` condition there would silently do nothing — the token would lex
+    // normally (security review L2). Reject them instead of ignoring them.
+    if grammar.mode.as_deref() == Some("indentation") {
+        for rule in &grammar.transitions {
+            if rule.actions.contains(&TransitionAction::Refuse) || !rule.conditions.is_empty() {
+                issues.push(format!(
+                    "Transition rule on line {} uses 'refuse' or an 'if' condition, but \
+                     'mode: indentation' grammars do not apply transitions",
+                    rule.line_number
+                ));
+            }
+        }
+    }
+
+    // Every trigger must name a token the lexer can emit: a definition or
+    // alias (top level or in a group), an error definition, `KEYWORD` when
+    // the grammar has keywords, or a built-in (`NEWLINE`, `INDENT`, `DEDENT`,
+    // `EOF`). A misspelt trigger never matches, so the rule — a `refuse`
+    // included — would silently never fire.
+    let mut emittable: std::collections::HashSet<&str> =
+        ["NEWLINE", "INDENT", "DEDENT", "EOF"].into_iter().collect();
+    if !grammar.keywords.is_empty() || !grammar.reserved_keywords.is_empty() {
+        emittable.insert("KEYWORD");
+    }
+    let all_definitions = grammar
+        .definitions
+        .iter()
+        .chain(grammar.error_definitions.iter())
+        .chain(grammar.groups.values().flat_map(|g| g.definitions.iter()));
+    for def in all_definitions {
+        emittable.insert(def.name.as_str());
+        if let Some(alias) = def.alias.as_deref() {
+            emittable.insert(alias);
+        }
+    }
+
     for rule in &grammar.transitions {
+        for token in &rule.on_tokens {
+            if !emittable.contains(token.as_str()) {
+                issues.push(format!(
+                    "Transition trigger '{}' (line {}) is not a token this grammar can emit",
+                    token, rule.line_number
+                ));
+            }
+        }
         if let Some(ref m) = rule.in_mode {
             if !mode_exists(m) {
                 issues.push(format!(
@@ -2804,6 +2887,8 @@ errors:
         let src = "\
 SLASH = \"/\"
 NAME = /[a-z]+/
+keywords:
+  if
 group beg:
   SLASH = \"/\"
 transitions:
@@ -2843,5 +2928,78 @@ transitions:
             let error = parse_token_grammar(&format!("X = /x/\ntransitions:\n  {rule}\n")).unwrap_err();
             assert!(error.message.contains(needle), "{rule}: {}", error.message);
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // Security review L1–L4: rules that would silently not apply are errors
+    // -----------------------------------------------------------------------
+
+    /// L1: `if` is split as a whitespace-delimited word. A bare `if` and a
+    /// tab before `if` used to leave the trigger as `X if`, which never fired.
+    #[test]
+    fn l1_if_is_a_word_and_a_bare_if_is_an_error() {
+        let error = parse_token_grammar("X = /x/\ntransitions:\n  on X if -> refuse\n").unwrap_err();
+        assert!(error.message.contains("Unknown transition condition ''"), "{}", error.message);
+
+        let g = parse_token_grammar("X = /x/\ntransitions:\n  on X\tif space_before -> refuse\n").unwrap();
+        assert_eq!(g.transitions[0].on_tokens, vec!["X"]);
+        assert_eq!(g.transitions[0].conditions, vec![TransitionCondition::SpaceBefore]);
+
+        // `ifx` and `IF_X` are not the word `if`.
+        let g = parse_token_grammar("IF_X = /i/\nX = /x/\ntransitions:\n  on (X | IF_X) -> refuse\n").unwrap();
+        assert_eq!(g.transitions[0].on_tokens, vec!["X", "IF_X"]);
+        assert!(g.transitions[0].conditions.is_empty());
+    }
+
+    /// L3: a guard glued to an alias used to become part of the alias name.
+    #[test]
+    fn l3_an_alias_containing_at_is_an_error() {
+        let error = parse_token_grammar("X = /x/ ->Y@line_start\n").unwrap_err();
+        assert!(error.message.contains("contains '@'"), "{}", error.message);
+        // With the space it is an alias plus a guard.
+        let g = parse_token_grammar("X = /x/ -> Y @line_start\n").unwrap();
+        assert_eq!(g.definitions[0].alias.as_deref(), Some("Y"));
+        assert_eq!(g.definitions[0].guard, TokenGuard::LineStart);
+    }
+
+    /// L2: the indentation tokenizer never applies transitions, so `refuse`
+    /// and `if` conditions there are rejected rather than ignored.
+    #[test]
+    fn l2_indentation_mode_rejects_refuse_and_conditions() {
+        for rule in ["on X -> refuse", "on X if space_before -> set-mode default"] {
+            let g = parse_token_grammar(&format!("mode: indentation\nX = /x/\ntransitions:\n  {rule}\n")).unwrap();
+            let issues = validate_token_grammar(&g);
+            assert!(
+                issues.iter().any(|i| i.contains("do not apply transitions")),
+                "{rule}: {issues:?}"
+            );
+        }
+        // A plain set-mode rule keeps its historical (documented) meaning.
+        let g = parse_token_grammar("mode: indentation\nX = /x/\ntransitions:\n  on X -> set-mode default\n").unwrap();
+        assert!(!validate_token_grammar(&g).iter().any(|i| i.contains("do not apply transitions")));
+    }
+
+    /// A trigger that names no emittable token never fires; built-ins,
+    /// aliases, group definitions and `KEYWORD` (with keywords) are fine.
+    #[test]
+    fn transition_triggers_must_name_emittable_tokens() {
+        let src = "\
+X = /x/ -> ALIASED
+keywords:
+  if
+group g:
+  Y = /y/
+transitions:
+  on SLAHS -> refuse
+  on (ALIASED | X | Y | KEYWORD | NEWLINE | EOF) -> set-mode default
+";
+        let issues = validate_token_grammar(&parse_token_grammar(src).unwrap());
+        let trigger_issues: Vec<_> = issues.iter().filter(|i| i.contains("Transition trigger")).collect();
+        assert_eq!(trigger_issues.len(), 1, "{issues:?}");
+        assert!(trigger_issues[0].contains("'SLAHS'"), "{issues:?}");
+
+        // Without keywords, `KEYWORD` is not emittable.
+        let g = parse_token_grammar("X = /x/\ntransitions:\n  on KEYWORD -> set-mode default\n").unwrap();
+        assert!(validate_token_grammar(&g).iter().any(|i| i.contains("'KEYWORD'")));
     }
 }

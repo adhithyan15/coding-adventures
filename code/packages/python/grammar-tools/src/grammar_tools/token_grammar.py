@@ -398,10 +398,15 @@ def _find_closing_slash(pattern_part: str) -> int:
 def _reject_definition_guard(alias: str, name: str, line_number: int) -> None:
     """Refuse ``-> ALIAS @line_start`` (LANG84 E1), which this port does not
     implement. Without this check the guard would silently become part of the
-    alias name and the definition would match everywhere."""
-    if any(word.startswith("@") for word in alias.split()):
+    alias name and the definition would match everywhere.
+
+    Any ``@`` counts, not only a word that starts with one: ``->Y@line_start``
+    (no space) would otherwise make the alias ``Y@line_start``. An alias names
+    a token type and never contains ``@``."""
+    if "@" in alias:
+        guard = next((w for w in alias.split() if "@" in w), alias)
         raise TokenGrammarError(
-            f"Definition guards ({alias.split()[-1]!r}, LANG84 E1) are not "
+            f"Definition guards ({guard!r}, LANG84 E1) are not "
             f"implemented by the Python grammar-tools for token {name!r}; "
             "use the Rust grammar-tools",
             line_number,
@@ -549,8 +554,13 @@ def _split_in_guard(head: str) -> tuple[str, str | None]:
 
 
 def _has_top_level_if(head: str) -> bool:
-    """Whether a transition head has an `` if `` outside any parenthesised
-    token set and outside a ``KEYWORD="..."`` value (LANG84 E8)."""
+    """Whether a transition head has the word ``if`` outside any parenthesised
+    token set and outside a ``KEYWORD="..."`` value (LANG84 E8).
+
+    ``if`` is a whitespace-delimited word: whitespace (space or tab) before
+    it, and whitespace or the end of the head after it. So ``X\tif c`` and a
+    bare trailing ``X if`` are found too, rather than read as the token name
+    ``X if`` that never matches."""
     depth = 0
     in_quotes = False
     for i, ch in enumerate(head):
@@ -562,8 +572,10 @@ def _has_top_level_if(head: str) -> bool:
             depth += 1
         elif ch == ")":
             depth -= 1
-        elif ch == " " and depth == 0 and head[i:].startswith(" if "):
-            return True
+        elif ch.isspace() and depth == 0 and head[i + 1 : i + 3] == "if":
+            after = head[i + 3 : i + 4]
+            if after == "" or after.isspace():
+                return True
     return False
 
 

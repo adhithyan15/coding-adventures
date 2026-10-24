@@ -345,9 +345,13 @@ var reservedGroupNames = map[string]bool{
 // rejectDefinitionGuard refuses "-> ALIAS @line_start" (LANG84 E1), which
 // this port does not implement. Without this check the guard would silently
 // become part of the alias name and the definition would match everywhere.
+//
+// Any "@" counts, not only a word that starts with one: "->Y@line_start" (no
+// space) would otherwise make the alias "Y@line_start". An alias names a
+// token type and never contains "@".
 func rejectDefinitionGuard(alias, name string, lineNumber int) error {
 	for _, word := range strings.Fields(alias) {
-		if strings.HasPrefix(word, "@") {
+		if strings.Contains(word, "@") {
 			return fmt.Errorf(
 				"Line %d: Definition guards (%q, LANG84 E1) are not implemented by the Go grammar-tools for token %q; use the Rust grammar-tools",
 				lineNumber, word, name)
@@ -356,8 +360,13 @@ func rejectDefinitionGuard(alias, name string, lineNumber int) error {
 	return nil
 }
 
-// hasTopLevelIf reports whether a transition head has an " if " outside any
-// parenthesised token set and outside a KEYWORD="..." value (LANG84 E8).
+// hasTopLevelIf reports whether a transition head has the word "if" outside
+// any parenthesised token set and outside a KEYWORD="..." value (LANG84 E8).
+//
+// "if" is a whitespace-delimited word: whitespace (space or tab) before it,
+// and whitespace or the end of the head after it. So "X\tif c" and a bare
+// trailing "X if" are found too, rather than read as the never-matching
+// token name "X if".
 func hasTopLevelIf(head string) bool {
 	depth := 0
 	inQuotes := false
@@ -370,8 +379,11 @@ func hasTopLevelIf(head string) bool {
 			depth++
 		case ch == ')':
 			depth--
-		case ch == ' ' && depth == 0 && strings.HasPrefix(head[i:], " if "):
-			return true
+		case (ch == ' ' || ch == '\t') && depth == 0 && strings.HasPrefix(head[i+1:], "if"):
+			after := head[i+3:]
+			if after == "" || after[0] == ' ' || after[0] == '\t' || after[0] == '\n' || after[0] == '\r' {
+				return true
+			}
 		}
 	}
 	return false

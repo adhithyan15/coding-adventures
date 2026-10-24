@@ -9,6 +9,10 @@
   `on X if space_before -> pop` read `X if space_before` as one token name.
   An `@` inside a trailing `#` comment is not a guard. These features are
   implemented by the Rust grammar-tools only.
+- Security review follow-up: an alias that contains `@` (a guard written
+  without a space, `->Y@line_start`) is refused too, and `if` is found as a
+  whitespace-delimited word, so a tab before it (`on X\tif …`) and a bare
+  trailing `on X if -> …` are refused instead of read as a token name.
 
 ## [0.6.1] - 2026-08-17
 

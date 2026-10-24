@@ -444,10 +444,17 @@ impl PositionFacts {
 }
 
 /// What a transition rule's E8 `if` conditions read about the token just
-/// emitted. `space_before` comes from the token's own F11 flag; the other two
-/// facts are positional, so the caller records them around the match.
+/// emitted. All three facts are recorded by the caller around the match.
+///
+/// `space_before` is a fact here rather than read from `token.flags` because
+/// the built-in `NEWLINE` token carries no flags (F11 hands its gap on to the
+/// *next* token instead), yet `on NEWLINE if space_before` must still see the
+/// trivia before the line break (`a ⏎` with a trailing space). Reading the
+/// pending gap for NEWLINE leaves every emitted token's flags unchanged.
 #[derive(Clone, Copy)]
 struct TokenFacts {
+    /// Trivia (F11 `TOKEN_PRECEDED_BY_SPACE`) came right before the token.
+    space_before: bool,
     /// The token's first character was at a line start (E1).
     line_start: bool,
     /// The character right after the token, or `None` at end of input.
@@ -460,8 +467,8 @@ impl TokenFacts {
     /// `space_after` treats end of input as a separator: nothing is adjacent.
     /// Whitespace is the ASCII set Ruby's lexer uses (space, tab, `\n`, `\r`,
     /// vertical tab, form feed).
-    fn holds(self, condition: TransitionCondition, token: &Token) -> bool {
-        let space_before = token.flags.unwrap_or(0) & TOKEN_PRECEDED_BY_SPACE != 0;
+    fn holds(self, condition: TransitionCondition) -> bool {
+        let space_before = self.space_before;
         let space_after = match self.next_char {
             None => true,
             Some(c) => matches!(c, ' ' | '\t' | '\n' | '\r' | '\u{0b}' | '\u{0c}'),
@@ -1267,6 +1274,11 @@ impl<'a> GrammarLexer<'a> {
         }
     }
 
+    /// Whether `token` carries the F11 space-before flag.
+    fn has_space_before(token: &Token) -> bool {
+        token.flags.unwrap_or(0) & TOKEN_PRECEDED_BY_SPACE != 0
+    }
+
     /// Apply the declarative mode transition table after `token` is emitted (F10).
     ///
     /// The first rule whose trigger token, optional `in MODE` guard, and
@@ -1315,7 +1327,7 @@ impl<'a> GrammarLexer<'a> {
                     continue;
                 }
             }
-            if !rule.conditions.iter().all(|c| facts.holds(*c, token)) {
+            if !rule.conditions.iter().all(|c| facts.holds(*c)) {
                 continue;
             }
             matched = Some(rule.actions.clone());
@@ -1426,6 +1438,8 @@ impl<'a> GrammarLexer<'a> {
                     type_name: None, flags: None,
                 };
                 let facts = TokenFacts {
+                    // The gap is still pending: NEWLINE does not take it.
+                    space_before: self.space_before_next,
                     line_start: self.position_facts().line_start,
                     next_char: self.chars.get(self.char_pos + 1).copied(),
                 };
@@ -1670,6 +1684,7 @@ impl<'a> GrammarLexer<'a> {
                     // callback runs first (above) and the table refines.
                     if let Some(t) = main_token_for_trans {
                         let facts = TokenFacts {
+                            space_before: Self::has_space_before(&t),
                             line_start: token_line_start,
                             next_char: self.chars.get(self.char_pos).copied(),
                         };
@@ -1692,6 +1707,7 @@ impl<'a> GrammarLexer<'a> {
                     // F10: consult the declarative table before the token is
                     // moved into `tokens`, so the new mode governs the NEXT match.
                     let facts = TokenFacts {
+                        space_before: Self::has_space_before(&token),
                         line_start: token_line_start,
                         next_char: self.chars.get(self.char_pos).copied(),
                     };

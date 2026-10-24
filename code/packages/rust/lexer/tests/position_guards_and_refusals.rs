@@ -202,6 +202,29 @@ fn the_built_in_newline_can_trigger_a_refusal() {
     assert!(lex_err(&g, "a\n\n").starts_with("2:1:"));
 }
 
+/// Security review L4: `space_before` on the built-in NEWLINE reads the
+/// trivia before the line break. The NEWLINE token itself still carries no
+/// flags (F11 hands that gap to the *next* token), so token streams are
+/// unchanged; only the condition sees it.
+#[test]
+fn space_before_on_the_built_in_newline_sees_trailing_trivia() {
+    let g = grammar("NAME = /[a-z]+/\ntransitions:\n  on NEWLINE if space_before -> refuse\n");
+    assert_eq!(lex(&g, "a\nb"), ["NAME:a", "NEWLINE:\\n", "NAME:b"]);
+    assert!(lex_err(&g, "a \nb").starts_with("1:3:"), "{}", lex_err(&g, "a \nb"));
+    assert!(lex_err(&g, "a\t\nb").starts_with("1:3:"));
+
+    let negated = grammar("NAME = /[a-z]+/\ntransitions:\n  on NEWLINE if !space_before -> refuse\n");
+    assert_eq!(lex(&negated, "a \nb"), ["NAME:a", "NEWLINE:\\n", "NAME:b"]);
+    assert!(lex_err(&negated, "a\nb").starts_with("1:2:"));
+
+    // The emitted NEWLINE's flags are untouched; the next token keeps its gap.
+    let plain = grammar("NAME = /[a-z]+/\n");
+    let tokens = GrammarLexer::new("a \nb", &plain).tokenize().unwrap();
+    assert_eq!(tokens[1].type_, TokenType::Newline);
+    assert_eq!(tokens[1].flags, None);
+    assert!(tokens[2].flags.is_some());
+}
+
 // ---------------------------------------------------------------------------
 // Backward compatibility
 // ---------------------------------------------------------------------------

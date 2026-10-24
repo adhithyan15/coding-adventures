@@ -862,7 +862,12 @@ defmodule CodingAdventures.GrammarTools.TokenGrammarTest do
           {"X = /x/\ntransitions:\n  on X if space_before && !space_after -> pop\n",
            "not implemented"},
           {"X = /x/\ntransitions:\n  on (X | Y) in default if line_start -> pop\n",
-           "not implemented"}
+           "not implemented"},
+          # Security review L3: a guard glued to the alias is still a guard.
+          {"X = /x/ ->Y@line_start\n", "not implemented"},
+          # Security review L1: a tab before `if`, and a bare trailing `if`.
+          {"X = /x/\ntransitions:\n  on X\tif space_before -> pop\n", "not implemented"},
+          {"X = /x/\ntransitions:\n  on X if -> pop\n", "not implemented"}
         ] do
       @source source
       @needle needle

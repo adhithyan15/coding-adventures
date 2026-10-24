@@ -1027,7 +1027,12 @@ class TestTokenGrammar < Minitest::Test
       ["X = \"x\" -> Y @input_start\n", "not implemented"],
       ["X = /x/\ntransitions:\n  on X -> refuse\n", "refuse"],
       ["X = /x/\ntransitions:\n  on X if space_before && !space_after -> pop\n", "not implemented"],
-      ["X = /x/\ntransitions:\n  on (X | Y) in default if line_start -> pop\n", "not implemented"]
+      ["X = /x/\ntransitions:\n  on (X | Y) in default if line_start -> pop\n", "not implemented"],
+      # Security review L3: a guard glued to the alias is still a guard.
+      ["X = /x/ ->Y@line_start\n", "not implemented"],
+      # Security review L1: a tab before `if`, and a bare trailing `if`.
+      ["X = /x/\ntransitions:\n  on X\tif space_before -> pop\n", "not implemented"],
+      ["X = /x/\ntransitions:\n  on X if -> pop\n", "not implemented"]
     ].each do |source, needle|
       error = assert_raises(GT::TokenGrammarError) { GT.parse_token_grammar(source) }
       assert_includes(error.message, needle, source)
@@ -1037,5 +1042,11 @@ class TestTokenGrammar < Minitest::Test
   def test_lang84_e8_keyword_value_if_is_not_a_condition
     grammar = GT.parse_token_grammar(%(X = /x/\ntransitions:\n  on KEYWORD="if" -> set-mode default\n))
     assert_equal("if", grammar.transitions[0].on_value)
+  end
+
+  # IF_X is a token name, not the condition keyword.
+  def test_lang84_e8_if_must_be_a_whole_word
+    grammar = GT.parse_token_grammar("IF_X = /i/\nX = /x/\ntransitions:\n  on (X | IF_X) -> set-mode default\n")
+    assert_equal(%w[X IF_X], grammar.transitions[0].on_tokens)
   end
 end

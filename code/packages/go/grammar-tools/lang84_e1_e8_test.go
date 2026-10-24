@@ -19,6 +19,11 @@ func TestLang84E1E8SyntaxIsRejected(t *testing.T) {
 		{"X = /x/\ntransitions:\n  on X -> refuse\n", "refuse"},
 		{"X = /x/\ntransitions:\n  on X if space_before && !space_after -> pop\n", "not implemented"},
 		{"X = /x/\ntransitions:\n  on (X | Y) in default if line_start -> pop\n", "not implemented"},
+		// Security review L3: a guard glued to the alias is still a guard.
+		{"X = /x/ ->Y@line_start\n", "not implemented"},
+		// Security review L1: a tab before `if`, and a bare trailing `if`.
+		{"X = /x/\ntransitions:\n  on X\tif space_before -> pop\n", "not implemented"},
+		{"X = /x/\ntransitions:\n  on X if -> pop\n", "not implemented"},
 	}
 	for _, c := range cases {
 		_, err := ParseTokenGrammar(c.source)
@@ -39,5 +44,16 @@ func TestLang84E8KeywordValueIfIsNotACondition(t *testing.T) {
 	}
 	if g.Transitions[0].OnValue != "if" {
 		t.Errorf("OnValue = %q, want \"if\"", g.Transitions[0].OnValue)
+	}
+}
+
+// `IF_X` is a token name, not the condition keyword.
+func TestLang84E8IfMustBeAWholeWord(t *testing.T) {
+	g, err := ParseTokenGrammar("IF_X = /i/\nX = /x/\ntransitions:\n  on (X | IF_X) -> set-mode default\n")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := strings.Join(g.Transitions[0].OnTokens, ","); got != "X,IF_X" {
+		t.Errorf("OnTokens = %q, want X,IF_X", got)
 	}
 }

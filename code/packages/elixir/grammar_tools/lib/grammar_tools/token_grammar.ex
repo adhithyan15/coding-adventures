@@ -856,6 +856,15 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
     if String.starts_with?(remainder, "->") do
       alias_name = String.trim(String.slice(remainder, 2..-1//1))
 
+      # `->Y@line_start` (no space) would otherwise make the alias
+      # `Y@line_start` and drop the guard. An alias names a token type and
+      # never contains `@`, so treat any `@` in it as a guard, which the caller
+      # refuses.
+      guard =
+        if is_nil(guard) and String.contains?(alias_name, "@"),
+          do: alias_name,
+          else: guard
+
       if alias_name == "" do
         {pattern, nil, guard}
       else
@@ -1051,8 +1060,13 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
     do_split_in_guard(head, 0, 0)
   end
 
-  # Whether a transition head has an " if " outside any parenthesised token set
-  # and outside a `KEYWORD="..."` value (LANG84 E8).
+  # Whether a transition head has the word "if" outside any parenthesised token
+  # set and outside a `KEYWORD="..."` value (LANG84 E8).
+  #
+  # "if" is a whitespace-delimited word: whitespace (space or tab) before it,
+  # and whitespace or the end of the head after it. So "X\tif c" and a bare
+  # trailing "X if" are found too, rather than read as the never-matching
+  # token name "X if".
   defp has_top_level_if?(head), do: do_has_top_level_if?(head, 0, 0, false)
 
   defp do_has_top_level_if?(head, idx, _depth, _in_quotes) when idx >= byte_size(head), do: false
@@ -1073,8 +1087,9 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
       ch == ")" ->
         do_has_top_level_if?(head, idx + 1, depth - 1, in_quotes)
 
-      ch == " " and depth == 0 and byte_size(head) - idx >= 4 and
-          binary_part(head, idx, 4) == " if " ->
+      ch in [" ", "\t"] and depth == 0 and byte_size(head) - idx >= 3 and
+          binary_part(head, idx + 1, 2) == "if" and
+          (byte_size(head) - idx == 3 or binary_part(head, idx + 3, 1) in [" ", "\t", "\n", "\r"]) ->
         true
 
       true ->

@@ -1023,6 +1023,11 @@ describe("LANG84 E1/E8 syntax", () => {
     ["X = /x/\ntransitions:\n  on X -> refuse\n", "refuse"],
     ["X = /x/\ntransitions:\n  on X if space_before && !space_after -> pop\n", "not implemented"],
     ["X = /x/\ntransitions:\n  on (X | Y) in default if line_start -> pop\n", "not implemented"],
+    // Security review L3: a guard glued to the alias is still a guard.
+    ["X = /x/ ->Y@line_start\n", "not implemented"],
+    // Security review L1: a tab before `if`, and a bare trailing `if`.
+    ["X = /x/\ntransitions:\n  on X\tif space_before -> pop\n", "not implemented"],
+    ["X = /x/\ntransitions:\n  on X if -> pop\n", "not implemented"],
   ])("rejects %j", (source, needle) => {
     expect(() => parseTokenGrammar(source)).toThrow(TokenGrammarError);
     expect(() => parseTokenGrammar(source)).toThrow(needle);
@@ -1033,5 +1038,12 @@ describe("LANG84 E1/E8 syntax", () => {
       'X = /x/\ntransitions:\n  on KEYWORD="if" -> set-mode default\n',
     );
     expect(grammar.transitions?.[0]?.onValue).toBe("if");
+  });
+
+  it("reads IF_X as a token name, not the condition keyword", () => {
+    const grammar = parseTokenGrammar(
+      "IF_X = /i/\nX = /x/\ntransitions:\n  on (X | IF_X) -> set-mode default\n",
+    );
+    expect(grammar.transitions?.[0]?.onTokens).toEqual(["X", "IF_X"]);
   });
 });

@@ -24,6 +24,10 @@ All notable changes to this package will be documented in this file.
 ### Unchanged
 - Grammars that use neither feature lex identically: the guard check passes
   every unguarded pattern, and rules without conditions behave as before.
+- Security review follow-up (L4): `on NEWLINE if space_before` now sees the
+  trivia before the line break (`a ⏎` with a trailing space). The built-in
+  NEWLINE token still carries no flags (F11 hands its gap to the next token),
+  so no emitted token stream changes; the condition reads the pending gap.
 
 ## Unreleased — `LexerContext` borrows the previous token
 

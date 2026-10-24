@@ -1048,7 +1048,7 @@ on NAME if line_start -> set-mode beg
 
 | Condition | Holds when |
 | --- | --- |
-| `space_before` | the token carries F11's `TOKEN_PRECEDED_BY_SPACE`: trivia or a line terminator was consumed since the previous token. The built-in `NEWLINE` token carries no gap flags, so it never has `space_before`. |
+| `space_before` | the token carries F11's `TOKEN_PRECEDED_BY_SPACE`: trivia or a line terminator was consumed since the previous token. For the built-in `NEWLINE`, which carries no gap flags (F11 hands its gap to the next token), the condition reads that pending gap instead, so `a ⏎` with a trailing space has `space_before`; the emitted token's flags are unchanged. |
 | `space_after` | the character right after the token is ASCII whitespace (space, tab, `\n`, `\r`, vertical tab, form feed) or the token ends the input. A one-character peek. |
 | `line_start` | the token's first character is at a line start in E1's sense. |
 
@@ -1067,8 +1067,26 @@ add a fixed number of reads per rule tested; the rule count stays capped at
 `MAX_TRANSITIONS`. Refusing is always safe: it turns a would-be mis-lex into
 an error.
 
+**Fail closed, never drop a rule silently** (security review follow-ups).
+A rule that cannot take effect is an error, not a no-op:
+
+- `if` is a whitespace-delimited word in the rule head, so `on X⇥if …` (tab)
+  splits like `on X if …`, and a bare trailing `on X if -> …` is a parse
+  error. A literal `" if "` split would have made the trigger `X if`, which
+  never matches.
+- An alias containing `@` is a parse error. `->Y@line_start` would otherwise
+  be the alias `Y@line_start` with no guard.
+- `validate_token_grammar` rejects `refuse` rules and `if` conditions in a
+  `mode: indentation` grammar: that tokenizer never applies transitions.
+- `validate_token_grammar` rejects a transition trigger that names no token
+  the grammar can emit: a definition or alias (top level or in a group), an
+  error definition, `KEYWORD` when the grammar has keywords, or the built-ins
+  `NEWLINE`, `INDENT`, `DEDENT` and `EOF`.
+
 **Ports.** The non-Rust grammar-tools reject `-> refuse` (as an unknown
-action) and an `if` condition list, with a clear error.
+action) and an `if` condition list, with a clear error. They find `if` as a
+whitespace-delimited word and treat any `@` in an alias as a guard, for the
+same fail-closed reason.
 
 ## Compliance and migration
 

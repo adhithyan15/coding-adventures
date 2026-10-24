@@ -1230,7 +1230,10 @@ def test_f10_compiler_round_trips_transitions() -> None:
         ("X = /x/ @input_start\n", "@input_start"),
         ("X = /x/ -> Y @line_start\n", "not implemented"),
         ('X = "x" -> Y @input_start\n', "not implemented"),
-        ("X = /x/\ntransitions:\n  on X -> refuse\n", "Unknown transition action 'refuse'"),
+        (
+            "X = /x/\ntransitions:\n  on X -> refuse\n",
+            "Unknown transition action 'refuse'",
+        ),
         (
             "X = /x/\ntransitions:\n  on X if space_before && !space_after -> pop\n",
             "not implemented",
@@ -1239,6 +1242,11 @@ def test_f10_compiler_round_trips_transitions() -> None:
             "X = /x/\ntransitions:\n  on (X | Y) in default if line_start -> pop\n",
             "not implemented",
         ),
+        # Security review L3: a guard glued to the alias is still a guard.
+        ("X = /x/ ->Y@line_start\n", "not implemented"),
+        # Security review L1: a tab before `if`, and a bare trailing `if`.
+        ("X = /x/\ntransitions:\n  on X\tif space_before -> pop\n", "not implemented"),
+        ("X = /x/\ntransitions:\n  on X if -> pop\n", "not implemented"),
     ],
 )
 def test_lang84_e1_e8_syntax_is_rejected(source: str, needle: str) -> None:
@@ -1252,3 +1260,11 @@ def test_lang84_e8_keyword_value_if_is_not_a_condition() -> None:
         'X = /x/\ntransitions:\n  on KEYWORD="if" -> set-mode default\n'
     )
     assert grammar.transitions[0].on_value == "if"
+
+
+def test_lang84_e8_if_must_be_a_whole_word() -> None:
+    """`IF_X` and `ifx` are token names, not the condition keyword."""
+    grammar = parse_token_grammar(
+        "IF_X = /i/\nX = /x/\ntransitions:\n  on (X | IF_X) -> set-mode default\n"
+    )
+    assert grammar.transitions[0].on_tokens == ("X", "IF_X")

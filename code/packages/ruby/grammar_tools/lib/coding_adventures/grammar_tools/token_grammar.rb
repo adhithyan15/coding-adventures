@@ -275,8 +275,12 @@ module CodingAdventures
     # Refuse "-> ALIAS @line_start" (LANG84 E1), which this port does not
     # implement. Without this check the guard would silently become part of
     # the alias name and the definition would match everywhere.
+    #
+    # Any "@" counts, not only a word that starts with one: "->Y@line_start"
+    # (no space) would otherwise make the alias "Y@line_start". An alias names
+    # a token type and never contains "@".
     def self.reject_definition_guard(alias_name, name_part, line_number)
-      guard = alias_name.split.find { |word| word.start_with?("@") }
+      guard = alias_name.split.find { |word| word.include?("@") }
       return if guard.nil?
 
       raise TokenGrammarError.new(
@@ -399,8 +403,13 @@ module CodingAdventures
       [head, nil]
     end
 
-    # Whether a transition head has an " if " outside any parenthesised token
-    # set and outside a KEYWORD="..." value (LANG84 E8).
+    # Whether a transition head has the word "if" outside any parenthesised
+    # token set and outside a KEYWORD="..." value (LANG84 E8).
+    #
+    # "if" is a whitespace-delimited word: whitespace (space or tab) before
+    # it, and whitespace or the end of the head after it. So "X\tif c" and a
+    # bare trailing "X if" are found too, rather than read as the
+    # never-matching token name "X if".
     def self.top_level_if?(head)
       depth = 0
       in_quotes = false
@@ -413,8 +422,9 @@ module CodingAdventures
           depth += 1
         elsif ch == ")"
           depth -= 1
-        elsif ch == " " && depth.zero? && head[i..].start_with?(" if ")
-          return true
+        elsif ch.match?(/\s/) && depth.zero? && head[(i + 1)..].start_with?("if")
+          after = head[i + 3]
+          return true if after.nil? || after.match?(/\s/)
         end
       end
       false

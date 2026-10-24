@@ -30,6 +30,17 @@ All notable changes to this project will be documented in this file.
   Nib, Ruby, Python) were then regenerated and match byte for byte; Ruby's
   and Python's dedup module names (`g_<hash>`) changed because the hash covers
   the generated text.
+- Security review follow-ups (fail closed, never silently drop a rule):
+  - `if` in a transition head is a whitespace-delimited word, so
+    `on X\tif …` splits and a bare `on X if -> …` is an error; before, the
+    trigger became `X if` and the rule never fired (L1).
+  - An alias containing `@` is an error: `->Y@line_start` used to become the
+    alias `Y@line_start` with no guard (L3).
+  - `validate_token_grammar` rejects `refuse` rules and `if` conditions in
+    `mode: indentation` grammars, whose tokenizer never applies transitions
+    (L2), and any transition trigger that names no token the grammar can
+    emit (a definition or alias, an error definition, `KEYWORD` when there
+    are keywords, or `NEWLINE`/`INDENT`/`DEDENT`/`EOF`).
 
 ## [Unreleased] - F11 token-adjacency predicates (LANG84 E6)
 
