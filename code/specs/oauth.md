@@ -883,6 +883,20 @@ construction and authentication. It still does not route algorithms, retain
 complete issuer policy, authenticate any other link, validate the whole path,
 recognize or constrain trust, process name constraints or revocation, perform
 TLS or HTTP, authorize OAuth transport, or open a network connection.
+A bounded complete-intermediate-policy follow-up now strengthens that
+construction-bound authentication without accepting either endpoint
+separately. It consumes one constructed-path adjacency together with complete
+intermediate policy for the exact projected non-terminal issuer, rejects the
+construction's terminal adjacency and any certificate-object mismatch before
+RSA key parsing or signature verification, and then retains
+both the authenticated construction projection and the complete intermediate
+policy in distinct non-copyable evidence. This binds caller-owned critical-
+extension recognition, issuing-CA role, data-driven algorithm profile,
+self-issued classification, and explicit-time validity to the same ordered
+issuer that authenticated the projected child. It does not advance path-length
+state, authenticate another link, route algorithms, validate the whole path,
+recognize or constrain trust, process name constraints or revocation, perform
+TLS or HTTP, authorize OAuth transport, or open a network connection.
 Certificate-wide role policy can now bind caller-owned critical-extension
 recognition and algorithm-independent role semantics to the same exact decoded
 certificate. The non-copyable result prevents checking critical extensions on

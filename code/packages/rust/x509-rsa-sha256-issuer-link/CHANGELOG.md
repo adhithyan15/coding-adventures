@@ -33,6 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the exact projected target-or-candidate child and selected issuer without
   rerunning Name policy, then retains both path order and the validated issuer
   key in distinct non-copyable evidence.
+- Added a stronger construction-bound composition that also consumes and
+  retains complete intermediate policy for the exact projected non-terminal
+  issuer, rejecting terminal adjacency and object mismatch before RSA work.
 
 ### Security
 
@@ -58,3 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   silently discard the retained path order, while still granting no algorithm
   routing, complete issuer policy, other-link authentication, complete-path,
   trust, revocation, TLS, HTTP, or network authority.
+- Construction-bound complete-policy authentication rejects a detached or
+  byte-equal re-decoded intermediate before RSA key or signature work, while
+  still granting no path-length, other-link, trust, revocation, TLS, HTTP, or
+  network authority.

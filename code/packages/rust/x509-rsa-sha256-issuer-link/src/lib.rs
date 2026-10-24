@@ -13,12 +13,16 @@
 //! can retain complete intermediate policy, including validity at one explicit
 //! observation, for the identical issuer object. A construction-bound entry
 //! point can instead consume one exact adjacent-link projection and retain its
-//! path order while authenticating only that projected pair. Recognition is
-//! not semantic validation of other critical extensions, and an algorithm
-//! profile neither chooses nor enables this crate's fixed verifier. No result
-//! establishes path length, name constraints, revocation, trust anchors,
-//! complete path validation, TLS, HTTP, or network effects. A bounded follow-up
-//! can apply the existing path-length transition while retaining the
+//! path order while authenticating only that projected pair. A stronger
+//! construction-bound entry point also retains complete intermediate policy
+//! for the identical projected non-terminal issuer. It rejects the terminal
+//! adjacency before RSA work so terminal trust-anchor semantics cannot be
+//! represented as intermediate-policy evidence. Recognition is not semantic
+//! validation of other critical extensions, and an algorithm profile neither
+//! chooses nor enables this crate's fixed verifier. No result establishes path
+//! length, name constraints, revocation, trust anchors, complete path
+//! validation, TLS, HTTP, or network effects. A bounded follow-up can apply the
+//! existing path-length transition while retaining the selection-bound
 //! authenticated intermediate, but it still proves only one caller-ordered
 //! step.
 
@@ -161,6 +165,45 @@ impl fmt::Display for X509RsaSha256ConstructedPathAdjacentLinkError {
 }
 
 impl std::error::Error for X509RsaSha256ConstructedPathAdjacentLinkError {}
+
+/// Stable construction-and-intermediate-policy failures with no certificate bytes.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkErrorKind {
+    /// The projected issuer is the construction's terminal certificate.
+    TerminalIssuer,
+    /// The complete intermediate policy is not for the exact projected issuer.
+    EvidenceMismatch,
+    /// The exact construction-bound pair failed existing link authentication.
+    AdjacentLink(X509RsaSha256ConstructedPathAdjacentLinkErrorKind),
+}
+
+/// A redacted failure while binding constructed adjacency to complete issuer policy.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkError {
+    kind: X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkErrorKind,
+}
+
+impl X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkError {
+    const fn new(kind: X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkErrorKind) -> Self {
+        Self { kind }
+    }
+
+    pub const fn kind(self) -> X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA SHA-256 constructed-path intermediate issuer policy-link error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkError {}
 
 /// Stable stronger-composition failure categories that retain no certificate bytes.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -370,6 +413,69 @@ impl<'path, 'target, 'target_encoded, 'candidates, 'candidate_encoded>
 impl fmt::Debug for VerifiedX509RsaSha256ConstructedPathAdjacentLink<'_, '_, '_, '_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("VerifiedX509RsaSha256ConstructedPathAdjacentLink")
+    }
+}
+
+/// Non-copyable evidence binding non-terminal constructed-path authentication to complete policy.
+///
+/// The retained complete intermediate policy applies caller-owned critical-
+/// extension recognition, issuing-CA role, data-driven algorithm,
+/// self-issued, and explicit-time validity policy to the exact projected
+/// non-terminal issuer that authenticated the retained child. It neither
+/// advances path-length state nor authenticates any other path adjacency.
+pub struct VerifiedX509RsaSha256ConstructedPathIntermediateIssuerPolicyLink<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    verified_link: VerifiedX509RsaSha256ConstructedPathAdjacentLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    intermediate_policy:
+        ValidatedX509IntermediateCertificatePolicy<'candidates, 'candidate_encoded>,
+}
+
+impl<'path, 'target, 'target_encoded, 'candidates, 'candidate_encoded>
+    VerifiedX509RsaSha256ConstructedPathIntermediateIssuerPolicyLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+{
+    /// Return the consumed construction-bound authenticated link.
+    pub const fn verified_link(
+        &self,
+    ) -> &VerifiedX509RsaSha256ConstructedPathAdjacentLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.verified_link
+    }
+
+    /// Return complete policy for the exact projected non-terminal issuer.
+    pub const fn intermediate_policy(
+        &self,
+    ) -> &ValidatedX509IntermediateCertificatePolicy<'candidates, 'candidate_encoded> {
+        &self.intermediate_policy
+    }
+}
+
+impl fmt::Debug
+    for VerifiedX509RsaSha256ConstructedPathIntermediateIssuerPolicyLink<'_, '_, '_, '_, '_>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("VerifiedX509RsaSha256ConstructedPathIntermediateIssuerPolicyLink")
     }
 }
 
@@ -723,6 +829,81 @@ pub fn verify_constructed_x509_rsa_sha256_issuer_link<
         adjacent_link,
         issuer_public_key,
     })
+}
+
+/// Authenticate one non-terminal constructed adjacency with complete policy for its issuer.
+///
+/// The projected issuer must not be the construction's terminal certificate,
+/// and the intermediate-policy certificate must be the identical decoded
+/// object projected as issuer by `adjacent_link`. Both checks happen before the
+/// existing RSA key and signature work, so terminal policy or policy for a
+/// detached or byte-equal re-decode cannot authorize cryptography for the
+/// retained path. Success retains both complete proof objects without advancing
+/// path length, authenticating another adjacency, establishing trust, or
+/// granting transport authority.
+pub fn verify_constructed_x509_rsa_sha256_intermediate_issuer_policy_link<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    adjacent_link: ConstructedX509CertificatePathAdjacentLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    intermediate_policy: ValidatedX509IntermediateCertificatePolicy<
+        'candidates,
+        'candidate_encoded,
+    >,
+    policy: X509RsaSha256IssuerLinkPolicy<'_>,
+) -> Result<
+    VerifiedX509RsaSha256ConstructedPathIntermediateIssuerPolicyLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkError,
+> {
+    if adjacent_link.issuer_depth() + 1 == adjacent_link.constructed_path().issuer_count() {
+        return Err(
+            X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkError::new(
+                X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkErrorKind::TerminalIssuer,
+            ),
+        );
+    }
+
+    if !std::ptr::eq(
+        adjacent_link.issuer_certificate(),
+        intermediate_policy.certificate(),
+    ) {
+        return Err(
+            X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkError::new(
+                X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkErrorKind::EvidenceMismatch,
+            ),
+        );
+    }
+
+    let verified_link = verify_constructed_x509_rsa_sha256_issuer_link(adjacent_link, policy)
+        .map_err(|error| {
+            X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkError::new(
+                X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkErrorKind::AdjacentLink(
+                    error.kind(),
+                ),
+            )
+        })?;
+
+    Ok(
+        VerifiedX509RsaSha256ConstructedPathIntermediateIssuerPolicyLink {
+            verified_link,
+            intermediate_policy,
+        },
+    )
 }
 
 /// Authenticate one selected issuer while retaining certificate-wide role-policy evidence.

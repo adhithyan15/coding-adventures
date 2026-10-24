@@ -33,8 +33,14 @@ depth zero or the preceding selected candidate at later depths, authenticates
 that exact child against the exact projected issuer without rerunning Name
 policy, and returns non-copyable evidence retaining the projection and
 validated issuer key. This keeps construction order attached to one verified
-link. It does not authenticate another link, route algorithms, retain complete
-issuer policy, validate the full path, or establish trust.
+link. A stronger construction-bound entry point also consumes complete
+`ValidatedX509IntermediateCertificatePolicy` for the exact projected
+non-terminal issuer. It rejects the construction's terminal adjacency and any
+object-identity mismatch before RSA work, then retains both complete proofs,
+binding critical-extension, role, data-driven algorithm, self-issued, and
+explicit-time validity policy to the ordered intermediate. Neither entry point
+advances path-length state, authenticates another link, routes algorithms,
+validates the full path, or establishes trust.
 
 A stronger evidence-bound entry point additionally consumes one
 `ValidatedCertificateRolePolicy` for the selected issuer. Before key or
