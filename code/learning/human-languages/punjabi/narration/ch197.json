@@ -1,0 +1,521 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 197,
+  "title": "This Is a Daily Routine",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:d24b51052e610550",
+  "lessons": [
+    {
+      "id": "PA-C197-routine-return",
+      "sequence": 10720,
+      "title": "Return to this and is",
+      "headword": "ਇਹ · ਹੈ",
+      "romanization": "eh; hai",
+      "gloss": "retrieve this and is for a familiar identity frame",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3933c7417f43edb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "eh; hai; YOU SAY: ਇਹ; ਹੈ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *eh; hai*; YOU SAY: **ਇਹ; ਹੈ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the familiar pointer first and the familiar verb last. The middle slot stays empty until the next lesson owns its new word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "eh; YOU SAY: ਇਹ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *eh*; YOU SAY: **ਇਹ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "hai; YOU SAY: ਹੈ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *hai*; YOU SAY: **ਹੈ**]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the first word, pause for the empty middle, then say the last."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the two familiar words around the empty middle slot. This opener owns no new word."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C197-dinchariya",
+      "sequence": 10730,
+      "title": "One noun for a daily routine",
+      "headword": "ਦਿਨਚਰਿਆ",
+      "romanization": "dinchariyaa",
+      "gloss": "daily routine or the usual ordered activities of a day",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e295f529280e58f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the familiar first and last words of the identity frame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: direct owner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦਿਨਚਰਿਆ (dinchariyaa) — dinchariā — daily routine; the usual ordered activities of a day."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear and say the whole word before reading it. Keep it as one whole noun rather than inventing smaller Punjabi pieces. This lesson owns the word alone; the complete identity frame comes only after a separate retrieval."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "cognates",
+          "title": "Across the family",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "An Australian Government Punjabi health page uses this exact word in an everyday routine context. A Punjabi-supported A2 lesson also uses it in its daily-routine heading. Together they support only the present-day daily-routine sense taught here; this lesson makes no claim about other specialised uses. Sources: Australian Government Medicare Mental Health Check In; MozhiLingo: Daily Routine."
+            },
+            {
+              "kind": "speech",
+              "text": "For source history, this learned Punjabi word is from Sanskrit dinacaryā. Apte records that Sanskrit form with the sense “daily occupation, daily routine of business.” That history does not turn its parts into a productive Punjabi rule: keep the present-day Punjabi noun whole. Source: V. S. Apte, The Practical Sanskrit-English Dictionary, p. 0813-1, Cologne Digital Sanskrit Dictionaries."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "dinchariā; YOU SAY: ਦਿਨਚਰਿਆ (dinchariyaa)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *dinchariā*; YOU SAY: **ਦਿਨਚਰਿਆ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਦਿਨਚਰਿਆ (dinchariyaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਦਿਨਚਰਿਆ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਦਿਨਚਰਿਆ (dinchariyaa) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਦਿਨਚਰਿਆ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the noun for “daily routine” without looking."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C197-dinchariya-review",
+      "sequence": 10740,
+      "title": "Retrieve the new word on its own",
+      "headword": "ਦਿਨਚਰਿਆ",
+      "romanization": "dinchariyaa",
+      "gloss": "retrieve daily routine by sound, meaning, and script",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:55793abbc3293497",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "dinchariā; YOU SAY: ਦਿਨਚਰਿਆ (dinchariyaa)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *dinchariā*; YOU SAY: **ਦਿਨਚਰਿਆ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "daily routine; YOU SAY: ਦਿਨਚਰਿਆ (dinchariyaa)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *daily routine*; YOU SAY: **ਦਿਨਚਰਿਆ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਦਿਨਚਰਿਆ (dinchariyaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਦਿਨਚਰਿਆ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਦਿਨਚਰਿਆ (dinchariyaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਦਿਨਚਰਿਆ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep one noun and one daily-routine meaning here. Inflection, specialised uses, and a longer routine narrative stay outside this bounded lesson."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say and then write the word once from memory."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C197-routine-label",
+      "sequence": 10750,
+      "title": "Put the new noun into one identity frame",
+      "headword": "ਇਹ ਦਿਨਚਰਿਆ ਹੈ",
+      "romanization": "eh dinchariyaa hai",
+      "gloss": "this is a daily routine",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20427ca0512f6a36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਇਹ, then the new noun, then ਹੈ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇਹ ਦਿਨਚਰਿਆ ਹੈ (eh dinchariyaa hai) — eh dinchariā hai — this is a daily routine."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the new whole noun between familiar ਇਹ and ਹੈ. Familiar ਹੈ stays last in the already-owned identity frame. This chapter teaches only this one label; it does not add an inflection rule or a full routine narrative."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "eh dinchariā hai; YOU SAY: ਇਹ ਦਿਨਚਰਿਆ ਹੈ (eh dinchariyaa hai)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *eh dinchariā hai*; YOU SAY: **ਇਹ ਦਿਨਚਰਿਆ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਇਹ ਦਿਨਚਰਿਆ ਹੈ (eh dinchariyaa hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਇਹ ਦਿਨਚਰਿਆ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਇਹ ਦਿਨਚਰਿਆ ਹੈ (eh dinchariyaa hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਇਹ ਦਿਨਚਰਿਆ ਹੈ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the complete identity frame."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C197-payoff",
+      "sequence": 10760,
+      "title": "A bounded daily-routine noun payoff",
+      "headword": "ਇਹ ਦਿਨਚਰਿਆ ਹੈ",
+      "romanization": "eh dinchariyaa hai",
+      "gloss": "recognise and produce one daily-routine identity frame",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ec75ebc34ee22bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the new noun alone before rebuilding its identity frame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "eh dinchariā hai; YOU SAY: ਇਹ ਦਿਨਚਰਿਆ ਹੈ (eh dinchariyaa hai)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *eh dinchariā hai*; YOU SAY: **ਇਹ ਦਿਨਚਰਿਆ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਇਹ ਦਿਨਚਰਿਆ ਹੈ (eh dinchariyaa hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਇਹ ਦਿਨਚਰਿਆ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write ਇਹ ਦਿਨਚਰਿਆ ਹੈ (eh dinchariyaa hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write **ਇਹ ਦਿਨਚਰਿਆ ਹੈ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the new noun, then produce the complete identity frame."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the twentieth prerequisite tranche exposed by Punjabi A2 mock drafting. It does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

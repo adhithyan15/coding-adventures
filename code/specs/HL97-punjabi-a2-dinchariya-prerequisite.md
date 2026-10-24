@@ -34,6 +34,13 @@ These sources support the bounded present-day sense only. The learner note must
 not claim that the Punjabi University dictionary attests this spelling: its
 exact lookup currently returns “Match Not Found.”
 
+For source history, the learned Punjabi word is from Sanskrit *dinacaryā*.
+Apte records that Sanskrit form as “daily occupation” or “daily routine of
+business” on p. 0813-1:
+<https://www.sanskrit-lexicon.uni-koeln.de/scans/APScan/2020/web/webtc/getword.php?key=dinacaryA&filter=roman&accent=no&transLit=slp1>.
+The lesson may report that narrow historical comparison, but it must not claim
+that the two visible pieces form a productive Punjabi derivation.
+
 This is the twentieth prerequisite tranche exposed by Punjabi A2 mock drafting.
 It does not by itself unblock mock 1 and is not mock-readiness, attainment,
 external-equivalence, or human-validation evidence. Authored and generated

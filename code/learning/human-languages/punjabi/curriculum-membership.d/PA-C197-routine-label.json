@@ -1,0 +1,11 @@
+{
+  "id": "PA-C197-routine-label",
+  "pathSegment": "PA-PATH-197-A2-DINCHARIYA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-197-A2-DINCHARIYA",
+      "order": 3
+    }
+  ]
+}

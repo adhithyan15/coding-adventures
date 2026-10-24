@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:5be570dbd1e90b3e",
+  "lessonIds": [
+    "PA-C197-routine-return",
+    "PA-C197-dinchariya",
+    "PA-C197-dinchariya-review",
+    "PA-C197-routine-label",
+    "PA-C197-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch197-this-is-a-daily-routine.tex"
+}

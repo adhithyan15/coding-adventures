@@ -85,7 +85,13 @@ it("adds a slow Punjabi A2 daily-routine noun prerequisite without mock credit",
   expect(learnerCopy).toContain(
     "https://www.mozhilingo.com/english/punjabi/lessons/daily-routine",
   );
+  expect(learnerCopy).toContain(
+    "https://www.sanskrit-lexicon.uni-koeln.de/scans/APScan/2020/web/webtc/" +
+      "getword.php?key=dinacaryA&filter=roman&accent=no&transLit=slp1",
+  );
   expect(learnerCopy).toMatch(/present-day.*routine sense/is);
+  expect(learnerCopy).toMatch(/learned Punjabi word.*from Sanskrit.*daily occupation.*daily routine/is);
+  expect(learnerCopy).toMatch(/history.*productive Punjabi rule/is);
   expect(learnerCopy).not.toContain("https://dic.learnpunjabi.org/");
   expect(learnerCopy).not.toMatch(/feminine|masculine|plural|oblique/is);
   expect(learnerCopy).not.toMatch(/Ayurved|agenda|ਦਿਨ\s*\+\s*ਚਰਿਆ|root means|prefix means|suffix means/is);

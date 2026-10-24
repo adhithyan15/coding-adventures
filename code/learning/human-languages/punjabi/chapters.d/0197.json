@@ -1,0 +1,18 @@
+{
+  "chapter": 197,
+  "title": "This Is a Daily Routine",
+  "label": "ch:pa-a2-dinchariya",
+  "canDo": "I can recognise and use the noun for a daily routine in one bounded identity frame.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C197-payoff",
+    "kind": "production",
+    "summary": "Recognise and produce the daily-routine noun in one bounded identity frame through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-LEX-DINCHARIYA-197"
+    ],
+    "note": "This twentieth Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}
