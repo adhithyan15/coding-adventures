@@ -17674,3 +17674,27 @@ SingleResponse root to the same pending OCSP owner, explicitly keeping larger
 response containers and authentication out of scope. The regenerated inventory
 now has 1,533 identities / 4,815 slots in the same 15 established lanes, with
 zero collisions or unknown buckets. No new implementation is selected.
+
+## Post-#18105 GFM parity-loop restart (October 24, 2026)
+
+PR #18105 merged the TE04 fenced-block AST and consumer repair as
+`8908cd9ef8113340b9ce6ec5dc9ea87b77dcc738`.  The prerequisite is therefore no
+longer the in-progress parity item.  The loop had not selected its successor,
+which left the durable queue present but idle.
+
+The fresh collision-checked report at `2949f52059` contains 1,535 established
+implementation identities and 4,817 occupied slots across fifteen languages.
+Rust has 1,293 identities, Python 507, TypeScript 474, and every other lane fewer
+than 302.  There are zero canonical collisions and zero unknown buckets.  Of
+178 high-consensus identities, Dart is missing 92, Swift 51, Java and Kotlin 48
+each, and Haskell four.  Structural counts remain planning evidence, not
+behavioral qualification or an instruction to clone native-only Rust packages.
+
+Select exactly `gfm-language-neutral-conformance-fixture`.  Its fenced-node
+prerequisite is merged, it unblocks the existing Swift, Java/Kotlin/Dart, C#,
+F#, and Haskell owners, and it fixes one deterministic contract before any new
+lane copies parser behavior.  [TE04 portable GFM extension conformance](TE04-gfm-portable-conformance.md)
+defines the closed source/AST/HTML corpus, finite fixture bounds, inert fence
+policy, independent validator, and adoption order.  The neutral foundation
+earns no native-lane credit; TypeScript adoption and missing-language ports stay
+separate delivery items.
