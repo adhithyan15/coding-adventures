@@ -1234,6 +1234,23 @@ authorize a responder, bind any response to a certificate or constructed path,
 decide freshness or revocation, fetch or cache data, read a clock, or grant
 path, trust, TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS
 remains unavailable.
+A bounded `x509-ocsp-basic-response` prerequisite now composes exactly one RFC
+6960 `BasicOCSPResponse` SEQUENCE under a shared caller-owned DER depth,
+element, length, OID-arc, extension-count, response-count, and fixed
+certificate-count budget. It requires one structural `ResponseData`, one
+generic signature `AlgorithmIdentifier`, and one canonical signature BIT
+STRING in schema order, followed by an optional explicit `certs [0]` sequence.
+Each present certificate is decoded by the complete repository-owned RFC 5280
+certificate structure layer through the same enclosing DER decoder; no nested
+budget is reset. Success retains the exact complete response encoding, the
+exact signed `ResponseData` bytes, the generic algorithm identifier, the
+borrowed signature bits, and the ordered bounded certificate values without
+reserialization. The structural layer does not recognize or enable a signature
+algorithm, verify the signature, authorize or select a responder certificate,
+match `ResponderID`, build or validate a certificate path, apply certificate
+role or critical-extension policy, decide freshness or revocation, fetch or
+cache data, read a clock, or grant path, trust, TLS, HTTP, OAuth transport, or
+network authority. Concrete HTTPS remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
