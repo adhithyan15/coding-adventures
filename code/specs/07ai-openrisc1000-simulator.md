@@ -97,8 +97,10 @@ manual specifies. Division by zero and signed overflow are typed atomic faults.
 
 Typed errors distinguish invalid images and restored states, misaligned or
 out-of-range fetch/data access, fetch outside the installed image, unknown or
-unsupported instructions, invalid SPR access, failed atomic store, divide by
-zero, halted execution, excessive trace retention, and exhausted step budgets.
+unsupported instructions, invalid SPR access, divide by zero, signed division
+overflow, halted execution, excessive trace retention, and exhausted step
+budgets. As the architecture specifies, a failed `l.swa` is a successful
+instruction that clears SR[F] and does not write memory.
 Every error has stable nonempty display text and every failing transition
 preserves the complete state.
 
@@ -109,6 +111,6 @@ Completion requires:
 2. behavioral witnesses for both branch outcomes, signed/unsigned data,
    carry/overflow, jumps/links, exceptions, atomics, and memory widths;
 3. lifecycle, restore, rollback, malformed-word, and bounded-execution tests;
-4. line coverage above 80%; and
+4. line coverage above 80% (completion baseline: 83.80%, 481/574); and
 5. Rustfmt, strict Clippy, rustdoc, release tests, BUILD integration, lessons
    validation, affected-package checks, and security review before publication.
