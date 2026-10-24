@@ -257,6 +257,28 @@ fn basic_dispatch_keeps_the_outer_decoder_element_budget() {
 }
 
 #[test]
+fn basic_dispatch_keeps_the_outer_decoder_depth_budget() {
+    let body = basic_response(1);
+    let encoded = successful(&body);
+    let mut decoder = Asn1Decoder::new(Asn1Limits {
+        max_depth: 4,
+        ..Asn1Limits::default()
+    });
+    let root = decoder.decode_exact(&encoded).unwrap();
+    let outer = decode_x509_ocsp_response(&mut decoder, root).unwrap();
+    let error =
+        decode_x509_ocsp_basic_response_bytes(&mut decoder, outer.response_bytes().unwrap())
+            .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509OcspBasicResponseDispatchErrorKind::InvalidResponseFraming(
+            Asn1ErrorKind::DepthLimitExceeded
+        )
+    );
+}
+
+#[test]
 fn status_and_response_bytes_presence_are_bound_together() {
     assert_eq!(
         decode(&response(0, None)).unwrap_err().kind(),
