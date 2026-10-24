@@ -6,6 +6,11 @@
 //! `with(...)` or a label's `:`, so `function f(){with(a);}` became
 //! `function f(){with(a)}` and `{l2:;}` became `{l2:}`. Neither parses.
 //!
+//! `with` itself is not marked as a body slot, because that would also catch
+//! a method named `with` (`class C{with(){}}`). Instead, a `;` directly after
+//! the `)` of a `with(...)` head is kept. `KEPT` lists the shapes this leaves
+//! different from upstream, all of which must still parse.
+//!
 //! The same change stops a keyword used as a property name (`{if:1}`) from
 //! arming the next `(`. That used to turn `x={if:1};function g(){}` into the
 //! invalid `x={if:1};function g();`.
@@ -25,7 +30,6 @@ const CASES: &[(&str, &str)] = &[
     ("{l2:;}", "{l2:;};"),
     ("function f(){l:{with(a);}}", "function f(){l:with(a);};"),
     ("switch(x){case 1:with(a);}", "switch(x){case 1:with(a);};"),
-    ("with(o){}", "with(o);"),
     ("with(o){a()}", "with(o)a();"),
     ("function f(){with(o){a()}}", "function f(){with(o)a()};"),
     ("with(o)with(p);", "with(o)with(p);"),
@@ -62,6 +66,24 @@ const CASES: &[(&str, &str)] = &[
         "async function f(){for await(x of y){}}",
         "async function f(){for await(x of y);};",
     ),
+];
+
+/// Shapes closurec prints differently from upstream on purpose. The output
+/// must still parse. `with(o){}` keeps its braces where upstream prints
+/// `with(o);`, because treating `with` as a body slot would also catch
+/// methods named `with`, which must keep their bodies.
+const KEPT: &[&str] = &[
+    "with(o){}",
+    "function f(){with(a){}}",
+    "class C{with(){}};function g(){}",
+    "x={with(){}};function g(){}",
+    "x={a:1,with(){}}",
+    "class C{static with(){}}",
+    "class C{async with(){}}",
+    "class C{*with(){}}",
+    "x={get with(){}}",
+    "x=class{with(){}}",
+    "class C{with(){}x(){}}",
 ];
 
 fn compile_ws(source: &str) -> String {
@@ -106,7 +128,7 @@ fn whitespace_only_empty_bodies_match_upstream() {
 
 #[test]
 fn whitespace_only_empty_body_output_parses() {
-    for (source, _) in CASES {
+    for source in CASES.iter().map(|(s, _)| *s).chain(KEPT.iter().copied()) {
         let out = compile_ws(source);
         // `new Function` parses without running; skipped without node.
         let Ok(run) = Command::new("node")

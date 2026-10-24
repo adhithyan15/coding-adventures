@@ -245,9 +245,14 @@ historical context with status `RESOLVED` and a link to the fix PR.
   like `while`: `with(o);` keeps its `;`, `with(o){}` becomes `with(o);`,
   and `with(o){a()}` becomes `with(o)a();`. A label keeps its `;` (`l:;`),
   and a `case`/`default` clause drops it (`case 1:}`).
-- **Resolution (WHITESPACE_ONLY).** `with` arms the control-flow head like
-  `while`, so gap-031 and gap-032 apply to its body too. `is_label_body`
-  keeps a `;` that follows a label's `:`. A label is a word followed by `:`
+- **Resolution (WHITESPACE_ONLY).** `is_with_body` keeps a `;` that
+  directly follows the `)` of a `with(...)` head (not after `.`/`?.`).
+  `with` is deliberately *not* armed like `while`. That flag can't tell a
+  `with` statement from a method named `with`, and the security review
+  showed `class C{with(){}}` would then print as the invalid
+  `class C{with();}`. A method's `)` is never followed by `;`. The cost is
+  that `with(o){}` keeps its braces, where upstream prints `with(o);`.
+  `is_label_body` keeps a `;` that follows a label's `:`. A label is a word followed by `:`
   where the token before the word is a statement boundary (start, `;`,
   `{`, `}`, `)`, `:`, `else`, `do`). That excludes `case x:` and
   `case a.b:`.
@@ -257,10 +262,15 @@ historical context with status `RESOLVED` and a link to the fix PR.
   property name (`{if:1}`) left the flag armed for the next `(`, which
   could be a function's parameter list:
   `x={if:1};function g(){}` printed as the invalid `x={if:1};function g();`.
-  `with` would have widened that bug, so it is fixed in the same change.
-- **Tests.** Seven unit tests, and
-  `closurec/tests/regression_ws_empty_body_semi.rs`, which pins 26 shapes
-  to the jar's bytes and checks with `node` that each output parses.
+- **Still open, filed from the review.** #18123: a *method* named
+  `if`/`while`/`for`/`with` still gets body-slot rules (`class C{if(){}}`
+  → `class C{if();}`). #18124: gap-032/gap-076 flatten a lone `let`/`const`
+  into a body slot. #18125: a newline after `y.if` loses its boundary.
+- **Tests.** Eight unit tests, and
+  `closurec/tests/regression_ws_empty_body_semi.rs`. It pins 25 shapes to
+  the jar's bytes, and checks with `node` that those shapes, plus 11
+  shapes left different on purpose (empty `with` blocks and methods named
+  `with`), all parse.
 
 ### CCR-084 (#15919) — a block-final `throw` keeps its `;` (exception to gap-030 rule A)
 

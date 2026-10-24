@@ -3622,7 +3622,12 @@ pub fn whitespace_only_minify(
         // Rule A: drop `;` directly before `}`, UNLESS the
         // `;` is a body slot (body_position_next), or it ends a `throw`:
         // upstream forces that one (CCR-084, `function f(){throw 1;}`).
-        if val == ";" && !body_position_next && !throw_terminator[idx] && !is_label_body(&kept, idx) {
+        if val == ";"
+            && !body_position_next
+            && !throw_terminator[idx]
+            && !is_label_body(&kept, idx)
+            && !is_with_body(&kept, &kept_open_paren, idx)
+        {
             if let Some(next) = kept.get(idx + 1) {
                 if next.value == "}" {
                     // Skip this `;`. We are still at a stmt
@@ -4082,15 +4087,10 @@ pub fn whitespace_only_minify(
                 next_block_is_try_chain = true;
             }
             at_stmt_boundary = false;
-        } else if matches!(val, "if" | "while" | "for" | "with")
+        } else if matches!(val, "if" | "while" | "for")
             && opens_control_flow_head(&kept, idx, prev_before_this_emit)
         {
-            // The next `(` is a control-flow head. #17883 adds `with`:
-            // `with(o)` has a body slot exactly like `while(o)`, and upstream
-            // prints it the same way (`with(o){}` → `with(o);`,
-            // `with(o){a()}` → `with(o)a();`). Arming it protects the
-            // empty-statement body in `with(a);}`, which Rule A used to drop,
-            // leaving the invalid `with(a)}`.
+            // The next `(` is a control-flow head.
             next_paren_is_control_flow_head = true;
             at_stmt_boundary = false;
         } else if val == "switch" {
@@ -6174,8 +6174,44 @@ fn is_plain_identifier(tok: &lexer::token::Token) -> bool {
     matches!(tok.type_, lexer::token::TokenType::Name)
 }
 
-/// #17883: does the keyword at `idx` (`if`/`while`/`for`/`with`) really
-/// open a control-flow head?
+/// #17883: is the `;` at `idx` the empty-statement body of `with(…)`?
+///
+/// `function f(){with(a);}` used to print as the invalid
+/// `function f(){with(a)}`: Rule A dropped the `;` because nothing marked
+/// it as a body slot. We recognise the slot from the tokens right before
+/// the `;`: a `)` whose `(` follows the keyword `with`, not after `.` or
+/// `?.`.
+///
+/// Why not arm `with` like `while` (`body_position_next`) and let every
+/// body-slot rule apply, as upstream's `with(o){}` → `with(o);` would
+/// suggest? Because that flag can't tell a `with` statement from a method
+/// named `with`, which is common (`Array.prototype.with`, Temporal):
+/// `class C{with(){}}` would print as the invalid `class C{with();}`. A
+/// method's `)` is always followed by `{`, never by `;`, so this narrower
+/// test can't fire on one. The cost is that `with(o){}` keeps its braces,
+/// one byte more than upstream, as before.
+fn is_with_body(kept: &[&lexer::token::Token], kept_open_paren: &[usize], idx: usize) -> bool {
+    let Some(close) = idx.checked_sub(1) else {
+        return false;
+    };
+    if !is_structural_punct(kept[close], ")") || kept_open_paren[close] == usize::MAX {
+        return false;
+    }
+    let open = kept_open_paren[close];
+    let Some(keyword) = open.checked_sub(1).map(|k| kept[k]) else {
+        return false;
+    };
+    if is_string_literal(keyword) || keyword.value != "with" {
+        return false;
+    }
+    let after_member_dot = open
+        .checked_sub(2)
+        .is_some_and(|k| matches!(kept[k].value.as_str(), "." | "?."));
+    !after_member_dot
+}
+
+/// #17883: does the keyword at `idx` (`if`/`while`/`for`) really open a
+/// control-flow head?
 ///
 /// The flag it arms stays set until the next `(`. So a keyword that is only
 /// a property name used to arm the parameter list of the next function, and
@@ -10876,11 +10912,21 @@ mod tests {
     }
 
     #[test]
-    fn issue17883_with_body_follows_the_while_rules() {
-        // gap-031 and gap-032 now apply to `with`, as upstream does.
-        assert_eq!(minify("with(o){}"), "with(o);");
-        assert_eq!(minify("with(o){a()}"), "with(o)a();");
-        assert_eq!(minify("function f(){with(o){a()}}"), "function f(){with(o)a()};");
+    fn issue17883_an_empty_with_block_keeps_its_braces() {
+        // Upstream prints `with(o);`. We don't arm `with` as a body slot
+        // (see `is_with_body`), so the empty block stays, as before.
+        assert_eq!(minify("with(o){}"), "with(o){};");
+        assert_eq!(minify("function f(){with(a){}}"), "function f(){with(a){}};");
+    }
+
+    #[test]
+    fn issue17883_a_method_named_with_keeps_its_body() {
+        // A method's `)` is followed by `{`, never `;`, so `is_with_body`
+        // can't fire on one.
+        assert_eq!(minify("class C{with(){}}"), "class C{with(){}};");
+        assert_eq!(minify("x={with(){}};"), "x={with(){}};");
+        assert_eq!(minify("class C{static with(){}}"), "class C{static with(){}};");
+        assert_eq!(minify("x={get with(){}};"), "x={get with(){}};");
     }
 
     #[test]

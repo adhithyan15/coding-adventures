@@ -32,18 +32,21 @@ braced, parse, and it times the nested case. Six unit tests cover the rule.
 `{l2:}`, and neither parses. The `;` before `}` is dropped by gap-030 Rule A
 unless it is a body slot, and only `if`/`while`/`for` headers marked one.
 
-- `with(...)` now marks a body slot like `while(...)`. Its body follows the
-  same rules as upstream: `with(o){}` → `with(o);`, `with(o){a()}` →
-  `with(o)a();`.
+- A `;` right after the `)` of a `with(...)` head is kept. `with` is not
+  marked as a body slot the way `while` is, because that would also catch
+  a method named `with` (`class C{with(){}}` would lose its body). So
+  `with(o){}` still keeps its braces, where upstream prints `with(o);`.
 - A label's `:` before `;` marks a body slot (`l:;`). `case 1:;` and
   `default:;` still print as `case 1:` and `default:`, as upstream does.
 - A keyword used as a property name no longer marks the next `(` as a
   control-flow head. `x={if:1};function g(){}` used to print as the
   invalid `x={if:1};function g();`.
 
-`tests/regression_ws_empty_body_semi.rs` pins 26 shapes to the jar's bytes
-and checks with `node` that each output parses. Seven unit tests cover the
-rules.
+`tests/regression_ws_empty_body_semi.rs` pins 25 shapes to the jar's bytes.
+It checks with `node` that those shapes, and 11 shapes left different on
+purpose, all parse. Eight unit tests cover the rules. Issues filed from the
+review: #18123 (methods named `if`/`while`/`for`/`with`), #18124 (a lone
+`let`/`const` flattened into a body slot) and #18125.
 
 ### Fixed - a `function`/`class` declaration in a block no longer becomes an expression (#17877)
 
