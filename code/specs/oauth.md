@@ -949,6 +949,20 @@ The result still retains caller-supplied initial path-length state and does not
 apply intermediate name constraints, excluded or non-DNS anchor constraints,
 other anchor policy, revocation, generalized path validation, TLS, HTTP, OAuth
 transport, or network authority.
+A bounded construction-bound intermediate-policy follow-up now consumes that
+complete anchor-policy result and applies the exact retained intermediate's
+NameConstraints extension to the exact retained target. An absent extension
+retains the complete prior proof without new DNS evidence. A present extension
+must be critical and must decode under caller-owned limits as the supported
+permitted-and-excluded-dNSName subset; every target dNSName must satisfy the
+permitted policy, excluded names take precedence, and wildcard targets that
+overlap an excluded subtree fail closed. The target, intermediate, constructed
+path, reviewed terminal, and SAN collection are all derived through the one
+retained proof, so callers cannot splice policy evidence from another path or
+certificate. This fixed two-link boundary still retains caller-supplied initial
+path-length state and does not apply excluded or non-DNS anchor constraints,
+other anchor policy, revocation, generalized path validation, TLS, HTTP, OAuth
+transport, or network authority.
 Certificate-wide role policy can now bind caller-owned critical-extension
 recognition and algorithm-independent role semantics to the same exact decoded
 certificate. The non-copyable result prevents checking critical extensions on
