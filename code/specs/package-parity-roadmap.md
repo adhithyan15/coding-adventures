@@ -17699,6 +17699,40 @@ policy, independent validator, and adoption order.  The neutral foundation
 earns no native-lane credit; TypeScript adoption and missing-language ports stay
 separate delivery items.
 
+### Prioritized continuation queue
+
+The October 24 operator continuation replaces the former one-PR waiting policy
+with at most three dependency-safe parity PRs in flight. A PR may enter guarded
+auto-merge only after every required check passes and GitHub reports no merge
+conflict. Dependent work may be prepared on a stacked local branch, while a
+merge-independent owner may proceed in its own main-based worktree. Reprioritize
+after every merge and whenever an audit registers new work.
+
+The dependency-aware queue is:
+
+1. Complete `gfm-language-neutral-conformance-fixture` in PR #18118.
+2. Adopt it through `gfm-typescript-neutral-conformance-adoption`: all sixteen
+   vectors through the public parser and HTML renderer, with dynamic fixture
+   reading, corruption witnesses, coverage, and fixture-to-package CI selection.
+3. In parallel, take `commonmark-html-csharp-lane-prerequisites`; it depends on
+   already-merged #18105 rather than #18118 and is the smallest ready foundation
+   that closes two missing C# roots. Follow with the equivalent F# owner.
+4. Take `gfm-swift-lane-parity`, including the required same-lane fenced-node
+   AST/renderer reconciliation, then the Swift facade owner.
+5. Reconcile C#, F#, and Haskell GFM separately after both their same-lane
+   CommonMark/HTML prerequisites and the neutral corpus merge. Haskell remains
+   last in this group because its current CommonMark and GFM roots are starter
+   generic-token wrappers, not native Markdown implementations.
+6. Before selection, split the combined Java/Kotlin/Dart prerequisite and GFM
+   records into per-language owners. Each lane lacks CommonMark, HTML rendering,
+   and GFM behavior; the current aggregate hides six or more reviewable package
+   steps and must not be selected as one tranche.
+
+This prioritization distinguishes structural roots from behavior. C# and F#
+already expose substantive CommonMark parsers but lack the portable facade and
+HTML families; Haskell's similarly named roots do not yet establish Markdown
+semantics. Java, Kotlin, and Dart currently have only document AST foundations.
+
 ## TypeScript GFM neutral-conformance adoption
 
 Register and select `gfm-typescript-neutral-conformance-adoption`, depending
@@ -17718,15 +17752,16 @@ prerequisites.  Those successors remain separate work items even if the same
 fixture exposes implementation differences.
 
 Local adoption evidence exercises all sixteen rows dynamically through those
-two public APIs and passes 20 focused assertions, including independent
-source, AST, and HTML corruption witnesses.  The unchanged package suite passes
-763 tests at 89.21% statement and 87.37% branch coverage through its actual
-BUILD front.  Exact-path selector tests pass for Linux, macOS, and Windows,
-including language filters, missing-reader atomicity, dependent propagation,
-and path lookalikes.  The production Go selector builds and passes vet; its
-complete package suite passes apart from the pre-existing PowerShell-dependent
-registry-generator round trip on hosts without `pwsh`.  A real unforced
-TypeScript dry run discovers 505 package roots, identifies only
+two public APIs and passes focused assertions including independent source,
+AST, and HTML corruption witnesses plus bounded strict UTF-8 fixture loading.
+The package suite and coverage figures are recorded in the fixture validation
+receipt and reproduced through its actual BUILD front. Exact-path selection and
+language filtering pass for Linux, macOS,
+and Windows. Linux-focused tests additionally cover missing-reader atomicity,
+dependent propagation, and path lookalikes. The production Go selector builds
+and passes vet; its complete package suite passes apart from the pre-existing
+PowerShell-dependent registry-generator round trip on hosts without `pwsh`. A
+real unforced TypeScript dry run discovers 505 package roots, identifies only
 `typescript/gfm-parser` as directly changed, and retains its 60-package
-prerequisite/dependent closure.  These results qualify the TypeScript adoption
+prerequisite/dependent closure. These results qualify the TypeScript adoption
 only; hosted CI and final-head security review remain publication gates.
