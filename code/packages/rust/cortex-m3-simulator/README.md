@@ -1,0 +1,26 @@
+# Cortex-M3 simulator
+
+Checked Rust functional model of one Arm Cortex-M3 core, implementing the
+Armv7-M Thumb instruction boundary defined by
+[Spec 07al](../../../specs/07al-cortex-m3-simulator.md).
+
+The model owns all integer and special-register state, IT state, two stack
+pointers, the local exclusive monitor, 64 KiB of little-endian memory,
+power/event state, and exact installed-image metadata. Loads, restore, step,
+bounded run, and execute are typed and transactional. Successful traces retain
+exact raw bytes, instruction width, conventional mnemonic, and complete
+before/after snapshots.
+
+The core is intentionally separate from NVIC, SysTick, debug, AHB-Lite timing,
+and vendor peripherals. Those compose around this package in later gate and SoC
+cells.
+
+## Verification
+
+The completion suite covers every primary 16-bit family plus Armv7-M IT,
+CBZ/CBNZ, MOVW/MOVT, division, wide scalar memory, exclusive monitor, table
+branch, barrier, and special-register families. It also covers flags, scalar
+and multiple memory, branches, stack ordering, dual stack selection, privilege,
+power hints, typed faults, and transactional lifecycle. Release tests, strict
+Clippy, and rustdoc warnings pass. The completion baseline is 84.88% line
+coverage (1,201/1,415).
