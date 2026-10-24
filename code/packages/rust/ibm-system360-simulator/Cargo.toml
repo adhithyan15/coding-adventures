@@ -1,0 +1,10 @@
+[package]
+name = "ibm-system360-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked functional simulator for the IBM System/360 architecture"
+license = "MIT"
+
+[lib]
+name = "ibm_system360_simulator"
+path = "src/lib.rs"
