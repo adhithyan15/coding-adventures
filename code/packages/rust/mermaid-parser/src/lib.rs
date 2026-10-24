@@ -13909,7 +13909,7 @@ fn parse_er_line_text(cursor: &mut TokenCursor) -> String {
     while !cursor.at_eof() && token_name(cursor.current()) != "NEWLINE" {
         words.push(cursor.advance().value.clone());
     }
-    words.join(" ")
+    normalize_mermaid_line_breaks(&words.join(" "))
 }
 
 fn upsert_er_node(

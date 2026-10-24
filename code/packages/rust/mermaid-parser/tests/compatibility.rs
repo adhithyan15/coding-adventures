@@ -165,6 +165,14 @@ const ER_COMPACT_ATTRIBUTE_BLOCKS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-compact-attribute-blocks-11.16.1-visual-corpus.json"
 ));
+const ER_ROLE_LINE_BREAKS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-role-line-breaks-11.16.1-corpus.json"
+));
+const ER_ROLE_LINE_BREAKS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-role-line-breaks-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2518,6 +2526,24 @@ fn pinned_er_compact_attribute_blocks_reach_semantic_ir() {
         book.compartments[0].entries,
         ["title: string [PK] - Display title"]
     );
+}
+
+#[test]
+fn pinned_er_relationship_role_line_breaks_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_ROLE_LINE_BREAKS_CORPUS)
+        .expect("ER role line-break corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_ROLE_LINE_BREAKS_VISUAL_CORPUS)
+        .expect("ER role line-break visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER role line-break source"),
+    )
+    .expect("ER role line-break fixture must parse");
+
+    assert_eq!(diagram.relationships[0].label.as_deref(), Some("has\none"));
 }
 
 #[test]

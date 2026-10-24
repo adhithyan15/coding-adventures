@@ -1623,6 +1623,20 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_relationship_role_line_breaks_as_quoted_text() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nPERSON ||--o| ACCOUNT : \"has<br/>one\"\n",
+        );
+        let roles: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("ENTITY_STRING"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(roles, ["has<br/>one"]);
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
