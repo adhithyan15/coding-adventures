@@ -17735,8 +17735,9 @@ semantics. Java, Kotlin, and Dart currently have only document AST foundations.
 
 ## TypeScript GFM neutral-conformance adoption
 
-Register and select `gfm-typescript-neutral-conformance-adoption`, depending
-only on the completed `gfm-language-neutral-conformance-fixture`.  Its bounded
+Prepare `gfm-typescript-neutral-conformance-adoption` behind the active
+`gfm-language-neutral-conformance-fixture` PR. It remains pending and cannot
+publish until that prerequisite completes. Its bounded
 scope is the public TypeScript `gfm-parser` `parse()` API followed by the public
 `document-ast-to-html` `toHtml()` API over all sixteen committed vectors.  The
 reader must enumerate the corpus dynamically, compare the complete AST and
@@ -17754,9 +17755,8 @@ fixture exposes implementation differences.
 Local adoption evidence exercises all sixteen rows dynamically through those
 two public APIs and passes focused assertions including independent source,
 AST, and HTML corruption witnesses plus bounded strict UTF-8 fixture loading.
-The package suite and coverage figures are recorded in the fixture validation
-receipt and reproduced through its actual BUILD front. Exact-path selection and
-language filtering pass for Linux, macOS,
+The actual package BUILD passes 764 tests at 89.21% statement and 87.37% branch
+coverage. Exact-path selection and language filtering pass for Linux, macOS,
 and Windows. Linux-focused tests additionally cover missing-reader atomicity,
 dependent propagation, and path lookalikes. The production Go selector builds
 and passes vet; its complete package suite passes apart from the pre-existing

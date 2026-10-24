@@ -4,7 +4,16 @@
  * publish only parser code.  The loop below is data-driven: adding a valid
  * corpus case automatically adds a native parse-and-render assertion.
  */
-import { readFileSync } from "node:fs";
+import {
+  closeSync,
+  mkdtempSync,
+  openSync,
+  readSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { TextDecoder } from "node:util";
 import type { DocumentNode } from "@coding-adventures/document-ast";
 import { toHtml } from "@coding-adventures/document-ast-to-html";
@@ -41,8 +50,30 @@ function parseCorpus(raw: Buffer): PortableCorpus {
   return JSON.parse(text) as PortableCorpus;
 }
 
-function loadCorpus(): PortableCorpus {
-  return parseCorpus(readFileSync(corpusUrl));
+function readBoundedCorpus(location: URL | string): Buffer {
+  const descriptor = openSync(location, "r");
+  try {
+    const buffer = Buffer.alloc(MAX_CORPUS_BYTES + 1);
+    let length = 0;
+    while (length < buffer.byteLength) {
+      const count = readSync(
+        descriptor,
+        buffer,
+        length,
+        buffer.byteLength - length,
+        null,
+      );
+      if (count === 0) break;
+      length += count;
+    }
+    return buffer.subarray(0, length);
+  } finally {
+    closeSync(descriptor);
+  }
+}
+
+function loadCorpus(location: URL | string = corpusUrl): PortableCorpus {
+  return parseCorpus(readBoundedCorpus(location));
 }
 
 /** Exercise only the two public APIs named by the adoption contract. */
@@ -70,9 +101,14 @@ describe("TE04 portable GFM extension conformance", () => {
   });
 
   it("bounds and strictly decodes the native fixture read", () => {
-    expect(() => parseCorpus(Buffer.alloc(MAX_CORPUS_BYTES + 1))).toThrow(
-      /exceeds 131072 bytes/,
-    );
+    const directory = mkdtempSync(join(tmpdir(), "gfm-portable-"));
+    const oversized = join(directory, "oversized.json");
+    try {
+      writeFileSync(oversized, Buffer.alloc(MAX_CORPUS_BYTES + 2));
+      expect(() => loadCorpus(oversized)).toThrow(/exceeds 131072 bytes/);
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
     expect(() => parseCorpus(Buffer.from([0xef, 0xbb, 0xbf, 0x7b, 0x7d]))).toThrow(
       /byte-order mark/,
     );
