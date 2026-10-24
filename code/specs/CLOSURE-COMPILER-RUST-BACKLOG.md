@@ -154,14 +154,16 @@ Ranking:
 
 | # | ID | Item | Status |
 |---:|---|---|---|
-| 1 | F12 phase 0 | Add the ExpressionStatement lookahead to the ES grammars (ECMA-262 §14.5), so `{ a }⏎/foo/g.exec(s)` fails to parse instead of compiling to a different program. See [F12](F12-parser-driven-lexical-goals.md) §5. | Ready |
+| 1 | F12 phase 0 | Add the ExpressionStatement lookahead to the ES grammars (ECMA-262 §14.5), so `{ a }⏎/foo/g.exec(s)` fails to parse instead of compiling to a different program. See [F12](F12-parser-driven-lexical-goals.md) §5. | In progress (closure-parity-loop-rest session; touches `javascript-parser`) |
 | 2 | #17907 | The emitter turns non-directives (`"use\x20strict"`, `` `use strict` ``, `("use strict")`) into a real `"use strict"` directive. | Ready |
-| 3 | #17940 | A function declaration in a class `static {}` block parses as an expression (same family as #17877). | Ready |
-| 4 | #17939 | WHITESPACE_ONLY drops the restricted-production line break after `yield`. | Ready |
+| 3 | #17940 | A function declaration in a class `static {}` block parses as an expression (same family as #17877). | Blocked by F12 phase 0 (row 1): needs the ES grammars and `javascript-parser` (rule 8) |
+| 4 | #17939 | WHITESPACE_ONLY drops the restricted-production line break after `yield`. | Blocked by F12 phase 0 (row 1): in a generator the ASI module (`javascript-parser/src/asi.rs`) sees `yield` as an identifier, and only the parser knows the generator context (rule 8) |
 | 5 | #17887 | The emitter prints `a<!--b`, line comments swallow `\r`, and WHITESPACE_ONLY drops a line break after the identifier `yield`. One PR per bug. | Ready |
 | 6 | #17883 | WHITESPACE_ONLY drops the empty-statement `;` after `with(...)` or a label before `}`, so the output no longer parses. | Ready |
 | 7 | #17888 | The BLOCK_COMMENT pattern misses comments ending in `**/`, and REGEX admits line terminators. | Ready |
 | 8 | #17882 | ASI insertion takes tens of seconds on about 400 labeled blocks. Make it linear or bounded. | Ready |
+| 8a | #18114 | WHITESPACE_ONLY moves an argument IIFE's call outside the enclosing call: `f(function(){}())` → `f(function(){})()`. | Ready |
+| 8b | #18115 | ADVANCED inlines a function that reads `this` into a call site with a different `this` (`o.m` gains `o` as `this`). | Ready |
 
 ### Q0.5 — valid JavaScript that closurec rejects
 
@@ -171,7 +173,7 @@ Ranking:
 | 10 | #17941 | Object method shorthand and async function expressions fail to parse. | Ready |
 | 11 | #17852 | Adjacent class members and reserved-word property names fail to parse. | Ready |
 | 12 | F12 phases 1–4 | Parser-driven lexical goals, so regex vs. division is decided by the parser. Phase 1 `lexer` (snapshot, mode override, deferred errors); phase 2 `parser`/`grammar-tools` (`relex:` section, token source, undo, memo); phase 3 `javascript-parser` (relex rules, byte-offset ASI, fix B's inputs as fixtures); phase 4 `closurec` (resolved token stream; WHITESPACE_ONLY parses). One PR per phase; phases 1–3 need `ci-full-build`. | Decision — phase 1 waits for the owner to confirm F12's *Decisions* section |
-| 13 | #17884 | Support Annex B HTML-like comments (`<!--` and line-leading `-->`) instead of refusing them. Coordinate with #17914, another session's fix for the `-->` test262 regression. | Ready after #17914 merges |
+| 13 | #17884 | Support Annex B HTML-like comments (`<!--` and line-leading `-->`) instead of refusing them. #17914 (the `-->` test262 regression fix) merged on 2026-10-24. | Ready |
 | 14 | CCR-075 #15860 | Refuse what Closure refuses. Slice 1 (private class elements) merged as #17876; find and ship the remaining upstream refusals. | Ready |
 
 ### Q1 — cheap ladder wins (emitter and DCE parity)
@@ -285,3 +287,4 @@ Add one line per batch of merges or selections.
 | 2026-10-19 | Owner decided CCR-075: refuse what Closure refuses. Added to Q0 as rank 5.5. |
 | 2026-10-19 | Selected #16008 (PR #17829) and #16009 (bounded chains, CLOC42). |
 | 2026-10-22 | Recorded 20 Closure PRs merged since the reset. The loop had stopped after parking fix B, so rule 6 now parks the item, not the loop. Merges are recorded in a daily docs PR (rule 5), and near-root crate PRs use `ci-full-build` (rule 10). F12 phase 0 queued; Claude settled phases 1–4's open questions provisionally. New front-end findings ranked into Q0/Q0.5. Next: F12 phase 0. |
+| 2026-10-24 | Round 3 started on Q0 while closure-parity-loop-rest does F12 phase 0. #17914 merged, so #17884 is Ready. #17940 and #17939 wait for phase 0, which holds `javascript-parser`. Filed and ranked #18114 and #18115 (both miscompiles, found while testing #17907). Next: #17907, #17883. |
