@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/x509-ocsp-response",
   "capabilities": [],
-  "justification": "Pure allocation-free decoding of one already framed RFC 6960 OCSPResponse value. It performs no filesystem, network, process, environment, clock, key, signing, verification, responder authorization, certificate binding, certificate-path, trust-root, freshness, revocation-decision, HTTP, TLS, or cryptographic access."
+  "justification": "Pure allocation-free decoding of one already framed RFC 6960 OCSPResponse value plus explicit id-pkix-ocsp-basic structural dispatch under the caller's existing DER budget. It performs no filesystem, network, process, environment, clock, key, signing, verification, responder authorization, certificate binding, certificate-path, trust-root, freshness, revocation-decision, HTTP, TLS, or cryptographic access."
 }
