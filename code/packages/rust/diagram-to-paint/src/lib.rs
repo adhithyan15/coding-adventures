@@ -7321,7 +7321,7 @@ where
                 &rel.kind,
             )));
         }
-        if let Some((ref pos, ref lbl)) = rel.label {
+        if let Some((pos, lbl)) = rel.label.as_ref().filter(|(_, label)| !label.is_empty()) {
             instructions.push(PaintInstruction::Rect(PaintRect {
                 base: PaintBase::default(),
                 x: pos.x - 44.0,
@@ -10249,6 +10249,44 @@ mod tests {
                 .count(),
             2
         );
+    }
+
+    #[test]
+    fn structural_empty_relationship_label_does_not_emit_label_paint() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedStructuralDiagram {
+            width: 200.0,
+            height: 80.0,
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            architecture_config: None,
+            groups: vec![],
+            nodes: vec![],
+            relationships: vec![diagram_ir::LayoutedStructuralRelationship {
+                from_id: "customer".into(),
+                to_id: "order".into(),
+                kind: RelKind::Association,
+                start_arrow: false,
+                end_arrow: false,
+                from_group: false,
+                to_group: false,
+                from_port: None,
+                to_port: None,
+                routing: diagram_ir::StructuralRouting::Direct,
+                points: vec![Point { x: 20.0, y: 40.0 }, Point { x: 180.0, y: 40.0 }],
+                from_mult: None,
+                to_mult: None,
+                label: Some((Point { x: 100.0, y: 40.0 }, String::new())),
+            }],
+        };
+
+        let scene = diagram_to_paint_structural(&layout, &opts);
+        assert_eq!(scene.instructions.len(), 1);
+        assert!(matches!(scene.instructions[0], PaintInstruction::Path(_)));
     }
 
     #[test]

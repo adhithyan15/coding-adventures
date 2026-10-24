@@ -1649,6 +1649,18 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_empty_quoted_relationship_role() {
+        let tokens = tokenize_mermaid_er("erDiagram\nCUSTOMER ||--|{ ORDER : \"\"\n");
+        let roles: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ == TokenType::String)
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(roles, [""]);
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
