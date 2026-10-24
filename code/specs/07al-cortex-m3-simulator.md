@@ -25,7 +25,9 @@ The package models one deterministic Cortex-M3 core with:
   and length, and one local exclusive monitor;
 - the complete Cortex-M0-compatible integer Thumb surface plus a bounded,
   explicit Cortex-M3 extension surface: IT blocks, CBZ/CBNZ, MOVW/MOVT,
-  SDIV/UDIV, wide byte/halfword/word scalar transfers, TBB/TBH, word
+  SDIV/UDIV, immediate-offset wide byte/halfword transfers over R0-R12 with
+  R0-R12/SP bases, immediate-offset wide word transfers over R0-R12/SP with
+  R0-R12/SP bases, TBB/TBH, word
   LDREX/STREX, CLREX, BASEPRI, FAULTMASK, barriers, and the corresponding
   Armv7-M status views; and
 - exact raw bytes, width, conventional mnemonic, and complete before/after
@@ -91,7 +93,7 @@ The cell is complete only when it has:
    accesses, control flow, special registers, and typed atomic faults;
 3. transactional load, restore, step, run, execute, fetch, bounds, and
    retention tests;
-4. release line coverage above 80% (completion baseline: 84.88%,
-   1,201/1,415 lines); and
+4. release line coverage above 80% (completion baseline: 85.80%,
+   1,299/1,514 lines); and
 5. Rustfmt, strict Clippy, rustdoc, release tests, BUILD integration, lessons
    validation, affected-package checks, and security review before publication.

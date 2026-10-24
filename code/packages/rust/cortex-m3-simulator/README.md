@@ -18,9 +18,10 @@ cells.
 ## Verification
 
 The completion suite covers every primary 16-bit family plus Armv7-M IT,
-CBZ/CBNZ, MOVW/MOVT, division, wide scalar memory, exclusive monitor, table
+CBZ/CBNZ, MOVW/MOVT, division, bounded immediate-offset wide scalar memory
+over R0-R12/SP bases (with PC forms rejected), exclusive monitor, table
 branch, barrier, and special-register families. It also covers flags, scalar
 and multiple memory, branches, stack ordering, dual stack selection, privilege,
 power hints, typed faults, and transactional lifecycle. Release tests, strict
-Clippy, and rustdoc warnings pass. The completion baseline is 84.88% line
-coverage (1,201/1,415).
+Clippy, and rustdoc warnings pass. The completion baseline is 85.80% line
+coverage (1,299/1,514).

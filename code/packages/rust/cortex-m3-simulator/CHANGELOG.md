@@ -3,6 +3,7 @@
 ## 0.1.0 — 2026-10-24
 
 - Add the checked Armv7-M Cortex-M3 functional execution boundary, IT and
-  exclusive-monitor state, wide data and memory operations, complete traces,
+  exclusive-monitor state, bounded immediate-offset wide data and memory
+  operations over R0-R12/SP bases, complete traces,
   typed atomic faults, bounded transactional execution, 22 completion tests,
   and 84.88% line coverage (1,201/1,415).

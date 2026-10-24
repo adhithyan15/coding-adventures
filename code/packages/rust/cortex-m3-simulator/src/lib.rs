@@ -319,9 +319,32 @@ impl CortexM3Simulator {
         let sequential_pc = next.pc;
         let mnemonic = if before.itstate != 0 {
             let condition = before.itstate >> 4;
-            let mnemonic = if condition_holds(&before, condition) {
-                execute_decoded(&mut next, first, second, class, pc)?
+            validate_it_member(first, class, before.itstate, pc)?;
+            let executes_unconditionally = first & 0xff00 == 0xbe00;
+            let mnemonic = if executes_unconditionally || condition_holds(&before, condition) {
+                let mnemonic = execute_decoded(&mut next, first, second, class, pc)?;
+                if suppresses_flags_in_it(first, class) {
+                    next.apsr = before.apsr;
+                }
+                if next.pc != sequential_pc && advance_itstate(before.itstate) != 0 {
+                    return Err(CortexM3Error::UnknownInstruction16 { raw: first, pc });
+                }
+                mnemonic
             } else {
+                let mut validation = try_clone_state(&next)?;
+                if let Err(error) = execute_decoded(&mut validation, first, second, class, pc) {
+                    let conditional_undefined =
+                        class == InstructionClass::ConditionalBranch && (first >> 8) & 0xf == 14;
+                    if !conditional_undefined
+                        && matches!(
+                            error,
+                            CortexM3Error::UnknownInstruction16 { .. }
+                                | CortexM3Error::UnknownInstruction32 { .. }
+                        )
+                    {
+                        return Err(error);
+                    }
+                }
                 "it-skip"
             };
             next.itstate = if next.pc == sequential_pc {
@@ -405,6 +428,54 @@ impl CortexM3Simulator {
     }
 }
 
+fn validate_it_member(
+    first: u16,
+    class: InstructionClass,
+    itstate: u8,
+    pc: u32,
+) -> Result<(), CortexM3Error> {
+    let forbidden = first & 0xf500 == 0xb100
+        || first & 0xffc0 == 0
+        || matches!(first, 0xb661..=0xb663 | 0xb671..=0xb673)
+        || first & 0xff00 == 0xbf00 && first & 0xf != 0
+        || class == InstructionClass::ConditionalBranch
+            && (first >> 8) & 0xf < 14
+            && (first >> 8) & 0xf != u16::from(itstate >> 4);
+    if forbidden || advance_itstate(itstate) != 0 && instruction_writes_pc(first, class) {
+        return Err(CortexM3Error::UnknownInstruction16 { raw: first, pc });
+    }
+    Ok(())
+}
+
+fn instruction_writes_pc(first: u16, class: InstructionClass) -> bool {
+    if class == InstructionClass::ConditionalBranch {
+        return (first >> 8) & 0xf < 14;
+    }
+    if matches!(
+        class,
+        InstructionClass::UnconditionalBranch
+            | InstructionClass::BranchLink
+            | InstructionClass::TableBranch
+    ) {
+        return true;
+    }
+    if class == InstructionClass::SpecialData {
+        let operation = (first >> 8) & 3;
+        let rd = (((first >> 7) & 1) << 3) | (first & 7);
+        return operation == 3 || matches!(operation, 0 | 2) && rd == u16::from(PC);
+    }
+    class == InstructionClass::Miscellaneous && first & 0xfe00 == 0xbc00 && first & 0x100 != 0
+}
+
+fn suppresses_flags_in_it(first: u16, class: InstructionClass) -> bool {
+    match class {
+        InstructionClass::ShiftAddSubtract => true,
+        InstructionClass::Immediate => (first >> 11) & 3 != 1,
+        InstructionClass::DataProcessing => !matches!((first >> 6) & 0xf, 8 | 10 | 11),
+        _ => false,
+    }
+}
+
 fn try_clone_state(state: &CortexM3State) -> Result<CortexM3State, CortexM3Error> {
     let mut memory = Vec::new();
     memory
@@ -478,8 +549,10 @@ fn validate_state(state: &CortexM3State) -> Result<(), CortexM3Error> {
     }
     if state.apsr & !APSR_MASK != 0
         || state.control & !3 != 0
-        || state.ipsr > 63
-        || (state.itstate != 0 && (state.itstate & 0xf == 0 || state.itstate >> 4 >= 0xe))
+        || (state.itstate != 0
+            && (state.itstate & 0xf == 0
+                || state.itstate >> 4 == 0xf
+                || state.itstate >> 4 == 0xe && !(state.itstate & 0xf).is_power_of_two()))
     {
         return Err(CortexM3Error::InvalidState {
             reason: "reserved status bits are set",
@@ -490,9 +563,17 @@ fn validate_state(state: &CortexM3State) -> Result<(), CortexM3Error> {
             reason: "mode and IPSR disagree",
         });
     }
+    if state.handler_mode && state.control & 2 != 0 {
+        return Err(CortexM3Error::InvalidState {
+            reason: "handler mode cannot select the process stack",
+        });
+    }
     if let Some(address) = state.exclusive_address {
         if address & 3 != 0
-            || usize::try_from(address).map_or(true, |start| start + 4 > MEMORY_SIZE)
+            || usize::try_from(address)
+                .ok()
+                .and_then(|start| start.checked_add(4))
+                .is_none_or(|end| end > MEMORY_SIZE)
         {
             return Err(CortexM3Error::InvalidState {
                 reason: "exclusive monitor address is invalid",
@@ -1010,18 +1091,31 @@ fn execute_special(
     let rm = ((raw >> 3) & 0xf) as u8;
     let rd = ((((raw >> 7) & 1) << 3) | (raw & 7)) as u8;
     if operation == 3 {
-        if raw & 7 != 0 || matches!(rm, SP | PC) {
+        let link = raw & 0x80 != 0;
+        if raw & 7 != 0 || link && rm == PC {
             return Err(CortexM3Error::UnknownInstruction16 {
                 raw,
                 pc: instruction_pc,
             });
         }
-        let target = read_register(state, rm)?;
-        if raw & 0x80 != 0 {
+        let target = if rm == PC {
+            instruction_pc.wrapping_add(4)
+        } else {
+            read_register(state, rm)?
+        };
+        if link {
             state.lr = state.pc | 1;
         }
         branch_exchange(state, target)?;
-        return Ok(if raw & 0x80 != 0 { "blx" } else { "bx" });
+        return Ok(if link { "blx" } else { "bx" });
+    }
+    if operation == 1 && (rd < 8 && rm < 8 || matches!(rd, PC) || matches!(rm, PC))
+        || operation == 0 && rd == PC && rm == PC
+    {
+        return Err(CortexM3Error::UnknownInstruction16 {
+            raw,
+            pc: instruction_pc,
+        });
     }
     let left = if rd == PC {
         instruction_pc.wrapping_add(4)
@@ -1293,7 +1387,7 @@ fn execute_miscellaneous(
     if raw & 0xff00 == 0xbf00 && raw & 0xf != 0 {
         let condition = ((raw >> 4) & 0xf) as u8;
         let mask = (raw & 0xf) as u8;
-        if condition >= 0xe || state.itstate != 0 {
+        if condition == 0xf || condition == 0xe && !mask.is_power_of_two() || state.itstate != 0 {
             return Err(CortexM3Error::UnknownInstruction16 { raw, pc });
         }
         state.itstate = (condition << 4) | mask;
@@ -1345,6 +1439,18 @@ fn execute_multiple_memory(
         });
     }
     let mut address = state.registers[rn];
+    checked_aligned_range(address, 4)?;
+    let total_width = mask.count_ones() as usize * 4;
+    if usize::try_from(address)
+        .ok()
+        .and_then(|start| start.checked_add(total_width))
+        .is_none_or(|end| end > MEMORY_SIZE)
+    {
+        return Err(CortexM3Error::DataOutOfRange {
+            address,
+            width: total_width,
+        });
+    }
     for register in 0..8 {
         if mask & (1 << register) != 0 {
             if load {
@@ -1380,7 +1486,9 @@ fn condition_holds(state: &CortexM3State, condition: u8) -> bool {
         10 => n == v,
         11 => n != v,
         12 => !z && n == v,
-        _ => z || n != v,
+        13 => z || n != v,
+        14 => true,
+        _ => false,
     }
 }
 
@@ -1527,11 +1635,13 @@ fn execute_thumb2_memory(
 ) -> Result<&'static str, CortexM3Error> {
     let rn = (first & 0xf) as u8;
     let rt = ((second >> 12) & 0xf) as u8;
-    if rn > 12 || rt > 12 {
+    let operation = first & 0xfff0;
+    let word_transfer = matches!(operation, 0xf8c0 | 0xf8d0);
+    if rn > SP || rt > 12 && !(word_transfer && rt == SP) {
         return Err(CortexM3Error::UnknownInstruction32 { first, second, pc });
     }
     let address = read_register(state, rn)?.wrapping_add(u32::from(second & 0xfff));
-    match first & 0xfff0 {
+    match operation {
         0xf880 => {
             write_memory(state, address, 1, read_register(state, rt)?)?;
             Ok("strb.w")
@@ -1581,7 +1691,7 @@ fn execute_exclusive(
         return Ok("clrex");
     }
     let rn = (first & 0xf) as u8;
-    if rn > 12 {
+    if rn == PC {
         return Err(CortexM3Error::UnknownInstruction32 { first, second, pc });
     }
     let address = read_register(state, rn)?.wrapping_add(u32::from(second as u8) * 4);
@@ -1601,7 +1711,7 @@ fn execute_exclusive(
     }
     let rt = ((second >> 12) & 0xf) as u8;
     let rd = ((second >> 8) & 0xf) as u8;
-    if rt > 12 || rd > 12 {
+    if rt > 12 || rd > 12 || rd == rt || rd == rn {
         return Err(CortexM3Error::UnknownInstruction32 { first, second, pc });
     }
     let success = state.exclusive_address == Some(address);
@@ -1621,12 +1731,17 @@ fn execute_table_branch(
 ) -> Result<&'static str, CortexM3Error> {
     let rn = (first & 0xf) as u8;
     let rm = (second & 0xf) as u8;
-    if rn > 12 || rm > 12 || second & 0xffe0 != 0xf000 {
+    if rn == SP || matches!(rm, SP | PC) || second & 0xffe0 != 0xf000 {
         return Err(CortexM3Error::UnknownInstruction32 { first, second, pc });
     }
     let halfword = second & 0x10 != 0;
     let index = read_register(state, rm)?;
-    let address = read_register(state, rn)?.wrapping_add(if halfword {
+    let base = if rn == PC {
+        pc.wrapping_add(4)
+    } else {
+        read_register(state, rn)?
+    };
+    let address = base.wrapping_add(if halfword {
         index.wrapping_mul(2)
     } else {
         index
@@ -1646,23 +1761,24 @@ fn execute_barrier(second: u16) -> Result<&'static str, CortexM3Error> {
 }
 
 fn read_special(state: &CortexM3State, sysm: u8) -> Option<u32> {
-    let epsr = (1_u32 << 24)
-        | (u32::from(state.itstate & 0x3) << 25)
-        | (u32::from(state.itstate >> 2) << 10);
     match sysm {
         0 => Some(state.apsr),
         1 => Some(state.apsr | u32::from(state.ipsr)),
-        2 => Some(state.apsr | epsr),
-        3 => Some(state.apsr | epsr | u32::from(state.ipsr)),
+        2 => Some(state.apsr),
+        3 => Some(state.apsr | u32::from(state.ipsr)),
         5 => Some(u32::from(state.ipsr)),
-        6 => Some(epsr),
-        7 => Some(epsr | u32::from(state.ipsr)),
+        6 => Some(0),
+        7 => Some(u32::from(state.ipsr)),
         8 => Some(state.msp),
         9 => Some(state.psp),
         16 => Some(u32::from(state.primask)),
         17 | 18 => Some(u32::from(state.basepri)),
         19 => Some(u32::from(state.faultmask)),
-        20 => Some(u32::from(state.control)),
+        20 => Some(u32::from(if state.handler_mode {
+            state.control & !2
+        } else {
+            state.control
+        })),
         _ => None,
     }
 }
@@ -1715,7 +1831,7 @@ fn execute_special_register(
         _ => {
             let requested = value as u8 & 3;
             state.control = if state.handler_mode {
-                (state.control & 2) | (requested & 1)
+                requested & 1
             } else {
                 requested
             };

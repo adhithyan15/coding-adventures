@@ -91,7 +91,6 @@ fn load_and_restore_validation_are_atomic() {
         |state: &mut CortexM3State| state.msp = 1,
         |state: &mut CortexM3State| state.apsr = 1,
         |state: &mut CortexM3State| state.control = 4,
-        |state: &mut CortexM3State| state.ipsr = 64,
         |state: &mut CortexM3State| state.handler_mode = true,
     ] {
         let mut invalid = before.clone();
@@ -105,7 +104,7 @@ fn load_and_restore_validation_are_atomic() {
 
     for invalid in [
         CortexM3State {
-            itstate: 0xe8,
+            itstate: 0xec,
             ..before.clone()
         },
         CortexM3State {
@@ -119,6 +118,19 @@ fn load_and_restore_validation_are_atomic() {
         ));
         assert_eq!(simulator.get_state(), before);
     }
+
+    let mut maximum_exception = before.clone();
+    maximum_exception.ipsr = u8::MAX;
+    maximum_exception.handler_mode = true;
+    simulator.restore(maximum_exception).unwrap();
+    assert_eq!(simulator.get_state().ipsr, u8::MAX);
+
+    let mut invalid_handler_stack = simulator.get_state();
+    invalid_handler_stack.control = 2;
+    assert!(matches!(
+        simulator.restore(invalid_handler_stack),
+        Err(CortexM3Error::InvalidState { .. })
+    ));
 }
 
 #[test]
@@ -257,6 +269,15 @@ fn multiple_memory_writeback_and_base_in_list_rules_execute() {
     load.step().unwrap();
     assert_eq!(load.read_register(0).unwrap(), 7);
     assert_eq!(load.read_register(1).unwrap(), 8);
+
+    let mut misaligned = loaded(&[0xc101]);
+    misaligned.write_register(1, 0x201).unwrap();
+    let before = misaligned.get_state();
+    assert!(matches!(
+        misaligned.step(),
+        Err(CortexM3Error::MisalignedData { .. })
+    ));
+    assert_eq!(misaligned.get_state(), before);
 }
 
 #[test]
@@ -278,6 +299,49 @@ fn direct_and_register_control_flow_preserve_thumb_state() {
     let mut bx = loaded(&[0x4708, bkpt(0)]);
     bx.write_register(1, ORIGIN + 3).unwrap();
     bx.step().unwrap();
+
+    for raw in [0x4768, 0x47e8] {
+        let mut stack_target = loaded(&[raw]);
+        let mut state = stack_target.get_state();
+        state.msp = 0x300;
+        stack_target.restore(state).unwrap();
+        let before = stack_target.get_state();
+        assert_eq!(
+            stack_target.step(),
+            Err(CortexM3Error::InvalidThumbTarget { target: 0x300 })
+        );
+        assert_eq!(stack_target.get_state(), before);
+    }
+
+    let mut pc_target = loaded(&[0x4778]);
+    let before = pc_target.get_state();
+    assert_eq!(
+        pc_target.step(),
+        Err(CortexM3Error::InvalidThumbTarget { target: ORIGIN + 4 })
+    );
+    assert_eq!(pc_target.get_state(), before);
+
+    let mut invalid_blx_pc = loaded(&[0x47f8]);
+    let before = invalid_blx_pc.get_state();
+    assert!(matches!(
+        invalid_blx_pc.step(),
+        Err(CortexM3Error::UnknownInstruction16 { .. })
+    ));
+    assert_eq!(invalid_blx_pc.get_state(), before);
+
+    for raw in [0x4508, 0x4587, 0x45f8, 0x44ff] {
+        let mut reserved = loaded(&[raw]);
+        let before = reserved.get_state();
+        assert_eq!(
+            reserved.step(),
+            Err(CortexM3Error::UnknownInstruction16 { raw, pc: ORIGIN })
+        );
+        assert_eq!(reserved.get_state(), before);
+    }
+
+    let mut compare_sp = loaded(&[0x4568]);
+    compare_sp.write_register(0, MEMORY_SIZE as u32).unwrap();
+    assert_eq!(compare_sp.step().unwrap().mnemonic, "cmp");
     assert_eq!(bx.get_state().pc, ORIGIN + 2);
 
     for (raw, expected) in [(0x4487, 0x304), (0x4687, 0x200)] {
@@ -398,11 +462,27 @@ fn barriers_special_registers_and_privilege_execute() {
         handler.step().unwrap();
     }
     assert_eq!(handler.read_register(0).unwrap(), 0x5000_0007);
-    assert_eq!(handler.read_register(1).unwrap(), 0x5100_0000);
-    assert_eq!(handler.read_register(2).unwrap(), 0x5100_0007);
+    assert_eq!(handler.read_register(1).unwrap(), 0x5000_0000);
+    assert_eq!(handler.read_register(2).unwrap(), 0x5000_0007);
     assert_eq!(handler.read_register(3).unwrap(), 7);
-    assert_eq!(handler.read_register(4).unwrap(), 0x0100_0000);
-    assert_eq!(handler.read_register(5).unwrap(), 0x0100_0007);
+    assert_eq!(handler.read_register(4).unwrap(), 0);
+    assert_eq!(handler.read_register(5).unwrap(), 7);
+
+    let set_control = msr(0, 20);
+    let get_control = mrs(1, 20);
+    let mut words = Vec::new();
+    words.extend(set_control);
+    words.extend(get_control);
+    let mut handler_control = loaded(&words);
+    let mut state = handler_control.get_state();
+    state.handler_mode = true;
+    state.ipsr = 1;
+    state.registers[0] = 2;
+    handler_control.restore(state).unwrap();
+    handler_control.step().unwrap();
+    handler_control.step().unwrap();
+    assert_eq!(handler_control.get_state().control & 2, 0);
+    assert_eq!(handler_control.read_register(1).unwrap(), 0);
 }
 
 #[test]
@@ -485,6 +565,118 @@ fn it_blocks_execute_and_skip_from_architectural_conditions() {
     assert_eq!(executed.step().unwrap().mnemonic, "movs");
     assert_eq!(executed.read_register(2).unwrap(), 9);
     assert_eq!(executed.get_state().itstate, 0);
+
+    let mut flags = loaded(&[it(1, 8), movs(0, 0)]);
+    let mut state = flags.get_state();
+    state.apsr = 1 << 29;
+    flags.restore(state).unwrap();
+    flags.step().unwrap();
+    flags.step().unwrap();
+    assert_eq!(flags.get_state().apsr, 1 << 29);
+
+    let mut breakpoint = loaded(&[movs(0, 1), it(0, 8), bkpt(0)]);
+    breakpoint.step().unwrap();
+    breakpoint.step().unwrap();
+    assert_eq!(breakpoint.step().unwrap().mnemonic, "bkpt 0");
+    assert!(breakpoint.get_state().halted);
+
+    let mut always = loaded(&[it(14, 4), movs(0, 1), movs(1, 2)]);
+    for _ in 0..3 {
+        always.step().unwrap();
+    }
+    assert_eq!(always.read_register(0).unwrap(), 1);
+    assert_eq!(always.read_register(1).unwrap(), 2);
+
+    let mut invalid_al = loaded(&[it(14, 12)]);
+    let before = invalid_al.get_state();
+    assert!(matches!(
+        invalid_al.step(),
+        Err(CortexM3Error::UnknownInstruction16 { .. })
+    ));
+    assert_eq!(invalid_al.get_state(), before);
+}
+
+#[test]
+fn it_rejects_forbidden_and_nonfinal_control_flow_even_when_condition_fails() {
+    for (mask, raw) in [(8, cbz(0, 0)), (8, 0xb672), (8, it(1, 8)), (4, 0x4708)] {
+        let mut simulator = loaded(&[movs(0, 1), it(0, mask), raw, nop()]);
+        simulator.step().unwrap();
+        simulator.step().unwrap();
+        let before = simulator.get_state();
+        assert_eq!(
+            simulator.step(),
+            Err(CortexM3Error::UnknownInstruction16 {
+                raw,
+                pc: ORIGIN + 4,
+            })
+        );
+        assert_eq!(simulator.get_state(), before);
+    }
+
+    for condition in [0, 1] {
+        let mut simulator = loaded(&[movs(0, 1), it(condition, 8), 0x0001]);
+        simulator.step().unwrap();
+        simulator.step().unwrap();
+        let before = simulator.get_state();
+        assert_eq!(
+            simulator.step(),
+            Err(CortexM3Error::UnknownInstruction16 {
+                raw: 0x0001,
+                pc: ORIGIN + 4,
+            })
+        );
+        assert_eq!(simulator.get_state(), before);
+    }
+
+    let mismatched_branch = b_cond(1, 0);
+    let mut mismatch = loaded(&[movs(0, 1), it(0, 8), mismatched_branch]);
+    mismatch.step().unwrap();
+    mismatch.step().unwrap();
+    let before = mismatch.get_state();
+    assert_eq!(
+        mismatch.step(),
+        Err(CortexM3Error::UnknownInstruction16 {
+            raw: mismatched_branch,
+            pc: ORIGIN + 4,
+        })
+    );
+    assert_eq!(mismatch.get_state(), before);
+
+    let mut skipped_svc = loaded(&[movs(0, 1), it(0, 4), 0xdf01, nop()]);
+    skipped_svc.step().unwrap();
+    skipped_svc.step().unwrap();
+    assert_eq!(skipped_svc.step().unwrap().mnemonic, "it-skip");
+
+    let mut executed_svc = loaded(&[movs(0, 1), it(1, 4), 0xdf01, nop()]);
+    executed_svc.step().unwrap();
+    executed_svc.step().unwrap();
+    let before = executed_svc.get_state();
+    assert_eq!(
+        executed_svc.step(),
+        Err(CortexM3Error::SupervisorCall {
+            immediate: 1,
+            pc: ORIGIN + 4,
+        })
+    );
+    assert_eq!(executed_svc.get_state(), before);
+
+    let mut skipped_udf = loaded(&[movs(0, 1), it(0, 4), 0xde01, nop()]);
+    skipped_udf.step().unwrap();
+    skipped_udf.step().unwrap();
+    assert_eq!(skipped_udf.step().unwrap().mnemonic, "it-skip");
+
+    let mut executed_udf = loaded(&[movs(0, 1), it(1, 4), 0xde01, nop()]);
+    executed_udf.step().unwrap();
+    executed_udf.step().unwrap();
+    let before = executed_udf.get_state();
+    assert_eq!(
+        executed_udf.step(),
+        Err(CortexM3Error::UnknownInstruction16 {
+            raw: 0xde01,
+            pc: ORIGIN + 4,
+        })
+    );
+    assert_eq!(executed_udf.get_state(), before);
 }
 
 #[test]
@@ -529,6 +721,16 @@ fn thumb2_wide_data_and_memory_operations_execute() {
         &simulator.get_state().memory[0x301..0x305],
         &[0x78, 0x56, 0x34, 0x12]
     );
+
+    let mut sp = loaded(&[0xf8cd, 0xd004, 0xf8dd, 0xd004]);
+    let mut state = sp.get_state();
+    state.msp = 0x300;
+    sp.restore(state).unwrap();
+    sp.step().unwrap();
+    assert_eq!(sp.read_memory(0x304, 4).unwrap(), 0x300);
+    sp.write_memory(0x304, 4, 0x340).unwrap();
+    sp.step().unwrap();
+    assert_eq!(sp.get_state().msp, 0x340);
 }
 
 #[test]
@@ -575,6 +777,33 @@ fn exclusive_monitor_commit_failure_and_clear_are_explicit() {
         Err(CortexM3Error::MisalignedData { .. })
     ));
     assert_eq!(misaligned.get_state(), before);
+
+    let sp_load = ldrex(0, 13, 0);
+    let sp_store = strex(1, 0, 13, 0);
+    let mut stack_program = Vec::new();
+    stack_program.extend(sp_load);
+    stack_program.extend(sp_store);
+    let mut stack_based = loaded(&stack_program);
+    let mut state = stack_based.get_state();
+    state.msp = 0x300;
+    state.memory[0x300..0x304].copy_from_slice(&7_u32.to_le_bytes());
+    stack_based.restore(state).unwrap();
+    stack_based.step().unwrap();
+    assert_eq!(stack_based.read_register(0).unwrap(), 7);
+    assert_eq!(stack_based.get_state().exclusive_address, Some(0x300));
+    stack_based.step().unwrap();
+    assert_eq!(stack_based.read_register(1).unwrap(), 0);
+
+    for invalid in [strex(2, 2, 1, 0), strex(1, 2, 1, 0)] {
+        let mut aliased = loaded(&invalid);
+        aliased.write_register(1, 0x300).unwrap();
+        let before = aliased.get_state();
+        assert!(matches!(
+            aliased.step(),
+            Err(CortexM3Error::UnknownInstruction32 { .. })
+        ));
+        assert_eq!(aliased.get_state(), before);
+    }
 }
 
 #[test]
@@ -586,6 +815,42 @@ fn table_branches_and_extended_masks_execute() {
     simulator.write_memory(0x301, 1, 2).unwrap();
     assert_eq!(simulator.step().unwrap().mnemonic, "tbb");
     assert_eq!(simulator.get_state().pc, ORIGIN + 8);
+
+    let pc_branch = tbb(15, 0);
+    let mut pc_relative = loaded(&[pc_branch[0], pc_branch[1], nop(), nop(), bkpt(0)]);
+    pc_relative.write_register(0, 0).unwrap();
+    pc_relative.write_memory(ORIGIN + 4, 1, 2).unwrap();
+    pc_relative.step().unwrap();
+    assert_eq!(pc_relative.get_state().pc, ORIGIN + 8);
+
+    let mut unaligned_pc_base = loaded(&[nop(), pc_branch[0], pc_branch[1], nop(), nop(), bkpt(0)]);
+    unaligned_pc_base.step().unwrap();
+    unaligned_pc_base.write_register(0, 0).unwrap();
+    unaligned_pc_base.write_memory(ORIGIN + 6, 1, 2).unwrap();
+    unaligned_pc_base.step().unwrap();
+    assert_eq!(unaligned_pc_base.get_state().pc, ORIGIN + 10);
+
+    let lr_branch = tbh(14, 0);
+    let mut lr_relative = loaded(&[lr_branch[0], lr_branch[1], nop(), nop(), bkpt(0)]);
+    lr_relative.write_register(0, 1).unwrap();
+    lr_relative.write_register(14, 0x300).unwrap();
+    lr_relative.write_memory(0x302, 2, 2).unwrap();
+    lr_relative.step().unwrap();
+    assert_eq!(lr_relative.get_state().pc, ORIGIN + 8);
+
+    let lr_index_branch = tbb(0, 14);
+    let mut lr_index = loaded(&[
+        lr_index_branch[0],
+        lr_index_branch[1],
+        nop(),
+        nop(),
+        bkpt(0),
+    ]);
+    lr_index.write_register(0, 0x300).unwrap();
+    lr_index.write_register(14, 1).unwrap();
+    lr_index.write_memory(0x301, 1, 2).unwrap();
+    lr_index.step().unwrap();
+    assert_eq!(lr_index.get_state().pc, ORIGIN + 8);
 
     let set_basepri = msr(0, 17);
     let set_faultmask = msr(1, 19);
