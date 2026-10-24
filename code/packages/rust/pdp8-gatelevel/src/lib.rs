@@ -124,8 +124,10 @@ impl Pdp8GateLevel {
         }
         validate_program_extent(program.len() / 2, origin)?;
         let words = program
-            .chunks_exact(2)
-            .map(|bytes| u16::from_le_bytes([bytes[0], bytes[1]]))
+            .as_chunks::<2>()
+            .0
+            .iter()
+            .map(|bytes| u16::from_le_bytes(*bytes))
             .collect::<Vec<_>>();
         self.load_words(&words, origin)
     }
