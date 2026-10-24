@@ -131,7 +131,8 @@ parenthesized suffixes preserve their complete source spelling through semantic
 IR, layout, and paint. ER headers, statements, directions, and word-form
 relationships and attribute key markers match case-insensitively from family
 detection through paint, while authored entity and attribute text retains its
-original case. ER remains partial while the
+original case. Numeric `1` cardinalities are disambiguated from numeric entity
+identifiers, including compact relationship operators. ER remains partial while the
 rest of the pinned upstream syntax and visual corpus is incomplete.
 
 ## Required New Semantic Families

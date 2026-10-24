@@ -13882,7 +13882,7 @@ fn is_er_cardinality(token: &Token) -> bool {
     matches!(
         token_name(token),
         "ZERO_OR_ONE" | "ZERO_OR_MORE" | "ONE_OR_MORE" | "ONLY_ONE" | "MD_PARENT"
-    )
+    ) || (token_name(token) == "NUMBER" && token.value == "1")
 }
 
 fn parse_er_cardinality(cursor: &mut TokenCursor) -> Result<String, ParseError> {
@@ -13893,6 +13893,7 @@ fn parse_er_cardinality(cursor: &mut TokenCursor) -> Result<String, ParseError> 
         "ONE_OR_MORE" => "1..*",
         "ONLY_ONE" => "1",
         "MD_PARENT" => "parent",
+        "NUMBER" if token.value == "1" => "1",
         _ => return Err(token_error(&token, "expected ER cardinality")),
     };
     cursor.advance();

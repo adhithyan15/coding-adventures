@@ -117,6 +117,14 @@ const ER_CASE_INSENSITIVE_ATTRIBUTE_KEYS_VISUAL_CORPUS: &str = include_str!(conc
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-case-insensitive-attribute-keys-11.16.1-visual-corpus.json"
 ));
+const ER_NUMERIC_CARDINALITY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-numeric-cardinality-11.16.1-corpus.json"
+));
+const ER_NUMERIC_CARDINALITY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-numeric-cardinality-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2263,6 +2271,29 @@ fn pinned_er_case_insensitive_attribute_keys_reach_semantic_ir() {
             "owner_id: string [fK, Uk] - Owner reference"
         ]
     );
+}
+
+#[test]
+fn pinned_er_numeric_cardinality_disambiguates_numeric_entities() {
+    let syntax: Value = serde_json::from_str(ER_NUMERIC_CARDINALITY_CORPUS)
+        .expect("ER numeric cardinality corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_NUMERIC_CARDINALITY_VISUAL_CORPUS)
+        .expect("ER numeric cardinality visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER numeric cardinality source"),
+    )
+    .expect("ER numeric cardinality fixture must parse");
+
+    assert_eq!(diagram.relationships.len(), 2);
+    assert_eq!(diagram.relationships[0].from_mult.as_deref(), Some("1"));
+    assert_eq!(diagram.relationships[0].to_mult.as_deref(), Some("1..*"));
+    assert_eq!(diagram.relationships[1].from_mult.as_deref(), Some("0..*"));
+    assert_eq!(diagram.relationships[1].to_mult.as_deref(), Some("1"));
+    assert!(diagram.nodes.iter().any(|node| node.id == "1"));
 }
 
 #[test]
