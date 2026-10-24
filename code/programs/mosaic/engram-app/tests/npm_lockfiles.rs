@@ -12,7 +12,7 @@
 //! there that bumps an npm version reruns this test and fails it here:
 //!
 //! ```text
-//!   emitter writes "vite": "7.3.7"     lock root says "vite": "7.3.6"
+//!   emitter writes "vite": "7.3.8"     lock root says "vite": "7.3.7"
 //!                  |                                  |
 //!                  +------------ mismatch ------------+
 //!                                    |

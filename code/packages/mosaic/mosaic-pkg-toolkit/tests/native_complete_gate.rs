@@ -132,13 +132,7 @@ fn is_allowed(backend: Backend, component: &str, code: &str) -> bool {
 #[test]
 fn toolkit_atoms_are_native_complete_or_explicitly_tracked() {
     let mut failures = Vec::new();
-    for backend in [
-        Backend::Xaml,
-        Backend::SwiftUI,
-        Backend::Qt,
-        Backend::Flutter,
-        Backend::Compose,
-    ] {
+    for backend in Backend::NATIVE {
         let out = TempDir::new().expect("temp dir");
         let report = analyze_package_degradations(
             &BuildOptions {
@@ -227,13 +221,7 @@ fn toolkit_atoms_are_native_complete_or_explicitly_tracked() {
 fn no_allowed_style_drop_has_silently_been_fixed() {
     let mut observed: Vec<(Backend, String)> = Vec::new();
 
-    for backend in [
-        Backend::Xaml,
-        Backend::SwiftUI,
-        Backend::Qt,
-        Backend::Flutter,
-        Backend::Compose,
-    ] {
+    for backend in Backend::NATIVE {
         let out = TempDir::new().expect("temp dir");
         let report = analyze_package_degradations(
             &BuildOptions {
@@ -279,13 +267,7 @@ fn no_allowed_style_drop_has_silently_been_fixed() {
 fn no_allowed_degradation_has_silently_been_fixed() {
     let mut observed: Vec<(Backend, String, String)> = Vec::new();
 
-    for backend in [
-        Backend::Xaml,
-        Backend::SwiftUI,
-        Backend::Qt,
-        Backend::Flutter,
-        Backend::Compose,
-    ] {
+    for backend in Backend::NATIVE {
         let out = TempDir::new().expect("temp dir");
         let report = analyze_package_degradations(
             &BuildOptions {

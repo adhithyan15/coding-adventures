@@ -99,7 +99,17 @@ files:
 ```text
 mosaic-compile pkg <PACKAGE_ROOT> --backend <BACKEND> --output <DIR> [--emit-project] [--profile permissive|native-complete] [--runtime-library <CDYLIB>] [--token-palette <JSON>] [--ios-ui-test <FILE.swift>]...
 
-BACKEND: react | swiftui | qt | xaml | compose | webcomponent | html | flutter
+BACKEND: one of the names `mosaic-compile backends` prints
+```
+
+`mosaic-compile backends` prints the package backends, one per line, in build
+order (`--native` prints only the native ones). It is derived from the
+compiler's own backend list, so build scripts read it instead of keeping a
+copy that can fall behind:
+
+```sh
+mosaic-compile backends            # react, electron, swiftui, qt, webcomponent, html, xaml, flutter, compose
+mosaic-compile backends --native   # swiftui, qt, xaml, flutter, compose
 ```
 
 `--emit-project` asks the package builder to write the selected backend's

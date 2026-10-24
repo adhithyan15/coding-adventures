@@ -39,13 +39,27 @@ let tokens = lexer.tokenize().expect("tokenization failed");
 
 ## Token types
 
-`tokenize_javascript_division_only(source, EsVersion)` is an explicit restricted
-entry for numeric subsets that exclude regular-expression literals. It removes
-`REGEX` and `BAD_REGEX` from the compiled grammar before token matching and
-retains other token rules, comments, locations and newline flags. Its callers
-must enforce their source limits and reject unsupported syntax. Ordinary
-tokenizer APIs retain their regex rules; this entry does not implement general
-JavaScript's context-sensitive lexical-goal selection.
+### Regex or division: the F10 mode table
+
+A `/` starts a regular-expression literal in *expression position* and is the
+division operator in *operand position*. Every edition from es2015 to es2025
+carries a declarative mode table (F10) in its `.tokens` file that tracks
+this: the lexer starts in `default` (a `/` is a regex), switches to `div`
+after a value-producing token (a name, number, bigint, string, regex,
+template, `)`, `]`, `this`, `true`, …), and back to `default` after an
+operator, opener or keyword such as `return`:
+
+| source         | tokens                         |
+|----------------|--------------------------------|
+| `8 / 2 / 2`    | `8` `/` `2` `/` `2`            |
+| `x = /a/g`     | `x` `=` `/a/g`                 |
+| `10n / 2n`     | `10n` `/` `2n`                 |
+
+This is an approximation of the full lexical-goal rules (LANG84 E7 replaces
+it), but it is exact for numeric code. es1 has no regex literals; es3 and es5
+do not carry the table yet, so they still read `8 / 2 / 2` as `8`, regex
+`/ 2 /`, `2`. (`tokenize_javascript_division_only`, which deleted `REGEX`
+from the compiled grammar instead, was removed in 0.10.0.)
 
 The JavaScript lexer produces these token categories:
 
