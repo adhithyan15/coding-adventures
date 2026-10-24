@@ -1,8 +1,8 @@
 use der_asn1::{
     decode_bit_string, decode_boolean, decode_ia5_string, decode_implicit_bit_string,
     decode_implicit_ia5_string, decode_implicit_object_identifier, decode_implicit_octet_string,
-    decode_integer, decode_null, decode_object_identifier, decode_octet_string, Asn1Decoder,
-    Asn1ErrorKind, Asn1Limits,
+    decode_enumerated, decode_integer, decode_null, decode_object_identifier, decode_octet_string,
+    Asn1Decoder, Asn1ErrorKind, Asn1Limits,
 };
 
 fn decode(input: &[u8]) -> (Asn1Decoder, der_asn1::Asn1Element<'_>) {
@@ -164,6 +164,68 @@ fn integer_enforces_minimal_twos_complement() {
             .kind(),
         Asn1ErrorKind::IntegerOverflow
     );
+}
+
+#[test]
+fn enumerated_borrows_canonical_twos_complement_values() {
+    for (input, expected) in [
+        (&[0x0a, 0x01, 0x00][..], 0),
+        (&[0x0a, 0x01, 0x7f], 127),
+        (&[0x0a, 0x02, 0x00, 0x80], 128),
+        (
+            &[0x0a, 0x09, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff],
+            u64::MAX,
+        ),
+    ] {
+        let (_, element) = decode(input);
+        let value = decode_enumerated(element).unwrap();
+        assert!(!value.is_negative());
+        assert_eq!(value.to_u64().unwrap(), expected);
+        assert_eq!(value.signed_bytes(), &input[2..]);
+    }
+
+    let (_, negative) = decode(&[0x0a, 0x01, 0xff]);
+    let negative = decode_enumerated(negative).unwrap();
+    assert!(negative.is_negative());
+    assert_eq!(negative.signed_bytes(), &[0xff]);
+    assert_eq!(
+        negative.to_u64().unwrap_err().kind(),
+        Asn1ErrorKind::NegativeEnumerated
+    );
+}
+
+#[test]
+fn enumerated_rejects_wrong_tags_and_noncanonical_values() {
+    for (input, kind) in [
+        (&[0x0a, 0x00][..], Asn1ErrorKind::EmptyEnumerated),
+        (
+            &[0x0a, 0x02, 0x00, 0x7f],
+            Asn1ErrorKind::NonMinimalEnumerated,
+        ),
+        (
+            &[0x0a, 0x02, 0xff, 0x80],
+            Asn1ErrorKind::NonMinimalEnumerated,
+        ),
+        (&[0x2a, 0x01, 0x00], Asn1ErrorKind::UnexpectedTag),
+        (&[0x02, 0x01, 0x00], Asn1ErrorKind::UnexpectedTag),
+    ] {
+        let (_, element) = decode(input);
+        assert_eq!(decode_enumerated(element).unwrap_err().kind(), kind);
+    }
+
+    let (_, enumerated) = decode(&[0x0a, 0x01, 0x00]);
+    assert_eq!(
+        decode_integer(enumerated).unwrap_err().kind(),
+        Asn1ErrorKind::UnexpectedTag
+    );
+
+    let (_, too_wide) = decode(&[
+        0x0a, 0x09, 0x01, 0xde, 0xad, 0xbe, 0xef, 0xca, 0xfe, 0xba, 0xbe,
+    ]);
+    let error = decode_enumerated(too_wide).unwrap().to_u64().unwrap_err();
+    assert_eq!(error.kind(), Asn1ErrorKind::EnumeratedOverflow);
+    assert_eq!(error.offset(), 2);
+    assert!(!error.to_string().contains("deadbeef"));
 }
 
 #[test]
