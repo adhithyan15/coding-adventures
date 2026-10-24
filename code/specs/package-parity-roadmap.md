@@ -17735,11 +17735,12 @@ semantics. Java, Kotlin, and Dart currently have only document AST foundations.
 
 ## TypeScript GFM neutral-conformance adoption
 
-Prepare `gfm-typescript-neutral-conformance-adoption` behind the active
-`gfm-language-neutral-conformance-fixture` PR. It remains pending and cannot
-publish until that prerequisite completes. Its bounded
-scope is the public TypeScript `gfm-parser` `parse()` API followed by the public
-`document-ast-to-html` `toHtml()` API over all sixteen committed vectors.  The
+PR #18118 merged `gfm-language-neutral-conformance-fixture` as
+`83f1871e3d61e8151b0e9313337f5dc2c842a3e6`, so select
+`gfm-typescript-neutral-conformance-adoption` as the next dependency-ready
+item. Its bounded scope is the public TypeScript `gfm-parser` `parse()` API
+followed by the public `document-ast-to-html` `toHtml()` API over all sixteen
+committed vectors. The
 reader must enumerate the corpus dynamically, compare the complete AST and
 HTML, retain independent source/AST/HTML corruption witnesses, preserve package
 coverage, and route an exact `gfm-extension-v1/cases.json` change to the native
