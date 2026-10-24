@@ -16,7 +16,7 @@ prerequisites: [GU-C148-me-pidhi, GU-C148-tene, GU-C10-chaa, GU-C10-paani, GU-C1
 sounds: []
 roots: []
 duration:
-  max_seconds: 255
+  max_seconds: 265
 requires:
   knowledge: [GU-GRAMMAR-C148-ERGATIVE-01, GU-GRAMMAR-C148-OBJECT-AGREE-01, GU-GRAMMAR-C148-ERG-SG-01, GU-LEX-CHA, GU-LEX-PAANI, GU-LEX-BAHEN, GU-LEX-C84-TOWN-03, GU-LEX-CHHOKRO-01, GU-LEX-C55-HOUSEWORK-05, GU-LEX-C88-CARRY-04, GU-LEX-C255-STORY255-01, GU-LEX-PUSTAK-01, GU-LEX-LAKHVU, GU-LEX-VANCHVU, GU-LEX-JOVU, GU-LEX-BHAAT-01, GU-LEX-KHAAVU]
 introduces:
@@ -55,7 +55,7 @@ With a verb that has an object, a name or a noun that does it takes **-એ** (*-
 | **પોલીસ** | **પોલીસે** (*polīse*) |
 | **છોકરો** | **છોકરાએ** (*chokrāe*) |
 
-After a consonant it is the sign **ે**; after a vowel, the letter **એ**. **છોકરો** first turns its **-ો** into **-ા**, as it does before **-ને**.
+After a consonant it is the sign **ે**; after a vowel, the letter **એ**. **છોકરો** first turns its **-ો** into **-ા**, as it does before **-ને**. A plural keeps its **-ઓ** and adds **એ**: **છોકરાઓએ** (*chokrāoe*), "the boys".
 
 ## You'll want to know: the verb follows the thing
 <!-- hl-knowledge: introduces=[GU-GRAMMAR-C273-NE-OBJECT-01]; assesses=[GU-LEX-C88-CARRY-04, GU-LEX-C255-STORY255-01, GU-LEX-PUSTAK-01, GU-LEX-LAKHVU, GU-LEX-VANCHVU, GU-LEX-JOVU] -->

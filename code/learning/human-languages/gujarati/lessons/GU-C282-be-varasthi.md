@@ -54,7 +54,7 @@ reviews_of: [GU-C282-sudhi, GU-C92-varas, GU-C24-hear-savaar]
 >
 > *dukān savārthī sānj sudhī khullī che.* — "The shop is open from morning until evening."
 
-**-થી** marks the start and **સુધી** the end. A span with no start or end named takes **આખું**, "whole", with no ending: **મેં આખો દિવસ કામ કર્યું** (*mẽ ākho divas kām karyũ*), "I worked all day".
+**-થી** marks the start and **સુધી** the end. A span with no start or end named takes **આખું**, "whole", and neither **-થી** nor **સુધી**: **મેં આખો દિવસ કામ કર્યું** (*mẽ ākho divas kām karyũ*), "I worked all day".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-GRAMMAR-C282-THI-SINCE-01, GU-GRAMMAR-C282-THI-SUDHI-01, GU-LEX-SHAHAR-01] -->

@@ -52,7 +52,7 @@ reviews_of: [GU-C281-mane-bik, GU-C146-maaro, GU-C91-goodwishes]
 >
 > *tamārī icchā śũ che?* — "What is your wish?"
 
-**શુભેચ્છા** is **શુભ**, "good, lucky", with **ઇચ્છા**: good wishes.
+**શુભેચ્છા** is *śubh*, "good, lucky", with **ઇચ્છા**: good wishes.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

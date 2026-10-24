@@ -4,7 +4,7 @@
   "chapter": 273,
   "title": "Who did it, and what has happened",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:10e473d1639d477e",
+  "sourceHash": "fnv1a64:569f5cee1c30332d",
   "lessons": [
     {
       "id": "GU-C273-arune-pidhi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec2c3639d49a62e9",
+      "sourceHash": "fnv1a64:22fc377adde5df20",
       "notice": null,
       "blocks": [
         {
@@ -70,7 +70,7 @@
             },
             {
               "kind": "speech",
-              "text": "After a consonant it is the sign ે; after a vowel, the letter એ. છોકરો first turns its -ો into -ા, as it does before -ને."
+              "text": "After a consonant it is the sign ે; after a vowel, the letter એ. છોકરો first turns its -ો into -ા, as it does before -ને. A plural keeps its -ઓ and adds એ: છોકરાઓએ (chokrāoe), \"the boys\"."
             }
           ]
         },

@@ -16,7 +16,7 @@ You'll want to know: સૌથી.
 મને ચોમાસું સૌથી વધારે ગમે છે. mane comāsũ sauthī vadhāre game che. — "I like the monsoon most of all."
 
 The word, taken apart.
-સૌથી (sauthī) is built from સૌ, "all, everyone", and -થી, "from": "from all", so "more than all". CDIAL lists Gujarati sau, "wholly", under Sanskrit sarva, "all, whole" (CDIAL 13276).
+સૌથી (sauthī) is built from sau, "all, everyone", and -થી, "from": "from all", so "more than all". CDIAL lists Gujarati sau, "wholly", under Sanskrit sarva, "all, whole" (CDIAL 13276).
 
 Guided Practice.
 [pause 1 second]
@@ -61,7 +61,7 @@ without lifting, curve it down to the right — and only now lift.
 Three strokes — six movements, two pen lifts; cited to KanoAI's hand-made Gujarati barakhadi templates. Finger-trace ૌ (au sign) once.
 
 Writing — copy with the model.
-Copy સૌ once: સ, the bar, then the two flags. Compare only two things: are there two flags, and does the lower one come first? Repair one if needed.
+Copy સૌથી (sauthī) once: સ, the bar, the two flags, then થી. Compare only two things: are there two flags, and does the lower one come first? Repair one if needed.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Writing — recall after hiding.
@@ -71,7 +71,7 @@ Hide the model and write the au sign once. Uncover ૌ, compare, and stop after 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up Recall.
 [pause 3 seconds]
-Read સો સૌ સૌથી (sauthī) aloud. What turns ો into ૌ (au sign)? (A second flag above.)
+Read સો and સૌથી (sauthī) aloud. What turns ો into ૌ (au sign)? (A second flag above.)
 Sources: KanoAI's Gujarati barakhadi stroke templates (Tejas Gajjar, KanoAI, Gujarati barakhadi centre-line stroke templates (interpolate-svg/svgs/barakhadi), commit 9d3e294, 1_k/9_kau.svg, groups g1, g2 then g3 (strokes g1s0, g2s0, g3s0): the au sign drawn after the consonant (GitHub, 2026)) and the Unicode Gujarati chart.
 
 
@@ -150,7 +150,7 @@ Grammar Lens: -થી and the present.
 
 You'll want to know: from … until, and all day.
 દુકાન સવારથી સાંજ સુધી ખુલ્લી છે. dukān savārthī sānj sudhī khullī che. — "The shop is open from morning until evening."
--થી marks the start and સુધી (sudhī) the end. A span with no start or end named takes આખું, "whole", with no ending: મેં આખો દિવસ કામ કર્યું (mẽ ākho divas kām karyũ), "I worked all day".
+-થી marks the start and સુધી (sudhī) the end. A span with no start or end named takes આખું, "whole", and neither -થી nor સુધી (sudhī): મેં આખો દિવસ કામ કર્યું (mẽ ākho divas kām karyũ), "I worked all day".
 
 Guided Practice.
 [pause 1 second]

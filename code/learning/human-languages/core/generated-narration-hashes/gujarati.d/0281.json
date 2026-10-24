@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 281,
-  "sourceHash": "fnv1a64:8f4faf221e5c1894",
+  "sourceHash": "fnv1a64:c34d555759967fbc",
   "lessonIds": [
     "GU-C281-dukh",
     "GU-W50-visarga",
@@ -16,7 +16,7 @@
   "drivablePrefix": 1,
   "text": "gujarati/narration/ch281.txt",
   "json": "gujarati/narration/ch281.json",
-  "textHash": "fnv1a64:f15b505c4adec4d0",
-  "jsonHash": "fnv1a64:ead931289c996405",
+  "textHash": "fnv1a64:f64a28271f2f9205",
+  "jsonHash": "fnv1a64:c8321072f6d9f544",
   "findings": []
 }

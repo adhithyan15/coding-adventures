@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 279,
-  "sourceHash": "fnv1a64:eecca8a1a0007862",
+  "sourceHash": "fnv1a64:bb9895eca316a864",
   "lessonIds": [
     "GU-C279-rit",
     "GU-C279-kevi-rite-javu",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "gujarati/narration/ch279.txt",
   "json": "gujarati/narration/ch279.json",
-  "textHash": "fnv1a64:a4a3ee7f97ac8d01",
-  "jsonHash": "fnv1a64:f7be1b114c3e4d2b",
+  "textHash": "fnv1a64:c5f1d6515ff40ef7",
+  "jsonHash": "fnv1a64:d7fc6f81cc096c4f",
   "findings": []
 }

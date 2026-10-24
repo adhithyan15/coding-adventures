@@ -4,7 +4,7 @@
   "chapter": 282,
   "title": "Comparing, and how long",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e652e4c1d060775a",
+  "sourceHash": "fnv1a64:b08f85c73a4a4517",
   "lessons": [
     {
       "id": "GU-C282-sauthi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db72ffade9a74a99",
+      "sourceHash": "fnv1a64:aaa352aa79f5cd93",
       "notice": null,
       "blocks": [
         {
@@ -69,7 +69,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "સૌથી (sauthī) is built from સૌ, \"all, everyone\", and -થી, \"from\": \"from all\", so \"more than all\". CDIAL lists Gujarati sau, \"wholly\", under Sanskrit sarva, \"all, whole\" (CDIAL 13276)."
+              "text": "સૌથી (sauthī) is built from sau, \"all, everyone\", and -થી, \"from\": \"from all\", so \"more than all\". CDIAL lists Gujarati sau, \"wholly\", under Sanskrit sarva, \"all, whole\" (CDIAL 13276)."
             }
           ]
         },
@@ -148,7 +148,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:b34684adc4e68c83",
+      "sourceHash": "fnv1a64:dda3de8001b26c97",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -256,7 +256,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy સૌ once: સ, the bar, then the two flags. Compare only two things: are there two flags, and does the lower one come first? Repair one if needed."
+              "text": "Copy સૌથી (sauthī) once: સ, the bar, the two flags, then થી. Compare only two things: are there two flags, and does the lower one come first? Repair one if needed."
             }
           ]
         },
@@ -302,7 +302,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read સો સૌ સૌથી (sauthī) aloud. What turns ો into ૌ (au sign)? (A second flag above.)"
+              "text": "Read સો and સૌથી (sauthī) aloud. What turns ો into ૌ (au sign)? (A second flag above.)"
             },
             {
               "kind": "speech",
@@ -598,7 +598,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e4f425f1698a274",
+      "sourceHash": "fnv1a64:250a46ed8ab222a0",
       "notice": null,
       "blocks": [
         {
@@ -644,7 +644,7 @@
             },
             {
               "kind": "speech",
-              "text": "-થી marks the start and સુધી (sudhī) the end. A span with no start or end named takes આખું, \"whole\", with no ending: મેં આખો દિવસ કામ કર્યું (mẽ ākho divas kām karyũ), \"I worked all day\"."
+              "text": "-થી marks the start and સુધી (sudhī) the end. A span with no start or end named takes આખું, \"whole\", and neither -થી nor સુધી (sudhī): મેં આખો દિવસ કામ કર્યું (mẽ ākho divas kām karyũ), \"I worked all day\"."
             }
           ]
         },

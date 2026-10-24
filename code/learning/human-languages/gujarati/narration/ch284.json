@@ -4,7 +4,7 @@
   "chapter": 284,
   "title": "It depends, and what would have been",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:59a0f38c8f095c92",
+  "sourceHash": "fnv1a64:ecb0aaa7bf3dff23",
   "lessons": [
     {
       "id": "GU-C284-adhar",
@@ -585,7 +585,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b5403764b84629c",
+      "sourceHash": "fnv1a64:e7dee1d5db7729f2",
       "notice": null,
       "blocks": [
         {
@@ -646,11 +646,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "If you're tired, stay at home. If I miss the train, I'll come by bus: the bus is slower than the train, but it's cheaper.",
+              "instruction": "If you're tired, stay at home. If I miss the train, I'll come by bus: the train is faster than the bus, but the bus is cheaper.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: If you're tired, stay at home. If I miss the train, I'll come by bus: the bus is slower than the train, but it's cheaper.]"
+              "source": "[YOU SAY: If you're tired, stay at home. If I miss the train, I'll come by bus: the train is faster than the bus, but the bus is cheaper.]"
             },
             {
               "kind": "prompt",

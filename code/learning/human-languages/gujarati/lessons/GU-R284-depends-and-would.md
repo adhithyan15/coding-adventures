@@ -44,7 +44,7 @@ reviews_of: [GU-C284-adhar, GU-C284-adhar-rakhe-che, GU-C284-hot-to-avat, GU-W54
 - [YOU SAY: My parents are my support. What do you think?]
 - [YOU SAY: It depends on the weather. Everything depends on the time.]
 - [YOU SAY: Will we go or not? It depends on the rain. If it doesn't rain, we'll go.]
-- [YOU SAY: If you're tired, stay at home. If I miss the train, I'll come by bus: the bus is slower than the train, but it's cheaper.]
+- [YOU SAY: If you're tired, stay at home. If I miss the train, I'll come by bus: the train is faster than the bus, but the bus is cheaper.]
 - [YOU SAY: If I had had time, I would have come.]
 - [YOU SAY: If the train hadn't been late, we would have arrived early.]
 

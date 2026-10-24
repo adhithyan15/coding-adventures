@@ -70,7 +70,7 @@ Three strokes — six movements, two pen lifts; cited to KanoAI's hand-made Guja
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-C282-AU-SIGN-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **સૌ** once: **સ**, the bar, then the two flags. Compare only two things: are there two flags, and does the lower one come first? Repair one if needed.
+Copy **સૌથી** once: **સ**, the bar, the two flags, then **થી**. Compare only two things: are there two flags, and does the lower one come first? Repair one if needed.
 
 ## Writing — recall after hiding
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-C282-AU-SIGN-01] -->
@@ -82,6 +82,6 @@ Hide the model and write the *au* sign once. Uncover **ૌ**, compare, and stop 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-C282-AU-SIGN-01, GU-LEX-C282-SAUTHI-01] -->
 
-[PAUSE 3s] Read **સો સૌ સૌથી** aloud. What turns **ો** into **ૌ**? (**A second flag above.**)
+[PAUSE 3s] Read **સો** and **સૌથી** aloud. What turns **ો** into **ૌ**? (**A second flag above.**)
 
 Sources: [KanoAI's Gujarati barakhadi stroke templates](https://github.com/gajjartejas/KanoAI/tree/9d3e2949a3f265448e430e15329093ea3aa516b8/interpolate-svg/svgs/barakhadi) (Tejas Gajjar, KanoAI, Gujarati barakhadi centre-line stroke templates (interpolate-svg/svgs/barakhadi), commit 9d3e294, 1_k/9_kau.svg, groups g1, g2 then g3 (strokes g1s0, g2s0, g3s0): the au sign drawn after the consonant (GitHub, 2026)) and the [Unicode Gujarati chart](https://www.unicode.org/charts/PDF/U0A80.pdf).

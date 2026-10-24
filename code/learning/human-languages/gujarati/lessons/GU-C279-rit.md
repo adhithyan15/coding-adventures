@@ -59,7 +59,7 @@ The answer can be **બસમાં**: by bus.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**રીત** (*rīt*) goes back to Sanskrit *rīti*, "going, a course", and later "a way of doing things" (Monier-Williams). CDIAL's entry for *rīti* (CDIAL 10751) lists an older Gujarati *rī*, "method, manner"; **રીત** keeps the Sanskrit *-t*, so it is probably the learned form.
+**રીત** (*rīt*) goes back to Sanskrit *rīti*, "going, a course", and later "a way of doing things" (Monier-Williams). CDIAL's entry for *rīti* (CDIAL 10751) lists a Gujarati *rī*, "method, manner"; **રીત** keeps the Sanskrit *-t*, so it is probably the learned form.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C279-RIT-01, GU-LEX-C85-TRAVEL-02] -->

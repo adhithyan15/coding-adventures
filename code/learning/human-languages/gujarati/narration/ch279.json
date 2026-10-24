@@ -4,7 +4,7 @@
   "chapter": 279,
   "title": "Asking the way",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:eecca8a1a0007862",
+  "sourceHash": "fnv1a64:bb9895eca316a864",
   "lessons": [
     {
       "id": "GU-C279-rit",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f039a8347c78e08",
+      "sourceHash": "fnv1a64:69bd825dcf2125aa",
       "notice": null,
       "blocks": [
         {
@@ -73,7 +73,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "રીત (rīt) goes back to Sanskrit rīti, \"going, a course\", and later \"a way of doing things\" (Monier-Williams). CDIAL's entry for rīti (CDIAL 10751) lists an older Gujarati rī, \"method, manner\"; રીત keeps the Sanskrit -t, so it is probably the learned form."
+              "text": "રીત (rīt) goes back to Sanskrit rīti, \"going, a course\", and later \"a way of doing things\" (Monier-Williams). CDIAL's entry for rīti (CDIAL 10751) lists a Gujarati rī, \"method, manner\"; રીત keeps the Sanskrit -t, so it is probably the learned form."
             }
           ]
         },

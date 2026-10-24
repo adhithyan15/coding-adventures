@@ -57,7 +57,7 @@ reviews_of: [GU-C281-banvu-che, GU-C72-small, GU-C187-vadhare, GU-C09-gamvun]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**સૌથી** (*sauthī*) is built from **સૌ**, "all, everyone", and **-થી**, "from": "from all", so "more than all". CDIAL lists Gujarati *sau*, "wholly", under Sanskrit *sarva*, "all, whole" (CDIAL 13276).
+**સૌથી** (*sauthī*) is built from *sau*, "all, everyone", and **-થી**, "from": "from all", so "more than all". CDIAL lists Gujarati *sau*, "wholly", under Sanskrit *sarva*, "all, whole" (CDIAL 13276).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C282-SAUTHI-01, GU-LEX-C72-SIZE-01] -->

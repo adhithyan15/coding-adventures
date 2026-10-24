@@ -4,7 +4,7 @@
   "chapter": 281,
   "title": "Feelings and hopes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8f4faf221e5c1894",
+  "sourceHash": "fnv1a64:c34d555759967fbc",
   "lessons": [
     {
       "id": "GU-C281-dukh",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e282cb6bb588f64b",
+      "sourceHash": "fnv1a64:05fd9f2d7c58a844",
       "notice": null,
       "blocks": [
         {
@@ -69,7 +69,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "દુઃખ (duḥkh) is a tatsama: Sanskrit duḥkha, \"pain, sorrow\" (CDIAL 6375), written with the Sanskrit ઃ (visarga) kept. CDIAL also lists an inherited Gujarati dukh from the same word."
+              "text": "દુઃખ (duḥkh) is a tatsama: Sanskrit duḥkha, \"difficulty, pain\" (CDIAL 6375), written with the Sanskrit ઃ (visarga) kept. CDIAL also lists an inherited Gujarati dukh from the same word."
             }
           ]
         },
@@ -476,7 +476,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42a819030e493169",
+      "sourceHash": "fnv1a64:11cdfd25b0b71349",
       "notice": null,
       "blocks": [
         {
@@ -515,7 +515,7 @@
             },
             {
               "kind": "speech",
-              "text": "શુભેચ્છા is શુભ, \"good, lucky\", with ઇચ્છા (icchā): good wishes."
+              "text": "શુભેચ્છા is śubh, \"good, lucky\", with ઇચ્છા (icchā): good wishes."
             }
           ]
         },

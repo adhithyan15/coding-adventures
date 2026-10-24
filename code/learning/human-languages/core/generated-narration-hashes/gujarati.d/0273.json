@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 273,
-  "sourceHash": "fnv1a64:10e473d1639d477e",
+  "sourceHash": "fnv1a64:569f5cee1c30332d",
   "lessonIds": [
     "GU-C273-arune-pidhi",
     "GU-C273-gayo-che",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "gujarati/narration/ch273.txt",
   "json": "gujarati/narration/ch273.json",
-  "textHash": "fnv1a64:5996f91162232dea",
-  "jsonHash": "fnv1a64:7998e3ceb1e45721",
+  "textHash": "fnv1a64:c6e275f062c6c1c6",
+  "jsonHash": "fnv1a64:e48fb25de7c9a29b",
   "findings": []
 }

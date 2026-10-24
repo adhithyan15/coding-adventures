@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 284,
-  "sourceHash": "fnv1a64:59a0f38c8f095c92",
+  "sourceHash": "fnv1a64:ecb0aaa7bf3dff23",
   "lessonIds": [
     "GU-C284-adhar",
     "GU-C284-adhar-rakhe-che",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "gujarati/narration/ch284.txt",
   "json": "gujarati/narration/ch284.json",
-  "textHash": "fnv1a64:cfae09c72bdc2d8d",
-  "jsonHash": "fnv1a64:4bb513e9d2e0366f",
+  "textHash": "fnv1a64:7b43f9fae7779ec4",
+  "jsonHash": "fnv1a64:56f677d15a65fd41",
   "findings": []
 }
