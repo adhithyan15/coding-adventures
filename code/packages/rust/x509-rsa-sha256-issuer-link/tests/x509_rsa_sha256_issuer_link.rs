@@ -469,6 +469,65 @@ fn authenticates_constructed_adjacency_with_complete_exact_intermediate_policy()
 }
 
 #[test]
+fn rejects_constructed_terminal_issuer_before_link_crypto() {
+    let target_encoded = fixture();
+    let mut intermediate_encoded = fixture();
+    replace_nth(
+        &mut intermediate_encoded,
+        b"fixture.example",
+        0,
+        b"root001.example",
+    );
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, b"fixture.example", 1, b"root001.example");
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let profiles = algorithm_profiles();
+    let path = construct_unique_x509_certificate_path_by(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let terminal_link = path.adjacent_link(1).unwrap();
+    let role_policy = validate_certificate_role_policy(
+        &candidates[1],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let algorithm_policy =
+        validate_certificate_algorithm_policy(&candidates[1], &profiles).unwrap();
+    let self_issued = classify_certificate_self_issued(&candidates[1], |issuer, subject| {
+        issuer.encoded() == subject.encoded()
+    });
+    let terminal_policy = validate_x509_intermediate_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        self_issued,
+        &observed_time(),
+    )
+    .unwrap();
+
+    let error = verify_constructed_x509_rsa_sha256_intermediate_issuer_policy_link(
+        terminal_link,
+        terminal_policy,
+        policy(),
+    )
+    .expect_err("the constructed path's terminal issuer is not an intermediate");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkErrorKind::TerminalIssuer
+    );
+    assert!(!error.to_string().contains("root001"));
+}
+
+#[test]
 fn rejects_detached_intermediate_policy_before_constructed_link_crypto() {
     let target_encoded = fixture();
     let mut detached_intermediate_encoded = fixture();
@@ -528,6 +587,74 @@ fn rejects_detached_intermediate_policy_before_constructed_link_crypto() {
         policy(),
     )
     .expect_err("detached policy must fail before invalid issuer-key parsing");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkErrorKind::EvidenceMismatch
+    );
+    assert!(!error.to_string().contains("fixture"));
+}
+
+#[test]
+fn rejects_byte_equal_redecoded_intermediate_policy() {
+    let target_encoded = fixture();
+    let mut intermediate_encoded = fixture();
+    replace_nth(
+        &mut intermediate_encoded,
+        b"fixture.example",
+        0,
+        b"root001.example",
+    );
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, b"fixture.example", 1, b"root001.example");
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let detached_issuer = decode(&intermediate_encoded);
+    let profiles = algorithm_profiles();
+    let path = construct_unique_x509_certificate_path_by(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let adjacent_link = path.adjacent_link(0).unwrap();
+    assert_eq!(
+        adjacent_link.issuer_certificate().encoded(),
+        detached_issuer.encoded()
+    );
+    assert!(!std::ptr::eq(
+        adjacent_link.issuer_certificate(),
+        &detached_issuer
+    ));
+    let role_policy = validate_certificate_role_policy(
+        &detached_issuer,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let algorithm_policy =
+        validate_certificate_algorithm_policy(&detached_issuer, &profiles).unwrap();
+    let self_issued = classify_certificate_self_issued(&detached_issuer, |issuer, subject| {
+        issuer.encoded() == subject.encoded()
+    });
+    let intermediate_policy = validate_x509_intermediate_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        self_issued,
+        &observed_time(),
+    )
+    .unwrap();
+
+    let error = verify_constructed_x509_rsa_sha256_intermediate_issuer_policy_link(
+        adjacent_link,
+        intermediate_policy,
+        policy(),
+    )
+    .expect_err("a byte-equal re-decode is still detached policy evidence");
 
     assert_eq!(
         error.kind(),
