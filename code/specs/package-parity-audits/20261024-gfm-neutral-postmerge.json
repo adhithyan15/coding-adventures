@@ -1,0 +1,1889 @@
+{
+  "observed_at": "2026-10-24T18:59:14.052919+00:00",
+  "merge_evidence": {
+    "headRefOid": "9d3351649673fd55c6143b87431a26e7f90d0290",
+    "mergeCommit": {
+      "oid": "83f1871e3d61e8151b0e9313337f5dc2c842a3e6"
+    },
+    "mergedAt": "2026-10-24T18:59:25Z",
+    "number": 18118,
+    "state": "MERGED",
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/18118"
+  },
+  "inventory_revision": "83f1871e3d61e8151b0e9313337f5dc2c842a3e6",
+  "inventory_method": "Fresh fetched Git tree paths, parsed and reported through exact-main package_parity_report.py API; complete tracked package set, not preserved67 filesystem.",
+  "inventory_report_sha256": "d9b25cf5ef3ea5b027eda3330070278152fe3b4a284c51bca832dd971553b209",
+  "inventory_reporter_source_sha256": "a73e6c23d6d22869432656c37a62cd0e1152ca8ad1d63956d8faee2b34c0c27d",
+  "inventory_summary": {
+    "all_reported_union": 1578,
+    "established_languages": 15,
+    "high_consensus": 178,
+    "implementation_directories": 4818,
+    "implementation_package_slots": 4818,
+    "implementation_union": 1536,
+    "python": 507,
+    "rust": 1294,
+    "rust_python_core": 408,
+    "rust_python_union": 1393
+  },
+  "completion_bands": {
+    "1": {
+      "missing_slots": 14756,
+      "packages": 1054
+    },
+    "10-15": {
+      "missing_slots": 250,
+      "packages": 178
+    },
+    "2-4": {
+      "missing_slots": 2282,
+      "packages": 181
+    },
+    "5-9": {
+      "missing_slots": 934,
+      "packages": 123
+    }
+  },
+  "ocaml_packages": 5,
+  "canonical_collisions": 0,
+  "unknown_language_buckets": 0,
+  "receipt_count": 29,
+  "receipts": [
+    {
+      "file": "20261024-pr18118-native-plan-and-ranking.json",
+      "sha256": "b1a7207c2721c18a05b127fb96d391eff7970242c8a9bb43a546aa3e882e175c",
+      "content": {
+        "observed_at": "2026-10-24T17:38:47.942885+00:00",
+        "pr_number": 18118,
+        "head": "93c1d6c08edd86de9c7d1c2f50df7a8fadec71bc",
+        "mode": "bounded-read-only-preparation",
+        "qualification_credit": false,
+        "native_validation_plan": {
+          "reader_packages": [
+            "typescript/gfm-parser",
+            "typescript/gfm",
+            "typescript/document-ast-to-html"
+          ],
+          "corpus": "code/specs/fixtures/gfm-extension-v1/cases.json",
+          "ordered_cases": 16,
+          "assertions": [
+            "All16orderedIDs; publicparser/facade AST+HTML; renderer consumes literalAST directly.",
+            "Omission/duplicate/reorder/independentASTorHTMLperturbation must fail; oraclepinschema validation is separate.",
+            "Each native npm build,test,coverage and actualBUILD front; retain productioncoverageglobs.",
+            "Exactadoptionpaths cases/schema/validator/actuallyintroducedsharedreader; oldfence21route unchanged.",
+            "Threeplatforms Forcefalse,TypeScripttoolchain,deleted/renamedoldpaths,ordinaryunion,missing/wronglanereaders,lookalikes,atomicplanfailure.",
+            "Preserve652CommonMark literals/skips,21fences,immutableAST and generalrendererregressions."
+          ]
+        },
+        "postmerge_prioritization": {
+          "selection_made": false,
+          "if_authority_dispute_unresolved": "gfm-remaining-extension-contract-classification",
+          "then_reference_candidate": "gfm-typescript-extension-v1-native-adoption",
+          "graph_leverage": {
+            "typescript_adoption": {
+              "direct": 0,
+              "transitive": 0
+            },
+            "csharp_prerequisite": {
+              "direct": 3,
+              "transitive": 3
+            },
+            "fsharp_prerequisite": {
+              "direct": 3,
+              "transitive": 3
+            },
+            "haskell_prerequisite": {
+              "direct": 3,
+              "transitive": 3
+            },
+            "swift_parser": {
+              "direct": 1,
+              "transitive": 1
+            }
+          },
+          "rationale": "Resolve governing single-tilde/adjacenttext policy before native adoption; referenceevidence precedes copying disputedcontract into otherlanes. Graphcounts are readiness evidence only."
+        },
+        "constraints": [
+          "No competing push,secondPR,implementationchange or auto-merge while queued/ownershipunresolved.",
+          "Preserved67draft is not16caseadoption; independentcorpora cannot be silently replaced."
+        ]
+      }
+    },
+    {
+      "file": "20261024-pr18118-build-tool-owner-audit.json",
+      "sha256": "c7f4212f99800dc911aabdd49ad61da03dda3171cf46024bacb288d8872d46b1",
+      "content": {
+        "observed_at": "2026-10-24T17:41:30.471894+00:00",
+        "pr": 18118,
+        "review_mode": "bounded-read-only",
+        "source": "code/specs/package-parity-audits/20261024-gfm-postmerge.json plus currenttrackedroots and13sampledBUILDfiles",
+        "result": "Existing owners cover reviewed scope; no newly unowned gap.",
+        "classification": {
+          "established_native_engine_lanes": 10,
+          "dotnet_fronts": [
+            "code/programs/dotnet/build-tool-csharp",
+            "code/programs/dotnet/build-tool-fsharp"
+          ],
+          "process_free_established_cores": [
+            "java",
+            "kotlin",
+            "dart"
+          ],
+          "emerging_excluded_lane": "ocaml",
+          "lane_obligations_including_ocaml": 16,
+          "existing_pending_selection_blocked_terminal_owners": 14
+        },
+        "qualification_limits": [
+          "No nativeexecution,fulladapter or productioncoverage credit from thissourceaudit.",
+          "MissingCabal skip-success and Dart90percentthreshold are alreadyowned limitations."
+        ]
+      }
+    },
+    {
+      "file": "20261024-pr18118-ocaml-readiness-audit.json",
+      "sha256": "b0b4c169116be5f19b260e34349999a123d954161147684c96a8a1b2f9cc2391",
+      "content": {
+        "observed_at": "2026-10-24T17:42:28.091250+00:00",
+        "pr_number": 18118,
+        "mode": "bounded-read-only",
+        "new_unowned_prerequisites": [],
+        "coverage_of_existing_owners": {
+          "scaffold_and_resolver": [
+            "ocaml-infrastructure",
+            "ocaml-build-substrate-process-free-core"
+          ],
+          "denominator": "ocaml-lane-promotion",
+          "capability": "ocaml-capability-analyzer",
+          "capability_documentation": "ocaml-capability-analyzer-status-documentation-repair",
+          "toolchain": "ocaml-ci-toolchain",
+          "representatives": "ocaml-representative-package-ci-execution"
+        },
+        "source_observations": [
+          "Go scaffold emits pinnedDune/opam/tests/coverage metadata; Go resolver parsesopam/Dune.",
+          "Reporter retainsOCaml as emerging; no denominatorpromotion.",
+          "SeparateCI capabilitygate plus pinned threeplatform toolchain setup.",
+          "Representative contract names fourpackagechain and95percentcoveragefloor.",
+          "Nativebuildtoolcompletion/currentcontractadoption/neutraladapter/threeplatformexecution/archive mirrors/denominatorconsumers/finalpromotion remain existingownedgates."
+        ],
+        "qualification_limits": [
+          "Source andjournal review only; no freshhostedexecution/measuredcoverage/installedconsumer/promotion credit.",
+          "No implementation,PR mutation,selection or tests."
+        ]
+      }
+    },
+    {
+      "file": "20261024-pr18118-lane-prerequisite-fixture-plan.json",
+      "sha256": "2e9277723f9295d21507ecb5268be2f627845c6512b900fd451e6ace2fd8b92b",
+      "content": {
+        "observed_at": "2026-10-24T17:45:07.484562+00:00",
+        "mode": "bounded-read-only",
+        "main": "2949f52059ed81e2a202f171c53d2b57069be002",
+        "inventory_delta": {
+          "tracked_package_roots": 0,
+          "target_lane_alias_collisions": 0,
+          "new_unowned_gaps": 0
+        },
+        "observed_ownership": [
+          "Java/Kotlin/Dart reviewedroots onlydocument-ast; missingparser/rendererowned by gfm-java-kotlin-dart-commonmark-renderer-prerequisites.",
+          "SwiftCommonMarkparser/facade/rendererpresence retains existing GFMowners.",
+          "Haskellparserpresence/missingrenderer matches commonmark-html-haskell-lane-prerequisites.",
+          "Reviewedfive-laneowners lack explicitpackage_paths but prosematchesobservedroots; no incorrectpathbinding."
+        ],
+        "fixture_plan": {
+          "owners": [
+            "commonmark-html-csharp-lane-prerequisites",
+            "commonmark-html-fsharp-lane-prerequisites",
+            "commonmark-html-haskell-lane-prerequisites"
+          ],
+          "parser_gate": [
+            "emptydocument",
+            "heading/paragraphorder",
+            "resolvedlinkdestination/title",
+            "inlineformatting/code/entities",
+            "ordered/unorderedlists/blockquote",
+            "legacycode_blocklanguage/null/newline"
+          ],
+          "renderer_gate": "IndependentlyconstructedtypedAST to establishedliteralHTML:escaping,links,lists/tightness,codeblocks.",
+          "pipeline_gate": "Committed652CommonMark0.31.2source/HTML through publicparse/render; recordeveryfailure/skip; preserve separate21fenceregressions.",
+          "native_requirements": [
+            "Nonzerodiscoveredbehavioraltests, realnativeinvocation and measuredcoverage.",
+            "TE00resolvedlinks/formattaggedrawnodes; TE06independentC#andF#implementations.",
+            "Existinglane-localrefusal/limitregressions do not define universalerrors."
+          ]
+        },
+        "qualification_limits": [
+          "Sourceonly; notests or nativecredit.",
+          "Haskelldescription-onlytest and missingCabalskip-success remain unqualified.",
+          "HTMLrendererroots absentinC#/F#/Haskell; C#/F#parserpresence is distinctfromHaskellstarterrepair."
+        ]
+      }
+    },
+    {
+      "file": "20261024-pr18118-build-tool-prerequisite-ranking.json",
+      "sha256": "44cd919b0931020e91b10e669558bc1b53dfc42d950380cfd3b51d8c74e6528c",
+      "content": {
+        "observed_at": "2026-10-24T17:47:47.623555+00:00",
+        "review_mode": "bounded read-only dependency review",
+        "qualification_credit": false,
+        "pending_terminal_prerequisites": {
+          "go": [
+            "build-tool-go-native-source-snapshot-stability-hardening",
+            "build-tool-go-portable-dependency-hashing-conformance",
+            "build-tool-go-oracle",
+            "build-tool-go-repository-boundary-reverse-diff-digest-adoption"
+          ],
+          "python": [
+            "build-tool-execution-semantics-corpus",
+            "build-tool-python-repository-boundary-reverse-diff-digest-adoption"
+          ],
+          "ruby": [
+            "build-tool-execution-semantics-corpus",
+            "build-tool-ruby-portable-dependency-hashing-conformance",
+            "build-tool-ruby-ci-gate-selection-conformance",
+            "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption"
+          ],
+          "ocaml": [
+            "ocaml-build-tool-current-contract-conformance",
+            "ocaml-build-tool-three-platform-ci-execution",
+            "build-tool-execution-semantics-corpus"
+          ]
+        },
+        "prospective_portable_priorities": [
+          {
+            "id": "build-tool-python-repository-boundary-reverse-diff-digest-adoption",
+            "merged_prerequisites": 4,
+            "total_prerequisites": 4
+          },
+          {
+            "id": "build-tool-ruby-portable-dependency-hashing-conformance",
+            "merged_prerequisites": 2,
+            "total_prerequisites": 2
+          },
+          {
+            "id": "build-tool-ruby-ci-gate-selection-conformance",
+            "merged_prerequisites": 4,
+            "total_prerequisites": 4
+          }
+        ],
+        "policy_boundaries": [
+          "No next item selected while PR #18118 is active and delivery ownership is unresolved.",
+          "Go hashing and boundary adoption depend on explicitly blocked snapshot security work.",
+          "The Go oracle and OCaml current-contract chain contain execution obligations; metadata readiness does not override delivery exclusions.",
+          "The execution-semantics corpus depends on trusted authority and three platform containment implementations."
+        ],
+        "new_unowned_gaps": []
+      }
+    },
+    {
+      "file": "20261024-pr18118-validator-refusal-review.json",
+      "sha256": "444afffb0d82df2a6be1df13571d06668ddd4961d42d64859e30fb10ab40bd5c",
+      "content": {
+        "observed_at": "2026-10-24T17:48:37.117225+00:00",
+        "head": "93c1d6c08edd86de9c7d1c2f50df7a8fadec71bc",
+        "review_mode": "bounded read-only source review; not executed",
+        "finding": {
+          "scope": "Decoded-object versus serialized admission consistency",
+          "detail": "A canonical decoded document with limits.max_ast_depth = 16.0 appears to pass value-only limits comparison, because Python equates 16.0 and 16; the tree guard does not reject floats. Serializing that value is refused by parse_float=_reject_number.",
+          "source_path": "code/scripts/gfm_extension_conformance.py",
+          "comparison_line": 353,
+          "wire_number_refusal_line": 155,
+          "impact": "No resource-bound weakening or case-digest bypass identified.",
+          "resolution_options": [
+            "Require exact integer types for decoded limit fields.",
+            "Explicitly document normalization for decoded callers."
+          ],
+          "existing_owner": "gfm-language-neutral-conformance-fixture"
+        },
+        "other_reviewed_scope": "Schema/node domains align; additional UTF-8 byte, tree/alias, table-shape, roster/order and literal-digest guards are documented validator refinements.",
+        "actions": "No tests, source changes, PR mutation, new owner, selection or qualification credit."
+      }
+    },
+    {
+      "file": "20261024-pr18118-python-ruby-hashing-validation-plans.json",
+      "sha256": "490023b4e75a000539450cb6e70a13661466fcbc1f1776cc8c51e17c1b735139",
+      "content": {
+        "observed_at": "2026-10-24T17:50:50.892568+00:00",
+        "mode": "bounded read-only source preparation",
+        "new_unowned_gaps": [],
+        "selection_made": false,
+        "native_credit": false,
+        "python": {
+          "owner": "build-tool-python-repository-boundary-reverse-diff-digest-adoption",
+          "existing_scope": "Graph/diff tests already consume repository-boundary/shared-input diff fixtures and digest-mismatch precedence. Preserve this; verify full source-union/digest/cache behavior.",
+          "fixtures": [
+            "repository-source-input-boundary.json",
+            "diff-selection-repository-boundary.json",
+            "diff-selection-shared-input-multiconsumer.json",
+            "source-collection-repository-rust-boundary.json",
+            "All 11 hashing-cache cases"
+          ],
+          "authority": "build-tool-conformance.md:1646-1702",
+          "assertions": [
+            "Exact reverse lookup; deduplicated UTF-8-sorted path framing.",
+            "Raw dependency digest framing and combined digests.",
+            "Independent assertions for both shared consumers; diff selection alone is not hashing proof.",
+            "Pin nonempty fixture and case-ID rosters; preserve literal expectations."
+          ],
+          "native_plan": [
+            "Focused graph/diff/hasher tests, then full suite and production coverage.",
+            "Ruff, mypy and package build checks; Python >=3.12 and local progress-bar required.",
+            "Record test counts, failures/skips and actual coverage; existing 80 percent threshold is not measured parity proof.",
+            "Report POSIX no-follow, Windows junction/reparse and runtime pytest skips; pure supplied-data cases execute everywhere."
+          ],
+          "exclusions": [
+            "Snapshot acquisition",
+            "Persistent cache",
+            "Sandbox execution",
+            "Full neutral adapter",
+            "OCaml promotion"
+          ]
+        },
+        "ruby": {
+          "owner": "build-tool-ruby-portable-dependency-hashing-conformance",
+          "authority": "build-tool-conformance.md:1660",
+          "source_finding": "Ruby hasher currently concatenates digest text; the contract frames package identity with raw 32-byte digests and combines decoded package/dependency streams. Existing tests mostly assert length/change.",
+          "source_path": "code/programs/ruby/build-tool/lib/build_tool/hasher.rb:436",
+          "initial_fixtures": [
+            "hashing-cache-dependency-order-before.json",
+            "hashing-cache-dependency-change-after.json",
+            "hashing-cache-failed-prior-record.json"
+          ],
+          "assertions": [
+            "Exact dependency and combined digests.",
+            "Reverse-input-order independence and dependency identity contribution.",
+            "Dependency-only invalidation with unchanged package bytes.",
+            "Empty dependency behavior and explicit malformed/missing-input refusals.",
+            "Expand to all 11 hashing-cache fixtures with hit/missing/corrupt/shared-input behavior."
+          ],
+          "native_plan": "Focused native hasher tests, cache/CLI regressions and actual Ruby BUILD/coverage front; save receipts.",
+          "exclusions": [
+            "Retained-handle snapshots",
+            "Filesystem races",
+            "Cache persistence",
+            "Sandbox execution",
+            "Host authority"
+          ]
+        }
+      }
+    },
+    {
+      "file": "20261024-pr18118-main-94caabdd-package-delta.json",
+      "sha256": "dcc36005e812d107c8a9b2ac661b60bdfcf2fae16cc6b6804a691b45ce8b8b61",
+      "content": {
+        "observed_at": "2026-10-24T17:53:19.509402+00:00",
+        "from_revision": "2949f52059ed81e2a202f171c53d2b57069be002",
+        "to_revision": "94caabddc2cdf71d0ba0800bbe124201af8d7c16",
+        "source_delta": "Punjabi PR #18104 only; corpus/changelog additions within existing human-language-data root.",
+        "tracked_package_roots_before": 5226,
+        "tracked_package_roots_after": 5226,
+        "new_roots": [],
+        "removed_roots": [],
+        "within_lane_canonical_collisions": 0,
+        "new_owners_needed": [],
+        "mode": "Read-only tree/source audit; no native qualification.",
+        "latest_main_observed_when_saved": "ce1fe9b5c62e3fe2d05960d3946dce719cb272a7",
+        "provenance_correction": "The read-only audit was pinned to 94caabdd. origin/main advanced concurrently before receipt serialization; the later ref is observation only, not audited inventory evidence."
+      }
+    },
+    {
+      "file": "20261024-pr18118-ruby-ci-gate-adoption-plan.json",
+      "sha256": "7050dd905abdb99387c70d5d6806c0678eefd27d689fbd1e028fb937dc9a945e",
+      "content": {
+        "observed_at": "2026-10-24T17:54:08.505367+00:00",
+        "owner": "build-tool-ruby-ci-gate-selection-conformance",
+        "state": "pending",
+        "merged_prerequisites": 4,
+        "total_prerequisites": 4,
+        "selection_made": false,
+        "mode": "Bounded read-only source preparation; no tests or qualification.",
+        "authority": [
+          "build-tool-conformance.md:1593-1625",
+          "ci-gate-registry.md"
+        ],
+        "fixtures": [
+          "ci-gate-selection-character-classes.json",
+          "ci-gate-selection-force.json",
+          "ci-gate-selection-machinery.json",
+          "ci-gate-selection-match-work-at-limit.json",
+          "ci-gate-selection-match-work-over-limit.json",
+          "ci-gate-selection-null-affected.json",
+          "ci-gate-selection-null-changed-files.json",
+          "ci-gate-selection-package-and-path.json",
+          "ci-gate-selection-recursive-glob.json",
+          "ci-gate-selection-shared-pattern-at-limit.json",
+          "ci-gate-selection-unrelated.json"
+        ],
+        "native_gap": "Ruby CIWorkflow analyzes workflow patches and toolchain needs; current tests do not implement the neutral gate-registry evaluator.",
+        "tests_first_plan": [
+          "Replay all 11 committed fixtures independently; assert exact sorted gate IDs, explicit false verdicts and deterministic run_ output names.",
+          "Validate the complete closed registry before force/null/machinery shortcuts.",
+          "Check Unicode-scalar glob work, shared-pattern deduplication, exact limit acceptance and fail-closed CI_GATE_MATCH_LIMIT_EXCEEDED with no partial result.",
+          "Keep supplied registry/snapshots process-free; no Git, filesystem, process, scheduling or GITHUB_OUTPUT.",
+          "Run focused Minitest adoption tests, workflow/glob regressions and actual Ruby BUILD with production coverage."
+        ],
+        "ci_selection_proof": [
+          "Add Ruby exact reader root and drift tests while preserving four existing native readers.",
+          "Fixture-only selection on Linux/macOS/Windows with force=false and correct toolchains.",
+          "Language filters, deleted/renamed paths, atomic missing-reader failure and actual selected Ruby BUILD receipts."
+        ],
+        "new_unowned_gaps": []
+      }
+    },
+    {
+      "file": "20261024-pr18118-swift-jvm-dart-prerequisite-plans.json",
+      "sha256": "01d9aab9bf29a9d1c0a7210e072ac0437a13b40f94802dade4613ef07fd37725",
+      "content": {
+        "observed_at": "2026-10-24T17:57:07.200940+00:00",
+        "mode": "Bounded read-only source review; no selection, execution, mutation or native qualification.",
+        "new_owners_added": [],
+        "swift": {
+          "owners": [
+            "gfm-swift-lane-parity",
+            "gfm-facade-swift-lane-parity"
+          ],
+          "public_apis": [
+            "CommonmarkParser.parse(_: String) -> BlockNode",
+            "DocumentAstToHtml.render(_:) -> String",
+            "DocumentAstToHtml.htmlEscape(_:)",
+            "Commonmark.toHtml(_:)"
+          ],
+          "build_front": "commonmark-parser/BUILD runs swift test --enable-code-coverage --verbose",
+          "boundaries": [
+            "Parser documents a CommonMark 0.31.2 subset.",
+            "Fenced/intermediate code currently becomes codeBlock(language:value:); reconcile source-preserving fenced metadata before GFM adoption."
+          ],
+          "smallest_plan": [
+            "Independent source-to-AST and hand-built-AST-to-HTML witnesses for fence metadata, exact payload/newlines, escaping, lists and inline delimiters.",
+            "Exercise facade separately after parser/renderer contracts.",
+            "Require nonempty native test execution and measured production coverage; collection enabled is not a threshold pass."
+          ]
+        },
+        "java_kotlin_dart": {
+          "owner": "gfm-java-kotlin-dart-commonmark-renderer-prerequisites",
+          "missing_roots": "CommonMark parser and HTML renderer roots remain absent in all three lanes.",
+          "ast_boundary_observations": {
+            "java": [
+              "Records retain caller-owned lists; assess immutable ownership.",
+              "Unordered-list start is primitive int; define canonical null projection."
+            ],
+            "kotlin": [
+              "Types retain supplied lists; assess ownership.",
+              "CodeBlockNode language and list start are nonnullable; define absent-value projection."
+            ],
+            "dart": [
+              "Copies collections into unmodifiable lists.",
+              "Language/start are nullable."
+            ],
+            "shared": [
+              "All three lack FencedBlockNode; retain legacy code_block and reconcile distinct nullable TE04 name/info/value fields.",
+              "Java/Kotlin rows/cells and alignment enums need explicit canonical projection."
+            ]
+          },
+          "smallest_plan": [
+            "Typed-AST contract witnesses, then independent node-to-HTML renderer witnesses, then CommonMark parser composition.",
+            "Reuse TE00/TE04 and committed CommonMark HTML literals; no production-generated expectations.",
+            "Cover empty/null, collection ownership, escaping, resolved links, lists/tightness and legacy code."
+          ],
+          "native_evidence": [
+            "Independently invoked public APIs and nonzero fixture counts.",
+            "Explicit failures/skips, declared BUILD fronts, compiler/tool versions and measured coverage.",
+            "Replay CommonMark 652 separately from later GFM/fence adoption."
+          ]
+        },
+        "qualification_limits": [
+          "AST presence or renderer-only success does not establish parser parity.",
+          "Source observations require contract review and actual native evidence before any qualification."
+        ]
+      }
+    },
+    {
+      "file": "20261024-pr18118-hosted-corpus-evidence-plan.json",
+      "sha256": "e9ed9ba6cf54745fc7ce925866089372889f15475e4916dc4412b3992c675910",
+      "content": {
+        "observed_at": "2026-10-24T18:00:18.340008+00:00",
+        "head": "93c1d6c08edd86de9c7d1c2f50df7a8fadec71bc",
+        "mode": "Read-only source inspection; no execution or PR changes.",
+        "validator_commands": [
+          "python3 code/scripts/gfm_extension_conformance.py",
+          "python3 -m unittest discover -s code/scripts/tests -p test_gfm_extension_conformance.py"
+        ],
+        "inputs": [
+          "code/specs/fixtures/gfm-extension-v1/cases.json",
+          "code/specs/fixtures/gfm-extension-v1/schema.json"
+        ],
+        "source_observation": "Published workflow runs Repo-wide metadata contracts but has no explicit invocation of the new GFM validator/tests. Separately gated build-tool conformance invokes other scripts.",
+        "required_receipts": [
+          "Detect logs, gate values and affected-plan artifacts for exact head.",
+          "Actual commands showing 16 validated cases and mutation-test count/results; absent evidence remains unproven.",
+          "Terminal acceptable selected jobs and required gates/security checks; distinguish intentional skips from executed jobs."
+        ],
+        "qualification_limits": [
+          "Published validation reports zero changed native package roots and no native reader.",
+          "Aggregate green and existing TypeScript tests do not grant this corpus native-adoption credit."
+        ],
+        "existing_owner": "gfm-language-neutral-conformance-fixture",
+        "new_owner_needed": false
+      }
+    },
+    {
+      "file": "20261024-pr18118-main-ce1fe9b5-package-delta.json",
+      "sha256": "02c9ea551a3f7910c2fc2860662f25aca908447e4f675eb3a60e13f77b302eb7",
+      "content": {
+        "observed_at": "2026-10-24T18:04:27.693139+00:00",
+        "from_revision": "94caabddc2cdf71d0ba0800bbe124201af8d7c16",
+        "to_revision": "ce1fe9b5c62e3fe2d05960d3946dce719cb272a7",
+        "changes": "Mermaid ER cardinality PR #18110 only.",
+        "new_roots": [],
+        "removed_roots": [],
+        "raw_tracked_roots_before": 5226,
+        "raw_tracked_roots_after": 5226,
+        "within_lane_canonical_collisions": 0,
+        "existing_owners": [
+          "array-runtime-and-language-frontends-neutral-foundation",
+          "document-diagram-and-layout-neutral-foundation"
+        ],
+        "new_owners_needed": [],
+        "qualification": "Pinned Mermaid 11.16.1 lexer/parser/layout/paint corpora remain source evidence; no native visual or all-lane conformance credit."
+      }
+    },
+    {
+      "file": "20261024-pr18118-detect-and-plan-receipt.json",
+      "sha256": "8a70ec34ba0e391b1b1e09db078dbf973f78ebd7ed7f11053b620f90b1b39353",
+      "content": {
+        "observed_at": "2026-10-24T18:04:27.693139+00:00",
+        "head": "93c1d6c08edd86de9c7d1c2f50df7a8fadec71bc",
+        "run": 40116676663,
+        "job": 120939283955,
+        "artifact": 12569679274,
+        "artifact_sha256": "ec605b600ca790093dd726cb43ea994e06af67965e1bcb09018d5887c23e2b14",
+        "log_path": "gfm-pr18118-detect-job-120939283955.log",
+        "log_sha256": "363cc194d7c4c36b2bf17c1c886332f9f3ccd7b6edb381cdd3e0fc487a2e01a7",
+        "actual_plan": {
+          "schema_version": 1,
+          "force": false,
+          "affected_packages": 0,
+          "packages": 5354,
+          "dependency_edges": 10951,
+          "languages_needed": 0,
+          "platform_overrides": 3,
+          "ci_jobs": 22
+        },
+        "actual_flags": {
+          "run_build_linux_os_suites": false,
+          "run_build_macos_os_suites": false,
+          "run_build_windows_os_suites": false,
+          "run_contracts_adj_stdlib": true,
+          "run_contracts_build_tool_conformance": false,
+          "run_contracts_capability_cage": false,
+          "run_forme_release_platform": false,
+          "run_mosaic_grammar_regen_check": false,
+          "run_ocaml_capability_gate": false,
+          "run_ruby_grammar_regen_check": false,
+          "run_rust_grammar_regen_check": false,
+          "needs_python": false,
+          "needs_ruby": false,
+          "needs_go": false,
+          "needs_typescript": false,
+          "needs_rust": false,
+          "needs_elixir": false,
+          "needs_lua": false,
+          "needs_perl": false,
+          "needs_swift": false,
+          "needs_dart": false,
+          "needs_java": false,
+          "needs_kotlin": false,
+          "needs_haskell": false,
+          "needs_ocaml": false,
+          "needs_dotnet": false,
+          "needs_cpp": false
+        },
+        "notes": [
+          "Direct completed-job REST logs work while gh run view --log refuses during active parent run.",
+          "Actual timestamped outputs were distinguished from echoed shell command text.",
+          "No changed package files; no selected native language or package execution.",
+          "Metadata and later required checks remain pending; new GFM corpus hosted execution is unproven until direct command logs."
+        ],
+        "qualification_credit": false
+      }
+    },
+    {
+      "file": "20261024-pr18118-existing-lane-adoption-ownership.json",
+      "sha256": "8cba599af55ef34ed7aa09cdd30c90e63adeb7305eaa549de6f8c2d66537da54",
+      "content": {
+        "observed_at": "2026-10-24T18:08:50.782588+00:00",
+        "mode": "Read-only source/path/ownership audit; metadata registration only",
+        "source_head": "a16f92142cda843db4f99a30f99cc8d3a2e50e11",
+        "active_pr": 18118,
+        "active_head": "93c1d6c08edd86de9c7d1c2f50df7a8fadec71bc",
+        "new_pending_adoption_owners": [
+          {
+            "id": "gfm-go-extension-v1-native-adoption",
+            "title": "Adopt the reviewed GFM extension corpus in Go",
+            "status": "pending",
+            "depends_on": [
+              "gfm-language-neutral-conformance-fixture",
+              "gfm-remaining-extension-contract-classification"
+            ],
+            "delivery_class": "portable",
+            "package_paths": [
+              "code/packages/go/gfm-parser",
+              "code/packages/go/gfm",
+              "code/packages/go/document-ast-to-html"
+            ],
+            "notes": "Present constituent roots do not prove neutral-corpus adoption. After actual fixture merge and authority reconciliation, independently consume the reviewed ordered corpus through production parser/facade/renderer, compare full AST and exact HTML, retain CommonMark/fence regressions, and measure native BUILD/test/production coverage. Current published v1 has16cases; do not replace its literals with preserved67 or regenerate expectations from production. Verify actual public dispatch, including CommonMark-named APIs inside GFM roots. Ruby/Lua/Elixir use existing underscore roots; never scaffold duplicate aliases. Fixture-only CI selection is supporting adoption work. No full-GFM, arbitrary-input refusal, source-only, or reviewed-exception credit."
+          },
+          {
+            "id": "gfm-python-extension-v1-native-adoption",
+            "title": "Adopt the reviewed GFM extension corpus in Python",
+            "status": "pending",
+            "depends_on": [
+              "gfm-language-neutral-conformance-fixture",
+              "gfm-remaining-extension-contract-classification"
+            ],
+            "delivery_class": "portable",
+            "package_paths": [
+              "code/packages/python/gfm-parser",
+              "code/packages/python/gfm",
+              "code/packages/python/document-ast-to-html"
+            ],
+            "notes": "Present constituent roots do not prove neutral-corpus adoption. After actual fixture merge and authority reconciliation, independently consume the reviewed ordered corpus through production parser/facade/renderer, compare full AST and exact HTML, retain CommonMark/fence regressions, and measure native BUILD/test/production coverage. Current published v1 has16cases; do not replace its literals with preserved67 or regenerate expectations from production. Verify actual public dispatch, including CommonMark-named APIs inside GFM roots. Ruby/Lua/Elixir use existing underscore roots; never scaffold duplicate aliases. Fixture-only CI selection is supporting adoption work. No full-GFM, arbitrary-input refusal, source-only, or reviewed-exception credit."
+          },
+          {
+            "id": "gfm-ruby-extension-v1-native-adoption",
+            "title": "Adopt the reviewed GFM extension corpus in Ruby",
+            "status": "pending",
+            "depends_on": [
+              "gfm-language-neutral-conformance-fixture",
+              "gfm-remaining-extension-contract-classification"
+            ],
+            "delivery_class": "portable",
+            "package_paths": [
+              "code/packages/ruby/gfm_parser",
+              "code/packages/ruby/gfm",
+              "code/packages/ruby/document_ast_to_html"
+            ],
+            "notes": "Present constituent roots do not prove neutral-corpus adoption. After actual fixture merge and authority reconciliation, independently consume the reviewed ordered corpus through production parser/facade/renderer, compare full AST and exact HTML, retain CommonMark/fence regressions, and measure native BUILD/test/production coverage. Current published v1 has16cases; do not replace its literals with preserved67 or regenerate expectations from production. Verify actual public dispatch, including CommonMark-named APIs inside GFM roots. Ruby/Lua/Elixir use existing underscore roots; never scaffold duplicate aliases. Fixture-only CI selection is supporting adoption work. No full-GFM, arbitrary-input refusal, source-only, or reviewed-exception credit."
+          },
+          {
+            "id": "gfm-rust-extension-v1-native-adoption",
+            "title": "Adopt the reviewed GFM extension corpus in Rust",
+            "status": "pending",
+            "depends_on": [
+              "gfm-language-neutral-conformance-fixture",
+              "gfm-remaining-extension-contract-classification"
+            ],
+            "delivery_class": "portable",
+            "package_paths": [
+              "code/packages/rust/gfm-parser",
+              "code/packages/rust/gfm",
+              "code/packages/rust/document-ast-to-html"
+            ],
+            "notes": "Present constituent roots do not prove neutral-corpus adoption. After actual fixture merge and authority reconciliation, independently consume the reviewed ordered corpus through production parser/facade/renderer, compare full AST and exact HTML, retain CommonMark/fence regressions, and measure native BUILD/test/production coverage. Current published v1 has16cases; do not replace its literals with preserved67 or regenerate expectations from production. Verify actual public dispatch, including CommonMark-named APIs inside GFM roots. Ruby/Lua/Elixir use existing underscore roots; never scaffold duplicate aliases. Fixture-only CI selection is supporting adoption work. No full-GFM, arbitrary-input refusal, source-only, or reviewed-exception credit."
+          },
+          {
+            "id": "gfm-perl-extension-v1-native-adoption",
+            "title": "Adopt the reviewed GFM extension corpus in Perl",
+            "status": "pending",
+            "depends_on": [
+              "gfm-language-neutral-conformance-fixture",
+              "gfm-remaining-extension-contract-classification"
+            ],
+            "delivery_class": "portable",
+            "package_paths": [
+              "code/packages/perl/gfm-parser",
+              "code/packages/perl/gfm",
+              "code/packages/perl/document-ast-to-html"
+            ],
+            "notes": "Present constituent roots do not prove neutral-corpus adoption. After actual fixture merge and authority reconciliation, independently consume the reviewed ordered corpus through production parser/facade/renderer, compare full AST and exact HTML, retain CommonMark/fence regressions, and measure native BUILD/test/production coverage. Current published v1 has16cases; do not replace its literals with preserved67 or regenerate expectations from production. Verify actual public dispatch, including CommonMark-named APIs inside GFM roots. Ruby/Lua/Elixir use existing underscore roots; never scaffold duplicate aliases. Fixture-only CI selection is supporting adoption work. No full-GFM, arbitrary-input refusal, source-only, or reviewed-exception credit."
+          },
+          {
+            "id": "gfm-lua-extension-v1-native-adoption",
+            "title": "Adopt the reviewed GFM extension corpus in Lua",
+            "status": "pending",
+            "depends_on": [
+              "gfm-language-neutral-conformance-fixture",
+              "gfm-remaining-extension-contract-classification"
+            ],
+            "delivery_class": "portable",
+            "package_paths": [
+              "code/packages/lua/gfm_parser",
+              "code/packages/lua/gfm",
+              "code/packages/lua/document_ast_to_html"
+            ],
+            "notes": "Present constituent roots do not prove neutral-corpus adoption. After actual fixture merge and authority reconciliation, independently consume the reviewed ordered corpus through production parser/facade/renderer, compare full AST and exact HTML, retain CommonMark/fence regressions, and measure native BUILD/test/production coverage. Current published v1 has16cases; do not replace its literals with preserved67 or regenerate expectations from production. Verify actual public dispatch, including CommonMark-named APIs inside GFM roots. Ruby/Lua/Elixir use existing underscore roots; never scaffold duplicate aliases. Fixture-only CI selection is supporting adoption work. No full-GFM, arbitrary-input refusal, source-only, or reviewed-exception credit."
+          },
+          {
+            "id": "gfm-elixir-extension-v1-native-adoption",
+            "title": "Adopt the reviewed GFM extension corpus in Elixir",
+            "status": "pending",
+            "depends_on": [
+              "gfm-language-neutral-conformance-fixture",
+              "gfm-remaining-extension-contract-classification"
+            ],
+            "delivery_class": "portable",
+            "package_paths": [
+              "code/packages/elixir/gfm_parser",
+              "code/packages/elixir/gfm",
+              "code/packages/elixir/document_ast_to_html"
+            ],
+            "notes": "Present constituent roots do not prove neutral-corpus adoption. After actual fixture merge and authority reconciliation, independently consume the reviewed ordered corpus through production parser/facade/renderer, compare full AST and exact HTML, retain CommonMark/fence regressions, and measure native BUILD/test/production coverage. Current published v1 has16cases; do not replace its literals with preserved67 or regenerate expectations from production. Verify actual public dispatch, including CommonMark-named APIs inside GFM roots. Ruby/Lua/Elixir use existing underscore roots; never scaffold duplicate aliases. Fixture-only CI selection is supporting adoption work. No full-GFM, arbitrary-input refusal, source-only, or reviewed-exception credit."
+          }
+        ],
+        "existing_pending_dependencies_refined": [
+          "gfm-swift-lane-parity",
+          "gfm-java-kotlin-dart-lane-parity",
+          "gfm-csharp-lane-parity",
+          "gfm-fsharp-lane-parity",
+          "gfm-haskell-lane-parity",
+          "gfm-typescript-extension-v1-native-adoption"
+        ],
+        "presence_corrections": {
+          "csharp": "Present native GFM parser front, unqualified; renderer/facades absent.",
+          "fsharp": "Present native GFM parser front, unqualified; renderer/facades absent.",
+          "haskell": "Present generic token wrapper, no Markdown-to-AST proof; renderer/facades absent."
+        },
+        "collision_checks": "Exact and normalized owner IDs unique; all21adoption roots have tracked BUILD fronts; dependency graph acyclic.",
+        "qualification_credit": false,
+        "constraints": [
+          "No item selected while active PR and delivery-owner choice remain unresolved.",
+          "No implementation, second PR, push or merge.",
+          "Actual semantic dispatch, fixture-only routing and native execution remain future evidence."
+        ],
+        "registered_at_commit": "c898f1e7d9598b0f62d75ba2241d8fe185b19293"
+      }
+    },
+    {
+      "file": "20261024-pr18118-concurrent-policy-conflict.json",
+      "sha256": "bba0469560df635fc57a24485ef5026ad0d60e0486a1582379aabe5422d5aad8",
+      "content": {
+        "observed_at": "2026-10-24T18:11:10.427615+00:00",
+        "old_active_head": "93c1d6c08edd86de9c7d1c2f50df7a8fadec71bc",
+        "new_active_head": "9d3351649673fd55c6143b87431a26e7f90d0290",
+        "changed_files": [
+          ".claude/package-parity-loop-state.json",
+          "code/specs/package-parity-roadmap.md"
+        ],
+        "implementation_diff": false,
+        "policy_conflict": {
+          "observed_at": "2026-10-24T18:11:10.427615+00:00",
+          "commit": "9d3351649673fd55c6143b87431a26e7f90d0290",
+          "remote_maximum_active_prs": 3,
+          "this_task_maximum_active_prs": 1,
+          "adopted_by_this_task": false,
+          "reason": "The latest direct heartbeat instruction keeps at most one parity PR active; a separate run repository claim does not change that instruction."
+        },
+        "owner_aliases": {
+          "gfm-typescript-extension-v1-native-adoption": "gfm-typescript-neutral-conformance-adoption"
+        },
+        "qualification_limits": [
+          "Previous93c1 CI logs/plan remain historical exact-head evidence, not fresh9d335 CI success.",
+          "Corpus/schema/validator bytes did not change in this metadata-only push.",
+          "Delivery ownership remains unresolved; no implementation, secondPR, push or merge from this task."
+        ],
+        "recorded_at_commit": "6b31fed362d7586c9d35c8836b812bbfe7142be9"
+      }
+    },
+    {
+      "file": "20261024-pr18118-journal-reconciliation-verification.json",
+      "sha256": "6017cae10b13c00232b68ae4a38a22085963126a30e5a50bd28a861014fdc7c5",
+      "content": {
+        "observed_at": "2026-10-24T18:14:20.565107+00:00",
+        "local_commit": "6b31fed362d7586c9d35c8836b812bbfe7142be9",
+        "remote_commit": "9d3351649673fd55c6143b87431a26e7f90d0290",
+        "mode": "Bounded read-only metadata/source review; no execution or qualification.",
+        "verification": {
+          "local_ids": 1532,
+          "remote_ids": 1522,
+          "remote_only_ids": 0,
+          "shared_status_differences": 0,
+          "exact_and_normalized_alias_collisions": 0,
+          "missing_dependencies": 0,
+          "dependency_cycles": 0,
+          "recorded_package_paths_exist": true,
+          "fixture_status": "pr-open",
+          "fenced_repair_status": "merged",
+          "new_native_adoption_statuses": "pending"
+        },
+        "local_only_scopes": [
+          "Seven Go/Python/Ruby/Rust/Elixir/Lua/Perl GFM native adopters",
+          "Remaining GFM authority classification",
+          "Two OCSP documentary classifiers"
+        ],
+        "canonical_ts_owner": "gfm-typescript-neutral-conformance-adoption",
+        "legacy_ts_alias": "gfm-typescript-extension-v1-native-adoption",
+        "shared_dependency_refinements": 6,
+        "shared_note_differences": 9,
+        "policy_boundary": "This task retains one active PR. Remote three-PR prose does not change direct task authorization or resolve delivery ownership.",
+        "postmerge_plan": [
+          "Verify actual merge and exact head first.",
+          "Merge records by canonical ID, retaining local-only scopes, aliases, corrected notes and authority prerequisites.",
+          "Keep historical receipts immutable; append reconciliation evidence.",
+          "Transition only the neutral foundation after merge; leave native adoption pending without credit.",
+          "Fetch current main, regenerate inventory and collision-check the graph before any later selection.",
+          "Preserve unrelated OCSP records and unpublished local work."
+        ]
+      }
+    },
+    {
+      "file": "20261024-pr18118-overlap-and-leverage-refresh.json",
+      "sha256": "06c61674740ab55e1597032624632784429a28053cd31f3f4985db8e8fa4df3b",
+      "content": {
+        "observed_at": "2026-10-24T18:18:24.965913+00:00",
+        "mode": "Bounded read-only live PR and dependency review; no selection or qualification.",
+        "active_parity_pr": 18118,
+        "head": "9d3351649673fd55c6143b87431a26e7f90d0290",
+        "local_maximum_active_prs": 1,
+        "open_pr_heads": {
+          "18118": "9d3351649673fd55c6143b87431a26e7f90d0290",
+          "18129": "f1d393c6cfb9a1ef4594a885668ca97b8e7a5036",
+          "18126": "eb09acc2335728efbe15916cc28c2b7ff4433133",
+          "18121": "f9c835785c6e037f580b0ce5a96892ff4374f98b",
+          "18120": "e0c15543db3e3087c92be06255bfb29ce1648aba",
+          "18117": "8c85948225945fb18e914cfd60c95af0d720aad4",
+          "18116": "e23b17460cb787fef94e7ddd440b8c1b3ab1cbf1",
+          "18113": "a953b29a2605ecfcd0e55fc7b61e215e1062152a",
+          "18111": "8d3d16b64dcec74f70e449bbd3f71444fcf56fdb",
+          "17808": "40450ae73bc45fffe60257f8a21f0efca32fdd6d"
+        },
+        "overlap_observations": [
+          "Only #18118 is registered as an active parity-delivery PR; no second open PR changes its fixture/spec/validator or eight adoption owners package paths.",
+          "#18117 overlaps existing Forme classification scope.",
+          "#18120 overlaps PDP8 singleton classification and proposes a distinct gate-level root; not merged inventory credit.",
+          "#18116 journal-app manifests/locks are downstream but do not change GFM implementation paths."
+        ],
+        "graph_leverage": {
+          "gfm-language-neutral-conformance-fixture": {
+            "direct_unfinished": 13,
+            "transitive_unfinished": 20
+          },
+          "gfm-remaining-extension-contract-classification": {
+            "direct_unfinished": 13,
+            "transitive_unfinished": 20
+          },
+          "commonmark-html-csharp-lane-prerequisites": {
+            "direct_unfinished": 3,
+            "transitive_unfinished": 3
+          },
+          "commonmark-html-fsharp-lane-prerequisites": {
+            "direct_unfinished": 3,
+            "transitive_unfinished": 3
+          },
+          "commonmark-html-haskell-lane-prerequisites": {
+            "direct_unfinished": 3,
+            "transitive_unfinished": 3
+          }
+        },
+        "readiness_notes": [
+          "Fixture and authority classifier reach the same20; do not sum leverage.",
+          "Fixture merge alone readies none of13direct children while authority classification remains pending.",
+          "After both foundations, TypeScript, seven existing-lane adopters and Swift have no further graph prerequisite.",
+          "Historical12-descendant note remains historical; this receipt records the updated20."
+        ],
+        "coordination_lookup": "Available app thread metadata exposed only the current active parity chat; direct authorization for the separate run policy was not established. No messages sent to other chats.",
+        "actions": "No implementation changes, PR mutation, push or merge."
+      }
+    },
+    {
+      "file": "20261024-pr18118-main-cc710ef2-ocsp-ownership.json",
+      "sha256": "14ecf8ebee0b7ad61c07ed9e05794158869c0bf7757087b40fdaa9b9fa16c761",
+      "content": {
+        "observed_at": "2026-10-24T18:22:17.520926+00:00",
+        "mode": "Pinned read-only tree/source audit; documentary owner registration only",
+        "inventory_delta": {
+          "from_revision": "ce1fe9b5c62e3fe2d05960d3946dce719cb272a7",
+          "to_revision": "cc710ef23c7bb7c336043bb530f8aff4793f4440",
+          "new_roots": [
+            "code/packages/rust/x509-ocsp-response"
+          ],
+          "removed_roots": [],
+          "raw_roots_before": 5226,
+          "raw_roots_after": 5227,
+          "canonical_collisions": 0,
+          "registered_owner": "x509-ocsp-response-envelope-profile-classification",
+          "full_reporter_refresh_required_after_active_pr_merge": true,
+          "native_credit": false
+        },
+        "new_pending_owner": {
+          "id": "x509-ocsp-response-envelope-profile-classification",
+          "title": "Classify the portable outer OCSP response-envelope profile",
+          "status": "pending",
+          "depends_on": [],
+          "delivery_class": "portable",
+          "package_paths": [
+            "code/packages/rust/x509-ocsp-response"
+          ],
+          "discovered_at_revision": "cc710ef23c7bb7c336043bb530f8aff4793f4440",
+          "future_delivery_prerequisites": [
+            "der-tlv-portable-conformance",
+            "der-asn1-portable-conformance"
+          ],
+          "notes": "Documentary applicability review only: bounded outer RFC6960 response status and ResponseBytes structure, assigned statuses, success/error cardinality, opaque response-type OID and borrowed OCTET STRING, exact framing, shared DER budgets and redacted errors. Existing OCSP structural-fields owner excludes larger containers; ResponseData and BasicResponse are different structures. Future fixture/native children must depend explicitly on merged DER TLV/ASN.1 prerequisites and reviewed profile. Exclude inner dispatch, signatures, responder authorization, certificate/path binding, freshness/revocation decisions and network authority. Empty capability declarations and package presence grant no native, full-protocol or reviewed-exception credit."
+        },
+        "other_delta": "ALGOL static-sign factors remain within existing algol-iir-compiler-language-neutral-conformance and applicable-lane owners.",
+        "last_inventory_note": "Keep prior full reporter snapshot historical; this partial delta is not a fresh full reporter/native qualification.",
+        "active_pr": 18118,
+        "selection_made": false,
+        "registered_at_commit": "f9f54a3a38a582dbf8e05a25348b377764dec8a3"
+      }
+    },
+    {
+      "file": "20261024-pr18118-go-native-adoption-plan.json",
+      "sha256": "8350fd66191150e8b7e3eb2873f8da7c4461a3484d6c21002d94165dbe5820dd",
+      "content": {
+        "observed_at": "2026-10-24T18:23:18.525804+00:00",
+        "mode": "Bounded read-only source preparation; no execution or qualification.",
+        "owner": "gfm-go-extension-v1-native-adoption",
+        "actual_dispatch": [
+          "GFM parser performs local block parsing, GFM extensions and inline resolution.",
+          "Facade commonmark.go imports gfm-parser despite its commonmark package name.",
+          "Facade public APIs: Parse(string), ToHtml(string), separate ToHtmlSafe(string).",
+          "Renderer accepts *DocumentNode and RenderOptions."
+        ],
+        "prerequisites": [
+          "Go Document AST has legacy CodeBlockNode but no FencedBlockNode; renderer has no fenced dispatch.",
+          "Reconcile TE04 source-preserving nodes while retaining CommonMark code_block.",
+          "Project empty-language/alignment/unordered-start sentinels to canonical nullable fields; preserve empty arrays versus null."
+        ],
+        "native_plan": [
+          "After authority resolution, consume reviewed corpus through parser, facade and renderer; compare full independent AST/HTML.",
+          "Renderer receives fixture-built nodes directly; keep safe rendering separate from default canonical HTML.",
+          "Add TE04 metadata/payload/escaping regressions before adoption credit.",
+          "Run each module tests, production coverage, vet and actual BUILD fronts; preserve facade/CommonMark tests and validate affected AST consumers.",
+          "Require nonzero fixture tests; no-test-files output is insufficient.",
+          "Prove fixture-only selection of all three Go roots, correct toolchains and actual selected BUILD execution."
+        ],
+        "new_expected_outputs_authored": false,
+        "selection_made": false
+      }
+    },
+    {
+      "file": "20261024-pr18118-9d335164-plan-receipt.json",
+      "sha256": "24fed54ac1c5530db74aa3ac7d4b569d433160f74fbd674dae3bd9df356f1542",
+      "content": {
+        "observed_at": "2026-10-24T18:26:33.817386+00:00",
+        "head": "9d3351649673fd55c6143b87431a26e7f90d0290",
+        "run": 40119477288,
+        "detect_job": 120947930868,
+        "artifact": 12571395150,
+        "artifact_metadata_digest": "sha256:c55094ffed94323ee50d1a74526cf080b4a6924919f2e77df1711558424206a7",
+        "downloaded_archive_sha256": "c55094ffed94323ee50d1a74526cf080b4a6924919f2e77df1711558424206a7",
+        "log_sha256": "6eede8645a5be09adfe56e652c64eabb6258e06719e97dc5b53c8050336e4616",
+        "log_bytes": 225365,
+        "actual_flags": {
+          "run_build_linux_os_suites": false,
+          "run_build_macos_os_suites": false,
+          "run_build_windows_os_suites": false,
+          "run_contracts_adj_stdlib": true,
+          "run_contracts_build_tool_conformance": false,
+          "run_contracts_capability_cage": false,
+          "run_forme_release_platform": false,
+          "run_mosaic_grammar_regen_check": false,
+          "run_ocaml_capability_gate": false,
+          "run_ruby_grammar_regen_check": false,
+          "run_rust_grammar_regen_check": false,
+          "needs_python": false,
+          "needs_ruby": false,
+          "needs_go": false,
+          "needs_typescript": false,
+          "needs_rust": false,
+          "needs_elixir": false,
+          "needs_lua": false,
+          "needs_perl": false,
+          "needs_swift": false,
+          "needs_dart": false,
+          "needs_java": false,
+          "needs_kotlin": false,
+          "needs_haskell": false,
+          "needs_ocaml": false,
+          "needs_dotnet": false,
+          "needs_cpp": false
+        },
+        "actual_plan": {
+          "force": false,
+          "affected_packages": 0,
+          "packages": 5354,
+          "dependency_edges": 10951,
+          "languages_needed": {},
+          "platform_overrides": 3,
+          "ci_jobs": 22
+        },
+        "qualification_credit": false,
+        "limitations": [
+          "Planner evidence only; no selected native package execution or corpus adoption.",
+          "Metadata corpus execution still requires actual command logs."
+        ],
+        "artifact_digest_verified": true,
+        "log_path": "gfm-pr18118-9d335164-detect.log",
+        "archive_path": "gfm-pr18118-9d335164-build-plan.zip"
+      }
+    },
+    {
+      "file": "20261024-pr18118-ocsp-envelope-neutral-witness-plan.json",
+      "sha256": "6307f13e3ab6e126e44cbcb6a6867ac08ee6c15097511d95b1b177df7fd9a036",
+      "content": {
+        "observed_at": "2026-10-24T18:29:05.796384+00:00",
+        "upstream_revision": "cc710ef23c7bb7c336043bb530f8aff4793f4440",
+        "package_path": "code/packages/rust/x509-ocsp-response",
+        "owner": "x509-ocsp-response-envelope-profile-classification",
+        "mode": "Four bounded source/reference reads; no execution, classification completion or native credit.",
+        "witness_plan": [
+          "Assigned statuses 0,1,2,3,5,6; reject unassigned, negative, nonminimal and oversized ENUMERATED values.",
+          "Ratify success/body profile: success has exactly one terminal constructed [0] EXPLICIT ResponseBytes; assigned errors exclude it. Displayed ASN.1 marks the field optional, so do not infer a whole-protocol rule from syntax.",
+          "Ordered OID and OCTET STRING; reject wrong tags, missing fields, duplicate/trailing elements and malformed framing.",
+          "Preserve complete envelope, inner sequence and opaque response bytes independently.",
+          "Accept unknown OID and empty opaque payload under the bounded outer profile.",
+          "DER budget cut points, whole-envelope-relative error offsets and payload-redacted diagnostics.",
+          "Freeze independently reviewed literal bytes/outcomes; never generate expectations from Rust."
+        ],
+        "exclusions": [
+          "Inner BasicOCSPResponse decoding",
+          "OID dispatch authority",
+          "Algorithms/signatures",
+          "Responder authorization",
+          "Certificate binding",
+          "Freshness/revocation decisions",
+          "Transport/cache behavior"
+        ],
+        "reference": "https://www.rfc-editor.org/rfc/rfc6960.html#section-3.2",
+        "future_prerequisites": [
+          "Reviewed neutral DER limit/error conventions",
+          "Exact-input admission",
+          "Immutable literal fixtures",
+          "Separate bounded inner dispatch and authentication/policy ownership where applicable"
+        ],
+        "selection_made": false
+      }
+    },
+    {
+      "file": "20261024-pr18118-receipt-integrity-and-ruby-lua-dispatch-plan.json",
+      "sha256": "2795bfb9c4f716aaab029a1fd41c6b96007f79cabc06473ea9b2cd68e8e10212",
+      "content": {
+        "observed_at": "2026-10-24T18:32:42.203396+00:00",
+        "mode": "Bounded read-only review; no runtime execution, selection, mutation or qualification.",
+        "integrity_verification": {
+          "receipts_checked": 21,
+          "missing": 0,
+          "hash_mismatches": 0,
+          "malformed_json": 0,
+          "duplicate_entries": 0,
+          "unlisted_pins": 0
+        },
+        "ocsp_owner_verification": {
+          "id": "x509-ocsp-response-envelope-profile-classification",
+          "status": "pending",
+          "classification_dependencies": [],
+          "future_der_prerequisites_explicit": true,
+          "upstream_revision": "cc710ef23c7bb7c336043bb530f8aff4793f4440",
+          "root_tree": "6f15926d85ed28fa231426dbcc58ce793dcbc552",
+          "older_local_checkout_absence_expected": true
+        },
+        "ruby_lua_dispatch_plan": {
+          "owners": [
+            "gfm-ruby-extension-v1-native-adoption",
+            "gfm-lua-extension-v1-native-adoption"
+          ],
+          "ruby_source": [
+            "Facade explicitly requires coding_adventures_gfm_parser and calls CommonmarkParser.parse plus independent renderer.",
+            "Parser invokes local block/inline modules; shared namespace and loader shim still need runtime load-origin proof."
+          ],
+          "lua_source": [
+            "Facade imports coding_adventures.commonmark_parser; package.path and package.loaded control the selected implementation.",
+            "GFM parser contains table/task transforms and local parsing, but fences currently become legacy code_block."
+          ],
+          "witnesses": [
+            "Fresh processes with both sibling roots available; record Ruby loaded-feature and Lua resolved-module origins.",
+            "Independently compare reviewed strike/task/table AST and literal HTML via parser/facade; equality between two production fronts alone is insufficient.",
+            "Keep renderer-from-literal-AST and CommonMark regression fronts independent.",
+            "Test load-order/cache contamination and TE04 fence boundaries under the reviewed API contract; do not infer universal coexistence guarantees."
+          ],
+          "native_fronts": [
+            "Ruby gfm and gfm_parser BUILD; facade/parser basic and CommonMark spec tests.",
+            "Lua gfm and gfm_parser BUILD/BUILD_windows; facade/parser tests."
+          ],
+          "unproven": [
+            "Loader configuration",
+            "Actual runtime dispatch",
+            "Native BUILD commands and production coverage"
+          ]
+        },
+        "new_owners_needed": false
+      }
+    },
+    {
+      "file": "20261024-pr18118-ubuntu-build-and-elixir-dispatch-plan.json",
+      "sha256": "17ddc28e673490467fdacfa7cd5e29936fac7f6d972a07b1062b7307dd087cc6",
+      "content": {
+        "observed_at": "2026-10-24T18:38:12.794226+00:00",
+        "pr_number": 18118,
+        "head": "9d3351649673fd55c6143b87431a26e7f90d0290",
+        "audit_mode": "read-only; no implementation or remote mutations",
+        "ubuntu_build": {
+          "run_id": 40119477288,
+          "job_id": 120950622760,
+          "conclusion": "SUCCESS",
+          "completed_at": "2026-10-24T18:36:06Z",
+          "log_file": "gfm-pr18118-9d335164-ubuntu-build.log",
+          "log_bytes": 1686186,
+          "log_sha256": "463ad12d2f6e773d28d2c0e37f5f91084000e06aeda4ff22ea811960e499b08f",
+          "packages_loaded": 5354,
+          "built": 0,
+          "skipped": 5354,
+          "failed": 0,
+          "blocked": 0,
+          "cached": 0,
+          "typescript_gfm_fronts": "all three explicitly skipped",
+          "corpus_keyword_mentions": 0,
+          "qualification": "No native corpus adoption established; separate metadata job outside this evidence."
+        },
+        "elixir_native_adoption_plan": {
+          "owner": "gfm-elixir-extension-v1-native-adoption",
+          "source_reads": [
+            "code/packages/elixir/gfm/lib/commonmark.ex",
+            "code/packages/elixir/gfm/mix.exs",
+            "code/packages/elixir/gfm_parser/mix.exs",
+            "code/packages/elixir/gfm/BUILD"
+          ],
+          "dispatch": "CodingAdventures.CommonmarkParser.parse/1 -> CodingAdventures.DocumentAstToHtml.render/1",
+          "dependency": ":coding_adventures_gfm_parser from ../gfm_parser",
+          "toolchain": "Elixir ~>1.14",
+          "coverage_threshold": 80,
+          "facade_build": "mix deps.get && mix test --cover",
+          "loader_witness": "Fresh Mix process; dependency path, :code.which/1 and compile-source origin; repeat with ordinary CommonMark sibling artifacts present.",
+          "independent_oracles": [
+            "reviewed corpus AST through parser",
+            "literal HTML through facade",
+            "fixture-built AST through renderer"
+          ],
+          "validation": [
+            "preserve CommonMark regressions",
+            "distinct fenced nodes and inert payload separately from legacy code",
+            "nonzero native parser/facade fixture counts and production coverage",
+            "fixture-only routing selects parser and facade, plus renderer supporting adoption"
+          ],
+          "limitations": "Parser entry-body and parser BUILD contents were outside four reads; no engine-semantic or execution qualification."
+        }
+      }
+    },
+    {
+      "file": "20261024-pr18118-rust-perl-native-dispatch-plans.json",
+      "sha256": "b6d7422e80ea4cb4e7545e0652ef7dd3b31aa1ce565d7a16c148fd609fdbda47",
+      "content": {
+        "observed_at": "2026-10-24T18:39:54.425049+00:00",
+        "pr_number": 18118,
+        "remote_head": "9d3351649673fd55c6143b87431a26e7f90d0290",
+        "local_source_head": "f9f54a3a38a582dbf8e05a25348b377764dec8a3",
+        "audit_mode": "Two parallel bounded read-only source audits, four files each; no execution or native qualification",
+        "rust": {
+          "owner": "gfm-rust-extension-v1-native-adoption",
+          "dispatch": "Facade reexports gfm_parser::parse and shared HTML renderer; parser performs local block parsing then inline resolution.",
+          "sources": [
+            "code/packages/rust/gfm/src/lib.rs",
+            "code/packages/rust/gfm-parser/src/lib.rs",
+            "code/packages/rust/document-ast-to-html/src/lib.rs",
+            "code/packages/rust/gfm/BUILD"
+          ],
+          "fence_limitation": "Renderer exhaustively dispatches CodeBlock and uses legacy CodeBlock for fenced and indented content. No distinct fenced variant appears; cannot silently relabel legacy nodes.",
+          "build": "cargo test -p gfm -- --nocapture",
+          "validation_plan": [
+            "strict reviewed corpus admission and native AST projection preserving nulls, alignments, empty collections and segmentation",
+            "independent parser AST, facade markdown_to_html literal HTML and fixture-built renderer AST oracles",
+            "retain safe rendering, CommonMark and extension regressions",
+            "verify Cargo metadata resolves intended local dependency paths",
+            "native tests for parser/facade/renderer plus production coverage, scoped Clippy and formatting",
+            "fixture-only routing executes all three fronts plus document-ast when fence contract changes; require nonzero corpus counts"
+          ]
+        },
+        "perl": {
+          "owner": "gfm-perl-extension-v1-native-adoption",
+          "sources": [
+            "code/packages/perl/gfm/lib/CodingAdventures/Gfm.pm",
+            "code/packages/perl/gfm-parser/lib/CodingAdventures/GfmParser.pm",
+            "code/packages/perl/document-ast-to-html/lib/CodingAdventures/DocumentAstToHtml.pm",
+            "code/packages/perl/gfm/BUILD"
+          ],
+          "dispatch": "Gfm.pm contains its own parser and renderer; it does not delegate to separate GfmParser.pm/DocumentAstToHtml.pm.",
+          "fence_limitation": "Facade uses code_block/info/content. Parser and standalone renderer use code_block/language/value; parser opening-fence parsing discards full info after first word. Fixture fenced_block/name/info/value cannot be reconstructed from discarded metadata.",
+          "build": "Dependency installation then prove -l -v t/; no coverage command.",
+          "validation_plan": [
+            "load each exact lib path and call fully qualified APIs; test independent facade separately",
+            "resolve fence representation before projection; do not invent metadata, conflate indented/fenced blocks or normalize away semantic differences",
+            "all 16 ordered IDs: independent parser AST, facade AST and HTML, renderer HTML from literal fixture AST",
+            "preserve Boolean/null/string distinctions and input immutability",
+            "fixture/schema/validator/shared-reader changes select all three actual reader roots; test ordinary-change union, deletion/rename, lookalikes and missing-reader refusal",
+            "run real native BUILDs and tests; measure production Devel::Cover denominator plus lint/syntax; require nonempty assertions and explicit failure/skip accounting"
+          ]
+        },
+        "ownership_result": "Both findings fit existing pending adoption owners; no new unowned gap or native qualification."
+      }
+    },
+    {
+      "file": "20261024-pr18118-integrity-and-hosted-validator-reachability.json",
+      "sha256": "33c360e19cd2e7bafed004328a6c71e4cb50cb6c8b35d04fd4cf364334d406ae",
+      "content": {
+        "observed_at": "2026-10-24T18:43:14.881203+00:00",
+        "pr_number": 18118,
+        "head": "9d3351649673fd55c6143b87431a26e7f90d0290",
+        "audit_mode": "parallel bounded read-only audits; no execution qualification",
+        "receipt_integrity": {
+          "receipts_checked_before_this_addition": 24,
+          "all_hashes_match": true,
+          "all_json_decodes": true,
+          "duplicate_names": 0,
+          "unlisted_pins": 0,
+          "initial_head_historical": true,
+          "typescript_legacy_alias_unique": true
+        },
+        "journal_graph": {
+          "dangling_dependencies": 0,
+          "cycles": 0,
+          "fixture_direct_unfinished": 13,
+          "fixture_transitive_unfinished": 20,
+          "classifier_direct_unfinished": 13,
+          "classifier_transitive_unfinished": 20,
+          "descendant_sets_identical": true,
+          "unique_union": 20
+        },
+        "hosted_gfm_static_reachability": {
+          "files_reviewed": [
+            ".github/workflows/ci.yml",
+            "code/scripts/package_parity_report.py",
+            "code/scripts/tests/test_package_parity_report.py",
+            "code/scripts/gfm_extension_conformance.py"
+          ],
+          "metadata_step": "ci.yml lines630-706 enumerates specific validator commands and unittest patterns, no unrestricted discovery and no GFM validator/test invocation.",
+          "parity_report_bridge": "Reviewed report and report tests do not invoke GFM; report subprocess only lists paths via Git.",
+          "build_tool_step": "ci.yml lines751-766 invokes distinct build-tool contracts.",
+          "validator_witness": "gfm_extension_conformance.py lines389-394 prints validated 16 portable GFM extension cases.",
+          "minimal_future_witness": "Executed fail-closed validator and exact unittest pattern on fixture-only changes; logs show16cases, nonzero tests, exact checkout/fixture pins and successful exit. Native adoption separately needs real lane consumers.",
+          "qualification": "Static reachability only. Metadata success cannot prove GFM corpus execution. Existing foundation/adoption owners cover findings."
+        }
+      }
+    },
+    {
+      "file": "20261024-pr18118-main-ee2cd6d1-authority-matrix-metadata-receipt.json",
+      "sha256": "90060f9ca07b1ff0a1d7cffca9d0ea056eff34f9728de7285a051f2552fa7ced",
+      "content": {
+        "observed_at": "2026-10-24T18:46:27.539225+00:00",
+        "pr_number": 18118,
+        "remote_head": "9d3351649673fd55c6143b87431a26e7f90d0290",
+        "local_source_head": "ab2822a2cdad3ee2f7f6318ea36c540a986c96b3",
+        "main_delta": {
+          "base": "cc710ef23c7bb7c336043bb530f8aff4793f4440",
+          "head": "ee2cd6d1249389eae409f72a97c52afd05575865",
+          "mode": "literal remote SHA capture and complete available local immutable diff/tree comparison; no fetch",
+          "changed_paths": [
+            "code/specs/CLOSURE-COMPILER-RUST-BACKLOG.md"
+          ],
+          "root_count_before": 5227,
+          "root_count_after": 5227,
+          "new_roots": [],
+          "removed_roots": [],
+          "new_owners_required": false,
+          "qualification": "Delta audit only, not a regenerated full parity inventory"
+        },
+        "authority_classifier_plan": {
+          "owner": "gfm-remaining-extension-contract-classification",
+          "review_limit": "four source/spec files; read-only, no tests or completion",
+          "profile_ids": [
+            "gfm-extension-v1",
+            "te04-gfm-extensions-v1"
+          ],
+          "single_tilde": "Published strike-single-tilde keeps before ~kept~ after literal. Local strike/single parses ~gone~ as strike. Distinguish unmatched lone tilde from matched one-tilde pair; document authoritative grammar/version and compatibility policy.",
+          "adjacent_text": "Published task-like-paragraph splits [x] not a list into three text nodes; local README mandates coalescing, and task/later-paragraph preserves [x] later as one text node. No identical standalone local input exists. Ratify AST text segmentation separately from task recognition; identical HTML does not settle AST conformance.",
+          "acceptance": [
+            "retain both immutable rosters and profile IDs",
+            "record authoritative reference/version and separate grammar from repository AST/HTML choices",
+            "document per-dispute compatibility outcomes",
+            "normative changes require explicit version/migration decision and newly reviewed witnesses, never silent oracle replacement"
+          ],
+          "qualification": "No oracle winner selected or native adoption awarded"
+        },
+        "metadata_execution": {
+          "run_id": 40119477288,
+          "job_id": 120950622724,
+          "conclusion": "SUCCESS",
+          "log_file": "gfm-pr18118-9d335164-metadata.log",
+          "log_bytes": 253219,
+          "log_sha256": "a3861d53ef5b14a409192ad1a7a87761b548d9c3b5cae31720063fcd7297a502",
+          "gfm_validator_mentions": 0,
+          "gfm_corpus_mentions": 0,
+          "gfm_16_case_witness_mentions": 0,
+          "qualification": "Metadata success provides no new GFM corpus execution or native adoption proof."
+        }
+      }
+    },
+    {
+      "file": "20261024-pr18118-cpp-scope-owner-and-ocaml-gate-plan.json",
+      "sha256": "16081fe3ce729f840d9b4a914d49cb950d7afbab2405a854440a8d24ab0c6594",
+      "content": {
+        "observed_at": "2026-10-24T18:51:17.640758+00:00",
+        "pr_number": 18118,
+        "remote_head": "9d3351649673fd55c6143b87431a26e7f90d0290",
+        "reviewed_source_head": "ab2822a2cdad3ee2f7f6318ea36c540a986c96b3",
+        "local_documentary_head": "f9ddeb60a2217bddd68bd71d0b8ebff131d68314",
+        "audit_mode": "parallel bounded read-only source/owner audits; root registered pending documentary scope, no implementation or remote mutations",
+        "cpp": {
+          "root_count": 142,
+          "absent_constituents": [
+            "document-ast",
+            "commonmark-parser",
+            "commonmark",
+            "document-ast-to-html",
+            "gfm-parser",
+            "gfm"
+          ],
+          "lane_status": "emerging, outside established15 denominator",
+          "existing_graduation_owner": "c-cpp-graduation governs build-tool maturity/applicability, not reviewed text-stack exception",
+          "new_pending_owner": "cpp-text-stack-applicability-classification",
+          "depends_on": [
+            "c-cpp-graduation"
+          ],
+          "scope": "Classify TE00/TE01/TE04 package applicability; register native delivery children or evidence-backed narrow exceptions after lane decision. No automatic promotion or denominator expansion.",
+          "future_prerequisites": [
+            "typed immutable AST",
+            "independent AST-to-HTML literals",
+            "native CommonMark parser and652-example regressions",
+            "reviewed GFM/fence corpus and thin facade",
+            "real native BUILD/coverage fronts and fixture-only CI routing"
+          ],
+          "validation": "Journal unique IDs, valid statuses, no dangling dependencies, no cycles; git diff --check passed."
+        },
+        "ocaml": {
+          "status": "emerging; no denominator promotion",
+          "owner_order": [
+            "ocaml-build-substrate",
+            "ocaml-build-tool-and-promotion",
+            "ocaml-build-tool-current-contract-conformance",
+            "ocaml-opam-archive-mirror-all-ci-paths plus current-contract prerequisite before ocaml-build-tool-three-platform-ci-execution",
+            "ocaml-build-tool-neutral-adapter-closure",
+            "cipher/LZSS consumers and capability status documentation before ocaml-lane-promotion"
+          ],
+          "promotion_direct_gates": 11,
+          "merged_direct_gates": 4,
+          "pending_direct_gates": 7,
+          "sources": [
+            ".github/workflows/build-ocaml-representative.yml",
+            "code/specs/OCAML01-emerging-lane-contract.md"
+          ],
+          "declared_witnesses": [
+            "actual package archives and native builds/tests",
+            "at least95percent analyzer coverage plus package coverage validation",
+            "installed downstream smokes",
+            "closed artifacts across three targets",
+            "complete current native build-tool corpora with no undeclared skips",
+            "measured production coverage and two-way Go plan interchange"
+          ],
+          "limits": "Declarations and merged owner status do not freshly prove execution. Explicit selection blocks remain. Promotion requires reviewed atomic package/build/security/documentation/three-platform gates, denominator15to16 and reporter band10to16. No newly unowned OCaml scope."
+        },
+        "required_checks": {
+          "strict": false,
+          "contexts": [
+            "CI gate",
+            "Human Languages Books gate"
+          ],
+          "app_id": 15368
+        }
+      }
+    },
+    {
+      "file": "20261024-pr18118-cpp-owner-review-and-neutral-refusal-plan.json",
+      "sha256": "a158467ac00a119c654f9c797c0f7ad07f54ed076b2626eb4c8d0cd8aa7e357d",
+      "content": {
+        "observed_at": "2026-10-24T18:53:31.136472+00:00",
+        "pr_number": 18118,
+        "head": "9d3351649673fd55c6143b87431a26e7f90d0290",
+        "local_documentary_head": "f9ddeb60a2217bddd68bd71d0b8ebff131d68314",
+        "independent_cpp_owner_review": {
+          "unique_pending_owner": true,
+          "dependency": "pending c-cpp-graduation precedes pending cpp-text-stack-applicability-classification",
+          "dangling_dependencies": 0,
+          "normalized_id_alias_collisions": 0,
+          "cycles": 0,
+          "established_lanes": 15,
+          "c_cpp_ocaml_emerging": true,
+          "roadmap_lines": "17715-17725",
+          "qualification": "No implementation, promotion, native conformance or exception credit; no concrete issue."
+        },
+        "neutral_validator_test_plan_review": {
+          "files_reviewed": 4,
+          "declared_tests": 11,
+          "executed_tests": 0,
+          "admission": [
+            "exact16 ordered roster",
+            "profile/limits",
+            "CLI count",
+            "strict-loader round trip",
+            "schema object closure"
+          ],
+          "oracle_mutation": "Each case source, AST and HTML individually corrupted and refused; canonical per-case SHA256 covers all three together.",
+          "structure": [
+            "missing/extra/duplicate/reordered cases",
+            "unknown fields/node kinds",
+            "table width/header/alignment",
+            "task placement/types",
+            "fence nullability/name token/finalLF"
+          ],
+          "transport_work": [
+            "duplicate and escaped duplicate keys",
+            "malformed/truncated JSON and trailing documents",
+            "BOM/invalidUTF8/surrogates/numeric refusal",
+            "depth16 accepted and17 refused",
+            "aliases/cycles/item ceiling",
+            "ASCII/multibyte aggregate byte limits",
+            "oversized/missing file"
+          ],
+          "ast_source": [
+            "direct depth/node refusals and257node mutation",
+            "129source lines",
+            "oversized source line and HTML"
+          ],
+          "schema_limit": "JSON schema maxLength is character-based; native admission must retain validator UTF8-byte checks.",
+          "remaining_native_witnesses": [
+            "representative coordinated oracle corruption and transport/boundary mutations through real native readers",
+            "cap+1 bounded reads",
+            "all16 independent public parser AST, fixture-built renderer HTML and facade HTML comparisons",
+            "preserved existing regressions",
+            "fixture-only hosted selection with nonzero native counts"
+          ],
+          "qualification": "Source review only. No native execution or arbitrary Markdown refusal guarantee; schema validity alone cannot establish semantic/digest agreement."
+        },
+        "checkpoint_reconciliation": {
+          "current_alias_fields_synchronized": [
+            "last_observed",
+            "last_observed_at",
+            "owners",
+            "owner_count",
+            "edges",
+            "dependency_edge_count",
+            "statuses",
+            "item_status_counts",
+            "ci_counts",
+            "latest_ci_counts",
+            "merge_state_status",
+            "required_contexts_observed"
+          ],
+          "reason": "Replace stale active snapshot aliases with exact-head live observations while preserving explicitly historical receipts.",
+          "pending_gate": "CI gate",
+          "no_auto_merge_while_pending": true
+        }
+      }
+    },
+    {
+      "file": "20261024-pr18118-terminal-checks-auto-only-boundary.json",
+      "sha256": "a235588eb71d964861280d1aaa07189fae05599d71ca0d9ea16674b4aa84c547",
+      "content": {
+        "observed_at": "2026-10-24T18:55:54.208912+00:00",
+        "pr": {
+          "autoMergeRequest": null,
+          "headRefOid": "9d3351649673fd55c6143b87431a26e7f90d0290",
+          "id": "PR_kwDORqITmM8AAAABKeEmfQ",
+          "mergeStateStatus": "UNKNOWN",
+          "mergeable": "UNKNOWN",
+          "number": 18118,
+          "state": "MERGED",
+          "statusCheckRollup": [
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SUCCESS",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120947930868",
+              "name": "detect",
+              "startedAt": "2026-10-24T18:20:38Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:30:34Z",
+              "conclusion": "SUCCESS",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477096/job/120947680787",
+              "name": "Detect CodeQL languages",
+              "startedAt": "2026-10-24T18:27:01Z",
+              "status": "COMPLETED",
+              "workflowName": "CodeQL"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:25:46Z",
+              "conclusion": "SUCCESS",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477167/job/120948134312",
+              "name": "Detect human-language book changes",
+              "startedAt": "2026-10-24T18:22:44Z",
+              "status": "COMPLETED",
+              "workflowName": "Human Languages Books"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:30:34Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477096/job/120952361644",
+              "name": "Analyze (javascript-typescript)",
+              "startedAt": "2026-10-24T18:30:34Z",
+              "status": "COMPLETED",
+              "workflowName": "CodeQL"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:25:46Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477167/job/120951249118",
+              "name": "Compile driver Bash compatibility (${{ matrix.os }})",
+              "startedAt": "2026-10-24T18:25:47Z",
+              "status": "COMPLETED",
+              "workflowName": "Human Languages Books"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:49:21Z",
+              "conclusion": "SUCCESS",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950622724",
+              "name": "Repo-wide metadata contracts",
+              "startedAt": "2026-10-24T18:41:53Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950623891",
+              "name": "OCaml capability gate",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:30:34Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477096/job/120952361686",
+              "name": "Analyze (python)",
+              "startedAt": "2026-10-24T18:30:34Z",
+              "status": "COMPLETED",
+              "workflowName": "CodeQL"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:25:46Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477167/job/120951248925",
+              "name": "Python shard boundary (windows-latest)",
+              "startedAt": "2026-10-24T18:25:47Z",
+              "status": "COMPLETED",
+              "workflowName": "Human Languages Books"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950623824",
+              "name": "PHY00/PHY01 fixture consumers",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:30:34Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477096/job/120952361874",
+              "name": "Analyze (ruby)",
+              "startedAt": "2026-10-24T18:30:34Z",
+              "status": "COMPLETED",
+              "workflowName": "CodeQL"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:25:46Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477167/job/120951248935",
+              "name": "Build all human-language books",
+              "startedAt": "2026-10-24T18:25:47Z",
+              "status": "COMPLETED",
+              "workflowName": "Human Languages Books"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950624003",
+              "name": "D18F message conformance",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:30:34Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477096/job/120952361764",
+              "name": "Analyze (go)",
+              "startedAt": "2026-10-24T18:30:34Z",
+              "status": "COMPLETED",
+              "workflowName": "CodeQL"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:25:46Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477167/job/120951249724",
+              "name": "Publish books to Pages and Releases",
+              "startedAt": "2026-10-24T18:25:47Z",
+              "status": "COMPLETED",
+              "workflowName": "Human Languages Books"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950624034",
+              "name": "D18P channel conformance",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:30:34Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477096/job/120952362055",
+              "name": "Analyze (swift)",
+              "startedAt": "2026-10-24T18:30:34Z",
+              "status": "COMPLETED",
+              "workflowName": "CodeQL"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:35:25Z",
+              "conclusion": "SUCCESS",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477167/job/120951248517",
+              "name": "Human Languages Books gate",
+              "startedAt": "2026-10-24T18:35:22Z",
+              "status": "COMPLETED",
+              "workflowName": "Human Languages Books"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950624018",
+              "name": "D18Q channel-key grant conformance",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950623963",
+              "name": "D18T durable epoch-activation conformance",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950623779",
+              "name": "Ruby compiled-grammar regeneration check",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950623868",
+              "name": "Mosaic compiled-grammar regeneration check",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950624399",
+              "name": "Reconciled Rust compiled-grammar regeneration check",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950624184",
+              "name": "Unicode 17 generated Elixir conformance",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950624069",
+              "name": "Unicode 17 generated Lua conformance",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950624395",
+              "name": "Unicode 17 generated Perl conformance",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950624437",
+              "name": "Unicode 17 generated Haskell conformance",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950624160",
+              "name": "Unicode 17 generated Swift conformance",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950624383",
+              "name": "Unicode 17 generated Dart conformance",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950624129",
+              "name": "Flutter platform library (${{ matrix.os }})",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950623807",
+              "name": "Forme release (${{ matrix.host }})",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950624327",
+              "name": "Mosaic Linux runtime acceptance",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:36:06Z",
+              "conclusion": "SUCCESS",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950622760",
+              "name": "build (ubuntu-latest)",
+              "startedAt": "2026-10-24T18:30:04Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:23:02Z",
+              "conclusion": "SKIPPED",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120950624267",
+              "name": "Forme release verdict",
+              "startedAt": "2026-10-24T18:23:02Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            },
+            {
+              "__typename": "CheckRun",
+              "completedAt": "2026-10-24T18:58:29Z",
+              "conclusion": "SUCCESS",
+              "detailsUrl": "https://github.com/adhithyan15/coding-adventures/actions/runs/40119477288/job/120956775044",
+              "name": "CI gate",
+              "startedAt": "2026-10-24T18:58:25Z",
+              "status": "COMPLETED",
+              "workflowName": "CI"
+            }
+          ],
+          "url": "https://github.com/adhithyan15/coding-adventures/pull/18118"
+        },
+        "counts": {
+          "SUCCESS": 7,
+          "SKIPPED": 28
+        },
+        "auto_only_attempt": {
+          "observed_at": "2026-10-24T18:54:56.977198+00:00",
+          "pr_number": 18118,
+          "head": "9d3351649673fd55c6143b87431a26e7f90d0290",
+          "action": "enablePullRequestAutoMerge only; never manual merge",
+          "eligibility": {
+            "all_checks_terminal": true,
+            "counts": {
+              "SUCCESS": 7,
+              "SKIPPED": 28
+            },
+            "mergeable": "MERGEABLE",
+            "merge_state": "CLEAN"
+          },
+          "exit_code": 1,
+          "stdout": "{\"data\":{\"enablePullRequestAutoMerge\":null},\"errors\":[{\"type\":\"UNPROCESSABLE\",\"path\":[\"enablePullRequestAutoMerge\"],\"locations\":[{\"line\":1,\"column\":22}],\"message\":\"Pull request Pull request is in clean status\"}]}",
+          "stderr": "gh: Pull request Pull request is in clean status\n"
+        },
+        "ci_gate_log": {
+          "file": "gfm-pr18118-9d335164-ci-gate.log",
+          "bytes": 8058,
+          "sha256": "f8e3fae8ab4cd02e802e2188c80f231a870381ba8ab2cfedc614171c27b9f73f",
+          "contains_success_witness": true
+        },
+        "qualification": "Workflow acceptance only. No native GFM corpus execution; Ubuntu build skipped5354packages and metadata had zero new corpus mentions.",
+        "next_action": "Await actual external merge; never manually merge. Then capture merge evidence and regenerate fresh-main inventory/incorporate all pending audits before selection. Delivery ownership remains separately unresolved."
+      }
+    }
+  ],
+  "incorporation": {
+    "merged_owner": "gfm-language-neutral-conformance-fixture",
+    "native_adoption_credit": false,
+    "remaining_authority_owner": "gfm-remaining-extension-contract-classification",
+    "canonical_ts_owner": "gfm-typescript-neutral-conformance-adoption",
+    "preserved_legacy_alias": "gfm-typescript-extension-v1-native-adoption",
+    "preserved_cpp_pending_owner": "cpp-text-stack-applicability-classification",
+    "preserved_new_root_owner": "x509-ocsp-response-envelope-profile-classification",
+    "one_active_parity_pr_limit": 1,
+    "scope": "All saved bounded audits incorporated as evidence/preparation; native adopters remain pending. Historical waiting-for-merge text in the29th receipt was superseded by verified external merge during capture."
+  },
+  "priority_review": [
+    "gfm-remaining-extension-contract-classification",
+    "build-tool-python-repository-boundary-reverse-diff-digest-adoption",
+    "build-tool-ruby-portable-dependency-hashing-conformance",
+    "build-tool-ruby-ci-gate-selection-conformance"
+  ],
+  "selection": "none yet; fresh active-overlap and publication-isolation review before exactly one successor"
+}

@@ -17766,3 +17766,20 @@ This prioritization distinguishes structural roots from behavior. C# and F#
 already expose substantive CommonMark parsers but lack the portable facade and
 HTML families; Haskell's similarly named roots do not yet establish Markdown
 semantics. Java, Kotlin, and Dart currently have only document AST foundations.
+
+## October 24, 2026: serialized C# security follow-up and preserved audit owners
+
+Keep the explicit one-active-parity-PR limit. PR #18143 now bounds aggregate
+URL normalization work and executes its Windows native tests on repeated
+builds. Six genuine RED regressions became GREEN; all 33 renderer tests pass
+with 100% line and 98.82% branch coverage, including installed-package checks.
+The independent second security review passed. No CommonMark/GFM parser
+qualification or facade completion follows.
+
+Carry the 29 post-#18118 audit receipts and twelve pending classification/native
+adoption owners from the preserved parity journal into this public successor.
+GFM adoption still depends on its pending authority classifier after the
+fixture merge. C++ remains emerging, and the fresh main inventory remains
+15 established lanes, 1,536 identities and 4,818 slots with no collisions.
+The existing C# document-AST Windows repeat-build gap has a separate pending
+owner; its four directly executed native tests grant no build-front credit.
