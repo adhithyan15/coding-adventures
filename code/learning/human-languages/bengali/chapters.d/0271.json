@@ -1,0 +1,22 @@
+{
+  "chapter": 271,
+  "title": "Tickets, and When Things Go Wrong",
+  "label": "ch:bn-tickets-and-when-things-go-wrong",
+  "canDo": "I can buy a ticket (ekṭā ṭikiṭ deben?), ask the fare and the time, report a lost bag or a missed train (hāriye gechhe, chheṛe gechhe), and read and write ৌ in নৌকা.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-R271-at-the-station",
+    "kind": "production",
+    "summary": "Complete BN-R271-at-the-station: buy a ticket and report a problem.",
+    "assesses": [
+      "BN-GRAMMAR-C271-TICKET-ASK-01",
+      "BN-GRAMMAR-C271-LOST-01",
+      "BN-LEX-C271-NOUKA-01",
+      "BN-SCRIPT-C271-AU-KAR-01",
+      "BN-GRAMMAR-C271-FARE-TIME-01",
+      "BN-GRAMMAR-C271-MISSED-01"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 270,
+  "title": "Which Way, and How Far",
+  "label": "ch:bn-which-way-and-how-far",
+  "canDo": "I can ask the way (kībhābe jābô? kôtô dūr?), give it (sojā, bā̃dike, ḍāndike), and read and write the sign ূ in দূর.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-R270-asking-the-way",
+    "kind": "production",
+    "summary": "Complete BN-R270-asking-the-way: ask the way and give it.",
+    "assesses": [
+      "BN-GRAMMAR-C270-ASK-WAY-01",
+      "BN-LEX-C270-DUR-01",
+      "BN-SCRIPT-C270-UU-KAR-01",
+      "BN-GRAMMAR-C270-GIVE-WAY-01"
+    ]
+  }
+}

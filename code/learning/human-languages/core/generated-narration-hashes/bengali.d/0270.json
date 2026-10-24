@@ -1,0 +1,18 @@
+{
+  "language": "bengali",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:96c3ba72df457e43",
+  "lessonIds": [
+    "BN-C270-dur",
+    "BN-W270-letter-uu-kar",
+    "BN-C270-kibhabe-jabo",
+    "BN-R270-asking-the-way"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "bengali/narration/ch270.txt",
+  "json": "bengali/narration/ch270.json",
+  "textHash": "fnv1a64:8ba30f8a40cff08a",
+  "jsonHash": "fnv1a64:4d4cb91bd4f8fb12",
+  "findings": []
+}

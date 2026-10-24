@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:d26deb1e50201a34",
+  "lessonIds": [
+    "BN-C264-gelam",
+    "BN-C264-chhilam",
+    "BN-C264-ghota",
+    "BN-W264-letter-gha",
+    "BN-R264-what-happened"
+  ],
+  "tex": "bengali/book/chapters/ch264-what-happened-and-where-i-was.tex"
+}

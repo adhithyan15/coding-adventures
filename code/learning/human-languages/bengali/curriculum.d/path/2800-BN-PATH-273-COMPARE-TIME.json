@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-273-COMPARE-TIME",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "BN-EXT-273-COMPARE-TIME"
+  ],
+  "after": []
+}

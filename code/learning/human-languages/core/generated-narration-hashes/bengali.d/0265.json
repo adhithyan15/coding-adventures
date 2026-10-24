@@ -1,0 +1,18 @@
+{
+  "language": "bengali",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:93552fa1458fe137",
+  "lessonIds": [
+    "BN-C265-jabo",
+    "BN-C265-shesh",
+    "BN-W265-letter-murdhanya-sha",
+    "BN-R265-what-will-happen"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "bengali/narration/ch265.txt",
+  "json": "bengali/narration/ch265.json",
+  "textHash": "fnv1a64:02d049473b439caa",
+  "jsonHash": "fnv1a64:d78b435739dc5765",
+  "findings": []
+}

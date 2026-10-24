@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:ffba0a190f1cd8d7",
+  "lessonIds": [
+    "BN-C264-gelam",
+    "BN-C264-chhilam",
+    "BN-C264-ghota",
+    "BN-W264-letter-gha",
+    "BN-R264-what-happened"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "bengali/narration/ch264.txt",
+  "json": "bengali/narration/ch264.json",
+  "textHash": "fnv1a64:1a59b99db6128778",
+  "jsonHash": "fnv1a64:cbea4a9d7662e9f4",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:b42b9ea5bb64bf22",
+  "lessonIds": [
+    "BN-C268-mone-hoy",
+    "BN-C268-karon",
+    "BN-W268-letter-murdhanya-na",
+    "BN-C268-karon-jonno",
+    "BN-R268-opinion-and-reason"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "bengali/narration/ch268.txt",
+  "json": "bengali/narration/ch268.json",
+  "textHash": "fnv1a64:ddcf9f2c4a61028a",
+  "jsonHash": "fnv1a64:612e53dc1b24d632",
+  "findings": []
+}

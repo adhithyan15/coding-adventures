@@ -1,0 +1,31 @@
+{
+  "lesson": {
+    "id": "BN-W272-letter-o-indep",
+    "language": "bengali",
+    "chapter": 272,
+    "sequence": 16910,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:96cb47015afa5271",
+    "detachableSegments": [
+      "Script you'll notice: অ",
+      "Writing: অ — copy the printed shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

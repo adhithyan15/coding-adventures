@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:b7b776c0b84e8b4d",
+  "lessonIds": [
+    "BN-C272-obhigyota",
+    "BN-W272-letter-o-indep",
+    "BN-C272-bhalo-lagchhe",
+    "BN-C272-hote-chai",
+    "BN-R272-feelings-and-hopes"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "bengali/narration/ch272.txt",
+  "json": "bengali/narration/ch272.json",
+  "textHash": "fnv1a64:515fada96b60806f",
+  "jsonHash": "fnv1a64:255639df1910b0cc",
+  "findings": []
+}

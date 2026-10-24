@@ -1,0 +1,884 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 267,
+  "title": "First, Then, Suddenly",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:287f0d3284e60e02",
+  "lessons": [
+    {
+      "id": "BN-C267-giye",
+      "sequence": 16650,
+      "title": "বাড়ি গিয়ে খেলাম (bāṛi giye khelām) — one action, then the next",
+      "headword": "বাড়ি গিয়ে খেলাম",
+      "romanization": "bāṛi giye khelām",
+      "gloss": "I went home and ate — the -e form that joins one action to the next",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1662bd798cd30f9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was reading when Mira came\". (jôkhon āmi bôi pôṛchhilām, tôkhon mīrā elô.) Then the word for \"please\", দয়া করে: \"having done a kindness\". Its করে is the form of this lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the -e form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আমি স্টেশনে গিয়ে টিকিট কিনলাম। āmi sṭeshône giye ṭikiṭ kinlām. — \"I went to the station and bought a ticket.\""
+            },
+            {
+              "kind": "speech",
+              "text": "গিয়ে is যাওয়া in the -e form: \"having gone\". It finishes one action so the next can start, and the last verb carries the tense for both. Most verbs add -এ to the stem: করা becomes করে (kore), দেখা becomes দেখে (dekhe), বসা becomes বসে (bose). An আ in the stem becomes এ: আসা becomes এসে (ese), নামা becomes নেমে (neme), হাঁটা becomes হেঁটে (hẽṭe). An এ said e, or an ও, rises: কেনা becomes কিনে (kine). The verbs whose stem ends in a vowel take -য়ে: খাওয়া becomes খেয়ে (kheye), নেওয়া becomes নিয়ে (niye), দেওয়া becomes দিয়ে (diye)."
+            },
+            {
+              "kind": "speech",
+              "text": "The -e form can also say how: হেঁটে গেলাম (hẽṭe gelām), \"I went on foot\". And it pairs with a second verb that adds a shade rather than a new action: বসে পড়লাম (bose pôṛlām), \"I sat down\", with পড়া in its other sense, \"to fall\"; হারিয়ে গেল, \"it got lost\", which you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: one doer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both actions belong to the same person: আমি বাড়ি গিয়ে খেলাম (āmi bāṛi giye khelām), \"I went home and ate\". When someone else does the second thing, Bengali says two sentences: আমি বাড়ি গেলাম। মীরা খেল।."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I got off the bus and walked home\" — āmi bās theke neme hẽṭe bāṛi gelām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I got off the bus and walked home\" — *āmi bās theke neme hẽṭe bāṛi gelām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She ate and went out\" — she kheye bāire gelô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She ate and went out\" — *she kheye bāire gelô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We sat and drank tea\" — āmrā bose chā khelām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We sat and drank tea\" — *āmrā bose chā khelām*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "BN-C267-giye-r1",
+              "prompt": "Say that you went to the station and bought a ticket, in one sentence.",
+              "assesses": [
+                "BN-GRAMMAR-C267-CONJUNCTIVE-01",
+                "BN-GRAMMAR-C267-SAME-DOER-01"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "āmi sṭeshône giye ṭikiṭ kinlām",
+                "আমি স্টেশনে গিয়ে টিকিট কিনলাম।"
+              ],
+              "feedback": {
+                "correct": "giye finishes the going; kinlām carries the past.",
+                "incorrect": "The first verb in the -e form (giye), the last in the past (kinlām)."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "যাওয়া in the -e form? (গিয়ে.) খাওয়া? (খেয়ে.) Which verb carries the tense? (The last one.) Can the two actions have two doers? (No: then it is two sentences.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C267-prothome-tarpor",
+      "sequence": 16660,
+      "title": "প্রথমে … তারপর … শেষে (prôthôme … tārpôr … sheshe) — the order of a story",
+      "headword": "প্রথমে … তারপর … শেষে",
+      "romanization": "prôthôme … tārpôr … sheshe",
+      "gloss": "first … after that … in the end — the order of a story",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:494cf86c563dd9b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I went home and ate\". (āmi bāṛi giye khelām.) Then say প্রথমে, \"at first\", and শেষ, \"the end\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: first, then",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রথমে আমরা চা খেলাম। তারপর বাজারে গেলাম। prôthôme āmrā chā khelām. tārpôr bājāre gelām. — \"First we had tea. After that we went to the market.\""
+            },
+            {
+              "kind": "speech",
+              "text": "প্রথমে, which you know, opens a story. তারপর (tārpôr), \"after that, then\", is new: তার, \"of that\", and পর, \"after\", the word inside পরে. তারপর starts each new step; পরে, \"later\", says the step came some time after."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: in the end",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শেষে (sheshe) is শেষ with -এ: \"at the end, finally\". It closes the story."
+            },
+            {
+              "kind": "speech",
+              "text": "শেষে আমরা বাড়ি ফিরলাম। sheshe āmrā bāṛi phirlām. — \"In the end we came back home.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"First I went to the station by bus\" — prôthôme āmi bāse sṭeshône gelām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"First I went to the station by bus\" — *prôthôme āmi bāse sṭeshône gelām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"After that I bought a ticket\" — tārpôr ṭikiṭ kinlām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"After that I bought a ticket\" — *tārpôr ṭikiṭ kinlām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In the end we came back home\" — sheshe āmrā bāṛi phirlām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In the end we came back home\" — *sheshe āmrā bāṛi phirlām*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "BN-C267-prothome-tarpor-r1",
+              "prompt": "Tell three steps: first you had tea, after that you went to the market, in the end you came home.",
+              "assesses": [
+                "BN-GRAMMAR-C267-FIRST-THEN-01",
+                "BN-GRAMMAR-C267-FINALLY-01"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "prôthôme āmi chā khelām. tārpôr bājāre gelām. sheshe bāṛi phirlām.",
+                "প্রথমে আমি চা খেলাম। তারপর বাজারে গেলাম। শেষে বাড়ি ফিরলাম।"
+              ],
+              "feedback": {
+                "correct": "prôthôme, tārpôr, sheshe: the frame of a story.",
+                "incorrect": "Open with prôthôme, step on with tārpôr, close with sheshe."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What opens a story? (প্রথমে.) What starts each next step? (তারপর.) What closes it? (শেষে.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C267-hothat",
+      "sequence": 16670,
+      "title": "হঠাৎ (hôṭhāt) — suddenly",
+      "headword": "হঠাৎ",
+      "romanization": "hôṭhāt",
+      "gloss": "suddenly",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45cc9c1d70ae3dd2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"first\", \"after that\" and \"in the end\". (prôthôme, tārpôr, sheshe.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হঠাৎ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হঠাৎ — hôṭhāt — \"suddenly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি হাঁটছিলাম, হঠাৎ ঝড় এল। āmi hā̃ṭchhilām, hôṭhāt jhôṛ elô. — \"I was walking, and suddenly a storm came.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A story goes প্রথমে, তারপর; হঠাৎ (hôṭhāt) is where it turns. It comes before the event that breaks into the scene."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হঠাৎ (hôṭhāt) is Sanskrit haṭhāt, \"by force, forcibly\", the ablative of haṭha, \"force\" (Monier-Williams). Monier-Williams also gives haṭhāt as \"necessarily, inevitably\". The Bengali sense, \"suddenly\", is not among the senses it lists, and the source does not say how the word came to it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hôṭhāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hôṭhāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I was walking, and suddenly a storm came\" — āmi hā̃ṭchhilām, hôṭhāt jhôṛ elô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I was walking, and suddenly a storm came\" — *āmi hā̃ṭchhilām, hôṭhāt jhôṛ elô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We were eating; suddenly Mira came\" — āmrā khāchchhilām, hôṭhāt mīrā elô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We were eating; suddenly Mira came\" — *āmrā khāchchhilām, hôṭhāt mīrā elô*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হঠাৎ (hôṭhāt) mean? (\"Suddenly\".) What comes after it, a scene or an event? (An event, in the plain past.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W267-letter-khanda-ta",
+      "sequence": 16680,
+      "title": "ৎ (t) — the letter at the end of হঠাৎ (hôṭhāt)",
+      "headword": "ৎ",
+      "romanization": "t",
+      "gloss": "the letter ৎ — khanda ta, a t with no vowel after it, at the end of হঠাৎ",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:980d2ef56522f539",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ৎ",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ৎ, Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say হঠাৎ (hôṭhāt), \"suddenly\". Then read ত (tô) and the hasanta ্, the mark that takes a letter's vowel away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ৎ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ৎ — t, the khanda ta, \"a piece of ta\". It is a ত with no vowel after it. Where a word ends in that bare t, as হঠাৎ (hôṭhāt) does, Bengali often writes ৎ instead of ত with a hasanta."
+            },
+            {
+              "kind": "speech",
+              "text": "In the print of this book, ৎ (t) has no headline. It is a small closed loop at the top, with a long slanting tail joined to the left side of the loop; the tail's lower end, at the bottom right, is a short upright foot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ৎ — copy the printed shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen beside ৎ (t) and copy the shape you can see, slowly and large. Check the copy against the print: the small loop, the long tail, the short foot."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start ৎ (t) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ৎ (t) at the end of হঠাৎ (hôṭhāt)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: ৎ at the end of **হঠাৎ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ত, then ৎ (t), from the print, naming each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ত, then ৎ, from the print, naming each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "হঠাৎ (hôṭhāt), with ঠ in its middle",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **হঠাৎ**, with ঠ in its middle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "হঠাৎ aloud: hôṭhāt",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **হঠাৎ** aloud: *hôṭhāt*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter ends হঠাৎ (hôṭhāt)? (ৎ.) What does it say? (A t with no vowel after it.) Does it have a headline? (No.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "BN-W267-letter-khanda-ta-r1",
+              "prompt": "With no model, write hôṭhāt, 'suddenly'.",
+              "assesses": [
+                "BN-SCRIPT-C267-KHANDA-TA-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "হঠাৎ"
+              ],
+              "feedback": {
+                "correct": "ঠ in the middle, ৎ at the end.",
+                "incorrect": "Reopen ৎ: a small loop, a long tail, a short foot. Then write হঠাৎ again."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C267-ek-shonibar",
+      "sequence": 16690,
+      "title": "(reading) (gôtô shônibār āmi didimār grāme gelām.) — a Saturday at Grandmother's village",
+      "headword": "(reading)",
+      "romanization": "gôtô shônibār āmi didimār grāme gelām.",
+      "gloss": "a Saturday at Grandmother's village, in ninety-eight words, told with every past",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "reading-type"
+      ],
+      "sourceHash": "fnv1a64:89c7d6c7dd902b55",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ninety-eight words, every one met before or explained after the story. The writer is Mira, on her way to her grandmother's village."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গত শনিবার আমি দিদিমার গ্রামে গেলাম। প্রথমে বাসে স্টেশনে গেলাম। তারপর ট্রেনে চড়লাম। ট্রেনে আমি একটা বই পড়ছিলাম। হঠাৎ (hôṭhāt) ঝড় এল। ঠিক তখন ট্রেন একটা নদী পার হচ্ছিল। জানালার বাইরে আকাশ কালো ছিল, আর গাছগুলো কাঁপছিল। বিকেলে ট্রেন গ্রামের স্টেশনে থামল। তখন ঝড় ছিল না। আমি ট্রেন থেকে নেমে হেঁটে বাড়ি গেলাম। বাড়ি গিয়ে দেখলাম, দিদিমা রান্না করছিলেন। দাদু বারান্দায় বসে চা খাচ্ছিলেন। সন্ধ্যায় আমরা ভাত আর মাছ খেলাম। তারপর দিদিমা আমাকে একটা পুরনো গল্প বললেন। রাতে আবার ঝড় এল, কিন্তু আমরা ভিতরে ছিলাম। শেষে আমি তাড়াতাড়ি শুলাম। কাল সকালে আমি আবার শহরে ফিরব। দিনটা আমার ভালো লাগল।."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again, and sort every verb: event, scene or plan",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again, and sort every verb: event, scene or plan]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "New forms: দিদিমার, \"Grandmother's\", with the -র of আমার; শুলাম (shulām), শোয়া in the past, \"I lay down to sleep\"; দিনটা আমার ভালো লাগল, \"the day felt good to me\"."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The scenes take -ছিল-; the events take the plain past, joined with -e forms and kept in order by প্রথমে, তারপর and শেষে. হঠাৎ (hôṭhāt) turns the story; ফিরব is the plan."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what Mira was doing on the train when the storm came",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what Mira was doing on the train when the storm came]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what Grandfather was doing on the veranda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what Grandfather was doing on the veranda]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "BN-C267-ek-shonibar-r1",
+              "prompt": "What was Grandmother doing when Mira got to the house?",
+              "assesses": [
+                "BN-SKILL-C267-READ-STORY-01",
+                "BN-GRAMMAR-C266-ONGOING-PAST-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "she was cooking",
+                "দিদিমা রান্না করছিলেন",
+                "rānnā kôrchhilen",
+                "cooking"
+              ],
+              "feedback": {
+                "correct": "rānnā kôrchhilen: a scene, with respect.",
+                "incorrect": "Find the sentence that starts bāṛi giye dekhlām."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is কাঁপছিল in the scene form? (The shaking went on through the storm.) Which word turns the story? (হঠাৎ (hôṭhāt).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R267-a-story-in-order",
+      "sequence": 16700,
+      "title": "Review — a story in order",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "a short story in order, after reading Mira's Saturday",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb004c506385cf0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I went to the station and bought a ticket\". (āmi sṭeshône giye ṭikiṭ kinlām.) Then \"after that\". (tārpôr.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "First I went to the village by bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: First I went to the village by bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "After that I got off the bus and walked to the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: After that I got off the bus and walked to the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I was sitting by the river. Suddenly Mira came.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I was sitting by the river. Suddenly Mira came.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "We ate and talked. In the end I came back home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: We ate and talked. In the end I came back home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mira's grandmother told a story. What happened in it?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Mira's grandmother told a story. What happened in it?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "হঠাৎ (hôṭhāt), then শেষে",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **হঠাৎ**, then **শেষে**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "আসা in the -e form? (এসে.) What opens, steps and closes a story? (প্রথমে, তারপর, শেষে.) Which letter ends হঠাৎ (hôṭhāt)? (ৎ (t).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

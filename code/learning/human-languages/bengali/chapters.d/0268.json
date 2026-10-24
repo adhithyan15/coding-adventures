@@ -1,0 +1,22 @@
+{
+  "chapter": 268,
+  "title": "What I Think, and Why",
+  "label": "ch:bn-what-i-think-and-why",
+  "canDo": "I can say what I think with āmār mône hôy, give a reason with kārôn, kenonā and -er jônyô, and read and write ণ in কারণ.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-R268-opinion-and-reason",
+    "kind": "production",
+    "summary": "Complete BN-R268-opinion-and-reason: say what you think and give your reason.",
+    "assesses": [
+      "BN-GRAMMAR-C268-I-THINK-01",
+      "BN-GRAMMAR-C268-KARON-BECAUSE-01",
+      "BN-GRAMMAR-C268-THINK-NOT-01",
+      "BN-LEX-C268-KARON-01",
+      "BN-SCRIPT-C268-MURDHANYA-NA-01",
+      "BN-GRAMMAR-C268-JONNO-01"
+    ]
+  }
+}

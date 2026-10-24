@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:287f0d3284e60e02",
+  "lessonIds": [
+    "BN-C267-giye",
+    "BN-C267-prothome-tarpor",
+    "BN-C267-hothat",
+    "BN-W267-letter-khanda-ta",
+    "BN-C267-ek-shonibar",
+    "BN-R267-a-story-in-order"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "bengali/narration/ch267.txt",
+  "json": "bengali/narration/ch267.json",
+  "textHash": "fnv1a64:5b1b5651aea54ac0",
+  "jsonHash": "fnv1a64:6f47787a3b0a559a",
+  "findings": []
+}

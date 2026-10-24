@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R270-asking-the-way",
+    "language": "bengali",
+    "chapter": 270,
+    "sequence": 16840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7378f33c7c704db7"
+  },
+  "findings": []
+}

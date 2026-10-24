@@ -1,0 +1,11 @@
+{
+  "id": "BN-C274-dhoka",
+  "pathSegment": "BN-PATH-274-IF-OTHERWISE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-274-IF-OTHERWISE",
+      "order": 2
+    }
+  ]
+}

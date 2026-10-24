@@ -50,16 +50,23 @@ export const scriptInventoryEvidence = {
     const bengali = scripts.bengali!;
     expect(bengali.font).toBe("_fonts/NotoSansBengali-Static.ttf");
     expect(bengali.complete).toBe(false);
-    expect(bengali.letters).toHaveLength(30);
-    expect(bengali.marks).toHaveLength(11);
+    expect(bengali.letters).toHaveLength(39);
+    expect(bengali.marks).toHaveLength(14);
     expect(bengali.digits?.map((digit) => digit.glyph).join("")).toBe("০১২৩৪৫৬৭৮৯");
 
     // Every Bengali code point a Bengali headword uses is in the inventory.
+    // Headwords are compared in NFD, so a nukta letter (য়, ড়) is its base and the
+    // dot below, and ো is ে + া, all of them listed. NFD also splits the sign ৌ
+    // (U+09CC, the vowel of নৌকা) into ে + the au length mark U+09D7, which is
+    // never written on its own; that one pair is put back together, so ৌ is
+    // checked against its own row and no unlisted U+09D7 is let through.
     expect(missingByScript.get("bengali.json")).toBeUndefined();
     const used = new Set(
       lessons
         .filter((lesson) => lesson.language === "bengali")
-        .flatMap((lesson) => [...(lesson.realization.headword ?? "").normalize("NFD")])
+        .flatMap((lesson) => [
+          ...(lesson.realization.headword ?? "").normalize("NFD").replace(/\u09C7\u09D7/g, "\u09CC"),
+        ])
         .filter((character) => /\p{Script=Bengali}/u.test(character)),
     );
     const listed = new Set([

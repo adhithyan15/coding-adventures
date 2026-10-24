@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:fa89c62f09c7d80e",
+  "lessonIds": [
+    "BN-C266-porchhilam",
+    "BN-C266-jokhon-tokhon",
+    "BN-C266-thik",
+    "BN-W266-letter-ttha",
+    "BN-C266-otha",
+    "BN-R266-the-scene"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "bengali/narration/ch266.txt",
+  "json": "bengali/narration/ch266.json",
+  "textHash": "fnv1a64:21bbfec2dd2e157b",
+  "jsonHash": "fnv1a64:b2091757ab6f41d1",
+  "findings": []
+}

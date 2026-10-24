@@ -1,0 +1,887 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 275,
+  "title": "It Depends, and What Would Be",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:8646674a18dd3381",
+  "lessons": [
+    {
+      "id": "BN-C275-nirbhor-kore",
+      "sequence": 17050,
+      "title": "… -এর ওপর নির্ভর করে (… -er opôr nirbhôr kôre) (-er opôr nirbhôr kôre) — it depends on",
+      "headword": "… -এর ওপর নির্ভর করে",
+      "romanization": "… -er opôr nirbhôr kôre",
+      "gloss": "it depends on … — what a plan hangs on",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f176631a9333a82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"If it rains, we'll stay at home\". (brishṭi hôle āmrā bāṛite thākbô.) Then ওপরে, \"above, upstairs\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: it depends on",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "এটা আবহাওয়ার ওপর নির্ভর করে। eṭā ābôhāoyār opôr nirbhôr kôre. — \"It depends on the weather.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ওপর (opôr), \"on, upon\", is the word inside ওপরে. নির্ভর করা (nirbhôr kôrā) is \"to depend\". What it depends on takes the -র form, then ওপর: \"it does depending upon the weather\". সব, \"all\", from the last chapter, makes it \"everything\": সব আবহাওয়ার ওপর নির্ভর করে."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: it's up to you",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With a person, it is \"up to\" them: এটা তোমার ওপর নির্ভর করে (eṭā tomār opôr nirbhôr kôre), \"it's up to you\". About a plan:"
+            },
+            {
+              "kind": "speech",
+              "text": "কাল বাজারে যাব, যদি মীরা আসে। সব মীরার ওপর নির্ভর করে। kāl bājāre jābô, jôdi mīrā āse. sôb mīrār opôr nirbhôr kôre. — \"We'll go to the market tomorrow if Mira comes. Everything depends on Mira.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It depends on the weather\" — eṭā ābôhāoyār opôr nirbhôr kôre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It depends on the weather\" — *eṭā ābôhāoyār opôr nirbhôr kôre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It's up to you\" — eṭā tomār opôr nirbhôr kôre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It's up to you\" — *eṭā tomār opôr nirbhôr kôre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Everything depends on the train\" — sôb ṭrener opôr nirbhôr kôre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Everything depends on the train\" — *sôb ṭrener opôr nirbhôr kôre*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "BN-C275-nirbhor-kore-r1",
+              "prompt": "Say that it depends on the weather, then that it's up to you.",
+              "assesses": [
+                "BN-GRAMMAR-C275-DEPENDS-01",
+                "BN-GRAMMAR-C275-DEPENDS-ON-PERSON-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "eṭā ābôhāoyār opôr nirbhôr kôre; eṭā tomār opôr nirbhôr kôre",
+                "এটা আবহাওয়ার ওপর নির্ভর করে। এটা তোমার ওপর নির্ভর করে।"
+              ],
+              "feedback": {
+                "correct": "The -r form, then opôr nirbhôr kôre.",
+                "incorrect": "What it depends on takes -r, then opôr, then nirbhôr kôre."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It depends on the weather\"? (এটা আবহাওয়ার ওপর নির্ভর করে.) \"It's up to you\"? (তোমার ওপর নির্ভর করে.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C275-jetam",
+      "sequence": 17060,
+      "title": "যদি … থাকত, তাহলে … যেতাম (jôdi … thāktô, tāhôle … jetām) — what would be",
+      "headword": "যদি … থাকত, তাহলে … যেতাম",
+      "romanization": "jôdi … thāktô, tāhôle … jetām",
+      "gloss": "if … had …, then … would go — the -tām form, for what would be and what used to be",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd65791495530d84",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"It depends on the weather\". (eṭā ābôhāoyār opôr nirbhôr kôre.) Then \"If you come, I'll cook\". (jôdi tumi āso, āmi rānnā kôrbô.) That if can come true."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: what would be",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "যদি সময় থাকত, তাহলে আমি যেতাম। jôdi sômôy thāktô, tāhôle āmi jetām. — \"If I had time, I would go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "For an if that is not true, both halves take the -ত- form: the stem, then -ত-, then the person: আমি যেতাম (āmi jetām), তুমি যেতে (tumi jete), সে যেত (she jetô), আপনি যেতেন (āpni jeten). যাওয়া becomes যে-, খাওয়া becomes খে-, হওয়া becomes হ-; করা becomes করতাম, থাকা becomes থাকতাম. টাকা থাকলে আমি একটা নৌকা কিনতাম (ṭākā thākle āmi ekṭā noukā kintām), \"if I had money, I'd buy a boat\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: what used to be",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The same form tells what happened again and again in the past:"
+            },
+            {
+              "kind": "speech",
+              "text": "আগে আমি রোজ নদীতে যেতাম। āge āmi roj nôdīte jetām. — \"I used to go to the river every day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "আগে, \"before\", here is \"in the old days\". A word like রোজ or প্রতিদিন makes the habit clear."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If I had time, I would go\" — jôdi sômôy thāktô, tāhôle āmi jetām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If I had time, I would go\" — *jôdi sômôy thāktô, tāhôle āmi jetām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If I had money, I'd buy a boat\" — ṭākā thākle āmi ekṭā noukā kintām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If I had money, I'd buy a boat\" — *ṭākā thākle āmi ekṭā noukā kintām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I used to go to the river every day\" — āge āmi roj nôdīte jetām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I used to go to the river every day\" — *āge āmi roj nôdīte jetām*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "BN-C275-jetam-r1",
+              "prompt": "Say that if you had time you would go, then that you used to go to the river every day.",
+              "assesses": [
+                "BN-GRAMMAR-C275-WOULD-01",
+                "BN-GRAMMAR-C275-USED-TO-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "jôdi sômôy thāktô, tāhôle āmi jetām; āge āmi roj nôdīte jetām",
+                "যদি সময় থাকত, তাহলে আমি যেতাম। আগে আমি রোজ নদীতে যেতাম।"
+              ],
+              "feedback": {
+                "correct": "-t- in both halves of the untrue if; the same form for a habit.",
+                "incorrect": "Stem, then -t-, then the person: thāk-t-ô, je-t-ām."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I would go\"? (যেতাম.) \"He would go\"? (যেত.) What makes যেতাম a habit? (A word like রোজ or প্রতিদিন, and a time in the past.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C275-songge",
+      "sequence": 17070,
+      "title": "সঙ্গে (sôngge) — with",
+      "headword": "সঙ্গে",
+      "romanization": "sôngge",
+      "gloss": "with; together with",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db2fdc9a00d38171",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"If I had time, I would go\". (jôdi sômôy thāktô, tāhôle āmi jetām.) Then the line from your first meeting: আলাপ করে ভালো লাগলো."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সঙ্গে",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সঙ্গে — sôngge — \"with\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি বন্ধুর সঙ্গে সিনেমায় গেলাম। āmi bôndhur sôngge sinemāy gelām. — \"I went to the cinema with a friend.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The one you are with takes the -র form: বন্ধুর সঙ্গে (sôngge), আমার সঙ্গে (sôngge), তোমার সঙ্গে (sôngge). Now the greeting of chapter three can say who: তোমার সঙ্গে (sôngge) আলাপ করে ভালো লাগল, \"it was good to meet you\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সঙ্গে (sôngge) is usually read as সঙ্গ, \"company\", with the locative -এ: \"in the company of\". সঙ্গ is a tatsama, Sanskrit saṅga, which Monier-Williams gives as \"contact with\" and \"association with\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngge*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I used to go to the river with Grandfather\" — āge āmi dādur sôngge nôdīte jetām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I used to go to the river with Grandfather\" — *āge āmi dādur sôngge nôdīte jetām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I went to the cinema with a friend\" — āmi bôndhur sôngge sinemāy gelām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I went to the cinema with a friend\" — *āmi bôndhur sôngge sinemāy gelām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It was good to meet you\" — tomār sôngge ālāp kore bhālo lāglô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It was good to meet you\" — *tomār sôngge ālāp kore bhālo lāglô*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সঙ্গে (sôngge) mean? (\"With\".) Which form does the person take? (The -র form: তোমার সঙ্গে (sôngge).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W275-letter-uma",
+      "sequence": 17080,
+      "title": "ঙ (ng) — the letter inside সঙ্গে (sôngge)",
+      "headword": "ঙ",
+      "romanization": "ng",
+      "gloss": "the letter ঙ — ng, the letter inside the ঙ্গ of সঙ্গে",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:ed90a5782624efe3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ঙ",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ঙ, Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say সঙ্গে (sôngge), \"with\". Then read বাংলা: its ং says ng too."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ঙ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঙ — ng, as in \"sing\". It almost never starts a word. In সঙ্গে (sôngge) it is joined to গ in one conjunct, ঙ্গ, ngg, which does not look like the two letters set side by side: learn that shape as a whole."
+            },
+            {
+              "kind": "speech",
+              "text": "In the print of this book, ঙ (ng) has no headline. Its lower part is a large round bowl: its left arm ends high, at the upper left, in a slanted tip, and its right side ends in a short flat end at the right. At the top, in the middle, sits a small closed loop, with a short straight arm slanting up to the left from it. Below the loop, a short stem and a curve join it to the end of the bowl's right side."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ঙ — copy the printed shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen beside ঙ (ng) and copy the shape you can see, slowly and large. Check the copy against the print: the bowl and its tall left arm, the small loop and its arm, the short stem and curve."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start ঙ (ng) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "the conjunct ঙ্গ in সঙ্গে (sôngge)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: the conjunct ঙ্গ in **সঙ্গে**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ঙ (ng), from the print, then ঙ্গ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ঙ, from the print, then **ঙ্গ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "সঙ্গে (sôngge)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **সঙ্গে**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ঢোকা, from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ঢোকা**, from memory]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is inside the ঙ্গ of সঙ্গে (sôngge)? (ঙ.) Does ঙ have a headline? (No.) Which other sign says ng? (ং, in বাংলা.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "BN-W275-letter-uma-r1",
+              "prompt": "With no model, write the letter ng on its own, then sôngge, 'with'.",
+              "assesses": [
+                "BN-SCRIPT-C275-UMA-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "ঙ; সঙ্গে"
+              ],
+              "feedback": {
+                "correct": "ঙ alone; in sôngge it joins গ as ঙ্গ.",
+                "incorrect": "Reopen ঙ: the bowl, the small loop with its arm, no headline. Then write it again."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W275-six-lines",
+      "sequence": 17090,
+      "title": "Six lines about a trip",
+      "headword": "(six lines)",
+      "romanization": "",
+      "gloss": "six connected lines about a trip, with a scene, a reason, a feeling and a would-be",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:9ac5cb2ff821418c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The A2 message asked for a practical note to a named reader. This task asks for six lines, and they tell a story: a trip, by train, bus or boat, real or invented."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pick one reader: Arun, অরুণ, or Mira, মীরা. Say সঙ্গে (sôngge) and নৌকা aloud; both may go in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A told story is not a list of events. It has a scene, in -ছিল-, or with যখন … তখন. It has events in the plain past, kept in order with প্রথমে, তারপর and শেষে, and joined with the -e form. It has a reason, with কারণ, তাই or -এর জন্য, and a feeling, with আমার … লাগল or ভয় করছিল."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A good one ends by looking at what might have been: যদি …, তাহলে … যেতাম."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "On paper, in Bengali script, write six lines to your reader about the trip, one line for each of these:"
+            },
+            {
+              "kind": "speech",
+              "text": "the scene: when it was, and what you were doing as it began, with -ছিলাম or যখন … তখন;"
+            },
+            {
+              "kind": "speech",
+              "text": "the first thing that happened, with প্রথমে, and who you went with, with সঙ্গে (sôngge);"
+            },
+            {
+              "kind": "speech",
+              "text": "what happened next, with তারপর or an -e form, and one thing that went wrong: হারিয়ে গেছে or ছেড়ে গেছে, or হঠাৎ;"
+            },
+            {
+              "kind": "speech",
+              "text": "why, with কারণ, তাই or -এর জন্য;"
+            },
+            {
+              "kind": "speech",
+              "text": "how it ended and how you felt, with শেষে and আমার … লাগল or ভয় করছিল;"
+            },
+            {
+              "kind": "speech",
+              "text": "what might have been, with যদি …, তাহলে … -তাম, and how far you went, with দূর or থেকে … পর্যন্ত."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "There is no model in this lesson. Use only words you already write. The work is choosing the right past for each line, and joining them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now read your lines as you read Mira's Saturday. Mark every verb s for scene, e for event. Line one should be mostly s; lines two and three mostly e."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then three checks. A past ending is -ল, said -lô: গেল, এল. নৌকা has ৌ around its ন, and সঙ্গে (sôngge) has ঙ (ng) joined to গ. হঠাৎ ends in ৎ."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last, read line six alone. Do both halves of the if take -ত-: থাকত, যেতাম?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R275-depends-and-would",
+      "sequence": 17100,
+      "title": "Review — it depends, and what would be",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what something depends on and what would be",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59993e224b672b2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"It depends on the weather\", then \"If I had time, I would go\". (eṭā ābôhāoyār opôr nirbhôr kôre; jôdi sômôy thāktô, tāhôle āmi jetām.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Will we go tomorrow? It depends on the weather. If Mira doesn't come, we won't go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Will we go tomorrow? It depends on the weather. If Mira doesn't come, we won't go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It's up to you. If you come, I'll come with you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It's up to you. If you come, I'll come with you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If I had money, I would buy a boat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If I had money, I would buy a boat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In the old days I used to go to the river with Grandfather every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In the old days I used to go to the river with Grandfather every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "We went into the shop with Mira.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: We went into the shop with Mira.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "সঙ্গে (sôngge), then ঢোকা",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **সঙ্গে**, then **ঢোকা**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It depends on\"? (-এর ওপর নির্ভর করে.) \"I would go\"? (যেতাম.) \"I used to go\"? (রোজ যেতাম.) Which letter is inside সঙ্গে (sôngge)? (ঙ (ng).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

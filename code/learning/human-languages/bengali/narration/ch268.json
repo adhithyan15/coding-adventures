@@ -1,0 +1,707 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 268,
+  "title": "What I Think, and Why",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:b42b9ea5bb64bf22",
+  "lessons": [
+    {
+      "id": "BN-C268-mone-hoy",
+      "sequence": 16710,
+      "title": "আমার মনে হয় … (āmār mône hôy …) — I think",
+      "headword": "আমার মনে হয় …",
+      "romanization": "āmār mône hôy …",
+      "gloss": "I think … — literally, it comes to my mind",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccfbacbf665a4fd0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"first\", \"after that\", \"in the end\". (prôthôme, tārpôr, sheshe.) Then মনে রাখা, \"to remember\": \"to keep in the mind\". Its মনে, \"in the mind\", is in this lesson too."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: I think",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আমার মনে হয়, কাল ঝড় হবে। āmār mône hôy, kāl jhôṛ hôbe. — \"I think there will be a storm tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Bengali does not say \"I think\" with আমি. It says \"to my mind it comes\": আমার মনে হয়, with the thinker in the -র form, as in আমার নাম. যে, \"that\", which you know, may follow it: আমার মনে হয় যে …. To ask, put the other person in the same form: তোমার কী মনে হয়? (tomār kī mône hôy?), \"what do you think?\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: I don't think so",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "না after হয় turns it: আমার মনে হয় না (āmār mône hôy nā), \"I don't think so\", and আমার মনে হয় না সে আসবে, \"I don't think he'll come\". In the past, হয় becomes হল: আমার মনে হল (āmār mône hôlô), \"I thought (then), it seemed to me\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think there will be a storm tomorrow\" — āmār mône hôy, kāl jhôṛ hôbe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think there will be a storm tomorrow\" — *āmār mône hôy, kāl jhôṛ hôbe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What do you think?\" — tomār kī mône hôy?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What do you think?\" — *tomār kī mône hôy?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I don't think the train will come\" — āmār mône hôy nā ṭren āsbe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I don't think the train will come\" — *āmār mône hôy nā ṭren āsbe*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "BN-C268-mone-hoy-r1",
+              "prompt": "Say that you think there will be a storm tomorrow, then that you don't think Mira will come.",
+              "assesses": [
+                "BN-GRAMMAR-C268-I-THINK-01",
+                "BN-GRAMMAR-C268-THINK-NOT-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "āmār mône hôy, kāl jhôṛ hôbe; āmār mône hôy nā mīrā āsbe",
+                "আমার মনে হয়, কাল ঝড় হবে। আমার মনে হয় না মীরা আসবে।"
+              ],
+              "feedback": {
+                "correct": "āmār, not āmi: the thought comes to you.",
+                "incorrect": "Start with āmār mône hôy; for the not, put nā after hôy."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I think\"? (আমার মনে হয়.) Why আমার and not আমি? (The thought comes to me.) \"I thought, then\"? (আমার মনে হল.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C268-karon",
+      "sequence": 16720,
+      "title": "কারণ (kārôn) — a reason; because",
+      "headword": "কারণ",
+      "romanization": "kārôn",
+      "gloss": "a reason; because",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41c35dbdb4fc79c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I think\". (āmār mône hôy.) Then কেননা, \"because\", from chapter twenty-nine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কারণ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কারণ — kārôn — \"a reason; because\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তোমার রাগের কারণ কী? tomār rāger kārôn kī? — \"What's the reason you're angry?\""
+            },
+            {
+              "kind": "speech",
+              "text": "As a noun it is \"a reason\": রাগের কারণ (kārôn), \"the reason for the anger\". It is also the everyday \"because\", opening the reason after the result:"
+            },
+            {
+              "kind": "speech",
+              "text": "আজ আমি বাড়িতে থাকব, কারণ বাইরে ঝড় হচ্ছে। āj āmi bāṛite thākbô, kārôn bāire jhôṛ hôchchhe. — \"I'll stay at home today, because there's a storm outside.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কারণ (kārôn) is a tatsama: Sanskrit kāraṇa, \"cause\", which CDIAL (3057) lists with the Bengali word under it. CDIAL files kāraṇa under the root kṛ, \"to do, to make\": a cause is what makes a thing happen."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārôn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārôn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What's the reason you're angry?\" — tomār rāger kārôn kī?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What's the reason you're angry?\" — *tomār rāger kārôn kī?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I'll stay at home, because there's a storm outside\" — āmi bāṛite thākbô, kārôn bāire jhôṛ hôchchhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I'll stay at home, because there's a storm outside\" — *āmi bāṛite thākbô, kārôn bāire jhôṛ hôchchhe*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কারণ (kārôn) mean? (\"A reason\", and \"because\".) Which comes first, the result or the reason? (The result; কারণ (kārôn) opens the reason.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W268-letter-murdhanya-na",
+      "sequence": 16730,
+      "title": "ণ (n) — the letter at the end of কারণ (kārôn)",
+      "headword": "ণ",
+      "romanization": "n",
+      "gloss": "the letter ণ — n, the letter at the end of কারণ",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:43f694f0728efd7f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ণ",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ণ, Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say কারণ (kārôn), \"because\". Then read ন (nô), the first letter you ever wrote."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ণ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ণ — n. Bengali says ণ and ন alike, so, like ষ beside শ, it is a matter of spelling: most words that carry ণ come from Sanskrit."
+            },
+            {
+              "kind": "speech",
+              "text": "Set the print of ণ (n) beside ন. Both have an upright stem on the right and an arch on the left that ends in a solid knob. In ন, the headline is long and covers the whole letter, and the arch meets the stem low down, near its middle. In ণ (n), the headline is short and sits only at the stem and to its right; the arch meets the stem near the top, where the headline would be, and the stem's top end stands a little above the short headline, cut on a slant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ণ — copy the printed shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen beside ণ (n) and copy the shape you can see, slowly and large. Check the copy against the print: the short headline right of the stem, the arch joined near the top, the knob, the stem to its foot."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start ণ (n) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ণ (n) at the end of কারণ (kārôn)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: ণ at the end of **কারণ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ন, then ণ (n), from the print, naming each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ন, then ণ, from the print, naming each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "কারণ (kārôn)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **কারণ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "হঠাৎ, from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **হঠাৎ**, from memory]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter ends কারণ (kārôn)? (ণ (n).) Where does its headline sit? (Only at the stem and to its right.) Where does its arch meet the stem? (Near the top; in ন, low down.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "BN-W268-letter-murdhanya-na-r1",
+              "prompt": "With no model, write kārôn, 'because'.",
+              "assesses": [
+                "BN-SCRIPT-C268-MURDHANYA-NA-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "কারণ"
+              ],
+              "feedback": {
+                "correct": "ণ at the end, with its short headline right of the stem.",
+                "incorrect": "Reopen ণ beside ন: where does the arch meet the stem? Then write কারণ again."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C268-karon-jonno",
+      "sequence": 16740,
+      "title": "… কারণ … / -এর জন্য (… kārôn … / -er jônyô) (kārôn / -er jônyô) — giving the reason",
+      "headword": "… কারণ … / -এর জন্য",
+      "romanization": "… kārôn … / -er jônyô",
+      "gloss": "because … and because of … — giving the reason",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a833feddf1c2ddfa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I'll stay at home, because there's a storm outside\". (āmi bāṛite thākbô, kārôn bāire jhôṛ hôchchhe.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: because, with a sentence",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আজ আমি যাব না, কারণ আমি ক্লান্ত। āj āmi jābô nā, kārôn āmi klāntô. — \"I won't go today, because I'm tired.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A whole reason, with its own verb or its own ক্লান্ত, follows কারণ (kārôn). কেননা, which you met in chapter twenty-nine, does the same job in the same place: আজ আমি যাব না, কেননা আমি ক্লান্ত. To ask for one, কেন? (kenô?), \"why?\", the word inside কেননা."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: because of, for",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For a reason that is only a noun, Bengali puts the noun in its -র form and adds জন্য (jônyô): -এর জন্য, \"because of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ঝড়ের জন্য ট্রেন দেরিতে এল। jhôṛer jônyô ṭren derite elô. — \"The train came late because of the storm.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The same জন্য is \"for\": এটা তোমার জন্য (eṭā tomār jônyô), \"this is for you\". After a vowel the ending is -র: মীরার জন্য."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Why? Because I'm tired.\" — kenô? kārôn āmi klāntô.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Why? Because I'm tired.\" — *kenô? kārôn āmi klāntô.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The train came late because of the storm\" — jhôṛer jônyô ṭren derite elô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The train came late because of the storm\" — *jhôṛer jônyô ṭren derite elô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"This is for you\" — eṭā tomār jônyô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"This is for you\" — *eṭā tomār jônyô*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "BN-C268-karon-jonno-r1",
+              "prompt": "Say that you won't go today because you're tired, then that the train came late because of the storm.",
+              "assesses": [
+                "BN-GRAMMAR-C268-KARON-BECAUSE-01",
+                "BN-GRAMMAR-C268-JONNO-01"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "āj āmi jābô nā, kārôn āmi klāntô; jhôṛer jônyô ṭren derite elô",
+                "আজ আমি যাব না, কারণ আমি ক্লান্ত। ঝড়ের জন্য ট্রেন দেরিতে এল।",
+                "āj āmi jābô nā, kenonā āmi klāntô; jhôṛer jônyô ṭren derite elô"
+              ],
+              "feedback": {
+                "correct": "kārôn before a sentence; -er jônyô after a noun.",
+                "incorrect": "A reason with a verb takes kārôn; a noun takes -er jônyô."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What follows কারণ (kārôn)? (A whole reason.) What follows a noun? (-এর জন্য.) \"Why?\" (কেন?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R268-opinion-and-reason",
+      "sequence": 16750,
+      "title": "Review — what I think, and why",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what you think, and your reason",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14d3c41de8e6fd91",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think there will be a storm tomorrow\", then \"I won't go, because I'm tired\". (āmār mône hôy, kāl jhôṛ hôbe; āmi jābô nā, kārôn āmi klāntô.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "What do you think? I think Mira is right.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: What do you think? I think Mira is right.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I don't think the bus will come today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I don't think the bus will come today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I stayed at home yesterday, because I had a fever.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I stayed at home yesterday, because I had a fever.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "We came late because of the storm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: We came late because of the storm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "What was the reason? I don't know.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: What was the reason? I don't know.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "কারণ (kārôn), then ঠিক",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **কারণ**, then **ঠিক**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I don't think so\"? (আমার মনে হয় না.) Which word gives a reason with a verb? (কারণ (kārôn), or কেননা.) Which gives one with a noun? (-এর জন্য.) Which letter ends কারণ (kārôn)? (ণ (n).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

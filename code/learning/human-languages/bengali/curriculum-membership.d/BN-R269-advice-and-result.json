@@ -1,0 +1,11 @@
+{
+  "id": "BN-R269-advice-and-result",
+  "pathSegment": "BN-PATH-269-SHOULD-SO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-269-SHOULD-SO",
+      "order": 4
+    }
+  ]
+}

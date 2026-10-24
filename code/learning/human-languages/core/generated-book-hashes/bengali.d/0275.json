@@ -1,0 +1,14 @@
+{
+  "language": "bengali",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:7869caca45a86b26",
+  "lessonIds": [
+    "BN-C275-nirbhor-kore",
+    "BN-C275-jetam",
+    "BN-C275-songge",
+    "BN-W275-letter-uma",
+    "BN-W275-six-lines",
+    "BN-R275-depends-and-would"
+  ],
+  "tex": "bengali/book/chapters/ch275-it-depends-and-what-would-be.tex"
+}

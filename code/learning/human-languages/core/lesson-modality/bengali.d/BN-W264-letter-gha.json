@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "BN-W264-letter-gha",
+    "language": "bengali",
+    "chapter": 264,
+    "sequence": 16530,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:49f6141c91985e44",
+    "detachableSegments": [
+      "Script you'll notice: ঘ",
+      "Writing: ঘ — copy the printed shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

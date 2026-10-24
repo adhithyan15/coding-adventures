@@ -1,0 +1,12 @@
+{
+  "language": "bengali",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:d369b260db5fb877",
+  "lessonIds": [
+    "BN-C270-dur",
+    "BN-W270-letter-uu-kar",
+    "BN-C270-kibhabe-jabo",
+    "BN-R270-asking-the-way"
+  ],
+  "tex": "bengali/book/chapters/ch270-which-way-and-how-far.tex"
+}

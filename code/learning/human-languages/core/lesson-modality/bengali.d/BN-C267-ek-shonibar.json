@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C267-ek-shonibar",
+    "language": "bengali",
+    "chapter": 267,
+    "sequence": 16690,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:89c7d6c7dd902b55"
+  },
+  "findings": []
+}

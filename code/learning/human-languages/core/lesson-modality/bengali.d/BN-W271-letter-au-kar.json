@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "BN-W271-letter-au-kar",
+    "language": "bengali",
+    "chapter": 271,
+    "sequence": 16860,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9da5bb835a9fd68e",
+    "detachableSegments": [
+      "Script you'll notice: ৌ",
+      "Writing: ৌ — copy the printed shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
