@@ -12,7 +12,7 @@ concept_tag: PA-A2-DINCHARIYA-DIRECT-OWNER
 prerequisites: [PA-C197-routine-return]
 sounds: []
 roots: []
-etymology_hook: "Punjabi dinchariā is a learned word from Sanskrit dinacaryā 'daily occupation, daily routine' (Apte p. 0813-1); keep the Punjabi noun whole"
+etymology_hook: "Punjabi origin remains unknown here; compare Sanskrit dinacaryā 'daily occupation, daily routine' (Apte 0813-1)"
 duration:
   max_seconds: 225
 requires:
@@ -48,22 +48,21 @@ Hear and say the whole word before reading it. Keep it as one whole noun rather
 than inventing smaller Punjabi pieces. This lesson owns the word alone; the
 complete identity frame comes only after a separate retrieval.
 
-## Across the family
+## The word, taken apart — where the trail runs out
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-DINCHARIYA-197] -->
 
 An Australian Government Punjabi health page uses this exact word in an
-everyday routine context. A Punjabi-supported A2 lesson also uses it in its
-daily-routine heading. Together they support only the present-day daily-routine
-sense taught here; this lesson makes no claim about other specialised uses.
-Sources:
-[Australian Government Medicare Mental Health Check In](https://www.medicarementalhealthcheckin.gov.au/pa);
-[MozhiLingo: Daily Routine](https://www.mozhilingo.com/english/punjabi/lessons/daily-routine).
+everyday routine context. It supports only the present-day daily-routine sense
+taught here; this lesson makes no claim about other specialised uses. Source:
+[Australian Government Medicare Mental Health Check In](https://www.medicarementalhealthcheckin.gov.au/pa).
 
-For source history, this learned Punjabi word is from Sanskrit *dinacaryā*.
-Apte records that Sanskrit form with the sense “daily occupation, daily routine
-of business.” That history does not turn its parts into a productive Punjabi
-rule: keep the present-day Punjabi noun whole. Source: V. S. Apte, *The Practical
-Sanskrit-English Dictionary*, p. 0813-1,
+The Punjabi origin of **ਦਿਨਚਰਿਆ** remains unknown in the sources used here. For
+a memory comparison only, Apte records the matching Sanskrit form *dinacaryā*
+with the sense “daily occupation, daily routine of business.” This
+comparison does not establish a Sanskrit-to-Punjabi transmission and does not
+turn its parts into a productive Punjabi rule: keep the present-day Punjabi
+noun whole. Source: V. S. Apte, *The Practical Sanskrit-English Dictionary*, p.
+0813-1,
 [Cologne Digital Sanskrit Dictionaries](https://www.sanskrit-lexicon.uni-koeln.de/scans/APScan/2020/web/webtc/getword.php?key=dinacaryA&filter=roman&accent=no&transLit=slp1).
 
 ## Guided Practice

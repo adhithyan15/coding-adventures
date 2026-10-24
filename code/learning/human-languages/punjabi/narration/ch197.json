@@ -4,7 +4,7 @@
   "chapter": 197,
   "title": "This Is a Daily Routine",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d24b51052e610550",
+  "sourceHash": "fnv1a64:44b685cb281f4d71",
   "lessons": [
     {
       "id": "PA-C197-routine-return",
@@ -116,7 +116,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e295f529280e58f8",
+      "sourceHash": "fnv1a64:1456ce5c4ff68e94",
       "notice": null,
       "blocks": [
         {
@@ -153,16 +153,16 @@
         },
         {
           "index": 2,
-          "type": "cognates",
-          "title": "Across the family",
+          "type": "etymology",
+          "title": "The word, taken apart — where the trail runs out",
           "segments": [
             {
               "kind": "speech",
-              "text": "An Australian Government Punjabi health page uses this exact word in an everyday routine context. A Punjabi-supported A2 lesson also uses it in its daily-routine heading. Together they support only the present-day daily-routine sense taught here; this lesson makes no claim about other specialised uses. Sources: Australian Government Medicare Mental Health Check In; MozhiLingo: Daily Routine."
+              "text": "An Australian Government Punjabi health page uses this exact word in an everyday routine context. It supports only the present-day daily-routine sense taught here; this lesson makes no claim about other specialised uses. Source: Australian Government Medicare Mental Health Check In."
             },
             {
               "kind": "speech",
-              "text": "For source history, this learned Punjabi word is from Sanskrit dinacaryā. Apte records that Sanskrit form with the sense “daily occupation, daily routine of business.” That history does not turn its parts into a productive Punjabi rule: keep the present-day Punjabi noun whole. Source: V. S. Apte, The Practical Sanskrit-English Dictionary, p. 0813-1, Cologne Digital Sanskrit Dictionaries."
+              "text": "The Punjabi origin of ਦਿਨਚਰਿਆ (dinchariyaa) remains unknown in the sources used here. For a memory comparison only, Apte records the matching Sanskrit form dinacaryā with the sense “daily occupation, daily routine of business.” This comparison does not establish a Sanskrit-to-Punjabi transmission and does not turn its parts into a productive Punjabi rule: keep the present-day Punjabi noun whole. Source: V. S. Apte, The Practical Sanskrit-English Dictionary, p. 0813-1, Cologne Digital Sanskrit Dictionaries."
             }
           ]
         },

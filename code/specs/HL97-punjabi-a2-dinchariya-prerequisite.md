@@ -27,19 +27,17 @@ meeting-agenda sense.
 The Australian Government's Punjabi Medicare Mental Health Check In page uses
 **ਤੁਹਾਡੀ ਦਿਨਚਰਿਆ** for a person's routine:
 <https://www.medicarementalhealthcheckin.gov.au/pa>.
-MozhiLingo's Punjabi-supported A2 page labels “Daily Routine” as **ਰੋਜ਼ਾਨਾ ਦੀ
-ਦਿਨਚਰਿਆ** and supplies corroborating educational context:
-<https://www.mozhilingo.com/english/punjabi/lessons/daily-routine>.
-These sources support the bounded present-day sense only. The learner note must
+This source supports the bounded present-day sense only. The learner note must
 not claim that the Punjabi University dictionary attests this spelling: its
 exact lookup currently returns “Match Not Found.”
 
-For source history, the learned Punjabi word is from Sanskrit *dinacaryā*.
-Apte records that Sanskrit form as “daily occupation” or “daily routine of
-business” on p. 0813-1:
+The Punjabi origin of **ਦਿਨਚਰਿਆ** remains unknown in the sources used here. As
+a narrow memory comparison, Apte records the matching Sanskrit form
+*dinacaryā* as “daily occupation” or “daily routine of business” on p. 0813-1:
 <https://www.sanskrit-lexicon.uni-koeln.de/scans/APScan/2020/web/webtc/getword.php?key=dinacaryA&filter=roman&accent=no&transLit=slp1>.
-The lesson may report that narrow historical comparison, but it must not claim
-that the two visible pieces form a productive Punjabi derivation.
+The lesson may report that comparison, but it must not claim a Sanskrit-to-
+Punjabi transmission or that the two visible pieces form a productive Punjabi
+derivation.
 
 This is the twentieth prerequisite tranche exposed by Punjabi A2 mock drafting.
 It does not by itself unblock mock 1 and is not mock-readiness, attainment,

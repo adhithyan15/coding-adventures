@@ -20,7 +20,20 @@ comparison and do not turn it into a productive modern decomposition. Run
 not exercise this corpus-wide pin.
 
 The first correction still failed the visible-etymology pin because “matching
-Sanskrit source form” stated a comparison, not an origin. The learner-facing
-sentence must answer the actual question with an explicit supported relation,
-such as “this learned Punjabi word is from Sanskrit,” while keeping the
+Sanskrit source form” stated a comparison, not an origin. That does not justify
+upgrading the comparison into a borrowing claim. When no source establishes a
+transmission route, say explicitly that the deeper origin is not established,
+then label any matching historical form as a memory comparison only. The
+coverage rule recognizes that honest uncertainty, and the lesson keeps the
 productive-decomposition boundary separate.
+
+The first uncertainty wording, “origin is not established by the sources used
+here,” was semantically accurate but still invisible to the measured rule. Use
+the rule's equally accurate explicit uncertainty shape — for example, “the
+Punjabi origin remains unknown in the sources used here” — and pin the
+non-transmission boundary in the focused regression. Put that statement under
+the repository's parsed etymology heading, “The word, taken apart” (optionally
+qualified with “where the trail runs out”); uncertainty is a deliberately
+looser signal inside that block, not a corpus-wide prose signal. An arbitrary
+origin-sounding heading may satisfy the coverage heuristic yet fail book
+generation as an unknown body block.
