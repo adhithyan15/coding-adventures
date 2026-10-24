@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Skilled Hands",
+  "label": "ch:bn-skilled-hands",
+  "canDo": "I can name some skilled trades and say what they make and mend.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C492-gatha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can name some skilled trades and say what they make and mend.",
+    "assesses": [
+      "BN-LEX-C492-KARIGOR492-03",
+      "BN-LEX-C492-KARIGOR492-04",
+      "BN-LEX-C492-KARIGOR492-05"
+    ]
+  }
+}

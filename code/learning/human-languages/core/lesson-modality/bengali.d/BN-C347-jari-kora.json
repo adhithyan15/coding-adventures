@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C347-jari-kora",
+    "language": "bengali",
+    "chapter": 347,
+    "sequence": 21910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f53320afbd4919d3"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C414-kauntar",
+    "language": "bengali",
+    "chapter": 414,
+    "sequence": 25540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19a95f3660b27869"
+  },
+  "findings": []
+}

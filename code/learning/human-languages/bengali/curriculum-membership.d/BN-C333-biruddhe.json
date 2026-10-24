@@ -1,0 +1,11 @@
+{
+  "id": "BN-C333-biruddhe",
+  "pathSegment": "BN-PATH-333-JUKTI333",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-333-JUKTI333",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:a7f24c716854ac30",
+  "lessonIds": [
+    "BN-C494-bekar",
+    "BN-C494-bayodata",
+    "BN-C494-shikkhanobish",
+    "BN-C494-intarbhiu",
+    "BN-C494-jog-deoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch494.txt",
+  "json": "bengali/narration/ch494.json",
+  "textHash": "fnv1a64:b3cd26f0e13f5828",
+  "jsonHash": "fnv1a64:beed13349a6e29fb",
+  "findings": []
+}

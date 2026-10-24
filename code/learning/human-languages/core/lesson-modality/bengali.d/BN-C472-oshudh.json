@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C472-oshudh",
+    "language": "bengali",
+    "chapter": 472,
+    "sequence": 28740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c680ab9d7b41348f"
+  },
+  "findings": []
+}

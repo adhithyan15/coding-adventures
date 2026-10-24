@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "Speeches and Talks",
+  "label": "ch:bn-speeches-and-talks",
+  "canDo": "I can talk about a speech, the speaker and who was there.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C360-sombodhon-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can talk about a speech, the speaker and who was there.",
+    "assesses": [
+      "BN-LEX-C360-BOKTRITA360-03",
+      "BN-LEX-C360-BOKTRITA360-04",
+      "BN-LEX-C360-BOKTRITA360-05"
+    ]
+  }
+}

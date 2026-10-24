@@ -1,0 +1,21 @@
+{
+  "chapter": 391,
+  "title": "Collisions and Close Calls",
+  "label": "ch:bn-collisions-and-close-calls",
+  "canDo": "I can describe a collision, a stalled bus, an overtaking and a sudden stop.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-R391-review-384-391",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can describe a collision, a stalled bus, an overtaking and a sudden stop.",
+    "assesses": [
+      "BN-LEX-C391-SONGHORSHO391-01",
+      "BN-LEX-C391-SONGHORSHO391-02",
+      "BN-LEX-C391-SONGHORSHO391-03",
+      "BN-LEX-C391-SONGHORSHO391-04",
+      "BN-LEX-C391-SONGHORSHO391-05"
+    ]
+  }
+}

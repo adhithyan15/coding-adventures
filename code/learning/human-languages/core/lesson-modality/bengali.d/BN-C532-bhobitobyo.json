@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C532-bhobitobyo",
+    "language": "bengali",
+    "chapter": 532,
+    "sequence": 32060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2019d6378996b17"
+  },
+  "findings": []
+}

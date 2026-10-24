@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "Bending the Rules",
+  "label": "ch:bn-bending-the-rules",
+  "canDo": "I can say when a rule was broken and what was unfair.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C341-onyay",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can say when a rule was broken and what was unfair.",
+    "assesses": [
+      "BN-LEX-C341-ONYAY341-03",
+      "BN-LEX-C341-ONYAY341-04",
+      "BN-LEX-C341-ONYAY341-05"
+    ]
+  }
+}

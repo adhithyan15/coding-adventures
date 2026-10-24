@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:bc50d5e4ce1ae577",
+  "lessonIds": [
+    "BN-C543-kriti",
+    "BN-C543-siddhi",
+    "BN-C543-nikhut",
+    "BN-C543-hasil-kora",
+    "BN-C543-obhishto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch543.txt",
+  "json": "bengali/narration/ch543.json",
+  "textHash": "fnv1a64:cb5ce3f41f4fe873",
+  "jsonHash": "fnv1a64:42e1a2b82c03a703",
+  "findings": []
+}

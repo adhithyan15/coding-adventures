@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 278,
+  "title": "A Crash on the Road",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b6a6c237af27efe8",
+  "lessons": [
+    {
+      "id": "BN-C278-dhakka",
+      "sequence": 18100,
+      "title": "ধাক্কা (dhākkā) — a jolt; a collision",
+      "headword": "ধাক্কা",
+      "romanization": "dhākkā",
+      "gloss": "a jolt; a collision",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80e8f3fd0647fc5d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a crowd, then the Bengali for to turn up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ধাক্কা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ধাক্কা — dhākkā — \"a jolt; a collision\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আস্তে না চালালে ধাক্কা লাগবে। āste nā chālāle dhākkā lāgbe. If you don't drive slowly, you will crash into something."
+            },
+            {
+              "kind": "speech",
+              "text": "ধাক্কা (dhākkā) লাগা, to collide; ধাক্কা (dhākkā) দেওয়া, to push or bump into."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ধাক্কা (dhākkā) is filed in CDIAL 6701 under a Middle Indo-Aryan dhakk-, 'push, strike', which lists Bengali dhākkā, 'a push'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhākkā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhākkā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhākkā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhākkā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āste nā chālāle dhākkā lāgbe. — If you don't drive slowly, you will crash into something.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āste nā chālāle dhākkā lāgbe.* — If you don't drive slowly, you will crash into something.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a crowd, then the Bengali for to turn up, then say dhākkā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a crowd, then the Bengali for to turn up, then say *dhākkā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ধাক্কা (dhākkā) mean? (\"A jolt; a collision\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C278-chola",
+      "sequence": 18110,
+      "title": "চলা (chôlā) — to move; to go along",
+      "headword": "চলা",
+      "romanization": "chôlā",
+      "gloss": "to move; to go along",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51ef928a4256d138",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to turn up, then the Bengali for a jolt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: চলা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চলা — chôlā — \"to move; to go along\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বাসটা দ্রুত চলছিল, তাই হঠাৎ থামতে পারল না। bāsṭā drutô chôlchhilô, tāi hôṭhāt thāmte pārlô nā. The bus was going fast, so it couldn't stop suddenly."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই বাস চলল, sei bās chôllô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চলা (chôlā) comes down from Sanskrit calati, 'goes away; shakes' (CDIAL 4715, which lists Bengali calā, 'to move, walk'). It is the plain partner of চালানো: a driver চালায়, and the car চলে."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chôlā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chôlā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chôlā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chôlā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāsṭā drutô chôlchhilô, tāi hôṭhāt thāmte pārlô nā. — The bus was going fast, so it couldn't stop suddenly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāsṭā drutô chôlchhilô, tāi hôṭhāt thāmte pārlô nā.* — The bus was going fast, so it couldn't stop suddenly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to turn up, then the Bengali for a jolt, then say chôlā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to turn up, then the Bengali for a jolt, then say *chôlā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does চলা (chôlā) mean? (\"To move; to go along\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C278-bhanga",
+      "sequence": 18120,
+      "title": "ভাঙা (bhāngā) — to break",
+      "headword": "ভাঙা",
+      "romanization": "bhāngā",
+      "gloss": "to break",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4907557a0b3abfe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a jolt, then the Bengali for to move."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভাঙা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভাঙা — bhāngā — \"to break\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ধাক্কায় গাড়ির জানালা ভাঙল। dhākkāy gāṛir jānālā bhānglô. The car window broke in the collision."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই জানালা ভাঙল, sei jānālā bhānglô."
+            },
+            {
+              "kind": "speech",
+              "text": "It works both ways: কেউ জানালা ভাঙল, someone broke the window; জানালা ভাঙল, the window broke. The -এ form is ভেঙে."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভাঙা (bhāngā) comes down from Sanskrit bhaṅga, 'breaking; a break' (CDIAL 9353, which lists Bengali bhāṅā, 'to be broken'). Its ঙ is the nasal ng before the vowel."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāngā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāngā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāngā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāngā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhākkāy gāṛir jānālā bhānglô. — The car window broke in the collision.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhākkāy gāṛir jānālā bhānglô.* — The car window broke in the collision.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a jolt, then the Bengali for to move, then say bhāngā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a jolt, then the Bengali for to move, then say *bhāngā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভাঙা (bhāngā) mean? (\"To break\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C278-ultano",
+      "sequence": 18130,
+      "title": "উল্টানো (ulṭāno) — to overturn; to turn over",
+      "headword": "উল্টানো",
+      "romanization": "ulṭāno",
+      "gloss": "to overturn; to turn over",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f7761b1354c1c2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to move, then the Bengali for to break."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উল্টানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উল্টানো — ulṭāno — \"to overturn; to turn over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বাসের ধাক্কায় রিকশাটা উল্টে গেল। bāser dhākkāy rikshāṭā ulṭe gelô. The rickshaw overturned when the bus hit it."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি বইয়ের পাতা উল্টালেন, tini bôiyer pātā ulṭālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উল্টানো (ulṭāno) is filed in CDIAL 2368 under a Middle Indo-Aryan ullaṭati, 'turns over', which lists Bengali ulṭāna, 'to turn over'. উল্টে যাওয়া, to tip over; উল্টানো on its own, to turn something over."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ulṭāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ulṭāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ulṭāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ulṭāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāser dhākkāy rikshāṭā ulṭe gelô. — The rickshaw overturned when the bus hit it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāser dhākkāy rikshāṭā ulṭe gelô.* — The rickshaw overturned when the bus hit it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to move, then the Bengali for to break, then say ulṭāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to move, then the Bengali for to break, then say *ulṭāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উল্টানো (ulṭāno) mean? (\"To overturn; to turn over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C278-ahoto",
+      "sequence": 18140,
+      "title": "আহত (āhôtô) — injured; hurt",
+      "headword": "আহত",
+      "romanization": "āhôtô",
+      "gloss": "injured; hurt",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a777e173b7ae88c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to break, then the Bengali for to overturn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আহত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আহত — āhôtô — \"injured; hurt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দুর্ঘটনায় অনেক মানুষ আহত হল। durghôṭônāy ônek mānush āhôtô hôlô. Many people were injured in the accident."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আহত (āhôtô) is Sanskrit āhata, 'struck, beaten, hurt' (Monier-Williams), taken over whole. আহত হওয়া, to be injured."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āhôtô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āhôtô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āhôtô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āhôtô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durghôṭônāy ônek mānush āhôtô hôlô. — Many people were injured in the accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durghôṭônāy ônek mānush āhôtô hôlô.* — Many people were injured in the accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to break, then the Bengali for to overturn, then say āhôtô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to break, then the Bengali for to overturn, then say *āhôtô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আহত (āhôtô) mean? (\"Injured; hurt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

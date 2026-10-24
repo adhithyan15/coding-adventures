@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C497-chhatai-kora",
+    "language": "bengali",
+    "chapter": 497,
+    "sequence": 30290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d73639a7555277c5"
+  },
+  "findings": []
+}

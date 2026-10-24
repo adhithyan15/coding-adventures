@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C382-bojay-rakha",
+    "language": "bengali",
+    "chapter": 382,
+    "sequence": 23690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:015b789fb40dbb89"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "Making a Case",
+  "label": "ch:bn-making-a-case",
+  "canDo": "I can argue for a view and say which side I am on.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C333-somorthon-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can argue for a view and say which side I am on.",
+    "assesses": [
+      "BN-LEX-C333-JUKTI333-03",
+      "BN-LEX-C333-JUKTI333-04",
+      "BN-LEX-C333-JUKTI333-05"
+    ]
+  }
+}

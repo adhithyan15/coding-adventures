@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C455-utsuk",
+    "language": "bengali",
+    "chapter": 455,
+    "sequence": 27900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57b6b2f90d899fd1"
+  },
+  "findings": []
+}

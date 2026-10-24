@@ -1,0 +1,19 @@
+{
+  "chapter": 471,
+  "title": "Falling Ill",
+  "label": "ch:bn-falling-ill",
+  "canDo": "I can say that I am ill, that I feel dizzy or that someone fainted.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C471-shojyashayi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can say that I am ill, that I feel dizzy or that someone fainted.",
+    "assesses": [
+      "BN-LEX-C471-OSUKH471-03",
+      "BN-LEX-C471-OSUKH471-04",
+      "BN-LEX-C471-OSUKH471-05"
+    ]
+  }
+}

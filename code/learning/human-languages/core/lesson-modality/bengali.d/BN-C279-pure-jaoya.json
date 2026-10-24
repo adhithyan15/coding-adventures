@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C279-pure-jaoya",
+    "language": "bengali",
+    "chapter": 279,
+    "sequence": 18180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45af613bc2dde35a"
+  },
+  "findings": []
+}

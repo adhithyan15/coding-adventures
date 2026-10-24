@@ -1,0 +1,19 @@
+{
+  "chapter": 425,
+  "title": "Clouds and Monsoon Rain",
+  "label": "ch:bn-clouds-and-monsoon-rain",
+  "canDo": "I can talk about clouds, the monsoon, a downpour and a lightning strike.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C425-chhaoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can talk about clouds, the monsoon, a downpour and a lightning strike.",
+    "assesses": [
+      "BN-LEX-C425-MEGH425-03",
+      "BN-LEX-C425-MEGH425-04",
+      "BN-LEX-C425-MEGH425-05"
+    ]
+  }
+}

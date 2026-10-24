@@ -1,0 +1,19 @@
+{
+  "chapter": 281,
+  "title": "A Lucky Escape",
+  "label": "ch:bn-a-lucky-escape",
+  "canDo": "I can say that someone escaped, went missing or was found.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C281-obosheshe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 281: I can say that someone escaped, went missing or was found.",
+    "assesses": [
+      "BN-LEX-C281-BHAGYO281-03",
+      "BN-LEX-C281-BHAGYO281-04",
+      "BN-LEX-C281-BHAGYO281-05"
+    ]
+  }
+}

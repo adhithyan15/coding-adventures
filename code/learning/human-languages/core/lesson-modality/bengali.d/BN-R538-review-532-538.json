@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R538-review-532-538",
+    "language": "bengali",
+    "chapter": 538,
+    "sequence": 32400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c71e8c617ae693a"
+  },
+  "findings": []
+}

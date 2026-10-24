@@ -1,0 +1,11 @@
+{
+  "id": "BN-C445-kanna",
+  "pathSegment": "BN-PATH-445-SHOK445",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-445-SHOK445",
+      "order": 1
+    }
+  ]
+}

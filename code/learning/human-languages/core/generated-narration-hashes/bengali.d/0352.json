@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:5c05b490c5f0bb11",
+  "lessonIds": [
+    "BN-C352-boishomyo",
+    "BN-C352-morjada",
+    "BN-C352-sohanubhuti",
+    "BN-C352-bonchito",
+    "BN-C352-ontorbhukto-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch352.txt",
+  "json": "bengali/narration/ch352.json",
+  "textHash": "fnv1a64:9f3a43c6e42e9eb2",
+  "jsonHash": "fnv1a64:95fe1ed5ac4842af",
+  "findings": []
+}

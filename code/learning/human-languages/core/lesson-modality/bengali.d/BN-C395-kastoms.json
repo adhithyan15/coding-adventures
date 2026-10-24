@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C395-kastoms",
+    "language": "bengali",
+    "chapter": 395,
+    "sequence": 24580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3af2817a7335157"
+  },
+  "findings": []
+}

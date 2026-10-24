@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C425-megh",
+    "language": "bengali",
+    "chapter": 425,
+    "sequence": 26100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cacae8e361a1cd99"
+  },
+  "findings": []
+}

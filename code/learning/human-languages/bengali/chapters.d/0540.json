@@ -1,0 +1,19 @@
+{
+  "chapter": 540,
+  "title": "Paying the Price",
+  "label": "ch:bn-paying-the-price",
+  "canDo": "I can talk about fees, the price of a mistake, reassurance and settling matters.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C540-chukano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 540: I can talk about fees, the price of a mistake, reassurance and settling matters.",
+    "assesses": [
+      "BN-LEX-C540-MASHUL540-03",
+      "BN-LEX-C540-MASHUL540-04",
+      "BN-LEX-C540-MASHUL540-05"
+    ]
+  }
+}

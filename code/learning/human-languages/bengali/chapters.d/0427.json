@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "Seasons and Heat",
+  "label": "ch:bn-seasons-and-heat",
+  "canDo": "I can name the hot season and autumn, a fruit's season, and say how hot it is.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C427-uttap",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can name the hot season and autumn, a fruit's season, and say how hot it is.",
+    "assesses": [
+      "BN-LEX-C427-GRISHMO427-03",
+      "BN-LEX-C427-GRISHMO427-04",
+      "BN-LEX-C427-GRISHMO427-05"
+    ]
+  }
+}

@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 447,
+  "title": "Regret",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b896b9f757b84adc",
+  "lessons": [
+    {
+      "id": "BN-C447-aphsos",
+      "sequence": 27460,
+      "title": "আফসোস (āphsos) — regret; a pity",
+      "headword": "আফসোস",
+      "romanization": "āphsos",
+      "gloss": "regret; a pity",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62f2101555de0503",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to breathe a sigh of relief, then the Bengali for to cope with."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আফসোস",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আফসোস — āphsos — \"regret; a pity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ছুটিতে গ্রামে যেতে পারলাম না, এটাই আমার আফসোস। chhuṭite grāme jete pārlām nā, eṭāi āmār āphsos. I couldn't go to the village for the holidays, and that is my one regret."
+            },
+            {
+              "kind": "speech",
+              "text": "আফসোস (āphsos) করা, to say you regret something; আফসোস (āphsos) হওয়া, to feel regret."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আফসোস (āphsos) is usually traced to Persian afsōs, a cry of \"alas\" that also means regret."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āphsos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āphsos*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āphsos, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āphsos*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhuṭite grāme jete pārlām nā, eṭāi āmār āphsos. — I couldn't go to the village for the holidays, and that is my one regret.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhuṭite grāme jete pārlām nā, eṭāi āmār āphsos.* — I couldn't go to the village for the holidays, and that is my one regret.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to breathe a sigh of relief, then the Bengali for to cope with, then say āphsos again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to breathe a sigh of relief, then the Bengali for to cope with, then say *āphsos* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আফসোস (āphsos) mean? (\"Regret; a pity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C447-onushochona",
+      "sequence": 27470,
+      "title": "অনুশোচনা (ônushochônā) — remorse; repentance",
+      "headword": "অনুশোচনা",
+      "romanization": "ônushochônā",
+      "gloss": "remorse; repentance",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd317684d46b8705",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to cope with, then the Bengali for regret."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অনুশোচনা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনুশোচনা — ônushochônā — \"remorse; repentance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মিথ্যে বলার পরে অরুণের অনুশোচনা হল। mitthe bôlār pôre ôruner ônushochônā hôlô. After telling the lie, Arun felt remorse."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনুশোচনা (ônushochônā) is a tatsama, Sanskrit anuśocana, \"sorrow, repentance\" (Monier-Williams), grief that comes after the deed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônushochônā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônushochônā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônushochônā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônushochônā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitthe bôlār pôre ôruner ônushochônā hôlô. — After telling the lie, Arun felt remorse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitthe bôlār pôre ôruner ônushochônā hôlô.* — After telling the lie, Arun felt remorse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to cope with, then the Bengali for regret, then say ônushochônā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to cope with, then the Bengali for regret, then say *ônushochônā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অনুশোচনা (ônushochônā) mean? (\"Remorse; repentance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C447-onutopto",
+      "sequence": 27480,
+      "title": "অনুতপ্ত (ônutôptô) — repentant; contrite",
+      "headword": "অনুতপ্ত",
+      "romanization": "ônutôptô",
+      "gloss": "repentant; contrite",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e1843526176dfae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for regret, then the Bengali for remorse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অনুতপ্ত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনুতপ্ত — ônutôptô — \"repentant; contrite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "চোরটা অনুতপ্ত হয়ে টাকা ফিরিয়ে দিল। chorṭā ônutôptô hôye ṭākā phiriye dilô. The thief, repentant, gave the money back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনুতপ্ত (ônutôptô) is a tatsama, Sanskrit anutapta, \"heated\" and so \"filled with regret\" (Monier-Williams): burning afterwards."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônutôptô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônutôptô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônutôptô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônutôptô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chorṭā ônutôptô hôye ṭākā phiriye dilô. — The thief, repentant, gave the money back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chorṭā ônutôptô hôye ṭākā phiriye dilô.* — The thief, repentant, gave the money back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for regret, then the Bengali for remorse, then say ônutôptô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for regret, then the Bengali for remorse, then say *ônutôptô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অনুতপ্ত (ônutôptô) mean? (\"Repentant; contrite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C447-postano",
+      "sequence": 27490,
+      "title": "পস্তানো (pôstāno) — to rue; to regret (something done)",
+      "headword": "পস্তানো",
+      "romanization": "pôstāno",
+      "gloss": "to rue; to regret (something done)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03df2a90579bb72d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for remorse, then the Bengali for repentant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পস্তানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পস্তানো — pôstāno — \"to rue; to regret (something done)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সস্তা জুতো কিনে পরে পস্তালাম। sôstā juto kine pôre pôstālām. I bought cheap shoes and regretted it later."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি পরে পস্তালেন, tini pôre pôstālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পস্তানো (pôstāno) is listed by CDIAL for Bengali under a reconstructed Sanskrit paścōttāpa, \"burning afterwards\", that is, remorse (CDIAL 8010)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôstāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôstāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôstāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôstāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôstā juto kine pôre pôstālām. — I bought cheap shoes and regretted it later.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôstā juto kine pôre pôstālām.* — I bought cheap shoes and regretted it later.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for remorse, then the Bengali for repentant, then say pôstāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for remorse, then the Bengali for repentant, then say *pôstāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পস্তানো (pôstāno) mean? (\"To rue; to regret (something done)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C447-svikar-kora",
+      "sequence": 27500,
+      "title": "স্বীকার করা (svīkār kôrā) — to admit; to acknowledge",
+      "headword": "স্বীকার করা",
+      "romanization": "svīkār kôrā",
+      "gloss": "to admit; to acknowledge",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62605ad28d51dd89",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for repentant, then the Bengali for to rue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: স্বীকার করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "স্বীকার করা — svīkār kôrā — \"to admit; to acknowledge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অরুণ ভুলটা স্বীকার করল। ôrun bhulṭā svīkār kôrlô. Arun admitted the mistake."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি সত্যিটা স্বীকার করলেন, tini sôttiṭā svīkār kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "স্বীকার করা (svīkār kôrā) is Sanskrit svīkāra, \"making one's own, accepting\" (Monier-Williams), with kôrā, \"to do\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svīkār kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svīkār kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svīkār kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svīkār kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôrun bhulṭā svīkār kôrlô. — Arun admitted the mistake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôrun bhulṭā svīkār kôrlô.* — Arun admitted the mistake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for repentant, then the Bengali for to rue, then say svīkār kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for repentant, then the Bengali for to rue, then say *svīkār kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does স্বীকার করা (svīkār kôrā) mean? (\"To admit; to acknowledge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

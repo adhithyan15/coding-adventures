@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C351-kodor",
+    "language": "bengali",
+    "chapter": 351,
+    "sequence": 22100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8239dd6b518b0c82"
+  },
+  "findings": []
+}

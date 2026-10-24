@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:fbf8443cbd90db51",
+  "lessonIds": [
+    "BN-C544-totpor",
+    "BN-C544-obokash",
+    "BN-C544-ghoniye-asa",
+    "BN-C544-hurohuri",
+    "BN-C544-jhotpot"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch544.txt",
+  "json": "bengali/narration/ch544.json",
+  "textHash": "fnv1a64:066bc8e2ab7e0a0e",
+  "jsonHash": "fnv1a64:7eaaf4cb866ecca9",
+  "findings": []
+}

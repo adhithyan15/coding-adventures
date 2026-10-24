@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "Riddles and Traps",
+  "label": "ch:bn-riddles-and-traps",
+  "canDo": "I can tell how someone was tricked, trapped, and whether they got away.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C324-par-paoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can tell how someone was tricked, trapped, and whether they got away.",
+    "assesses": [
+      "BN-LEX-C324-KOUSHOL324-03",
+      "BN-LEX-C324-KOUSHOL324-04",
+      "BN-LEX-C324-KOUSHOL324-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:f80cd47b164030f9",
+  "lessonIds": [
+    "BN-C337-proman",
+    "BN-C337-nishchito",
+    "BN-C337-bhitti",
+    "BN-C337-shonakto-kora",
+    "BN-C337-udghaton-kora",
+    "BN-R337-review-330-337"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch337.txt",
+  "json": "bengali/narration/ch337.json",
+  "textHash": "fnv1a64:c496e5ac705a6053",
+  "jsonHash": "fnv1a64:990d5e99121ebb67",
+  "findings": []
+}

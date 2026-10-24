@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:985c3c42c7cd6c14",
+  "lessonIds": [
+    "BN-C481-ma",
+    "BN-C481-dada",
+    "BN-C481-didi",
+    "BN-C481-boudi",
+    "BN-C481-thakuma"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch481.txt",
+  "json": "bengali/narration/ch481.json",
+  "textHash": "fnv1a64:45241190a2af2fb1",
+  "jsonHash": "fnv1a64:acf233515a69fdd6",
+  "findings": []
+}

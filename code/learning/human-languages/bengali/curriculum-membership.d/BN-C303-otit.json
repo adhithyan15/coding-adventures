@@ -1,0 +1,11 @@
+{
+  "id": "BN-C303-otit",
+  "pathSegment": "BN-PATH-303-SEDIN303",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-303-SEDIN303",
+      "order": 1
+    }
+  ]
+}

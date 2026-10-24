@@ -1,0 +1,14 @@
+{
+  "language": "bengali",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:8fa13f51a645dbb7",
+  "lessonIds": [
+    "BN-C345-songsod",
+    "BN-C345-songbidhan",
+    "BN-C345-prostab",
+    "BN-C345-onumodon-kora",
+    "BN-C345-batil-kora",
+    "BN-R345-review-338-345"
+  ],
+  "tex": "bengali/book/chapters/ch345-making-laws.tex"
+}

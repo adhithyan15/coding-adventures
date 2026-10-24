@@ -1,0 +1,11 @@
+{
+  "id": "BN-C323-sonnyasi",
+  "pathSegment": "BN-PATH-323-NAYOK323",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-323-NAYOK323",
+      "order": 3
+    }
+  ]
+}

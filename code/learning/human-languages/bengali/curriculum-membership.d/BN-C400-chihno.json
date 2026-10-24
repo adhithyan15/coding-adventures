@@ -1,0 +1,11 @@
+{
+  "id": "BN-C400-chihno",
+  "pathSegment": "BN-PATH-400-THIKANA400",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-400-THIKANA400",
+      "order": 1
+    }
+  ]
+}

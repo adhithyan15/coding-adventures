@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 281,
+  "title": "A Lucky Escape",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:66788374e776d19b",
+  "lessons": [
+    {
+      "id": "BN-C281-bhagyokrome",
+      "sequence": 18250,
+      "title": "ভাগ্যক্রমে (bhāgyôkrôme) — luckily; by good luck",
+      "headword": "ভাগ্যক্রমে",
+      "romanization": "bhāgyôkrôme",
+      "gloss": "luckily; by good luck",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bafc41ca88b46b7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a siren, then the Bengali for refuge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভাগ্যক্রমে",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভাগ্যক্রমে — bhāgyôkrôme — \"luckily; by good luck\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ভাগ্যক্রমে আমরা বাইরে ছিলাম; যদি ভিতরে থাকতাম, তাহলে আহত হতাম। bhāgyôkrôme āmrā bāire chhilām; jôdi bhitôre thāktām, tāhôle āhôtô hôtām. Luckily we were outside; if we had been inside, we would have been hurt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভাগ্যক্রমে (bhāgyôkrôme) joins ভাগ্য, luck, to Sanskrit krama, 'a step, a course' (Monier-Williams), in the -e form: 'in the course of luck', luckily."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāgyôkrôme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāgyôkrôme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāgyôkrôme, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāgyôkrôme*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāgyôkrôme āmrā bāire chhilām; jôdi bhitôre thāktām, tāhôle āhôtô hôtām. — Luckily we were outside; if we had been inside, we would have been hurt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāgyôkrôme āmrā bāire chhilām; jôdi bhitôre thāktām, tāhôle āhôtô hôtām.* — Luckily we were outside; if we had been inside, we would have been hurt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a siren, then the Bengali for refuge, then say bhāgyôkrôme again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a siren, then the Bengali for refuge, then say *bhāgyôkrôme* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভাগ্যক্রমে (bhāgyôkrôme) mean? (\"Luckily; by good luck\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C281-nikhoj",
+      "sequence": 18260,
+      "title": "নিখোঁজ (nikhõj) — missing",
+      "headword": "নিখোঁজ",
+      "romanization": "nikhõj",
+      "gloss": "missing",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3ee4ec097637ec8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for refuge, then the Bengali for luckily."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নিখোঁজ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিখোঁজ — nikhõj — \"missing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ঝড়ের পরে অনেক জেলে নিখোঁজ ছিল। jhôṛer pôre ônek jele nikhõj chhilô. After the storm many fishermen were missing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিখোঁজ (nikhõj) puts the prefix ni-, 'without', before খোঁজ, a trace or news of someone, the noun behind খোঁজা, to look for (CDIAL 3929 lists Bengali khõj, 'trace'): without a trace, missing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikhõj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikhõj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikhõj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikhõj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhôṛer pôre ônek jele nikhõj chhilô. — After the storm many fishermen were missing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhôṛer pôre ônek jele nikhõj chhilô.* — After the storm many fishermen were missing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for refuge, then the Bengali for luckily, then say nikhõj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for refuge, then the Bengali for luckily, then say *nikhõj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does নিখোঁজ (nikhõj) mean? (\"Missing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C281-rokkha-paoya",
+      "sequence": 18270,
+      "title": "রক্ষা পাওয়া (rôkkhā pāoyā) — to be spared; to escape harm",
+      "headword": "রক্ষা পাওয়া",
+      "romanization": "rôkkhā pāoyā",
+      "gloss": "to be spared; to escape harm",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d8fc7937c30ccd8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for luckily, then the Bengali for missing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: রক্ষা পাওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রক্ষা পাওয়া — rôkkhā pāoyā — \"to be spared; to escape harm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ভাগ্যক্রমে নৌকার সবাই রক্ষা পেল। bhāgyôkrôme noukār sôbāi rôkkhā pelô. Luckily everyone on the boat was spared."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই শিশু রক্ষা পেল, sei shishu rôkkhā pelô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রক্ষা পাওয়া (rôkkhā pāoyā) puts Sanskrit rakṣā, 'protection, care' (Monier-Williams), before পাওয়া: to get protection, to come through unharmed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rôkkhā pāoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rôkkhā pāoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rôkkhā pāoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rôkkhā pāoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāgyôkrôme noukār sôbāi rôkkhā pelô. — Luckily everyone on the boat was spared.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāgyôkrôme noukār sôbāi rôkkhā pelô.* — Luckily everyone on the boat was spared.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for luckily, then the Bengali for missing, then say rôkkhā pāoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for luckily, then the Bengali for missing, then say *rôkkhā pāoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does রক্ষা পাওয়া (rôkkhā pāoyā) mean? (\"To be spared; to escape harm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C281-chhota",
+      "sequence": 18280,
+      "title": "ছোটা (chhoṭā) — to run; to rush",
+      "headword": "ছোটা",
+      "romanization": "chhoṭā",
+      "gloss": "to run; to rush",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b848388127887ead",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for missing, then the Bengali for to be spared."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ছোটা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ছোটা — chhoṭā — \"to run; to rush\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আগুন দেখে লোকজন জল নিয়ে ছুটল। āgun dekhe lokjôn jôl niye chhuṭlô. When they saw the fire, people ran with water."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই কুকুর ছুটল, sei kukur chhuṭlô."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem vowel rises in the past: ছুটল, ran."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ছোটা (chhoṭā) is filed in CDIAL 3707 under a Middle Indo-Aryan kṣuṭyatē, 'is released', which lists Bengali chuṭā, 'to get loose, run away, run'. ছুটি, a holiday, a time let loose, is listed beside it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhoṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhoṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhoṭā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhoṭā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgun dekhe lokjôn jôl niye chhuṭlô. — When they saw the fire, people ran with water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgun dekhe lokjôn jôl niye chhuṭlô.* — When they saw the fire, people ran with water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for missing, then the Bengali for to be spared, then say chhoṭā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for missing, then the Bengali for to be spared, then say *chhoṭā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ছোটা (chhoṭā) mean? (\"To run; to rush\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C281-obosheshe",
+      "sequence": 18290,
+      "title": "অবশেষে (ôbôsheshe) — at last; finally",
+      "headword": "অবশেষে",
+      "romanization": "ôbôsheshe",
+      "gloss": "at last; finally",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f98f26c45945f47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to be spared, then the Bengali for to rush."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অবশেষে",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অবশেষে — ôbôsheshe — \"at last; finally\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অনেক খোঁজার পরে অবশেষে পুলিশ শিশুটিকে খুঁজে পেল। ônek khõjār pôre ôbôsheshe pulish shishuṭike khũje pelô. After a long search the police finally found the child."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অবশেষে (ôbôsheshe) is Sanskrit avaśeṣa, 'what is left over' (Monier-Williams), in the -e form: 'at what remains', at the very end."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbôsheshe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbôsheshe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbôsheshe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbôsheshe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônek khõjār pôre ôbôsheshe pulish shishuṭike khũje pelô. — After a long search the police finally found the child.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônek khõjār pôre ôbôsheshe pulish shishuṭike khũje pelô.* — After a long search the police finally found the child.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to be spared, then the Bengali for to rush, then say ôbôsheshe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to be spared, then the Bengali for to rush, then say *ôbôsheshe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অবশেষে (ôbôsheshe) mean? (\"At last; finally\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

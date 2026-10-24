@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C535-sitbelt",
+    "language": "bengali",
+    "chapter": 535,
+    "sequence": 32200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c626edd55b953096"
+  },
+  "findings": []
+}

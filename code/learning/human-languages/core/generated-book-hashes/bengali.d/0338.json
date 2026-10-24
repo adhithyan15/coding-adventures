@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:570b5fe2eaf7e2d6",
+  "lessonIds": [
+    "BN-C338-sonod",
+    "BN-C338-tothyo",
+    "BN-C338-sakkhyo",
+    "BN-C338-melano",
+    "BN-C338-khondon-kora"
+  ],
+  "tex": "bengali/book/chapters/ch338-on-the-record.tex"
+}

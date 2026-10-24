@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "Granting and Denying",
+  "label": "ch:bn-granting-and-denying",
+  "canDo": "I can deny a claim, criticise fairly and give an example.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C335-prosonggo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can deny a claim, criticise fairly and give an example.",
+    "assesses": [
+      "BN-LEX-C335-PROSONGO335-03",
+      "BN-LEX-C335-PROSONGO335-04",
+      "BN-LEX-C335-PROSONGO335-05"
+    ]
+  }
+}

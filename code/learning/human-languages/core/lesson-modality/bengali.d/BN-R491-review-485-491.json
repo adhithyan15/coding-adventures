@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R491-review-485-491",
+    "language": "bengali",
+    "chapter": 491,
+    "sequence": 29760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed732b718a171c6c"
+  },
+  "findings": []
+}

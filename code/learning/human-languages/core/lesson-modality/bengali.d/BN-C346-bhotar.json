@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C346-bhotar",
+    "language": "bengali",
+    "chapter": 346,
+    "sequence": 21840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d8f65eaad9e6e7a"
+  },
+  "findings": []
+}

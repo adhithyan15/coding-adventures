@@ -1,0 +1,11 @@
+{
+  "id": "BN-C319-khonon-kora",
+  "pathSegment": "BN-PATH-319-PURATON319",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-319-PURATON319",
+      "order": 2
+    }
+  ]
+}

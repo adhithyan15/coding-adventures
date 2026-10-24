@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:507c87eb1ca8cc6d",
+  "lessonIds": [
+    "BN-C426-thanda",
+    "BN-C426-tushar",
+    "BN-C426-jome-jaoya",
+    "BN-C426-konkone",
+    "BN-C426-gole-jaoya"
+  ],
+  "tex": "bengali/book/chapters/ch426-cold-frost-and-thaw.tex"
+}

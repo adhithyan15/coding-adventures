@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C340-boidho",
+    "language": "bengali",
+    "chapter": 340,
+    "sequence": 21510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ab2c3d7dfda7c79"
+  },
+  "findings": []
+}

@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 279,
+  "title": "Fire!",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:04330c121ea2b9b4",
+  "lessons": [
+    {
+      "id": "BN-C279-jvola",
+      "sequence": 18150,
+      "title": "জ্বলা (jvôlā) — to burn; to be alight",
+      "headword": "জ্বলা",
+      "romanization": "jvôlā",
+      "gloss": "to burn; to be alight",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1392c139860518d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to overturn, then the Bengali for injured."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জ্বলা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জ্বলা — jvôlā — \"to burn; to be alight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "যদি রাতে বাড়িতে আলো জ্বলে, তাহলে বুঝব যে কেউ আছে। jôdi rāte bāṛite ālo jvôle, tāhôle bujhbô je keu āchhe. If there's a light on in the house at night, I'll know someone is there."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই বাতি জ্বলল, sei bāti jvôllô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জ্বলা (jvôlā) comes down from Sanskrit jvalati, 'burns brightly' (CDIAL 5306, which lists Bengali jalā, 'to burn'). It is the partner of জ্বালানো: you light a lamp, and it burns."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jvôlā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jvôlā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jvôlā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jvôlā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jôdi rāte bāṛite ālo jvôle, tāhôle bujhbô je keu āchhe. — If there's a light on in the house at night, I'll know someone is there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jôdi rāte bāṛite ālo jvôle, tāhôle bujhbô je keu āchhe.* — If there's a light on in the house at night, I'll know someone is there.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to overturn, then the Bengali for injured, then say jvôlā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to overturn, then the Bengali for injured, then say *jvôlā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does জ্বলা (jvôlā) mean? (\"To burn; to be alight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C279-shikha",
+      "sequence": 18160,
+      "title": "শিখা (shikhā) — a flame",
+      "headword": "শিখা",
+      "romanization": "shikhā",
+      "gloss": "a flame",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8629e527b622219",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for injured, then the Bengali for to be alight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শিখা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শিখা — shikhā — \"a flame\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মোমবাতির শিখা বাতাসে কাঁপছিল। mombātir shikhā bātāse kā̃pchhilô. The candle flame was flickering in the breeze."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শিখা (shikhā) is Sanskrit śikhā, a tuft of hair or a crest (Monier-Williams); the pointed top of a fire is its crest, its flame."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shikhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shikhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shikhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shikhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mombātir shikhā bātāse kā̃pchhilô. — The candle flame was flickering in the breeze.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mombātir shikhā bātāse kā̃pchhilô.* — The candle flame was flickering in the breeze.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for injured, then the Bengali for to be alight, then say shikhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for injured, then the Bengali for to be alight, then say *shikhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does শিখা (shikhā) mean? (\"A flame\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C279-sphulinggo",
+      "sequence": 18170,
+      "title": "স্ফুলিঙ্গ (sphulinggô) — a spark",
+      "headword": "স্ফুলিঙ্গ",
+      "romanization": "sphulinggô",
+      "gloss": "a spark",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5449384c04997ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to be alight, then the Bengali for a flame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: স্ফুলিঙ্গ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "স্ফুলিঙ্গ — sphulinggô — \"a spark\"."
+            },
+            {
+              "kind": "speech",
+              "text": "একটা ছোট স্ফুলিঙ্গ থেকে বাজারে আগুন লাগল। ekṭā chhoṭo sphulinggô theke bājāre āgun lāglô. The market caught fire from one small spark."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "স্ফুলিঙ্গ (sphulinggô) is Sanskrit sphuliṅga, 'a spark of fire' (Monier-Williams), taken over whole. It is a written word; in talk a spark is often ফুলকি."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sphulinggô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sphulinggô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sphulinggô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sphulinggô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekṭā chhoṭo sphulinggô theke bājāre āgun lāglô. — The market caught fire from one small spark.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekṭā chhoṭo sphulinggô theke bājāre āgun lāglô.* — The market caught fire from one small spark.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to be alight, then the Bengali for a flame, then say sphulinggô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to be alight, then the Bengali for a flame, then say *sphulinggô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does স্ফুলিঙ্গ (sphulinggô) mean? (\"A spark\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C279-pure-jaoya",
+      "sequence": 18180,
+      "title": "পুড়ে যাওয়া (puṛe jāoyā) — to burn down; to get burnt",
+      "headword": "পুড়ে যাওয়া",
+      "romanization": "puṛe jāoyā",
+      "gloss": "to burn down; to get burnt",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45af613bc2dde35a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a flame, then the Bengali for a spark."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পুড়ে যাওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পুড়ে যাওয়া — puṛe jāoyā — \"to burn down; to get burnt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আগুনে দোকানটা পুড়ে গেল। āgune dokānṭā puṛe gelô. The shop burned down in the fire."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই দোকান পুড়ে গেল, sei dokān puṛe gelô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পুড়ে যাওয়া (puṛe jāoyā) is the -e form of পোড়া, to be burnt — CDIAL 8397 lists Bengali poṛā and puṛā, 'to burn, be burnt' — before যাওয়া, which finishes the burning off. পোড়ানো is to burn something."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṛe jāoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṛe jāoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puṛe jāoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puṛe jāoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgune dokānṭā puṛe gelô. — The shop burned down in the fire.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgune dokānṭā puṛe gelô.* — The shop burned down in the fire.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a flame, then the Bengali for a spark, then say puṛe jāoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a flame, then the Bengali for a spark, then say *puṛe jāoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পুড়ে যাওয়া (puṛe jāoyā) mean? (\"To burn down; to get burnt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C279-bisphoron",
+      "sequence": 18190,
+      "title": "বিস্ফোরণ (bisphorôn) — an explosion",
+      "headword": "বিস্ফোরণ",
+      "romanization": "bisphorôn",
+      "gloss": "an explosion",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90bbdc9533b3911d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a spark, then the Bengali for to burn down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিস্ফোরণ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিস্ফোরণ — bisphorôn — \"an explosion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাতে কারখানায় একটা বিস্ফোরণ হল। rāte kārkhānāy ekṭā bisphorôn hôlô. There was an explosion at the factory last night."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিস্ফোরণ (bisphorôn) is a learned word built from Sanskrit vi-, 'apart', and sphoraṇa, 'throbbing, quivering' (Monier-Williams); Sanskrit itself has the near word visphoṭa, 'a crash'. বিস্ফোরণ হওয়া, an explosion happens."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bisphorôn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bisphorôn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bisphorôn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bisphorôn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāte kārkhānāy ekṭā bisphorôn hôlô. — There was an explosion at the factory last night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāte kārkhānāy ekṭā bisphorôn hôlô.* — There was an explosion at the factory last night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a spark, then the Bengali for to burn down, then say bisphorôn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a spark, then the Bengali for to burn down, then say *bisphorôn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিস্ফোরণ (bisphorôn) mean? (\"An explosion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "The Last Day of the Festival",
+  "label": "ch:bn-the-last-day-of-the-festival",
+  "canDo": "I can tell how a festival ends: the immersion, the farewell, the embrace.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C308-kolakuli-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can tell how a festival ends: the immersion, the farewell, the embrace.",
+    "assesses": [
+      "BN-LEX-C308-BISORJON308-03",
+      "BN-LEX-C308-BISORJON308-04",
+      "BN-LEX-C308-BISORJON308-05"
+    ]
+  }
+}

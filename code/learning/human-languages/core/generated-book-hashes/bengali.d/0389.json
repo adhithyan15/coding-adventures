@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:7a53c4d922b21f94",
+  "lessonIds": [
+    "BN-C389-chalok",
+    "BN-C389-kondaktor",
+    "BN-C389-helmet",
+    "BN-C389-ishara-kora",
+    "BN-C389-haka"
+  ],
+  "tex": "bengali/book/chapters/ch389-drivers-and-conductors.tex"
+}

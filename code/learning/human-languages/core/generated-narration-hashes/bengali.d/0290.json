@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:1ad7d91eb43e5c13",
+  "lessonIds": [
+    "BN-C290-dheu",
+    "BN-C290-tir",
+    "BN-C290-bhangon",
+    "BN-C290-grihohin",
+    "BN-C290-helikoptar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch290.txt",
+  "json": "bengali/narration/ch290.json",
+  "textHash": "fnv1a64:6f9412c65d47500b",
+  "jsonHash": "fnv1a64:e0894e14245f101e",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "The Water Rises",
+  "label": "ch:bn-the-water-rises",
+  "canDo": "I can describe a tidal surge and the rising water.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C289-plabito-hooya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can describe a tidal surge and the rising water.",
+    "assesses": [
+      "BN-LEX-C289-JOLOCHCHHAS289-03",
+      "BN-LEX-C289-JOLOCHCHHAS289-04",
+      "BN-LEX-C289-JOLOCHCHHAS289-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:7023019a606a5076",
+  "lessonIds": [
+    "BN-C343-dosh",
+    "BN-C343-dayi",
+    "BN-C343-khotipuron",
+    "BN-C343-jobabdihi-kora",
+    "BN-C343-rehai-deoya"
+  ],
+  "tex": "bengali/book/chapters/ch343-whose-fault-was-it.tex"
+}

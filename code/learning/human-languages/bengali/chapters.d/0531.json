@@ -1,0 +1,21 @@
+{
+  "chapter": 531,
+  "title": "Drafts and Lists",
+  "label": "ch:bn-drafts-and-lists",
+  "canDo": "I can talk about drafts, lists and working out a plan.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-R531-review-524-531",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can talk about drafts, lists and working out a plan.",
+    "assesses": [
+      "BN-LEX-C531-KHOSRA531-01",
+      "BN-LEX-C531-KHOSRA531-02",
+      "BN-LEX-C531-KHOSRA531-03",
+      "BN-LEX-C531-KHOSRA531-04",
+      "BN-LEX-C531-KHOSRA531-05"
+    ]
+  }
+}

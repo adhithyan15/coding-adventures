@@ -1,0 +1,11 @@
+{
+  "id": "BN-C423-morok",
+  "pathSegment": "BN-PATH-423-THONGA423",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-423-THONGA423",
+      "order": 1
+    }
+  ]
+}

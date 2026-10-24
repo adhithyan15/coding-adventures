@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:4b09fae65cf2f1cb",
+  "lessonIds": [
+    "BN-C393-dijel",
+    "BN-C393-haoya",
+    "BN-C393-pangchar",
+    "BN-C393-phurano",
+    "BN-C393-chalu-kora"
+  ],
+  "tex": "bengali/book/chapters/ch393-fuel-and-flat-tyres.tex"
+}

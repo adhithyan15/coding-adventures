@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:495aec9f29a17122",
+  "lessonIds": [
+    "BN-C478-jotno",
+    "BN-C478-seba",
+    "BN-C478-tharmomitar",
+    "BN-C478-jolpotti",
+    "BN-C478-shushrusha-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch478.txt",
+  "json": "bengali/narration/ch478.json",
+  "textHash": "fnv1a64:4ac67cf49a36bc61",
+  "jsonHash": "fnv1a64:d74a7ac191380609",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C482-bhaijhi",
+    "language": "bengali",
+    "chapter": 482,
+    "sequence": 29280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3f2fe64c20aca4a"
+  },
+  "findings": []
+}

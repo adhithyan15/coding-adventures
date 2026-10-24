@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:c489faf65c20b9cd",
+  "lessonIds": [
+    "BN-C289-jolochchhvas",
+    "BN-C289-toliye-jaoya",
+    "BN-C289-uchu",
+    "BN-C289-bhela",
+    "BN-C289-plabito-hooya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch289.txt",
+  "json": "bengali/narration/ch289.json",
+  "textHash": "fnv1a64:6449d108719e0d80",
+  "jsonHash": "fnv1a64:06554cbcf89ce0c4",
+  "findings": []
+}

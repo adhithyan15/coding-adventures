@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-395-BIMAN395",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "BN-EXT-395-BIMAN395"
+  ],
+  "after": []
+}

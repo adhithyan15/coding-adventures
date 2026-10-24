@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-522-BYAYAM522",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "BN-EXT-522-BYAYAM522"
+  ],
+  "after": []
+}

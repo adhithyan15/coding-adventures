@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 544,
+  "title": "Time Pressure",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fbf8443cbd90db51",
+  "lessons": [
+    {
+      "id": "BN-C544-totpor",
+      "sequence": 32660,
+      "title": "তৎপর (tôtpôr) — prompt; quick to act",
+      "headword": "তৎপর",
+      "romanization": "tôtpôr",
+      "gloss": "prompt; quick to act",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3734444898a29543",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to secure, then the Bengali for a desired goal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: তৎপর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তৎপর — tôtpôr — \"prompt; quick to act\"."
+            },
+            {
+              "kind": "speech",
+              "text": "যদি দমকল তৎপর না হত, তাহলে আগুন ছড়াত। Jôdi dômkôl tôtpôr nā hôtô, tāhôle āgun chhôṛātô. If the fire brigade hadn't been quick, the fire would have spread."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তৎপর (tôtpôr) is a tatsama, Sanskrit tatpara, \"following on that, intent on it\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tôtpôr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tôtpôr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tôtpôr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tôtpôr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Jôdi dômkôl tôtpôr nā hôtô, tāhôle āgun chhôṛātô. — If the fire brigade hadn't been quick, the fire would have spread.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Jôdi dômkôl tôtpôr nā hôtô, tāhôle āgun chhôṛātô.* — If the fire brigade hadn't been quick, the fire would have spread.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to secure, then the Bengali for a desired goal, then say tôtpôr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to secure, then the Bengali for a desired goal, then say *tôtpôr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does তৎপর (tôtpôr) mean? (\"Prompt; quick to act\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C544-obokash",
+      "sequence": 32670,
+      "title": "অবকাশ (ôbôkāsh) — a respite; a break",
+      "headword": "অবকাশ",
+      "romanization": "ôbôkāsh",
+      "gloss": "a respite; a break",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:379daf43c5ad5635",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a desired goal, then the Bengali for prompt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অবকাশ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অবকাশ — ôbôkāsh — \"a respite; a break\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দুপুরে অবকাশ পেলে আমি একটু ঘুমাই। Dupure ôbôkāsh pele āmi ekṭu ghumāi. If I get a break at midday, I take a short nap."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অবকাশ (ôbôkāsh) is a tatsama, Sanskrit avakāśa, \"room, space\", which Monier-Williams also gives for a stretch of time in between: a gap in the day."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbôkāsh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbôkāsh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbôkāsh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbôkāsh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dupure ôbôkāsh pele āmi ekṭu ghumāi. — If I get a break at midday, I take a short nap.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dupure ôbôkāsh pele āmi ekṭu ghumāi.* — If I get a break at midday, I take a short nap.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a desired goal, then the Bengali for prompt, then say ôbôkāsh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a desired goal, then the Bengali for prompt, then say *ôbôkāsh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অবকাশ (ôbôkāsh) mean? (\"A respite; a break\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C544-ghoniye-asa",
+      "sequence": 32680,
+      "title": "ঘনিয়ে আসা (ghôniye āsā) — to draw near (of a date or danger)",
+      "headword": "ঘনিয়ে আসা",
+      "romanization": "ghôniye āsā",
+      "gloss": "to draw near (of a date or danger)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac3e637818b87eb8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for prompt, then the Bengali for a respite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঘনিয়ে আসা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘনিয়ে আসা — ghôniye āsā — \"to draw near (of a date or danger)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বিয়ের দিন ঘনিয়ে এল। Biyer din ghôniye elô. The wedding day drew near."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই দিন ঘনিয়ে এল, sei din ghôniye elô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘনিয়ে আসা (ghôniye āsā) joins ঘনিয়ে, the -এ form of a verb built on ঘন, \"dense, close\", to আসা, \"to come\": coming closer and closer. CDIAL lists Bengali ghana, \"thick, dense\", under Sanskrit ghana, and notes a Bengali verb from it meaning to come close (CDIAL 4424)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghôniye āsā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghôniye āsā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghôniye āsā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghôniye āsā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Biyer din ghôniye elô. — The wedding day drew near.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Biyer din ghôniye elô.* — The wedding day drew near.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for prompt, then the Bengali for a respite, then say ghôniye āsā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for prompt, then the Bengali for a respite, then say *ghôniye āsā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঘনিয়ে আসা (ghôniye āsā) mean? (\"To draw near (of a date or danger)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C544-hurohuri",
+      "sequence": 32690,
+      "title": "হুড়োহুড়ি (huṛohuṛi) — a scramble; a rush",
+      "headword": "হুড়োহুড়ি",
+      "romanization": "huṛohuṛi",
+      "gloss": "a scramble; a rush",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c59c36cbe367d257",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a respite, then the Bengali for to draw near."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হুড়োহুড়ি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হুড়োহুড়ি — huṛohuṛi — \"a scramble; a rush\"."
+            },
+            {
+              "kind": "speech",
+              "text": "স্টেশনে লোকজনের হুড়োহুড়ি ছিল। Sṭeshône lokjôner huṛohuṛi chhilô. There was a scramble of people at the station."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হুড়োহুড়ি (huṛohuṛi) is an expressive doubled word for people pushing and rushing. It perhaps belongs with হুড়, \"a crowd\", which CDIAL lists as Bengali huṛ under huḍati, \"collects\" (CDIAL 14136); the link is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huṛohuṛi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huṛohuṛi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huṛohuṛi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huṛohuṛi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sṭeshône lokjôner huṛohuṛi chhilô. — There was a scramble of people at the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sṭeshône lokjôner huṛohuṛi chhilô.* — There was a scramble of people at the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a respite, then the Bengali for to draw near, then say huṛohuṛi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a respite, then the Bengali for to draw near, then say *huṛohuṛi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হুড়োহুড়ি (huṛohuṛi) mean? (\"A scramble; a rush\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C544-jhotpot",
+      "sequence": 32700,
+      "title": "ঝটপট (jhôṭpôṭ) — in a jiffy; quickly",
+      "headword": "ঝটপট",
+      "romanization": "jhôṭpôṭ",
+      "gloss": "in a jiffy; quickly",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0c79dde174e2b67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to draw near, then the Bengali for a scramble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঝটপট",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঝটপট — jhôṭpôṭ — \"in a jiffy; quickly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মেয়েটা ঝটপট জামা পরল। Meyeṭā jhôṭpôṭ jāmā pôrlô. The girl put on her dress in a jiffy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঝটপট (jhôṭpôṭ) is an expressive doubled word built on ঝট, \"quickly\"; CDIAL lists Bengali jhaṭ and the doubled jhaṭ-phaṭ, both \"quickly\", under a reconstructed jhaṭ, \"sudden movement\" (CDIAL 5327)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhôṭpôṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhôṭpôṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhôṭpôṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhôṭpôṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Meyeṭā jhôṭpôṭ jāmā pôrlô. — The girl put on her dress in a jiffy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Meyeṭā jhôṭpôṭ jāmā pôrlô.* — The girl put on her dress in a jiffy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to draw near, then the Bengali for a scramble, then say jhôṭpôṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to draw near, then the Bengali for a scramble, then say *jhôṭpôṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঝটপট (jhôṭpôṭ) mean? (\"In a jiffy; quickly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

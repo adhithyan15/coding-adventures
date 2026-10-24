@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "A Bed for the Night",
+  "label": "ch:bn-a-bed-for-the-night",
+  "canDo": "I can find a guesthouse, a hostel or a rest house, and somewhere to shelter.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C406-toka-deoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can find a guesthouse, a hostel or a rest house, and somewhere to shelter.",
+    "assesses": [
+      "BN-LEX-C406-THAI406-03",
+      "BN-LEX-C406-THAI406-04",
+      "BN-LEX-C406-THAI406-05"
+    ]
+  }
+}

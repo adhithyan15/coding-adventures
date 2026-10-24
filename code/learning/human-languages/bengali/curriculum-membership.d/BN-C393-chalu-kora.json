@@ -1,0 +1,11 @@
+{
+  "id": "BN-C393-chalu-kora",
+  "pathSegment": "BN-PATH-393-PANGCHAR393",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-393-PANGCHAR393",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,846 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 337,
+  "title": "Show Me the Proof",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:f80cd47b164030f9",
+  "lessons": [
+    {
+      "id": "BN-C337-proman",
+      "sequence": 21350,
+      "title": "প্রমাণ (prômān) — proof; evidence",
+      "headword": "প্রমাণ",
+      "romanization": "prômān",
+      "gloss": "proof; evidence",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24ce1fc81c75f929",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to interpret, then the Bengali for briefly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রমাণ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রমাণ — prômān — \"proof; evidence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তোমার কাছে কোনো প্রমাণ আছে? tomār kāchhe kono prômān āchhe? Do you have any proof?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রমাণ (prômān) is Sanskrit pramāṇa, a measure or standard and, in logic, a proof (Monier-Williams). To have proof is -এর কাছে প্রমাণ থাকা."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prômān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prômān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prômān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prômān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomār kāchhe kono prômān āchhe? — Do you have any proof?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomār kāchhe kono prômān āchhe?* — Do you have any proof?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to interpret, then the Bengali for briefly, then say prômān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to interpret, then the Bengali for briefly, then say *prômān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রমাণ (prômān) mean? (\"Proof; evidence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C337-nishchito",
+      "sequence": 21360,
+      "title": "নিশ্চিত (nishchitô) — sure; certain",
+      "headword": "নিশ্চিত",
+      "romanization": "nishchitô",
+      "gloss": "sure; certain",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d03bde548957d728",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for briefly, then the Bengali for proof."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নিশ্চিত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিশ্চিত — nishchitô — \"sure; certain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি নিশ্চিত, মীরা আসবে। āmi nishchitô, mīrā āsbe. I'm sure Mira will come."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিশ্চিত (nishchitô) is Sanskrit niścita, settled or ascertained (Monier-Williams). A person can be নিশ্চিত, and so can a fact."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nishchitô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nishchitô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nishchitô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nishchitô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmi nishchitô, mīrā āsbe. — I'm sure Mira will come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmi nishchitô, mīrā āsbe.* — I'm sure Mira will come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for briefly, then the Bengali for proof, then say nishchitô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for briefly, then the Bengali for proof, then say *nishchitô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does নিশ্চিত (nishchitô) mean? (\"Sure; certain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C337-bhitti",
+      "sequence": 21370,
+      "title": "ভিত্তি (bhitti) — a basis; a foundation",
+      "headword": "ভিত্তি",
+      "romanization": "bhitti",
+      "gloss": "a basis; a foundation",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a3fa8bd3c75b9f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for proof, then the Bengali for sure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভিত্তি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভিত্তি — bhitti — \"a basis; a foundation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই অভিযোগের কোনো ভিত্তি নেই। ei ôbhijoger kono bhitti nei. This charge has no basis."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভিত্তি (bhitti) is Sanskrit bhitti, a wall (Monier-Williams). The Bengali sense, the foundation or basis of a building or a claim, is not one the dictionary gives."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhitti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhitti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhitti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhitti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ei ôbhijoger kono bhitti nei. — This charge has no basis.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ei ôbhijoger kono bhitti nei.* — This charge has no basis.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for proof, then the Bengali for sure, then say bhitti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for proof, then the Bengali for sure, then say *bhitti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভিত্তি (bhitti) mean? (\"A basis; a foundation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C337-shonakto-kora",
+      "sequence": 21380,
+      "title": "শনাক্ত করা (shônāktô kôrā) — to identify; to pick out",
+      "headword": "শনাক্ত করা",
+      "romanization": "shônāktô kôrā",
+      "gloss": "to identify; to pick out",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9acd1dde80265146",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for sure, then the Bengali for a basis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শনাক্ত করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শনাক্ত করা — shônāktô kôrā — \"to identify; to pick out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পুলিশ চোরকে শনাক্ত করল। pulish chorke shônāktô kôrlô. The police identified the thief."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি লোকটাকে শনাক্ত করলেন, tini lokṭāke shônāktô kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শনাক্ত করা (shônāktô kôrā) is usually traced to Persian shinākht, recognition, with করা: to say for certain who or what something is."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shônāktô kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shônāktô kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shônāktô kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shônāktô kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulish chorke shônāktô kôrlô. — The police identified the thief.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulish chorke shônāktô kôrlô.* — The police identified the thief.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for sure, then the Bengali for a basis, then say shônāktô kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for sure, then the Bengali for a basis, then say *shônāktô kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does শনাক্ত করা (shônāktô kôrā) mean? (\"To identify; to pick out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C337-udghaton-kora",
+      "sequence": 21390,
+      "title": "উদ্ঘাটন করা (udghāṭôn kôrā) — to uncover; to bring to light",
+      "headword": "উদ্ঘাটন করা",
+      "romanization": "udghāṭôn kôrā",
+      "gloss": "to uncover; to bring to light",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1bfb537539039ce1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a basis, then the Bengali for to identify."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উদ্ঘাটন করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উদ্ঘাটন করা — udghāṭôn kôrā — \"to uncover; to bring to light\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমরা আসল কারণ উদ্ঘাটন করব। āmrā āsôl kārôn udghāṭôn kôrbô. We will uncover the real reason."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি রহস্যটা উদ্ঘাটন করলেন, tini rôhôsyôṭā udghāṭôn kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উদ্ঘাটন করা (udghāṭôn kôrā) is Sanskrit udghāṭana, an unlocking and so a laying bare (Monier-Williams), with করা: to bring a hidden fact or a mystery into the open. রহস্য উদ্ঘাটন করা is to solve a mystery."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udghāṭôn kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udghāṭôn kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udghāṭôn kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udghāṭôn kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmrā āsôl kārôn udghāṭôn kôrbô. — We will uncover the real reason.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmrā āsôl kārôn udghāṭôn kôrbô.* — We will uncover the real reason.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a basis, then the Bengali for to identify, then say udghāṭôn kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a basis, then the Bengali for to identify, then say *udghāṭôn kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উদ্ঘাটন করা (udghāṭôn kôrā) mean? (\"To uncover; to bring to light\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R337-review-330-337",
+      "sequence": 21400,
+      "title": "Looking back: from Where It Came From to Show Me the Proof",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Where It Came From to Show Me the Proof",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34dc6465ef7c6a31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for a source and to create."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a source, to create, an influence, a reaction, an inspiration",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a source, to create, an influence, a reaction, an inspiration]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a purpose, a good turn, a profit, a financial loss, useful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a purpose, a good turn, a profit, a financial loss, useful]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "therefore, besides, and yet, mind you, to hold good",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: therefore, besides, and yet, mind you, to hold good]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an argument, a statement, a side in a dispute, against, to back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an argument, a statement, a side in a dispute, against, to back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an objection, a debate, views, to oppose, to disregard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an objection, a debate, views, to oppose, to disregard]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to deny, to criticise, an outlook, an example, a topic of talk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to deny, to criticise, an outlook, an example, a topic of talk]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "importance, special, main, to interpret, briefly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: importance, special, main, to interpret, briefly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "proof, sure, a basis, to identify, to uncover",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: proof, sure, a basis, to identify, to uncover]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A source? (উৎস, utsô.) To create? (সৃষ্টি করা, srishṭi kôrā.) An influence? (প্রভাব, prôbhāb.) A reaction? (প্রতিক্রিয়া, prôtikriyā.) An inspiration? (প্রেরণা, preronā.) A purpose? (উদ্দেশ্য, uddeshyô.) A good turn? (উপকার, upôkār.) A profit? (লাভ, lābh.) A financial loss? (লোকসান, loksān.) Useful? (উপযোগী, upôjogī.) Therefore? (সুতরাং, sutôrāng.) Besides? (তাছাড়া, tāchhāṛā.) And yet? (অথচ, ôthôch.) Mind you? (অবশ্য, ôbôshyô.) To hold good? (খাটা, khāṭā.) An argument? (যুক্তি, jukti.) A statement? (বক্তব্য, bôktôbyô.) A side in a dispute? (পক্ষ, pôkkhô.) Against? (বিরুদ্ধে, biruddhe.) To back? (সমর্থন করা, sômôrthôn kôrā.) An objection? (আপত্তি, āpôtti.) A debate? (বিতর্ক, bitôrkô.) Views? (মতামত, môtāmôt.) To oppose? (বিরোধিতা করা, birodhitā kôrā.) To disregard? (উপেক্ষা করা, upekkhā kôrā.) To deny? (অস্বীকার করা, ôsvīkār kôrā.) To criticise? (সমালোচনা করা, sômālochônā kôrā.) An outlook? (দৃষ্টিভঙ্গি, drishṭibhônggi.) An example? (উদাহরণ, udāhôrôn.) A topic of talk? (প্রসঙ্গ, prôsônggô.) Importance? (গুরুত্ব, gurutvô.) Special? (বিশেষ, bishesh.) Main? (মূল, mūl.) To interpret? (ব্যাখ্যা করা, bækhyā kôrā.) Briefly? (সংক্ষেপে, sôngkkhepe.) Proof? (প্রমাণ, prômān.) Sure? (নিশ্চিত, nishchitô.) A basis? (ভিত্তি, bhitti.) To identify? (শনাক্ত করা, shônāktô kôrā.) To uncover? (উদ্ঘাটন করা, udghāṭôn kôrā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

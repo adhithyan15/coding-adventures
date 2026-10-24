@@ -1,0 +1,11 @@
+{
+  "id": "BN-C539-nachhorbanda",
+  "pathSegment": "BN-PATH-539-BIGHNO539",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-539-BIGHNO539",
+      "order": 1
+    }
+  ]
+}

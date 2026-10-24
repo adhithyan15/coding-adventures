@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "Raising a Voice",
+  "label": "ch:bn-raising-a-voice",
+  "canDo": "I can say what people protest about and what they want.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C349-jonosongkhya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can say what people protest about and what they want.",
+    "assesses": [
+      "BN-LEX-C349-PROTIBAD349-03",
+      "BN-LEX-C349-PROTIBAD349-04",
+      "BN-LEX-C349-PROTIBAD349-05"
+    ]
+  }
+}

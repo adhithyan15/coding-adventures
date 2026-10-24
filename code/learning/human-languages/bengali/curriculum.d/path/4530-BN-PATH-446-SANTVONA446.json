@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-446-SANTVONA446",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "BN-EXT-446-SANTVONA446"
+  ],
+  "after": []
+}

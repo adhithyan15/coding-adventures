@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C476-dom",
+    "language": "bengali",
+    "chapter": 476,
+    "sequence": 28940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9c30317c8c75f60"
+  },
+  "findings": []
+}

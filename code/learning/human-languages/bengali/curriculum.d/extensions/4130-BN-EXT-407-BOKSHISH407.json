@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-407-BOKSHISH407",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can hear the bell, read the menu, tip the bearer and send clothes to the laundry.",
+  "prerequisites": []
+}

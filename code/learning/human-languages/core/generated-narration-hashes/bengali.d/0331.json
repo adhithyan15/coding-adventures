@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:20b0c5b01bb1812c",
+  "lessonIds": [
+    "BN-C331-uddeshyo",
+    "BN-C331-upokar",
+    "BN-C331-labh",
+    "BN-C331-loksan",
+    "BN-C331-upojogi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch331.txt",
+  "json": "bengali/narration/ch331.json",
+  "textHash": "fnv1a64:ad9ac0a6d845e033",
+  "jsonHash": "fnv1a64:6b296cb7d7a2405c",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:4fd02a2ba3b62ebf",
+  "lessonIds": [
+    "BN-C297-kotha",
+    "BN-C297-sakkhatkar",
+    "BN-C297-ghoshona-kora",
+    "BN-C297-bibriti",
+    "BN-C297-ullekh-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch297.txt",
+  "json": "bengali/narration/ch297.json",
+  "textHash": "fnv1a64:5b4365685ec3cd6d",
+  "jsonHash": "fnv1a64:ec8f1fdc86af0b55",
+  "findings": []
+}

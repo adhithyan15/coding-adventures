@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C511-dekchi",
+    "language": "bengali",
+    "chapter": 511,
+    "sequence": 30980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1cd8b01fb4562f25"
+  },
+  "findings": []
+}

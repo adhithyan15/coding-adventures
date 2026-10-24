@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:54445d3ee9fdb21e",
+  "lessonIds": [
+    "BN-C284-kobul-kora",
+    "BN-C284-sutro",
+    "BN-C284-pahara-deoya",
+    "BN-C284-koyedi",
+    "BN-C284-jamin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch284.txt",
+  "json": "bengali/narration/ch284.json",
+  "textHash": "fnv1a64:0e12ca2496124842",
+  "jsonHash": "fnv1a64:e358059ce0762dde",
+  "findings": []
+}

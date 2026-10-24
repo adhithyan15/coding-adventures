@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 321,
+  "output": "bengali/book/chapters/ch321-legends.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

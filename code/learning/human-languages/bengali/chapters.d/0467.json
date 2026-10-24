@@ -1,0 +1,19 @@
+{
+  "chapter": 467,
+  "title": "Face and Mouth",
+  "label": "ch:bn-face-and-mouth",
+  "canDo": "I can name the lips, jaw, gums and voice, and say that someone frowned.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C467-kochkano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can name the lips, jaw, gums and voice, and say that someone frowned.",
+    "assesses": [
+      "BN-LEX-C467-THOT467-03",
+      "BN-LEX-C467-THOT467-04",
+      "BN-LEX-C467-THOT467-05"
+    ]
+  }
+}

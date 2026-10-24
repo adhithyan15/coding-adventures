@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C371-olpo",
+    "language": "bengali",
+    "chapter": 371,
+    "sequence": 23120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce51925ffe4b1615"
+  },
+  "findings": []
+}

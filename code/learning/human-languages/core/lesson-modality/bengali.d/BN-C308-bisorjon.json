@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C308-bisorjon",
+    "language": "bengali",
+    "chapter": 308,
+    "sequence": 19640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1301504c4a30762f"
+  },
+  "findings": []
+}

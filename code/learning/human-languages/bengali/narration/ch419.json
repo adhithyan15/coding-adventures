@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 419,
+  "title": "Want and Waste",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6cb114483fcd1bfa",
+  "lessons": [
+    {
+      "id": "BN-C419-obhab",
+      "sequence": 25790,
+      "title": "অভাব (ôbhāb) — want; lack; need",
+      "headword": "অভাব",
+      "romanization": "ôbhāb",
+      "gloss": "want; lack; need",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8db4bd8efb9b9db2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a moneylender, then the Bengali for the rest (remaining)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অভাব",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অভাব — ôbhāb — \"want; lack; need\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গরমে গ্রামে জলের অভাব হয়। gôrôme grāme jôler ôbhāb hôy. In summer the village runs short of water."
+            },
+            {
+              "kind": "speech",
+              "text": "Also hardship itself: অভাবের দিন, hard times; টাকার অভাব (ôbhāb), a shortage of money."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অভাব (ôbhāb) is Sanskrit abhāva, \"non-existence, absence\" (Monier-Williams), from a-, not, and bhāva, being; Bengali uses it for the want of what one needs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbhāb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbhāb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbhāb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbhāb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôrôme grāme jôler ôbhāb hôy. — In summer the village runs short of water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôrôme grāme jôler ôbhāb hôy.* — In summer the village runs short of water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a moneylender, then the Bengali for the rest (remaining), then say ôbhāb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a moneylender, then the Bengali for the rest (remaining), then say *ôbhāb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অভাব (ôbhāb) mean? (\"Want; lack; need\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C419-opochoy",
+      "sequence": 25800,
+      "title": "অপচয় (ôpôchôy) — waste; wastefulness",
+      "headword": "অপচয়",
+      "romanization": "ôpôchôy",
+      "gloss": "waste; wastefulness",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8edde2ec3571f18c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for the rest (remaining), then the Bengali for want (lack)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অপচয়",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অপচয় — ôpôchôy — \"waste; wastefulness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আলো জ্বালিয়ে রাখা বিদ্যুতের অপচয়। ālo jvāliye rākhā bidyuter ôpôchôy. Leaving the lights on is a waste of electricity."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অপচয় (ôpôchôy) is Sanskrit apacaya, \"diminution, decrease\" (Monier-Williams); the sense of wasting is the Bengali use."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôpôchôy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôpôchôy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôpôchôy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôpôchôy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālo jvāliye rākhā bidyuter ôpôchôy. — Leaving the lights on is a waste of electricity.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālo jvāliye rākhā bidyuter ôpôchôy.* — Leaving the lights on is a waste of electricity.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for the rest (remaining), then the Bengali for want (lack), then say ôpôchôy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for the rest (remaining), then the Bengali for want (lack), then say *ôpôchôy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অপচয় (ôpôchôy) mean? (\"Waste; wastefulness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C419-kipte",
+      "sequence": 25810,
+      "title": "কিপটে (kipṭe) — stingy; a miser",
+      "headword": "কিপটে",
+      "romanization": "kipṭe",
+      "gloss": "stingy; a miser",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:26de2dfd9b0c6746",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for want (lack), then the Bengali for waste (of something useful)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কিপটে",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কিপটে — kipṭe — \"stingy; a miser\"."
+            },
+            {
+              "kind": "speech",
+              "text": "কিপটে দোকানদার একটা পয়সাও ছাড়লেন না। kipṭe dokāndār ekṭā pôysāo chhāṛlen nā. The stingy shopkeeper would not give up a single paisa."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কিপটে (kipṭe) is an everyday, rather rude word for a stingy person; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kipṭe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kipṭe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kipṭe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kipṭe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kipṭe dokāndār ekṭā pôysāo chhāṛlen nā. — The stingy shopkeeper would not give up a single paisa.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kipṭe dokāndār ekṭā pôysāo chhāṛlen nā.* — The stingy shopkeeper would not give up a single paisa.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for want (lack), then the Bengali for waste (of something useful), then say kipṭe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for want (lack), then the Bengali for waste (of something useful), then say *kipṭe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কিপটে (kipṭe) mean? (\"Stingy; a miser\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C419-bondhok",
+      "sequence": 25820,
+      "title": "বন্ধক (bôndhôk) — a pledge; a mortgage",
+      "headword": "বন্ধক",
+      "romanization": "bôndhôk",
+      "gloss": "a pledge; a mortgage",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d7fa869452b80fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for waste (of something useful), then the Bengali for stingy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বন্ধক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বন্ধক — bôndhôk — \"a pledge; a mortgage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দরকারে বাবা জমিটা বন্ধক রাখলেন। dôrkāre bābā jômiṭā bôndhôk rākhlen. In his need my father mortgaged the land."
+            },
+            {
+              "kind": "speech",
+              "text": "বন্ধক (bôndhôk) রাখা, to pawn or to mortgage; বন্ধক (bôndhôk) ছাড়ানো, to redeem a pledge."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বন্ধক (bôndhôk) is Sanskrit bandhaka, \"pledging, a pledge\" (Monier-Williams), from bandh, to bind: a thing bound as a surety."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôndhôk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôndhôk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôndhôk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôndhôk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dôrkāre bābā jômiṭā bôndhôk rākhlen. — In his need my father mortgaged the land.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dôrkāre bābā jômiṭā bôndhôk rākhlen.* — In his need my father mortgaged the land.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for waste (of something useful), then the Bengali for stingy, then say bôndhôk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for waste (of something useful), then the Bengali for stingy, then say *bôndhôk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বন্ধক (bôndhôk) mean? (\"A pledge; a mortgage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C419-sombol",
+      "sequence": 25830,
+      "title": "সম্বল (sômbôl) — one's means; what one has to live on",
+      "headword": "সম্বল",
+      "romanization": "sômbôl",
+      "gloss": "one's means; what one has to live on",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e0c85ffd0424c04",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for stingy, then the Bengali for a pledge (for a loan)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সম্বল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সম্বল — sômbôl — \"one's means; what one has to live on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ওই টাকাটাই ছিল আমাদের পথের সম্বল। oi ṭākāṭāi chhilô āmāder pôther sômbôl. That money was all we had for the journey."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সম্বল (sômbôl) is Sanskrit śambala, also written sambala, \"provisions for a journey\" (Monier-Williams): পথের সম্বল keeps the old sense, and the word has grown to mean all one has to live on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sômbôl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sômbôl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sômbôl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sômbôl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oi ṭākāṭāi chhilô āmāder pôther sômbôl. — That money was all we had for the journey.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oi ṭākāṭāi chhilô āmāder pôther sômbôl.* — That money was all we had for the journey.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for stingy, then the Bengali for a pledge (for a loan), then say sômbôl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for stingy, then the Bengali for a pledge (for a loan), then say *sômbôl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সম্বল (sômbôl) mean? (\"One's means; what one has to live on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C407-bokshish",
+  "pathSegment": "BN-PATH-407-BOKSHISH407",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-407-BOKSHISH407",
+      "order": 3
+    }
+  ]
+}

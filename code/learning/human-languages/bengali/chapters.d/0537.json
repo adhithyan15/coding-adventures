@@ -1,0 +1,19 @@
+{
+  "chapter": 537,
+  "title": "Making Up My Mind",
+  "label": "ch:bn-making-up-my-mind",
+  "canDo": "I can say how I made up my mind, or had no choice.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C537-pichhpa-hooya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 537: I can say how I made up my mind, or had no choice.",
+    "assesses": [
+      "BN-LEX-C537-MONOSTHIR537-03",
+      "BN-LEX-C537-MONOSTHIR537-04",
+      "BN-LEX-C537-MONOSTHIR537-05"
+    ]
+  }
+}

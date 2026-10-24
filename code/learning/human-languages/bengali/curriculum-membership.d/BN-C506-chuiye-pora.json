@@ -1,0 +1,11 @@
+{
+  "id": "BN-C506-chuiye-pora",
+  "pathSegment": "BN-PATH-506-TANK506",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-506-TANK506",
+      "order": 4
+    }
+  ]
+}

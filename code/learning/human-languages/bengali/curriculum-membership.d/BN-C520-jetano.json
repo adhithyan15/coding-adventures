@@ -1,0 +1,11 @@
+{
+  "id": "BN-C520-jetano",
+  "pathSegment": "BN-PATH-520-PODOK520",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-520-PODOK520",
+      "order": 4
+    }
+  ]
+}

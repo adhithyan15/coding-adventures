@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C488-bardhokyo",
+    "language": "bengali",
+    "chapter": 488,
+    "sequence": 29590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7429bcd14052bd0d"
+  },
+  "findings": []
+}

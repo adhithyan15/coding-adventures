@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:0e337a45f788c15e",
+  "lessonIds": [
+    "BN-C533-doibat",
+    "BN-C533-kaktaliyo",
+    "BN-C533-mooka",
+    "BN-C533-phoskano",
+    "BN-C533-lotari"
+  ],
+  "tex": "bengali/book/chapters/ch533-by-chance.tex"
+}

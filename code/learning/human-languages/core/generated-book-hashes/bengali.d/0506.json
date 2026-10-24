@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:455e203b21fd236f",
+  "lessonIds": [
+    "BN-C506-tengk",
+    "BN-C506-phuto",
+    "BN-C506-upoche-pora",
+    "BN-C506-secha",
+    "BN-C506-chuiye-pora"
+  ],
+  "tex": "bengali/book/chapters/ch506-leaks-and-holes.tex"
+}

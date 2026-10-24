@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:36cba25fb1c787f8",
+  "lessonIds": [
+    "BN-C474-hapani",
+    "BN-C474-dayabetis",
+    "BN-C474-roktochap",
+    "BN-C474-kensar",
+    "BN-C474-jondis"
+  ],
+  "tex": "bengali/book/chapters/ch474-long-illnesses.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:8141677ab5ebde89",
+  "lessonIds": [
+    "BN-C321-kingbodonti",
+    "BN-C321-rupkotha",
+    "BN-C321-doityo",
+    "BN-C321-jadu",
+    "BN-C321-ghumano"
+  ],
+  "tex": "bengali/book/chapters/ch321-legends.tex"
+}

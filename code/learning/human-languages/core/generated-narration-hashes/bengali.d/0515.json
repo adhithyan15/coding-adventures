@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:559e44ae396df062",
+  "lessonIds": [
+    "BN-C515-poribeshon",
+    "BN-C515-gras",
+    "BN-C515-svad",
+    "BN-C515-eto",
+    "BN-C515-achano",
+    "BN-R515-review-508-515"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch515.txt",
+  "json": "bengali/narration/ch515.json",
+  "textHash": "fnv1a64:78e9301e42dd736d",
+  "jsonHash": "fnv1a64:06ac5805ae50f31d",
+  "findings": []
+}

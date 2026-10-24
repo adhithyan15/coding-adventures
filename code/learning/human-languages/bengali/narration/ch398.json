@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 398,
+  "title": "Currents and Beaches",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:009d614d19827e8c",
+  "lessons": [
+    {
+      "id": "BN-C398-srot",
+      "sequence": 24710,
+      "title": "স্রোত (srot) — a current; a stream",
+      "headword": "স্রোত",
+      "romanization": "srot",
+      "gloss": "a current; a stream",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac85bdab3109a663",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a bank (of a pond or river), then the Bengali for to moor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: স্রোত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "স্রোত — srot — \"a current; a stream\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নদীর স্রোতে নৌকাটা দ্রুত চলল। nôdīr srote noukāṭā drutô chôllô. The boat moved fast on the river's current."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a flow of people or things: মানুষের স্রোত (srot), a stream of people."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "স্রোত (srot) is Sanskrit srotas, \"the current or bed of a river, a stream\" (Monier-Williams), from sru, to flow."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "srot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *srot*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "srot, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *srot*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôdīr srote noukāṭā drutô chôllô. — The boat moved fast on the river's current.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôdīr srote noukāṭā drutô chôllô.* — The boat moved fast on the river's current.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a bank (of a pond or river), then the Bengali for to moor, then say srot again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a bank (of a pond or river), then the Bengali for to moor, then say *srot* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does স্রোত (srot) mean? (\"A current; a stream\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C398-soikot",
+      "sequence": 24720,
+      "title": "সৈকত (soikôt) — a beach",
+      "headword": "সৈকত",
+      "romanization": "soikôt",
+      "gloss": "a beach",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d34afd0a7d35c7a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to moor, then the Bengali for a current."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সৈকত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সৈকত — soikôt — \"a beach\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সন্ধ্যায় আমরা সৈকতে হাঁটলাম। sôndhyāy āmrā soikôte hā̃ṭlām. In the evening we walked on the beach."
+            },
+            {
+              "kind": "speech",
+              "text": "The first vowel sign is ৈ, the vowel oi; in talk people also say সমুদ্রের ধার."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সৈকত (soikôt) is Sanskrit saikata, \"sandy, made of sand\" (Monier-Williams), from sikatā, sand: a beach is the sandy place."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soikôt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soikôt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soikôt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soikôt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôndhyāy āmrā soikôte hā̃ṭlām. — In the evening we walked on the beach.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôndhyāy āmrā soikôte hā̃ṭlām.* — In the evening we walked on the beach.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to moor, then the Bengali for a current, then say soikôt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to moor, then the Bengali for a current, then say *soikôt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সৈকত (soikôt) mean? (\"A beach\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C398-jeti",
+      "sequence": 24730,
+      "title": "জেটি (jeṭi) — a jetty",
+      "headword": "জেটি",
+      "romanization": "jeṭi",
+      "gloss": "a jetty",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff6cd25b82d02b41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a current, then the Bengali for a beach."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জেটি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জেটি — jeṭi — \"a jetty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "জেটিতে দাঁড়িয়ে আমরা জাহাজ দেখলাম। jeṭite dā̃ṛiye āmrā jāhāj dekhlām. We stood on the jetty and watched the ships."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জেটি (jeṭi) is borrowed from English jetty, a landing stage built out into the water."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jeṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jeṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jeṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jeṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jeṭite dā̃ṛiye āmrā jāhāj dekhlām. — We stood on the jetty and watched the ships.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jeṭite dā̃ṛiye āmrā jāhāj dekhlām.* — We stood on the jetty and watched the ships.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a current, then the Bengali for a beach, then say jeṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a current, then the Bengali for a beach, then say *jeṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does জেটি (jeṭi) mean? (\"A jetty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C398-dub-deoya",
+      "sequence": 24740,
+      "title": "ডুব দেওয়া (ḍub deoyā) — to take a dip; to dive under",
+      "headword": "ডুব দেওয়া",
+      "romanization": "ḍub deoyā",
+      "gloss": "to take a dip; to dive under",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41d0e9c562e3d38d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a beach, then the Bengali for a jetty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ডুব দেওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ডুব দেওয়া — ḍub deoyā — \"to take a dip; to dive under\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গরমে অরুণ পুকুরে ডুব দিল। gôrôme ôrun pukure ḍub dilô. In the heat Arun took a dip in the pond."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি পুকুরে ডুব দিলেন, tini pukure ḍub dilen."
+            },
+            {
+              "kind": "speech",
+              "text": "ডুব is a plunge under water; ডোবা, to sink, is the same root."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ডুব দেওয়া (ḍub deoyā) joins ডুব, \"a plunge under water\", from the reconstructed ḍubb, \"sink\", under which CDIAL lists Bengali ḍubā, \"to sink\" (CDIAL 5561), to দেওয়া, to give."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍub deoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍub deoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍub deoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍub deoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôrôme ôrun pukure ḍub dilô. — In the heat Arun took a dip in the pond.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôrôme ôrun pukure ḍub dilô.* — In the heat Arun took a dip in the pond.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a beach, then the Bengali for a jetty, then say ḍub deoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a beach, then the Bengali for a jetty, then say *ḍub deoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ডুব দেওয়া (ḍub deoyā) mean? (\"To take a dip; to dive under\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C398-chhitano",
+      "sequence": 24750,
+      "title": "ছিটানো (chhiṭāno) — to splash; to sprinkle",
+      "headword": "ছিটানো",
+      "romanization": "chhiṭāno",
+      "gloss": "to splash; to sprinkle",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8721a87261ef1511",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a jetty, then the Bengali for to take a dip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ছিটানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ছিটানো — chhiṭāno — \"to splash; to sprinkle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শিশুরা সৈকতে জল ছিটাল। shishurā soikôte jôl chhiṭālô. The children splashed water on the beach."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি জল ছিটালেন, tini jôl chhiṭālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ছিটানো (chhiṭāno) is inherited: CDIAL lists Bengali chiṭā, \"to scatter, to sprinkle\", under the reconstructed chiṭ, \"a sudden movement, a splash\" (CDIAL 5035)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhiṭāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhiṭāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhiṭāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhiṭāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shishurā soikôte jôl chhiṭālô. — The children splashed water on the beach.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shishurā soikôte jôl chhiṭālô.* — The children splashed water on the beach.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a jetty, then the Bengali for to take a dip, then say chhiṭāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a jetty, then the Bengali for to take a dip, then say *chhiṭāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ছিটানো (chhiṭāno) mean? (\"To splash; to sprinkle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

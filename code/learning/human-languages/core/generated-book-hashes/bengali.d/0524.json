@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:c81ec8861928b933",
+  "lessonIds": [
+    "BN-C524-ijel",
+    "BN-C524-jolrong",
+    "BN-C524-noksha",
+    "BN-C524-khodai-kora",
+    "BN-C524-rangano"
+  ],
+  "tex": "bengali/book/chapters/ch524-paint-and-carving.tex"
+}

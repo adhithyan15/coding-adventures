@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "On the Record",
+  "label": "ch:bn-on-the-record",
+  "canDo": "I can check a record against the facts.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C338-khondon-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can check a record against the facts.",
+    "assesses": [
+      "BN-LEX-C338-DOLIL338-03",
+      "BN-LEX-C338-DOLIL338-04",
+      "BN-LEX-C338-DOLIL338-05"
+    ]
+  }
+}

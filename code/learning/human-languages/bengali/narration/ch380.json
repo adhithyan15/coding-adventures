@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 380,
+  "title": "The Right Conditions",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:60d64fbe744112ae",
+  "lessons": [
+    {
+      "id": "BN-C380-onukul",
+      "sequence": 23560,
+      "title": "অনুকূল (ônukūl) — favourable",
+      "headword": "অনুকূল",
+      "romanization": "ônukūl",
+      "gloss": "favourable",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76c823e3bc70e18a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to break a promise, then the Bengali for to vow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অনুকূল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনুকূল — ônukūl — \"favourable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আবহাওয়া অনুকূল হলে আমরা কাল নৌকায় যাব। ābôhāoyā ônukūl hôle āmrā kāl noukāy jābô. If the weather is favourable, we'll go by boat tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনুকূল (ônukūl) is Sanskrit anukūla, 'along the bank', and so going with you, favourable (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônukūl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônukūl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônukūl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônukūl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ābôhāoyā ônukūl hôle āmrā kāl noukāy jābô. — If the weather is favourable, we'll go by boat tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ābôhāoyā ônukūl hôle āmrā kāl noukāy jābô.* — If the weather is favourable, we'll go by boat tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to break a promise, then the Bengali for to vow, then say ônukūl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to break a promise, then the Bengali for to vow, then say *ônukūl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অনুকূল (ônukūl) mean? (\"Favourable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C380-protikul",
+      "sequence": 23570,
+      "title": "প্রতিকূল (prôtikūl) — unfavourable; adverse",
+      "headword": "প্রতিকূল",
+      "romanization": "prôtikūl",
+      "gloss": "unfavourable; adverse",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2ae25f6e8f8e846",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to vow, then the Bengali for favourable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রতিকূল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রতিকূল — prôtikūl — \"unfavourable; adverse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পরিস্থিতি প্রতিকূল হলে আমরা ফিরে আসব। pôristhiti prôtikūl hôle āmrā phire āsbô. If the situation turns against us, we'll come back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রতিকূল (prôtikūl) is Sanskrit pratikūla, 'against the bank', contrary (Monier-Williams), the opposite of অনুকূল (ônukūl)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtikūl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtikūl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtikūl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtikūl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôristhiti prôtikūl hôle āmrā phire āsbô. — If the situation turns against us, we'll come back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôristhiti prôtikūl hôle āmrā phire āsbô.* — If the situation turns against us, we'll come back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to vow, then the Bengali for favourable, then say prôtikūl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to vow, then the Bengali for favourable, then say *prôtikūl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রতিকূল (prôtikūl) mean? (\"Unfavourable; adverse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C380-upojukto",
+      "sequence": 23580,
+      "title": "উপযুক্ত (upôjuktô) — suitable; fitting",
+      "headword": "উপযুক্ত",
+      "romanization": "upôjuktô",
+      "gloss": "suitable; fitting",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:055fffbfc6d1038d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for favourable, then the Bengali for adverse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উপযুক্ত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপযুক্ত — upôjuktô — \"suitable; fitting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "উপযুক্ত লোক পেলে আমরা কাজটা দেব। upôjuktô lok pele āmrā kājṭā debô. If we find a suitable person, we'll give them the job."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপযুক্ত (upôjuktô) is Sanskrit upayukta, suitable or appropriate (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôjuktô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôjuktô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôjuktô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôjuktô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôjuktô lok pele āmrā kājṭā debô. — If we find a suitable person, we'll give them the job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôjuktô lok pele āmrā kājṭā debô.* — If we find a suitable person, we'll give them the job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for favourable, then the Bengali for adverse, then say upôjuktô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for favourable, then the Bengali for adverse, then say *upôjuktô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উপযুক্ত (upôjuktô) mean? (\"Suitable; fitting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C380-jogyo",
+      "sequence": 23590,
+      "title": "যোগ্য (jogyô) — qualified; deserving",
+      "headword": "যোগ্য",
+      "romanization": "jogyô",
+      "gloss": "qualified; deserving",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d80a118c910c936",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for adverse, then the Bengali for suitable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: যোগ্য",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "যোগ্য — jogyô — \"qualified; deserving\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তুমি যদি যোগ্য হও, তাহলে চাকরিটা পাবে। tumi jôdi jogyô hôo, tāhôle chākriṭā pābe. If you're qualified, you'll get the job."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "যোগ্য (jogyô) is Sanskrit yogya, fit for the yoke and so fit for a task (Monier-Williams). A person is যোগ্য for a post or a prize."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jogyô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jogyô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jogyô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jogyô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tumi jôdi jogyô hôo, tāhôle chākriṭā pābe. — If you're qualified, you'll get the job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tumi jôdi jogyô hôo, tāhôle chākriṭā pābe.* — If you're qualified, you'll get the job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for adverse, then the Bengali for suitable, then say jogyô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for adverse, then the Bengali for suitable, then say *jogyô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does যোগ্য (jogyô) mean? (\"Qualified; deserving\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C380-obhyosto-hooya",
+      "sequence": 23600,
+      "title": "অভ্যস্ত হওয়া (ôbhyôstô hôoyā) — to get used to",
+      "headword": "অভ্যস্ত হওয়া",
+      "romanization": "ôbhyôstô hôoyā",
+      "gloss": "to get used to",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41843f5c26bf3adf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for suitable, then the Bengali for qualified."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অভ্যস্ত হওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অভ্যস্ত হওয়া — ôbhyôstô hôoyā — \"to get used to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এখানে এক মাস থাকলে তুমি গরমে অভ্যস্ত হয়ে যাবে। ekhāne ek mās thākle tumi gôrôme ôbhyôstô hôye jābe. If you stay here a month, you'll get used to the heat."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি নতুন শহরে অভ্যস্ত হলেন, tini nôtun shôhôre ôbhyôstô hôlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অভ্যস্ত হওয়া (ôbhyôstô hôoyā) is Sanskrit abhyasta, practised (Monier-Williams), with হওয়া: to become practised at living with something, to get used to it. What you get used to takes -এ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbhyôstô hôoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbhyôstô hôoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbhyôstô hôoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbhyôstô hôoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekhāne ek mās thākle tumi gôrôme ôbhyôstô hôye jābe. — If you stay here a month, you'll get used to the heat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekhāne ek mās thākle tumi gôrôme ôbhyôstô hôye jābe.* — If you stay here a month, you'll get used to the heat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for suitable, then the Bengali for qualified, then say ôbhyôstô hôoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for suitable, then the Bengali for qualified, then say *ôbhyôstô hôoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অভ্যস্ত হওয়া (ôbhyôstô hôoyā) mean? (\"To get used to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

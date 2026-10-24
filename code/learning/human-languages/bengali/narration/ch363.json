@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 363,
+  "title": "Problems and Answers",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ba37e6ce94a71341",
+  "lessons": [
+    {
+      "id": "BN-C363-somosya",
+      "sequence": 22690,
+      "title": "সমস্যা (sômôsyā) — a problem",
+      "headword": "সমস্যা",
+      "romanization": "sômôsyā",
+      "gloss": "a problem",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:beb48573c2604436",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to sense, then the Bengali for clear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সমস্যা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সমস্যা — sômôsyā — \"a problem\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তোমার কোনো সমস্যা হলে আমাকে বলো। tomār kono sômôsyā hôle āmāke bôlo. If you have any problem, tell me."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সমস্যা (sômôsyā) is Sanskrit samasyā, a part of a verse given to someone else to complete, a kind of puzzle (Monier-Williams). Bengali widened the puzzle to any problem; that widening is not in the dictionary."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sômôsyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sômôsyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sômôsyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sômôsyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomār kono sômôsyā hôle āmāke bôlo. — If you have any problem, tell me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomār kono sômôsyā hôle āmāke bôlo.* — If you have any problem, tell me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to sense, then the Bengali for clear, then say sômôsyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to sense, then the Bengali for clear, then say *sômôsyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সমস্যা (sômôsyā) mean? (\"A problem\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C363-upay",
+      "sequence": 22700,
+      "title": "উপায় (upāy) — a way; a means",
+      "headword": "উপায়",
+      "romanization": "upāy",
+      "gloss": "a way; a means",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fdcafc82c3293122",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for clear, then the Bengali for a problem."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উপায়",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপায় — upāy — \"a way; a means\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আর কোনো উপায় নেই। ār kono upāy nei. There is no other way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপায় (upāy) is Sanskrit upāya, 'coming near', a means of reaching an end (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upāy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upāy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ār kono upāy nei. — There is no other way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ār kono upāy nei.* — There is no other way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for clear, then the Bengali for a problem, then say upāy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for clear, then the Bengali for a problem, then say *upāy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উপায় (upāy) mean? (\"A way; a means\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C363-bikolpo",
+      "sequence": 22710,
+      "title": "বিকল্প (bikôlpô) — an alternative; an option",
+      "headword": "বিকল্প",
+      "romanization": "bikôlpô",
+      "gloss": "an alternative; an option",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:156a1349e04b7a3e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a problem, then the Bengali for a means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিকল্প",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিকল্প — bikôlpô — \"an alternative; an option\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সাইকেল গাড়ির একটা ভালো বিকল্প। sāikel gāṛir ekṭā bhālo bikôlpô. A bicycle is a good alternative to a car."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিকল্প (bikôlpô) is Sanskrit vikalpa, an alternative or option (Monier-Williams). What it replaces takes -এর."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bikôlpô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bikôlpô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bikôlpô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bikôlpô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāikel gāṛir ekṭā bhālo bikôlpô. — A bicycle is a good alternative to a car.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāikel gāṛir ekṭā bhālo bikôlpô.* — A bicycle is a good alternative to a car.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a problem, then the Bengali for a means, then say bikôlpô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a problem, then the Bengali for a means, then say *bikôlpô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিকল্প (bikôlpô) mean? (\"An alternative; an option\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C363-uttor",
+      "sequence": 22720,
+      "title": "উত্তর (uttôr) — an answer; a reply",
+      "headword": "উত্তর",
+      "romanization": "uttôr",
+      "gloss": "an answer; a reply",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a95585a921848267",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a means, then the Bengali for an alternative."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উত্তর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উত্তর — uttôr — \"an answer; a reply\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার প্রশ্নের উত্তর দাও। āmār prôshner uttôr dāo. Answer my question."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উত্তর (uttôr) is Sanskrit uttara, the later or the upper one, and so a reply (Monier-Williams). The same word also means north. It is given with দেওয়া."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uttôr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uttôr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uttôr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uttôr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmār prôshner uttôr dāo. — Answer my question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmār prôshner uttôr dāo.* — Answer my question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a means, then the Bengali for an alternative, then say uttôr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a means, then the Bengali for an alternative, then say *uttôr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উত্তর (uttôr) mean? (\"An answer; a reply\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C363-utre-jaoya",
+      "sequence": 22730,
+      "title": "উতরে যাওয়া (utre jāoyā) — to come through; to get through (a test)",
+      "headword": "উতরে যাওয়া",
+      "romanization": "utre jāoyā",
+      "gloss": "to come through; to get through (a test)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b05dbb1cdc25f665",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an alternative, then the Bengali for an answer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উতরে যাওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উতরে যাওয়া — utre jāoyā — \"to come through; to get through (a test)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অনেক ঝামেলার পরে আমরা উতরে গেলাম। ônek jhāmelār pôre āmrā utre gelām. After a lot of trouble, we came through."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই পরিকল্পনাটা উতরে গেল, sei pôrikôlpônāṭā utre gelô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উতরে যাওয়া (utre jāoyā) is the -এ form of উতরা 'to cross, to get over' (CDIAL 1770 lists Bengali utarā) with যাওয়া: to get across a difficulty to the other side. The sense 'to pass a test' is a Bengali use."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utre jāoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utre jāoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utre jāoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utre jāoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônek jhāmelār pôre āmrā utre gelām. — After a lot of trouble, we came through.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônek jhāmelār pôre āmrā utre gelām.* — After a lot of trouble, we came through.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an alternative, then the Bengali for an answer, then say utre jāoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an alternative, then the Bengali for an answer, then say *utre jāoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উতরে যাওয়া (utre jāoyā) mean? (\"To come through; to get through (a test)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

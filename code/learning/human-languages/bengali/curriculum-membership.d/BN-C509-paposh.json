@@ -1,0 +1,11 @@
+{
+  "id": "BN-C509-paposh",
+  "pathSegment": "BN-PATH-509-GALICHA509",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-509-GALICHA509",
+      "order": 2
+    }
+  ]
+}

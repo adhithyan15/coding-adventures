@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 325,
+  "title": "A Story's Lesson",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1a5168b44016cf71",
+  "lessons": [
+    {
+      "id": "BN-C325-upodesh",
+      "sequence": 20510,
+      "title": "উপদেশ (upôdesh) — a moral lesson; counsel",
+      "headword": "উপদেশ",
+      "romanization": "upôdesh",
+      "gloss": "a moral lesson; counsel",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:075b91b3a6a0bb30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to coax, then the Bengali for to get away with it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উপদেশ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপদেশ — upôdesh — \"a moral lesson; counsel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গল্পের শেষে দাদু একটা উপদেশ দিলেন। gôlper sheshe dādu ekṭā upôdesh dilen. At the end of the story my grandfather gave us a lesson to remember."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপদেশ (upôdesh) is Sanskrit upadeśa, 'pointing out; instruction, advice' (Monier-Williams); it has nothing to do with দেশ, a country. Everyday advice is পরামর্শ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôdesh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôdesh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôdesh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôdesh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôlper sheshe dādu ekṭā upôdesh dilen. — At the end of the story my grandfather gave us a lesson to remember.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôlper sheshe dādu ekṭā upôdesh dilen.* — At the end of the story my grandfather gave us a lesson to remember.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to coax, then the Bengali for to get away with it, then say upôdesh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to coax, then the Bengali for to get away with it, then say *upôdesh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উপদেশ (upôdesh) mean? (\"A moral lesson; counsel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C325-porinam",
+      "sequence": 20520,
+      "title": "পরিণাম (pôrinām) — an outcome; a consequence",
+      "headword": "পরিণাম",
+      "romanization": "pôrinām",
+      "gloss": "an outcome; a consequence",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:490d2f0047221b16",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to get away with it, then the Bengali for a moral lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পরিণাম",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পরিণাম — pôrinām — \"an outcome; a consequence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "লোভের পরিণাম ভালো হয় না। lobher pôrinām bhālo hôy nā. Greed never ends well."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পরিণাম (pôrinām) is Sanskrit pariṇāma, 'change, development, ripening' (Monier-Williams): what a thing turns into in the end."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôrinām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôrinām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôrinām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôrinām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lobher pôrinām bhālo hôy nā. — Greed never ends well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lobher pôrinām bhālo hôy nā.* — Greed never ends well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to get away with it, then the Bengali for a moral lesson, then say pôrinām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to get away with it, then the Bengali for a moral lesson, then say *pôrinām* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পরিণাম (pôrinām) mean? (\"An outcome; a consequence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C325-pap",
+      "sequence": 20530,
+      "title": "পাপ (pāp) — a sin",
+      "headword": "পাপ",
+      "romanization": "pāp",
+      "gloss": "a sin",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f67c6c60cae4b952",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a moral lesson, then the Bengali for an outcome."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পাপ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাপ — pāp — \"a sin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গল্পে বলে যে মিথ্যা বলা পাপ। gôlpe bôle je mitthā bôlā pāp. The story says that telling lies is a sin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাপ (pāp) is Sanskrit pāpa, 'bad, evil', and as a noun 'a sin' (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāp, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāp*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôlpe bôle je mitthā bôlā pāp. — The story says that telling lies is a sin.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôlpe bôle je mitthā bôlā pāp.* — The story says that telling lies is a sin.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a moral lesson, then the Bengali for an outcome, then say pāp again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a moral lesson, then the Bengali for an outcome, then say *pāp* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পাপ (pāp) mean? (\"A sin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C325-shodhrano",
+      "sequence": 20540,
+      "title": "শোধরানো (shodhrāno) — to mend one's ways; to put right",
+      "headword": "শোধরানো",
+      "romanization": "shodhrāno",
+      "gloss": "to mend one's ways; to put right",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7eb154eae268e437",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an outcome, then the Bengali for a sin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শোধরানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শোধরানো — shodhrāno — \"to mend one's ways; to put right\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শাস্তির পরে লোভী রাজা শোধরালেন। shāstir pôre lobhī rājā shodhrālen. After his punishment the greedy king mended his ways."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই ছেলে শোধরাল, sei chhele shodhrālô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শোধরানো (shodhrāno) is usually explained as built on শোধ, 'a clearing, a setting right' — Sanskrit śodha, 'purification, correction' (Monier-Williams) — as a verb: to put oneself right."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shodhrāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shodhrāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shodhrāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shodhrāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāstir pôre lobhī rājā shodhrālen. — After his punishment the greedy king mended his ways.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāstir pôre lobhī rājā shodhrālen.* — After his punishment the greedy king mended his ways.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an outcome, then the Bengali for a sin, then say shodhrāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an outcome, then the Bengali for a sin, then say *shodhrāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does শোধরানো (shodhrāno) mean? (\"To mend one's ways; to put right\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C325-badhyo-hooya",
+      "sequence": 20550,
+      "title": "বাধ্য হওয়া (bādhyô hôoyā) — to be forced; to have no choice",
+      "headword": "বাধ্য হওয়া",
+      "romanization": "bādhyô hôoyā",
+      "gloss": "to be forced; to have no choice",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11519c4d948bdfb2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a sin, then the Bengali for to mend one's ways."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বাধ্য হওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বাধ্য হওয়া — bādhyô hôoyā — \"to be forced; to have no choice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ঝড়ের জন্য জেলেরা ফিরে আসতে বাধ্য হল। jhôṛer jônyô jelerā phire āste bādhyô hôlô. Because of the storm the fishermen were forced to come back."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি বাড়ি বেচতে বাধ্য হলেন, tini bāṛi bechte bādhyô hôlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বাধ্য হওয়া (bādhyô hôoyā) puts Sanskrit bādhya, 'to be pressed hard, held back' (Monier-Williams), before হওয়া: to be pressed into something. It takes the -তে form: যেতে বাধ্য হল, had to go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bādhyô hôoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bādhyô hôoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bādhyô hôoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bādhyô hôoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhôṛer jônyô jelerā phire āste bādhyô hôlô. — Because of the storm the fishermen were forced to come back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhôṛer jônyô jelerā phire āste bādhyô hôlô.* — Because of the storm the fishermen were forced to come back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a sin, then the Bengali for to mend one's ways, then say bādhyô hôoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a sin, then the Bengali for to mend one's ways, then say *bādhyô hôoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বাধ্য হওয়া (bādhyô hôoyā) mean? (\"To be forced; to have no choice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

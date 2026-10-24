@@ -1,0 +1,11 @@
+{
+  "id": "BN-C447-svikar-kora",
+  "pathSegment": "BN-PATH-447-APHSOS447",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-447-APHSOS447",
+      "order": 4
+    }
+  ]
+}

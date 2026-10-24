@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C333-jukti",
+    "language": "bengali",
+    "chapter": 333,
+    "sequence": 21150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2137a89101cc368f"
+  },
+  "findings": []
+}

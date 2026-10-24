@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:f7a3e7646c561895",
+  "lessonIds": [
+    "BN-C382-nishtha",
+    "BN-C382-odhyobosay",
+    "BN-C382-puron-kora",
+    "BN-C382-bojay-rakha",
+    "BN-C382-songshodhon-kora"
+  ],
+  "tex": "bengali/book/chapters/ch382-keeping-it-up.tex"
+}

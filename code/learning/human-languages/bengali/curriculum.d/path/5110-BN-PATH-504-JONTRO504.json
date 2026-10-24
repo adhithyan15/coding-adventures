@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-504-JONTRO504",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "BN-EXT-504-JONTRO504"
+  ],
+  "after": []
+}

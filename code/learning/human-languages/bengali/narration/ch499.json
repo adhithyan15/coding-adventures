@@ -1,0 +1,842 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 499,
+  "title": "Goods and Supplies",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3aebba34ab14ebee",
+  "lessons": [
+    {
+      "id": "BN-C499-utpadon",
+      "sequence": 30350,
+      "title": "উৎপাদন (utpādôn) — production; output",
+      "headword": "উৎপাদন",
+      "romanization": "utpādôn",
+      "gloss": "production; output",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4f346e5ddc63d95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a business partner, then the Bengali for a company share."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উৎপাদন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উৎপাদন — utpādôn — \"production; output\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই কারখানা রোজ এক হাজার জুতো উৎপাদন করে। Ei kārkhānā roj ek hājār juto utpādôn kôre. This factory produces a thousand shoes a day."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উৎপাদন (utpādôn) is a tatsama, Sanskrit utpādana, \"bringing forth, producing\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utpādôn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utpādôn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utpādôn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utpādôn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ei kārkhānā roj ek hājār juto utpādôn kôre. — This factory produces a thousand shoes a day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ei kārkhānā roj ek hājār juto utpādôn kôre.* — This factory produces a thousand shoes a day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a business partner, then the Bengali for a company share, then say utpādôn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a business partner, then the Bengali for a company share, then say *utpādôn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উৎপাদন (utpādôn) mean? (\"Production; output\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C499-kachamal",
+      "sequence": 30360,
+      "title": "কাঁচামাল (kā̃chāmāl) — raw material",
+      "headword": "কাঁচামাল",
+      "romanization": "kā̃chāmāl",
+      "gloss": "raw material",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac86f26a369cec92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a company share, then the Bengali for production."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কাঁচামাল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাঁচামাল — kā̃chāmāl — \"raw material\"."
+            },
+            {
+              "kind": "speech",
+              "text": "কাঁচামাল (kā̃chāmāl) না এলে কারখানা থামবে। Kā̃chāmāl nā ele kārkhānā thāmbe. If the raw material doesn't arrive, the factory will stop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাঁচামাল (kā̃chāmāl) joins কাঁচা, \"raw\", to মাল, \"goods\", which is usually traced to Arabic māl, \"property\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kā̃chāmāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kā̃chāmāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kā̃chāmāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kā̃chāmāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Kā̃chāmāl nā ele kārkhānā thāmbe. — If the raw material doesn't arrive, the factory will stop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Kā̃chāmāl nā ele kārkhānā thāmbe.* — If the raw material doesn't arrive, the factory will stop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a company share, then the Bengali for production, then say kā̃chāmāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a company share, then the Bengali for production, then say *kā̃chāmāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কাঁচামাল (kā̃chāmāl) mean? (\"Raw material\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C499-roptani-kora",
+      "sequence": 30370,
+      "title": "রপ্তানি করা (rôptāni kôrā) — to export",
+      "headword": "রপ্তানি করা",
+      "romanization": "rôptāni kôrā",
+      "gloss": "to export",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4827b00f66a80b6a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for production, then the Bengali for raw material."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: রপ্তানি করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রপ্তানি করা — rôptāni kôrā — \"to export\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই কারখানা বিদেশে জামা রপ্তানি করে। Ei kārkhānā bideshe jāmā rôptāni kôre. This factory exports shirts abroad."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি বিদেশে চা রপ্তানি করলেন, tini bideshe chā rôptāni kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রপ্তানি করা (rôptāni kôrā) joins রপ্তানি, \"export\", usually traced to Persian raftanī, \"what is to go out\", to করা, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rôptāni kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rôptāni kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rôptāni kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rôptāni kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ei kārkhānā bideshe jāmā rôptāni kôre. — This factory exports shirts abroad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ei kārkhānā bideshe jāmā rôptāni kôre.* — This factory exports shirts abroad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for production, then the Bengali for raw material, then say rôptāni kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for production, then the Bengali for raw material, then say *rôptāni kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does রপ্তানি করা (rôptāni kôrā) mean? (\"To export\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C499-sorborah",
+      "sequence": 30380,
+      "title": "সরবরাহ (sôrbôrāh) — a supply; supplying",
+      "headword": "সরবরাহ",
+      "romanization": "sôrbôrāh",
+      "gloss": "a supply; supplying",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea44ebbc4db3e704",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for raw material, then the Bengali for to export."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সরবরাহ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সরবরাহ — sôrbôrāh — \"a supply; supplying\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বন্যার পরে গ্রামে খাবারের সরবরাহ থামল। Bônyār pôre grāme khābārer sôrbôrāh thāmlô. After the flood the food supply to the village stopped."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সরবরাহ (sôrbôrāh) is usually traced to Persian sarbarāh, \"management, provision\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôrbôrāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôrbôrāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôrbôrāh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôrbôrāh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Bônyār pôre grāme khābārer sôrbôrāh thāmlô. — After the flood the food supply to the village stopped.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Bônyār pôre grāme khābārer sôrbôrāh thāmlô.* — After the flood the food supply to the village stopped.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for raw material, then the Bengali for to export, then say sôrbôrāh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for raw material, then the Bengali for to export, then say *sôrbôrāh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সরবরাহ (sôrbôrāh) mean? (\"A supply; supplying\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C499-amdani",
+      "sequence": 30390,
+      "title": "আমদানি (āmdāni) — an import; imports",
+      "headword": "আমদানি",
+      "romanization": "āmdāni",
+      "gloss": "an import; imports",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ffa8a83695a150c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to export, then the Bengali for a supply."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আমদানি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আমদানি — āmdāni — \"an import; imports\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমাদের দেশে তেলের আমদানি বাড়ল। Āmāder deshe teler āmdāni bāṛlô. Our country's oil imports went up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আমদানি (āmdāni) is usually traced to Persian āmadanī, \"what is to come in\": the partner of রপ্তানি."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmdāni",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmdāni*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmdāni, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmdāni*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āmāder deshe teler āmdāni bāṛlô. — Our country's oil imports went up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āmāder deshe teler āmdāni bāṛlô.* — Our country's oil imports went up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to export, then the Bengali for a supply, then say āmdāni again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to export, then the Bengali for a supply, then say *āmdāni* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আমদানি (āmdāni) mean? (\"An import; imports\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R499-review-492-499",
+      "sequence": 30400,
+      "title": "Looking back: from Skilled Hands to Goods and Supplies",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Skilled Hands to Goods and Supplies",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:840b6e3c6e5e0b28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for a craftsman and a goldsmith."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a craftsman, a goldsmith, to solder, a bell-metal smith, to string together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a craftsman, a goldsmith, to solder, a bell-metal smith, to string together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a desk, a clerk, an official seal, an office messenger, to type",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a desk, a clerk, an official seal, an office messenger, to type]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unemployed, a CV, an apprentice, a job interview, to join a job",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: unemployed, a CV, an apprentice, a job interview, to join a job]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pay, a bonus, earnings, a pension, to be worth it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pay, a bonus, earnings, a pension, to be worth it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a post at work, a promotion, an assistant, senior in rank, to stay in post",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a post at work, a promotion, an assistant, senior in rank, to stay in post]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a resignation, a job transfer, a strike by workers, dismissed, to lay off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a resignation, a job transfer, a strike by workers, dismissed, to lay off]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an initiative, a line of business, capital, a business partner, a company share",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an initiative, a line of business, capital, a business partner, a company share]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "production, raw material, to export, a supply, imports",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: production, raw material, to export, a supply, imports]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A craftsman? (কারিগর, kārigôr.) A goldsmith? (স্যাকরা, sækrā.) To solder? (ঝালাই করা, jhālāi kôrā.) A bell-metal smith? (কাঁসারি, kā̃sāri.) To string together? (গাঁথা, gā̃thā.) A desk? (ডেস্ক, ḍesk.) A clerk? (কেরানি, kerāni.) An official seal? (সিলমোহর, silmohôr.) An office messenger? (পিওন, pion.) To type? (টাইপ করা, ṭāip kôrā.) Unemployed? (বেকার, bekār.) A CV? (বায়োডাটা, bāyoḍāṭā.) An apprentice? (শিক্ষানবিশ, shikkhānôbish.) A job interview? (ইন্টারভিউ, inṭārbhiu.) To join a job? (যোগ দেওয়া, jog deoyā.) Pay? (বেতন, betôn.) A bonus? (বোনাস, bonās.) Earnings? (উপার্জন, upārjôn.) A pension? (পেনশন, penshôn.) To be worth it? (পোষানো, poshāno.) A post at work? (পদ, pôd.) A promotion? (পদোন্নতি, pôdonnôti.) An assistant? (সহকারী, sôhôkārī.) Senior in rank? (সিনিয়র, siniyôr.) To stay in post? (বহাল থাকা, bôhāl thākā.) A resignation? (ইস্তফা, istôphā.) A job transfer? (বদলি, bôdli.) A strike by workers? (ধর্মঘট, dhôrmôghôṭ.) Dismissed? (বরখাস্ত, bôrkhāstô.) To lay off? (ছাঁটাই করা, chhā̃ṭāi kôrā.) An initiative? (উদ্যোগ, udyog.) A line of business? (কারবার, kārbār.) Capital? (পুঁজি, pũji.) A business partner? (অংশীদার, ôngshīdār.) A company share? (শেয়ার, sheyār.) Production? (উৎপাদন, utpādôn.) Raw material? (কাঁচামাল, kā̃chāmāl.) To export? (রপ্তানি করা, rôptāni kôrā.) A supply? (সরবরাহ, sôrbôrāh.) Imports? (আমদানি, āmdāni.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

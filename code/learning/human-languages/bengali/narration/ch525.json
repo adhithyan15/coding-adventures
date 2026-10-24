@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 525,
+  "title": "Making Music",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c94f7e25b3e8947d",
+  "lessons": [
+    {
+      "id": "BN-C525-sur",
+      "sequence": 31690,
+      "title": "সুর (sur) — a tune; a melody",
+      "headword": "সুর",
+      "romanization": "sur",
+      "gloss": "a tune; a melody",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e20d9cd4abe27b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to carve, then the Bengali for to dye."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সুর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সুর — sur — \"a tune; a melody\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই গানের সুর সুন্দর। Ei gāner sur sundôr. This song has a lovely tune."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সুর (sur) goes back to Sanskrit svara, \"sound, a note\" (Monier-Williams), worn down in everyday speech."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sur, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sur*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ei gāner sur sundôr. — This song has a lovely tune.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ei gāner sur sundôr.* — This song has a lovely tune.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to carve, then the Bengali for to dye, then say sur again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to carve, then the Bengali for to dye, then say *sur* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সুর (sur) mean? (\"A tune; a melody\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C525-tal",
+      "sequence": 31700,
+      "title": "তাল (tāl) — rhythm; a beat",
+      "headword": "তাল",
+      "romanization": "tāl",
+      "gloss": "rhythm; a beat",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3533fcd32f3f8f3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to dye, then the Bengali for a tune."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: তাল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তাল — tāl — \"rhythm; a beat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তবলা গানের তাল রাখে। Tôblā gāner tāl rākhe. The tabla keeps the rhythm of the song."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তাল (tāl) is a tadbhava: CDIAL lists Bengali tāl, \"clapping\", under Sanskrit tāḍa, where tāla means a clap and musical time (CDIAL 5748)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Tôblā gāner tāl rākhe. — The tabla keeps the rhythm of the song.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Tôblā gāner tāl rākhe.* — The tabla keeps the rhythm of the song.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to dye, then the Bengali for a tune, then say tāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to dye, then the Bengali for a tune, then say *tāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does তাল (tāl) mean? (\"Rhythm; a beat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C525-svorlipi",
+      "sequence": 31710,
+      "title": "স্বরলিপি (svôrlipi) — musical notation",
+      "headword": "স্বরলিপি",
+      "romanization": "svôrlipi",
+      "gloss": "musical notation",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc3162f358f80e03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a tune, then the Bengali for rhythm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: স্বরলিপি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "স্বরলিপি — svôrlipi — \"musical notation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মেয়েটা খাতায় গানের স্বরলিপি লিখল। Meyeṭā khātāy gāner svôrlipi likhlô. The girl wrote down the song's notation in a notebook."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "স্বরলিপি (svôrlipi) joins Sanskrit svara, \"a note\", and lipi, \"writing, a script\" (Monier-Williams): music written down."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svôrlipi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svôrlipi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svôrlipi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svôrlipi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Meyeṭā khātāy gāner svôrlipi likhlô. — The girl wrote down the song's notation in a notebook.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Meyeṭā khātāy gāner svôrlipi likhlô.* — The girl wrote down the song's notation in a notebook.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a tune, then the Bengali for rhythm, then say svôrlipi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a tune, then the Bengali for rhythm, then say *svôrlipi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does স্বরলিপি (svôrlipi) mean? (\"Musical notation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C525-gomgom-kora",
+      "sequence": 31720,
+      "title": "গমগম করা (gômgôm kôrā) — to resound; to boom",
+      "headword": "গমগম করা",
+      "romanization": "gômgôm kôrā",
+      "gloss": "to resound; to boom",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad6c3061a885ddc9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for rhythm, then the Bengali for musical notation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গমগম করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গমগম করা — gômgôm kôrā — \"to resound; to boom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গানের সময় পুরো ঘরটা গমগম করছিল। Gāner sômôy puro ghôrṭā gômgôm kôrchhilô. During the song the whole room was resounding."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই ঘর গানে গমগম করল, sei ghôr gāne gômgôm kôrlô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গমগম করা (gômgôm kôrā) joins গমগম, an imitative word for a deep, filling sound, to করা, \"to do\". No dictionary we use records an older form, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gômgôm kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gômgôm kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gômgôm kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gômgôm kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Gāner sômôy puro ghôrṭā gômgôm kôrchhilô. — During the song the whole room was resounding.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Gāner sômôy puro ghôrṭā gômgôm kôrchhilô.* — During the song the whole room was resounding.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for rhythm, then the Bengali for musical notation, then say gômgôm kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for rhythm, then the Bengali for musical notation, then say *gômgôm kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গমগম করা (gômgôm kôrā) mean? (\"To resound; to boom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C525-shis-deoya",
+      "sequence": 31730,
+      "title": "শিস দেওয়া (shis deoyā) — to whistle",
+      "headword": "শিস দেওয়া",
+      "romanization": "shis deoyā",
+      "gloss": "to whistle",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a5725a0b2ed17f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for musical notation, then the Bengali for to resound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শিস দেওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শিস দেওয়া — shis deoyā — \"to whistle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ছেলেটা শিস দিয়ে একটা গান গাইল। Chheleṭā shis diye ekṭā gān gāilô. The boy whistled a song."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি শিস দিলেন, tini shis dilen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শিস দেওয়া (shis deoyā) joins শিস, probably an imitative word for a whistle, to দেওয়া, \"to give\". No dictionary we use records an older form, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shis deoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shis deoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shis deoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shis deoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chheleṭā shis diye ekṭā gān gāilô. — The boy whistled a song.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Chheleṭā shis diye ekṭā gān gāilô.* — The boy whistled a song.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for musical notation, then the Bengali for to resound, then say shis deoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for musical notation, then the Bengali for to resound, then say *shis deoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does শিস দেওয়া (shis deoyā) mean? (\"To whistle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

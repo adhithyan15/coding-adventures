@@ -1,0 +1,11 @@
+{
+  "id": "BN-C456-achoron",
+  "pathSegment": "BN-PATH-456-CHORITRO456",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-456-CHORITRO456",
+      "order": 3
+    }
+  ]
+}

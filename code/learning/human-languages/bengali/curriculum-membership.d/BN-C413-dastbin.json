@@ -1,0 +1,11 @@
+{
+  "id": "BN-C413-dastbin",
+  "pathSegment": "BN-PATH-413-NORDOMA413",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-413-NORDOMA413",
+      "order": 2
+    }
+  ]
+}

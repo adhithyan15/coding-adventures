@@ -1,0 +1,11 @@
+{
+  "id": "BN-C303-kalokrome",
+  "pathSegment": "BN-PATH-303-SEDIN303",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-303-SEDIN303",
+      "order": 3
+    }
+  ]
+}

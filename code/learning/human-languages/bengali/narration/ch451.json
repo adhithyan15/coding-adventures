@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 451,
+  "title": "Disgust and Envy",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a18bf5fb24f05f4d",
+  "lessons": [
+    {
+      "id": "BN-C451-ghinghine",
+      "sequence": 27660,
+      "title": "ঘিনঘিনে (ghinghine) — disgusting; revolting",
+      "headword": "ঘিনঘিনে",
+      "romanization": "ghinghine",
+      "gloss": "disgusting; revolting",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3fbfe575cc854a1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to taunt, then the Bengali for to belittle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঘিনঘিনে",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘিনঘিনে — ghinghine — \"disgusting; revolting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার কাছে মাকড়সা ঘিনঘিনে লাগে। āmār kāchhe mākôṛsā ghinghine lāge. I find spiders revolting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘিনঘিনে (ghinghine) doubles ghin, \"loathing\", which CDIAL lists for Bengali under Sanskrit ghṛṇā (CDIAL 4500), and adds the adjective ending -e."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghinghine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghinghine*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghinghine, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghinghine*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmār kāchhe mākôṛsā ghinghine lāge. — I find spiders revolting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmār kāchhe mākôṛsā ghinghine lāge.* — I find spiders revolting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to taunt, then the Bengali for to belittle, then say ghinghine again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to taunt, then the Bengali for to belittle, then say *ghinghine* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঘিনঘিনে (ghinghine) mean? (\"Disgusting; revolting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C451-bitrishna",
+      "sequence": 27670,
+      "title": "বিতৃষ্ণা (bitrishnā) — aversion; distaste",
+      "headword": "বিতৃষ্ণা",
+      "romanization": "bitrishnā",
+      "gloss": "aversion; distaste",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb8097a213d6b471",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to belittle, then the Bengali for revolting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিতৃষ্ণা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিতৃষ্ণা — bitrishnā — \"aversion; distaste\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রোজ একই খাবার খেয়ে অরুণের বিতৃষ্ণা এল। roj eki khābār kheye ôruner bitrishnā elô. Eating the same food every day, Arun grew sick of it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিতৃষ্ণা (bitrishnā) is a tatsama, Sanskrit vitṛṣṇā, which Monier-Williams gives as freedom from desire, vi- \"without\" on tṛṣṇā \"thirst\"; Bengali has pushed it on to distaste, a sense the dictionary does not give."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bitrishnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bitrishnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bitrishnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bitrishnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roj eki khābār kheye ôruner bitrishnā elô. — Eating the same food every day, Arun grew sick of it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roj eki khābār kheye ôruner bitrishnā elô.* — Eating the same food every day, Arun grew sick of it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to belittle, then the Bengali for revolting, then say bitrishnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to belittle, then the Bengali for revolting, then say *bitrishnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিতৃষ্ণা (bitrishnā) mean? (\"Aversion; distaste\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C451-poroshrikator",
+      "sequence": 27680,
+      "title": "পরশ্রীকাতর (pôrôshrīkātôr) — envious of others' good fortune",
+      "headword": "পরশ্রীকাতর",
+      "romanization": "pôrôshrīkātôr",
+      "gloss": "envious of others' good fortune",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea0daadb373f818a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for revolting, then the Bengali for aversion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পরশ্রীকাতর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পরশ্রীকাতর — pôrôshrīkātôr — \"envious of others' good fortune\"."
+            },
+            {
+              "kind": "speech",
+              "text": "প্রতিবেশীর নতুন গাড়ি দেখে লোকটা পরশ্রীকাতর হল। prôtibeshīr nôtun gāṛi dekhe lokṭā pôrôshrīkātôr hôlô. The man grew envious when he saw his neighbour's new car."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পরশ্রীকাতর (pôrôshrīkātôr) puts together Sanskrit para, \"another\", śrī, \"good fortune\", and kātara, \"despairing, agitated\" (Monier-Williams): pained by someone else's good luck."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôrôshrīkātôr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôrôshrīkātôr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôrôshrīkātôr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôrôshrīkātôr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtibeshīr nôtun gāṛi dekhe lokṭā pôrôshrīkātôr hôlô. — The man grew envious when he saw his neighbour's new car.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtibeshīr nôtun gāṛi dekhe lokṭā pôrôshrīkātôr hôlô.* — The man grew envious when he saw his neighbour's new car.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for revolting, then the Bengali for aversion, then say pôrôshrīkātôr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for revolting, then the Bengali for aversion, then say *pôrôshrīkātôr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পরশ্রীকাতর (pôrôshrīkātôr) mean? (\"Envious of others' good fortune\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C451-ghrina-kora",
+      "sequence": 27690,
+      "title": "ঘৃণা করা (ghrinā kôrā) — to hate; to despise",
+      "headword": "ঘৃণা করা",
+      "romanization": "ghrinā kôrā",
+      "gloss": "to hate; to despise",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:968adde57c99a092",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for aversion, then the Bengali for envious of others' good fortune."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঘৃণা করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘৃণা করা — ghrinā kôrā — \"to hate; to despise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মীরা মিথ্যেকে ঘৃণা করে। mīrā mittheke ghrinā kôre. Mira hates lies."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি যুদ্ধকে ঘৃণা করলেন, tini juddhôke ghrinā kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘৃণা করা (ghrinā kôrā) is Sanskrit ghṛṇā, which Monier-Williams gives for warm feeling and pity and also for contempt and disgust; Bengali keeps the loathing, with kôrā, \"to do\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghrinā kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghrinā kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghrinā kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghrinā kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrā mittheke ghrinā kôre. — Mira hates lies.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrā mittheke ghrinā kôre.* — Mira hates lies.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for aversion, then the Bengali for envious of others' good fortune, then say ghrinā kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for aversion, then the Bengali for envious of others' good fortune, then say *ghrinā kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঘৃণা করা (ghrinā kôrā) mean? (\"To hate; to despise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C451-nak-sitkano",
+      "sequence": 27700,
+      "title": "নাক সিঁটকানো (nāk sĩṭkāno) — to turn up one's nose",
+      "headword": "নাক সিঁটকানো",
+      "romanization": "nāk sĩṭkāno",
+      "gloss": "to turn up one's nose",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16a2405e0813cef8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for envious of others' good fortune, then the Bengali for to hate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নাক সিঁটকানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নাক সিঁটকানো — nāk sĩṭkāno — \"to turn up one's nose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সবজি দেখে ছেলেটা নাক সিঁটকাল। sôbji dekhe chheleṭā nāk sĩṭkālô. The boy turned up his nose at the vegetables."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি খাবার দেখে নাক সিঁটকালেন, tini khābār dekhe nāk sĩṭkālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নাক সিঁটকানো (nāk sĩṭkāno) is নাক (taught), the nose (CDIAL 6909), with sĩṭkāno, \"to wrinkle up\", a verb whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāk sĩṭkāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāk sĩṭkāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāk sĩṭkāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāk sĩṭkāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôbji dekhe chheleṭā nāk sĩṭkālô. — The boy turned up his nose at the vegetables.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôbji dekhe chheleṭā nāk sĩṭkālô.* — The boy turned up his nose at the vegetables.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for envious of others' good fortune, then the Bengali for to hate, then say nāk sĩṭkāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for envious of others' good fortune, then the Bengali for to hate, then say *nāk sĩṭkāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does নাক সিঁটকানো (nāk sĩṭkāno) mean? (\"To turn up one's nose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

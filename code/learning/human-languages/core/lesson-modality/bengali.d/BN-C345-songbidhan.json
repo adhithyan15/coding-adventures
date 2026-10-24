@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C345-songbidhan",
+    "language": "bengali",
+    "chapter": 345,
+    "sequence": 21770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:541cde461fa9d8ae"
+  },
+  "findings": []
+}

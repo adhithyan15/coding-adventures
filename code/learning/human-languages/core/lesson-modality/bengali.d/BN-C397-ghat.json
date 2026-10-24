@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C397-ghat",
+    "language": "bengali",
+    "chapter": 397,
+    "sequence": 24660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28742b098a8d9e5a"
+  },
+  "findings": []
+}

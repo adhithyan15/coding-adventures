@@ -1,0 +1,11 @@
+{
+  "id": "BN-C473-mohamari",
+  "pathSegment": "BN-PATH-473-SONGKROMON473",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-473-SONGKROMON473",
+      "order": 3
+    }
+  ]
+}

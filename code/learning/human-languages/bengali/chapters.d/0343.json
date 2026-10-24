@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "Whose Fault Was It",
+  "label": "ch:bn-whose-fault-was-it",
+  "canDo": "I can say who was to blame and how it was put right.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C343-rehai-deoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can say who was to blame and how it was put right.",
+    "assesses": [
+      "BN-LEX-C343-DOSH343-03",
+      "BN-LEX-C343-DOSH343-04",
+      "BN-LEX-C343-DOSH343-05"
+    ]
+  }
+}

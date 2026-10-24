@@ -1,0 +1,11 @@
+{
+  "id": "BN-C381-onushilon-kora",
+  "pathSegment": "BN-PATH-381-BYOBOSTHA381",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-381-BYOBOSTHA381",
+      "order": 4
+    }
+  ]
+}

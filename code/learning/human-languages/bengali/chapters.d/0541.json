@@ -1,0 +1,19 @@
+{
+  "chapter": 541,
+  "title": "Waiting Your Turn",
+  "label": "ch:bn-waiting-your-turn",
+  "canDo": "I can talk about waiting, rows, tokens and the unexpected.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C541-porjay",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 541: I can talk about waiting, rows, tokens and the unexpected.",
+    "assesses": [
+      "BN-LEX-C541-PROTIKSHA541-03",
+      "BN-LEX-C541-PROTIKSHA541-04",
+      "BN-LEX-C541-PROTIKSHA541-05"
+    ]
+  }
+}

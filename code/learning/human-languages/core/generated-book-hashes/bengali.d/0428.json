@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:a9517f74d29a8fcf",
+  "lessonIds": [
+    "BN-C428-ardro",
+    "BN-C428-bhepsa",
+    "BN-C428-jhapsa",
+    "BN-C428-setsete",
+    "BN-C428-dheke-jaoya"
+  ],
+  "tex": "bengali/book/chapters/ch428-damp-and-haze.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:7723a2d9bc008d16",
+  "lessonIds": [
+    "BN-C388-tram",
+    "BN-C388-metro",
+    "BN-C388-oto",
+    "BN-C388-bhen",
+    "BN-C388-dourano"
+  ],
+  "tex": "bengali/book/chapters/ch388-trams-the-metro-and-autos.tex"
+}

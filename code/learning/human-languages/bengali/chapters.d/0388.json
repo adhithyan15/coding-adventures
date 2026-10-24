@@ -1,0 +1,19 @@
+{
+  "chapter": 388,
+  "title": "Trams, the Metro and Autos",
+  "label": "ch:bn-trams-the-metro-and-autos",
+  "canDo": "I can choose between a tram, the metro and an auto, and run for the bus.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C388-dourano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 388: I can choose between a tram, the metro and an auto, and run for the bus.",
+    "assesses": [
+      "BN-LEX-C388-TRAM388-03",
+      "BN-LEX-C388-TRAM388-04",
+      "BN-LEX-C388-TRAM388-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:222566c83b14ffa6",
+  "lessonIds": [
+    "BN-C520-podok",
+    "BN-C520-trophi",
+    "BN-C520-rekord",
+    "BN-C520-protijogi",
+    "BN-C520-jetano"
+  ],
+  "tex": "bengali/book/chapters/ch520-medals-and-records.tex"
+}

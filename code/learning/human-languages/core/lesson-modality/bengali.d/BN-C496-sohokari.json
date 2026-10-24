@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C496-sohokari",
+    "language": "bengali",
+    "chapter": 496,
+    "sequence": 30220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b821c397bc830f9"
+  },
+  "findings": []
+}

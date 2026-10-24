@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C513-kora-grate",
+    "language": "bengali",
+    "chapter": 513,
+    "sequence": 31090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d06189442b122df1"
+  },
+  "findings": []
+}

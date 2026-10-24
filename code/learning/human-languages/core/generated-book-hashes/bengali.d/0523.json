@@ -1,0 +1,14 @@
+{
+  "language": "bengali",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:78c3fa652178e243",
+  "lessonIds": [
+    "BN-C523-kemp",
+    "BN-C523-durbin",
+    "BN-C523-porbotarohon",
+    "BN-C523-borshi",
+    "BN-C523-satrano",
+    "BN-R523-review-516-523"
+  ],
+  "tex": "bengali/book/chapters/ch523-into-the-outdoors.tex"
+}

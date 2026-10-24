@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:ff1a3be3cbe5d2e3",
+  "lessonIds": [
+    "BN-C496-pod",
+    "BN-C496-podonnoti",
+    "BN-C496-sohokari",
+    "BN-C496-siniyor",
+    "BN-C496-bohal-thaka"
+  ],
+  "tex": "bengali/book/chapters/ch496-moving-up.tex"
+}

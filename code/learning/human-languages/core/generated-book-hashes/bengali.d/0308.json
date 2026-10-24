@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:f1079454af4c7448",
+  "lessonIds": [
+    "BN-C308-bisorjon",
+    "BN-C308-bhasano",
+    "BN-C308-biday",
+    "BN-C308-shobhajatra",
+    "BN-C308-kolakuli-kora"
+  ],
+  "tex": "bengali/book/chapters/ch308-the-last-day-of-the-festival.tex"
+}

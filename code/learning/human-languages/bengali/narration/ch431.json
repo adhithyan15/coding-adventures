@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 431,
+  "title": "Bays, Creeks and Deltas",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:067b9ef3504fd787",
+  "lessons": [
+    {
+      "id": "BN-C431-uposagor",
+      "sequence": 26410,
+      "title": "উপসাগর (upôsāgôr) — a bay; a gulf",
+      "headword": "উপসাগর",
+      "romanization": "upôsāgôr",
+      "gloss": "a bay; a gulf",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:feec1362137a21c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to irrigate, then the Bengali for to farm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উপসাগর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপসাগর — upôsāgôr — \"a bay; a gulf\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নদীটা দক্ষিণে গিয়ে উপসাগরে পড়ে। nôdīṭā dôkkhine giye upôsāgôre pôṛe. The river flows south and falls into the bay."
+            },
+            {
+              "kind": "speech",
+              "text": "The Bay of Bengal has its own name, built on this word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপসাগর (upôsāgôr) joins Sanskrit upa, \"near, lesser\", to sāgara, \"the sea\" (Monier-Williams): a lesser sea, a modern coinage for a bay."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôsāgôr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôsāgôr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôsāgôr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôsāgôr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôdīṭā dôkkhine giye upôsāgôre pôṛe. — The river flows south and falls into the bay.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôdīṭā dôkkhine giye upôsāgôre pôṛe.* — The river flows south and falls into the bay.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to irrigate, then the Bengali for to farm, then say upôsāgôr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to irrigate, then the Bengali for to farm, then say *upôsāgôr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উপসাগর (upôsāgôr) mean? (\"A bay; a gulf\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C431-khari",
+      "sequence": 26420,
+      "title": "খাঁড়ি (khā̃ṛi) — a creek; an inlet",
+      "headword": "খাঁড়ি",
+      "romanization": "khā̃ṛi",
+      "gloss": "a creek; an inlet",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6833fa2afd70f55f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to farm, then the Bengali for a bay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: খাঁড়ি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খাঁড়ি — khā̃ṛi — \"a creek; an inlet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "জোয়ারের সময় খাঁড়িতে জল ঢোকে। joyārer sômôy khā̃ṛite jôl ḍhoke. At high tide the water comes into the creek."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খাঁড়ি (khā̃ṛi) is inherited: CDIAL lists Bengali khāṛī, \"a creek, an inlet\", under the reconstructed khāḍa (CDIAL 3860), and again under khaḍḍa (CDIAL 3790)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khā̃ṛi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khā̃ṛi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khā̃ṛi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khā̃ṛi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joyārer sômôy khā̃ṛite jôl ḍhoke. — At high tide the water comes into the creek.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *joyārer sômôy khā̃ṛite jôl ḍhoke.* — At high tide the water comes into the creek.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to farm, then the Bengali for a bay, then say khā̃ṛi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to farm, then the Bengali for a bay, then say *khā̃ṛi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does খাঁড়ি (khā̃ṛi) mean? (\"A creek; an inlet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C431-bodvip",
+      "sequence": 26430,
+      "title": "বদ্বীপ (bôdvīp) — a delta",
+      "headword": "বদ্বীপ",
+      "romanization": "bôdvīp",
+      "gloss": "a delta",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e077c437736f911",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a bay, then the Bengali for a creek."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বদ্বীপ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বদ্বীপ — bôdvīp — \"a delta\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বদ্বীপে অনেক নদী আর খাল আছে। bôdvīpe ônek nôdī ār khāl āchhe. There are many rivers and canals in the delta."
+            },
+            {
+              "kind": "speech",
+              "text": "The ব in front is the letter: an island shaped like ব, as the Greek delta is shaped like its letter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বদ্বীপ (bôdvīp) is usually explained as ব, the letter, and দ্বীপ, \"an island\", Sanskrit dvīpa (Monier-Williams): a coinage that renders the Greek delta, named for a triangular letter, with a Bengali one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôdvīp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôdvīp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôdvīp, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôdvīp*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôdvīpe ônek nôdī ār khāl āchhe. — There are many rivers and canals in the delta.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôdvīpe ônek nôdī ār khāl āchhe.* — There are many rivers and canals in the delta.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a bay, then the Bengali for a creek, then say bôdvīp again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a bay, then the Bengali for a creek, then say *bôdvīp* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বদ্বীপ (bôdvīp) mean? (\"A delta\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C431-poli",
+      "sequence": 26440,
+      "title": "পলি (pôli) — silt",
+      "headword": "পলি",
+      "romanization": "pôli",
+      "gloss": "silt",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37b75d9620831c69",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a creek, then the Bengali for a delta."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পলি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পলি — pôli — \"silt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বন্যার পরে খেতে নতুন পলি পড়ল। bônyār pôre khete nôtun pôli pôṛlô. After the flood fresh silt settled on the fields."
+            },
+            {
+              "kind": "speech",
+              "text": "The river mud that makes Bengal's fields rich: পলিমাটি, silt soil."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পলি (pôli) is the fine river mud left by floods; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bônyār pôre khete nôtun pôli pôṛlô. — After the flood fresh silt settled on the fields.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bônyār pôre khete nôtun pôli pôṛlô.* — After the flood fresh silt settled on the fields.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a creek, then the Bengali for a delta, then say pôli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a creek, then the Bengali for a delta, then say *pôli* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পলি (pôli) mean? (\"Silt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C431-bhorat-kora",
+      "sequence": 26450,
+      "title": "ভরাট করা (bhôrāṭ kôrā) — to fill in (a pond or low land)",
+      "headword": "ভরাট করা",
+      "romanization": "bhôrāṭ kôrā",
+      "gloss": "to fill in (a pond or low land)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75d3be5a16258393",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a delta, then the Bengali for silt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভরাট করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভরাট করা — bhôrāṭ kôrā — \"to fill in (a pond or low land)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "লোকেরা পুরনো পুকুরটা ভরাট করল। lokerā purôno pukurṭā bhôrāṭ kôrlô. People filled in the old pond."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি জমিটা ভরাট করলেন, tini jômiṭā bhôrāṭ kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভরাট করা (bhôrāṭ kôrā) joins ভরাট, \"filled up, solid\", built on ভরা, \"full\" (CDIAL 9397), to করা, to do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhôrāṭ kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhôrāṭ kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhôrāṭ kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhôrāṭ kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokerā purôno pukurṭā bhôrāṭ kôrlô. — People filled in the old pond.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokerā purôno pukurṭā bhôrāṭ kôrlô.* — People filled in the old pond.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a delta, then the Bengali for silt, then say bhôrāṭ kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a delta, then the Bengali for silt, then say *bhôrāṭ kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভরাট করা (bhôrāṭ kôrā) mean? (\"To fill in (a pond or low land)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

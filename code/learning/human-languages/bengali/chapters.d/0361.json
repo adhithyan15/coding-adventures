@@ -1,0 +1,21 @@
+{
+  "chapter": 361,
+  "title": "Learning and Teaching",
+  "label": "ch:bn-learning-and-teaching",
+  "canDo": "I can talk about education and who teaches what.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-R361-review-354-361",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can talk about education and who teaches what.",
+    "assesses": [
+      "BN-LEX-C361-SHIKKHA361-01",
+      "BN-LEX-C361-SHIKKHA361-02",
+      "BN-LEX-C361-SHIKKHA361-03",
+      "BN-LEX-C361-SHIKKHA361-04",
+      "BN-LEX-C361-SHIKKHA361-05"
+    ]
+  }
+}

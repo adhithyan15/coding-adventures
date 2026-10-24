@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 543,
+  "title": "Reaching the Goal",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bc50d5e4ce1ae577",
+  "lessons": [
+    {
+      "id": "BN-C543-kriti",
+      "sequence": 32610,
+      "title": "কৃতী (kritī) — accomplished; high-achieving",
+      "headword": "কৃতী",
+      "romanization": "kritī",
+      "gloss": "accomplished; high-achieving",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:181a028292b66e2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to come loose, then the Bengali for a muddle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কৃতী",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কৃতী — kritī — \"accomplished; high-achieving\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমাদের গ্রামের এক কৃতী ছাত্রী বৃত্তি পেল। Āmāder grāmer ek kritī chhātrī britti pelô. An accomplished student from our village won a scholarship."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কৃতী (kritī) is Sanskrit kṛtin, \"one who acts\", and so \"skilful, successful\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kritī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kritī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kritī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kritī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āmāder grāmer ek kritī chhātrī britti pelô. — An accomplished student from our village won a scholarship.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āmāder grāmer ek kritī chhātrī britti pelô.* — An accomplished student from our village won a scholarship.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to come loose, then the Bengali for a muddle, then say kritī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to come loose, then the Bengali for a muddle, then say *kritī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কৃতী (kritī) mean? (\"Accomplished; high-achieving\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C543-siddhi",
+      "sequence": 32620,
+      "title": "সিদ্ধি (siddhi) — success; attainment",
+      "headword": "সিদ্ধি",
+      "romanization": "siddhi",
+      "gloss": "success; attainment",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:503e70736daa7702",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a muddle, then the Bengali for accomplished."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সিদ্ধি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সিদ্ধি — siddhi — \"success; attainment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অনেক বছরের চেষ্টার পরে বিজ্ঞানী সিদ্ধি পেলেন। Ônek bôchhôrer cheshṭār pôre bigyānī siddhi pelen. After many years of effort the scientist met with success."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সিদ্ধি (siddhi) is a tatsama, Sanskrit siddhi, \"accomplishment, success\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siddhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siddhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siddhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siddhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ônek bôchhôrer cheshṭār pôre bigyānī siddhi pelen. — After many years of effort the scientist met with success.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ônek bôchhôrer cheshṭār pôre bigyānī siddhi pelen.* — After many years of effort the scientist met with success.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a muddle, then the Bengali for accomplished, then say siddhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a muddle, then the Bengali for accomplished, then say *siddhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সিদ্ধি (siddhi) mean? (\"Success; attainment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C543-nikhut",
+      "sequence": 32630,
+      "title": "নিখুঁত (nikhũt) — flawless; perfect",
+      "headword": "নিখুঁত",
+      "romanization": "nikhũt",
+      "gloss": "flawless; perfect",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3dba437d6aa4439c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for accomplished, then the Bengali for attainment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নিখুঁত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিখুঁত — nikhũt — \"flawless; perfect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দর্জি একটা নিখুঁত জামা বানাল। Dôrji ekṭā nikhũt jāmā bānālô. The tailor made a perfect shirt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিখুঁত (nikhũt) joins the prefix নি-, \"without\", to খুঁত, \"a flaw\"; where খুঁত comes from is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikhũt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikhũt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikhũt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikhũt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dôrji ekṭā nikhũt jāmā bānālô. — The tailor made a perfect shirt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dôrji ekṭā nikhũt jāmā bānālô.* — The tailor made a perfect shirt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for accomplished, then the Bengali for attainment, then say nikhũt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for accomplished, then the Bengali for attainment, then say *nikhũt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does নিখুঁত (nikhũt) mean? (\"Flawless; perfect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C543-hasil-kora",
+      "sequence": 32640,
+      "title": "হাসিল করা (hāsil kôrā) — to achieve; to secure",
+      "headword": "হাসিল করা",
+      "romanization": "hāsil kôrā",
+      "gloss": "to achieve; to secure",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f02b2a19f8b753a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for attainment, then the Bengali for flawless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হাসিল করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হাসিল করা — hāsil kôrā — \"to achieve; to secure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "চেষ্টা করলে আমাদের দল প্রথম পুরস্কার হাসিল করবে। Cheshṭā kôrle āmāder dôl prothom purôskār hāsil kôrbe. If our team makes the effort, it will secure first prize."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি পুরস্কারটা হাসিল করলেন, tini purôskārṭā hāsil kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হাসিল করা (hāsil kôrā) joins হাসিল, \"gained, obtained\", usually traced to Arabic ḥāṣil, \"resulting, gained\", to করা, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāsil kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāsil kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāsil kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāsil kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Cheshṭā kôrle āmāder dôl prothom purôskār hāsil kôrbe. — If our team makes the effort, it will secure first prize.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Cheshṭā kôrle āmāder dôl prothom purôskār hāsil kôrbe.* — If our team makes the effort, it will secure first prize.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for attainment, then the Bengali for flawless, then say hāsil kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for attainment, then the Bengali for flawless, then say *hāsil kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হাসিল করা (hāsil kôrā) mean? (\"To achieve; to secure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C543-obhishto",
+      "sequence": 32650,
+      "title": "অভীষ্ট (ôbhīshṭô) — a desired goal; what one wished for",
+      "headword": "অভীষ্ট",
+      "romanization": "ôbhīshṭô",
+      "gloss": "a desired goal; what one wished for",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5335d02b7ae0dcd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for flawless, then the Bengali for to secure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অভীষ্ট",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অভীষ্ট — ôbhīshṭô — \"a desired goal; what one wished for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দলটা শেষে তার অভীষ্ট পুরস্কার পেল। Dôlṭā sheshe tār ôbhīshṭô purôskār pelô. In the end the team won the prize it had wished for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অভীষ্ট (ôbhīshṭô) is a tatsama, Sanskrit abhīṣṭa, \"wished for, dear\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbhīshṭô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbhīshṭô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbhīshṭô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbhīshṭô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dôlṭā sheshe tār ôbhīshṭô purôskār pelô. — In the end the team won the prize it had wished for.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dôlṭā sheshe tār ôbhīshṭô purôskār pelô.* — In the end the team won the prize it had wished for.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for flawless, then the Bengali for to secure, then say ôbhīshṭô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for flawless, then the Bengali for to secure, then say *ôbhīshṭô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অভীষ্ট (ôbhīshṭô) mean? (\"A desired goal; what one wished for\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

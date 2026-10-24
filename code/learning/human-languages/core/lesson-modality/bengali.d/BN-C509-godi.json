@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C509-godi",
+    "language": "bengali",
+    "chapter": 509,
+    "sequence": 30900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad87426079b97ca9"
+  },
+  "findings": []
+}

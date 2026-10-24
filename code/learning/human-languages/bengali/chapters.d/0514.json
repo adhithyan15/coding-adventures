@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "At the Stove",
+  "label": "ch:bn-at-the-stove",
+  "canDo": "I can say how food is boiled, heated, toasted, steamed and sautéed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C514-satlano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can say how food is boiled, heated, toasted, steamed and sautéed.",
+    "assesses": [
+      "BN-LEX-C514-UNUNE514-03",
+      "BN-LEX-C514-UNUNE514-04",
+      "BN-LEX-C514-UNUNE514-05"
+    ]
+  }
+}

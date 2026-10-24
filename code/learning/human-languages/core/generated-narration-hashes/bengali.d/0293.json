@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:55c30dea442cfa7c",
+  "lessonIds": [
+    "BN-C293-bhumikompo",
+    "BN-C293-kompon",
+    "BN-C293-dhose-pora",
+    "BN-C293-dhvongso",
+    "BN-C293-chapa-pora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch293.txt",
+  "json": "bengali/narration/ch293.json",
+  "textHash": "fnv1a64:17cd4bac940f08a1",
+  "jsonHash": "fnv1a64:ca774a9edea245a3",
+  "findings": []
+}

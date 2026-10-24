@@ -1,0 +1,11 @@
+{
+  "id": "BN-C340-nishiddho",
+  "pathSegment": "BN-PATH-340-BOIDHO340",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-340-BOIDHO340",
+      "order": 1
+    }
+  ]
+}

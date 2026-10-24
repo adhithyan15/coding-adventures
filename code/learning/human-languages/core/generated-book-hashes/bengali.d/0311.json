@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:a527e1544790bbbc",
+  "lessonIds": [
+    "BN-C311-nagordola",
+    "BN-C311-putulnach",
+    "BN-C311-belun",
+    "BN-C311-ghora",
+    "BN-C311-thasa"
+  ],
+  "tex": "bengali/book/chapters/ch311-at-the-village-fair.tex"
+}

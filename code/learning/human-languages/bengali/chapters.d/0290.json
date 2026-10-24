@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "Waves and Wreckage",
+  "label": "ch:bn-waves-and-wreckage",
+  "canDo": "I can describe waves, broken riverbanks and families left homeless.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C290-helikoptar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can describe waves, broken riverbanks and families left homeless.",
+    "assesses": [
+      "BN-LEX-C290-DHEU290-03",
+      "BN-LEX-C290-DHEU290-04",
+      "BN-LEX-C290-DHEU290-05"
+    ]
+  }
+}

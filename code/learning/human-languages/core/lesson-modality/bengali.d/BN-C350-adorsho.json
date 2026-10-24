@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C350-adorsho",
+    "language": "bengali",
+    "chapter": 350,
+    "sequence": 22020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d84ac4bac8caf67e"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "bengali",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:8c5fab32465e4019",
+  "lessonIds": [
+    "BN-C376-lokkhyo",
+    "BN-C376-cheshta",
+    "BN-C376-porishrom",
+    "BN-C376-sophol",
+    "BN-C376-orjon-kora",
+    "BN-R376-review-370-376"
+  ],
+  "tex": "bengali/book/chapters/ch376-aiming-high.tex"
+}

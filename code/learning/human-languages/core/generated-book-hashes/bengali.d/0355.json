@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:fee6815f49744de9",
+  "lessonIds": [
+    "BN-C355-porisongkhyan",
+    "BN-C355-nomuna",
+    "BN-C355-jorip",
+    "BN-C355-songgroho-kora",
+    "BN-C355-bishleshon-kora"
+  ],
+  "tex": "bengali/book/chapters/ch355-collecting-data.tex"
+}

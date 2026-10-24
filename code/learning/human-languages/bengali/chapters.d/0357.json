@@ -1,0 +1,19 @@
+{
+  "chapter": 357,
+  "title": "Reporting Findings",
+  "label": "ch:bn-reporting-findings",
+  "canDo": "I can say what a piece of research is about and how it ends.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C357-dharona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can say what a piece of research is about and how it ends.",
+    "assesses": [
+      "BN-LEX-C357-PROBONDHO357-03",
+      "BN-LEX-C357-PROBONDHO357-04",
+      "BN-LEX-C357-PROBONDHO357-05"
+    ]
+  }
+}

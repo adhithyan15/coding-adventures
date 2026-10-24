@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:488a6ae367f2778a",
+  "lessonIds": [
+    "BN-C532-niyoti",
+    "BN-C532-bhobitobyo",
+    "BN-C532-ach-kora",
+    "BN-C532-purbabhas",
+    "BN-C532-jyotishi"
+  ],
+  "tex": "bengali/book/chapters/ch532-what-lies-ahead.tex"
+}

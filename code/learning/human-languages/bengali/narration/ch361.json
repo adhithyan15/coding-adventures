@@ -1,0 +1,842 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 361,
+  "title": "Learning and Teaching",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:d2c037c844e67854",
+  "lessons": [
+    {
+      "id": "BN-C361-shikkha",
+      "sequence": 22580,
+      "title": "শিক্ষা (shikkhā) — education",
+      "headword": "শিক্ষা",
+      "romanization": "shikkhā",
+      "gloss": "education",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:edacc6b749836092",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for in attendance, then the Bengali for to address a crowd."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শিক্ষা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শিক্ষা — shikkhā — \"education\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শিক্ষা সবার অধিকার। shikkhā sôbār ôdhikār. Education is everyone's right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শিক্ষা (shikkhā) is Sanskrit śikṣā, learning or study (Monier-Williams). The everyday verb শেখা, to learn, comes from the same root by the spoken road (CDIAL 12430 śíkṣatē lists Bengali sikhā)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shikkhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shikkhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shikkhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shikkhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shikkhā sôbār ôdhikār. — Education is everyone's right.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shikkhā sôbār ôdhikār.* — Education is everyone's right.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for in attendance, then the Bengali for to address a crowd, then say shikkhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for in attendance, then the Bengali for to address a crowd, then say *shikkhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does শিক্ষা (shikkhā) mean? (\"Education\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C361-bidya",
+      "sequence": 22590,
+      "title": "বিদ্যা (bidyā) — learning; knowledge",
+      "headword": "বিদ্যা",
+      "romanization": "bidyā",
+      "gloss": "learning; knowledge",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d89ac9fa6ba3b59c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to address a crowd, then the Bengali for education."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিদ্যা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিদ্যা — bidyā — \"learning; knowledge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বিদ্যা কেউ চুরি করতে পারে না। bidyā keu churi kôrte pāre nā. No one can steal your learning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিদ্যা (bidyā) is Sanskrit vidyā, knowledge or learning (Monier-Williams). It is the learning a person carries, as in বিদ্যালয়, a school, 'the house of learning'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bidyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bidyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bidyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bidyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bidyā keu churi kôrte pāre nā. — No one can steal your learning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bidyā keu churi kôrte pāre nā.* — No one can steal your learning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to address a crowd, then the Bengali for education, then say bidyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to address a crowd, then the Bengali for education, then say *bidyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিদ্যা (bidyā) mean? (\"Learning; knowledge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C361-odhyapok",
+      "sequence": 22600,
+      "title": "অধ্যাপক (ôdhyāpôk) — a professor; a college lecturer",
+      "headword": "অধ্যাপক",
+      "romanization": "ôdhyāpôk",
+      "gloss": "a professor; a college lecturer",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c95f95730da5d88a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for education, then the Bengali for learning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অধ্যাপক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অধ্যাপক — ôdhyāpôk — \"a professor; a college lecturer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মীরার বাবা কলেজে অধ্যাপক। mīrār bābā kôleje ôdhyāpôk. Mira's father is a lecturer at the college."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অধ্যাপক (ôdhyāpôk) is Sanskrit adhyāpaka, a teacher (Monier-Williams). Bengali keeps it for those who teach at a college or a university."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôdhyāpôk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôdhyāpôk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôdhyāpôk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôdhyāpôk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrār bābā kôleje ôdhyāpôk. — Mira's father is a lecturer at the college.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrār bābā kôleje ôdhyāpôk.* — Mira's father is a lecturer at the college.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for education, then the Bengali for learning, then say ôdhyāpôk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for education, then the Bengali for learning, then say *ôdhyāpôk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অধ্যাপক (ôdhyāpôk) mean? (\"A professor; a college lecturer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C361-digri",
+      "sequence": 22610,
+      "title": "ডিগ্রি (ḍigri) — a university degree",
+      "headword": "ডিগ্রি",
+      "romanization": "ḍigri",
+      "gloss": "a university degree",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ba64c3b01cae2e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for learning, then the Bengali for a professor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ডিগ্রি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ডিগ্রি — ḍigri — \"a university degree\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অরুণ বিজ্ঞানে ডিগ্রি পেল। ôrun bigyāne ḍigri pelô. Arun got a degree in science."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ডিগ্রি (ḍigri) is borrowed from English degree, with the English d heard as the Bengali ḍ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍigri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍigri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍigri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍigri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôrun bigyāne ḍigri pelô. — Arun got a degree in science.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôrun bigyāne ḍigri pelô.* — Arun got a degree in science.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for learning, then the Bengali for a professor, then say ḍigri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for learning, then the Bengali for a professor, then say *ḍigri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ডিগ্রি (ḍigri) mean? (\"A university degree\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C361-porano-teach",
+      "sequence": 22620,
+      "title": "পড়ানো (pôṛāno) — to teach (a subject); to tutor",
+      "headword": "পড়ানো",
+      "romanization": "pôṛāno",
+      "gloss": "to teach (a subject); to tutor",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2038f767d1d9cf52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a professor, then the Bengali for a university degree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পড়ানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পড়ানো — pôṛāno — \"to teach (a subject); to tutor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মীরা সন্ধ্যায় শিশুদের ইংরেজি পড়ায়। mīrā sôndhyāy shishuder ingreji pôṛāy. Mira teaches children English in the evenings."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি অনেক বছর ইতিহাস পড়ালেন, tini ônek bôchhôr itihās pôṛālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পড়ানো (pôṛāno) is the causative of পড়া 'to read, to study' (CDIAL 7712 páṭhati lists Bengali paṛā): to make someone study. শেখানো teaches a skill; পড়ানো teaches a subject from books."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôṛāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôṛāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôṛāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôṛāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrā sôndhyāy shishuder ingreji pôṛāy. — Mira teaches children English in the evenings.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrā sôndhyāy shishuder ingreji pôṛāy.* — Mira teaches children English in the evenings.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a professor, then the Bengali for a university degree, then say pôṛāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a professor, then the Bengali for a university degree, then say *pôṛāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পড়ানো (pôṛāno) mean? (\"To teach (a subject); to tutor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R361-review-354-361",
+      "sequence": 22630,
+      "title": "Looking back: from Finding Out to Learning and Teaching",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Finding Out to Learning and Teaching",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bdf6d1a97070083",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for research and an experiment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "research, an experiment, a theory, to discover, to look into",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: research, an experiment, a theory, to discover, to look into]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "statistics, a sample, a survey, to collect, to analyse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: statistics, a sample, a survey, to collect, to analyse]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a percentage, a ratio, to calculate, a yardstick, to assess",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a percentage, a ratio, to calculate, a yardstick, to assess]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an essay, a subject, a remark, a conclusion of a text, a notion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an essay, a subject, a remark, a conclusion of a text, a notion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a likeness, a difference, a link, ordinary, to mix up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a likeness, a difference, a link, ordinary, to mix up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an excuse, a pretence, a demanded explanation, to sidestep, acceptable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an excuse, a pretence, a demanded explanation, to sidestep, acceptable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lecture, a speaker, a chairperson, in attendance, to address a crowd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lecture, a speaker, a chairperson, in attendance, to address a crowd]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "education, learning, a professor, a university degree, to tutor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: education, learning, a professor, a university degree, to tutor]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Research? (গবেষণা, gôbeshônā.) An experiment? (পরীক্ষা, pôrīkkhā.) A theory? (তত্ত্ব, tôttvô.) To discover? (আবিষ্কার করা, ābishkār kôrā.) To look into? (অনুসন্ধান করা, ônusôndhān kôrā.) Statistics? (পরিসংখ্যান, pôrisôngkhyān.) A sample? (নমুনা, nômunā.) A survey? (জরিপ, jôrip.) To collect? (সংগ্রহ করা, sônggrôhô kôrā.) To analyse? (বিশ্লেষণ করা, bishleshôn kôrā.) A percentage? (শতাংশ, shôtāngshô.) A ratio? (অনুপাত, ônupāt.) To calculate? (হিসেব করা, hiseb kôrā.) A yardstick? (মাপকাঠি, māpkāṭhi.) To assess? (মূল্যায়ন করা, mūlyāyôn kôrā.) An essay? (প্রবন্ধ, prôbôndhô.) A subject? (বিষয়, bishôy.) A remark? (মন্তব্য, môntôbyô.) A conclusion of a text? (উপসংহার, upôsônghār.) A notion? (ধারণা, dhārônā.) A likeness? (মিল, mil.) A difference? (পার্থক্য, pārthôkyô.) A link? (যোগসূত্র, jogsūtrô.) Ordinary? (সাধারণ, sādhārôn.) To mix up? (গুলিয়ে ফেলা, guliye phelā.) An excuse? (অজুহাত, ôjuhāt.) A pretence? (ভান, bhān.) A demanded explanation? (কৈফিয়ত, koiphiyôt.) To sidestep? (পাশ কাটানো, pāsh kāṭāno.) Acceptable? (গ্রহণযোগ্য, grôhônjogyô.) A lecture? (বক্তৃতা, bôktritā.) A speaker? (বক্তা, bôktā.) A chairperson? (সভাপতি, sôbhāpôti.) In attendance? (উপস্থিত, upôsthitô.) To address a crowd? (সম্বোধন করা, sômbodhôn kôrā.) Education? (শিক্ষা, shikkhā.) Learning? (বিদ্যা, bidyā.) A professor? (অধ্যাপক, ôdhyāpôk.) A university degree? (ডিগ্রি, ḍigri.) To tutor? (পড়ানো, pôṛāno.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

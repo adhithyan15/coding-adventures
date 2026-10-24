@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "A Story's Lesson",
+  "label": "ch:bn-a-story-s-lesson",
+  "canDo": "I can say what a story teaches about right and wrong.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C325-badhyo-hooya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can say what a story teaches about right and wrong.",
+    "assesses": [
+      "BN-LEX-C325-UPODESH325-03",
+      "BN-LEX-C325-UPODESH325-04",
+      "BN-LEX-C325-UPODESH325-05"
+    ]
+  }
+}

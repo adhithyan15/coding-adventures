@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C303-sedin",
+    "language": "bengali",
+    "chapter": 303,
+    "sequence": 19380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7c5c8d1994b091e"
+  },
+  "findings": []
+}

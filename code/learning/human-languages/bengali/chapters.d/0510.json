@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "Cleaning Day",
+  "label": "ch:bn-cleaning-day",
+  "canDo": "I can talk about cobwebs, scrubbing and wringing out cloths.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C510-maja",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can talk about cobwebs, scrubbing and wringing out cloths.",
+    "assesses": [
+      "BN-LEX-C510-SAPHAI510-03",
+      "BN-LEX-C510-SAPHAI510-04",
+      "BN-LEX-C510-SAPHAI510-05"
+    ]
+  }
+}

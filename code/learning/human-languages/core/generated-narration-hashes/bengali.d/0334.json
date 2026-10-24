@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:9beb53aa2029a6e5",
+  "lessonIds": [
+    "BN-C334-apotti",
+    "BN-C334-bitorko",
+    "BN-C334-motamot",
+    "BN-C334-birodhita-kora",
+    "BN-C334-upekkha-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch334.txt",
+  "json": "bengali/narration/ch334.json",
+  "textHash": "fnv1a64:5725145ccaa72321",
+  "jsonHash": "fnv1a64:8bad6fd937b93779",
+  "findings": []
+}

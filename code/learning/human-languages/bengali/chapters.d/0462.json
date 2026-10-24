@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "Lazy and Industrious",
+  "label": "ch:bn-lazy-and-industrious",
+  "canDo": "I can say whether someone is lazy, industrious or messy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C462-gorimosi-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can say whether someone is lazy, industrious or messy.",
+    "assesses": [
+      "BN-LEX-C462-OLOS462-03",
+      "BN-LEX-C462-OLOS462-04",
+      "BN-LEX-C462-OLOS462-05"
+    ]
+  }
+}

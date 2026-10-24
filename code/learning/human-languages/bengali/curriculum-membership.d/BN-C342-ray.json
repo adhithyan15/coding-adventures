@@ -1,0 +1,11 @@
+{
+  "id": "BN-C342-ray",
+  "pathSegment": "BN-PATH-342-BICHAR342",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-342-BICHAR342",
+      "order": 2
+    }
+  ]
+}

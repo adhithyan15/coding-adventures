@@ -1,0 +1,11 @@
+{
+  "id": "BN-C432-morubhumi",
+  "pathSegment": "BN-PATH-432-CHURA432",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-432-CHURA432",
+      "order": 3
+    }
+  ]
+}

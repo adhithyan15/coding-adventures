@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:997b3de5161b06eb",
+  "lessonIds": [
+    "BN-C326-ashchoryo",
+    "BN-C326-oloukik",
+    "BN-C326-kolpona-kora",
+    "BN-C326-guptodhon",
+    "BN-C326-miliye-jaoya"
+  ],
+  "tex": "bengali/book/chapters/ch326-wonders.tex"
+}

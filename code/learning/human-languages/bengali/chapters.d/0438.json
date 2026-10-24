@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Mind and Feeling",
+  "label": "ch:bn-mind-and-feeling",
+  "canDo": "I can talk about the mind and about what I feel.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C438-ter-paoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can talk about the mind and about what I feel.",
+    "assesses": [
+      "BN-LEX-C438-MON438-03",
+      "BN-LEX-C438-MON438-04",
+      "BN-LEX-C438-MON438-05"
+    ]
+  }
+}

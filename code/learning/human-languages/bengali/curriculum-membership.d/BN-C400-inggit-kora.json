@@ -1,0 +1,11 @@
+{
+  "id": "BN-C400-inggit-kora",
+  "pathSegment": "BN-PATH-400-THIKANA400",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-400-THIKANA400",
+      "order": 4
+    }
+  ]
+}

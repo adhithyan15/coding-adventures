@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:b8c99f6733530aa1",
+  "lessonIds": [
+    "BN-C512-unun",
+    "BN-C512-khunti",
+    "BN-C512-sarashi",
+    "BN-C512-dhakna",
+    "BN-C512-bata"
+  ],
+  "tex": "bengali/book/chapters/ch512-kitchen-tools.tex"
+}

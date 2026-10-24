@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:18ff62351dd4d1bc",
+  "lessonIds": [
+    "BN-C287-muhurto",
+    "BN-C287-chokite",
+    "BN-C287-akre-dhora",
+    "BN-C287-totkkhonat",
+    "BN-C287-achhre-pora"
+  ],
+  "tex": "bengali/book/chapters/ch287-in-a-split-second.tex"
+}

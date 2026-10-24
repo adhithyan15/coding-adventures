@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-286-DEKHA286",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "BN-EXT-286-DEKHA286"
+  ],
+  "after": []
+}

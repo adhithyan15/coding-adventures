@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:eeaa68ac41d68997",
+  "lessonIds": [
+    "BN-C379-protishruti",
+    "BN-C379-songkolpo",
+    "BN-C379-drirho",
+    "BN-C379-bhonggo-kora",
+    "BN-C379-protigya-kora"
+  ],
+  "tex": "bengali/book/chapters/ch379-keeping-a-promise.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C439-sukh",
+    "language": "bengali",
+    "chapter": 439,
+    "sequence": 27050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04a15209c6258606"
+  },
+  "findings": []
+}

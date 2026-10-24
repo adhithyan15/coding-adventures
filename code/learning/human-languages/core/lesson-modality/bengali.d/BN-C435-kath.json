@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C435-kath",
+    "language": "bengali",
+    "chapter": 435,
+    "sequence": 26640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd7fd3b1a8cc3fe8"
+  },
+  "findings": []
+}

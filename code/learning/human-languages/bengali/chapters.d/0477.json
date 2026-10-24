@@ -1,0 +1,21 @@
+{
+  "chapter": 477,
+  "title": "Burns and Aches",
+  "label": "ch:bn-burns-and-aches",
+  "canDo": "I can talk about burning, throbbing pain and limping.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-R477-review-470-477",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can talk about burning, throbbing pain and limping.",
+    "assesses": [
+      "BN-LEX-C477-JBOLUNI477-01",
+      "BN-LEX-C477-JBOLUNI477-02",
+      "BN-LEX-C477-JBOLUNI477-03",
+      "BN-LEX-C477-JBOLUNI477-04",
+      "BN-LEX-C477-JBOLUNI477-05"
+    ]
+  }
+}

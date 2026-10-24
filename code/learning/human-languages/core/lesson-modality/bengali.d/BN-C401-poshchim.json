@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C401-poshchim",
+    "language": "bengali",
+    "chapter": 401,
+    "sequence": 24890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee6d065be13b888b"
+  },
+  "findings": []
+}

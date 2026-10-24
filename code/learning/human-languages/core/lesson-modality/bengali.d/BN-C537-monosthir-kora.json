@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C537-monosthir-kora",
+    "language": "bengali",
+    "chapter": 537,
+    "sequence": 32300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:484e4d11f6c4f638"
+  },
+  "findings": []
+}

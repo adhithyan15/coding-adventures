@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C495-bonas",
+    "language": "bengali",
+    "chapter": 495,
+    "sequence": 30160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90a5cd50b0b647d9"
+  },
+  "findings": []
+}

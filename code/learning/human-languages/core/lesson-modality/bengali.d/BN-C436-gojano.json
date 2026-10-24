@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C436-gojano",
+    "language": "bengali",
+    "chapter": 436,
+    "sequence": 26690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ba1536fa25dbf55"
+  },
+  "findings": []
+}

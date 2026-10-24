@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:9a6e6c291fe3a9ff",
+  "lessonIds": [
+    "BN-C338-sonod",
+    "BN-C338-tothyo",
+    "BN-C338-sakkhyo",
+    "BN-C338-melano",
+    "BN-C338-khondon-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch338.txt",
+  "json": "bengali/narration/ch338.json",
+  "textHash": "fnv1a64:829ac6c85c8bd0de",
+  "jsonHash": "fnv1a64:e64717ac8f8b8d6a",
+  "findings": []
+}

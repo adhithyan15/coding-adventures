@@ -392,6 +392,13 @@ describe("the gate that would have caught the A2 claim", () => {
     // past + असतो, realizing all five B1 nodes, plus letter lessons for ऋ and
     // ञ) and chapters 288-557 (1,350 headwords, 408 verbs), which moved it from
     // the A2 row of HELD to B1.
+    // Bengali followed as the fifteenth, with chapters 264-275 (the B1 core: the
+    // past by person with its changed stems, the future -ব / -বে / -বেন, -ছি and
+    // -ছিলাম, the -এ form, reasons with কারণ / উচিত / -তে হবে / তাই, travel,
+    // feelings with the genitive and -এর চেয়ে / সবচেয়ে, and যদি … তাহলে / -লে /
+    // -তাম, realizing all five B1 nodes, plus twelve letter and sign lessons
+    // from ঘ to ঙ) and chapters 276-545 (1,350 headwords, 380 verbs), which
+    // moved it from the A2 row of HELD to B1.
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

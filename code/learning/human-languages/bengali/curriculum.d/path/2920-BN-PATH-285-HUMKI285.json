@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-285-HUMKI285",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "BN-EXT-285-HUMKI285"
+  ],
+  "after": []
+}

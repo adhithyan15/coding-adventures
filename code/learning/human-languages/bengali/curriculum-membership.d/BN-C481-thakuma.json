@@ -1,0 +1,11 @@
+{
+  "id": "BN-C481-thakuma",
+  "pathSegment": "BN-PATH-481-MA481",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-481-MA481",
+      "order": 4
+    }
+  ]
+}

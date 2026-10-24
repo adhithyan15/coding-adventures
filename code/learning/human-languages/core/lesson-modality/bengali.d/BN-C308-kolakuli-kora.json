@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C308-kolakuli-kora",
+    "language": "bengali",
+    "chapter": 308,
+    "sequence": 19680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0edd04d4db5a27a2"
+  },
+  "findings": []
+}

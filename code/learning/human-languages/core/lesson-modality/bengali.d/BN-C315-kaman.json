@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C315-kaman",
+    "language": "bengali",
+    "chapter": 315,
+    "sequence": 20030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce4b1bfd76e8a18c"
+  },
+  "findings": []
+}

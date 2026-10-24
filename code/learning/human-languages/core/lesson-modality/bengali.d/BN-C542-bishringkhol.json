@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C542-bishringkhol",
+    "language": "bengali",
+    "chapter": 542,
+    "sequence": 32580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbafc0de1056c321"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C368-othoba",
+    "language": "bengali",
+    "chapter": 368,
+    "sequence": 22980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2bc85769a32a33c8"
+  },
+  "findings": []
+}

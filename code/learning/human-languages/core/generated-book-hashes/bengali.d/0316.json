@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:34e2c8ace3d8e6db",
+  "lessonIds": [
+    "BN-C316-ghera",
+    "BN-C316-prachir",
+    "BN-C316-porikha",
+    "BN-C316-teka",
+    "BN-C316-pichhono"
+  ],
+  "tex": "bengali/book/chapters/ch316-the-siege.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:739c5b3703b42195",
+  "lessonIds": [
+    "BN-C469-ghama",
+    "BN-C469-bron",
+    "BN-C469-til",
+    "BN-C469-dag",
+    "BN-C469-lom",
+    "BN-R469-review-462-469"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch469.txt",
+  "json": "bengali/narration/ch469.json",
+  "textHash": "fnv1a64:37e43296a0edab12",
+  "jsonHash": "fnv1a64:ed1ad3ee5408f8aa",
+  "findings": []
+}

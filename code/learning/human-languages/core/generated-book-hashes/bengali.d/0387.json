@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:dfed931a826cda0b",
+  "lessonIds": [
+    "BN-C387-poth",
+    "BN-C387-gontobyo",
+    "BN-C387-sophor",
+    "BN-C387-jatayat-kora",
+    "BN-C387-phirti"
+  ],
+  "tex": "bengali/book/chapters/ch387-ways-and-destinations.tex"
+}

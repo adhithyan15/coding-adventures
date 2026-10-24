@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C402-kinara",
+    "language": "bengali",
+    "chapter": 402,
+    "sequence": 24940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:011100327ec8b53b"
+  },
+  "findings": []
+}

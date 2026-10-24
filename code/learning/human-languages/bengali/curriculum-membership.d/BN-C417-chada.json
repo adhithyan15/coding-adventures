@@ -1,0 +1,11 @@
+{
+  "id": "BN-C417-chada",
+  "pathSegment": "BN-PATH-417-NOT417",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-417-NOT417",
+      "order": 4
+    }
+  ]
+}

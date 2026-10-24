@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C296-prokash-kora",
+    "language": "bengali",
+    "chapter": 296,
+    "sequence": 19050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4684f95b5d697d49"
+  },
+  "findings": []
+}

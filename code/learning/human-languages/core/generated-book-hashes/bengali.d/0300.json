@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:29f0eb8c18541f8b",
+  "lessonIds": [
+    "BN-C300-pathok",
+    "BN-C300-shrota",
+    "BN-C300-bigyopti",
+    "BN-C300-prochar-kora",
+    "BN-C300-songkhya"
+  ],
+  "tex": "bengali/book/chapters/ch300-readers-and-listeners.tex"
+}

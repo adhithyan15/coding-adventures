@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:c14e2bc6aefaa1f9",
+  "lessonIds": [
+    "BN-C477-jontrona",
+    "BN-C477-pora-burn",
+    "BN-C477-tonton-kora",
+    "BN-C477-khorano",
+    "BN-C477-gongano",
+    "BN-R477-review-470-477"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch477.txt",
+  "json": "bengali/narration/ch477.json",
+  "textHash": "fnv1a64:71eba553b8166f1a",
+  "jsonHash": "fnv1a64:e6912ff8ce1e7f6d",
+  "findings": []
+}

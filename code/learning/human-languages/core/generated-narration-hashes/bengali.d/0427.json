@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:c8b705c27920afd2",
+  "lessonIds": [
+    "BN-C427-grishmo",
+    "BN-C427-shorot",
+    "BN-C427-mousum",
+    "BN-C427-tapmatra",
+    "BN-C427-uttap"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch427.txt",
+  "json": "bengali/narration/ch427.json",
+  "textHash": "fnv1a64:1b0884b04c197b6b",
+  "jsonHash": "fnv1a64:e1c1e850b7bc0a04",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C482-beyai",
+    "language": "bengali",
+    "chapter": 482,
+    "sequence": 29290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bafb6a00a7c0caed"
+  },
+  "findings": []
+}

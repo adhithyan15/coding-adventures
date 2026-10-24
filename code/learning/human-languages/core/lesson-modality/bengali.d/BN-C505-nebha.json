@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C505-nebha",
+    "language": "bengali",
+    "chapter": 505,
+    "sequence": 30700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:773ba4dd03b65246"
+  },
+  "findings": []
+}

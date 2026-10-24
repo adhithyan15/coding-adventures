@@ -1,0 +1,11 @@
+{
+  "id": "BN-C298-rotano",
+  "pathSegment": "BN-PATH-298-UTTEJONA298",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-298-UTTEJONA298",
+      "order": 1
+    }
+  ]
+}

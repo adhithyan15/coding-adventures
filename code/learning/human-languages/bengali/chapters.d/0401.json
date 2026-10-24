@@ -1,0 +1,19 @@
+{
+  "chapter": 401,
+  "title": "Points of the Compass",
+  "label": "ch:bn-points-of-the-compass",
+  "canDo": "I can say which way is south, east and west, read a compass and look to the horizon.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C401-digonto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can say which way is south, east and west, read a compass and look to the horizon.",
+    "assesses": [
+      "BN-LEX-C401-DIK401-03",
+      "BN-LEX-C401-DIK401-04",
+      "BN-LEX-C401-DIK401-05"
+    ]
+  }
+}

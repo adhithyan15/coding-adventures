@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:517e0fa60c9efafc",
+  "lessonIds": [
+    "BN-C277-sakkhi",
+    "BN-C277-keu",
+    "BN-C277-sobai",
+    "BN-C277-bhir",
+    "BN-C277-hajir-hooya"
+  ],
+  "tex": "bengali/book/chapters/ch277-who-saw-it.tex"
+}

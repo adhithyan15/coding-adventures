@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R283-review-276-283",
+    "language": "bengali",
+    "chapter": 283,
+    "sequence": 18400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b17808aa4a76fc0f"
+  },
+  "findings": []
+}

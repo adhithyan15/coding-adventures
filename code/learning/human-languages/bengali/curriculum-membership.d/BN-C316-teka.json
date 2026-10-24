@@ -1,0 +1,11 @@
+{
+  "id": "BN-C316-teka",
+  "pathSegment": "BN-PATH-316-GHERA316",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-316-GHERA316",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C361-bidya",
+    "language": "bengali",
+    "chapter": 361,
+    "sequence": 22590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d89ac9fa6ba3b59c"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:36f1c1401288e9ce",
+  "lessonIds": [
+    "BN-C297-kotha",
+    "BN-C297-sakkhatkar",
+    "BN-C297-ghoshona-kora",
+    "BN-C297-bibriti",
+    "BN-C297-ullekh-kora"
+  ],
+  "tex": "bengali/book/chapters/ch297-who-said-what.tex"
+}

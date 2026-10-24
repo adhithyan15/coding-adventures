@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:9b9681bdc0c00bb9",
+  "lessonIds": [
+    "BN-C441-atongko",
+    "BN-C441-atke-otha",
+    "BN-C441-shiure-otha",
+    "BN-C441-ghabrano",
+    "BN-C441-dhorphor-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch441.txt",
+  "json": "bengali/narration/ch441.json",
+  "textHash": "fnv1a64:24d1f2aa12399dc1",
+  "jsonHash": "fnv1a64:5b5e89dd9fef99ad",
+  "findings": []
+}

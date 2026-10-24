@@ -1,0 +1,11 @@
+{
+  "id": "BN-C500-sara",
+  "pathSegment": "BN-PATH-500-BIBHAG500",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-500-BIBHAG500",
+      "order": 3
+    }
+  ]
+}

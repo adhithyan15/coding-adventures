@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 374,
+  "title": "Keeping Danger Away",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5c5eade9fa3b70c8",
+  "lessons": [
+    {
+      "id": "BN-C374-hushiyar",
+      "sequence": 23250,
+      "title": "হুঁশিয়ার (hũshiyār) — watchful; on one's guard",
+      "headword": "হুঁশিয়ার",
+      "romanization": "hũshiyār",
+      "gloss": "watchful; on one's guard",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:072e41d2dcca5ad7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for nearly, then the Bengali for partial."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হুঁশিয়ার",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হুঁশিয়ার — hũshiyār — \"watchful; on one's guard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাতে বাইরে গেলে হুঁশিয়ার থেকো। rāte bāire gele hũshiyār theko. Be on your guard if you go out at night."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হুঁশিয়ার (hũshiyār) is usually traced to Persian hushyār, alert or wide awake. As a single word it is also a warning: হুঁশিয়ার! Watch out!"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hũshiyār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hũshiyār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hũshiyār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hũshiyār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāte bāire gele hũshiyār theko. — Be on your guard if you go out at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāte bāire gele hũshiyār theko.* — Be on your guard if you go out at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for nearly, then the Bengali for partial, then say hũshiyār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for nearly, then the Bengali for partial, then say *hũshiyār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হুঁশিয়ার (hũshiyār) mean? (\"Watchful; on one's guard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C374-protirodh-kora",
+      "sequence": 23260,
+      "title": "প্রতিরোধ করা (prôtirodh kôrā) — to resist; to prevent",
+      "headword": "প্রতিরোধ করা",
+      "romanization": "prôtirodh kôrā",
+      "gloss": "to resist; to prevent",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ffe652315141c09",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for partial, then the Bengali for on one's guard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রতিরোধ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রতিরোধ করা — prôtirodh kôrā — \"to resist; to prevent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নিয়মিত হাত ধুলে তুমি অনেক রোগ প্রতিরোধ করতে পারবে। niyômitô hāt dhule tumi ônek rog prôtirodh kôrte pārbe. If you wash your hands regularly, you can ward off many diseases."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি শত্রুকে প্রতিরোধ করলেন, tini shôtruke prôtirodh kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রতিরোধ করা (prôtirodh kôrā) is Sanskrit pratirodha, opposition or obstruction (Monier-Williams), with করা: to stand against an attack, a disease or a change."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtirodh kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtirodh kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtirodh kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtirodh kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyômitô hāt dhule tumi ônek rog prôtirodh kôrte pārbe. — If you wash your hands regularly, you can ward off many diseases.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyômitô hāt dhule tumi ônek rog prôtirodh kôrte pārbe.* — If you wash your hands regularly, you can ward off many diseases.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for partial, then the Bengali for on one's guard, then say prôtirodh kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for partial, then the Bengali for on one's guard, then say *prôtirodh kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রতিরোধ করা (prôtirodh kôrā) mean? (\"To resist; to prevent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C374-thekano",
+      "sequence": 23270,
+      "title": "ঠেকানো (ṭhekāno) — to stop; to ward off",
+      "headword": "ঠেকানো",
+      "romanization": "ṭhekāno",
+      "gloss": "to stop; to ward off",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0673ae45053b0a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for on one's guard, then the Bengali for to resist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঠেকানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঠেকানো — ṭhekāno — \"to stop; to ward off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দরজা বন্ধ না করলে তুমি মশা ঠেকাতে পারবে না। dôrjā bôndhô nā kôrle tumi môshā ṭhekāte pārbe nā. If you don't close the door, you won't keep the mosquitoes out."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি বলটা ঠেকালেন, tini bôlṭā ṭhekālen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঠেকানো (ṭhekāno) is built on the reconstructed ṭhēkk, to fix; CDIAL 5509 lists Bengali ṭhek, a prop, and ṭhekāna, to obstruct: to put something in the way so a thing cannot get through."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhekāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhekāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhekāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhekāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dôrjā bôndhô nā kôrle tumi môshā ṭhekāte pārbe nā. — If you don't close the door, you won't keep the mosquitoes out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dôrjā bôndhô nā kôrle tumi môshā ṭhekāte pārbe nā.* — If you don't close the door, you won't keep the mosquitoes out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for on one's guard, then the Bengali for to resist, then say ṭhekāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for on one's guard, then the Bengali for to resist, then say *ṭhekāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঠেকানো (ṭhekāno) mean? (\"To stop; to ward off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C374-niyontron-kora",
+      "sequence": 23280,
+      "title": "নিয়ন্ত্রণ করা (niyôntrôn kôrā) — to control",
+      "headword": "নিয়ন্ত্রণ করা",
+      "romanization": "niyôntrôn kôrā",
+      "gloss": "to control",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0abc18478183ae8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to resist, then the Bengali for to ward off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নিয়ন্ত্রণ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিয়ন্ত্রণ করা — niyôntrôn kôrā — \"to control\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাগ নিয়ন্ত্রণ না করলে বিপদ হবে। rāg niyôntrôn nā kôrle bipôd hôbe. If you don't control your anger, there will be trouble."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি ভিড় নিয়ন্ত্রণ করলেন, tini bhiṛ niyôntrôn kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিয়ন্ত্রণ করা (niyôntrôn kôrā) is Sanskrit niyantraṇa, restraining or governing (Monier-Williams), with করা: to keep a crowd, a price or a feeling in check."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyôntrôn kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyôntrôn kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyôntrôn kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyôntrôn kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāg niyôntrôn nā kôrle bipôd hôbe. — If you don't control your anger, there will be trouble.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāg niyôntrôn nā kôrle bipôd hôbe.* — If you don't control your anger, there will be trouble.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to resist, then the Bengali for to ward off, then say niyôntrôn kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to resist, then the Bengali for to ward off, then say *niyôntrôn kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does নিয়ন্ত্রণ করা (niyôntrôn kôrā) mean? (\"To control\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C374-nojor",
+      "sequence": 23290,
+      "title": "নজর (nôjôr) — watch; a close eye (on something)",
+      "headword": "নজর",
+      "romanization": "nôjôr",
+      "gloss": "watch; a close eye (on something)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24d002ccd5254462",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to ward off, then the Bengali for to control."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নজর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নজর — nôjôr — \"watch; a close eye (on something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বাজারে গেলে ব্যাগের ওপর নজর রাখো। bājāre gele byāger opôr nôjôr rākho. If you go to the market, keep an eye on your bag."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নজর (nôjôr) is usually traced to Arabic naẓar, a look, through Persian. নজর রাখা is to keep watch on something."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôjôr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôjôr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôjôr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôjôr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bājāre gele byāger opôr nôjôr rākho. — If you go to the market, keep an eye on your bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bājāre gele byāger opôr nôjôr rākho.* — If you go to the market, keep an eye on your bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to ward off, then the Bengali for to control, then say nôjôr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to ward off, then the Bengali for to control, then say *nôjôr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does নজর (nôjôr) mean? (\"Watch; a close eye (on something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

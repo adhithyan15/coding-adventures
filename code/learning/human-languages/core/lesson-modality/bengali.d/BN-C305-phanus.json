@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C305-phanus",
+    "language": "bengali",
+    "chapter": 305,
+    "sequence": 19520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b519bbea3ed6552"
+  },
+  "findings": []
+}

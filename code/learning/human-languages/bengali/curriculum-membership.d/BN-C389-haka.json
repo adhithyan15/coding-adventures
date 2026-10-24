@@ -1,0 +1,11 @@
+{
+  "id": "BN-C389-haka",
+  "pathSegment": "BN-PATH-389-CHALOK389",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-389-CHALOK389",
+      "order": 4
+    }
+  ]
+}

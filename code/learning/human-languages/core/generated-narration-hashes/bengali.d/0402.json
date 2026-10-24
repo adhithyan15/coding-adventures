@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:2080c9d8db8e2d99",
+  "lessonIds": [
+    "BN-C402-majhkhan",
+    "BN-C402-ghurpoth",
+    "BN-C402-kinara",
+    "BN-C402-dishehara",
+    "BN-C402-ghurpak-khaoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch402.txt",
+  "json": "bengali/narration/ch402.json",
+  "textHash": "fnv1a64:0393c848a519962e",
+  "jsonHash": "fnv1a64:8dc26d1f775ea2f0",
+  "findings": []
+}

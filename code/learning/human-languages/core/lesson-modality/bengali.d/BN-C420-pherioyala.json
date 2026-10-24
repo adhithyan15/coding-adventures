@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C420-pherioyala",
+    "language": "bengali",
+    "chapter": 420,
+    "sequence": 25850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55ec65a01963a2b3"
+  },
+  "findings": []
+}

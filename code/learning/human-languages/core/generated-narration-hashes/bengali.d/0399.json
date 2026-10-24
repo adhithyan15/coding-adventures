@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:9bbdff137abc5e1f",
+  "lessonIds": [
+    "BN-C399-bhromon-kora",
+    "BN-C399-bonbhojon",
+    "BN-C399-tabu",
+    "BN-C399-pohano",
+    "BN-C399-gaid",
+    "BN-R399-review-392-399"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch399.txt",
+  "json": "bengali/narration/ch399.json",
+  "textHash": "fnv1a64:a6b39e1ae4017d68",
+  "jsonHash": "fnv1a64:c925cae7ef1c26c4",
+  "findings": []
+}

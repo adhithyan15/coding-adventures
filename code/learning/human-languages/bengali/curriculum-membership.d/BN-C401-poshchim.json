@@ -1,0 +1,11 @@
+{
+  "id": "BN-C401-poshchim",
+  "pathSegment": "BN-PATH-401-DIK401",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-401-DIK401",
+      "order": 2
+    }
+  ]
+}

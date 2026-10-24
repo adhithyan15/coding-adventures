@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "One Thing Leads to Another",
+  "label": "ch:bn-one-thing-leads-to-another",
+  "canDo": "I can link one reason to the next and say what follows.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C332-khata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can link one reason to the next and say what follows.",
+    "assesses": [
+      "BN-LEX-C332-SUTORANG332-03",
+      "BN-LEX-C332-SUTORANG332-04",
+      "BN-LEX-C332-SUTORANG332-05"
+    ]
+  }
+}

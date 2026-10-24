@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:c4a3b3c08fde261f",
+  "lessonIds": [
+    "BN-C421-mal",
+    "BN-C421-gudam",
+    "BN-C421-ordar",
+    "BN-C421-paikari",
+    "BN-C421-mojut-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch421.txt",
+  "json": "bengali/narration/ch421.json",
+  "textHash": "fnv1a64:37c544c5ccc7685d",
+  "jsonHash": "fnv1a64:0f5fcf7ed9f75029",
+  "findings": []
+}

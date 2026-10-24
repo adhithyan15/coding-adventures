@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "A Person's Character",
+  "label": "ch:bn-a-person-s-character",
+  "canDo": "I can describe someone's character and habits.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C456-ropto-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can describe someone's character and habits.",
+    "assesses": [
+      "BN-LEX-C456-CHORITRO456-03",
+      "BN-LEX-C456-CHORITRO456-04",
+      "BN-LEX-C456-CHORITRO456-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:56997813fcd3956f",
+  "lessonIds": [
+    "BN-C309-ghuri",
+    "BN-C309-orano",
+    "BN-C309-noboborsho",
+    "BN-C309-halkhata",
+    "BN-C309-protha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch309.txt",
+  "json": "bengali/narration/ch309.json",
+  "textHash": "fnv1a64:335cfff348b796b3",
+  "jsonHash": "fnv1a64:d6385b7db41eacc8",
+  "findings": []
+}

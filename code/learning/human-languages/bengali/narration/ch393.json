@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 393,
+  "title": "Fuel and Flat Tyres",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0246a2cd91be42ec",
+  "lessons": [
+    {
+      "id": "BN-C393-dijel",
+      "sequence": 24460,
+      "title": "ডিজেল (ḍijel) — diesel",
+      "headword": "ডিজেল",
+      "romanization": "ḍijel",
+      "gloss": "diesel",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fec6908e689ab953",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a signboard, then the Bengali for to keep close to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ডিজেল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ডিজেল — ḍijel — \"diesel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ট্রাকগুলো ডিজেলে চলে। ṭrākgulo ḍijele chôle. Lorries run on diesel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ডিজেল (ḍijel) is borrowed from English diesel, named after the engineer Rudolf Diesel; the English z sound is said with জ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍijel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍijel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍijel, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍijel*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭrākgulo ḍijele chôle. — Lorries run on diesel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭrākgulo ḍijele chôle.* — Lorries run on diesel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a signboard, then the Bengali for to keep close to, then say ḍijel again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a signboard, then the Bengali for to keep close to, then say *ḍijel* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ডিজেল (ḍijel) mean? (\"Diesel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C393-haoya",
+      "sequence": 24470,
+      "title": "হাওয়া (hāoyā) — air; a breeze",
+      "headword": "হাওয়া",
+      "romanization": "hāoyā",
+      "gloss": "air; a breeze",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:161f7bf0c2fa1f12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to keep close to, then the Bengali for diesel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হাওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হাওয়া — hāoyā — \"air; a breeze\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পেট্রোল পাম্পে আমরা চাকায় হাওয়া ভরলাম। peṭrol pāmpe āmrā chākāy hāoyā bhôrlām. At the petrol station we put air in the tyres."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the breeze you feel: বাতাস is the wind; হাওয়া (hāoyā) is the air moving, or the air in a tyre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হাওয়া (hāoyā) is usually traced to Arabic hawāʾ, \"air\", which came into Bengali through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peṭrol pāmpe āmrā chākāy hāoyā bhôrlām. — At the petrol station we put air in the tyres.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peṭrol pāmpe āmrā chākāy hāoyā bhôrlām.* — At the petrol station we put air in the tyres.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to keep close to, then the Bengali for diesel, then say hāoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to keep close to, then the Bengali for diesel, then say *hāoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হাওয়া (hāoyā) mean? (\"Air; a breeze\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C393-pangchar",
+      "sequence": 24480,
+      "title": "পাংচার (pāngchār) — a puncture",
+      "headword": "পাংচার",
+      "romanization": "pāngchār",
+      "gloss": "a puncture",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f8d74037c2ce5a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for diesel, then the Bengali for air."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পাংচার",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাংচার — pāngchār — \"a puncture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পথে সাইকেলের চাকা পাংচার হল। pôthe sāikeler chākā pāngchār hôlô. On the way the bicycle got a puncture."
+            },
+            {
+              "kind": "speech",
+              "text": "পাংচার (pāngchār) হওয়া, to get a puncture; the repair stall by the road is a পাংচারের দোকান."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাংচার (pāngchār) is borrowed from English puncture, with ং for the English n before ch."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāngchār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāngchār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāngchār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāngchār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôthe sāikeler chākā pāngchār hôlô. — On the way the bicycle got a puncture.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôthe sāikeler chākā pāngchār hôlô.* — On the way the bicycle got a puncture.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for diesel, then the Bengali for air, then say pāngchār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for diesel, then the Bengali for air, then say *pāngchār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পাংচার (pāngchār) mean? (\"A puncture\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C393-phurano",
+      "sequence": 24490,
+      "title": "ফুরানো (phurāno) — to run out; to be used up",
+      "headword": "ফুরানো",
+      "romanization": "phurāno",
+      "gloss": "to run out; to be used up",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4385ef82d8cc674",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for air, then the Bengali for a puncture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ফুরানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফুরানো — phurāno — \"to run out; to be used up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পথে গাড়ির পেট্রোল ফুরিয়ে গেল। pôthe gāṛir peṭrol phuriye gelô. The car ran out of petrol on the way."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই পেট্রোল ফুরিয়ে গেল, sei peṭrol phuriye gelô."
+            },
+            {
+              "kind": "speech",
+              "text": "The thing that runs out is the subject: টাকা ফুরিয়ে গেল, the money ran out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফুরানো (phurāno) is an everyday Bengali verb whose origin is not settled; CDIAL gives no Bengali form that matches it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phurāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phurāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phurāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phurāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôthe gāṛir peṭrol phuriye gelô. — The car ran out of petrol on the way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôthe gāṛir peṭrol phuriye gelô.* — The car ran out of petrol on the way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for air, then the Bengali for a puncture, then say phurāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for air, then the Bengali for a puncture, then say *phurāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ফুরানো (phurāno) mean? (\"To run out; to be used up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C393-chalu-kora",
+      "sequence": 24500,
+      "title": "চালু করা (chālu kôrā) — to start (an engine); to switch on",
+      "headword": "চালু করা",
+      "romanization": "chālu kôrā",
+      "gloss": "to start (an engine); to switch on",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:921bec356ee46472",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a puncture, then the Bengali for to run out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: চালু করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চালু করা — chālu kôrā — \"to start (an engine); to switch on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "চালক ইঞ্জিন চালু করলেন। chālôk injin chālu kôrlen. The driver started the engine."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি পাখা চালু করলেন, tini pākhā chālu kôrlen."
+            },
+            {
+              "kind": "speech",
+              "text": "চালু on its own is running, in use: দোকানটা চালু, the shop is open for business."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চালু করা (chālu kôrā) joins চালু, \"going, in working order\", probably a Bengali formation on চাল, \"gait, motion\", which CDIAL lists under the reconstructed calyā (CDIAL 4722), to করা, to do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chālu kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chālu kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chālu kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chālu kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chālôk injin chālu kôrlen. — The driver started the engine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chālôk injin chālu kôrlen.* — The driver started the engine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a puncture, then the Bengali for to run out, then say chālu kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a puncture, then the Bengali for to run out, then say *chālu kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does চালু করা (chālu kôrā) mean? (\"To start (an engine); to switch on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

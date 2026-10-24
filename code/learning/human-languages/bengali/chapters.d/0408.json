@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "Rented Rooms",
+  "label": "ch:bn-rented-rooms",
+  "canDo": "I can rent a flat, pay an advance and a deposit, and say where I live.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C408-bosbas-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can rent a flat, pay an advance and a deposit, and say where I live.",
+    "assesses": [
+      "BN-LEX-C408-BASA408-03",
+      "BN-LEX-C408-BASA408-04",
+      "BN-LEX-C408-BASA408-05"
+    ]
+  }
+}

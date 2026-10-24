@@ -1,0 +1,11 @@
+{
+  "id": "BN-C303-smoron-kora",
+  "pathSegment": "BN-PATH-303-SEDIN303",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-303-SEDIN303",
+      "order": 4
+    }
+  ]
+}

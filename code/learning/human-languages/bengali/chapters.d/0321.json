@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "Legends",
+  "label": "ch:bn-legends",
+  "canDo": "I can tell a legend or a fairy tale about giants and magic.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C321-ghumano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can tell a legend or a fairy tale about giants and magic.",
+    "assesses": [
+      "BN-LEX-C321-KINGBODONTI321-03",
+      "BN-LEX-C321-KINGBODONTI321-04",
+      "BN-LEX-C321-KINGBODONTI321-05"
+    ]
+  }
+}

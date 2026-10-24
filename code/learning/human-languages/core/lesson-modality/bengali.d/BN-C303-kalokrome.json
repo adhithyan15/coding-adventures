@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C303-kalokrome",
+    "language": "bengali",
+    "chapter": 303,
+    "sequence": 19410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00f312700a88d2e3"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C451-nak-sitkano",
+  "pathSegment": "BN-PATH-451-GHRINA451",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-451-GHRINA451",
+      "order": 4
+    }
+  ]
+}

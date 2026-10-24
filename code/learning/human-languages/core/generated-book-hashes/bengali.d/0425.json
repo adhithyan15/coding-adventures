@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:154589f72611b791",
+  "lessonIds": [
+    "BN-C425-megh",
+    "BN-C425-borsha",
+    "BN-C425-musholdhare",
+    "BN-C425-bojropat",
+    "BN-C425-chhaoya"
+  ],
+  "tex": "bengali/book/chapters/ch425-clouds-and-monsoon-rain.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:51ee139638a82fb8",
+  "lessonIds": [
+    "BN-C434-prokriti",
+    "BN-C434-poribesh",
+    "BN-C434-dushon",
+    "BN-C434-noshto-kora",
+    "BN-C434-songrokkhon-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch434.txt",
+  "json": "bengali/narration/ch434.json",
+  "textHash": "fnv1a64:fbf90e974a8f2f1a",
+  "jsonHash": "fnv1a64:e353146f171eafc4",
+  "findings": []
+}

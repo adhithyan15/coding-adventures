@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:c6e72cfadb1bd149",
+  "lessonIds": [
+    "BN-C531-khosra",
+    "BN-C531-talika",
+    "BN-C531-krom",
+    "BN-C531-ruprekha",
+    "BN-C531-bad-deoya",
+    "BN-R531-review-524-531"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch531.txt",
+  "json": "bengali/narration/ch531.json",
+  "textHash": "fnv1a64:fe00ef386fbad411",
+  "jsonHash": "fnv1a64:08a585b6ce99e0fc",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C451-nak-sitkano",
+    "language": "bengali",
+    "chapter": 451,
+    "sequence": 27700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16a2405e0813cef8"
+  },
+  "findings": []
+}

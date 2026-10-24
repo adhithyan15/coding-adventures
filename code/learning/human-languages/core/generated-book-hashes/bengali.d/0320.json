@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:c8d01890f52d1e9b",
+  "lessonIds": [
+    "BN-C320-smritistombho",
+    "BN-C320-nirman-kora",
+    "BN-C320-somadhi",
+    "BN-C320-gombuj",
+    "BN-C320-sthapotyo"
+  ],
+  "tex": "bengali/book/chapters/ch320-monuments-and-memory.tex"
+}

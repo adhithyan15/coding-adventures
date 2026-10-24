@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C324-bholano",
+    "language": "bengali",
+    "chapter": 324,
+    "sequence": 20490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0971bf14b7a7c4f"
+  },
+  "findings": []
+}

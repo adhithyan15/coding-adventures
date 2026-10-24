@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 411,
+  "title": "Post and Offices",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8e19370a59956471",
+  "lessons": [
+    {
+      "id": "BN-C411-dakghor",
+      "sequence": 25380,
+      "title": "ডাকঘর (ḍākghôr) — a post office",
+      "headword": "ডাকঘর",
+      "romanization": "ḍākghôr",
+      "gloss": "a post office",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a81bcc3a0d698d20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a square (open place), then the Bengali for to pace up and down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ডাকঘর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ডাকঘর — ḍākghôr — \"a post office\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি ডাকঘর থেকে একটা খাম কিনলাম। āmi ḍākghôr theke ekṭā khām kinlām. I bought an envelope at the post office."
+            },
+            {
+              "kind": "speech",
+              "text": "ডাক is the post itself: ডাকে আসা, to come by post."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ডাকঘর (ḍākghôr) joins ডাক, which CDIAL lists as Bengali ḍāk, \"a relay, the post, a posting stage\" (CDIAL 5519), to ঘর, \"a house\": the house of the post."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākghôr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākghôr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākghôr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākghôr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmi ḍākghôr theke ekṭā khām kinlām. — I bought an envelope at the post office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmi ḍākghôr theke ekṭā khām kinlām.* — I bought an envelope at the post office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a square (open place), then the Bengali for to pace up and down, then say ḍākghôr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a square (open place), then the Bengali for to pace up and down, then say *ḍākghôr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ডাকঘর (ḍākghôr) mean? (\"A post office\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C411-ophis",
+      "sequence": 25390,
+      "title": "অফিস (ôphis) — an office",
+      "headword": "অফিস",
+      "romanization": "ôphis",
+      "gloss": "an office",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db116f572b6bbdeb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to pace up and down, then the Bengali for a post office."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অফিস",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অফিস — ôphis — \"an office\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মীরার অফিস স্টেশনের কাছে। mīrār ôphis sṭeshôner kāchhe. Mira's office is near the station."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অফিস (ôphis) is borrowed from English office; the first letter is অ, said as an open ô."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôphis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôphis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôphis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôphis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrār ôphis sṭeshôner kāchhe. — Mira's office is near the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrār ôphis sṭeshôner kāchhe.* — Mira's office is near the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to pace up and down, then the Bengali for a post office, then say ôphis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to pace up and down, then the Bengali for a post office, then say *ôphis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অফিস (ôphis) mean? (\"An office\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C411-chithi",
+      "sequence": 25400,
+      "title": "চিঠি (chiṭhi) — a letter (sent by post)",
+      "headword": "চিঠি",
+      "romanization": "chiṭhi",
+      "gloss": "a letter (sent by post)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0aa410e2edfe870",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a post office, then the Bengali for an office."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: চিঠি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চিঠি — chiṭhi — \"a letter (sent by post)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মামা বিদেশ থেকে একটা চিঠি লিখলেন। māmā bidesh theke ekṭā chiṭhi likhlen. My uncle wrote a letter from abroad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চিঠি (chiṭhi) is inherited: CDIAL lists Bengali ciṭhi, \"a letter\", under the reconstructed ciṣṭa (CDIAL 4832)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chiṭhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chiṭhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chiṭhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chiṭhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māmā bidesh theke ekṭā chiṭhi likhlen. — My uncle wrote a letter from abroad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māmā bidesh theke ekṭā chiṭhi likhlen.* — My uncle wrote a letter from abroad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a post office, then the Bengali for an office, then say chiṭhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a post office, then the Bengali for an office, then say *chiṭhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does চিঠি (chiṭhi) mean? (\"A letter (sent by post)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C411-piyon",
+      "sequence": 25410,
+      "title": "পিয়ন (piyôn) — a postman; an office messenger",
+      "headword": "পিয়ন",
+      "romanization": "piyôn",
+      "gloss": "a postman; an office messenger",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:020dec2af87f609b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an office, then the Bengali for a letter (sent by post)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পিয়ন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পিয়ন — piyôn — \"a postman; an office messenger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পিয়ন দুপুরে আমাদের চিঠি দিয়ে গেল। piyôn dupure āmāder chiṭhi diye gelô. The postman left our letters at midday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পিয়ন (piyôn) is usually traced to Portuguese peão, \"a foot-soldier, a man on foot\", the same word as English peon."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piyôn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piyôn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piyôn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piyôn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piyôn dupure āmāder chiṭhi diye gelô. — The postman left our letters at midday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piyôn dupure āmāder chiṭhi diye gelô.* — The postman left our letters at midday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an office, then the Bengali for a letter (sent by post), then say piyôn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an office, then the Bengali for a letter (sent by post), then say *piyôn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পিয়ন (piyôn) mean? (\"A postman; an office messenger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C411-pathano",
+      "sequence": 25420,
+      "title": "পাঠানো (pāṭhāno) — to send",
+      "headword": "পাঠানো",
+      "romanization": "pāṭhāno",
+      "gloss": "to send",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9924c9beac0c4929",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a letter (sent by post), then the Bengali for a postman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পাঠানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাঠানো — pāṭhāno — \"to send\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি ডাকঘর থেকে দিদিমাকে একটা পার্সেল পাঠালাম। āmi ḍākghôr theke didimāke ekṭā pārsel pāṭhālām. I sent my grandmother a parcel from the post office."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি চিঠি পাঠালেন, tini chiṭhi pāṭhālen."
+            },
+            {
+              "kind": "speech",
+              "text": "The one you send to takes -কে: বাবাকে টাকা পাঠানো (pāṭhāno), to send money to Father. Also for people: ছেলেকে স্কুলে পাঠানো (pāṭhāno), to send a son to school."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাঠানো (pāṭhāno) is inherited: CDIAL lists Bengali paṭhāna, \"sends\", under Sanskrit prátiṣṭhati, \"sets out\", and its causing form prásthāpayati, \"sends\" (CDIAL 8607): to send is to make someone set out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmi ḍākghôr theke didimāke ekṭā pārsel pāṭhālām. — I sent my grandmother a parcel from the post office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmi ḍākghôr theke didimāke ekṭā pārsel pāṭhālām.* — I sent my grandmother a parcel from the post office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a letter (sent by post), then the Bengali for a postman, then say pāṭhāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a letter (sent by post), then the Bengali for a postman, then say *pāṭhāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পাঠানো (pāṭhāno) mean? (\"To send\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

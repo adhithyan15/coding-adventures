@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 443,
+  "title": "Temper and Grumbling",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c2b3d6772abfebb3",
+  "lessons": [
+    {
+      "id": "BN-C443-khobh",
+      "sequence": 27250,
+      "title": "ক্ষোভ (khobh) — resentment; bitterness",
+      "headword": "ক্ষোভ",
+      "romanization": "khobh",
+      "gloss": "resentment; bitterness",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a19e629efd2ecf40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for free of worry, then the Bengali for to fidget."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ক্ষোভ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ক্ষোভ — khobh — \"resentment; bitterness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নতুন নিয়ম নিয়ে কর্মীরা ক্ষোভ জানাল। nôtun niyôm niye kôrmīrā khobh jānālô. The workers voiced their resentment over the new rule."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ক্ষোভ (khobh) is a tatsama, Sanskrit kṣobha, \"shaking, agitation, emotion\" (Monier-Williams); in Bengali it is the stirred-up bitterness of someone who feels wronged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khobh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khobh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khobh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khobh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôtun niyôm niye kôrmīrā khobh jānālô. — The workers voiced their resentment over the new rule.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôtun niyôm niye kôrmīrā khobh jānālô.* — The workers voiced their resentment over the new rule.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for free of worry, then the Bengali for to fidget, then say khobh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for free of worry, then the Bengali for to fidget, then say *khobh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ক্ষোভ (khobh) mean? (\"Resentment; bitterness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C443-khitkhite",
+      "sequence": 27260,
+      "title": "খিটখিটে (khiṭkhiṭe) — irritable; crotchety",
+      "headword": "খিটখিটে",
+      "romanization": "khiṭkhiṭe",
+      "gloss": "irritable; crotchety",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67931301d22923fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to fidget, then the Bengali for resentment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: খিটখিটে",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খিটখিটে — khiṭkhiṭe — \"irritable; crotchety\"."
+            },
+            {
+              "kind": "speech",
+              "text": "জ্বর হলে দাদু খিটখিটে হয়ে যান। jbôr hôle dādu khiṭkhiṭe hôye jān. When he has a fever, my grandfather gets crotchety."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খিটখিটে (khiṭkhiṭe) is an expressive word, its sound standing for a scratchy, easily annoyed temper; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khiṭkhiṭe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khiṭkhiṭe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khiṭkhiṭe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khiṭkhiṭe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jbôr hôle dādu khiṭkhiṭe hôye jān. — When he has a fever, my grandfather gets crotchety.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jbôr hôle dādu khiṭkhiṭe hôye jān.* — When he has a fever, my grandfather gets crotchety.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to fidget, then the Bengali for resentment, then say khiṭkhiṭe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to fidget, then the Bengali for resentment, then say *khiṭkhiṭe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does খিটখিটে (khiṭkhiṭe) mean? (\"Irritable; crotchety\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C443-khepano",
+      "sequence": 27270,
+      "title": "খেপানো (khepāno) — to provoke; to tease until someone gets cross",
+      "headword": "খেপানো",
+      "romanization": "khepāno",
+      "gloss": "to provoke; to tease until someone gets cross",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d336481925e58cf3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for resentment, then the Bengali for irritable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: খেপানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খেপানো — khepāno — \"to provoke; to tease until someone gets cross\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পাড়ার ছেলেরা কুকুরটাকে খেপাল। pāṛār chhelerā kukurṭāke khepālô. The neighbourhood boys provoked the dog."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি ভাইকে খেপালেন, tini bhāike khepālen."
+            },
+            {
+              "kind": "speech",
+              "text": "Its plain partner is খেপে যাওয়া, to fly into a rage."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খেপানো (khepāno) is the causative of khepā, \"to go mad\", which is probably Sanskrit kṣipta, \"thrown\" (CDIAL 3685), a word Monier-Williams also gives for a scattered, distracted mind: to drive someone wild."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khepāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khepāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khepāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khepāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṛār chhelerā kukurṭāke khepālô. — The neighbourhood boys provoked the dog.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṛār chhelerā kukurṭāke khepālô.* — The neighbourhood boys provoked the dog.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for resentment, then the Bengali for irritable, then say khepāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for resentment, then the Bengali for irritable, then say *khepāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does খেপানো (khepāno) mean? (\"To provoke; to tease until someone gets cross\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C443-phuse-otha",
+      "sequence": 27280,
+      "title": "ফুঁসে ওঠা (phũse oṭhā) — to seethe; to bristle with anger",
+      "headword": "ফুঁসে ওঠা",
+      "romanization": "phũse oṭhā",
+      "gloss": "to seethe; to bristle with anger",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80fc390910380523",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for irritable, then the Bengali for to provoke."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ফুঁসে ওঠা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফুঁসে ওঠা — phũse oṭhā — \"to seethe; to bristle with anger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "খবরটা শুনে গ্রামের লোকজন ফুঁসে উঠল। khôbôrṭā shune grāmer lokjôn phũse uṭhlô. When they heard the news, the villagers seethed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি রাগে ফুঁসে উঠলেন, tini rāge phũse uṭhlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফুঁসে ওঠা (phũse oṭhā) is phũse, the -এ form of an imitative verb for the angry hiss of a snake, with oṭhā, \"to rise\" (CDIAL 1793)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phũse oṭhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phũse oṭhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phũse oṭhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phũse oṭhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khôbôrṭā shune grāmer lokjôn phũse uṭhlô. — When they heard the news, the villagers seethed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khôbôrṭā shune grāmer lokjôn phũse uṭhlô.* — When they heard the news, the villagers seethed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for irritable, then the Bengali for to provoke, then say phũse oṭhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for irritable, then the Bengali for to provoke, then say *phũse oṭhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ফুঁসে ওঠা (phũse oṭhā) mean? (\"To seethe; to bristle with anger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C443-gojgoj-kora",
+      "sequence": 27290,
+      "title": "গজগজ করা (gôjgôj kôrā) — to grumble; to mutter crossly",
+      "headword": "গজগজ করা",
+      "romanization": "gôjgôj kôrā",
+      "gloss": "to grumble; to mutter crossly",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7704c9853686338",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to provoke, then the Bengali for to seethe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গজগজ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গজগজ করা — gôjgôj kôrā — \"to grumble; to mutter crossly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দাদু সকাল থেকে গজগজ করছেন। dādu sôkāl theke gôjgôj kôrchhen. Grandfather has been grumbling since the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি সারাদিন গজগজ করলেন, tini sārādin gôjgôj kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গজগজ করা (gôjgôj kôrā) is gôjgôj, an imitative word for low, cross muttering, with kôrā, \"to do\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôjgôj kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôjgôj kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôjgôj kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôjgôj kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādu sôkāl theke gôjgôj kôrchhen. — Grandfather has been grumbling since the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādu sôkāl theke gôjgôj kôrchhen.* — Grandfather has been grumbling since the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to provoke, then the Bengali for to seethe, then say gôjgôj kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to provoke, then the Bengali for to seethe, then say *gôjgôj kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গজগজ করা (gôjgôj kôrā) mean? (\"To grumble; to mutter crossly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

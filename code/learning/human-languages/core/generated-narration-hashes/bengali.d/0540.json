@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:188e3dc490087251",
+  "lessonIds": [
+    "BN-C540-mashul",
+    "BN-C540-khesarot",
+    "BN-C540-ashvas",
+    "BN-C540-bormo",
+    "BN-C540-chukano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch540.txt",
+  "json": "bengali/narration/ch540.json",
+  "textHash": "fnv1a64:442b4d6a86ec1108",
+  "jsonHash": "fnv1a64:cd96752b2297b0e7",
+  "findings": []
+}

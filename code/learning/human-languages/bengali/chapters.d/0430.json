@@ -1,0 +1,21 @@
+{
+  "chapter": 430,
+  "title": "Fields and Farming",
+  "label": "ch:bn-fields-and-farming",
+  "canDo": "I can talk about a farmer, his plough and his fields, and watering the crop.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-R430-review-424-430",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can talk about a farmer, his plough and his fields, and watering the crop.",
+    "assesses": [
+      "BN-LEX-C430-KHET430-01",
+      "BN-LEX-C430-KHET430-02",
+      "BN-LEX-C430-KHET430-03",
+      "BN-LEX-C430-KHET430-04",
+      "BN-LEX-C430-KHET430-05"
+    ]
+  }
+}

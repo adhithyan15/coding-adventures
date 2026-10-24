@@ -1,0 +1,11 @@
+{
+  "id": "BN-C516-binodon",
+  "pathSegment": "BN-PATH-516-BINODON516",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "BN-EXT-516-BINODON516",
+      "order": 0
+    }
+  ]
+}

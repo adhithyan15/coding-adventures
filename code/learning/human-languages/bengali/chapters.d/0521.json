@@ -1,0 +1,19 @@
+{
+  "chapter": 521,
+  "title": "Bat and Ball",
+  "label": "ch:bn-bat-and-ball",
+  "canDo": "I can talk about bats, wickets, runs and catches.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C521-petano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 521: I can talk about bats, wickets, runs and catches.",
+    "assesses": [
+      "BN-LEX-C521-BAT521-03",
+      "BN-LEX-C521-BAT521-04",
+      "BN-LEX-C521-BAT521-05"
+    ]
+  }
+}

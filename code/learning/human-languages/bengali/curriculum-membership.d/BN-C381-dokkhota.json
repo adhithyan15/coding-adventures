@@ -1,0 +1,11 @@
+{
+  "id": "BN-C381-dokkhota",
+  "pathSegment": "BN-PATH-381-BYOBOSTHA381",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-381-BYOBOSTHA381",
+      "order": 3
+    }
+  ]
+}

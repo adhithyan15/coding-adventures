@@ -1,0 +1,11 @@
+{
+  "id": "BN-C457-kripon",
+  "pathSegment": "BN-PATH-457-UDAR457",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-457-UDAR457",
+      "order": 1
+    }
+  ]
+}

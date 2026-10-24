@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:d4ae723feaf3b488",
+  "lessonIds": [
+    "BN-C465-bibek",
+    "BN-C465-bichokkhon",
+    "BN-C465-medhabi",
+    "BN-C465-kritogyo",
+    "BN-C465-bibechona-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch465.txt",
+  "json": "bengali/narration/ch465.json",
+  "textHash": "fnv1a64:e0afe1c9d39a237e",
+  "jsonHash": "fnv1a64:7c3403d469846c91",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:14b1ba5cbc0c9c98",
+  "lessonIds": [
+    "BN-C303-sedin",
+    "BN-C303-otit",
+    "BN-C303-perono",
+    "BN-C303-kalokrome",
+    "BN-C303-smoron-kora"
+  ],
+  "tex": "bengali/book/chapters/ch303-long-ago.tex"
+}

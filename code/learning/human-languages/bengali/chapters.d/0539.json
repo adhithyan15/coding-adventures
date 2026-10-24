@@ -1,0 +1,19 @@
+{
+  "chapter": 539,
+  "title": "Facing Obstacles",
+  "label": "ch:bn-facing-obstacles",
+  "canDo": "I can talk about obstacles, getting tangled up and not giving up.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C539-jorano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 539: I can talk about obstacles, getting tangled up and not giving up.",
+    "assesses": [
+      "BN-LEX-C539-BIGHNO539-03",
+      "BN-LEX-C539-BIGHNO539-04",
+      "BN-LEX-C539-BIGHNO539-05"
+    ]
+  }
+}

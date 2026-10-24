@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:d9be175c1aa64d7f",
+  "lessonIds": [
+    "BN-C467-thot",
+    "BN-C467-choyal",
+    "BN-C467-mari",
+    "BN-C467-kontho",
+    "BN-C467-kochkano"
+  ],
+  "tex": "bengali/book/chapters/ch467-face-and-mouth.tex"
+}

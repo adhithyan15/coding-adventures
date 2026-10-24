@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "Flights and Runways",
+  "label": "ch:bn-flights-and-runways",
+  "canDo": "I can talk about a flight, the runway and customs on the way abroad.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C395-pari-deoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can talk about a flight, the runway and customs on the way abroad.",
+    "assesses": [
+      "BN-LEX-C395-BIMAN395-03",
+      "BN-LEX-C395-BIMAN395-04",
+      "BN-LEX-C395-BIMAN395-05"
+    ]
+  }
+}

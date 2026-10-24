@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:5a9d13041a1864b6",
+  "lessonIds": [
+    "BN-C313-rajyo",
+    "BN-C313-somrat",
+    "BN-C313-singhason",
+    "BN-C313-mukut",
+    "BN-C313-shason-kora"
+  ],
+  "tex": "bengali/book/chapters/ch313-kingdoms.tex"
+}

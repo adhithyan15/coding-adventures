@@ -1,0 +1,11 @@
+{
+  "id": "BN-C484-bongsho",
+  "pathSegment": "BN-PATH-484-SONTAN484",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-484-SONTAN484",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C393-haoya",
+    "language": "bengali",
+    "chapter": 393,
+    "sequence": 24470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:161f7bf0c2fa1f12"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:95420bf8bd49380a",
+  "lessonIds": [
+    "BN-C459-binoyi",
+    "BN-C459-nomro",
+    "BN-C459-uddhoto",
+    "BN-C459-beyadob",
+    "BN-C459-toshamod-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch459.txt",
+  "json": "bengali/narration/ch459.json",
+  "textHash": "fnv1a64:e17674dd3d5094df",
+  "jsonHash": "fnv1a64:e3b48571f529f3a9",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:0ff40eb2dcbb54e4",
+  "lessonIds": [
+    "BN-C330-utso",
+    "BN-C330-srishti-kora",
+    "BN-C330-probhab",
+    "BN-C330-protikriya",
+    "BN-C330-prerona"
+  ],
+  "tex": "bengali/book/chapters/ch330-where-it-came-from.tex"
+}

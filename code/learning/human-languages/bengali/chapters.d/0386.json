@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "Porters and Luggage",
+  "label": "ch:bn-porters-and-luggage",
+  "canDo": "I can get help to carry and unload my bags.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C386-bohon-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can get help to carry and unload my bags.",
+    "assesses": [
+      "BN-LEX-C386-KULI386-03",
+      "BN-LEX-C386-KULI386-04",
+      "BN-LEX-C386-KULI386-05"
+    ]
+  }
+}

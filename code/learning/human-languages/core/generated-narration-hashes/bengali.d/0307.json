@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:d909f0aed174459e",
+  "lessonIds": [
+    "BN-C307-dhak",
+    "BN-C307-kasor",
+    "BN-C307-dhunuchi",
+    "BN-C307-aroti",
+    "BN-C307-dolano",
+    "BN-R307-review-300-307"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch307.txt",
+  "json": "bengali/narration/ch307.json",
+  "textHash": "fnv1a64:e105610aeb0b6759",
+  "jsonHash": "fnv1a64:02359104d9b1a451",
+  "findings": []
+}

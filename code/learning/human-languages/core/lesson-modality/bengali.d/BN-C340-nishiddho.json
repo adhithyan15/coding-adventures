@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C340-nishiddho",
+    "language": "bengali",
+    "chapter": 340,
+    "sequence": 21520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:feaa39f7159677d1"
+  },
+  "findings": []
+}

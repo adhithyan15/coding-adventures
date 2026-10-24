@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:8b4230d02e58a5e7",
+  "lessonIds": [
+    "BN-C496-pod",
+    "BN-C496-podonnoti",
+    "BN-C496-sohokari",
+    "BN-C496-siniyor",
+    "BN-C496-bohal-thaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch496.txt",
+  "json": "bengali/narration/ch496.json",
+  "textHash": "fnv1a64:f0044f1bef59b5a3",
+  "jsonHash": "fnv1a64:c8ef2d5637830614",
+  "findings": []
+}

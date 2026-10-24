@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Keeping Fit",
+  "label": "ch:bn-keeping-fit",
+  "canDo": "I can talk about yoga, practice, wrestling and staying fit.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C522-kusti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can talk about yoga, practice, wrestling and staying fit.",
+    "assesses": [
+      "BN-LEX-C522-BYAYAM522-03",
+      "BN-LEX-C522-BYAYAM522-04",
+      "BN-LEX-C522-BYAYAM522-05"
+    ]
+  }
+}

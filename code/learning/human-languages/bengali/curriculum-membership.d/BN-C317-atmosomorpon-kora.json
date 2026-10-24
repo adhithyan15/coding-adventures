@@ -1,0 +1,11 @@
+{
+  "id": "BN-C317-atmosomorpon-kora",
+  "pathSegment": "BN-PATH-317-BIR317",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-317-BIR317",
+      "order": 3
+    }
+  ]
+}

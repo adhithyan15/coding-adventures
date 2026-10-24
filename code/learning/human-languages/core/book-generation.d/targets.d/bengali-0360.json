@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 360,
+  "output": "bengali/book/chapters/ch360-speeches-and-talks.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

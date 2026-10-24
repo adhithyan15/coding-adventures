@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:3c7bd1d0df4f63d1",
+  "lessonIds": [
+    "BN-C364-kothin",
+    "BN-C364-songkot",
+    "BN-C364-daridryo",
+    "BN-C364-biporjosto-hooya",
+    "BN-C364-chorom"
+  ],
+  "tex": "bengali/book/chapters/ch364-hard-times.tex"
+}

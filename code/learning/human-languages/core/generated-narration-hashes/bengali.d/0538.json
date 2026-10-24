@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:fa31301a4ed2b285",
+  "lessonIds": [
+    "BN-C538-durjog",
+    "BN-C538-biporjoy",
+    "BN-C538-upokrom",
+    "BN-C538-asonno",
+    "BN-C538-apotkalin",
+    "BN-R538-review-532-538"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch538.txt",
+  "json": "bengali/narration/ch538.json",
+  "textHash": "fnv1a64:7fe4ce2211e1c1dd",
+  "jsonHash": "fnv1a64:ef82c7529fcff6d4",
+  "findings": []
+}

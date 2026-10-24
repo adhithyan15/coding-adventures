@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C354-abishkar-kora",
+    "language": "bengali",
+    "chapter": 354,
+    "sequence": 22260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6bb86cf01f2009b8"
+  },
+  "findings": []
+}

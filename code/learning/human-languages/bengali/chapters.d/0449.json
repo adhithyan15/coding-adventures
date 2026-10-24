@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "Affection",
+  "label": "ch:bn-affection",
+  "canDo": "I can talk about affection and love in a family.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C449-bhokti-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can talk about affection and love in a family.",
+    "assesses": [
+      "BN-LEX-C449-SNEHO449-03",
+      "BN-LEX-C449-SNEHO449-04",
+      "BN-LEX-C449-SNEHO449-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C290-grihohin",
+  "pathSegment": "BN-PATH-290-DHEU290",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-290-DHEU290",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C433-nala",
+    "language": "bengali",
+    "chapter": 433,
+    "sequence": 26520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:348bf5d24a8e2431"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C511-dhala",
+    "language": "bengali",
+    "chapter": 511,
+    "sequence": 31000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b04a313ca1e82acb"
+  },
+  "findings": []
+}

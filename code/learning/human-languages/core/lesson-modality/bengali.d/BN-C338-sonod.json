@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C338-sonod",
+    "language": "bengali",
+    "chapter": 338,
+    "sequence": 21410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6fb6cf4b48b277a7"
+  },
+  "findings": []
+}

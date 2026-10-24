@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:a3a694b79fba5b3b",
+  "lessonIds": [
+    "BN-C498-udyog",
+    "BN-C498-karbar",
+    "BN-C498-puji",
+    "BN-C498-ongshidar",
+    "BN-C498-sheyar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch498.txt",
+  "json": "bengali/narration/ch498.json",
+  "textHash": "fnv1a64:ab9f5127bb705dcd",
+  "jsonHash": "fnv1a64:8f936eb06f9bbcdc",
+  "findings": []
+}

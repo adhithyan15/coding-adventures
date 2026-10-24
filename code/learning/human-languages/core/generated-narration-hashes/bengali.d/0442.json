@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:fb4d3e4c39413807",
+  "lessonIds": [
+    "BN-C442-udbeg",
+    "BN-C442-durbhabona",
+    "BN-C442-osthir",
+    "BN-C442-nishchinto",
+    "BN-C442-chhotphot-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch442.txt",
+  "json": "bengali/narration/ch442.json",
+  "textHash": "fnv1a64:7b1d2d6fe48abdc7",
+  "jsonHash": "fnv1a64:d3dc8c47eab03e7d",
+  "findings": []
+}

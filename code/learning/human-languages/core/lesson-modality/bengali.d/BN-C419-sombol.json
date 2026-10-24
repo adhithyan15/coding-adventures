@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C419-sombol",
+    "language": "bengali",
+    "chapter": 419,
+    "sequence": 25830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e0c85ffd0424c04"
+  },
+  "findings": []
+}

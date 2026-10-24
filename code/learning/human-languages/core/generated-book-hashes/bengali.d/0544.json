@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:78646ab52a40dc61",
+  "lessonIds": [
+    "BN-C544-totpor",
+    "BN-C544-obokash",
+    "BN-C544-ghoniye-asa",
+    "BN-C544-hurohuri",
+    "BN-C544-jhotpot"
+  ],
+  "tex": "bengali/book/chapters/ch544-time-pressure.tex"
+}

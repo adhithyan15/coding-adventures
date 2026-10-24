@@ -1,0 +1,11 @@
+{
+  "id": "BN-C534-juya",
+  "pathSegment": "BN-PATH-534-BAJI534",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-534-BAJI534",
+      "order": 1
+    }
+  ]
+}

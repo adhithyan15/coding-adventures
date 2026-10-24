@@ -1,0 +1,11 @@
+{
+  "id": "BN-C373-sompurno",
+  "pathSegment": "BN-PATH-373-EKEBARE373",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-373-EKEBARE373",
+      "order": 1
+    }
+  ]
+}

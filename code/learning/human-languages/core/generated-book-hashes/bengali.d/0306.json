@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:cae6625ef95abb4b",
+  "lessonIds": [
+    "BN-C306-otithi",
+    "BN-C306-nimontron-kora",
+    "BN-C306-bhoj",
+    "BN-C306-upohar",
+    "BN-C306-apyayon-kora"
+  ],
+  "tex": "bengali/book/chapters/ch306-guests-and-a-feast.tex"
+}

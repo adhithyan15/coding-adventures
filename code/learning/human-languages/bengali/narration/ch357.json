@@ -1,0 +1,701 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 357,
+  "title": "Reporting Findings",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2b11db5215198257",
+  "lessons": [
+    {
+      "id": "BN-C357-probondho",
+      "sequence": 22380,
+      "title": "প্রবন্ধ (prôbôndhô) — an essay; an article",
+      "headword": "প্রবন্ধ",
+      "romanization": "prôbôndhô",
+      "gloss": "an essay; an article",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89b552604a4ec44f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a yardstick, then the Bengali for to assess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রবন্ধ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রবন্ধ — prôbôndhô — \"an essay; an article\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মীরা পত্রিকায় একটা প্রবন্ধ লিখল। mīrā pôtrikāy ekṭā prôbôndhô likhlô. Mira wrote an article in a magazine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রবন্ধ (prôbôndhô) is Sanskrit prabandha, a binding together (Monier-Williams), and so a connected piece of writing. Bengali uses it for an essay or an article."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôbôndhô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôbôndhô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôbôndhô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôbôndhô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrā pôtrikāy ekṭā prôbôndhô likhlô. — Mira wrote an article in a magazine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrā pôtrikāy ekṭā prôbôndhô likhlô.* — Mira wrote an article in a magazine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a yardstick, then the Bengali for to assess, then say prôbôndhô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a yardstick, then the Bengali for to assess, then say *prôbôndhô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রবন্ধ (prôbôndhô) mean? (\"An essay; an article\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C357-bishoy",
+      "sequence": 22390,
+      "title": "বিষয় (bishôy) — a subject; a topic",
+      "headword": "বিষয়",
+      "romanization": "bishôy",
+      "gloss": "a subject; a topic",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99ca3dd1adf13521",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to assess, then the Bengali for an essay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিষয়",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিষয় — bishôy — \"a subject; a topic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তোমার প্রবন্ধের বিষয় কী? tomār prôbôndher bishôy kī? What is your essay about?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিষয় (bishôy) is Sanskrit viṣaya, a sphere or an object of attention (Monier-Williams). In Bengali it is the subject of a talk, a book or a school course."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bishôy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bishôy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bishôy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bishôy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomār prôbôndher bishôy kī? — What is your essay about?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomār prôbôndher bishôy kī?* — What is your essay about?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to assess, then the Bengali for an essay, then say bishôy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to assess, then the Bengali for an essay, then say *bishôy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিষয় (bishôy) mean? (\"A subject; a topic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C357-montobyo",
+      "sequence": 22400,
+      "title": "মন্তব্য (môntôbyô) — a comment; a remark",
+      "headword": "মন্তব্য",
+      "romanization": "môntôbyô",
+      "gloss": "a comment; a remark",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d05a8b92984e2554",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an essay, then the Bengali for a subject."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মন্তব্য",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মন্তব্য — môntôbyô — \"a comment; a remark\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তোমার মন্তব্যটা দরকারি ছিল। tomār môntôbyôṭā dôrkāri chhilô. Your comment was useful."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মন্তব্য (môntôbyô) is Sanskrit mantavya, 'what is to be thought' (Monier-Williams). Bengali uses it for a short remark or comment."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môntôbyô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môntôbyô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "môntôbyô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *môntôbyô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomār môntôbyôṭā dôrkāri chhilô. — Your comment was useful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomār môntôbyôṭā dôrkāri chhilô.* — Your comment was useful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an essay, then the Bengali for a subject, then say môntôbyô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an essay, then the Bengali for a subject, then say *môntôbyô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মন্তব্য (môntôbyô) mean? (\"A comment; a remark\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C357-uposonghar",
+      "sequence": 22410,
+      "title": "উপসংহার (upôsônghār) — a conclusion of a text; a closing section",
+      "headword": "উপসংহার",
+      "romanization": "upôsônghār",
+      "gloss": "a conclusion of a text; a closing section",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d65ea8aefc0fc94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a subject, then the Bengali for a remark."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উপসংহার",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপসংহার — upôsônghār — \"a conclusion of a text; a closing section\"."
+            },
+            {
+              "kind": "speech",
+              "text": "প্রবন্ধের উপসংহারটা ছোট। prôbôndher upôsônghārṭā chhoṭo. The essay's conclusion is short."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপসংহার (upôsônghār) is Sanskrit upasaṃhāra, summing up (Monier-Williams): the closing part of an essay or a speech."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôsônghār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôsônghār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôsônghār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôsônghār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôbôndher upôsônghārṭā chhoṭo. — The essay's conclusion is short.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôbôndher upôsônghārṭā chhoṭo.* — The essay's conclusion is short.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a subject, then the Bengali for a remark, then say upôsônghār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a subject, then the Bengali for a remark, then say *upôsônghār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উপসংহার (upôsônghār) mean? (\"A conclusion of a text; a closing section\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C357-dharona",
+      "sequence": 22420,
+      "title": "ধারণা (dhārônā) — an idea; a notion",
+      "headword": "ধারণা",
+      "romanization": "dhārônā",
+      "gloss": "an idea; a notion",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1995b52593810b78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a remark, then the Bengali for a conclusion of a text."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ধারণা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ধারণা — dhārônā — \"an idea; a notion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই বিষয়ে আমার কোনো ধারণা নেই। ei bishôye āmār kono dhārônā nei. I have no idea about this subject."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ধারণা (dhārônā) is Sanskrit dhāraṇā, holding, keeping in mind (Monier-Williams): what you hold in your head about something, a notion."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhārônā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhārônā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhārônā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhārônā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ei bishôye āmār kono dhārônā nei. — I have no idea about this subject.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ei bishôye āmār kono dhārônā nei.* — I have no idea about this subject.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a remark, then the Bengali for a conclusion of a text, then say dhārônā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a remark, then the Bengali for a conclusion of a text, then say *dhārônā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ধারণা (dhārônā) mean? (\"An idea; a notion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C424-monda",
+  "pathSegment": "BN-PATH-424-DAM424",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-424-DAM424",
+      "order": 2
+    }
+  ]
+}

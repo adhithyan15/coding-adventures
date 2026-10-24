@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:b410e7342e1476ea",
+  "lessonIds": [
+    "BN-C522-jogbyayam",
+    "BN-C522-paloyan",
+    "BN-C522-phit",
+    "BN-C522-bakano",
+    "BN-C522-kusti"
+  ],
+  "tex": "bengali/book/chapters/ch522-keeping-fit.tex"
+}

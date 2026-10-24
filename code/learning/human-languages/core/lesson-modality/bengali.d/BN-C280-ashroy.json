@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C280-ashroy",
+    "language": "bengali",
+    "chapter": 280,
+    "sequence": 18240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45d0998a6f1c4950"
+  },
+  "findings": []
+}

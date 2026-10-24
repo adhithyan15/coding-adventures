@@ -1,0 +1,11 @@
+{
+  "id": "BN-C488-joubon",
+  "pathSegment": "BN-PATH-488-SHOISHOB488",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-488-SHOISHOB488",
+      "order": 2
+    }
+  ]
+}

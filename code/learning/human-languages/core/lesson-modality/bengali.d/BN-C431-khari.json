@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C431-khari",
+    "language": "bengali",
+    "chapter": 431,
+    "sequence": 26420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6833fa2afd70f55f"
+  },
+  "findings": []
+}

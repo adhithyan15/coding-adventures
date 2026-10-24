@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 306,
+  "title": "Guests and a Feast",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b829705167f5e73b",
+  "lessons": [
+    {
+      "id": "BN-C306-otithi",
+      "sequence": 19530,
+      "title": "অতিথি (ôtithi) — a guest",
+      "headword": "অতিথি",
+      "romanization": "ôtithi",
+      "gloss": "a guest",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5780b34fac08da47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to glitter, then the Bengali for a sky lantern."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অতিথি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অতিথি — ôtithi — \"a guest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পুজোর দিন বাড়িতে অনেক অতিথি এলেন। pujor din bāṛite ônek ôtithi elen. Many guests came to the house on the day of the puja."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অতিথি (ôtithi) is Sanskrit atithi, 'a guest, one owed hospitality' (Monier-Williams), which records an old explanation: a-tithi, one with no fixed day for coming."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôtithi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôtithi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôtithi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôtithi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pujor din bāṛite ônek ôtithi elen. — Many guests came to the house on the day of the puja.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pujor din bāṛite ônek ôtithi elen.* — Many guests came to the house on the day of the puja.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to glitter, then the Bengali for a sky lantern, then say ôtithi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to glitter, then the Bengali for a sky lantern, then say *ôtithi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অতিথি (ôtithi) mean? (\"A guest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C306-nimontron-kora",
+      "sequence": 19540,
+      "title": "নিমন্ত্রণ করা (nimôntrôn kôrā) — to invite",
+      "headword": "নিমন্ত্রণ করা",
+      "romanization": "nimôntrôn kôrā",
+      "gloss": "to invite",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e9fe912f0cd922a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a sky lantern, then the Bengali for a guest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নিমন্ত্রণ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিমন্ত্রণ করা — nimôntrôn kôrā — \"to invite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মামা আমাদের তাঁর মেয়ের বিয়েতে নিমন্ত্রণ করলেন। māmā āmāder tā̃r meyer biyete nimôntrôn kôrlen. My uncle invited us to his daughter's wedding."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি আমাদের নিমন্ত্রণ করলেন, tini āmāder nimôntrôn kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নিমন্ত্রণ করা (nimôntrôn kôrā) puts Sanskrit nimantraṇa, 'an invitation, a summons' (Monier-Williams), before করা."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nimôntrôn kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nimôntrôn kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nimôntrôn kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nimôntrôn kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māmā āmāder tā̃r meyer biyete nimôntrôn kôrlen. — My uncle invited us to his daughter's wedding.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māmā āmāder tā̃r meyer biyete nimôntrôn kôrlen.* — My uncle invited us to his daughter's wedding.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a sky lantern, then the Bengali for a guest, then say nimôntrôn kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a sky lantern, then the Bengali for a guest, then say *nimôntrôn kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does নিমন্ত্রণ করা (nimôntrôn kôrā) mean? (\"To invite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C306-bhoj",
+      "sequence": 19550,
+      "title": "ভোজ (bhoj) — a feast",
+      "headword": "ভোজ",
+      "romanization": "bhoj",
+      "gloss": "a feast",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e196bf51257b5c28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a guest, then the Bengali for to invite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভোজ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভোজ — bhoj — \"a feast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বিয়ের রাতে একটা বড় ভোজ হল। biyer rāte ekṭā bôṛo bhoj hôlô. There was a big feast on the night of the wedding."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভোজ (bhoj) comes down from Sanskrit bhojya, 'to be eaten; a meal' (CDIAL 9631, which lists Bengali bhoj, 'a feast')."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhoj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhoj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhoj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhoj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biyer rāte ekṭā bôṛo bhoj hôlô. — There was a big feast on the night of the wedding.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biyer rāte ekṭā bôṛo bhoj hôlô.* — There was a big feast on the night of the wedding.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a guest, then the Bengali for to invite, then say bhoj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a guest, then the Bengali for to invite, then say *bhoj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভোজ (bhoj) mean? (\"A feast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C306-upohar",
+      "sequence": 19560,
+      "title": "উপহার (upôhār) — a gift; a present",
+      "headword": "উপহার",
+      "romanization": "upôhār",
+      "gloss": "a gift; a present",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3429725be40d7038",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to invite, then the Bengali for a feast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উপহার",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপহার — upôhār — \"a gift; a present\"."
+            },
+            {
+              "kind": "speech",
+              "text": "জন্মদিনে বন্ধুরা আমাকে একটা বই উপহার দিল। jônmôdine bôndhurā āmāke ekṭā bôi upôhār dilô. My friends gave me a book as a birthday present."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপহার (upôhār) is Sanskrit upahāra, an offering to a god or a present to a superior (Monier-Williams); it has nothing to do with হার, a necklace. উপহার দেওয়া, to give a present."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôhār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôhār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôhār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôhār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jônmôdine bôndhurā āmāke ekṭā bôi upôhār dilô. — My friends gave me a book as a birthday present.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jônmôdine bôndhurā āmāke ekṭā bôi upôhār dilô.* — My friends gave me a book as a birthday present.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to invite, then the Bengali for a feast, then say upôhār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to invite, then the Bengali for a feast, then say *upôhār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উপহার (upôhār) mean? (\"A gift; a present\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C306-apyayon-kora",
+      "sequence": 19570,
+      "title": "আপ্যায়ন করা (āpyāyôn kôrā) — to entertain guests; to treat hospitably",
+      "headword": "আপ্যায়ন করা",
+      "romanization": "āpyāyôn kôrā",
+      "gloss": "to entertain guests; to treat hospitably",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e756cc36c1931e23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a feast, then the Bengali for a gift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আপ্যায়ন করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আপ্যায়ন করা — āpyāyôn kôrā — \"to entertain guests; to treat hospitably\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বাবা অতিথিদের চা আর সন্দেশ দিয়ে আপ্যায়ন করলেন। bābā ôtithider chā ār sôndesh diye āpyāyôn kôrlen. Father welcomed the guests with tea and sweets."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি অতিথিদের আপ্যায়ন করলেন, tini ôtithider āpyāyôn kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আপ্যায়ন করা (āpyāyôn kôrā) puts Sanskrit āpyāyana, 'causing fullness, gladdening' (Monier-Williams), before করা: to fill your guests up and make them glad."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpyāyôn kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpyāyôn kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpyāyôn kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpyāyôn kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bābā ôtithider chā ār sôndesh diye āpyāyôn kôrlen. — Father welcomed the guests with tea and sweets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bābā ôtithider chā ār sôndesh diye āpyāyôn kôrlen.* — Father welcomed the guests with tea and sweets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a feast, then the Bengali for a gift, then say āpyāyôn kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a feast, then the Bengali for a gift, then say *āpyāyôn kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আপ্যায়ন করা (āpyāyôn kôrā) mean? (\"To entertain guests; to treat hospitably\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:594ceb84a25148c6",
+  "lessonIds": [
+    "BN-C526-setar",
+    "BN-C526-dhol",
+    "BN-C526-harmoniyam",
+    "BN-C526-behala",
+    "BN-C526-tungtang-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch526.txt",
+  "json": "bengali/narration/ch526.json",
+  "textHash": "fnv1a64:06d5a7d1dac6c677",
+  "jsonHash": "fnv1a64:5c9adb746adb36a1",
+  "findings": []
+}

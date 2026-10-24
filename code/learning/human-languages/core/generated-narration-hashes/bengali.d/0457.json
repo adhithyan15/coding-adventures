@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:5dc167a7f35f5760",
+  "lessonIds": [
+    "BN-C457-udar",
+    "BN-C457-kripon",
+    "BN-C457-antorik",
+    "BN-C457-poropokari",
+    "BN-C457-mohot"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch457.txt",
+  "json": "bengali/narration/ch457.json",
+  "textHash": "fnv1a64:312662557e940b2f",
+  "jsonHash": "fnv1a64:21331ab779dfa90a",
+  "findings": []
+}

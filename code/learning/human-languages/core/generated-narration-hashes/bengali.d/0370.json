@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:5ef84e0a5bbb4f14",
+  "lessonIds": [
+    "BN-C370-khub",
+    "BN-C370-bhishon",
+    "BN-C370-beshi",
+    "BN-C370-kom",
+    "BN-C370-ektu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch370.txt",
+  "json": "bengali/narration/ch370.json",
+  "textHash": "fnv1a64:5f9afefd4613f69c",
+  "jsonHash": "fnv1a64:f4bd0faeb0e6da8e",
+  "findings": []
+}

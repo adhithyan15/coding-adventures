@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 513,
+  "title": "Chopping and Kneading",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:33c312864399346c",
+  "lessons": [
+    {
+      "id": "BN-C513-kota",
+      "sequence": 31070,
+      "title": "কোটা (koṭā) — to chop (vegetables or fish)",
+      "headword": "কোটা",
+      "romanization": "koṭā",
+      "gloss": "to chop (vegetables or fish)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f501539e8e873813",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a lid, then the Bengali for to grind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কোটা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কোটা — koṭā — \"to chop (vegetables or fish)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি রাতের জন্য সবজি কুটলাম। Āmi rāter jônyô sôbji kuṭlām. I chopped vegetables for dinner."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি মাছ কুটলেন, tini māchh kuṭlen."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem vowel rises in the past: কুটলাম, I chopped."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কোটা (koṭā) is a tadbhava: CDIAL lists Bengali kuṭā, \"to cut up for cooking\", and koṭā under Sanskrit kuṭṭayati, \"crushes, pounds\" (CDIAL 3241)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṭā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṭā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āmi rāter jônyô sôbji kuṭlām. — I chopped vegetables for dinner.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āmi rāter jônyô sôbji kuṭlām.* — I chopped vegetables for dinner.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a lid, then the Bengali for to grind, then say koṭā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a lid, then the Bengali for to grind, then say *koṭā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কোটা (koṭā) mean? (\"To chop (vegetables or fish)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C513-khosa",
+      "sequence": 31080,
+      "title": "খোসা (khosā) — a peel; a husk",
+      "headword": "খোসা",
+      "romanization": "khosā",
+      "gloss": "a peel; a husk",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8baee7bd7ab918e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to grind, then the Bengali for to chop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: খোসা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খোসা — khosā — \"a peel; a husk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি আলুর খোসা বালতিতে ফেললাম। Āmi ālur khosā bāltite phellām. I threw the potato peel into the bucket."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খোসা (khosā) comes from a reconstructed khosa; CDIAL lists Bengali khosā, \"husk\" (CDIAL 3948)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khosā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khosā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khosā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khosā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āmi ālur khosā bāltite phellām. — I threw the potato peel into the bucket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āmi ālur khosā bāltite phellām.* — I threw the potato peel into the bucket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to grind, then the Bengali for to chop, then say khosā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to grind, then the Bengali for to chop, then say *khosā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does খোসা (khosā) mean? (\"A peel; a husk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C513-kora-grate",
+      "sequence": 31090,
+      "title": "কোরা (korā) — to grate (coconut); to scrape",
+      "headword": "কোরা",
+      "romanization": "korā",
+      "gloss": "to grate (coconut); to scrape",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d06189442b122df1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to chop, then the Bengali for a peel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কোরা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কোরা — korā — \"to grate (coconut); to scrape\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দিদিমা পিঠের জন্য নারকেল কুরলেন। Didimā piṭher jônyô nārkel kurlen. My grandmother grated coconut for the pithe."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি নারকেল কুরলেন, tini nārkel kurlen."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem vowel rises in the past: কুরলেন, she grated."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কোরা (korā) comes from a reconstructed kōrati, \"scrapes\"; CDIAL lists Bengali korā and kurā, \"to scrape, to grate\" (CDIAL 3530)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "korā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *korā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "korā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *korā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Didimā piṭher jônyô nārkel kurlen. — My grandmother grated coconut for the pithe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Didimā piṭher jônyô nārkel kurlen.* — My grandmother grated coconut for the pithe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to chop, then the Bengali for a peel, then say korā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to chop, then the Bengali for a peel, then say *korā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কোরা (korā) mean? (\"To grate (coconut); to scrape\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C513-makha",
+      "sequence": 31100,
+      "title": "মাখা (mākhā) — to knead; to mix by hand",
+      "headword": "মাখা",
+      "romanization": "mākhā",
+      "gloss": "to knead; to mix by hand",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b150cb1b50d8b463",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a peel, then the Bengali for to grate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মাখা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মাখা — mākhā — \"to knead; to mix by hand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি রুটির জন্য আটা মাখলাম। Āmi ruṭir jônyô āṭā mākhlām. I kneaded flour for the rotis."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি ময়দা মাখলেন, tini môydā mākhlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মাখা (mākhā) is a tadbhava: CDIAL lists Bengali mākhā, \"to knead, to smear\", under Sanskrit mrakṣati (CDIAL 10379)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mākhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mākhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mākhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mākhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āmi ruṭir jônyô āṭā mākhlām. — I kneaded flour for the rotis.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āmi ruṭir jônyô āṭā mākhlām.* — I kneaded flour for the rotis.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a peel, then the Bengali for to grate, then say mākhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a peel, then the Bengali for to grate, then say *mākhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মাখা (mākhā) mean? (\"To knead; to mix by hand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C513-kuchono",
+      "sequence": 31110,
+      "title": "কুচোনো (kuchono) — to chop finely; to dice",
+      "headword": "কুচোনো",
+      "romanization": "kuchono",
+      "gloss": "to chop finely; to dice",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc78293525011a3f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to grate, then the Bengali for to knead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কুচোনো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কুচোনো — kuchono — \"to chop finely; to dice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি তরকারির জন্য পেঁয়াজ কুচোলাম। Āmi tôrkārir jônyô pẽyāj kucholām. I chopped the onions finely for the curry."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি আদা কুচোলেন, tini ādā kucholen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কুচোনো (kuchono) comes from a reconstructed kucyate, \"contracts, shrinks\"; CDIAL lists Bengali kucāna, \"to shrivel, to cut into bits\" (CDIAL 3221)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuchono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuchono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuchono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuchono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Āmi tôrkārir jônyô pẽyāj kucholām. — I chopped the onions finely for the curry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Āmi tôrkārir jônyô pẽyāj kucholām.* — I chopped the onions finely for the curry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to grate, then the Bengali for to knead, then say kuchono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to grate, then the Bengali for to knead, then say *kuchono* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কুচোনো (kuchono) mean? (\"To chop finely; to dice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

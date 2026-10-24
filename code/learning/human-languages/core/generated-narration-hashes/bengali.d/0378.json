@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:f00a8ada8d65b101",
+  "lessonIds": [
+    "BN-C378-ayojon",
+    "BN-C378-obilombe",
+    "BN-C378-meyad",
+    "BN-C378-sthogito-kora",
+    "BN-C378-tagada-deoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch378.txt",
+  "json": "bengali/narration/ch378.json",
+  "textHash": "fnv1a64:a1be68ce300a21ef",
+  "jsonHash": "fnv1a64:a2d06fabcbace408",
+  "findings": []
+}

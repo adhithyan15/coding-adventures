@@ -1,0 +1,11 @@
+{
+  "id": "BN-C311-thasa",
+  "pathSegment": "BN-PATH-311-MELA311",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-311-MELA311",
+      "order": 4
+    }
+  ]
+}

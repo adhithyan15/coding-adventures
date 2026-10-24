@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C343-dayi",
+    "language": "bengali",
+    "chapter": 343,
+    "sequence": 21670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6699039ad1fe40c2"
+  },
+  "findings": []
+}

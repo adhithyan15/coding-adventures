@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C480-dhen",
+    "language": "bengali",
+    "chapter": 480,
+    "sequence": 29160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8cdb77c0b72ed9b"
+  },
+  "findings": []
+}

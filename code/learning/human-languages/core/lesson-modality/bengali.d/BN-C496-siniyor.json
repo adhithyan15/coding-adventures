@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C496-siniyor",
+    "language": "bengali",
+    "chapter": 496,
+    "sequence": 30230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:472c579a9140627d"
+  },
+  "findings": []
+}

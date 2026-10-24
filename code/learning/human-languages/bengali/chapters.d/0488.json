@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "Growing Up and Growing Old",
+  "label": "ch:bn-growing-up-and-growing-old",
+  "canDo": "I can talk about childhood, youth and old age.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C488-bere-otha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can talk about childhood, youth and old age.",
+    "assesses": [
+      "BN-LEX-C488-SHOISHOB488-03",
+      "BN-LEX-C488-SHOISHOB488-04",
+      "BN-LEX-C488-SHOISHOB488-05"
+    ]
+  }
+}

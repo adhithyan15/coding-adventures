@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C394-jontrangsho",
+    "language": "bengali",
+    "chapter": 394,
+    "sequence": 24520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d60e6cc680c82fe"
+  },
+  "findings": []
+}

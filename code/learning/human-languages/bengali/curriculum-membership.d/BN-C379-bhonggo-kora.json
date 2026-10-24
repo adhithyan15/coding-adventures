@@ -1,0 +1,11 @@
+{
+  "id": "BN-C379-bhonggo-kora",
+  "pathSegment": "BN-PATH-379-SONGKOLPO379",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-379-SONGKOLPO379",
+      "order": 3
+    }
+  ]
+}

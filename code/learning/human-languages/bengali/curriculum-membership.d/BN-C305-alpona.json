@@ -1,0 +1,11 @@
+{
+  "id": "BN-C305-alpona",
+  "pathSegment": "BN-PATH-305-PRODIP305",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-305-PRODIP305",
+      "order": 2
+    }
+  ]
+}

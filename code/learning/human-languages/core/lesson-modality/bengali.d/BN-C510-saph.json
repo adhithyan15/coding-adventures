@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C510-saph",
+    "language": "bengali",
+    "chapter": 510,
+    "sequence": 30940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:969d56a8c8a67575"
+  },
+  "findings": []
+}

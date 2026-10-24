@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C444-obhiman",
+    "language": "bengali",
+    "chapter": 444,
+    "sequence": 27300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99a387a6da7d3fca"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "Debts and Instalments",
+  "label": "ch:bn-debts-and-instalments",
+  "canDo": "I can pay in instalments, say what I owe and am owed, and settle a bill.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C416-metano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can pay in instalments, say what I owe and am owed, and settle a bill.",
+    "assesses": [
+      "BN-LEX-C416-KISTI416-03",
+      "BN-LEX-C416-KISTI416-04",
+      "BN-LEX-C416-KISTI416-05"
+    ]
+  }
+}

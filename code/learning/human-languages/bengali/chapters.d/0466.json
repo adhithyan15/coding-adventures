@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "The Body",
+  "label": "ch:bn-the-body",
+  "canDo": "I can name parts of the body: the arms, fingers, back and neck.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C466-ghar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can name parts of the body: the arms, fingers, back and neck.",
+    "assesses": [
+      "BN-LEX-C466-SHORIR466-03",
+      "BN-LEX-C466-SHORIR466-04",
+      "BN-LEX-C466-SHORIR466-05"
+    ]
+  }
+}

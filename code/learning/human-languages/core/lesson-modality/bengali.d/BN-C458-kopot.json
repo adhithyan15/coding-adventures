@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C458-kopot",
+    "language": "bengali",
+    "chapter": 458,
+    "sequence": 28030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54ad1fbb74665c98"
+  },
+  "findings": []
+}

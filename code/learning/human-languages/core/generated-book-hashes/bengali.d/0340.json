@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:b61491f9868d048d",
+  "lessonIds": [
+    "BN-C340-boidho",
+    "BN-C340-nishiddho",
+    "BN-C340-dhara",
+    "BN-C340-palon-kora",
+    "BN-C340-proyog-kora"
+  ],
+  "tex": "bengali/book/chapters/ch340-what-the-law-allows.tex"
+}

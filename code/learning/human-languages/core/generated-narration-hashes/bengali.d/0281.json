@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:66788374e776d19b",
+  "lessonIds": [
+    "BN-C281-bhagyokrome",
+    "BN-C281-nikhoj",
+    "BN-C281-rokkha-paoya",
+    "BN-C281-chhota",
+    "BN-C281-obosheshe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch281.txt",
+  "json": "bengali/narration/ch281.json",
+  "textHash": "fnv1a64:7af3c351557db702",
+  "jsonHash": "fnv1a64:b2ed5276e47ec208",
+  "findings": []
+}

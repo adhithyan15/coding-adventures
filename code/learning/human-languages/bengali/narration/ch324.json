@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 324,
+  "title": "Riddles and Traps",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ca9b0cab60e9a81c",
+  "lessons": [
+    {
+      "id": "BN-C324-dhadha",
+      "sequence": 20460,
+      "title": "ধাঁধা (dhā̃dhā) — a riddle; a puzzle",
+      "headword": "ধাঁধা",
+      "romanization": "dhā̃dhā",
+      "gloss": "a riddle; a puzzle",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:623fbfcdf7986794",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a holy man, then the Bengali for a disguise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ধাঁধা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ধাঁধা — dhā̃dhā — \"a riddle; a puzzle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাক্ষস রাজকুমারকে একটা ধাঁধা জিজ্ঞাসা করল। rākkhôs rājkumārke ekṭā dhā̃dhā jigyāsā kôrlô. The ogre asked the prince a riddle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ধাঁধা (dhā̃dhā) is a riddle or a puzzle; its origin is not settled. ধাঁধায় পড়া is to be puzzled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhā̃dhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhā̃dhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhā̃dhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhā̃dhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rākkhôs rājkumārke ekṭā dhā̃dhā jigyāsā kôrlô. — The ogre asked the prince a riddle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rākkhôs rājkumārke ekṭā dhā̃dhā jigyāsā kôrlô.* — The ogre asked the prince a riddle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a holy man, then the Bengali for a disguise, then say dhā̃dhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a holy man, then the Bengali for a disguise, then say *dhā̃dhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ধাঁধা (dhā̃dhā) mean? (\"A riddle; a puzzle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C324-koushol",
+      "sequence": 20470,
+      "title": "কৌশল (koushôl) — a trick; a clever plan",
+      "headword": "কৌশল",
+      "romanization": "koushôl",
+      "gloss": "a trick; a clever plan",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d84f7a6f3afc02b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a disguise, then the Bengali for a riddle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কৌশল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কৌশল — koushôl — \"a trick; a clever plan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শিয়াল একটা কৌশল করে কুমিরকে বোকা বানাল। shiyāl ekṭā koushôl kôre kumirke bokā bānālô. The jackal played a trick and made a fool of the crocodile."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কৌশল (koushôl) is Sanskrit kauśala, 'welfare; skilfulness, cleverness' (Monier-Williams); in Bengali it is the clever plan itself. Its ৌ is read ou."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koushôl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koushôl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koushôl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koushôl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiyāl ekṭā koushôl kôre kumirke bokā bānālô. — The jackal played a trick and made a fool of the crocodile.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiyāl ekṭā koushôl kôre kumirke bokā bānālô.* — The jackal played a trick and made a fool of the crocodile.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a disguise, then the Bengali for a riddle, then say koushôl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a disguise, then the Bengali for a riddle, then say *koushôl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কৌশল (koushôl) mean? (\"A trick; a clever plan\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C324-phad",
+      "sequence": 20480,
+      "title": "ফাঁদ (phā̃d) — a trap",
+      "headword": "ফাঁদ",
+      "romanization": "phā̃d",
+      "gloss": "a trap",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34d0ce83f6d639fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a riddle, then the Bengali for a trick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ফাঁদ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফাঁদ — phā̃d — \"a trap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "লোকেরা ইঁদুর ধরতে একটা ফাঁদ বানাল। lokerā ĩdur dhôrte ekṭā phā̃d bānālô. The people made a trap to catch the mice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফাঁদ (phā̃d) comes down from Sanskrit spāśa, 'a fetter, a noose' (CDIAL 13813, which lists Bengali phā̃d, 'a net'); ফাঁসানো, to frame, is its neighbour."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phā̃d",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phā̃d*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phā̃d, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phā̃d*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokerā ĩdur dhôrte ekṭā phā̃d bānālô. — The people made a trap to catch the mice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokerā ĩdur dhôrte ekṭā phā̃d bānālô.* — The people made a trap to catch the mice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a riddle, then the Bengali for a trick, then say phā̃d again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a riddle, then the Bengali for a trick, then say *phā̃d* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ফাঁদ (phā̃d) mean? (\"A trap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C324-bholano",
+      "sequence": 20490,
+      "title": "ভোলানো (bholāno) — to coax; to beguile",
+      "headword": "ভোলানো",
+      "romanization": "bholāno",
+      "gloss": "to coax; to beguile",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0971bf14b7a7c4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a trick, then the Bengali for a trap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভোলানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভোলানো — bholāno — \"to coax; to beguile\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শিয়াল প্রশংসা করে কাককে ভোলাল। shiyāl prôshôngsā kôre kākke bholālô. The jackal flattered the crow and beguiled it."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই শিয়াল কাককে ভোলাল, sei shiyāl kākke bholālô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভোলানো (bholāno) is ভোলা, to forget — CDIAL 9538, a Middle Indo-Aryan bhull-, 'err, forget' — with the -ānō ending: to make someone forget themselves, to coax them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bholāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bholāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bholāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bholāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiyāl prôshôngsā kôre kākke bholālô. — The jackal flattered the crow and beguiled it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiyāl prôshôngsā kôre kākke bholālô.* — The jackal flattered the crow and beguiled it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a trick, then the Bengali for a trap, then say bholāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a trick, then the Bengali for a trap, then say *bholāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভোলানো (bholāno) mean? (\"To coax; to beguile\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C324-par-paoya",
+      "sequence": 20500,
+      "title": "পার পাওয়া (pār pāoyā) — to get away with it; to escape",
+      "headword": "পার পাওয়া",
+      "romanization": "pār pāoyā",
+      "gloss": "to get away with it; to escape",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12c58b2e4a6e124c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a trap, then the Bengali for to coax."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পার পাওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পার পাওয়া — pār pāoyā — \"to get away with it; to escape\"."
+            },
+            {
+              "kind": "speech",
+              "text": "চোরটা অনেক কৌশল করল, কিন্তু পার পেল না। chorṭā ônek koushôl kôrlô, kintu pār pelô nā. The thief tried many tricks, but he didn't get away with it."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই চোর পার পেল, sei chor pār pelô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পার পাওয়া (pār pāoyā) puts পার, 'the far bank' — CDIAL 8100, Sanskrit pāra — before পাওয়া: to reach the far side, to get away. পার হওয়া is to cross."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pār pāoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pār pāoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pār pāoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pār pāoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chorṭā ônek koushôl kôrlô, kintu pār pelô nā. — The thief tried many tricks, but he didn't get away with it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chorṭā ônek koushôl kôrlô, kintu pār pelô nā.* — The thief tried many tricks, but he didn't get away with it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a trap, then the Bengali for to coax, then say pār pāoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a trap, then the Bengali for to coax, then say *pār pāoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পার পাওয়া (pār pāoyā) mean? (\"To get away with it; to escape\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

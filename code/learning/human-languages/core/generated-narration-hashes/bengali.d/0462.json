@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:7b06d1f492c1c575",
+  "lessonIds": [
+    "BN-C462-olos",
+    "BN-C462-kormoth",
+    "BN-C462-elomelo",
+    "BN-C462-phaki-deoya",
+    "BN-C462-gorimosi-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch462.txt",
+  "json": "bengali/narration/ch462.json",
+  "textHash": "fnv1a64:1cd16748820d77ac",
+  "jsonHash": "fnv1a64:37e3ca209834e0c6",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 542,
+  "title": "When Plans Fall Through",
+  "label": "ch:bn-when-plans-fall-through",
+  "canDo": "I can say how a plan falls through and ends in chaos.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C542-golmal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 542: I can say how a plan falls through and ends in chaos.",
+    "assesses": [
+      "BN-LEX-C542-BHESTE542-03",
+      "BN-LEX-C542-BHESTE542-04",
+      "BN-LEX-C542-BHESTE542-05"
+    ]
+  }
+}

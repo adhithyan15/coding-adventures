@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 444,
+  "title": "Sulking and Making Up",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0f26bfd44e1448d7",
+  "lessons": [
+    {
+      "id": "BN-C444-obhiman",
+      "sequence": 27300,
+      "title": "অভিমান (ôbhimān) — hurt pride; a loving sulk",
+      "headword": "অভিমান",
+      "romanization": "ôbhimān",
+      "gloss": "hurt pride; a loving sulk",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99a387a6da7d3fca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to seethe, then the Bengali for to grumble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অভিমান",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অভিমান — ôbhimān — \"hurt pride; a loving sulk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বোনের জন্মদিনে আমি ফোন করলাম না, তাই তার অভিমান হল। boner jônmôdine āmi phon kôrlām nā, tāi tār ôbhimān hôlô. I didn't phone on my sister's birthday, so she was hurt."
+            },
+            {
+              "kind": "speech",
+              "text": "অভিমান (ôbhimān) is felt between people who love each other: the sulk of a child, a sister or a wife, waiting to be coaxed round. অভিমানী, quick to feel it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অভিমান (ôbhimān) is a tatsama, Sanskrit abhimāna, \"a high opinion of oneself, pride\" (Monier-Williams); Bengali turned it into the wounded pride of someone slighted by a person they love."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbhimān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbhimān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbhimān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbhimān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "boner jônmôdine āmi phon kôrlām nā, tāi tār ôbhimān hôlô. — I didn't phone on my sister's birthday, so she was hurt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *boner jônmôdine āmi phon kôrlām nā, tāi tār ôbhimān hôlô.* — I didn't phone on my sister's birthday, so she was hurt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to seethe, then the Bengali for to grumble, then say ôbhimān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to seethe, then the Bengali for to grumble, then say *ôbhimān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অভিমান (ôbhimān) mean? (\"Hurt pride; a loving sulk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C444-onujog",
+      "sequence": 27310,
+      "title": "অনুযোগ (ônujog) — a gentle complaint; a reproach (to someone close)",
+      "headword": "অনুযোগ",
+      "romanization": "ônujog",
+      "gloss": "a gentle complaint; a reproach (to someone close)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6428625e1347abd7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to grumble, then the Bengali for hurt pride."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অনুযোগ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনুযোগ — ônujog — \"a gentle complaint; a reproach (to someone close)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মীরার অনুযোগ, অরুণ সবসময় দেরি করে আসে। mīrār ônujog, ôrun sôbsômôy deri kôre āse. Mira's complaint is that Arun always turns up late."
+            },
+            {
+              "kind": "speech",
+              "text": "অনুযোগ (ônujog) করা, to complain to someone close. অভিযোগ is a formal complaint or a charge; অনুযোগ (ônujog) stays inside the family and among friends."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনুযোগ (ônujog) is a tatsama, Sanskrit anuyoga, which Monier-Williams gives for questioning and also for reproof; Bengali uses it for the milder complaint made to someone you are close to."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônujog",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônujog*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônujog, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônujog*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrār ônujog, ôrun sôbsômôy deri kôre āse. — Mira's complaint is that Arun always turns up late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrār ônujog, ôrun sôbsômôy deri kôre āse.* — Mira's complaint is that Arun always turns up late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to grumble, then the Bengali for hurt pride, then say ônujog again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to grumble, then the Bengali for hurt pride, then say *ônujog* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অনুযোগ (ônujog) mean? (\"A gentle complaint; a reproach (to someone close)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C444-mukh-bhar-kora",
+      "sequence": 27320,
+      "title": "মুখ ভার করা (mukh bhār kôrā) — to sulk; to put on a sullen face",
+      "headword": "মুখ ভার করা",
+      "romanization": "mukh bhār kôrā",
+      "gloss": "to sulk; to put on a sullen face",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1d777fb482f1136",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for hurt pride, then the Bengali for a gentle complaint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মুখ ভার করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মুখ ভার করা — mukh bhār kôrā — \"to sulk; to put on a sullen face\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বকা খেয়ে ছোট বোন মুখ ভার করে বসে আছে। bôkā kheye chhoṭo bon mukh bhār kôre bôse āchhe. After being scolded, my little sister is sitting there sulking."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি মুখ ভার করলেন, tini mukh bhār kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মুখ ভার করা (mukh bhār kôrā) is মুখ (taught), the face, with bhār, \"weight\", from Sanskrit bhāra, \"burden, weight\" (CDIAL 9459), and kôrā, \"to do\" (CDIAL 2814): to make the face heavy."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukh bhār kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukh bhār kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukh bhār kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukh bhār kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôkā kheye chhoṭo bon mukh bhār kôre bôse āchhe. — After being scolded, my little sister is sitting there sulking.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôkā kheye chhoṭo bon mukh bhār kôre bôse āchhe.* — After being scolded, my little sister is sitting there sulking.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for hurt pride, then the Bengali for a gentle complaint, then say mukh bhār kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for hurt pride, then the Bengali for a gentle complaint, then say *mukh bhār kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মুখ ভার করা (mukh bhār kôrā) mean? (\"To sulk; to put on a sullen face\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C444-khoma-kora",
+      "sequence": 27330,
+      "title": "ক্ষমা করা (khômā kôrā) — to forgive",
+      "headword": "ক্ষমা করা",
+      "romanization": "khômā kôrā",
+      "gloss": "to forgive",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00cdddf9a3ff741c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a gentle complaint, then the Bengali for to sulk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ক্ষমা করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ক্ষমা করা — khômā kôrā — \"to forgive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার ভুলের জন্য বন্ধু আমাকে ক্ষমা করল। āmār bhuler jônyô bôndhu āmāke khômā kôrlô. My friend forgave me for my mistake."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি ছেলেকে ক্ষমা করলেন, tini chheleke khômā kôrlen."
+            },
+            {
+              "kind": "speech",
+              "text": "ক্ষমা চাওয়া, to ask forgiveness: আমি ক্ষমা চাইলাম."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ক্ষমা করা (khômā kôrā) is Sanskrit kṣamā, \"patience, forbearance\" (Monier-Williams), with kôrā, \"to do\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khômā kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khômā kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khômā kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khômā kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmār bhuler jônyô bôndhu āmāke khômā kôrlô. — My friend forgave me for my mistake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmār bhuler jônyô bôndhu āmāke khômā kôrlô.* — My friend forgave me for my mistake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a gentle complaint, then the Bengali for to sulk, then say khômā kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a gentle complaint, then the Bengali for to sulk, then say *khômā kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ক্ষমা করা (khômā kôrā) mean? (\"To forgive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C444-monomalinyo",
+      "sequence": 27340,
+      "title": "মনোমালিন্য (mônomālinyô) — ill feeling; bad blood (between people)",
+      "headword": "মনোমালিন্য",
+      "romanization": "mônomālinyô",
+      "gloss": "ill feeling; bad blood (between people)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:106ae73daf1fcf19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to sulk, then the Bengali for to forgive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মনোমালিন্য",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মনোমালিন্য — mônomālinyô — \"ill feeling; bad blood (between people)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "জমি নিয়ে দুই ভাইয়ের মনোমালিন্য হল। jômi niye dui bhāiyer mônomālinyô hôlô. The two brothers fell out over land."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মনোমালিন্য (mônomālinyô) joins Sanskrit manas, \"mind\" (CDIAL 9822), in its compound form mano-, and mālinya, \"dirtiness, darkness\" (Monier-Williams): a mind clouded against someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mônomālinyô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mônomālinyô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mônomālinyô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mônomālinyô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jômi niye dui bhāiyer mônomālinyô hôlô. — The two brothers fell out over land.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jômi niye dui bhāiyer mônomālinyô hôlô.* — The two brothers fell out over land.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to sulk, then the Bengali for to forgive, then say mônomālinyô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to sulk, then the Bengali for to forgive, then say *mônomālinyô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মনোমালিন্য (mônomālinyô) mean? (\"Ill feeling; bad blood (between people)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C538-upokrom",
+  "pathSegment": "BN-PATH-538-DURJOG538",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-538-DURJOG538",
+      "order": 2
+    }
+  ]
+}

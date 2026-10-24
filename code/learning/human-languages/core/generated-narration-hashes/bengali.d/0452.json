@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:efa92a529f3b3aa5",
+  "lessonIds": [
+    "BN-C452-ohongkar",
+    "BN-C452-demak",
+    "BN-C452-atmosomman",
+    "BN-C452-jahir-kora",
+    "BN-C452-opodostho-hooya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch452.txt",
+  "json": "bengali/narration/ch452.json",
+  "textHash": "fnv1a64:cd1b24b77455d56e",
+  "jsonHash": "fnv1a64:938d155d34f0523b",
+  "findings": []
+}

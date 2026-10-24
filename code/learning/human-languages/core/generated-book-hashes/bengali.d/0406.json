@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:c6b94d357d8f3084",
+  "lessonIds": [
+    "BN-C406-gesthaus",
+    "BN-C406-hostel",
+    "BN-C406-dhormoshala",
+    "BN-C406-thai",
+    "BN-C406-toka-deoya"
+  ],
+  "tex": "bengali/book/chapters/ch406-a-bed-for-the-night.tex"
+}
