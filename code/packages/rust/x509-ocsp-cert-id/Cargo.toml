@@ -1,0 +1,10 @@
+[package]
+name = "x509-ocsp-cert-id"
+version = "0.1.0"
+edition = "2021"
+description = "Allocation-free structural RFC 6960 OCSP CertID decoding"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-algorithm-identifier = { path = "../x509-algorithm-identifier" }
+x509-serial-number = { path = "../x509-serial-number" }
