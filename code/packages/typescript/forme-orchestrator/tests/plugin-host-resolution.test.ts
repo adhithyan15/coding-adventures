@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { KERNEL_API_VERSION, Kinds } from "@coding-adventures/forme-types";
+import type { KindRegistry } from "@coding-adventures/forme-types";
 import { defineStage } from "@coding-adventures/forme-stage";
 import type { CacheBackend } from "@coding-adventures/forme-cache";
 import type { PipelineConfig } from "@coding-adventures/forme-pipeline-config";
@@ -71,6 +72,51 @@ describe("PluginHost resolution", () => {
   it("keeps unresolved StageRefs fail-closed when no host is configured", async () => {
     const orchestrator = createOrchestrator();
     await expect(orchestrator.buildPipeline(config)).rejects.toThrow(/plugin host|StageRef/i);
+    await orchestrator.dispose();
+  });
+
+  it("threads the host kind registry through resolved DAG compatibility", async () => {
+    const extensionKind = { name: "ext:blog-post", version: "1.0" } as const;
+    const source = defineStage({
+      name: "@example/plugin/source",
+      version: "1.0.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "extension source",
+      consumes: Kinds.Void,
+      produces: extensionKind,
+      capabilities: [],
+      configSchema: null,
+      run() { return {} as never; },
+    });
+    const sink = defineStage({
+      name: "@example/plugin/sink",
+      version: "1.0.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "generic content sink",
+      consumes: Kinds.ContentNode,
+      produces: Kinds.DeployArtifact,
+      capabilities: [],
+      configSchema: null,
+      run() { return {} as never; },
+    });
+    const kindRegistry: KindRegistry = {
+      lookup(name) {
+        return name === "ext:blog-post"
+          ? { descriptor: extensionKind, parent: Kinds.ContentNode }
+          : undefined;
+      },
+    };
+    const loadStage = vi.fn(async (ref: { export?: string }) =>
+      ref.export === "source" ? source as never : sink as never);
+    const orchestrator = createOrchestrator({ pluginHost: { loadStage, kindRegistry } });
+
+    await expect(orchestrator.buildPipeline({
+      ...config,
+      stages: [
+        { id: "source", stage: { kind: "stage-ref", packageName: "@example/plugin", export: "source" } },
+        { id: "sink", stage: { kind: "stage-ref", packageName: "@example/plugin", export: "sink" } },
+      ],
+    })).resolves.toMatchObject({ dag: { topoOrder: ["source", "sink"] } });
     await orchestrator.dispose();
   });
 

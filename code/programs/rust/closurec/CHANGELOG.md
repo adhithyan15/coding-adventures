@@ -90,6 +90,18 @@ The fix is in the ECMAScript `.tokens` files and javascript-lexer.
 ADVANCED and, when `node` is installed, checks that each prints what the
 source prints.
 
+### Fixed - WHITESPACE_ONLY keeps the block around a lone `let`/`const` (#18124)
+
+`if(a){let x=1;}` printed as `if(a)let x=1;` and `while(o){let x=1;}` as
+`while(o)let x=1;`. A body slot takes a statement, and a lexical declaration
+isn't one, so neither output parsed. The body flatten passes (gap-032,
+gap-074/076/079, gap-080 and the `do` body) now keep the braces when the
+body starts with `const`, `let` + binding, `using` + binding or
+`await using`, as upstream does.
+
+`tests/regression_ws_lexical_body.rs` pins 15 shapes to the jar's bytes and
+checks with `node` that each output parses. Two unit tests cover the rule.
+
 ### Fixed - switch cases keep shared `var`/`function`/`class` declarations (#17879)
 
 `closure-pass-dce` truncated a case's dead tail, and collapsed a constant
