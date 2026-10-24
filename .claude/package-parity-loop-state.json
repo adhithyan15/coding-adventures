@@ -25796,7 +25796,10 @@
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18154",
       "opened_at": "2026-10-24T20:01:05Z",
       "opened_revision": "d6c1de44ada1343b1612be0c80546f09d9160755",
-      "final_review_revision": "d6c1de44ada1343b1612be0c80546f09d9160755",
+      "initial_review_revision": "d6c1de44ada1343b1612be0c80546f09d9160755",
+      "reconciliation_revision": "c05fcf8dc9725e6da9328c359c595a83dd025732",
+      "security_finding_revision": "c05fcf8dc9725e6da9328c359c595a83dd025732",
+      "security_fix_revision": "399b251573b19ed05c1d56e24c73f0cccf426f22",
       "delivery_class": "portable-lane-adoption",
       "selection_blocked": false,
       "registered_at": "2026-10-24T19:17:58Z",
@@ -25805,7 +25808,7 @@
       "package_paths": [
         "code/packages/fsharp/document-ast-to-html"
       ],
-      "validation_notes": "Exact-head independent review passed after merging current origin/main. Two separate clean archive first runs passed 20/20 tests with 100% line, 99.16% branch and 100% method coverage. The Unix and Windows build fronts instrument the initial build before the no-build Coverlet pass. NuGet pack contents, installed dependency shape and production/test vulnerability audits are clean. The build-tool dry-run selects exactly F# document-ast plus document-ast-to-html; package parity reports zero collisions and zero unknown buckets; the 1,531-owner state graph is unique, dependency-complete, acyclic and has no merged-to-unmerged edges.",
+      "validation_notes": "After PR #18143 merged, the branch reconciled current main and preserved the exact C# merge receipt plus this F# pr-open lifecycle. Independent review then found that per-table List.length/List.toArray checks did not bound aggregate work when a large immutable alignment list was aliased across many tables. A RED repeated-alias regression reproduced the missing exception. The repair now collects alignment metadata in one traversal while charging every visit against a per-render 100,000-entry aggregate budget; the exact ceiling is accepted and the budget resets per call. The complete suite passes 21/21 tests with 100% line, 99.17% branch and 100% method coverage. Lessons validation passes 1,483 shards, and the 1,547-owner state graph remains unique, dependency-complete, acyclic and has no merged-to-unmerged edges. Fresh independent exact-head review remains required before push.",
       "publication_notes": "Opened draft PR #18154 from exact reviewed head d6c1de44ada1343b1612be0c80546f09d9160755 over current main e9ea4be4fbdf1379918f401f6e9498f1563d04aa. GitHub reports the branch mergeable. This is the third active independent parity PR under the operator-authorized maximum of three; it has no production-file overlap with the C# renderer or TypeScript GFM adoption PRs. The PR remains draft only while this lifecycle receipt is committed and pushed; guarded auto-merge stays disabled until every required check is terminal and acceptable.",
       "notes": "Selected as the smallest independent post-#18118 tranche. Deliver one pure native F# renderer over every existing F# document-ast case with raw routing, URL hardening, immutable ownership, explicit depth/node/output bounds, native coverage, package metadata and Unix/Windows build fronts. Do not edit the parser or add CommonMark/GFM facades."
     },

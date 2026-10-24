@@ -17823,6 +17823,15 @@ coverage.  The package, dependency-audit, exact build-selection, collision and
 active independent parity PR under the three-PR ceiling; it remains separate
 from the C# renderer and TypeScript GFM adopter and introduces no parser,
 facade or GFM claim.
+
+After the C# renderer merged, reconciling its mainline receipt exposed a fresh
+independent-review finding at `c05fcf8dc9`: per-table alignment-list length and
+array conversion did not bound aggregate work when callers reused the same
+large immutable list across many otherwise-empty tables. A failing repeated-
+alias regression now precedes a single-pass collector that charges at most
+100,000 alignment entries per render, including every alias visit. The updated
+21-test suite passes with 100% line, 99.17% branch and 100% method coverage; a
+new exact-head independent review remains the publication gate.
 ## October 24, 2026: C# security follow-up and preserved audit owners
 
 Keep the operator-authorized ceiling of three dependency-safe parity PRs in
