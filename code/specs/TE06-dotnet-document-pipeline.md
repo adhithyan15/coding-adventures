@@ -69,3 +69,84 @@ The first tranche is successful when:
 - both languages have pure parser entry points
 - GFM-only constructs live behind `gfm-parser`, not inside the AST consumer API
 - tests demonstrate the same baseline document behaviour in C# and F#
+
+## C# HTML Renderer Tranche
+
+The next C# tranche adds only `document-ast-to-html` as a pure renderer over
+the public `document-ast` types. It does not duplicate or silently promote the
+already-substantive `commonmark-parser` package, and it does not add the thin
+`commonmark` facade before its parser prerequisite is qualified.
+
+Renderer tests are independently authored from the TE00 public contract. They
+exercise every C# `document-ast` node through `DocumentAstToHtml.ToHtml`,
+including tight and loose lists, ordered starts, escaping, raw-format routing,
+tables, task items, and dangerous URL schemes. These vectors are deliberately
+separate from GFM parser adoption: rendering extension node types already in
+the AST does not claim that C# consumes the GFM conformance corpus.
+
+### Public API
+
+```csharp
+using CodingAdventures.DocumentAst;
+using CodingAdventures.DocumentAstToHtml;
+
+var document = new DocumentNode([
+    new HeadingNode(1, [new TextNode("Hello")]),
+]);
+var html = DocumentAstToHtml.ToHtml(document);
+```
+
+`CodingAdventures.DocumentAstToHtml.DocumentAstToHtml.ToHtml` accepts a
+`DocumentNode` plus immutable render options. Raw HTML passes through by
+default for CommonMark compatibility; callers rendering untrusted input must
+request raw-node suppression or sanitize the AST before rendering. Text,
+attribute values, code, and link/image destinations are escaped. The renderer
+removes browser-ignored control and zero-width characters before rejecting
+`javascript:`, `vbscript:`, `data:`, and `blob:` destinations.
+
+### Resource And Ownership Contract
+
+- parsing retains the existing bounded public C# parser entry point;
+- rendering is an in-memory tree walk with explicit node-depth, node-count,
+  and output-character ceilings;
+- one render admits at most 1,000,000 aggregate UTF-16 code units of raw URL
+  destinations across links, images, and autolinks. Every visit, including an
+  alias of an earlier node or string, charges the shared budget before URL
+  normalization allocates or scans. Values stripped empty or rejected as unsafe
+  still count. The inclusive budget resets for every `ToHtml` call and bounds
+  normalization work independently of the resulting HTML size;
+- input AST records and child collections are borrowed and never mutated;
+- rendering returns a newly owned string and performs no filesystem, network,
+  process, environment, clock, or random access; and
+- a limit failure throws `InvalidOperationException` before returning partial
+  output.
+
+### Package And Build Evidence
+
+The new renderer root requires normal NuGet metadata, `README.md`,
+`CHANGELOG.md`, `required_capabilities.json`, Unix `BUILD`, and Windows
+`BUILD_windows` fronts. The build fronts run native .NET tests with production
+line coverage above the repository's 80% floor. The renderer declares only
+`document-ast`; test-only dependencies remain in the test project.
+The Windows front must still execute native tests and coverage when its setup
+directories already exist; a successful directory check is not build evidence.
+
+### Discovered Parser And Facade Sequence
+
+Executing the existing C# parser and new renderer against every record in the
+official CommonMark 0.31.2 corpus produced 233 exact matches out of 652. That
+is useful qualification evidence, but it is not CommonMark conformance and
+must not be hidden behind a facade that implies parity.
+
+The remaining C# pipeline therefore has two separately owned steps:
+
+1. `commonmark-parser-csharp-652-reconciliation` reconciles the existing parser
+   against all 652 official cases without using a fixture lookup, external
+   process, cross-language bridge, or third-party Markdown engine.
+2. `commonmark-csharp-facade-lane-parity` adds the thin facade only after both
+   the parser reconciliation and this renderer package have merged.
+
+This renderer tranche does not implement or qualify `commonmark-parser`, add
+the `commonmark` facade, implement or qualify `gfm`, consume the GFM extension
+fixture, centralize the repository's duplicated CommonMark corpus, or claim
+sanitization policy beyond the renderer's documented raw-node and URL rules.
