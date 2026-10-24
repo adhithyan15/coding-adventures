@@ -122,8 +122,9 @@ fail with typed atomic errors rather than taking an unmodeled trap.
 The simulator distinguishes 32-bit `icc` from 64-bit `xcc`. `*cc` arithmetic
 updates both widths from the same operation; logical `*cc` operations set N/Z
 and clear V/C. Shift encodings select 32- or 64-bit width and mask their counts
-accordingly. Division by zero and the signed minimum divided by negative one are
-typed atomic faults. `SETHI` writes a zero-extended low-word constant.
+accordingly. Division by zero is a typed atomic fault; as UltraSPARC specifies,
+signed minimum divided by negative one returns signed minimum. `SETHI` writes a
+zero-extended low-word constant.
 
 Instruction fetch is always big-endian. This bounded cell fixes implicit data
 accesses to big-endian (`PSTATE.cle = 0`); attempts to restore little-endian
@@ -149,6 +150,6 @@ Completion requires:
    memory widths, and fault atomicity;
 3. lifecycle, restore, rollback, malformed-image, retention, and bounded-run
    tests;
-4. line coverage above 80%; and
+4. line coverage above 80% (completion baseline: 87.30%, 804/921); and
 5. Rustfmt, strict Clippy, rustdoc, release tests, BUILD integration, lessons
    validation, affected-package checks, and security review before publication.
