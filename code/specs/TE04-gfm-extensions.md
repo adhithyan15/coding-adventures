@@ -401,6 +401,11 @@ Reference: [CommonMark 0.31.2 fenced code blocks](https://spec.commonmark.org/0.
 CommonMark permits implementation-specific info treatment; this section fixes
 the additional TE04 metadata normalization contract.
 
+The complete four-extension, cross-language oracle is specified separately in
+[TE04 portable GFM extension conformance](TE04-gfm-portable-conformance.md).
+That profile combines fences with strikethrough, task items, and pipe tables;
+this repair fixture remains the narrower TypeScript fence prerequisite.
+
 ### Fenced repair fixture CI selection
 
 An exact repository-relative change to
