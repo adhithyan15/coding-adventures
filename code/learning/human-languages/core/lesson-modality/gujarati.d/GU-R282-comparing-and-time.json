@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R282-comparing-and-time",
+    "language": "gujarati",
+    "chapter": 282,
+    "sequence": 15270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:067d3e0532ff4800"
+  },
+  "findings": []
+}

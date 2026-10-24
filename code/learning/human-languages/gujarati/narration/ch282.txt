@@ -1,0 +1,266 @@
+Gujarati, chapter 282: Comparing, and how long.
+8 lessons. You can do the first one in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 8.
+સૌથી (sauthī) — most; of all.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say "I want to become a doctor". (māre dāktar banvũ che.) Then "small", "more" and "to like". (નાનું, વધારે, ગમવું.)
+
+You'll want to know: સૌથી.
+સૌથી — sauthī — "most; of all". Put it before a describing word and it becomes the most of all:
+મીરા સૌથી નાની છે. Mīrā sauthī nānī che. — "Mira is the youngest."
+નાની follows Mira; સૌથી (sauthī) stays as it is. With વધારે it is "most of all":
+મને ચોમાસું સૌથી વધારે ગમે છે. mane comāsũ sauthī vadhāre game che. — "I like the monsoon most of all."
+
+The word, taken apart.
+સૌથી (sauthī) is built from sau, "all, everyone", and -થી, "from": "from all", so "more than all". CDIAL lists Gujarati sau, "wholly", under Sanskrit sarva, "all, whole" (CDIAL 13276).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: sauthī, then sauthī nānũ]
+[pause 8 seconds for the answer]
+[your turn — say: "Mira is the youngest" — Mīrā sauthī nānī che]
+[pause 8 seconds for the answer]
+[your turn — say: "I like the monsoon most of all" — mane comāsũ sauthī vadhāre game che]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does સૌથી (sauthī) mean? ("Most; of all".) "The biggest", of a house? (સૌથી (sauthī) મોટું.)
+
+
+Lesson 2 of 8.
+ૌ (au sign) — the au sign in સૌથી (sauthī).
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ૌ, Writing — recall after hiding and Wrap-up Recall.
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Warm-up.
+[pause 2 seconds]
+Before the new one: say સૌથી (sauthī), "most of all". Then write ૈ, the ai sign, and ો, the o sign, once each.
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: ૌ.
+ૌ — the au sign: the ા bar on the right plus two stacked strokes above. It sits on સ in સૌથી (sauthī).
+[a table of 2 rows, read aloud]
+one stroke above: ે e. two strokes above: ૈ ai, as in પૈસા.
+one stroke above: ો o: ા with ે above. two strokes above: ૌ (au sign) au: ા with ૈ above.
+It is written after its consonant: સ first, then the bar to its right, then the lower flag, then the upper flag.
+
+Writing — notice and trace.
+Follow the numbered strip:
+start at the top of the bar and draw it straight down.
+without lifting, turn into the short foot to the right.
+lift, then start at the lower flag's upper-left tip and arc it to the right.
+without lifting, curve it down to the right.
+lift, then start at the upper flag's upper-left tip and arc it to the right.
+without lifting, curve it down to the right — and only now lift.
+Three strokes — six movements, two pen lifts; cited to KanoAI's hand-made Gujarati barakhadi templates. Finger-trace ૌ (au sign) once.
+
+Writing — copy with the model.
+Copy સૌથી (sauthī) once: સ, the bar, the two flags, then થી. Compare only two things: are there two flags, and does the lower one come first? Repair one if needed.
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Writing — recall after hiding.
+Hide the model and write the au sign once. Uncover ૌ, compare, and stop after one repair.
+[once you have stopped driving — question: Hide the model and write the au sign from memory.]
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Wrap-up Recall.
+[pause 3 seconds]
+Read સો and સૌથી (sauthī) aloud. What turns ો into ૌ (au sign)? (A second flag above.)
+Sources: KanoAI's Gujarati barakhadi stroke templates (Tejas Gajjar, KanoAI, Gujarati barakhadi centre-line stroke templates (interpolate-svg/svgs/barakhadi), commit 9d3e294, 1_k/9_kau.svg, groups g1, g2 then g3 (strokes g1s0, g2s0, g3s0): the au sign drawn after the consonant (GitHub, 2026)) and the Unicode Gujarati chart.
+
+
+Lesson 3 of 8.
+… કરતાં મોટું (… kartā̃ moṭũ) — bigger than …
+
+Warm-up.
+[pause 2 seconds]
+Say "Mira is the youngest". (Mīrā sauthī nānī che.) Then "big" and "a city". (મોટું, શહેર.)
+
+Grammar Lens: કરતાં, than.
+શહેર ગામ કરતાં મોટું છે. śaher gām kartā̃ moṭũ che. — "The city is bigger than the village."
+The thing being described, then the one it is measured against with કરતાં (kartā̃), "than", then the describing word, which follows the first: મીરા અરુણ કરતાં નાની છે (Mīrā Aruṇ kartā̃ nānī che), "Mira is younger than Arun".
+A word with no ending of its own takes વધારે, "more", or ઓછું, "less": ટ્રેન બસ કરતાં વધારે ઝડપી છે (ṭren bas kartā̃ vadhāre jhaḍpī che).
+
+You'll want to know: the most of all.
+ઝડપી ટ્રેન સૌથી મોંઘી છે. jhaḍpī ṭren sauthī moṅghī che. — "The fast train is the most expensive."
+Two things take કરતાં; the top of a whole group takes સૌથી (sauthī):
+[a table of 2 rows, read aloud]
+the bus is cheaper than the train. say: બસ ટ્રેન કરતાં સસ્તી છે.
+the bus is the cheapest. say: બસ સૌથી (sauthī) સસ્તી છે.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "Mira is younger than Arun" — Mīrā Aruṇ kartā̃ nānī che]
+[pause 8 seconds for the answer]
+[your turn — say: "The train is faster than the bus" — ṭren bas kartā̃ vadhāre jhaḍpī che]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 24 seconds]
+Say that the city is bigger than the village, then that the bus is the cheapest.
+
+Wrap-up Recall.
+[pause 3 seconds]
+"Than"? (કરતાં.) "The city is bigger than the village"? (શહેર ગામ કરતાં મોટું છે.) For the top of a whole group? (સૌથી (sauthī).)
+
+
+Lesson 4 of 8.
+સુધી (sudhī) — until; as far as.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say "the city is bigger than the village". (śaher gām kartā̃ moṭũ che.) Then "evening" and "a river". (સાંજ, નદી.)
+
+You'll want to know: સુધી.
+સુધી — sudhī — "until; as far as". It comes after its word, as કરતાં does: an end in time, or in space.
+હું સાંજ સુધી ઘરે છું. hũ sānj sudhī ghare chũ. — "I'm at home until evening."
+અમે નદી સુધી ચાલ્યા. ame nadī sudhī cālyā. — "We walked as far as the river."
+
+The word, taken apart.
+સુધી (sudhī) is a small word with no older form in any dictionary we use, so its history is not settled.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: sudhī, then sānj sudhī]
+[pause 8 seconds for the answer]
+[your turn — say: "I'm at home until evening" — hũ sānj sudhī ghare chũ]
+[pause 8 seconds for the answer]
+[your turn — say: "We walked as far as the river" — ame nadī sudhī cālyā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does સુધી (sudhī) mean? ("Until; as far as".) Before its word, or after? (After: સાંજ સુધી (sudhī).)
+
+
+Lesson 5 of 8.
+બે વરસથી (be varasthī) — for how long, since when.
+
+Warm-up.
+[pause 2 seconds]
+Say "until evening". (sānj sudhī.) Then "a year" and "morning". (વરસ, સવાર.)
+
+Grammar Lens: -થી and the present.
+હું બે વરસથી અહીં રહું છું. hũ be varasthī ahī̃ rahũ chũ. — "I have lived here for two years."
+-થી, "from", on a length of time or a starting point says how long something has gone on, and the verb stays in the present: it is still going on. English says "have lived"; Gujarati says "I live, from two years". સવારથી વરસાદ પડે છે (savārthī varsād paḍe che): "it has been raining since morning". To ask: તમે કેટલા વખતથી અહીં રહો છો? (tame keṭlā vakhatthī ahī̃ raho cho?), "how long have you lived here?"
+
+You'll want to know: from … until, and all day.
+દુકાન સવારથી સાંજ સુધી ખુલ્લી છે. dukān savārthī sānj sudhī khullī che. — "The shop is open from morning until evening."
+-થી marks the start and સુધી (sudhī) the end. A span with no start or end named takes આખું, "whole", and neither -થી nor સુધી (sudhī): મેં આખો દિવસ કામ કર્યું (mẽ ākho divas kām karyũ), "I worked all day".
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "How long have you lived here?" — tame keṭlā vakhatthī ahī̃ raho cho?]
+[pause 8 seconds for the answer]
+[your turn — say: "I worked all day" — mẽ ākho divas kām karyũ]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 26 seconds]
+Say that you have lived here for two years, then that the shop is open from morning until evening.
+
+Wrap-up Recall.
+[pause 3 seconds]
+"For two years"? (બે વરસથી (be varasthī).) Past or present after it? (Present: રહું છું.) "From morning until evening"? (સવારથી સાંજ સુધી (sudhī).)
+
+
+Lesson 6 of 8.
+ઋતુ (ṛtu) — a season.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say "summer", "winter" and "the monsoon". (ઉનાળો, શિયાળો, ચોમાસું.) Then મોસમ: "a season; the weather".
+
+You'll want to know: ઋતુ.
+ઋતુ — ṛtu — "a season". It is feminine. મોસમ is also the weather; ઋતુ is one part of the year.
+અહીં ત્રણ ઋતુ છે: ઉનાળો, ચોમાસું અને શિયાળો. ahī̃ traṇ ṛtu che: unāḷo, comāsũ ane śiyāḷo. — "There are three seasons here: summer, the monsoon and winter."
+તમને કઈ ઋતુ સૌથી વધારે ગમે છે? tamne kaī ṛtu sauthī vadhāre game che? — "Which season do you like most?"
+કઈ is કયું, "which", following ઋતુ (ṛtu).
+
+The word, taken apart.
+ઋતુ (ṛtu) is a tatsama: Sanskrit ṛtu, "a fixed time; a season" (Monier-Williams), taken into Gujarati as it was, with the vowel letter ઋ (ṛ) that the next lesson writes.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ṛtu, then traṇ ṛtu]
+[pause 8 seconds for the answer]
+[your turn — say: "Which season do you like most?" — tamne kaī ṛtu sauthī vadhāre game che?]
+[pause 8 seconds for the answer]
+[your turn — say: "I like winter most of all" — mane śiyāḷo sauthī vadhāre game che]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does ઋતુ (ṛtu) mean? ("A season".) "Which season?" (કઈ ઋતુ (ṛtu)?: ઋતુ (ṛtu) is feminine.)
+
+
+Lesson 7 of 8.
+ઋ — the standing vowel ṛ.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — meet one form, Writing — recall after hiding and Wrap-up Recall.
+
+Warm-up.
+[your turn — recall: say a season — R1, one lesson back]
+[pause 8 seconds for the answer]
+[your turn — recall: say હૃદય, "the heart", and find the sign ૃ under its હ]
+[pause 8 seconds for the answer]
+ઋતુ (ṛtu) opens on the same vowel ṛ, with no consonant to carry it.
+
+You'll want to know: ૃ, standing alone.
+[a table of 1 row, read aloud]
+ṛ. after a consonant: ૃ, as in હૃદય. standing alone: ?
+The missing letter is ઋ (ṛ). Its print has three parts: a bent left body, a separate central stem with a foot, and a right loop flowing into a descending tail.
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — meet one form.
+ઋ — ṛ.
+Keep ઋ (ṛ) visible. Follow the numbered strip:
+sweep right along the upper left body and turn back down-left.
+lift and descend the central stem into its foot.
+lift again, circle the right loop, and finish through the descending tail.
+Three strokes, two pen lifts: a verified three-stroke teaching-app variant fitted to the bundled printed outline (t30apps.com, ‘Gujarati Alphabet Writing Practice’, version 1.0, ઋ (ṛ) animation, first through third SVG paths).
+
+Writing — notice and trace.
+Finger-trace ઋ (ṛ) once, then air-trace it once. Notice the two lifts: before the stem, and before the loop.
+
+Writing — copy with the model.
+Copy visible ઋ (ṛ) once. Compare only two things: are there three parts, and does the loop come last? Repair one landmark if needed.
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Writing — recall after hiding.
+Hide the model and write the standing vowel ṛ once. Uncover ઋ, compare, and stop after one repair.
+[once you have stopped driving — question: Hide the model and write the standing vowel r from memory.]
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Wrap-up Recall.
+[pause 3 seconds]
+Read ૃ ઋ (ṛ) ઋતુ (ṛtu) aloud. Which part of ઋ (ṛ) is written last? (The right loop and its tail.)
+Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
+
+
+Lesson 8 of 8.
+Review — comparing, and how long.
+
+Warm-up.
+[pause 2 seconds]
+Say "I'm afraid". (mane bīk lāge che.) Then "I want to become a doctor". (māre dāktar banvũ che.) And "my dream is to become a doctor". (mārũ sapnũ dāktar banvānũ che.)
+[once you have stopped driving — write: ૌ (au sign) in સૌથી (sauthī), then ઋ (ṛ) in ઋતુ (ṛtu), from memory]
+
+Guided Practice.
+[pause 2 seconds after each]
+[your turn — say: The city is bigger than the village. Mira is younger than Arun.]
+[pause 8 seconds for the answer]
+[your turn — say: The bus is the cheapest. The fast train is the most expensive.]
+[pause 8 seconds for the answer]
+[your turn — say: I have lived here for two years. It has been raining since morning.]
+[pause 8 seconds for the answer]
+[your turn — say: The shop is open from morning until evening. I worked all day.]
+[pause 8 seconds for the answer]
+[your turn — say: Which season do you like most? I like the monsoon most of all.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"Than"? (કરતાં.) "Most of all"? (સૌથી (sauthī) વધારે.) "For two years": which tense follows? (The present.) Which sign is on સ in સૌથી (sauthī)? (ૌ (au sign).)

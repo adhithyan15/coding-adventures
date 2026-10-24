@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C284-hot-to-avat",
+    "language": "gujarati",
+    "chapter": 284,
+    "sequence": 15340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f29f5ef51fd9bac2"
+  },
+  "findings": []
+}

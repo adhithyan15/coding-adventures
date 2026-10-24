@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C279-kevi-rite-javu",
+    "language": "gujarati",
+    "chapter": 279,
+    "sequence": 15040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d6ff005af213c78"
+  },
+  "findings": []
+}

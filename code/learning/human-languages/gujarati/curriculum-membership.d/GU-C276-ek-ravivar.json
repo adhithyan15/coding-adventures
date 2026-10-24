@@ -1,0 +1,11 @@
+{
+  "id": "GU-C276-ek-ravivar",
+  "pathSegment": "GU-PATH-276-NARRATE-ORDER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-276-NARRATE-ORDER",
+      "order": 3
+    }
+  ]
+}

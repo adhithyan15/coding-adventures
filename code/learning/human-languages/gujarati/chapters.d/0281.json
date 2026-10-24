@@ -1,0 +1,25 @@
+{
+  "chapter": 281,
+  "title": "Feelings and hopes",
+  "label": "ch:gu-feelings-and-hopes",
+  "canDo": "I can say how I feel and felt (mane bīk lāge che, hũ khuś chũ, mane duḥkh thayũ), say what I want to do and become (māre dāktar banvũ che), talk about a wish and a dream, and read and write ઃ and ઇ.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-R281-feelings-and-hopes",
+    "kind": "production",
+    "summary": "Complete GU-R281-feelings-and-hopes: say how you feel, and what you want and hope for.",
+    "assesses": [
+      "GU-LEX-C281-DUKH-01",
+      "GU-SCRIPT-C281-VISARGA-01",
+      "GU-GRAMMAR-C281-FEEL-NOUN-01",
+      "GU-GRAMMAR-C281-FEEL-ADJ-01",
+      "GU-LEX-C281-ICCHA-01",
+      "GU-SCRIPT-C281-I-01",
+      "GU-LEX-C281-SAPNU-01",
+      "GU-GRAMMAR-C281-VU-CHE-01",
+      "GU-GRAMMAR-C281-WISH-VANI-01"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C279-kevi-rite-javu",
+  "pathSegment": "GU-PATH-279-TRAVEL-WAY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-279-TRAVEL-WAY",
+      "order": 1
+    }
+  ]
+}
