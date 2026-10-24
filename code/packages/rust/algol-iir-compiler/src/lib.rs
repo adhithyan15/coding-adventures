@@ -4889,7 +4889,18 @@ impl Compiler {
                 }
             }
             let (base, exponents) = operands.split_first()?;
-            let exponent = literal_nonnegative_integral_arithmetic_power_chain(exponents)?;
+            let exponent = literal_nonnegative_integral_arithmetic_power_chain(exponents)
+                .or_else(|| {
+                    exact_static_nonnegative_integer_reduction_power_chain_with(
+                        exponents,
+                        &|candidate| {
+                            if candidate.rule_name != "proc_call" {
+                                return None;
+                            }
+                            self.exact_static_integer_reduction_leaf_value(candidate)
+                        },
+                    )
+                })?;
             if exponent == 0 {
                 return None;
             }
@@ -12606,22 +12617,10 @@ where
             }
         }
         let (base, exponents) = operands.split_first()?;
-        let (last, prefix) = exponents.split_last()?;
-        let exponent_value = |operand: &GrammarASTNode| {
-            let value = exact_static_integer_reduction_value_with(operand, static_call_value)?;
-            (0..=MAX_POW_UNROLL_EXPONENT as i64)
-                .contains(&value)
-                .then_some(value as u32)
-        };
-        let mut exponent = exponent_value(last)? as u64;
-        for operand in prefix.iter().rev() {
-            let exponent_base = exponent_value(operand)? as u64;
-            exponent = exponent_base.checked_pow(exponent.try_into().ok()?)?;
-            if exponent > MAX_POW_UNROLL_EXPONENT as u64 {
-                return None;
-            }
-        }
-        let exponent = u32::try_from(exponent).ok()?;
+        let exponent = exact_static_nonnegative_integer_reduction_power_chain_with(
+            exponents,
+            static_call_value,
+        )?;
         let value = exact_static_integer_reduction_value_with(base, static_call_value)?
             .checked_pow(exponent)?;
         return (value.unsigned_abs() <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE).then_some(value);
@@ -12664,6 +12663,35 @@ where
     }
 
     (value.unsigned_abs() <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE).then_some(value)
+}
+
+/// Evaluate a right-associative exponent chain whose operands are checked
+/// exact-integer reductions, including bounded static standard-function calls.
+fn exact_static_nonnegative_integer_reduction_power_chain_with<F>(
+    nodes: &[&GrammarASTNode],
+    static_call_value: &F,
+) -> Option<u32>
+where
+    F: Fn(&GrammarASTNode) -> Option<i64>,
+{
+    let (last, prefix) = nodes.split_last()?;
+    let operand_value = |node: &GrammarASTNode| {
+        let value = exact_static_integer_reduction_value_with(node, static_call_value)?;
+        (0..=MAX_POW_UNROLL_EXPONENT as i64)
+            .contains(&value)
+            .then_some(value as u32)
+    };
+    let mut value = operand_value(last)? as u64;
+
+    for node in prefix.iter().rev() {
+        let base = operand_value(node)? as u64;
+        value = base.checked_pow(value.try_into().ok()?)?;
+        if value > MAX_POW_UNROLL_EXPONENT as u64 {
+            return None;
+        }
+    }
+
+    Some(value as u32)
 }
 
 fn integer_gcd(mut left: u64, mut right: u64) -> u64 {
@@ -16136,6 +16164,46 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "two dynamic sign roots, path-dependent signs, calling selectors, and dynamic branches must remain outside the static sign-factor proof",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "unexpected error for {source:?}: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_static_normalizer_exponents() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(sign(pick()) ^ entier(2.75)); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) ^ abs(-2.0)); output(result) end",
+            "begin real procedure pick; pick := -2.25; boolean flag; real result; flag := pick() < 0; result := entier(sign(pick()) ^ sign(if flag then 0.25 else 7.5)); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) ^ entier(4.5 / 2.0) ^ sign(3.75)); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!("checked static normalizers remain bounded power exponents for {source:?}: {error}")
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_static_normalizer_exponents_reject_unproven_forms() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(sign(pick()) ^ sign(0.0)); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(sign(pick()) ^ sign(-3.75)); output(result) end",
+            "begin real procedure pick; pick := 3.5; real procedure power; power := 2.25; real result; result := entier(sign(pick()) ^ sign(power())); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean flag; real result; flag := pick() > 0; result := entier(sign(pick()) ^ sign(if flag then -0.25 else 7.5)); output(result) end",
+            "begin real procedure pick; pick := 3.5; boolean procedure choose; choose := true; real result; result := entier(sign(pick()) ^ sign(if choose() then 0.25 else 7.5)); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(sign(pick()) ^ entier(65.25)); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "zero, negative, dynamic, path-dependent, effectful, and oversized static-normalizer exponents must remain outside the bounded proof",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
