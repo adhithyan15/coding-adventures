@@ -16,8 +16,12 @@ This directory holds three kinds of files:
   `python3.12.3`, `python3.13.16` and `python3.16.0a1`. Each is a **partial**
   pair for the `py-int-print` subset, and `pair-evidence.csv` cites the
   upstream files it was written from. See [Release pairs](#release-pairs-lang84-phase-7a).
-- `subsets.csv` and `corpus/py-int-print/`: the subset and its oracle-backed
-  test cases. See [Corpus](#corpus-py-int-print).
+- Two Python 2 pairs (LANG84 phase 7c slice 1): `python2.2` and
+  `python2.7.18`, partial pairs for the `py2-int-print` subset (the `print`
+  statement and classic `/`). See
+  [Python 2 pairs](#python-2-pairs-lang84-phase-7c-slice-1).
+- `subsets.csv`, `corpus/py-int-print/` and `corpus/py2-int-print/`: the
+  subsets and their oracle-backed test cases. See [Corpus](#corpus-py-int-print-py2-int-print).
 
 The CSV header declares the legacy pairs with
 `legacy-minor-line-pairs: ...`, so `release_inventory.py check` does not
@@ -26,7 +30,8 @@ mistake them for release pairs.
 **Name collision:** `python2.7.*` and `python3.0.*` have the same file names
 that releases `2.7` and `3.0` (tags `v2.7` and `v3.0`) will need. Before either
 release gets its own pair, the legacy file must be moved or deleted, and its
-`legacy-minor-line-pairs` entry dropped.
+`legacy-minor-line-pairs` entry dropped. (Releases `2.2` and `2.7.18` have
+their own pairs; their stems do not collide with `python2.7.*`.)
 
 ## What the inventory holds
 
@@ -165,11 +170,57 @@ rejects it. The other releases accept `1_000`, `0_0` and `00`, and reject
 `1__0`, `1_`, `0_1` and `012`, as their tokenizers do.
 
 **The 3.0 and 2.7 name collision** above still holds. Release `3.0` (final)
-and every Python 2 release have no pair. Python 2 also needs a `print`
-statement shape and its own profile (`/` floors on ints), so it is a later
-slice.
+and release `2.7` have no pair. Python 2 is in the next section.
 
-## Corpus (`py-int-print`)
+## Python 2 pairs (LANG84 phase 7c slice 1)
+
+`py2-int-print` is Python 2's integer subset: the `print` statement (`print`
+and `print <expr>`) and `+ - * / // %`, where `/` is classic division and
+floors on ints. These two releases have a pair:
+
+| Release | Why this release | Token class | Oracle |
+| --- | --- | --- | --- |
+| 2.2 | first final release with `//` (PEP 238) | 29 keywords (`print` among them); 44 operators, with `<>` and the backquote | pinned source at the tag |
+| 2.7.18 | last Python 2 release | as 2.2 plus `@` (45 operators) and the keywords `as` and `with` (31) | pinned source at the tag |
+
+Both rows are `partial`, stage `P`, and name `py2-int-print` in
+`grammar_subset`, `iir_status` and `backend_status`, with profile `py2`.
+There is no host `python2`, so the evidence is the tags' own files, by blob ID
+in `pair-evidence.csv`:
+- `Grammar/Grammar`, `Parser/tokenizer.c` and `Lib/keyword.py`, which give
+  the syntax;
+- `Objects/intobject.c`, for classic `/` through `i_divmod`,
+  `ZeroDivisionError`, and promotion past the C `long`;
+- `Python/ceval.c`, for `PRINT_ITEM` and `PRINT_NEWLINE`;
+- `Python/pythonrun.c`, for `Py_FlushLine` before a traceback.
+
+Those six blob IDs were computed with `git hash-object` over the files' bytes
+at each tag, retrieved 2026-10-24.
+
+The grammar is py-int-print's plus one rule, `print_stmt = "print" [
+expression { COMMA expression } [ COMMA ] ]`. The compiler refuses
+`print a, b` and `print a,` (`Unsupported`): CPython 2 writes a pending
+softspace as a newline before an uncaught exception, which only a trap
+handler could reproduce. Integers are decimal only. `010` (octal 8 in Python
+2), `00`, `1L` and `1_000` are lexer errors.
+
+The release sweep puts 2.2 and 2.7.18 in one IIR-identity class, so
+`lang_matrix` runs the corpus on 2.2, and `check --matrix` credits those rows
+to 2.7.18.
+
+## Corpus (`py-int-print`, `py2-int-print`)
+
+`corpus/py2-int-print/` has the same layout as the `py-int-print` corpus
+below. There is no host `python2`, so each `.cite` names the pinned historical
+source as its oracle.
+- A rejected case records `host-python2: accepts` or `rejects`.
+- A `Trap.Overflow` case records the bigger integer CPython 2 prints.
+
+`python-iir-compiler` cross-checks every accepted case against host
+`python3`. It translates `print X` to `print(X)` and classic `/` to `//`,
+which is exact on ints because both languages floor and neither overflows.
+
+### `py-int-print`
 
 `corpus/py-int-print/` holds one file set per case:
 

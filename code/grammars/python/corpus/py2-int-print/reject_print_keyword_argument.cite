@@ -1,0 +1,4 @@
+oracle: pinned historical source, CPython v2.2 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+host-python2: rejects
+result: py2-int-print refuses it with a Parse error naming the release
+why: Python 3's print call: in Python 2 `print` is a keyword and `(1, end=2)` is not an expression (CPython 2 raises SyntaxError)

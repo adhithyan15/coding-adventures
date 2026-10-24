@@ -1,0 +1,4 @@
+oracle: pinned historical source, CPython v2.2 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+host-python2: accepts
+result: py2-int-print refuses it with a Lex error naming the release
+why: CPython 2 reads 010 as octal 8 (Parser/tokenizer.c); octal literals are not lexed here
