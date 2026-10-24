@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MR-R527-review-520-527
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 30220
+chapter: 527
+type: review
+headword: (dialogue)
+gloss: a review of the words from Pipes and Leaks to At the Stove
+concept_tag: REVIEW
+prerequisites: [MR-C520-nal, MR-C520-galne, MR-C520-galti, MR-C520-gatar, MR-C520-tumbne, MR-C521-bheg, MR-C521-tadakne, MR-C521-gond, MR-C521-karvat, MR-C521-limpne, MR-C522-divankhana, MR-C522-sayangrh, MR-C522-gacci, MR-C522-pharsi, MR-C522-tangne, MR-C523-galica, MR-C523-rajai, MR-C523-macchardani, MR-C523-catai, MR-C523-gundalne, MR-C524-kacra, MR-C524-kersuni, MR-C524-potere, MR-C524-jhatakne, MR-C524-ghasne, MR-C525-kalsi, MR-C525-math, MR-C525-otne, MR-C525-sandne, MR-C525-visalne, MR-C526-segdi, MR-C526-ota, MR-C526-polpat, MR-C526-malne, MR-C526-kisne, MR-C527-cirne, MR-C527-ukalne-boil, MR-C527-talne-fry, MR-C527-dhavalne, MR-C527-karapne]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MR-LEX-C520-NAL520-01, MR-LEX-C520-NAL520-02, MR-LEX-C520-NAL520-03, MR-LEX-C520-NAL520-04, MR-LEX-C520-NAL520-05, MR-LEX-C521-DURUSTI521-01, MR-LEX-C521-DURUSTI521-02, MR-LEX-C521-DURUSTI521-03, MR-LEX-C521-DURUSTI521-04, MR-LEX-C521-DURUSTI521-05, MR-LEX-C522-KHOLI522-01, MR-LEX-C522-KHOLI522-02, MR-LEX-C522-KHOLI522-03, MR-LEX-C522-KHOLI522-04, MR-LEX-C522-KHOLI522-05, MR-LEX-C523-GALICHA523-01, MR-LEX-C523-GALICHA523-02, MR-LEX-C523-GALICHA523-03, MR-LEX-C523-GALICHA523-04, MR-LEX-C523-GALICHA523-05, MR-LEX-C524-SAPHAI524-01, MR-LEX-C524-SAPHAI524-02, MR-LEX-C524-SAPHAI524-03, MR-LEX-C524-SAPHAI524-04, MR-LEX-C524-SAPHAI524-05, MR-LEX-C525-BHANDI525-01, MR-LEX-C525-BHANDI525-02, MR-LEX-C525-BHANDI525-03, MR-LEX-C525-BHANDI525-04, MR-LEX-C525-BHANDI525-05, MR-LEX-C526-OTA526-01, MR-LEX-C526-OTA526-02, MR-LEX-C526-OTA526-03, MR-LEX-C526-OTA526-04, MR-LEX-C526-OTA526-05, MR-LEX-C527-SHIJAVNE527-01, MR-LEX-C527-SHIJAVNE527-02, MR-LEX-C527-SHIJAVNE527-03, MR-LEX-C527-SHIJAVNE527-04, MR-LEX-C527-SHIJAVNE527-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MR-LEX-C520-NAL520-01, MR-LEX-C520-NAL520-02, MR-LEX-C520-NAL520-03, MR-LEX-C520-NAL520-04, MR-LEX-C520-NAL520-05, MR-LEX-C521-DURUSTI521-01, MR-LEX-C521-DURUSTI521-02, MR-LEX-C521-DURUSTI521-03, MR-LEX-C521-DURUSTI521-04, MR-LEX-C521-DURUSTI521-05, MR-LEX-C522-KHOLI522-01, MR-LEX-C522-KHOLI522-02, MR-LEX-C522-KHOLI522-03, MR-LEX-C522-KHOLI522-04, MR-LEX-C522-KHOLI522-05, MR-LEX-C523-GALICHA523-01, MR-LEX-C523-GALICHA523-02, MR-LEX-C523-GALICHA523-03, MR-LEX-C523-GALICHA523-04, MR-LEX-C523-GALICHA523-05, MR-LEX-C524-SAPHAI524-01, MR-LEX-C524-SAPHAI524-02, MR-LEX-C524-SAPHAI524-03, MR-LEX-C524-SAPHAI524-04, MR-LEX-C524-SAPHAI524-05, MR-LEX-C525-BHANDI525-01, MR-LEX-C525-BHANDI525-02, MR-LEX-C525-BHANDI525-03, MR-LEX-C525-BHANDI525-04, MR-LEX-C525-BHANDI525-05, MR-LEX-C526-OTA526-01, MR-LEX-C526-OTA526-02, MR-LEX-C526-OTA526-03, MR-LEX-C526-OTA526-04, MR-LEX-C526-OTA526-05, MR-LEX-C527-SHIJAVNE527-01, MR-LEX-C527-SHIJAVNE527-02, MR-LEX-C527-SHIJAVNE527-03, MR-LEX-C527-SHIJAVNE527-04, MR-LEX-C527-SHIJAVNE527-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard
+reviews_of: [MR-C520-nal, MR-C520-galne, MR-C520-galti, MR-C520-gatar, MR-C520-tumbne, MR-C521-bheg, MR-C521-tadakne, MR-C521-gond, MR-C521-karvat, MR-C521-limpne, MR-C522-divankhana, MR-C522-sayangrh, MR-C522-gacci, MR-C522-pharsi, MR-C522-tangne, MR-C523-galica, MR-C523-rajai, MR-C523-macchardani, MR-C523-catai, MR-C523-gundalne, MR-C524-kacra, MR-C524-kersuni, MR-C524-potere, MR-C524-jhatakne, MR-C524-ghasne, MR-C525-kalsi, MR-C525-math, MR-C525-otne, MR-C525-sandne, MR-C525-visalne, MR-C526-segdi, MR-C526-ota, MR-C526-polpat, MR-C526-malne, MR-C526-kisne, MR-C527-cirne, MR-C527-ukalne-boil, MR-C527-talne-fry, MR-C527-dhavalne, MR-C527-karapne]
+---
+
+# Looking back: from Pipes and Leaks to At the Stove
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C520-NAL520-01, MR-LEX-C520-NAL520-02] -->
+
+[PAUSE 3s] Say the Marathi for a faucet and to drip.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C520-NAL520-01, MR-LEX-C520-NAL520-02, MR-LEX-C520-NAL520-03, MR-LEX-C520-NAL520-04, MR-LEX-C520-NAL520-05, MR-LEX-C521-DURUSTI521-01, MR-LEX-C521-DURUSTI521-02, MR-LEX-C521-DURUSTI521-03, MR-LEX-C521-DURUSTI521-04, MR-LEX-C521-DURUSTI521-05, MR-LEX-C522-KHOLI522-01, MR-LEX-C522-KHOLI522-02, MR-LEX-C522-KHOLI522-03, MR-LEX-C522-KHOLI522-04, MR-LEX-C522-KHOLI522-05, MR-LEX-C523-GALICHA523-01, MR-LEX-C523-GALICHA523-02, MR-LEX-C523-GALICHA523-03, MR-LEX-C523-GALICHA523-04, MR-LEX-C523-GALICHA523-05, MR-LEX-C524-SAPHAI524-01, MR-LEX-C524-SAPHAI524-02, MR-LEX-C524-SAPHAI524-03, MR-LEX-C524-SAPHAI524-04, MR-LEX-C524-SAPHAI524-05, MR-LEX-C525-BHANDI525-01, MR-LEX-C525-BHANDI525-02, MR-LEX-C525-BHANDI525-03, MR-LEX-C525-BHANDI525-04, MR-LEX-C525-BHANDI525-05, MR-LEX-C526-OTA526-01, MR-LEX-C526-OTA526-02, MR-LEX-C526-OTA526-03, MR-LEX-C526-OTA526-04, MR-LEX-C526-OTA526-05, MR-LEX-C527-SHIJAVNE527-01, MR-LEX-C527-SHIJAVNE527-02, MR-LEX-C527-SHIJAVNE527-03, MR-LEX-C527-SHIJAVNE527-04, MR-LEX-C527-SHIJAVNE527-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a faucet, to drip, a leak, a drain, to get blocked]
+- [YOU SAY: a fissure, to crack, glue, a saw, to plaster]
+- [YOU SAY: a living room, a bedroom, a terrace, a floor tile, to hang up]
+- [YOU SAY: a carpet, a quilt, a mosquito net, a mat, to roll up]
+- [YOU SAY: rubbish, a grass broom, a floor cloth, to shake off, to scrub]
+- [YOU SAY: a brass water pot, a clay water pot, to pour, to spill, to rinse]
+- [YOU SAY: a stove, a kitchen counter, a rolling board, to knead, to grate]
+- [YOU SAY: to chop, to boil, to fry, to stir, to get burnt]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C520-NAL520-01, MR-LEX-C520-NAL520-02, MR-LEX-C520-NAL520-03, MR-LEX-C520-NAL520-04, MR-LEX-C520-NAL520-05, MR-LEX-C521-DURUSTI521-01, MR-LEX-C521-DURUSTI521-02, MR-LEX-C521-DURUSTI521-03, MR-LEX-C521-DURUSTI521-04, MR-LEX-C521-DURUSTI521-05, MR-LEX-C522-KHOLI522-01, MR-LEX-C522-KHOLI522-02, MR-LEX-C522-KHOLI522-03, MR-LEX-C522-KHOLI522-04, MR-LEX-C522-KHOLI522-05, MR-LEX-C523-GALICHA523-01, MR-LEX-C523-GALICHA523-02, MR-LEX-C523-GALICHA523-03, MR-LEX-C523-GALICHA523-04, MR-LEX-C523-GALICHA523-05, MR-LEX-C524-SAPHAI524-01, MR-LEX-C524-SAPHAI524-02, MR-LEX-C524-SAPHAI524-03, MR-LEX-C524-SAPHAI524-04, MR-LEX-C524-SAPHAI524-05, MR-LEX-C525-BHANDI525-01, MR-LEX-C525-BHANDI525-02, MR-LEX-C525-BHANDI525-03, MR-LEX-C525-BHANDI525-04, MR-LEX-C525-BHANDI525-05, MR-LEX-C526-OTA526-01, MR-LEX-C526-OTA526-02, MR-LEX-C526-OTA526-03, MR-LEX-C526-OTA526-04, MR-LEX-C526-OTA526-05, MR-LEX-C527-SHIJAVNE527-01, MR-LEX-C527-SHIJAVNE527-02, MR-LEX-C527-SHIJAVNE527-03, MR-LEX-C527-SHIJAVNE527-04, MR-LEX-C527-SHIJAVNE527-05] -->
+
+[PAUSE 3s] A faucet? (**नळ**, *naḷ*.) To drip? (**गळणे**, *gaḷṇe*.) A leak? (**गळती**, *gaḷtī*.) A drain? (**गटार**, *gaṭār*.) To get blocked? (**तुंबणे**, *tumbṇe*.) A fissure? (**भेग**, *bheg*.) To crack? (**तडकणे**, *taḍakṇe*.) Glue? (**गोंद**, *gond*.) A saw? (**करवत**, *karvat*.) To plaster? (**लिंपणे**, *limpṇe*.) A living room? (**दिवाणखाना**, *divāṇkhānā*.) A bedroom? (**शयनगृह**, *śayangṛh*.) A terrace? (**गच्ची**, *gaccī*.) A floor tile? (**फरशी**, *pharśī*.) To hang up? (**टांगणे**, *ṭāṅgṇe*.) A carpet? (**गालिचा**, *gālicā*.) A quilt? (**रजई**, *rajaī*.) A mosquito net? (**मच्छरदाणी**, *macchardāṇī*.) A mat? (**चटई**, *caṭaī*.) To roll up? (**गुंडाळणे**, *guṇḍāḷṇe*.) Rubbish? (**कचरा**, *kacrā*.) A grass broom? (**केरसुणी**, *kersuṇī*.) A floor cloth? (**पोतेरे**, *potere*.) To shake off? (**झटकणे**, *jhaṭakṇe*.) To scrub? (**घासणे**, *ghāsṇe*.) A brass water pot? (**कळशी**, *kaḷśī*.) A clay water pot? (**माठ**, *māṭh*.) To pour? (**ओतणे**, *otṇe*.) To spill? (**सांडणे**, *sāṇḍṇe*.) To rinse? (**विसळणे**, *visaḷṇe*.) A stove? (**शेगडी**, *śegḍī*.) A kitchen counter? (**ओटा**, *oṭā*.) A rolling board? (**पोळपाट**, *poḷpāṭ*.) To knead? (**मळणे**, *maḷṇe*.) To grate? (**किसणे**, *kisṇe*.) To chop? (**चिरणे**, *cirṇe*.) To boil? (**उकळणे**, *ukaḷṇe*.) To fry? (**तळणे**, *taḷṇe*.) To stir? (**ढवळणे**, *ḍhavaḷṇe*.) To get burnt? (**करपणे**, *karapṇe*.)
+`;export{t};

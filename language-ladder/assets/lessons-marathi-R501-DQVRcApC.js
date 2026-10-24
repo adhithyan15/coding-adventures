@@ -1,0 +1,105 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MR-R503-review-497-503
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 28760
+chapter: 503
+type: review
+headword: (dialogue)
+gloss: a review of the words from Elder and Younger to Wounds and Forgiveness
+concept_tag: REVIEW
+prerequisites: [MR-C497-dhakta, MR-C497-thorla, MR-C497-ekulta, MR-C497-culat, MR-C497-savatra, MR-C498-balpan, MR-C498-tarunya, MR-C498-vardhakya, MR-C498-vay, MR-C498-kisor, MR-C499-garodar, MR-C499-balantpan, MR-C499-tanha, MR-C499-rangne, MR-C499-pajne, MR-C500-sangopan, MR-C500-sambhalne, MR-C500-jopasne, MR-C500-lad-karne, MR-C500-dattak-ghene, MR-C501-sparsa, MR-C501-mithi-marne, MR-C501-gonjarne, MR-C501-thopatne, MR-C501-kurvalne, MR-C502-tatatut, MR-C502-kurbur, MR-C502-duravne, MR-C502-dhusphusne, MR-C502-abola-dharne, MR-C503-visvasghat, MR-C503-bocne, MR-C503-divacne, MR-C503-khadsavne, MR-C503-maph-karne]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MR-LEX-C497-THORLA497-01, MR-LEX-C497-THORLA497-02, MR-LEX-C497-THORLA497-03, MR-LEX-C497-THORLA497-04, MR-LEX-C497-THORLA497-05, MR-LEX-C498-VAY498-01, MR-LEX-C498-VAY498-02, MR-LEX-C498-VAY498-03, MR-LEX-C498-VAY498-04, MR-LEX-C498-VAY498-05, MR-LEX-C499-BAL499-01, MR-LEX-C499-BAL499-02, MR-LEX-C499-BAL499-03, MR-LEX-C499-BAL499-04, MR-LEX-C499-BAL499-05, MR-LEX-C500-SANGOPAN500-01, MR-LEX-C500-SANGOPAN500-02, MR-LEX-C500-SANGOPAN500-03, MR-LEX-C500-SANGOPAN500-04, MR-LEX-C500-SANGOPAN500-05, MR-LEX-C501-MITHI501-01, MR-LEX-C501-MITHI501-02, MR-LEX-C501-MITHI501-03, MR-LEX-C501-MITHI501-04, MR-LEX-C501-MITHI501-05, MR-LEX-C502-DURAVA502-01, MR-LEX-C502-DURAVA502-02, MR-LEX-C502-DURAVA502-03, MR-LEX-C502-DURAVA502-04, MR-LEX-C502-DURAVA502-05, MR-LEX-C503-MAPH503-01, MR-LEX-C503-MAPH503-02, MR-LEX-C503-MAPH503-03, MR-LEX-C503-MAPH503-04, MR-LEX-C503-MAPH503-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MR-LEX-C497-THORLA497-01, MR-LEX-C497-THORLA497-02, MR-LEX-C497-THORLA497-03, MR-LEX-C497-THORLA497-04, MR-LEX-C497-THORLA497-05, MR-LEX-C498-VAY498-01, MR-LEX-C498-VAY498-02, MR-LEX-C498-VAY498-03, MR-LEX-C498-VAY498-04, MR-LEX-C498-VAY498-05, MR-LEX-C499-BAL499-01, MR-LEX-C499-BAL499-02, MR-LEX-C499-BAL499-03, MR-LEX-C499-BAL499-04, MR-LEX-C499-BAL499-05, MR-LEX-C500-SANGOPAN500-01, MR-LEX-C500-SANGOPAN500-02, MR-LEX-C500-SANGOPAN500-03, MR-LEX-C500-SANGOPAN500-04, MR-LEX-C500-SANGOPAN500-05, MR-LEX-C501-MITHI501-01, MR-LEX-C501-MITHI501-02, MR-LEX-C501-MITHI501-03, MR-LEX-C501-MITHI501-04, MR-LEX-C501-MITHI501-05, MR-LEX-C502-DURAVA502-01, MR-LEX-C502-DURAVA502-02, MR-LEX-C502-DURAVA502-03, MR-LEX-C502-DURAVA502-04, MR-LEX-C502-DURAVA502-05, MR-LEX-C503-MAPH503-01, MR-LEX-C503-MAPH503-02, MR-LEX-C503-MAPH503-03, MR-LEX-C503-MAPH503-04, MR-LEX-C503-MAPH503-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard
+reviews_of: [MR-C497-dhakta, MR-C497-thorla, MR-C497-ekulta, MR-C497-culat, MR-C497-savatra, MR-C498-balpan, MR-C498-tarunya, MR-C498-vardhakya, MR-C498-vay, MR-C498-kisor, MR-C499-garodar, MR-C499-balantpan, MR-C499-tanha, MR-C499-rangne, MR-C499-pajne, MR-C500-sangopan, MR-C500-sambhalne, MR-C500-jopasne, MR-C500-lad-karne, MR-C500-dattak-ghene, MR-C501-sparsa, MR-C501-mithi-marne, MR-C501-gonjarne, MR-C501-thopatne, MR-C501-kurvalne, MR-C502-tatatut, MR-C502-kurbur, MR-C502-duravne, MR-C502-dhusphusne, MR-C502-abola-dharne, MR-C503-visvasghat, MR-C503-bocne, MR-C503-divacne, MR-C503-khadsavne, MR-C503-maph-karne]
+---
+
+# Looking back: family, care and parting
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C497-THORLA497-01, MR-LEX-C497-THORLA497-02] -->
+
+[PAUSE 3s] Say the Marathi for younger and elder.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C497-THORLA497-01, MR-LEX-C497-THORLA497-02, MR-LEX-C497-THORLA497-03, MR-LEX-C497-THORLA497-04, MR-LEX-C497-THORLA497-05, MR-LEX-C498-VAY498-01, MR-LEX-C498-VAY498-02, MR-LEX-C498-VAY498-03, MR-LEX-C498-VAY498-04, MR-LEX-C498-VAY498-05, MR-LEX-C499-BAL499-01, MR-LEX-C499-BAL499-02, MR-LEX-C499-BAL499-03, MR-LEX-C499-BAL499-04, MR-LEX-C499-BAL499-05, MR-LEX-C500-SANGOPAN500-01, MR-LEX-C500-SANGOPAN500-02, MR-LEX-C500-SANGOPAN500-03, MR-LEX-C500-SANGOPAN500-04, MR-LEX-C500-SANGOPAN500-05, MR-LEX-C501-MITHI501-01, MR-LEX-C501-MITHI501-02, MR-LEX-C501-MITHI501-03, MR-LEX-C501-MITHI501-04, MR-LEX-C501-MITHI501-05, MR-LEX-C502-DURAVA502-01, MR-LEX-C502-DURAVA502-02, MR-LEX-C502-DURAVA502-03, MR-LEX-C502-DURAVA502-04, MR-LEX-C502-DURAVA502-05, MR-LEX-C503-MAPH503-01, MR-LEX-C503-MAPH503-02, MR-LEX-C503-MAPH503-03, MR-LEX-C503-MAPH503-04, MR-LEX-C503-MAPH503-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: younger, elder, the only one, of a paternal uncle, step-]
+- [YOU SAY: childhood, youth, old age, age, a teenager]
+- [YOU SAY: pregnant, childbirth, newborn, to crawl, to give to drink]
+- [YOU SAY: upbringing, to take care of, to nurture, to pamper, to adopt]
+- [YOU SAY: a touch, to hug, to stroke, to pat, to caress]
+- [YOU SAY: a separation, bickering, to drift apart, to seethe, to stop speaking to]
+- [YOU SAY: a betrayal, to rankle, to goad, to rebuke, to forgive]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C497-THORLA497-01, MR-LEX-C497-THORLA497-02, MR-LEX-C497-THORLA497-03, MR-LEX-C497-THORLA497-04, MR-LEX-C497-THORLA497-05, MR-LEX-C498-VAY498-01, MR-LEX-C498-VAY498-02, MR-LEX-C498-VAY498-03, MR-LEX-C498-VAY498-04, MR-LEX-C498-VAY498-05, MR-LEX-C499-BAL499-01, MR-LEX-C499-BAL499-02, MR-LEX-C499-BAL499-03, MR-LEX-C499-BAL499-04, MR-LEX-C499-BAL499-05, MR-LEX-C500-SANGOPAN500-01, MR-LEX-C500-SANGOPAN500-02, MR-LEX-C500-SANGOPAN500-03, MR-LEX-C500-SANGOPAN500-04, MR-LEX-C500-SANGOPAN500-05, MR-LEX-C501-MITHI501-01, MR-LEX-C501-MITHI501-02, MR-LEX-C501-MITHI501-03, MR-LEX-C501-MITHI501-04, MR-LEX-C501-MITHI501-05, MR-LEX-C502-DURAVA502-01, MR-LEX-C502-DURAVA502-02, MR-LEX-C502-DURAVA502-03, MR-LEX-C502-DURAVA502-04, MR-LEX-C502-DURAVA502-05, MR-LEX-C503-MAPH503-01, MR-LEX-C503-MAPH503-02, MR-LEX-C503-MAPH503-03, MR-LEX-C503-MAPH503-04, MR-LEX-C503-MAPH503-05] -->
+
+[PAUSE 3s] Younger? (**धाकटा**, *dhākṭā*.) Elder? (**थोरला**, *thorlā*.) The only one? (**एकुलता**, *ekultā*.) Of a paternal uncle? (**चुलत**, *culat*.) Step-? (**सावत्र**, *sāvatra*.) Childhood? (**बालपण**, *bālpaṇ*.) Youth? (**तारुण्य**, *tāruṇya*.) Old age? (**वार्धक्य**, *vārdhakya*.) Age? (**वय**, *vay*.) A teenager? (**किशोर**, *kiśor*.) Pregnant? (**गरोदर**, *garodar*.) Childbirth? (**बाळंतपण**, *bāḷantpaṇ*.) Newborn? (**तान्हा**, *tānhā*.) To crawl? (**रांगणे**, *rāṅgṇe*.) To give to drink? (**पाजणे**, *pājṇe*.) Upbringing? (**संगोपन**, *saṅgopan*.) To take care of? (**सांभाळणे**, *sāmbhāḷṇe*.) To nurture? (**जोपासणे**, *jopāsṇe*.) To pamper? (**लाड करणे**, *lāḍ karṇe*.) To adopt? (**दत्तक घेणे**, *dattak gheṇe*.) A touch? (**स्पर्श**, *sparśa*.) To hug? (**मिठी मारणे**, *miṭhī mārṇe*.) To stroke? (**गोंजारणे**, *goñjārṇe*.) To pat? (**थोपटणे**, *thopaṭṇe*.) To caress? (**कुरवाळणे**, *kurvāḷṇe*.) A separation? (**ताटातूट**, *tāṭātūṭ*.) Bickering? (**कुरबुर**, *kurbur*.) To drift apart? (**दुरावणे**, *durāvṇe*.) To seethe? (**धुसफुसणे**, *dhusphusṇe*.) To stop speaking to? (**अबोला धरणे**, *abolā dharṇe*.) A betrayal? (**विश्वासघात**, *viśvāsghāt*.) To rankle? (**बोचणे**, *bocṇe*.) To goad? (**डिवचणे**, *ḍivacṇe*.) To rebuke? (**खडसावणे**, *khaḍsāvṇe*.) To forgive? (**माफ करणे**, *māph karṇe*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MR-R503-review-final-503
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 28770
+chapter: 503
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [MR-C503-visvasghat, MR-C503-bocne, MR-C503-divacne, MR-C503-khadsavne, MR-C503-maph-karne]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MR-LEX-C503-MAPH503-01, MR-LEX-C503-MAPH503-02, MR-LEX-C503-MAPH503-03, MR-LEX-C503-MAPH503-04, MR-LEX-C503-MAPH503-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MR-LEX-C503-MAPH503-01, MR-LEX-C503-MAPH503-02, MR-LEX-C503-MAPH503-03, MR-LEX-C503-MAPH503-04, MR-LEX-C503-MAPH503-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard
+reviews_of: [MR-C503-visvasghat, MR-C503-bocne, MR-C503-divacne, MR-C503-khadsavne, MR-C503-maph-karne]
+---
+
+# Wounds and Forgiveness — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C503-MAPH503-01, MR-LEX-C503-MAPH503-02] -->
+
+[PAUSE 3s] Say the Marathi for a betrayal and to rankle.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C503-MAPH503-01, MR-LEX-C503-MAPH503-02, MR-LEX-C503-MAPH503-03, MR-LEX-C503-MAPH503-04, MR-LEX-C503-MAPH503-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a betrayal, to rankle, to goad, to rebuke, to forgive]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C503-MAPH503-01, MR-LEX-C503-MAPH503-02, MR-LEX-C503-MAPH503-03, MR-LEX-C503-MAPH503-04, MR-LEX-C503-MAPH503-05] -->
+
+[PAUSE 3s] A betrayal? (**विश्वासघात**, *viśvāsghāt*.) To rankle? (**बोचणे**, *bocṇe*.) To goad? (**डिवचणे**, *ḍivacṇe*.) To rebuke? (**खडसावणे**, *khaḍsāvṇe*.) To forgive? (**माफ करणे**, *māph karṇe*.)
+`;export{t as n,r as t};

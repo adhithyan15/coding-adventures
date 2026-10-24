@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MR-R481-review-474-481
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 27630
+chapter: 481
+type: review
+headword: (dialogue)
+gloss: a review of the words from Tidy and Scatterbrained to Coughs and Colds
+concept_tag: REVIEW
+prerequisites: [MR-C474-nitnetka, MR-C474-gabala, MR-C474-vendhla, MR-C474-pasara, MR-C474-sista, MR-C475-sahsi, MR-C475-darpok, MR-C475-bindhasta, MR-C475-bephikir, MR-C475-bhine, MR-C476-bubul, MR-C476-nakpudi, MR-C476-hirdi, MR-C476-dadhi, MR-C476-misi, MR-C477-talhat, MR-C477-muth, MR-C477-mandi, MR-C477-potri, MR-C477-ghota, MR-C478-kavti, MR-C478-kana, MR-C478-bargadi, MR-C478-atde, MR-C478-sandha, MR-C479-nadi, MR-C479-nas, MR-C479-ghasa, MR-C479-pesi, MR-C479-kalij, MR-C480-tabyet, MR-C480-laksan, MR-C480-thakva, MR-C480-asakta, MR-C480-malmalne, MR-C481-padse, MR-C481-kaph, MR-C481-sinkne, MR-C481-sinkarne, MR-C481-khakarne]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MR-LEX-C474-SHISTA474-01, MR-LEX-C474-SHISTA474-02, MR-LEX-C474-SHISTA474-03, MR-LEX-C474-SHISTA474-04, MR-LEX-C474-SHISTA474-05, MR-LEX-C475-SAHAS475-01, MR-LEX-C475-SAHAS475-02, MR-LEX-C475-SAHAS475-03, MR-LEX-C475-SAHAS475-04, MR-LEX-C475-SAHAS475-05, MR-LEX-C476-CEHRA476-01, MR-LEX-C476-CEHRA476-02, MR-LEX-C476-CEHRA476-03, MR-LEX-C476-CEHRA476-04, MR-LEX-C476-CEHRA476-05, MR-LEX-C477-HAT477-01, MR-LEX-C477-HAT477-02, MR-LEX-C477-HAT477-03, MR-LEX-C477-HAT477-04, MR-LEX-C477-HAT477-05, MR-LEX-C478-HAD478-01, MR-LEX-C478-HAD478-02, MR-LEX-C478-HAD478-03, MR-LEX-C478-HAD478-04, MR-LEX-C478-HAD478-05, MR-LEX-C479-NADI479-01, MR-LEX-C479-NADI479-02, MR-LEX-C479-NADI479-03, MR-LEX-C479-NADI479-04, MR-LEX-C479-NADI479-05, MR-LEX-C480-TABYET480-01, MR-LEX-C480-TABYET480-02, MR-LEX-C480-TABYET480-03, MR-LEX-C480-TABYET480-04, MR-LEX-C480-TABYET480-05, MR-LEX-C481-SARDI481-01, MR-LEX-C481-SARDI481-02, MR-LEX-C481-SARDI481-03, MR-LEX-C481-SARDI481-04, MR-LEX-C481-SARDI481-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MR-LEX-C474-SHISTA474-01, MR-LEX-C474-SHISTA474-02, MR-LEX-C474-SHISTA474-03, MR-LEX-C474-SHISTA474-04, MR-LEX-C474-SHISTA474-05, MR-LEX-C475-SAHAS475-01, MR-LEX-C475-SAHAS475-02, MR-LEX-C475-SAHAS475-03, MR-LEX-C475-SAHAS475-04, MR-LEX-C475-SAHAS475-05, MR-LEX-C476-CEHRA476-01, MR-LEX-C476-CEHRA476-02, MR-LEX-C476-CEHRA476-03, MR-LEX-C476-CEHRA476-04, MR-LEX-C476-CEHRA476-05, MR-LEX-C477-HAT477-01, MR-LEX-C477-HAT477-02, MR-LEX-C477-HAT477-03, MR-LEX-C477-HAT477-04, MR-LEX-C477-HAT477-05, MR-LEX-C478-HAD478-01, MR-LEX-C478-HAD478-02, MR-LEX-C478-HAD478-03, MR-LEX-C478-HAD478-04, MR-LEX-C478-HAD478-05, MR-LEX-C479-NADI479-01, MR-LEX-C479-NADI479-02, MR-LEX-C479-NADI479-03, MR-LEX-C479-NADI479-04, MR-LEX-C479-NADI479-05, MR-LEX-C480-TABYET480-01, MR-LEX-C480-TABYET480-02, MR-LEX-C480-TABYET480-03, MR-LEX-C480-TABYET480-04, MR-LEX-C480-TABYET480-05, MR-LEX-C481-SARDI481-01, MR-LEX-C481-SARDI481-02, MR-LEX-C481-SARDI481-03, MR-LEX-C481-SARDI481-04, MR-LEX-C481-SARDI481-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard
+reviews_of: [MR-C474-nitnetka, MR-C474-gabala, MR-C474-vendhla, MR-C474-pasara, MR-C474-sista, MR-C475-sahsi, MR-C475-darpok, MR-C475-bindhasta, MR-C475-bephikir, MR-C475-bhine, MR-C476-bubul, MR-C476-nakpudi, MR-C476-hirdi, MR-C476-dadhi, MR-C476-misi, MR-C477-talhat, MR-C477-muth, MR-C477-mandi, MR-C477-potri, MR-C477-ghota, MR-C478-kavti, MR-C478-kana, MR-C478-bargadi, MR-C478-atde, MR-C478-sandha, MR-C479-nadi, MR-C479-nas, MR-C479-ghasa, MR-C479-pesi, MR-C479-kalij, MR-C480-tabyet, MR-C480-laksan, MR-C480-thakva, MR-C480-asakta, MR-C480-malmalne, MR-C481-padse, MR-C481-kaph, MR-C481-sinkne, MR-C481-sinkarne, MR-C481-khakarne]
+---
+
+# Looking back: from Tidy and Scatterbrained to Coughs and Colds
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C474-SHISTA474-01, MR-LEX-C474-SHISTA474-02] -->
+
+[PAUSE 3s] Say the Marathi for tidy and sloppy.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C474-SHISTA474-01, MR-LEX-C474-SHISTA474-02, MR-LEX-C474-SHISTA474-03, MR-LEX-C474-SHISTA474-04, MR-LEX-C474-SHISTA474-05, MR-LEX-C475-SAHAS475-01, MR-LEX-C475-SAHAS475-02, MR-LEX-C475-SAHAS475-03, MR-LEX-C475-SAHAS475-04, MR-LEX-C475-SAHAS475-05, MR-LEX-C476-CEHRA476-01, MR-LEX-C476-CEHRA476-02, MR-LEX-C476-CEHRA476-03, MR-LEX-C476-CEHRA476-04, MR-LEX-C476-CEHRA476-05, MR-LEX-C477-HAT477-01, MR-LEX-C477-HAT477-02, MR-LEX-C477-HAT477-03, MR-LEX-C477-HAT477-04, MR-LEX-C477-HAT477-05, MR-LEX-C478-HAD478-01, MR-LEX-C478-HAD478-02, MR-LEX-C478-HAD478-03, MR-LEX-C478-HAD478-04, MR-LEX-C478-HAD478-05, MR-LEX-C479-NADI479-01, MR-LEX-C479-NADI479-02, MR-LEX-C479-NADI479-03, MR-LEX-C479-NADI479-04, MR-LEX-C479-NADI479-05, MR-LEX-C480-TABYET480-01, MR-LEX-C480-TABYET480-02, MR-LEX-C480-TABYET480-03, MR-LEX-C480-TABYET480-04, MR-LEX-C480-TABYET480-05, MR-LEX-C481-SARDI481-01, MR-LEX-C481-SARDI481-02, MR-LEX-C481-SARDI481-03, MR-LEX-C481-SARDI481-04, MR-LEX-C481-SARDI481-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: tidy, sloppy, scatterbrained, a mess, discipline]
+- [YOU SAY: adventurous, chicken-hearted, carefree, unconcerned, to be scared of]
+- [YOU SAY: the eyeball, a nostril, a gum, a beard, a moustache]
+- [YOU SAY: the palm, a fist, the thigh, the calf, the ankle]
+- [YOU SAY: the skull, the spine, a rib, the gut, a joint]
+- [YOU SAY: the pulse, a vein, the gullet, a cell, the innermost heart]
+- [YOU SAY: one's health, a symptom, fatigue, weak, to feel sick]
+- [YOU SAY: a runny cold, phlegm, to sneeze, to blow one's nose, to clear one's throat]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C474-SHISTA474-01, MR-LEX-C474-SHISTA474-02, MR-LEX-C474-SHISTA474-03, MR-LEX-C474-SHISTA474-04, MR-LEX-C474-SHISTA474-05, MR-LEX-C475-SAHAS475-01, MR-LEX-C475-SAHAS475-02, MR-LEX-C475-SAHAS475-03, MR-LEX-C475-SAHAS475-04, MR-LEX-C475-SAHAS475-05, MR-LEX-C476-CEHRA476-01, MR-LEX-C476-CEHRA476-02, MR-LEX-C476-CEHRA476-03, MR-LEX-C476-CEHRA476-04, MR-LEX-C476-CEHRA476-05, MR-LEX-C477-HAT477-01, MR-LEX-C477-HAT477-02, MR-LEX-C477-HAT477-03, MR-LEX-C477-HAT477-04, MR-LEX-C477-HAT477-05, MR-LEX-C478-HAD478-01, MR-LEX-C478-HAD478-02, MR-LEX-C478-HAD478-03, MR-LEX-C478-HAD478-04, MR-LEX-C478-HAD478-05, MR-LEX-C479-NADI479-01, MR-LEX-C479-NADI479-02, MR-LEX-C479-NADI479-03, MR-LEX-C479-NADI479-04, MR-LEX-C479-NADI479-05, MR-LEX-C480-TABYET480-01, MR-LEX-C480-TABYET480-02, MR-LEX-C480-TABYET480-03, MR-LEX-C480-TABYET480-04, MR-LEX-C480-TABYET480-05, MR-LEX-C481-SARDI481-01, MR-LEX-C481-SARDI481-02, MR-LEX-C481-SARDI481-03, MR-LEX-C481-SARDI481-04, MR-LEX-C481-SARDI481-05] -->
+
+[PAUSE 3s] Tidy? (**नीटनेटका**, *nīṭneṭkā*.) Sloppy? (**गबाळा**, *gabāḷā*.) Scatterbrained? (**वेंधळा**, *vendhḷā*.) A mess? (**पसारा**, *pasārā*.) Discipline? (**शिस्त**, *śista*.) Adventurous? (**साहसी**, *sāhsī*.) Chicken-hearted? (**डरपोक**, *ḍarpok*.) Carefree? (**बिनधास्त**, *bindhāsta*.) Unconcerned? (**बेफिकीर**, *bephikīr*.) To be scared of? (**भिणे**, *bhiṇe*.) The eyeball? (**बुबुळ**, *bubuḷ*.) A nostril? (**नाकपुडी**, *nākpuḍī*.) A gum? (**हिरडी**, *hirḍī*.) A beard? (**दाढी**, *dāḍhī*.) A moustache? (**मिशी**, *miśī*.) The palm? (**तळहात**, *taḷhāt*.) A fist? (**मूठ**, *mūṭh*.) The thigh? (**मांडी**, *māṇḍī*.) The calf? (**पोटरी**, *poṭrī*.) The ankle? (**घोटा**, *ghoṭā*.) The skull? (**कवटी**, *kavṭī*.) The spine? (**कणा**, *kaṇā*.) A rib? (**बरगडी**, *bargaḍī*.) The gut? (**आतडे**, *ātḍe*.) A joint? (**सांधा**, *sāndhā*.) The pulse? (**नाडी**, *nāḍī*.) A vein? (**नस**, *nas*.) The gullet? (**घसा**, *ghasā*.) A cell? (**पेशी**, *peśī*.) The innermost heart? (**काळीज**, *kāḷīj*.) One's health? (**तब्येत**, *tabyet*.) A symptom? (**लक्षण**, *lakṣaṇ*.) Fatigue? (**थकवा**, *thakvā*.) Weak? (**अशक्त**, *aśakta*.) To feel sick? (**मळमळणे**, *maḷmaḷṇe*.) A runny cold? (**पडसे**, *paḍse*.) Phlegm? (**कफ**, *kaph*.) To sneeze? (**शिंकणे**, *śiṅkṇe*.) To blow one's nose? (**शिंकरणे**, *śiṅkarṇe*.) To clear one's throat? (**खाकरणे**, *khākarṇe*.)
+`;export{t};

@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MR-R334-review-328-334
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 19400
+chapter: 334
+type: review
+headword: (dialogue)
+gloss: a review of the words from War Comes to Turning Points
+concept_tag: REVIEW
+prerequisites: [MR-C328-satru, MR-C328-halla, MR-C328-akraman, MR-C328-ladhne, MR-C328-ranangan, MR-C329-talvar, MR-C329-dhal, MR-C329-sastra, MR-C329-toph, MR-C329-ghoddal, MR-C330-senapati, MR-C330-paydal, MR-C330-chavni, MR-C330-pahara-dene, MR-C330-jhunjne, MR-C331-vedha, MR-C331-gherne, MR-C331-khandak, MR-C331-tatbandi, MR-C331-buruj, MR-C332-vir, MR-C332-parakram, MR-C332-saurya, MR-C332-balidan, MR-C332-saran-jane, MR-C333-mohim, MR-C333-svari, MR-C333-maghar-ghene, MR-C333-mukta-karne, MR-C333-hakalne, MR-C334-kranti, MR-C334-sthapan-karne, MR-C334-ubharne, MR-C334-bakhar, MR-C334-silalekh]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MR-LEX-C328-LADHAI328-01, MR-LEX-C328-LADHAI328-02, MR-LEX-C328-LADHAI328-03, MR-LEX-C328-LADHAI328-04, MR-LEX-C328-LADHAI328-05, MR-LEX-C329-SHASTRA329-01, MR-LEX-C329-SHASTRA329-02, MR-LEX-C329-SHASTRA329-03, MR-LEX-C329-SHASTRA329-04, MR-LEX-C329-SHASTRA329-05, MR-LEX-C330-SENAPATI330-01, MR-LEX-C330-SENAPATI330-02, MR-LEX-C330-SENAPATI330-03, MR-LEX-C330-SENAPATI330-04, MR-LEX-C330-SENAPATI330-05, MR-LEX-C331-VEDHA331-01, MR-LEX-C331-VEDHA331-02, MR-LEX-C331-VEDHA331-03, MR-LEX-C331-VEDHA331-04, MR-LEX-C331-VEDHA331-05, MR-LEX-C332-SHAURYA332-01, MR-LEX-C332-SHAURYA332-02, MR-LEX-C332-SHAURYA332-03, MR-LEX-C332-SHAURYA332-04, MR-LEX-C332-SHAURYA332-05, MR-LEX-C333-MOHIM333-01, MR-LEX-C333-MOHIM333-02, MR-LEX-C333-MOHIM333-03, MR-LEX-C333-MOHIM333-04, MR-LEX-C333-MOHIM333-05, MR-LEX-C334-KRANTI334-01, MR-LEX-C334-KRANTI334-02, MR-LEX-C334-KRANTI334-03, MR-LEX-C334-KRANTI334-04, MR-LEX-C334-KRANTI334-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MR-LEX-C328-LADHAI328-01, MR-LEX-C328-LADHAI328-02, MR-LEX-C328-LADHAI328-03, MR-LEX-C328-LADHAI328-04, MR-LEX-C328-LADHAI328-05, MR-LEX-C329-SHASTRA329-01, MR-LEX-C329-SHASTRA329-02, MR-LEX-C329-SHASTRA329-03, MR-LEX-C329-SHASTRA329-04, MR-LEX-C329-SHASTRA329-05, MR-LEX-C330-SENAPATI330-01, MR-LEX-C330-SENAPATI330-02, MR-LEX-C330-SENAPATI330-03, MR-LEX-C330-SENAPATI330-04, MR-LEX-C330-SENAPATI330-05, MR-LEX-C331-VEDHA331-01, MR-LEX-C331-VEDHA331-02, MR-LEX-C331-VEDHA331-03, MR-LEX-C331-VEDHA331-04, MR-LEX-C331-VEDHA331-05, MR-LEX-C332-SHAURYA332-01, MR-LEX-C332-SHAURYA332-02, MR-LEX-C332-SHAURYA332-03, MR-LEX-C332-SHAURYA332-04, MR-LEX-C332-SHAURYA332-05, MR-LEX-C333-MOHIM333-01, MR-LEX-C333-MOHIM333-02, MR-LEX-C333-MOHIM333-03, MR-LEX-C333-MOHIM333-04, MR-LEX-C333-MOHIM333-05, MR-LEX-C334-KRANTI334-01, MR-LEX-C334-KRANTI334-02, MR-LEX-C334-KRANTI334-03, MR-LEX-C334-KRANTI334-04, MR-LEX-C334-KRANTI334-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard
+reviews_of: [MR-C328-satru, MR-C328-halla, MR-C328-akraman, MR-C328-ladhne, MR-C328-ranangan, MR-C329-talvar, MR-C329-dhal, MR-C329-sastra, MR-C329-toph, MR-C329-ghoddal, MR-C330-senapati, MR-C330-paydal, MR-C330-chavni, MR-C330-pahara-dene, MR-C330-jhunjne, MR-C331-vedha, MR-C331-gherne, MR-C331-khandak, MR-C331-tatbandi, MR-C331-buruj, MR-C332-vir, MR-C332-parakram, MR-C332-saurya, MR-C332-balidan, MR-C332-saran-jane, MR-C333-mohim, MR-C333-svari, MR-C333-maghar-ghene, MR-C333-mukta-karne, MR-C333-hakalne, MR-C334-kranti, MR-C334-sthapan-karne, MR-C334-ubharne, MR-C334-bakhar, MR-C334-silalekh]
+---
+
+# Looking back: from War Comes to Turning Points
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C328-LADHAI328-01, MR-LEX-C328-LADHAI328-02] -->
+
+[PAUSE 3s] Say the Marathi for an enemy and an attack.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C328-LADHAI328-01, MR-LEX-C328-LADHAI328-02, MR-LEX-C328-LADHAI328-03, MR-LEX-C328-LADHAI328-04, MR-LEX-C328-LADHAI328-05, MR-LEX-C329-SHASTRA329-01, MR-LEX-C329-SHASTRA329-02, MR-LEX-C329-SHASTRA329-03, MR-LEX-C329-SHASTRA329-04, MR-LEX-C329-SHASTRA329-05, MR-LEX-C330-SENAPATI330-01, MR-LEX-C330-SENAPATI330-02, MR-LEX-C330-SENAPATI330-03, MR-LEX-C330-SENAPATI330-04, MR-LEX-C330-SENAPATI330-05, MR-LEX-C331-VEDHA331-01, MR-LEX-C331-VEDHA331-02, MR-LEX-C331-VEDHA331-03, MR-LEX-C331-VEDHA331-04, MR-LEX-C331-VEDHA331-05, MR-LEX-C332-SHAURYA332-01, MR-LEX-C332-SHAURYA332-02, MR-LEX-C332-SHAURYA332-03, MR-LEX-C332-SHAURYA332-04, MR-LEX-C332-SHAURYA332-05, MR-LEX-C333-MOHIM333-01, MR-LEX-C333-MOHIM333-02, MR-LEX-C333-MOHIM333-03, MR-LEX-C333-MOHIM333-04, MR-LEX-C333-MOHIM333-05, MR-LEX-C334-KRANTI334-01, MR-LEX-C334-KRANTI334-02, MR-LEX-C334-KRANTI334-03, MR-LEX-C334-KRANTI334-04, MR-LEX-C334-KRANTI334-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an enemy, an attack, an invasion, to fight, a battlefield]
+- [YOU SAY: a sword, a round shield, a weapon, a cannon, cavalry]
+- [YOU SAY: a commander, infantry, an army camp, to stand guard, to battle]
+- [YOU SAY: a siege, to surround, a moat, a rampart, a bastion]
+- [YOU SAY: a hero, a heroic deed, bravery, a sacrifice, to surrender]
+- [YOU SAY: an expedition, a military campaign, to retreat, to set free, to drive out]
+- [YOU SAY: a revolution, to found, to erect, a chronicle, an inscription]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C328-LADHAI328-01, MR-LEX-C328-LADHAI328-02, MR-LEX-C328-LADHAI328-03, MR-LEX-C328-LADHAI328-04, MR-LEX-C328-LADHAI328-05, MR-LEX-C329-SHASTRA329-01, MR-LEX-C329-SHASTRA329-02, MR-LEX-C329-SHASTRA329-03, MR-LEX-C329-SHASTRA329-04, MR-LEX-C329-SHASTRA329-05, MR-LEX-C330-SENAPATI330-01, MR-LEX-C330-SENAPATI330-02, MR-LEX-C330-SENAPATI330-03, MR-LEX-C330-SENAPATI330-04, MR-LEX-C330-SENAPATI330-05, MR-LEX-C331-VEDHA331-01, MR-LEX-C331-VEDHA331-02, MR-LEX-C331-VEDHA331-03, MR-LEX-C331-VEDHA331-04, MR-LEX-C331-VEDHA331-05, MR-LEX-C332-SHAURYA332-01, MR-LEX-C332-SHAURYA332-02, MR-LEX-C332-SHAURYA332-03, MR-LEX-C332-SHAURYA332-04, MR-LEX-C332-SHAURYA332-05, MR-LEX-C333-MOHIM333-01, MR-LEX-C333-MOHIM333-02, MR-LEX-C333-MOHIM333-03, MR-LEX-C333-MOHIM333-04, MR-LEX-C333-MOHIM333-05, MR-LEX-C334-KRANTI334-01, MR-LEX-C334-KRANTI334-02, MR-LEX-C334-KRANTI334-03, MR-LEX-C334-KRANTI334-04, MR-LEX-C334-KRANTI334-05] -->
+
+[PAUSE 3s] An enemy? (**शत्रू**, *śatrū*.) An attack? (**हल्ला**, *hallā*.) An invasion? (**आक्रमण**, *ākramaṇ*.) To fight? (**लढणे**, *laḍhṇe*.) A battlefield? (**रणांगण**, *raṇāṅgaṇ*.) A sword? (**तलवार**, *talvār*.) A round shield? (**ढाल**, *ḍhāl*.) A weapon? (**शस्त्र**, *śastra*.) A cannon? (**तोफ**, *toph*.) Cavalry? (**घोडदळ**, *ghoḍdaḷ*.) A commander? (**सेनापती**, *senāpatī*.) Infantry? (**पायदळ**, *pāydaḷ*.) An army camp? (**छावणी**, *chāvṇī*.) To stand guard? (**पहारा देणे**, *pahārā deṇe*.) To battle? (**झुंजणे**, *jhuñjṇe*.) A siege? (**वेढा**, *veḍhā*.) To surround? (**घेरणे**, *gherṇe*.) A moat? (**खंदक**, *khandak*.) A rampart? (**तटबंदी**, *taṭbandī*.) A bastion? (**बुरुज**, *buruj*.) A hero? (**वीर**, *vīr*.) A heroic deed? (**पराक्रम**, *parākram*.) Bravery? (**शौर्य**, *śaurya*.) A sacrifice? (**बलिदान**, *balidān*.) To surrender? (**शरण जाणे**, *śaraṇ jāṇe*.) An expedition? (**मोहीम**, *mohīm*.) A military campaign? (**स्वारी**, *svārī*.) To retreat? (**माघार घेणे**, *māghār gheṇe*.) To set free? (**मुक्त करणे**, *mukta karṇe*.) To drive out? (**हाकलणे**, *hākalṇe*.) A revolution? (**क्रांती**, *krāntī*.) To found? (**स्थापन करणे**, *sthāpan karṇe*.) To erect? (**उभारणे**, *ubhārṇe*.) A chronicle? (**बखर**, *bakhar*.) An inscription? (**शिलालेख**, *śilālekh*.)
+`;export{t};

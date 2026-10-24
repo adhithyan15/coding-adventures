@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MR-R388-review-382-388
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 22400
+chapter: 388
+type: review
+headword: (dialogue)
+gloss: a review of the words from Likely or Certain to Goals and Progress
+concept_tag: REVIEW
+prerequisites: [MR-C382-sambhavya, MR-C382-bahudha, MR-C382-sahjikac, MR-C382-niscit, MR-C382-bhasne, MR-C383-bhakit, MR-C383-grhit-dharne, MR-C383-apeksa, MR-C383-kal, MR-C383-tadne, MR-C384-paristhiti, MR-C384-sthiti, MR-C384-avastha, MR-C384-pec, MR-C384-kasoti, MR-C385-cighalne, MR-C385-uphalne, MR-C385-nivalne, MR-C385-talne-averted, MR-C385-samore-jane, MR-C386-pratibandh-karne, MR-C386-rokhne, MR-C386-adavne, MR-C386-dakhal-ghene, MR-C386-palvat, MR-C387-vagalne, MR-C387-samavista-karne, MR-C387-visambne, MR-C387-tharne, MR-C387-patne, MR-C388-pradhanya, MR-C388-uddista, MR-C388-pragti, MR-C388-vikas, MR-C388-amlat-anne]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MR-LEX-C382-SHAKYA382-01, MR-LEX-C382-SHAKYA382-02, MR-LEX-C382-SHAKYA382-03, MR-LEX-C382-SHAKYA382-04, MR-LEX-C382-SHAKYA382-05, MR-LEX-C383-BHAKIT383-01, MR-LEX-C383-BHAKIT383-02, MR-LEX-C383-BHAKIT383-03, MR-LEX-C383-BHAKIT383-04, MR-LEX-C383-BHAKIT383-05, MR-LEX-C384-PARISTHITI384-01, MR-LEX-C384-PARISTHITI384-02, MR-LEX-C384-PARISTHITI384-03, MR-LEX-C384-PARISTHITI384-04, MR-LEX-C384-PARISTHITI384-05, MR-LEX-C385-CHIGHALNE385-01, MR-LEX-C385-CHIGHALNE385-02, MR-LEX-C385-CHIGHALNE385-03, MR-LEX-C385-CHIGHALNE385-04, MR-LEX-C385-CHIGHALNE385-05, MR-LEX-C386-PRATIBANDH386-01, MR-LEX-C386-PRATIBANDH386-02, MR-LEX-C386-PRATIBANDH386-03, MR-LEX-C386-PRATIBANDH386-04, MR-LEX-C386-PRATIBANDH386-05, MR-LEX-C387-GANANA387-01, MR-LEX-C387-GANANA387-02, MR-LEX-C387-GANANA387-03, MR-LEX-C387-GANANA387-04, MR-LEX-C387-GANANA387-05, MR-LEX-C388-UDDISHTA388-01, MR-LEX-C388-UDDISHTA388-02, MR-LEX-C388-UDDISHTA388-03, MR-LEX-C388-UDDISHTA388-04, MR-LEX-C388-UDDISHTA388-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MR-LEX-C382-SHAKYA382-01, MR-LEX-C382-SHAKYA382-02, MR-LEX-C382-SHAKYA382-03, MR-LEX-C382-SHAKYA382-04, MR-LEX-C382-SHAKYA382-05, MR-LEX-C383-BHAKIT383-01, MR-LEX-C383-BHAKIT383-02, MR-LEX-C383-BHAKIT383-03, MR-LEX-C383-BHAKIT383-04, MR-LEX-C383-BHAKIT383-05, MR-LEX-C384-PARISTHITI384-01, MR-LEX-C384-PARISTHITI384-02, MR-LEX-C384-PARISTHITI384-03, MR-LEX-C384-PARISTHITI384-04, MR-LEX-C384-PARISTHITI384-05, MR-LEX-C385-CHIGHALNE385-01, MR-LEX-C385-CHIGHALNE385-02, MR-LEX-C385-CHIGHALNE385-03, MR-LEX-C385-CHIGHALNE385-04, MR-LEX-C385-CHIGHALNE385-05, MR-LEX-C386-PRATIBANDH386-01, MR-LEX-C386-PRATIBANDH386-02, MR-LEX-C386-PRATIBANDH386-03, MR-LEX-C386-PRATIBANDH386-04, MR-LEX-C386-PRATIBANDH386-05, MR-LEX-C387-GANANA387-01, MR-LEX-C387-GANANA387-02, MR-LEX-C387-GANANA387-03, MR-LEX-C387-GANANA387-04, MR-LEX-C387-GANANA387-05, MR-LEX-C388-UDDISHTA388-01, MR-LEX-C388-UDDISHTA388-02, MR-LEX-C388-UDDISHTA388-03, MR-LEX-C388-UDDISHTA388-04, MR-LEX-C388-UDDISHTA388-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard
+reviews_of: [MR-C382-sambhavya, MR-C382-bahudha, MR-C382-sahjikac, MR-C382-niscit, MR-C382-bhasne, MR-C383-bhakit, MR-C383-grhit-dharne, MR-C383-apeksa, MR-C383-kal, MR-C383-tadne, MR-C384-paristhiti, MR-C384-sthiti, MR-C384-avastha, MR-C384-pec, MR-C384-kasoti, MR-C385-cighalne, MR-C385-uphalne, MR-C385-nivalne, MR-C385-talne-averted, MR-C385-samore-jane, MR-C386-pratibandh-karne, MR-C386-rokhne, MR-C386-adavne, MR-C386-dakhal-ghene, MR-C386-palvat, MR-C387-vagalne, MR-C387-samavista-karne, MR-C387-visambne, MR-C387-tharne, MR-C387-patne, MR-C388-pradhanya, MR-C388-uddista, MR-C388-pragti, MR-C388-vikas, MR-C388-amlat-anne]
+---
+
+# Looking back: from Likely or Certain to Goals and Progress
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C382-SHAKYA382-01, MR-LEX-C382-SHAKYA382-02] -->
+
+[PAUSE 3s] Say the Marathi for likely and probably.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C382-SHAKYA382-01, MR-LEX-C382-SHAKYA382-02, MR-LEX-C382-SHAKYA382-03, MR-LEX-C382-SHAKYA382-04, MR-LEX-C382-SHAKYA382-05, MR-LEX-C383-BHAKIT383-01, MR-LEX-C383-BHAKIT383-02, MR-LEX-C383-BHAKIT383-03, MR-LEX-C383-BHAKIT383-04, MR-LEX-C383-BHAKIT383-05, MR-LEX-C384-PARISTHITI384-01, MR-LEX-C384-PARISTHITI384-02, MR-LEX-C384-PARISTHITI384-03, MR-LEX-C384-PARISTHITI384-04, MR-LEX-C384-PARISTHITI384-05, MR-LEX-C385-CHIGHALNE385-01, MR-LEX-C385-CHIGHALNE385-02, MR-LEX-C385-CHIGHALNE385-03, MR-LEX-C385-CHIGHALNE385-04, MR-LEX-C385-CHIGHALNE385-05, MR-LEX-C386-PRATIBANDH386-01, MR-LEX-C386-PRATIBANDH386-02, MR-LEX-C386-PRATIBANDH386-03, MR-LEX-C386-PRATIBANDH386-04, MR-LEX-C386-PRATIBANDH386-05, MR-LEX-C387-GANANA387-01, MR-LEX-C387-GANANA387-02, MR-LEX-C387-GANANA387-03, MR-LEX-C387-GANANA387-04, MR-LEX-C387-GANANA387-05, MR-LEX-C388-UDDISHTA388-01, MR-LEX-C388-UDDISHTA388-02, MR-LEX-C388-UDDISHTA388-03, MR-LEX-C388-UDDISHTA388-04, MR-LEX-C388-UDDISHTA388-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: likely, probably, naturally, certain, to seem]
+- [YOU SAY: a prediction, to assume, an expectation, a trend, to size up]
+- [YOU SAY: circumstances, a state, a plight, a tight spot, a test]
+- [YOU SAY: to worsen, to surge up, to calm down, to be averted, to confront]
+- [YOU SAY: to prevent, to restrain, to block, to take notice, a loophole]
+- [YOU SAY: to leave out, to include, to rely on, to turn out, to be convinced]
+- [YOU SAY: a priority, an objective, progress, development, to implement]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C382-SHAKYA382-01, MR-LEX-C382-SHAKYA382-02, MR-LEX-C382-SHAKYA382-03, MR-LEX-C382-SHAKYA382-04, MR-LEX-C382-SHAKYA382-05, MR-LEX-C383-BHAKIT383-01, MR-LEX-C383-BHAKIT383-02, MR-LEX-C383-BHAKIT383-03, MR-LEX-C383-BHAKIT383-04, MR-LEX-C383-BHAKIT383-05, MR-LEX-C384-PARISTHITI384-01, MR-LEX-C384-PARISTHITI384-02, MR-LEX-C384-PARISTHITI384-03, MR-LEX-C384-PARISTHITI384-04, MR-LEX-C384-PARISTHITI384-05, MR-LEX-C385-CHIGHALNE385-01, MR-LEX-C385-CHIGHALNE385-02, MR-LEX-C385-CHIGHALNE385-03, MR-LEX-C385-CHIGHALNE385-04, MR-LEX-C385-CHIGHALNE385-05, MR-LEX-C386-PRATIBANDH386-01, MR-LEX-C386-PRATIBANDH386-02, MR-LEX-C386-PRATIBANDH386-03, MR-LEX-C386-PRATIBANDH386-04, MR-LEX-C386-PRATIBANDH386-05, MR-LEX-C387-GANANA387-01, MR-LEX-C387-GANANA387-02, MR-LEX-C387-GANANA387-03, MR-LEX-C387-GANANA387-04, MR-LEX-C387-GANANA387-05, MR-LEX-C388-UDDISHTA388-01, MR-LEX-C388-UDDISHTA388-02, MR-LEX-C388-UDDISHTA388-03, MR-LEX-C388-UDDISHTA388-04, MR-LEX-C388-UDDISHTA388-05] -->
+
+[PAUSE 3s] Likely? (**संभाव्य**, *sambhāvya*.) Probably? (**बहुधा**, *bahudhā*.) Naturally? (**साहजिकच**, *sāhjikac*.) Certain? (**निश्चित**, *niścit*.) To seem? (**भासणे**, *bhāsṇe*.) A prediction? (**भाकीत**, *bhākīt*.) To assume? (**गृहीत धरणे**, *gṛhīt dharṇe*.) An expectation? (**अपेक्षा**, *apekṣā*.) A trend? (**कल**, *kal*.) To size up? (**ताडणे**, *tāḍṇe*.) Circumstances? (**परिस्थिती**, *paristhitī*.) A state? (**स्थिती**, *sthitī*.) A plight? (**अवस्था**, *avasthā*.) A tight spot? (**पेच**, *pec*.) A test? (**कसोटी**, *kasoṭī*.) To worsen? (**चिघळणे**, *cighaḷṇe*.) To surge up? (**उफाळणे**, *uphāḷṇe*.) To calm down? (**निवळणे**, *nivaḷṇe*.) To be averted? (**टळणे**, *ṭaḷṇe*.) To confront? (**सामोरे जाणे**, *sāmore jāṇe*.) To prevent? (**प्रतिबंध करणे**, *pratibandh karṇe*.) To restrain? (**रोखणे**, *rokhṇe*.) To block? (**अडवणे**, *aḍavṇe*.) To take notice? (**दखल घेणे**, *dakhal gheṇe*.) A loophole? (**पळवाट**, *paḷvāṭ*.) To leave out? (**वगळणे**, *vagaḷṇe*.) To include? (**समाविष्ट करणे**, *samāviṣṭa karṇe*.) To rely on? (**विसंबणे**, *visambṇe*.) To turn out? (**ठरणे**, *ṭharṇe*.) To be convinced? (**पटणे**, *paṭṇe*.) A priority? (**प्राधान्य**, *prādhānya*.) An objective? (**उद्दिष्ट**, *uddiṣṭa*.) Progress? (**प्रगती**, *pragtī*.) Development? (**विकास**, *vikās*.) To implement? (**अमलात आणणे**, *amlāt āṇṇe*.)
+`;export{t};

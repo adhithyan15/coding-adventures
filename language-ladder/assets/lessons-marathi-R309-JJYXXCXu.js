@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MR-R311-review-304-311
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 18220
+chapter: 311
+type: review
+headword: (dialogue)
+gloss: a review of the words from Telling It Well to Who Makes the News
+concept_tag: REVIEW
+prerequisites: [MR-C304-varnan-karne, MR-C304-prasang, MR-C304-ulgadne, MR-C304-gajne, MR-C304-pasarne, MR-C305-gatvarsi, MR-C305-magil, MR-C305-tatpurvi, MR-C305-kalantarane, MR-C305-lotne, MR-C306-kramasah, MR-C306-anekda, MR-C306-adhunmadhun, MR-C306-apoap, MR-C306-nuktac, MR-C307-prarambh, MR-C307-ant, MR-C307-akher, MR-C307-kalkhand, MR-C307-smrti, MR-C308-pidhi, MR-C308-purvaj, MR-C308-varsa, MR-C308-vams, MR-C308-jatan-karne, MR-C309-gamavne, MR-C309-sosne, MR-C309-mrtyu, MR-C309-maran-pavne, MR-C309-udbhavne, MR-C310-vrttapatra, MR-C310-dainik, MR-C310-saptahik, MR-C310-mathla, MR-C310-chapne, MR-C311-vartahar, MR-C311-sampadak, MR-C311-lekh, MR-C311-agralekh, MR-C311-prakasit-karne]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MR-LEX-C304-VARNAN304-01, MR-LEX-C304-VARNAN304-02, MR-LEX-C304-VARNAN304-03, MR-LEX-C304-VARNAN304-04, MR-LEX-C304-VARNAN304-05, MR-LEX-C305-GATVARSH305-01, MR-LEX-C305-GATVARSH305-02, MR-LEX-C305-GATVARSH305-03, MR-LEX-C305-GATVARSH305-04, MR-LEX-C305-GATVARSH305-05, MR-LEX-C306-KRAMASH306-01, MR-LEX-C306-KRAMASH306-02, MR-LEX-C306-KRAMASH306-03, MR-LEX-C306-KRAMASH306-04, MR-LEX-C306-KRAMASH306-05, MR-LEX-C307-ANT307-01, MR-LEX-C307-ANT307-02, MR-LEX-C307-ANT307-03, MR-LEX-C307-ANT307-04, MR-LEX-C307-ANT307-05, MR-LEX-C308-PIDHI308-01, MR-LEX-C308-PIDHI308-02, MR-LEX-C308-PIDHI308-03, MR-LEX-C308-PIDHI308-04, MR-LEX-C308-PIDHI308-05, MR-LEX-C309-MRUTYU309-01, MR-LEX-C309-MRUTYU309-02, MR-LEX-C309-MRUTYU309-03, MR-LEX-C309-MRUTYU309-04, MR-LEX-C309-MRUTYU309-05, MR-LEX-C310-VRUTTAPATRA310-01, MR-LEX-C310-VRUTTAPATRA310-02, MR-LEX-C310-VRUTTAPATRA310-03, MR-LEX-C310-VRUTTAPATRA310-04, MR-LEX-C310-VRUTTAPATRA310-05, MR-LEX-C311-LEKH311-01, MR-LEX-C311-LEKH311-02, MR-LEX-C311-LEKH311-03, MR-LEX-C311-LEKH311-04, MR-LEX-C311-LEKH311-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MR-LEX-C304-VARNAN304-01, MR-LEX-C304-VARNAN304-02, MR-LEX-C304-VARNAN304-03, MR-LEX-C304-VARNAN304-04, MR-LEX-C304-VARNAN304-05, MR-LEX-C305-GATVARSH305-01, MR-LEX-C305-GATVARSH305-02, MR-LEX-C305-GATVARSH305-03, MR-LEX-C305-GATVARSH305-04, MR-LEX-C305-GATVARSH305-05, MR-LEX-C306-KRAMASH306-01, MR-LEX-C306-KRAMASH306-02, MR-LEX-C306-KRAMASH306-03, MR-LEX-C306-KRAMASH306-04, MR-LEX-C306-KRAMASH306-05, MR-LEX-C307-ANT307-01, MR-LEX-C307-ANT307-02, MR-LEX-C307-ANT307-03, MR-LEX-C307-ANT307-04, MR-LEX-C307-ANT307-05, MR-LEX-C308-PIDHI308-01, MR-LEX-C308-PIDHI308-02, MR-LEX-C308-PIDHI308-03, MR-LEX-C308-PIDHI308-04, MR-LEX-C308-PIDHI308-05, MR-LEX-C309-MRUTYU309-01, MR-LEX-C309-MRUTYU309-02, MR-LEX-C309-MRUTYU309-03, MR-LEX-C309-MRUTYU309-04, MR-LEX-C309-MRUTYU309-05, MR-LEX-C310-VRUTTAPATRA310-01, MR-LEX-C310-VRUTTAPATRA310-02, MR-LEX-C310-VRUTTAPATRA310-03, MR-LEX-C310-VRUTTAPATRA310-04, MR-LEX-C310-VRUTTAPATRA310-05, MR-LEX-C311-LEKH311-01, MR-LEX-C311-LEKH311-02, MR-LEX-C311-LEKH311-03, MR-LEX-C311-LEKH311-04, MR-LEX-C311-LEKH311-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard
+reviews_of: [MR-C304-varnan-karne, MR-C304-prasang, MR-C304-ulgadne, MR-C304-gajne, MR-C304-pasarne, MR-C305-gatvarsi, MR-C305-magil, MR-C305-tatpurvi, MR-C305-kalantarane, MR-C305-lotne, MR-C306-kramasah, MR-C306-anekda, MR-C306-adhunmadhun, MR-C306-apoap, MR-C306-nuktac, MR-C307-prarambh, MR-C307-ant, MR-C307-akher, MR-C307-kalkhand, MR-C307-smrti, MR-C308-pidhi, MR-C308-purvaj, MR-C308-varsa, MR-C308-vams, MR-C308-jatan-karne, MR-C309-gamavne, MR-C309-sosne, MR-C309-mrtyu, MR-C309-maran-pavne, MR-C309-udbhavne, MR-C310-vrttapatra, MR-C310-dainik, MR-C310-saptahik, MR-C310-mathla, MR-C310-chapne, MR-C311-vartahar, MR-C311-sampadak, MR-C311-lekh, MR-C311-agralekh, MR-C311-prakasit-karne]
+---
+
+# Looking back: from Telling It Well to Who Makes the News
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C304-VARNAN304-01, MR-LEX-C304-VARNAN304-02] -->
+
+[PAUSE 3s] Say the Marathi for to describe and an occasion.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C304-VARNAN304-01, MR-LEX-C304-VARNAN304-02, MR-LEX-C304-VARNAN304-03, MR-LEX-C304-VARNAN304-04, MR-LEX-C304-VARNAN304-05, MR-LEX-C305-GATVARSH305-01, MR-LEX-C305-GATVARSH305-02, MR-LEX-C305-GATVARSH305-03, MR-LEX-C305-GATVARSH305-04, MR-LEX-C305-GATVARSH305-05, MR-LEX-C306-KRAMASH306-01, MR-LEX-C306-KRAMASH306-02, MR-LEX-C306-KRAMASH306-03, MR-LEX-C306-KRAMASH306-04, MR-LEX-C306-KRAMASH306-05, MR-LEX-C307-ANT307-01, MR-LEX-C307-ANT307-02, MR-LEX-C307-ANT307-03, MR-LEX-C307-ANT307-04, MR-LEX-C307-ANT307-05, MR-LEX-C308-PIDHI308-01, MR-LEX-C308-PIDHI308-02, MR-LEX-C308-PIDHI308-03, MR-LEX-C308-PIDHI308-04, MR-LEX-C308-PIDHI308-05, MR-LEX-C309-MRUTYU309-01, MR-LEX-C309-MRUTYU309-02, MR-LEX-C309-MRUTYU309-03, MR-LEX-C309-MRUTYU309-04, MR-LEX-C309-MRUTYU309-05, MR-LEX-C310-VRUTTAPATRA310-01, MR-LEX-C310-VRUTTAPATRA310-02, MR-LEX-C310-VRUTTAPATRA310-03, MR-LEX-C310-VRUTTAPATRA310-04, MR-LEX-C310-VRUTTAPATRA310-05, MR-LEX-C311-LEKH311-01, MR-LEX-C311-LEKH311-02, MR-LEX-C311-LEKH311-03, MR-LEX-C311-LEKH311-04, MR-LEX-C311-LEKH311-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to describe, an occasion, to unfold, to make a stir, to spread]
+- [YOU SAY: last year, previous, before that, over time, to elapse]
+- [YOU SAY: step by step, many times, now and then, by itself, lately]
+- [YOU SAY: a commencement, an ending, at last, a period, a remembrance]
+- [YOU SAY: a generation, an ancestor, heritage, a lineage, to preserve]
+- [YOU SAY: to lose forever, to endure, death, to pass away, to arise]
+- [YOU SAY: a newspaper, a daily paper, a weekly, a headline, to print]
+- [YOU SAY: a reporter, an editor, an article, an editorial, to publish]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C304-VARNAN304-01, MR-LEX-C304-VARNAN304-02, MR-LEX-C304-VARNAN304-03, MR-LEX-C304-VARNAN304-04, MR-LEX-C304-VARNAN304-05, MR-LEX-C305-GATVARSH305-01, MR-LEX-C305-GATVARSH305-02, MR-LEX-C305-GATVARSH305-03, MR-LEX-C305-GATVARSH305-04, MR-LEX-C305-GATVARSH305-05, MR-LEX-C306-KRAMASH306-01, MR-LEX-C306-KRAMASH306-02, MR-LEX-C306-KRAMASH306-03, MR-LEX-C306-KRAMASH306-04, MR-LEX-C306-KRAMASH306-05, MR-LEX-C307-ANT307-01, MR-LEX-C307-ANT307-02, MR-LEX-C307-ANT307-03, MR-LEX-C307-ANT307-04, MR-LEX-C307-ANT307-05, MR-LEX-C308-PIDHI308-01, MR-LEX-C308-PIDHI308-02, MR-LEX-C308-PIDHI308-03, MR-LEX-C308-PIDHI308-04, MR-LEX-C308-PIDHI308-05, MR-LEX-C309-MRUTYU309-01, MR-LEX-C309-MRUTYU309-02, MR-LEX-C309-MRUTYU309-03, MR-LEX-C309-MRUTYU309-04, MR-LEX-C309-MRUTYU309-05, MR-LEX-C310-VRUTTAPATRA310-01, MR-LEX-C310-VRUTTAPATRA310-02, MR-LEX-C310-VRUTTAPATRA310-03, MR-LEX-C310-VRUTTAPATRA310-04, MR-LEX-C310-VRUTTAPATRA310-05, MR-LEX-C311-LEKH311-01, MR-LEX-C311-LEKH311-02, MR-LEX-C311-LEKH311-03, MR-LEX-C311-LEKH311-04, MR-LEX-C311-LEKH311-05] -->
+
+[PAUSE 3s] To describe? (**वर्णन करणे**, *varṇan karṇe*.) An occasion? (**प्रसंग**, *prasaṅg*.) To unfold? (**उलगडणे**, *ulgaḍṇe*.) To make a stir? (**गाजणे**, *gājṇe*.) To spread? (**पसरणे**, *pasarṇe*.) Last year? (**गतवर्षी**, *gatvarṣī*.) Previous? (**मागील**, *māgīl*.) Before that? (**तत्पूर्वी**, *tatpūrvī*.) Over time? (**कालांतराने**, *kālāntarāne*.) To elapse? (**लोटणे**, *loṭṇe*.) Step by step? (**क्रमशः**, *kramaśaḥ*.) Many times? (**अनेकदा**, *anekdā*.) Now and then? (**अधूनमधून**, *adhūnmadhūn*.) By itself? (**आपोआप**, *āpoāp*.) Lately? (**नुकताच**, *nuktāc*.) A commencement? (**प्रारंभ**, *prārambh*.) An ending? (**अंत**, *ant*.) At last? (**अखेर**, *akher*.) A period? (**कालखंड**, *kālkhaṇḍ*.) A remembrance? (**स्मृती**, *smṛtī*.) A generation? (**पिढी**, *piḍhī*.) An ancestor? (**पूर्वज**, *pūrvaj*.) Heritage? (**वारसा**, *vārsā*.) A lineage? (**वंश**, *vaṁś*.) To preserve? (**जतन करणे**, *jatan karṇe*.) To lose forever? (**गमावणे**, *gamāvṇe*.) To endure? (**सोसणे**, *sosṇe*.) Death? (**मृत्यू**, *mṛtyū*.) To pass away? (**मरण पावणे**, *maraṇ pāvṇe*.) To arise? (**उद्भवणे**, *udbhavṇe*.) A newspaper? (**वृत्तपत्र**, *vṛttapatra*.) A daily paper? (**दैनिक**, *dainik*.) A weekly? (**साप्ताहिक**, *sāptāhik*.) A headline? (**मथळा**, *mathḷā*.) To print? (**छापणे**, *chāpṇe*.) A reporter? (**वार्ताहर**, *vārtāhar*.) An editor? (**संपादक**, *sampādak*.) An article? (**लेख**, *lekh*.) An editorial? (**अग्रलेख**, *agralekh*.) To publish? (**प्रकाशित करणे**, *prakāśit karṇe*.)
+`;export{t};

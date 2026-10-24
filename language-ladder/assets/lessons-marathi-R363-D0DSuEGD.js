@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MR-R365-review-358-365
+spine_node: SPINE-GIVE-REASONS
+sequence: 21220
+chapter: 365
+type: review
+headword: (dialogue)
+gloss: a review of the words from Making Laws to Settling Disputes
+concept_tag: REVIEW
+prerequisites: [MR-C358-samvidhan, MR-C358-dhoran, MR-C358-lagu-karne, MR-C358-radda-karne, MR-C358-bahal-karne, MR-C359-vakil, MR-C359-khatla, MR-C359-sunavni, MR-C359-nivada, MR-C359-dava, MR-C360-samanta, MR-C360-bhedbhav, MR-C360-visamta, MR-C360-daridrya, MR-C360-saksarta, MR-C361-mahsul, MR-C361-arthasankalpa, MR-C361-nidhi, MR-C361-anudan, MR-C361-arthik, MR-C362-andolan, MR-C362-nidarsan, MR-C362-uposan, MR-C362-nisedh-karne, MR-C362-bahiskar-ghalne, MR-C363-satta, MR-C363-bhrastacar, MR-C363-pardarsakta, MR-C363-svartha, MR-C363-cithavne, MR-C364-samstha, MR-C364-samiti, MR-C364-sabha, MR-C364-pravakta, MR-C364-karyakarta, MR-C365-vataghati-karne, MR-C365-vad-ghalne, MR-C365-retne, MR-C365-mitavne, MR-C365-sangharsa-karne]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MR-LEX-C358-SANVIDHAN358-01, MR-LEX-C358-SANVIDHAN358-02, MR-LEX-C358-SANVIDHAN358-03, MR-LEX-C358-SANVIDHAN358-04, MR-LEX-C358-SANVIDHAN358-05, MR-LEX-C359-KHATLA359-01, MR-LEX-C359-KHATLA359-02, MR-LEX-C359-KHATLA359-03, MR-LEX-C359-KHATLA359-04, MR-LEX-C359-KHATLA359-05, MR-LEX-C360-SAMANTA360-01, MR-LEX-C360-SAMANTA360-02, MR-LEX-C360-SAMANTA360-03, MR-LEX-C360-SAMANTA360-04, MR-LEX-C360-SAMANTA360-05, MR-LEX-C361-ARTHIK361-01, MR-LEX-C361-ARTHIK361-02, MR-LEX-C361-ARTHIK361-03, MR-LEX-C361-ARTHIK361-04, MR-LEX-C361-ARTHIK361-05, MR-LEX-C362-ANDOLAN362-01, MR-LEX-C362-ANDOLAN362-02, MR-LEX-C362-ANDOLAN362-03, MR-LEX-C362-ANDOLAN362-04, MR-LEX-C362-ANDOLAN362-05, MR-LEX-C363-SATTA363-01, MR-LEX-C363-SATTA363-02, MR-LEX-C363-SATTA363-03, MR-LEX-C363-SATTA363-04, MR-LEX-C363-SATTA363-05, MR-LEX-C364-SANSTHA364-01, MR-LEX-C364-SANSTHA364-02, MR-LEX-C364-SANSTHA364-03, MR-LEX-C364-SANSTHA364-04, MR-LEX-C364-SANSTHA364-05, MR-LEX-C365-VATAGHATI365-01, MR-LEX-C365-VATAGHATI365-02, MR-LEX-C365-VATAGHATI365-03, MR-LEX-C365-VATAGHATI365-04, MR-LEX-C365-VATAGHATI365-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MR-LEX-C358-SANVIDHAN358-01, MR-LEX-C358-SANVIDHAN358-02, MR-LEX-C358-SANVIDHAN358-03, MR-LEX-C358-SANVIDHAN358-04, MR-LEX-C358-SANVIDHAN358-05, MR-LEX-C359-KHATLA359-01, MR-LEX-C359-KHATLA359-02, MR-LEX-C359-KHATLA359-03, MR-LEX-C359-KHATLA359-04, MR-LEX-C359-KHATLA359-05, MR-LEX-C360-SAMANTA360-01, MR-LEX-C360-SAMANTA360-02, MR-LEX-C360-SAMANTA360-03, MR-LEX-C360-SAMANTA360-04, MR-LEX-C360-SAMANTA360-05, MR-LEX-C361-ARTHIK361-01, MR-LEX-C361-ARTHIK361-02, MR-LEX-C361-ARTHIK361-03, MR-LEX-C361-ARTHIK361-04, MR-LEX-C361-ARTHIK361-05, MR-LEX-C362-ANDOLAN362-01, MR-LEX-C362-ANDOLAN362-02, MR-LEX-C362-ANDOLAN362-03, MR-LEX-C362-ANDOLAN362-04, MR-LEX-C362-ANDOLAN362-05, MR-LEX-C363-SATTA363-01, MR-LEX-C363-SATTA363-02, MR-LEX-C363-SATTA363-03, MR-LEX-C363-SATTA363-04, MR-LEX-C363-SATTA363-05, MR-LEX-C364-SANSTHA364-01, MR-LEX-C364-SANSTHA364-02, MR-LEX-C364-SANSTHA364-03, MR-LEX-C364-SANSTHA364-04, MR-LEX-C364-SANSTHA364-05, MR-LEX-C365-VATAGHATI365-01, MR-LEX-C365-VATAGHATI365-02, MR-LEX-C365-VATAGHATI365-03, MR-LEX-C365-VATAGHATI365-04, MR-LEX-C365-VATAGHATI365-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard
+reviews_of: [MR-C358-samvidhan, MR-C358-dhoran, MR-C358-lagu-karne, MR-C358-radda-karne, MR-C358-bahal-karne, MR-C359-vakil, MR-C359-khatla, MR-C359-sunavni, MR-C359-nivada, MR-C359-dava, MR-C360-samanta, MR-C360-bhedbhav, MR-C360-visamta, MR-C360-daridrya, MR-C360-saksarta, MR-C361-mahsul, MR-C361-arthasankalpa, MR-C361-nidhi, MR-C361-anudan, MR-C361-arthik, MR-C362-andolan, MR-C362-nidarsan, MR-C362-uposan, MR-C362-nisedh-karne, MR-C362-bahiskar-ghalne, MR-C363-satta, MR-C363-bhrastacar, MR-C363-pardarsakta, MR-C363-svartha, MR-C363-cithavne, MR-C364-samstha, MR-C364-samiti, MR-C364-sabha, MR-C364-pravakta, MR-C364-karyakarta, MR-C365-vataghati-karne, MR-C365-vad-ghalne, MR-C365-retne, MR-C365-mitavne, MR-C365-sangharsa-karne]
+---
+
+# Looking back: from Making Laws to Settling Disputes
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C358-SANVIDHAN358-01, MR-LEX-C358-SANVIDHAN358-02] -->
+
+[PAUSE 3s] Say the Marathi for a constitution and a policy.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C358-SANVIDHAN358-01, MR-LEX-C358-SANVIDHAN358-02, MR-LEX-C358-SANVIDHAN358-03, MR-LEX-C358-SANVIDHAN358-04, MR-LEX-C358-SANVIDHAN358-05, MR-LEX-C359-KHATLA359-01, MR-LEX-C359-KHATLA359-02, MR-LEX-C359-KHATLA359-03, MR-LEX-C359-KHATLA359-04, MR-LEX-C359-KHATLA359-05, MR-LEX-C360-SAMANTA360-01, MR-LEX-C360-SAMANTA360-02, MR-LEX-C360-SAMANTA360-03, MR-LEX-C360-SAMANTA360-04, MR-LEX-C360-SAMANTA360-05, MR-LEX-C361-ARTHIK361-01, MR-LEX-C361-ARTHIK361-02, MR-LEX-C361-ARTHIK361-03, MR-LEX-C361-ARTHIK361-04, MR-LEX-C361-ARTHIK361-05, MR-LEX-C362-ANDOLAN362-01, MR-LEX-C362-ANDOLAN362-02, MR-LEX-C362-ANDOLAN362-03, MR-LEX-C362-ANDOLAN362-04, MR-LEX-C362-ANDOLAN362-05, MR-LEX-C363-SATTA363-01, MR-LEX-C363-SATTA363-02, MR-LEX-C363-SATTA363-03, MR-LEX-C363-SATTA363-04, MR-LEX-C363-SATTA363-05, MR-LEX-C364-SANSTHA364-01, MR-LEX-C364-SANSTHA364-02, MR-LEX-C364-SANSTHA364-03, MR-LEX-C364-SANSTHA364-04, MR-LEX-C364-SANSTHA364-05, MR-LEX-C365-VATAGHATI365-01, MR-LEX-C365-VATAGHATI365-02, MR-LEX-C365-VATAGHATI365-03, MR-LEX-C365-VATAGHATI365-04, MR-LEX-C365-VATAGHATI365-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a constitution, a policy, to enforce, to cancel, to grant]
+- [YOU SAY: a lawyer, a lawsuit, a hearing, a verdict, a claim]
+- [YOU SAY: equality, discrimination, inequality, poverty, literacy]
+- [YOU SAY: revenue, a budget, a fund, a subsidy, economic]
+- [YOU SAY: a movement, a demonstration, a hunger strike, to protest, to boycott]
+- [YOU SAY: power, corruption, transparency, self-interest, to incite]
+- [YOU SAY: an institution, a committee, an assembly, a spokesperson, an activist]
+- [YOU SAY: to negotiate, to argue, to push through, to resolve, to fight for]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C358-SANVIDHAN358-01, MR-LEX-C358-SANVIDHAN358-02, MR-LEX-C358-SANVIDHAN358-03, MR-LEX-C358-SANVIDHAN358-04, MR-LEX-C358-SANVIDHAN358-05, MR-LEX-C359-KHATLA359-01, MR-LEX-C359-KHATLA359-02, MR-LEX-C359-KHATLA359-03, MR-LEX-C359-KHATLA359-04, MR-LEX-C359-KHATLA359-05, MR-LEX-C360-SAMANTA360-01, MR-LEX-C360-SAMANTA360-02, MR-LEX-C360-SAMANTA360-03, MR-LEX-C360-SAMANTA360-04, MR-LEX-C360-SAMANTA360-05, MR-LEX-C361-ARTHIK361-01, MR-LEX-C361-ARTHIK361-02, MR-LEX-C361-ARTHIK361-03, MR-LEX-C361-ARTHIK361-04, MR-LEX-C361-ARTHIK361-05, MR-LEX-C362-ANDOLAN362-01, MR-LEX-C362-ANDOLAN362-02, MR-LEX-C362-ANDOLAN362-03, MR-LEX-C362-ANDOLAN362-04, MR-LEX-C362-ANDOLAN362-05, MR-LEX-C363-SATTA363-01, MR-LEX-C363-SATTA363-02, MR-LEX-C363-SATTA363-03, MR-LEX-C363-SATTA363-04, MR-LEX-C363-SATTA363-05, MR-LEX-C364-SANSTHA364-01, MR-LEX-C364-SANSTHA364-02, MR-LEX-C364-SANSTHA364-03, MR-LEX-C364-SANSTHA364-04, MR-LEX-C364-SANSTHA364-05, MR-LEX-C365-VATAGHATI365-01, MR-LEX-C365-VATAGHATI365-02, MR-LEX-C365-VATAGHATI365-03, MR-LEX-C365-VATAGHATI365-04, MR-LEX-C365-VATAGHATI365-05] -->
+
+[PAUSE 3s] A constitution? (**संविधान**, *saṁvidhān*.) A policy? (**धोरण**, *dhoraṇ*.) To enforce? (**लागू करणे**, *lāgū karṇe*.) To cancel? (**रद्द करणे**, *radda karṇe*.) To grant? (**बहाल करणे**, *bahāl karṇe*.) A lawyer? (**वकील**, *vakīl*.) A lawsuit? (**खटला**, *khaṭlā*.) A hearing? (**सुनावणी**, *sunāvṇī*.) A verdict? (**निवाडा**, *nivāḍā*.) A claim? (**दावा**, *dāvā*.) Equality? (**समानता**, *samāntā*.) Discrimination? (**भेदभाव**, *bhedbhāv*.) Inequality? (**विषमता**, *viṣamtā*.) Poverty? (**दारिद्र्य**, *dāridrya*.) Literacy? (**साक्षरता**, *sākṣartā*.) Revenue? (**महसूल**, *mahsūl*.) A budget? (**अर्थसंकल्प**, *arthasaṅkalpa*.) A fund? (**निधी**, *nidhī*.) A subsidy? (**अनुदान**, *anudān*.) Economic? (**आर्थिक**, *ārthik*.) A movement? (**आंदोलन**, *āndolan*.) A demonstration? (**निदर्शन**, *nidarśan*.) A hunger strike? (**उपोषण**, *upoṣaṇ*.) To protest? (**निषेध करणे**, *niṣedh karṇe*.) To boycott? (**बहिष्कार घालणे**, *bahiṣkār ghālṇe*.) Power? (**सत्ता**, *sattā*.) Corruption? (**भ्रष्टाचार**, *bhraṣṭācār*.) Transparency? (**पारदर्शकता**, *pārdarśaktā*.) Self-interest? (**स्वार्थ**, *svārtha*.) To incite? (**चिथावणे**, *cithāvṇe*.) An institution? (**संस्था**, *saṁsthā*.) A committee? (**समिती**, *samitī*.) An assembly? (**सभा**, *sabhā*.) A spokesperson? (**प्रवक्ता**, *pravaktā*.) An activist? (**कार्यकर्ता**, *kāryakartā*.) To negotiate? (**वाटाघाटी करणे**, *vāṭāghāṭī karṇe*.) To argue? (**वाद घालणे**, *vād ghālṇe*.) To push through? (**रेटणे**, *reṭṇe*.) To resolve? (**मिटवणे**, *miṭavṇe*.) To fight for? (**संघर्ष करणे**, *saṅgharṣa karṇe*.)
+`;export{t};

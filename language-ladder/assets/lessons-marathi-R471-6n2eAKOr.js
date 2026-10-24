@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MR-R473-review-466-473
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 27220
+chapter: 473
+type: review
+headword: (dialogue)
+gloss: a review of the words from Peace of Mind to Mischief and Fun
+concept_tag: REVIEW
+prerequisites: [MR-C466-samadhan, MR-C466-svasthya, MR-C466-nivant, MR-C466-visavne, MR-C466-khulne, MR-C467-yatna, MR-C467-tadphadne, MR-C467-kalvalne, MR-C467-jagne-live, MR-C467-dagmagne, MR-C468-mrdu, MR-C468-saumya, MR-C468-halva, MR-C468-samvedansil, MR-C468-paropkari, MR-C469-kathor, MR-C469-nirdayi, MR-C469-dusta, MR-C469-ugra, MR-C469-kapti, MR-C470-labad, MR-C470-dhongi, MR-C470-bhola, MR-C470-niragas, MR-C470-thakavne, MR-C471-sahana, MR-C471-catur, MR-C471-buddhiman, MR-C471-samjutdar, MR-C471-akkal, MR-C472-hatti, MR-C472-admutha, MR-C472-lahri, MR-C472-utavla, MR-C472-adhir, MR-C473-khodkar, MR-C473-miskil, MR-C473-vinodi, MR-C473-gammat, MR-C473-thatta-karne]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MR-LEX-C466-SAMADHAN466-01, MR-LEX-C466-SAMADHAN466-02, MR-LEX-C466-SAMADHAN466-03, MR-LEX-C466-SAMADHAN466-04, MR-LEX-C466-SAMADHAN466-05, MR-LEX-C467-YATANA467-01, MR-LEX-C467-YATANA467-02, MR-LEX-C467-YATANA467-03, MR-LEX-C467-YATANA467-04, MR-LEX-C467-YATANA467-05, MR-LEX-C468-SAUMYA468-01, MR-LEX-C468-SAUMYA468-02, MR-LEX-C468-SAUMYA468-03, MR-LEX-C468-SAUMYA468-04, MR-LEX-C468-SAUMYA468-05, MR-LEX-C469-KATHOR469-01, MR-LEX-C469-KATHOR469-02, MR-LEX-C469-KATHOR469-03, MR-LEX-C469-KATHOR469-04, MR-LEX-C469-KATHOR469-05, MR-LEX-C470-LABAD470-01, MR-LEX-C470-LABAD470-02, MR-LEX-C470-LABAD470-03, MR-LEX-C470-LABAD470-04, MR-LEX-C470-LABAD470-05, MR-LEX-C471-SAHANA471-01, MR-LEX-C471-SAHANA471-02, MR-LEX-C471-SAHANA471-03, MR-LEX-C471-SAHANA471-04, MR-LEX-C471-SAHANA471-05, MR-LEX-C472-HATTI472-01, MR-LEX-C472-HATTI472-02, MR-LEX-C472-HATTI472-03, MR-LEX-C472-HATTI472-04, MR-LEX-C472-HATTI472-05, MR-LEX-C473-KHODKAR473-01, MR-LEX-C473-KHODKAR473-02, MR-LEX-C473-KHODKAR473-03, MR-LEX-C473-KHODKAR473-04, MR-LEX-C473-KHODKAR473-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MR-LEX-C466-SAMADHAN466-01, MR-LEX-C466-SAMADHAN466-02, MR-LEX-C466-SAMADHAN466-03, MR-LEX-C466-SAMADHAN466-04, MR-LEX-C466-SAMADHAN466-05, MR-LEX-C467-YATANA467-01, MR-LEX-C467-YATANA467-02, MR-LEX-C467-YATANA467-03, MR-LEX-C467-YATANA467-04, MR-LEX-C467-YATANA467-05, MR-LEX-C468-SAUMYA468-01, MR-LEX-C468-SAUMYA468-02, MR-LEX-C468-SAUMYA468-03, MR-LEX-C468-SAUMYA468-04, MR-LEX-C468-SAUMYA468-05, MR-LEX-C469-KATHOR469-01, MR-LEX-C469-KATHOR469-02, MR-LEX-C469-KATHOR469-03, MR-LEX-C469-KATHOR469-04, MR-LEX-C469-KATHOR469-05, MR-LEX-C470-LABAD470-01, MR-LEX-C470-LABAD470-02, MR-LEX-C470-LABAD470-03, MR-LEX-C470-LABAD470-04, MR-LEX-C470-LABAD470-05, MR-LEX-C471-SAHANA471-01, MR-LEX-C471-SAHANA471-02, MR-LEX-C471-SAHANA471-03, MR-LEX-C471-SAHANA471-04, MR-LEX-C471-SAHANA471-05, MR-LEX-C472-HATTI472-01, MR-LEX-C472-HATTI472-02, MR-LEX-C472-HATTI472-03, MR-LEX-C472-HATTI472-04, MR-LEX-C472-HATTI472-05, MR-LEX-C473-KHODKAR473-01, MR-LEX-C473-KHODKAR473-02, MR-LEX-C473-KHODKAR473-03, MR-LEX-C473-KHODKAR473-04, MR-LEX-C473-KHODKAR473-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard
+reviews_of: [MR-C466-samadhan, MR-C466-svasthya, MR-C466-nivant, MR-C466-visavne, MR-C466-khulne, MR-C467-yatna, MR-C467-tadphadne, MR-C467-kalvalne, MR-C467-jagne-live, MR-C467-dagmagne, MR-C468-mrdu, MR-C468-saumya, MR-C468-halva, MR-C468-samvedansil, MR-C468-paropkari, MR-C469-kathor, MR-C469-nirdayi, MR-C469-dusta, MR-C469-ugra, MR-C469-kapti, MR-C470-labad, MR-C470-dhongi, MR-C470-bhola, MR-C470-niragas, MR-C470-thakavne, MR-C471-sahana, MR-C471-catur, MR-C471-buddhiman, MR-C471-samjutdar, MR-C471-akkal, MR-C472-hatti, MR-C472-admutha, MR-C472-lahri, MR-C472-utavla, MR-C472-adhir, MR-C473-khodkar, MR-C473-miskil, MR-C473-vinodi, MR-C473-gammat, MR-C473-thatta-karne]
+---
+
+# Looking back: from Peace of Mind to Mischief and Fun
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C466-SAMADHAN466-01, MR-LEX-C466-SAMADHAN466-02] -->
+
+[PAUSE 3s] Say the Marathi for satisfaction and well-being.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C466-SAMADHAN466-01, MR-LEX-C466-SAMADHAN466-02, MR-LEX-C466-SAMADHAN466-03, MR-LEX-C466-SAMADHAN466-04, MR-LEX-C466-SAMADHAN466-05, MR-LEX-C467-YATANA467-01, MR-LEX-C467-YATANA467-02, MR-LEX-C467-YATANA467-03, MR-LEX-C467-YATANA467-04, MR-LEX-C467-YATANA467-05, MR-LEX-C468-SAUMYA468-01, MR-LEX-C468-SAUMYA468-02, MR-LEX-C468-SAUMYA468-03, MR-LEX-C468-SAUMYA468-04, MR-LEX-C468-SAUMYA468-05, MR-LEX-C469-KATHOR469-01, MR-LEX-C469-KATHOR469-02, MR-LEX-C469-KATHOR469-03, MR-LEX-C469-KATHOR469-04, MR-LEX-C469-KATHOR469-05, MR-LEX-C470-LABAD470-01, MR-LEX-C470-LABAD470-02, MR-LEX-C470-LABAD470-03, MR-LEX-C470-LABAD470-04, MR-LEX-C470-LABAD470-05, MR-LEX-C471-SAHANA471-01, MR-LEX-C471-SAHANA471-02, MR-LEX-C471-SAHANA471-03, MR-LEX-C471-SAHANA471-04, MR-LEX-C471-SAHANA471-05, MR-LEX-C472-HATTI472-01, MR-LEX-C472-HATTI472-02, MR-LEX-C472-HATTI472-03, MR-LEX-C472-HATTI472-04, MR-LEX-C472-HATTI472-05, MR-LEX-C473-KHODKAR473-01, MR-LEX-C473-KHODKAR473-02, MR-LEX-C473-KHODKAR473-03, MR-LEX-C473-KHODKAR473-04, MR-LEX-C473-KHODKAR473-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: satisfaction, well-being, relaxed, to rest a while, to brighten up]
+- [YOU SAY: torment, to writhe, to ache with pity, to stay alive, to wobble]
+- [YOU SAY: soft-hearted, mild, tender-hearted, sensitive, helpful to others]
+- [YOU SAY: harsh, merciless, wicked, fierce, deceitful]
+- [YOU SAY: sly, hypocritical, naive, innocent, to dupe]
+- [YOU SAY: sensible, shrewd, intelligent, understanding, common sense]
+- [YOU SAY: stubborn, obstinate, moody, hasty, impatient]
+- [YOU SAY: naughty, impish, funny, amusement, to tease]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C466-SAMADHAN466-01, MR-LEX-C466-SAMADHAN466-02, MR-LEX-C466-SAMADHAN466-03, MR-LEX-C466-SAMADHAN466-04, MR-LEX-C466-SAMADHAN466-05, MR-LEX-C467-YATANA467-01, MR-LEX-C467-YATANA467-02, MR-LEX-C467-YATANA467-03, MR-LEX-C467-YATANA467-04, MR-LEX-C467-YATANA467-05, MR-LEX-C468-SAUMYA468-01, MR-LEX-C468-SAUMYA468-02, MR-LEX-C468-SAUMYA468-03, MR-LEX-C468-SAUMYA468-04, MR-LEX-C468-SAUMYA468-05, MR-LEX-C469-KATHOR469-01, MR-LEX-C469-KATHOR469-02, MR-LEX-C469-KATHOR469-03, MR-LEX-C469-KATHOR469-04, MR-LEX-C469-KATHOR469-05, MR-LEX-C470-LABAD470-01, MR-LEX-C470-LABAD470-02, MR-LEX-C470-LABAD470-03, MR-LEX-C470-LABAD470-04, MR-LEX-C470-LABAD470-05, MR-LEX-C471-SAHANA471-01, MR-LEX-C471-SAHANA471-02, MR-LEX-C471-SAHANA471-03, MR-LEX-C471-SAHANA471-04, MR-LEX-C471-SAHANA471-05, MR-LEX-C472-HATTI472-01, MR-LEX-C472-HATTI472-02, MR-LEX-C472-HATTI472-03, MR-LEX-C472-HATTI472-04, MR-LEX-C472-HATTI472-05, MR-LEX-C473-KHODKAR473-01, MR-LEX-C473-KHODKAR473-02, MR-LEX-C473-KHODKAR473-03, MR-LEX-C473-KHODKAR473-04, MR-LEX-C473-KHODKAR473-05] -->
+
+[PAUSE 3s] Satisfaction? (**समाधान**, *samādhān*.) Well-being? (**स्वास्थ्य**, *svāsthya*.) Relaxed? (**निवांत**, *nivānt*.) To rest a while? (**विसावणे**, *visāvṇe*.) To brighten up? (**खुलणे**, *khulṇe*.) Torment? (**यातना**, *yātnā*.) To writhe? (**तडफडणे**, *taḍphaḍṇe*.) To ache with pity? (**कळवळणे**, *kaḷvaḷṇe*.) To stay alive? (**जगणे**, *jagṇe*.) To wobble? (**डगमगणे**, *ḍagmagṇe*.) Soft-hearted? (**मृदू**, *mṛdū*.) Mild? (**सौम्य**, *saumya*.) Tender-hearted? (**हळवा**, *haḷvā*.) Sensitive? (**संवेदनशील**, *saṁvedanśīl*.) Helpful to others? (**परोपकारी**, *paropkārī*.) Harsh? (**कठोर**, *kaṭhor*.) Merciless? (**निर्दयी**, *nirdayī*.) Wicked? (**दुष्ट**, *duṣṭa*.) Fierce? (**उग्र**, *ugra*.) Deceitful? (**कपटी**, *kapṭī*.) Sly? (**लबाड**, *labāḍ*.) Hypocritical? (**ढोंगी**, *ḍhoṅgī*.) Naive? (**भोळा**, *bhoḷā*.) Innocent? (**निरागस**, *nirāgas*.) To dupe? (**ठकवणे**, *ṭhakavṇe*.) Sensible? (**शहाणा**, *śahāṇā*.) Shrewd? (**चतुर**, *catur*.) Intelligent? (**बुद्धिमान**, *buddhimān*.) Understanding? (**समजूतदार**, *samjūtdār*.) Common sense? (**अक्कल**, *akkal*.) Stubborn? (**हट्टी**, *haṭṭī*.) Obstinate? (**आडमुठा**, *āḍmuṭhā*.) Moody? (**लहरी**, *lahrī*.) Hasty? (**उतावळा**, *utāvḷā*.) Impatient? (**अधीर**, *adhīr*.) Naughty? (**खोडकर**, *khoḍkar*.) Impish? (**मिश्किल**, *miśkil*.) Funny? (**विनोदी**, *vinodī*.) Amusement? (**गंमत**, *gammat*.) To tease? (**थट्टा करणे**, *thaṭṭā karṇe*.)
+`;export{t};

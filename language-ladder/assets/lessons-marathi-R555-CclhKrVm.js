@@ -1,0 +1,105 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MR-R557-review-551-557
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 31760
+chapter: 557
+type: review
+headword: (dialogue)
+gloss: a review of the words from Waiting Lists to Means and Notice
+concept_tag: REVIEW
+prerequisites: [MR-C551-pratiksa, MR-C551-yadi, MR-C551-kram, MR-C551-rakhiv, MR-C551-akasmik, MR-C552-phiskatne, MR-C552-bargalne, MR-C552-dhasalne, MR-C552-kolmadne, MR-C552-sutne, MR-C553-sadhya-karne, MR-C553-hulkavni-dene, MR-C553-acuk, MR-C553-hamkhas, MR-C553-tatpar, MR-C554-muddam, MR-C554-agau, MR-C554-ainveli, MR-C554-bahutek, MR-C554-sadharan, MR-C555-avadhi, MR-C555-dirangai, MR-C555-tatdi, MR-C555-dhandal, MR-C555-tarambal, MR-C556-anukul, MR-C556-pratikul, MR-C556-ghol, MR-C556-bikat, MR-C556-sambhram, MR-C557-kuvat, MR-C557-avaka, MR-C557-katkasar, MR-C557-purvasucana, MR-C557-anumati]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MR-LEX-C551-YADI551-01, MR-LEX-C551-YADI551-02, MR-LEX-C551-YADI551-03, MR-LEX-C551-YADI551-04, MR-LEX-C551-YADI551-05, MR-LEX-C552-BIGHADNE552-01, MR-LEX-C552-BIGHADNE552-02, MR-LEX-C552-BIGHADNE552-03, MR-LEX-C552-BIGHADNE552-04, MR-LEX-C552-BIGHADNE552-05, MR-LEX-C553-DHYEY553-01, MR-LEX-C553-DHYEY553-02, MR-LEX-C553-DHYEY553-03, MR-LEX-C553-DHYEY553-04, MR-LEX-C553-DHYEY553-05, MR-LEX-C554-VEL554-01, MR-LEX-C554-VEL554-02, MR-LEX-C554-VEL554-03, MR-LEX-C554-VEL554-04, MR-LEX-C554-VEL554-05, MR-LEX-C555-GHAI555-01, MR-LEX-C555-GHAI555-02, MR-LEX-C555-GHAI555-03, MR-LEX-C555-GHAI555-04, MR-LEX-C555-GHAI555-05, MR-LEX-C556-ANUKUL556-01, MR-LEX-C556-ANUKUL556-02, MR-LEX-C556-ANUKUL556-03, MR-LEX-C556-ANUKUL556-04, MR-LEX-C556-ANUKUL556-05, MR-LEX-C557-KUVAT557-01, MR-LEX-C557-KUVAT557-02, MR-LEX-C557-KUVAT557-03, MR-LEX-C557-KUVAT557-04, MR-LEX-C557-KUVAT557-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MR-LEX-C551-YADI551-01, MR-LEX-C551-YADI551-02, MR-LEX-C551-YADI551-03, MR-LEX-C551-YADI551-04, MR-LEX-C551-YADI551-05, MR-LEX-C552-BIGHADNE552-01, MR-LEX-C552-BIGHADNE552-02, MR-LEX-C552-BIGHADNE552-03, MR-LEX-C552-BIGHADNE552-04, MR-LEX-C552-BIGHADNE552-05, MR-LEX-C553-DHYEY553-01, MR-LEX-C553-DHYEY553-02, MR-LEX-C553-DHYEY553-03, MR-LEX-C553-DHYEY553-04, MR-LEX-C553-DHYEY553-05, MR-LEX-C554-VEL554-01, MR-LEX-C554-VEL554-02, MR-LEX-C554-VEL554-03, MR-LEX-C554-VEL554-04, MR-LEX-C554-VEL554-05, MR-LEX-C555-GHAI555-01, MR-LEX-C555-GHAI555-02, MR-LEX-C555-GHAI555-03, MR-LEX-C555-GHAI555-04, MR-LEX-C555-GHAI555-05, MR-LEX-C556-ANUKUL556-01, MR-LEX-C556-ANUKUL556-02, MR-LEX-C556-ANUKUL556-03, MR-LEX-C556-ANUKUL556-04, MR-LEX-C556-ANUKUL556-05, MR-LEX-C557-KUVAT557-01, MR-LEX-C557-KUVAT557-02, MR-LEX-C557-KUVAT557-03, MR-LEX-C557-KUVAT557-04, MR-LEX-C557-KUVAT557-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard
+reviews_of: [MR-C551-pratiksa, MR-C551-yadi, MR-C551-kram, MR-C551-rakhiv, MR-C551-akasmik, MR-C552-phiskatne, MR-C552-bargalne, MR-C552-dhasalne, MR-C552-kolmadne, MR-C552-sutne, MR-C553-sadhya-karne, MR-C553-hulkavni-dene, MR-C553-acuk, MR-C553-hamkhas, MR-C553-tatpar, MR-C554-muddam, MR-C554-agau, MR-C554-ainveli, MR-C554-bahutek, MR-C554-sadharan, MR-C555-avadhi, MR-C555-dirangai, MR-C555-tatdi, MR-C555-dhandal, MR-C555-tarambal, MR-C556-anukul, MR-C556-pratikul, MR-C556-ghol, MR-C556-bikat, MR-C556-sambhram, MR-C557-kuvat, MR-C557-avaka, MR-C557-katkasar, MR-C557-purvasucana, MR-C557-anumati]
+---
+
+# Looking Back at Chances and Choices
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C551-YADI551-01, MR-LEX-C551-YADI551-02] -->
+
+[PAUSE 3s] Say the Marathi for waiting and a list.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C551-YADI551-01, MR-LEX-C551-YADI551-02, MR-LEX-C551-YADI551-03, MR-LEX-C551-YADI551-04, MR-LEX-C551-YADI551-05, MR-LEX-C552-BIGHADNE552-01, MR-LEX-C552-BIGHADNE552-02, MR-LEX-C552-BIGHADNE552-03, MR-LEX-C552-BIGHADNE552-04, MR-LEX-C552-BIGHADNE552-05, MR-LEX-C553-DHYEY553-01, MR-LEX-C553-DHYEY553-02, MR-LEX-C553-DHYEY553-03, MR-LEX-C553-DHYEY553-04, MR-LEX-C553-DHYEY553-05, MR-LEX-C554-VEL554-01, MR-LEX-C554-VEL554-02, MR-LEX-C554-VEL554-03, MR-LEX-C554-VEL554-04, MR-LEX-C554-VEL554-05, MR-LEX-C555-GHAI555-01, MR-LEX-C555-GHAI555-02, MR-LEX-C555-GHAI555-03, MR-LEX-C555-GHAI555-04, MR-LEX-C555-GHAI555-05, MR-LEX-C556-ANUKUL556-01, MR-LEX-C556-ANUKUL556-02, MR-LEX-C556-ANUKUL556-03, MR-LEX-C556-ANUKUL556-04, MR-LEX-C556-ANUKUL556-05, MR-LEX-C557-KUVAT557-01, MR-LEX-C557-KUVAT557-02, MR-LEX-C557-KUVAT557-03, MR-LEX-C557-KUVAT557-04, MR-LEX-C557-KUVAT557-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: waiting, a list, a sequence, reserved, unforeseen]
+- [YOU SAY: to fall apart, to fizzle out, to crumble, to break down, to come loose]
+- [YOU SAY: to achieve, to elude, accurate, without fail, prompt]
+- [YOU SAY: on purpose, in advance, at the last moment, mostly, roughly]
+- [YOU SAY: a span of time, a needless delay, urgency, a rush, a scramble]
+- [YOU SAY: favourable, unfavourable, a muddle, dire, confusion]
+- [YOU SAY: capacity, scope, thrift, advance notice, formal permission]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C551-YADI551-01, MR-LEX-C551-YADI551-02, MR-LEX-C551-YADI551-03, MR-LEX-C551-YADI551-04, MR-LEX-C551-YADI551-05, MR-LEX-C552-BIGHADNE552-01, MR-LEX-C552-BIGHADNE552-02, MR-LEX-C552-BIGHADNE552-03, MR-LEX-C552-BIGHADNE552-04, MR-LEX-C552-BIGHADNE552-05, MR-LEX-C553-DHYEY553-01, MR-LEX-C553-DHYEY553-02, MR-LEX-C553-DHYEY553-03, MR-LEX-C553-DHYEY553-04, MR-LEX-C553-DHYEY553-05, MR-LEX-C554-VEL554-01, MR-LEX-C554-VEL554-02, MR-LEX-C554-VEL554-03, MR-LEX-C554-VEL554-04, MR-LEX-C554-VEL554-05, MR-LEX-C555-GHAI555-01, MR-LEX-C555-GHAI555-02, MR-LEX-C555-GHAI555-03, MR-LEX-C555-GHAI555-04, MR-LEX-C555-GHAI555-05, MR-LEX-C556-ANUKUL556-01, MR-LEX-C556-ANUKUL556-02, MR-LEX-C556-ANUKUL556-03, MR-LEX-C556-ANUKUL556-04, MR-LEX-C556-ANUKUL556-05, MR-LEX-C557-KUVAT557-01, MR-LEX-C557-KUVAT557-02, MR-LEX-C557-KUVAT557-03, MR-LEX-C557-KUVAT557-04, MR-LEX-C557-KUVAT557-05] -->
+
+[PAUSE 3s] Waiting? (**प्रतीक्षा**, *pratīkṣā*.) A list? (**यादी**, *yādī*.) A sequence? (**क्रम**, *kram*.) Reserved? (**राखीव**, *rākhīv*.) Unforeseen? (**आकस्मिक**, *ākasmik*.) To fall apart? (**फिसकटणे**, *phiskaṭṇe*.) To fizzle out? (**बारगळणे**, *bārgaḷṇe*.) To crumble? (**ढासळणे**, *ḍhāsaḷṇe*.) To break down? (**कोलमडणे**, *kolmaḍṇe*.) To come loose? (**सुटणे**, *suṭṇe*.) To achieve? (**साध्य करणे**, *sādhya karṇe*.) To elude? (**हुलकावणी देणे**, *hulkāvṇī deṇe*.) Accurate? (**अचूक**, *acūk*.) Without fail? (**हमखास**, *hamkhās*.) Prompt? (**तत्पर**, *tatpar*.) On purpose? (**मुद्दाम**, *muddām*.) In advance? (**आगाऊ**, *āgāū*.) At the last moment? (**ऐनवेळी**, *ainveḷī*.) Mostly? (**बहुतेक**, *bahutek*.) Roughly? (**साधारण**, *sādhāraṇ*.) A span of time? (**अवधी**, *avadhī*.) A needless delay? (**दिरंगाई**, *diraṅgāī*.) Urgency? (**तातडी**, *tātḍī*.) A rush? (**धांदल**, *dhāndal*.) A scramble? (**तारांबळ**, *tārāmbaḷ*.) Favourable? (**अनुकूल**, *anukūl*.) Unfavourable? (**प्रतिकूल**, *pratikūl*.) A muddle? (**घोळ**, *ghoḷ*.) Dire? (**बिकट**, *bikaṭ*.) Confusion? (**संभ्रम**, *sambhram*.) Capacity? (**कुवत**, *kuvat*.) Scope? (**आवाका**, *āvākā*.) Thrift? (**काटकसर**, *kāṭkasar*.) Advance notice? (**पूर्वसूचना**, *pūrvasūcanā*.) Formal permission? (**अनुमती**, *anumatī*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MR-R557-review-final-557
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 31770
+chapter: 557
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [MR-C557-kuvat, MR-C557-avaka, MR-C557-katkasar, MR-C557-purvasucana, MR-C557-anumati]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MR-LEX-C557-KUVAT557-01, MR-LEX-C557-KUVAT557-02, MR-LEX-C557-KUVAT557-03, MR-LEX-C557-KUVAT557-04, MR-LEX-C557-KUVAT557-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MR-LEX-C557-KUVAT557-01, MR-LEX-C557-KUVAT557-02, MR-LEX-C557-KUVAT557-03, MR-LEX-C557-KUVAT557-04, MR-LEX-C557-KUVAT557-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard
+reviews_of: [MR-C557-kuvat, MR-C557-avaka, MR-C557-katkasar, MR-C557-purvasucana, MR-C557-anumati]
+---
+
+# Means and Notice — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C557-KUVAT557-01, MR-LEX-C557-KUVAT557-02] -->
+
+[PAUSE 3s] Say the Marathi for capacity and scope.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C557-KUVAT557-01, MR-LEX-C557-KUVAT557-02, MR-LEX-C557-KUVAT557-03, MR-LEX-C557-KUVAT557-04, MR-LEX-C557-KUVAT557-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: capacity, scope, thrift, advance notice, formal permission]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C557-KUVAT557-01, MR-LEX-C557-KUVAT557-02, MR-LEX-C557-KUVAT557-03, MR-LEX-C557-KUVAT557-04, MR-LEX-C557-KUVAT557-05] -->
+
+[PAUSE 3s] Capacity? (**कुवत**, *kuvat*.) Scope? (**आवाका**, *āvākā*.) Thrift? (**काटकसर**, *kāṭkasar*.) Advance notice? (**पूर्वसूचना**, *pūrvasūcanā*.) Formal permission? (**अनुमती**, *anumatī*.)
+`;export{t as n,r as t};
