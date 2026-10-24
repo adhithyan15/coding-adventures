@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.9.0 - 2026-10-24
+
+### Added
+
+- Applied the exact selected reviewed terminal's supported permitted DNS
+  constraints to the exact target retained by the construction-bound path.
+- Added distinct non-copyable evidence retaining the complete constructed path,
+  target policy, reviewed root, path-length state, and optional payload-free DNS
+  count evidence.
+- Added public-chain coverage for the unconstrained reviewed-root branch without
+  changing production dependencies or required capabilities.
+
 ## 0.8.0 - 2026-10-24
 
 ### Added
