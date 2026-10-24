@@ -10,11 +10,10 @@ fn image(parts: &[&[u8]]) -> Vec<u8> {
 #[test]
 fn all_first_bytes_have_the_documented_classification_and_width() {
     let invalid = [
-        0x00, 0x02, 0x03, 0x04, 0x05, 0x12, 0x13, 0x14, 0x15, 0x18, 0x1a, 0x1c, 0x1d, 0x1e,
-        0x1f, 0x21, 0x38, 0x3a, 0x3c, 0x3d, 0x41, 0x42, 0x45, 0x4b, 0x4e, 0x51, 0x52, 0x55,
-        0x5b, 0x5e, 0x61, 0x62, 0x65, 0x6b, 0x71, 0x72, 0x75, 0x7b, 0x83, 0x87, 0x8f, 0x93,
-        0xa3, 0xb3, 0xc3, 0xc7, 0xcc, 0xcd, 0xcf, 0xd3, 0xdc, 0xdd, 0xe3, 0xec, 0xed, 0xf3,
-        0xfc, 0xfd,
+        0x00, 0x02, 0x03, 0x04, 0x05, 0x12, 0x13, 0x14, 0x15, 0x18, 0x1a, 0x1c, 0x1d, 0x1e, 0x1f,
+        0x21, 0x38, 0x3a, 0x3c, 0x3d, 0x41, 0x42, 0x45, 0x4b, 0x4e, 0x51, 0x52, 0x55, 0x5b, 0x5e,
+        0x61, 0x62, 0x65, 0x6b, 0x71, 0x72, 0x75, 0x7b, 0x83, 0x87, 0x8f, 0x93, 0xa3, 0xb3, 0xc3,
+        0xc7, 0xcc, 0xcd, 0xcf, 0xd3, 0xdc, 0xdd, 0xe3, 0xec, 0xed, 0xf3, 0xfc, 0xfd,
     ];
     let mut valid_count = 0;
     for opcode in 0_u8..=u8::MAX {
@@ -77,9 +76,7 @@ fn load_reset_restore_and_checked_access_cover_complete_state() {
     assert!(cpu.write_memory(0xffff, &[1, 2]).is_err());
     assert_eq!(cpu.get_state(), before);
     assert!(Motorola6800Simulator::new().load(&[], 0).is_err());
-    assert!(Motorola6800Simulator::new()
-        .load(&[0; 2], 0xffff)
-        .is_err());
+    assert!(Motorola6800Simulator::new().load(&[0; 2], 0xffff).is_err());
 }
 
 #[test]
@@ -131,7 +128,10 @@ fn arithmetic_logic_shift_and_decimal_adjust_follow_condition_rules() {
 
     let mut memory = Motorola6800Simulator::new();
     memory
-        .load(&image(&[&[0x60, 0], &[0x63, 0], &[0x6c, 0], &[0x6d, 0], &[0x3e]]), 0)
+        .load(
+            &image(&[&[0x60, 0], &[0x63, 0], &[0x6c, 0], &[0x6d, 0], &[0x3e]]),
+            0,
+        )
         .unwrap();
     memory.write_x(0x2000);
     memory.write_memory(0x2000, &[1]).unwrap();
@@ -165,9 +165,7 @@ fn every_conditional_branch_observes_the_documented_predicate() {
         assert_eq!(trace.pc_after, 4, "opcode {opcode:#04x}");
 
         let mut opposite = Motorola6800Simulator::new();
-        opposite
-            .load(&[opcode, 2, 0x01, 0x01, 0x3e], 0)
-            .unwrap();
+        opposite.load(&[opcode, 2, 0x01, 0x01, 0x3e], 0).unwrap();
         opposite.write_cc(not_taken_cc);
         assert_eq!(opposite.step().unwrap().pc_after, 2);
     }
@@ -176,8 +174,7 @@ fn every_conditional_branch_observes_the_documented_predicate() {
 #[test]
 fn stack_subroutine_software_interrupt_and_return_paths_round_trip() {
     let mut call = Motorola6800Simulator::new();
-    call.load(&[0xbd, 0, 4, 0x3e, 0x86, 42, 0x39], 0)
-        .unwrap();
+    call.load(&[0xbd, 0, 4, 0x3e, 0x86, 42, 0x39], 0).unwrap();
     call.write_sp(0x0200);
     call.run(16).unwrap();
     assert_eq!(call.get_state().a, 42);
@@ -200,8 +197,8 @@ fn transfer_stack_and_flag_orders_preserve_unrelated_state() {
     let mut cpu = Motorola6800Simulator::new();
     cpu.load(
         &[
-            0x06, 0x07, 0x16, 0x17, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x36, 0x37, 0x32,
-            0x33, 0x30, 0x35, 0x31, 0x34, 0x3e,
+            0x06, 0x07, 0x16, 0x17, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x36, 0x37, 0x32, 0x33,
+            0x30, 0x35, 0x31, 0x34, 0x3e,
         ],
         0,
     )
@@ -263,10 +260,7 @@ fn error_messages_and_execute_result_are_stable() {
             len: 2,
         },
         Motorola6800Error::FetchOutsideProgram { pc: 4 },
-        Motorola6800Error::TruncatedInstruction {
-            pc: 0,
-            needed: 2,
-        },
+        Motorola6800Error::TruncatedInstruction { pc: 0, needed: 2 },
         Motorola6800Error::UnknownOpcode { opcode: 0, pc: 0 },
         Motorola6800Error::InvalidState {
             reason: "bad memory",
@@ -284,4 +278,81 @@ fn error_messages_and_execute_result_are_stable() {
     assert!(result.halted);
     assert_eq!(result.steps, 2);
     assert_eq!(result.final_state.a, 42);
+}
+
+#[test]
+fn public_accessors_validation_and_failure_rollbacks_are_covered() {
+    let mut cpu = Motorola6800Simulator::new();
+    cpu.load(&[0x01, 0x3e], 0x100).unwrap();
+    cpu.write_a(1);
+    cpu.write_b(2);
+    cpu.write_x(3);
+    cpu.write_sp(4);
+    cpu.write_cc(5);
+    assert_eq!(
+        (cpu.read_a(), cpu.read_b(), cpu.read_x(), cpu.read_sp()),
+        (1, 2, 3, 4)
+    );
+    assert_eq!(cpu.read_cc() & 0x3f, 5);
+    assert!(cpu.read_memory(0xffff, 2).is_err());
+
+    let mut bad_memory = cpu.get_state();
+    bad_memory.memory.pop();
+    assert!(matches!(
+        cpu.restore(bad_memory),
+        Err(Motorola6800Error::InvalidState { .. })
+    ));
+    let mut bad_range = cpu.get_state();
+    bad_range.loaded_len = 0;
+    assert!(matches!(
+        cpu.restore(bad_range),
+        Err(Motorola6800Error::InvalidState { .. })
+    ));
+
+    cpu.write_cc(0);
+    cpu.step().unwrap();
+    assert_eq!(cpu.get_state().pc, 0x101);
+    let result = cpu.run(4).unwrap();
+    assert!(result.halted);
+    assert_eq!(result.steps, 1);
+}
+
+#[test]
+fn post_halt_fetch_and_transaction_failures_preserve_state() {
+    let mut halted = Motorola6800Simulator::new();
+    halted.load(&[0x3e], 0).unwrap();
+    assert_eq!(halted.step().unwrap().mnemonic, "WAI");
+    let before = halted.get_state();
+    assert_eq!(halted.step(), Err(Motorola6800Error::Halted));
+    assert_eq!(halted.get_state(), before);
+
+    let mut outside = Motorola6800Simulator::new();
+    outside.load(&[0x01], 0).unwrap();
+    outside.step().unwrap();
+    let before = outside.get_state();
+    assert_eq!(
+        outside.step(),
+        Err(Motorola6800Error::FetchOutsideProgram { pc: 1 })
+    );
+    assert_eq!(outside.get_state(), before);
+    assert_eq!(
+        outside.run(2),
+        Err(Motorola6800Error::FetchOutsideProgram { pc: 1 })
+    );
+    assert_eq!(outside.get_state(), before);
+
+    let mut executing = Motorola6800Simulator::new();
+    executing.load(&[0x3e], 0x200).unwrap();
+    let original = executing.get_state();
+    assert_eq!(
+        executing.execute(&[0x01], 0, 1),
+        Err(Motorola6800Error::StepLimitExceeded { limit: 1 })
+    );
+    assert_eq!(executing.get_state(), original);
+
+    let mut memory = Motorola6800Simulator::new();
+    memory.load(&[0x60, 0], 0).unwrap();
+    memory.write_x(0x2000);
+    memory.write_memory(0x2000, &[1]).unwrap();
+    assert_eq!(memory.step().unwrap().mnemonic, "NEG");
 }
