@@ -78,6 +78,11 @@ fn decodes_success_and_preserves_generic_response_bytes() {
         .equals(&[1, 3, 6, 1, 5, 5, 7, 48, 1, 1]));
     assert_eq!(bytes.response(), inner);
 
+    let bytes_debug = format!("{bytes:?}");
+    assert!(bytes_debug.contains("response_type_arc_count"));
+    assert!(bytes_debug.contains("response_octet_count"));
+    assert!(!bytes_debug.contains("020101"));
+
     let debug = format!("{decoded:?}");
     assert!(debug.contains("response_octet_count"));
     assert!(!debug.contains("020101"));
@@ -129,6 +134,13 @@ fn status_and_response_bytes_presence_are_bound_together() {
             X509OcspResponseErrorKind::UnexpectedResponseBytes
         );
     }
+
+    assert_eq!(
+        decode(&response(1, Some(element(0x05, &[]))))
+            .unwrap_err()
+            .kind(),
+        X509OcspResponseErrorKind::UnexpectedOptionalField
+    );
 }
 
 #[test]
@@ -267,6 +279,33 @@ fn nested_framing_offsets_are_rebased_to_the_complete_response() {
         ),
         "{error:?}"
     );
+
+    let malformed_inner_trailing = element(
+        0xa0,
+        &sequence(&[
+            element(0x06, BASIC_RESPONSE_OID),
+            element(0x04, &[1]),
+            vec![0x05, 0x01],
+        ]),
+    );
+    assert!(matches!(
+        decode(&response(0, Some(malformed_inner_trailing)))
+            .unwrap_err()
+            .kind(),
+        X509OcspResponseErrorKind::InvalidResponseBytes(Asn1ErrorKind::Framing(
+            DerErrorKind::TruncatedValue
+        ))
+    ));
+
+    let malformed_outer_trailing = sequence(&[
+        status(&[0]),
+        response_bytes(BASIC_RESPONSE_OID, &[1]),
+        vec![0x05, 0x01],
+    ]);
+    assert!(matches!(
+        decode(&malformed_outer_trailing).unwrap_err().kind(),
+        X509OcspResponseErrorKind::Structure(Asn1ErrorKind::Framing(DerErrorKind::TruncatedValue))
+    ));
 }
 
 #[test]
