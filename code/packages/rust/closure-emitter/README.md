@@ -91,13 +91,15 @@ pub enum EmitError {
 ## Directive prologues
 
 Like upstream Closure, the printer never writes back an input
-`"use strict"`. A program or function body drops its leading run of
-statements whose string value is `use strict`:
+`"use strict"`. A program or function body's directive prologue (its
+leading run of lone string statements) loses every statement whose string
+value is `use strict`:
 
 ```js
 "use strict"; ("use strict"); f();          // →  f();
 function g() { "use\x20strict"; return this } // →  function g(){return this};
-"a"; "use strict"; f();                     // →  "a";"use strict";f();  (kept)
+"a"; "use strict"; f();                     // →  "a";f();
+0; "use strict"; f();                       // →  0;"use strict";f();  (not a prologue)
 ```
 
 The AST does not record which statements were real directives, so printing

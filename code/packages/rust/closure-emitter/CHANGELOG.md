@@ -12,20 +12,26 @@ strings that passes fold out of `` `use strict` `` or split out of
 is a Use Strict Directive in the source, so the output became strict and
 behaved differently: `this` in a plain call turned `undefined`.
 
-Programs and function bodies now drop their leading run of statements whose
-string value is `use strict`, as upstream v20260915 does. The new
+A program or function body's directive prologue (its leading run of lone
+string statements) now loses every statement whose string value is
+`use strict`. Upstream v20260915 strips a leading run of them too. The new
 `emit_function_body` handles function declarations, function expressions,
 methods, accessors, constructors and block-bodied arrows. Plain blocks and
 class `static {}` blocks are not directive prologues and print unchanged. A
-`"use strict"` after any other statement is kept, as upstream keeps it.
+`"use strict"` after a non-string statement (`0;"use strict"`) is kept.
 
-Upstream strips before folding, so for `` `use strict`;x=1 `` and
-`"use strict",1;x=1` it prints a strict `"use strict";…`. closurec prints
-`x=1;` and `1;x=1;`, a deliberate divergence where upstream miscompiles.
+Two deliberate divergences, both where upstream miscompiles:
 
-Ten unit tests cover the program, the whole run, escaped values, statements
-that must stay, function declarations, function expressions, arrows and
-plain blocks.
+- Upstream strips before folding, so for `` `use strict`;x=1 `` and
+  `"use strict",1;x=1` it prints a strict `"use strict";…`. closurec prints
+  `x=1;` and `1;x=1;`.
+- Upstream keeps a `"use strict"` after `"a";`, so its SIMPLE output for
+  `"a";{"use strict"}` is a strict `"a";"use strict";…`. closurec drops it
+  anywhere in the prologue, so `"a";"use strict";f()` prints as `"a";f();`.
+
+Eleven unit tests cover the program, the whole run, later prologue
+positions, escaped values, statements that must stay, function
+declarations, function expressions, arrows and plain blocks.
 
 ## [0.62.0] - 2026-10-20
 

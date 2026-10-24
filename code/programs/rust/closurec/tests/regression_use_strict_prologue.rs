@@ -18,9 +18,9 @@
 //!
 //! The fix has two halves:
 //!
-//! - The AST printer (SIMPLE and ADVANCED) drops the leading run of
-//!   `"use strict"`-valued statements in a program or function body, as
-//!   upstream does (see `use_strict_prologue_len` in `closure-emitter`).
+//! - The AST printer (SIMPLE and ADVANCED) drops every `"use strict"`-valued
+//!   statement in a program or function body's directive prologue (see
+//!   `without_use_strict` in `closure-emitter`).
 //! - WHITESPACE_ONLY keeps an escape in a `use strict` string whose source
 //!   spelling had one, so it stays inert.
 //!
@@ -78,6 +78,34 @@ const FUNCTION_CASES: &[(&str, &str)] = &[
     ),
 ];
 
+/// A `"use strict"` after another directive (`"a";`) is still inside the
+/// prologue. SIMPLE flattens and folds these into a bare `"use strict"`
+/// statement there, which upstream then prints as a live directive (its
+/// SIMPLE output for each is `"a";"use strict";…`, which is strict). We drop
+/// it. `(source prefix, SIMPLE output)`; each source is `prefix + PROBE`.
+const LATER_IN_PROLOGUE: &[(&str, &str)] = &[
+    (
+        r#""a";if(1){"use strict"}"#,
+        r#""a";function t(){return this===void 0}console.log(t());"#,
+    ),
+    (
+        r#""a";{"use strict"}"#,
+        r#""a";function t(){return this===void 0}console.log(t());"#,
+    ),
+    (
+        r#""a";1&&"use strict";"#,
+        r#""a";function t(){return this===void 0}console.log(t());"#,
+    ),
+    (
+        r#""a";("use strict");"#,
+        r#""a";function t(){return this===void 0}console.log(t());"#,
+    ),
+    (
+        r#""a";"use strict",1;"#,
+        r#""a";1;function t(){return this===void 0}console.log(t());"#,
+    ),
+];
+
 fn compile(source: &str, level: &str) -> String {
     // Tests run in parallel in one process: a counter keeps scratch dirs apart.
     static NEXT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
@@ -129,6 +157,11 @@ fn all_sources() -> Vec<String> {
         .iter()
         .map(|(prefix, _, _)| format!("{prefix}{PROBE}"))
         .chain(FUNCTION_CASES.iter().map(|(s, _)| s.to_string()))
+        .chain(
+            LATER_IN_PROLOGUE
+                .iter()
+                .map(|(prefix, _)| format!("{prefix}{PROBE}")),
+        )
         .collect()
 }
 
@@ -146,6 +179,10 @@ fn non_directives_are_never_printed_as_use_strict() {
     for (source, simple) in FUNCTION_CASES {
         assert_eq!(&compile(source, "SIMPLE"), simple, "{source:?}");
     }
+    for (prefix, simple) in LATER_IN_PROLOGUE {
+        let source = format!("{prefix}{PROBE}");
+        assert_eq!(&compile(&source, "SIMPLE"), simple, "{source:?}");
+    }
 }
 
 #[test]
@@ -153,12 +190,14 @@ fn no_level_opens_its_output_with_use_strict() {
     for source in all_sources() {
         for level in ["WHITESPACE_ONLY", "SIMPLE", "ADVANCED"] {
             let out = compile(&source, level);
-            // A whole statement, at the start of the program or of a body.
-            let directive = ["\"use strict\";", "\"use strict\"}"];
-            let opens = directive.iter().any(|d| out.starts_with(d));
-            let opens_body = directive.iter().any(|d| out.contains(&format!("{{{d}")));
+            // A whole statement at the very start. Function bodies and
+            // later prologue positions are covered by the node comparison
+            // below, which sees strictness directly.
+            let opens = ["\"use strict\";", "\"use strict\"}"]
+                .iter()
+                .any(|d| out.starts_with(d));
             assert!(
-                !opens && !opens_body,
+                !opens,
                 "{source:?} at {level} gained a Use Strict Directive: {out}"
             );
         }

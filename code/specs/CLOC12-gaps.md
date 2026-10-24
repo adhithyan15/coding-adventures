@@ -282,32 +282,35 @@ historical context with status `RESOLVED` and a link to the fix PR.
   or parentheses. It keeps one that follows any other statement
   (`"a";"use strict"` and `0;"use strict"` print unchanged). It adds one
   top-level directive back only for `--emit_use_strict`, single-quoted.
-- **AST emitter (SIMPLE/ADVANCED): resolved.** `use_strict_prologue_len`
-  computes that leading run, and `emit_program` and the new
-  `emit_function_body` skip it. Function declarations, function
+- **AST emitter (SIMPLE/ADVANCED): resolved.** `without_use_strict` drops
+  every statement with value `use strict` from a body's directive prologue
+  (its leading run of lone string statements), and `emit_program` and the
+  new `emit_function_body` print what is left. Function declarations, function
   expressions, methods, accessors, constructors and block-bodied arrows all
   print their bodies through it. A plain block and a class `static {}` block
   are not prologues and keep their strings.
-- **Deliberate divergence.** Upstream strips at parse time, before folding,
-  so at SIMPLE it prints `` `use strict`;x=1 `` as `"use strict";x=1;`
-  and `"use strict",1;x=1` as `"use strict";1;x=1;`. Both outputs are
-  strict, so upstream miscompiles them. closurec strips after folding and
-  prints `x=1;` and `1;x=1;`.
+- **Deliberate divergences, both where upstream miscompiles.**
+  - Upstream strips at parse time, before folding, so at SIMPLE it prints
+    `` `use strict`;x=1 `` as `"use strict";x=1;` and `"use strict",1;x=1`
+    as `"use strict";1;x=1;`. Both outputs are strict. closurec strips
+    after folding and prints `x=1;` and `1;x=1;`.
+  - Upstream strips only the leading run, so after `"a";` it keeps a
+    `"use strict"`. SIMPLE's flattening then turns `"a";{"use strict"}`,
+    `"a";if(1){"use strict"}` and `"a";1&&"use strict"` into a live
+    `"a";"use strict";…`. closurec drops a `"use strict"` anywhere in the
+    prologue, so even a genuine `"a";"use strict";f()` prints as `"a";f();`.
+    That is consistent with stripping the genuine leading ones.
 - **WHITESPACE_ONLY token path: the escape case is resolved.**
   `emit_quoted_string` prints a `use strict` string whose source spelling had
   an escape as `"use\x20strict"`, so it stays inert. The template,
   parenthesised and sequence forms already printed as written. Stripping the
   leading run in WHITESPACE_ONLY, which needs function-body boundaries in the
   token stream, is left to CCR-085 (#15920).
-- **Still open.** A `"use strict"` after another directive-shaped string,
-  such as `"a";("use strict")` or `"a";"use\x20strict"`, still prints as a
-  real directive at SIMPLE and ADVANCED, as it does upstream. Fixing that
-  needs the bridge to record directives, which waits for `javascript-parser`
-  to be free under backlog rule 8.
-- **Tests.** Ten emitter unit tests, and
+- **Tests.** Eleven emitter unit tests, and
   `closurec/tests/regression_use_strict_prologue.rs`. The closurec test pins
-  WHITESPACE_ONLY and SIMPLE bytes for six shapes, asserts that no level
-  opens a body with `"use strict"`, and, when `node` is on `PATH`, checks
+  WHITESPACE_ONLY and SIMPLE bytes for four shapes, SIMPLE bytes for seven
+  more (in function bodies, and after `"a";`), asserts that no level opens
+  its output with `"use strict"`, and, when `node` is on `PATH`, checks
   that every output prints what its source prints.
 
 ### gap-031 — empty `{}` body collapses to `;`

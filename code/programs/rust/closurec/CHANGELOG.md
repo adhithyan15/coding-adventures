@@ -12,18 +12,20 @@ at SIMPLE and ADVANCED to `"use strict";x=1;…`, which throws
 `` `use strict` `` and for `"use strict",1`, in programs and in function
 bodies. WHITESPACE_ONLY turned `"use\x20strict"` into `"use strict"` too.
 
-- SIMPLE and ADVANCED now drop a body's leading `"use strict"` statements,
-  as upstream does (`closure-emitter` 0.63.0). That includes real
-  directives, so their output no longer carries them; upstream doesn't
-  either. `--emit_use_strict` still adds one at the top.
+- SIMPLE and ADVANCED now drop every `"use strict"` statement in a body's
+  directive prologue (`closure-emitter` 0.63.0). Upstream strips the
+  leading ones too, so real directives no longer reach the output.
+  `--emit_use_strict` still adds one at the top. After `"a";`, upstream
+  keeps a `"use strict"`, and SIMPLE's flattening can then make one out of
+  `"a";{"use strict"}`. closurec drops it there too.
 - WHITESPACE_ONLY prints an escaped spelling as `"use\x20strict"`, which
   stays inert. It still keeps real directives, which CCR-085 (#15920) will
   strip.
 
 `tests/regression_use_strict_prologue.rs` pins WHITESPACE_ONLY and SIMPLE
-bytes for six shapes. It asserts that no level opens a body with
-`"use strict"` and, with `node`, that every output prints what its source
-prints.
+bytes for four shapes and SIMPLE bytes for seven more. It asserts that no
+level opens its output with `"use strict"` and, with `node`, that every
+output prints what its source prints.
 
 ### Changed - WHITESPACE_ONLY unwraps a single-statement labeled block (CCR-087, #15924)
 
