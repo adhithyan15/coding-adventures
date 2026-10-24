@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:76eb6469e460ca72",
+  "lessonIds": [
+    "TA-C316-pinnar",
+    "TA-C316-anraiya",
+    "TA-C316-muntaiya",
+    "TA-C316-atanpin",
+    "TA-C316-ate-camayam"
+  ],
+  "tex": "tamil/book/chapters/ch316-that-very-day.tex"
+}

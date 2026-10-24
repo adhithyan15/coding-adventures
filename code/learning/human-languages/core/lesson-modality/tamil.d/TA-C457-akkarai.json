@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C457-akkarai",
+    "language": "tamil",
+    "chapter": 457,
+    "sequence": 26340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e79e6a054927ff7"
+  },
+  "findings": []
+}

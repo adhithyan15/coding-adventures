@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "Our Family Line",
+  "label": "ch:ka-our-family-line",
+  "canDo": "I can say a lineage, an ancestor, a family generation, a family line and a monarch.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C341-arasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can say a lineage, an ancestor, a family generation, a family line and a monarch.",
+    "assesses": [
+      "KA-LEX-C341-VAMSHA341-03",
+      "KA-LEX-C341-VAMSHA341-04",
+      "KA-LEX-C341-VAMSHA341-05"
+    ]
+  }
+}

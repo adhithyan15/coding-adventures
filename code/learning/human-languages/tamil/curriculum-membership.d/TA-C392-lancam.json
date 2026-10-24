@@ -1,0 +1,11 @@
+{
+  "id": "TA-C392-lancam",
+  "pathSegment": "TA-PATH-392-ULAL392",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-392-ULAL392",
+      "order": 1
+    }
+  ]
+}

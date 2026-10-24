@@ -1,0 +1,11 @@
+{
+  "id": "TA-C502-anucari",
+  "pathSegment": "TA-PATH-502-NERUKKAM502",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-502-NERUKKAM502",
+      "order": 0
+    }
+  ]
+}

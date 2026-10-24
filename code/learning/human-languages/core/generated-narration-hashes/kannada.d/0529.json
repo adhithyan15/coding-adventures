@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:c2843a084acf81fd",
+  "lessonIds": [
+    "KA-C529-vayaska",
+    "KA-C529-hadihareya",
+    "KA-C529-ekanta",
+    "KA-C529-moha",
+    "KA-C529-baduku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch529.txt",
+  "json": "kannada/narration/ch529.json",
+  "textHash": "fnv1a64:218d0b8b857cccfd",
+  "jsonHash": "fnv1a64:cc33acccefacc3bd",
+  "findings": []
+}

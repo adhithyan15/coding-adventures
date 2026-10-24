@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C317-utanukkutan",
+    "language": "tamil",
+    "chapter": 317,
+    "sequence": 18300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab1d0a8bdf5ea225"
+  },
+  "findings": []
+}

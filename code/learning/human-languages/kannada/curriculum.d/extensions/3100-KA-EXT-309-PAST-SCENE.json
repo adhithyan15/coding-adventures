@@ -1,0 +1,10 @@
+{
+  "id": "KA-EXT-309-PAST-SCENE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what happened in the past for every person (hōde, bandaru), set the scene with ōduttidde and ōduvāga, say what used to happen, and say what there was with ittu.",
+  "prerequisites": [
+    "KA-EXT-308-A2WRITING"
+  ]
+}

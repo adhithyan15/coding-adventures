@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C302-curaiyatu",
+    "language": "tamil",
+    "chapter": 302,
+    "sequence": 17550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60eb18e494a1f183"
+  },
+  "findings": []
+}

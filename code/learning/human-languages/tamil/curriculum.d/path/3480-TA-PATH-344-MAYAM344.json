@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-344-MAYAM344",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-344-MAYAM344"
+  ],
+  "after": []
+}

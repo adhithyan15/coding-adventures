@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C501-nisthura",
+    "language": "kannada",
+    "chapter": 501,
+    "sequence": 25590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba8452e3205a96c9"
+  },
+  "findings": []
+}

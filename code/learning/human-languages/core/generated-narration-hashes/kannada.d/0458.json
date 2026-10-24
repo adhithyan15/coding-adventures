@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:3570feb0ec1bbf4d",
+  "lessonIds": [
+    "KA-C458-yatre",
+    "KA-C458-giridhama",
+    "KA-C458-karedoyyu",
+    "KA-C458-vapasagu",
+    "KA-C458-tangu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch458.txt",
+  "json": "kannada/narration/ch458.json",
+  "textHash": "fnv1a64:63709bbd8843b9be",
+  "jsonHash": "fnv1a64:bedff3a71a2fbb4a",
+  "findings": []
+}

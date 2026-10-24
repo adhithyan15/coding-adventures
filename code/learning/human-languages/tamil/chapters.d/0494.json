@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Kin and Lineage",
+  "label": "ch:ta-kin-and-lineage",
+  "canDo": "I can talk about kinsmen, lineage, generations, descendants and heirs.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C494-varicu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can talk about kinsmen, lineage, generations, descendants and heirs.",
+    "assesses": [
+      "TA-LEX-C494-MARAPU494-03",
+      "TA-LEX-C494-MARAPU494-04",
+      "TA-LEX-C494-MARAPU494-05"
+    ]
+  }
+}

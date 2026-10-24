@@ -1,0 +1,11 @@
+{
+  "id": "KA-C405-madhyasthike",
+  "pathSegment": "KA-PATH-405-SANDHANA405",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-405-SANDHANA405",
+      "order": 2
+    }
+  ]
+}

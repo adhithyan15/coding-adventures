@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:1bfa2bdef5d29047",
+  "lessonIds": [
+    "TA-C544-cutatu",
+    "TA-C544-panayam-vai",
+    "TA-C544-cakacam",
+    "TA-C544-cakunam",
+    "TA-C544-vivekam",
+    "TA-R544-review-538-544"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch544.txt",
+  "json": "tamil/narration/ch544.json",
+  "textHash": "fnv1a64:14aa0c6d32e1b61d",
+  "jsonHash": "fnv1a64:9a68748d3324c046",
+  "findings": []
+}

@@ -1,0 +1,10 @@
+{
+  "id": "TA-EXT-287-MUST-BECAUSE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what someone must, must not or need not do with pōka vēṇṭum, pōkak kūṭātu and vara vēṇṭām, and give a reason with vantatāl, ēṉeṉṟāl and kāraṇam.",
+  "prerequisites": [
+    "TA-EXT-286-OPINION-SO"
+  ]
+}

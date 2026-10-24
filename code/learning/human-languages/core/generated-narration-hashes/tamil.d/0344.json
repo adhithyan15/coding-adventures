@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:2f4b8f0dec7f7a85",
+  "lessonIds": [
+    "TA-C344-arakkan",
+    "TA-C344-tevatai",
+    "TA-C344-mantiravati",
+    "TA-C344-capi",
+    "TA-C344-urumaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch344.txt",
+  "json": "tamil/narration/ch344.json",
+  "textHash": "fnv1a64:f4ddaf677a216515",
+  "jsonHash": "fnv1a64:688db749f1035db9",
+  "findings": []
+}

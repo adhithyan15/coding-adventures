@@ -1,0 +1,11 @@
+{
+  "id": "KA-C484-teva",
+  "pathSegment": "KA-PATH-484-TAPAMANA484",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-484-TAPAMANA484",
+      "order": 3
+    }
+  ]
+}

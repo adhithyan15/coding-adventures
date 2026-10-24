@@ -1,0 +1,866 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 362,
+  "title": "Doing Research",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:99abd7c6441929d4",
+  "lessons": [
+    {
+      "id": "TA-C362-araycci",
+      "sequence": 20860,
+      "title": "ஆராய்ச்சி (ārāycci) — research",
+      "headword": "ஆராய்ச்சி",
+      "romanization": "ārāycci",
+      "gloss": "research",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:092bb3a6dee54059",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a good match, then the Tamil for a connection."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆராய்ச்சி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆராய்ச்சி — ārāycci — \"research\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் அக்கா செடிகளைப் பற்றி ஆராய்ச்சி செய்கிறாள். eṉ akkā ceṭikaḷaip paṟṟi ārāycci ceykiṟāḷ. My elder sister does research on plants."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆராய்ச்சி (ārāycci) செய், to do research. Its verb is ஆராய், to investigate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆராய்ச்சி (ārāycci) is native Dravidian: DEDR 377 lists Tamil ārāy, \"to investigate, examine, seek\", and ārāycci, \"research, investigation\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārāycci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārāycci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārāycci, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārāycci*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ akkā ceṭikaḷaip paṟṟi ārāycci ceykiṟāḷ. — My elder sister does research on plants.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ akkā ceṭikaḷaip paṟṟi ārāycci ceykiṟāḷ.* — My elder sister does research on plants.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a good match, then the Tamil for a connection, then say ārāycci again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a good match, then the Tamil for a connection, then say *ārāycci* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆராய்ச்சி (ārāycci) mean? (\"Research\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C362-ayvu",
+      "sequence": 20870,
+      "title": "ஆய்வு (āyvu) — a study; an inspection",
+      "headword": "ஆய்வு",
+      "romanization": "āyvu",
+      "gloss": "a study; an inspection",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36b1e06c37bb1418",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a connection, then the Tamil for research."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆய்வு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆய்வு — āyvu — \"a study; an inspection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த ஆய்வு மூன்று ஆண்டுகள் நடந்தது. inta āyvu mūṉṟu āṇṭukaḷ naṭantatu. This study went on for three years."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆய்வு (āyvu) செய், to study, to inspect. ஆய்வாளர், a researcher."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆய்வு (āyvu) is native Dravidian: DEDR 363 lists Tamil āy, \"to search, examine, select\", and āyvu, \"investigation, research\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta āyvu mūṉṟu āṇṭukaḷ naṭantatu. — This study went on for three years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta āyvu mūṉṟu āṇṭukaḷ naṭantatu.* — This study went on for three years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a connection, then the Tamil for research, then say āyvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a connection, then the Tamil for research, then say *āyvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆய்வு (āyvu) mean? (\"A study; an inspection\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C362-taravu",
+      "sequence": 20880,
+      "title": "தரவு (taravu) — data",
+      "headword": "தரவு",
+      "romanization": "taravu",
+      "gloss": "data",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63ff63452db743a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for research, then the Tamil for a study."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தரவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தரவு — taravu — \"data\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தத் தரவுகளை எங்கிருந்து பெற்றீர்கள்? intat taravukaḷai eṅkiruntu peṟṟīrkaḷ? Where did you get this data?"
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: தரவுகள், taravukaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural தரவுகள், the pieces of data."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தரவு (taravu) is a modern Tamil coinage for \"data\", usually read as built on native taru, \"to give\" (DEDR 3098): \"what is given\", which is also what Latin data means."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taravu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taravu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taravu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taravu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intat taravukaḷai eṅkiruntu peṟṟīrkaḷ? — Where did you get this data?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intat taravukaḷai eṅkiruntu peṟṟīrkaḷ?* — Where did you get this data?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for research, then the Tamil for a study, then say taravu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for research, then the Tamil for a study, then say *taravu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தரவு (taravu) mean? (\"Data\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C362-pakuppayvu",
+      "sequence": 20890,
+      "title": "பகுப்பாய்வு (pakuppāyvu) — an analysis",
+      "headword": "பகுப்பாய்வு",
+      "romanization": "pakuppāyvu",
+      "gloss": "an analysis",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2f88f0422a52257",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a study, then the Tamil for data."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பகுப்பாய்வு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பகுப்பாய்வு — pakuppāyvu — \"an analysis\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆசிரியர் தேர்வு முடிவுகளைப் பகுப்பாய்வு செய்தார். āciriyar tērvu muṭivukaḷaip pakuppāyvu ceytār. The teacher analysed the exam results."
+            },
+            {
+              "kind": "speech",
+              "text": "பகுப்பாய்வு (pakuppāyvu) செய், to analyse."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பகுப்பாய்வு (pakuppāyvu) is a modern native coinage: pakuppu, \"division\", from paku, \"to divide\" (DEDR 3808), and āyvu, \"examination\" (DEDR 363): taking apart and examining."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakuppāyvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakuppāyvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakuppāyvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakuppāyvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āciriyar tērvu muṭivukaḷaip pakuppāyvu ceytār. — The teacher analysed the exam results.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āciriyar tērvu muṭivukaḷaip pakuppāyvu ceytār.* — The teacher analysed the exam results.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a study, then the Tamil for data, then say pakuppāyvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a study, then the Tamil for data, then say *pakuppāyvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பகுப்பாய்வு (pakuppāyvu) mean? (\"An analysis\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C362-alacu",
+      "sequence": 20900,
+      "title": "அலசு (alacu) — to analyse closely; to rinse",
+      "headword": "அலசு",
+      "romanization": "alacu",
+      "gloss": "to analyse closely; to rinse",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e4170a99c10de35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for data, then the Tamil for an analysis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அலசு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அலசு — alacu — \"to analyse closely; to rinse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மாணவர்கள் இந்தப் பிரச்சினையை விரிவாக அலசினார்கள். māṇavarkaḷ intap piracciṉaiyai virivāka alaciṉārkaḷ. The students went over this problem in detail."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): அலசினேன், alaciṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The first sense is to rinse clothes; a question is gone over again and again in the same way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அலசு (alacu) is native Dravidian: DEDR 246 lists Tamil alampu, alacu, \"to wash, rinse\". Going over a question closely is its newer sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alacu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alacu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alacu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alacu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṇavarkaḷ intap piracciṉaiyai virivāka alaciṉārkaḷ. — The students went over this problem in detail.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṇavarkaḷ intap piracciṉaiyai virivāka alaciṉārkaḷ.* — The students went over this problem in detail.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for data, then the Tamil for an analysis, then say alacu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for data, then the Tamil for an analysis, then say *alacu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அலசு (alacu) mean? (\"To analyse closely; to rinse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R362-review-355-362",
+      "sequence": 20910,
+      "title": "Looking back: from Advice and Proposals to Doing Research",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Advice and Proposals to Doing Research",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e58b6b5cd6dc32b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Tamil for to recommend and advice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to recommend, advice, to advise, to consult, to propose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to recommend, advice, to advise, to consult, to propose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to talk over, negotiations, to interrupt, a compromise, a heated argument",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to talk over, negotiations, to interrupt, a compromise, a heated argument]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nevertheless, on the other hand, except, likewise, to differ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: nevertheless, on the other hand, except, likewise, to differ]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a theory, a philosophy, an ideology, a policy, to establish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a theory, a philosophy, an ideology, a policy, to establish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to twist, to exaggerate, to contradict, uncertainty, to reject",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to twist, to exaggerate, to contradict, uncertainty, to reject]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fairness, justice, ethics, blame, an excuse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fairness, justice, ethics, blame, an excuse]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to determine, to look into, a yardstick, a good match, a connection",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to determine, to look into, a yardstick, a good match, a connection]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "research, a study, data, an analysis, to analyse closely",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: research, a study, data, an analysis, to analyse closely]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To recommend? (பரிந்துரை, parinturai.) Advice? (அறிவுரை, aṟivurai.) To advise? (அறிவுறுத்து, aṟivuṟuttu.) To consult? (ஆலோசி, ālōci.) To propose? (முன்மொழி, muṉmoḻi.) To talk over? (கலந்துரையாடு, kalanturaiyāṭu.) Negotiations? (பேச்சுவார்த்தை, pēccuvārttai.) To interrupt? (குறுக்கிடு, kuṟukkiṭu.) A compromise? (சமரசம், camaracam.) A heated argument? (வாக்குவாதம், vākkuvātam.) Nevertheless? (எனினும், eṉiṉum.) On the other hand? (மறுபுறம், maṟupuṟam.) Except? (தவிர, tavira.) Likewise? (அதேபோல், atēpōl.) To differ? (வேறுபடு, vēṟupaṭu.) A theory? (கோட்பாடு, kōṭpāṭu.) A philosophy? (தத்துவம், tattuvam.) An ideology? (சித்தாந்தம், cittāntam.) A policy? (கொள்கை, koḷkai.) To establish? (நிறுவு, niṟuvu.) To twist? (திரி, tiri.) To exaggerate? (மிகைப்படுத்து, mikaippaṭuttu.) To contradict? (முரண்படு, muraṇpaṭu.) Uncertainty? (ஐயம், aiyam.) To reject? (நிராகரி, nirākari.) Fairness? (நியாயம், niyāyam.) Justice? (நீதி, nīti.) Ethics? (அறம், aṟam.) Blame? (பழி, paḻi.) An excuse? (சாக்கு, cākku.) To determine? (தீர்மானி, tīrmāṉi.) To look into? (பரிசீலி, paricīli.) A yardstick? (அளவுகோல், aḷavukōl.) A good match? (பொருத்தம், poruttam.) A connection? (சம்பந்தம், campantam.) Research? (ஆராய்ச்சி, ārāycci.) A study? (ஆய்வு, āyvu.) Data? (தரவு, taravu.) An analysis? (பகுப்பாய்வு, pakuppāyvu.) To analyse closely? (அலசு, alacu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

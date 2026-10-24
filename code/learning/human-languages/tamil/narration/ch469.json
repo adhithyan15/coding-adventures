@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 469,
+  "title": "Enemies and Grudges",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:000b0b643081fdc3",
+  "lessons": [
+    {
+      "id": "TA-C469-pakai",
+      "sequence": 26920,
+      "title": "பகை (pakai) — enmity; a feud",
+      "headword": "பகை",
+      "romanization": "pakai",
+      "gloss": "enmity; a feud",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47fa65ab3035c978",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to weaken, then the Tamil for to nod off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பகை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பகை — pakai — \"enmity; a feud\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இரண்டு குடும்பங்களுக்கும் இடையில் பல வருடமாகப் பகை. iraṇṭu kuṭumpaṅkaḷukkum iṭaiyil pala varuṭamākap pakai. There has been a feud between the two families for many years."
+            },
+            {
+              "kind": "speech",
+              "text": "பகைவன், an enemy, in written Tamil."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பகை (pakai) is native Dravidian (DEDR 3808), in the family of பகு paku, \"to be split, to be at variance\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iraṇṭu kuṭumpaṅkaḷukkum iṭaiyil pala varuṭamākap pakai. — There has been a feud between the two families for many years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iraṇṭu kuṭumpaṅkaḷukkum iṭaiyil pala varuṭamākap pakai.* — There has been a feud between the two families for many years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to weaken, then the Tamil for to nod off, then say pakai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to weaken, then the Tamil for to nod off, then say *pakai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பகை (pakai) mean? (\"Enmity; a feud\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C469-virotam",
+      "sequence": 26930,
+      "title": "விரோதம் (virōtam) — hostility; ill will",
+      "headword": "விரோதம்",
+      "romanization": "virōtam",
+      "gloss": "hostility; ill will",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1b01751de5e7e39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to nod off, then the Tamil for enmity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விரோதம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விரோதம் — virōtam — \"hostility; ill will\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒரு சிறிய சண்டையால் அவர்களுக்குள் விரோதம் வளர்ந்தது. oru ciṟiya caṇṭaiyāl avarkaḷukkuḷ virōtam vaḷarntatu. Because of a small quarrel, hostility grew between them."
+            },
+            {
+              "kind": "speech",
+              "text": "-உக்குள் \"within, between\": அவர்களுக்குள், between them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விரோதம் (virōtam) is borrowed from Sanskrit virōdha, \"opposition, hostility\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virōtam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virōtam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virōtam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virōtam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oru ciṟiya caṇṭaiyāl avarkaḷukkuḷ virōtam vaḷarntatu. — Because of a small quarrel, hostility grew between them.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oru ciṟiya caṇṭaiyāl avarkaḷukkuḷ virōtam vaḷarntatu.* — Because of a small quarrel, hostility grew between them.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to nod off, then the Tamil for enmity, then say virōtam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to nod off, then the Tamil for enmity, then say *virōtam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விரோதம் (virōtam) mean? (\"Hostility; ill will\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C469-vancam",
+      "sequence": 26940,
+      "title": "வஞ்சம் (vañcam) — a grudge; spite",
+      "headword": "வஞ்சம்",
+      "romanization": "vañcam",
+      "gloss": "a grudge; spite",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88de925858fc8332",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for enmity, then the Tamil for hostility."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வஞ்சம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வஞ்சம் — vañcam — \"a grudge; spite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவன் மனதில் பழைய வஞ்சம் இருந்தது. avaṉ maṉatil paḻaiya vañcam iruntatu. He bore an old grudge."
+            },
+            {
+              "kind": "speech",
+              "text": "வஞ்சம் (vañcam) தீர், to settle a score."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வஞ்சம் (vañcam) is usually traced to Sanskrit vañcana, \"cheating, deception\" (Monier-Williams); in Tamil it is a deceit-filled grudge."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vañcam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vañcam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vañcam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vañcam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaṉ maṉatil paḻaiya vañcam iruntatu. — He bore an old grudge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaṉ maṉatil paḻaiya vañcam iruntatu.* — He bore an old grudge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for enmity, then the Tamil for hostility, then say vañcam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for enmity, then the Tamil for hostility, then say *vañcam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வஞ்சம் (vañcam) mean? (\"A grudge; spite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C469-etiri",
+      "sequence": 26950,
+      "title": "எதிரி (etiri) — an enemy; an opponent",
+      "headword": "எதிரி",
+      "romanization": "etiri",
+      "gloss": "an enemy; an opponent",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05bab5f2b89df325",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for hostility, then the Tamil for a grudge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: எதிரி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எதிரி — etiri — \"an enemy; an opponent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவன் என் நண்பன், எதிரி இல்லை. avaṉ eṉ naṇpaṉ, etiri illai. He is my friend, not my enemy."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: எதிரிகள், etirikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "From எதிர் \"opposite\": எதிரே, opposite, shares it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எதிரி (etiri) is native Dravidian, built on எதிர் etir, \"that which is opposite, in front\" (DEDR 795)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "etiri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *etiri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "etiri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *etiri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaṉ eṉ naṇpaṉ, etiri illai. — He is my friend, not my enemy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaṉ eṉ naṇpaṉ, etiri illai.* — He is my friend, not my enemy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for hostility, then the Tamil for a grudge, then say etiri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for hostility, then the Tamil for a grudge, then say *etiri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does எதிரி (etiri) mean? (\"An enemy; an opponent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C469-palivanku",
+      "sequence": 26960,
+      "title": "பழிவாங்கு (paḻivāṅku) — to take revenge",
+      "headword": "பழிவாங்கு",
+      "romanization": "paḻivāṅku",
+      "gloss": "to take revenge",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7df480c7e5ded10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a grudge, then the Tamil for an enemy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பழிவாங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பழிவாங்கு — paḻivāṅku — \"to take revenge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்த அவமானத்துக்காக அவன் பழிவாங்க நினைத்தான். anta avamāṉattukkāka avaṉ paḻivāṅka niṉaittāṉ. He thought of taking revenge for that humiliation."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): பழிவாங்கினேன், paḻivāṅkiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "பழி \"blame, vengeance\" + வாங்கு \"to take\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பழிவாங்கு (paḻivāṅku) is a native compound of பழி paḻi, \"blame, reproach\" (DEDR 4002), and வாங்கு, \"to take\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻivāṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻivāṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻivāṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻivāṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anta avamāṉattukkāka avaṉ paḻivāṅka niṉaittāṉ. — He thought of taking revenge for that humiliation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anta avamāṉattukkāka avaṉ paḻivāṅka niṉaittāṉ.* — He thought of taking revenge for that humiliation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a grudge, then the Tamil for an enemy, then say paḻivāṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a grudge, then the Tamil for an enemy, then say *paḻivāṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பழிவாங்கு (paḻivāṅku) mean? (\"To take revenge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

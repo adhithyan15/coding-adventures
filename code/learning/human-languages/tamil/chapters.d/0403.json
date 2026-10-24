@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "Highways and Flyovers",
+  "label": "ch:ta-highways-and-flyovers",
+  "canDo": "I can talk about a highway, a flyover, a detour and a junction, and about speeding.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C403-virai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can talk about a highway, a flyover, a detour and a junction, and about speeding.",
+    "assesses": [
+      "TA-LEX-C403-SALAI403-03",
+      "TA-LEX-C403-SALAI403-04",
+      "TA-LEX-C403-SALAI403-05"
+    ]
+  }
+}

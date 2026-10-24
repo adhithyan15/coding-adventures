@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:d29767cbc63268d4",
+  "lessonIds": [
+    "TA-C335-murrukaiyitu",
+    "TA-C335-akali",
+    "TA-C335-curankam",
+    "TA-C335-aran",
+    "TA-C335-orran"
+  ],
+  "tex": "tamil/book/chapters/ch335-a-siege.tex"
+}

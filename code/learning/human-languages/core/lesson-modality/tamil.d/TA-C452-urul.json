@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C452-urul",
+    "language": "tamil",
+    "chapter": 452,
+    "sequence": 25800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55195b5e0e62104f"
+  },
+  "findings": []
+}

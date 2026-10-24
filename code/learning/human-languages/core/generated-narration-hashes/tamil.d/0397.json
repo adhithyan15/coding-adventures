@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:79ab41d9689d2b0e",
+  "lessonIds": [
+    "TA-C397-makkalatci",
+    "TA-C397-pattimanram",
+    "TA-C397-orumanataka",
+    "TA-C397-tanippatta",
+    "TA-C397-pakuttarivu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch397.txt",
+  "json": "tamil/narration/ch397.json",
+  "textHash": "fnv1a64:1b3856d3c7601e35",
+  "jsonHash": "fnv1a64:f164c22fae19c874",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C430-veliccam",
+    "language": "tamil",
+    "chapter": 430,
+    "sequence": 24640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe3fcf62d178fad5"
+  },
+  "findings": []
+}

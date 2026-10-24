@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:61eee52803a79af3",
+  "lessonIds": [
+    "TA-C332-por",
+    "TA-C332-patai",
+    "TA-C332-pataiyetu",
+    "TA-C332-takku",
+    "TA-C332-katarpatai",
+    "TA-R332-review-326-332"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch332.txt",
+  "json": "tamil/narration/ch332.json",
+  "textHash": "fnv1a64:4e5685fbd0d875cb",
+  "jsonHash": "fnv1a64:916bd952ba368340",
+  "findings": []
+}

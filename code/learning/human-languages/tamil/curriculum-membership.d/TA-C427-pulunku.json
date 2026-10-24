@@ -1,0 +1,11 @@
+{
+  "id": "TA-C427-pulunku",
+  "pathSegment": "TA-PATH-427-VEPPAM427",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-427-VEPPAM427",
+      "order": 4
+    }
+  ]
+}

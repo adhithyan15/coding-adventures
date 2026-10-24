@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C396-porutpatuttu",
+    "language": "tamil",
+    "chapter": 396,
+    "sequence": 22650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83dee6f749c1e4a5"
+  },
+  "findings": []
+}

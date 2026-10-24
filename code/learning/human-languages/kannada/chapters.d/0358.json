@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "The Case Goes to Court",
+  "label": "ch:ka-the-case-goes-to-court",
+  "canDo": "I can say a hearing, a lawsuit, a case, bail and to confess.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C358-tappoppiko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can say a hearing, a lawsuit, a case, bail and to confess.",
+    "assesses": [
+      "KA-LEX-C358-VICHARANE358-03",
+      "KA-LEX-C358-VICHARANE358-04",
+      "KA-LEX-C358-VICHARANE358-05"
+    ]
+  }
+}

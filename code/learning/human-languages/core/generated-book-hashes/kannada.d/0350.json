@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:f7c8c30969dab69b",
+  "lessonIds": [
+    "KA-C350-sanmanisu",
+    "KA-C350-kondadu",
+    "KA-C350-birudu",
+    "KA-C350-kirti",
+    "KA-C350-udghatisu"
+  ],
+  "tex": "kannada/book/chapters/ch350-an-evening-of-honours.tex"
+}

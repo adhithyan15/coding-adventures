@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:57fad53ce0036e43",
+  "lessonIds": [
+    "TA-C328-mannar",
+    "TA-C328-rani",
+    "TA-C328-ilavaracan",
+    "TA-C328-ilavaraci",
+    "TA-C328-ariyanai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch328.txt",
+  "json": "tamil/narration/ch328.json",
+  "textHash": "fnv1a64:96f91d101b386353",
+  "jsonHash": "fnv1a64:30ad2daa34e09bd6",
+  "findings": []
+}

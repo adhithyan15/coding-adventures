@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 548,
+  "title": "Money Sense",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f0900532d284ac95",
+  "lessons": [
+    {
+      "id": "TA-C548-cikkanam",
+      "sequence": 31250,
+      "title": "சிக்கனம் (cikkaṉam) — thrift; economy",
+      "headword": "சிக்கனம்",
+      "romanization": "cikkaṉam",
+      "gloss": "thrift; economy",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2205aabf548adebe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to persist, then the Tamil for to fix a date."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சிக்கனம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிக்கனம் — cikkaṉam — \"thrift; economy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சிக்கனமாக இருந்தால் பணம் மிஞ்சும். cikkaṉamāka iruntāl paṇam miñcum. If you are thrifty, money will be left over."
+            },
+            {
+              "kind": "speech",
+              "text": "With -ஆக: சிக்கனமாகச் செலவு செய், to spend carefully."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of சிக்கனம் (cikkaṉam) is not settled: no dictionary we can check gives its source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cikkaṉam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cikkaṉam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cikkaṉam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cikkaṉam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cikkaṉamāka iruntāl paṇam miñcum. — If you are thrifty, money will be left over.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cikkaṉamāka iruntāl paṇam miñcum.* — If you are thrifty, money will be left over.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to persist, then the Tamil for to fix a date, then say cikkaṉam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to persist, then the Tamil for to fix a date, then say *cikkaṉam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சிக்கனம் (cikkaṉam) mean? (\"Thrift; economy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C548-tivalaku",
+      "sequence": 31260,
+      "title": "திவாலாகு (tivālāku) — to go bankrupt",
+      "headword": "திவாலாகு",
+      "romanization": "tivālāku",
+      "gloss": "to go bankrupt",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6465fd756da9e5a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to fix a date, then the Tamil for thrift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: திவாலாகு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திவாலாகு — tivālāku — \"to go bankrupt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கடன் அதிகமானால் நிறுவனம் திவாலாகும். kaṭaṉ atikamāṉāl niṟuvaṉam tivālākum. If the debts grow, the company will go bankrupt."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): திவாலானது, tivālāṉatu."
+            },
+            {
+              "kind": "speech",
+              "text": "An ஆகு verb: the firm is the subject, so the past is திவாலானது. Bankruptcy is திவால்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In திவாலாகு (tivālāku) the verb is the native ஆகு, \"to become\"; the origin of திவால் (tivāl), \"bankruptcy\", is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tivālāku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tivālāku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tivālāku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tivālāku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭaṉ atikamāṉāl niṟuvaṉam tivālākum. — If the debts grow, the company will go bankrupt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭaṉ atikamāṉāl niṟuvaṉam tivālākum.* — If the debts grow, the company will go bankrupt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to fix a date, then the Tamil for thrift, then say tivālāku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to fix a date, then the Tamil for thrift, then say *tivālāku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does திவாலாகு (tivālāku) mean? (\"To go bankrupt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C548-ey",
+      "sequence": 31270,
+      "title": "ஏய் (ēy) — to swindle; to evade",
+      "headword": "ஏய்",
+      "romanization": "ēy",
+      "gloss": "to swindle; to evade",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0634e9f2a1431228",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for thrift, then the Tamil for to go bankrupt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஏய்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏய் — ēy — \"to swindle; to evade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவன் வரி கட்டாமல் அரசை ஏய்த்தான். avaṉ vari kaṭṭāmal aracai ēyttāṉ. He cheated the government by not paying tax."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ஏய்த்தேன், ēyttēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The one cheated takes -ஐ. Tax evasion is வரி ஏய்ப்பு."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏய் (ēy) is native Dravidian: DEDR 899 gives ஏய் (ēy), \"to be fit, to resemble\", and in its strong form \"to tell a seeming truth, to deceive\", with ஏய்ப்பு, \"deceit\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaṉ vari kaṭṭāmal aracai ēyttāṉ. — He cheated the government by not paying tax.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaṉ vari kaṭṭāmal aracai ēyttāṉ.* — He cheated the government by not paying tax.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for thrift, then the Tamil for to go bankrupt, then say ēy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for thrift, then the Tamil for to go bankrupt, then say *ēy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஏய் (ēy) mean? (\"To swindle; to evade\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C548-mocati",
+      "sequence": 31280,
+      "title": "மோசடி (mōcaṭi) — a fraud; a scam",
+      "headword": "மோசடி",
+      "romanization": "mōcaṭi",
+      "gloss": "a fraud; a scam",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4700e839ba6b3be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to go bankrupt, then the Tamil for to swindle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மோசடி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மோசடி — mōcaṭi — \"a fraud; a scam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பரிசு விழுந்ததாக வரும் குறுஞ்செய்தி ஒரு மோசடி. paricu viḻuntatāka varum kuṟuñceyti oru mōcaṭi. A text message saying you have won a prize is a scam."
+            },
+            {
+              "kind": "speech",
+              "text": "With செய் (cey): மோசடி (mōcaṭi) செய், to commit fraud."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of மோசடி (mōcaṭi) is not settled: no dictionary we can check gives its source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mōcaṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mōcaṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mōcaṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mōcaṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paricu viḻuntatāka varum kuṟuñceyti oru mōcaṭi. — A text message saying you have won a prize is a scam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paricu viḻuntatāka varum kuṟuñceyti oru mōcaṭi.* — A text message saying you have won a prize is a scam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to go bankrupt, then the Tamil for to swindle, then say mōcaṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to go bankrupt, then the Tamil for to swindle, then say *mōcaṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மோசடி (mōcaṭi) mean? (\"A fraud; a scam\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C548-uturuvu",
+      "sequence": 31290,
+      "title": "ஊடுருவு (ūṭuruvu) — to break into; to infiltrate",
+      "headword": "ஊடுருவு",
+      "romanization": "ūṭuruvu",
+      "gloss": "to break into; to infiltrate",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e73bda1ca3b95429",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to swindle, then the Tamil for a fraud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஊடுருவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஊடுருவு — ūṭuruvu — \"to break into; to infiltrate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "திருடர்கள் வங்கியின் கணினிக்குள் ஊடுருவினார்கள். tiruṭarkaḷ vaṅkiyiṉ kaṇiṉikkuḷ ūṭuruviṉārkaḷ. Thieves broke into the bank's computer."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ஊடுருவினேன், ūṭuruviṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Into what takes -க்குள், \"into\": கணினிக்குள் ஊடுருவு (ūṭuruvu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஊடுருவு (ūṭuruvu) is a native compound: ஊடு (ūṭu), \"through, the middle\", and உருவு (uruvu), \"to pierce through, to penetrate\" (DEDR 663)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūṭuruvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūṭuruvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūṭuruvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūṭuruvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiruṭarkaḷ vaṅkiyiṉ kaṇiṉikkuḷ ūṭuruviṉārkaḷ. — Thieves broke into the bank's computer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiruṭarkaḷ vaṅkiyiṉ kaṇiṉikkuḷ ūṭuruviṉārkaḷ.* — Thieves broke into the bank's computer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to swindle, then the Tamil for a fraud, then say ūṭuruvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to swindle, then the Tamil for a fraud, then say *ūṭuruvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஊடுருவு (ūṭuruvu) mean? (\"To break into; to infiltrate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

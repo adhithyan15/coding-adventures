@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C541-itar",
+    "language": "tamil",
+    "chapter": 541,
+    "sequence": 30900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ad023634df71565"
+  },
+  "findings": []
+}

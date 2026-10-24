@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:a190ad6dcee060de",
+  "lessonIds": [
+    "TA-C462-avamanam",
+    "TA-C462-cankatam",
+    "TA-C462-kuccam",
+    "TA-C462-aruvaruppu",
+    "TA-C462-mukam-culi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch462.txt",
+  "json": "tamil/narration/ch462.json",
+  "textHash": "fnv1a64:a71f358ec10404ed",
+  "jsonHash": "fnv1a64:00dc0e318980453a",
+  "findings": []
+}

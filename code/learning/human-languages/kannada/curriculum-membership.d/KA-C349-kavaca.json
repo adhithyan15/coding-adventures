@@ -1,0 +1,11 @@
+{
+  "id": "KA-C349-kavaca",
+  "pathSegment": "KA-PATH-349-KHADGA349",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-349-KHADGA349",
+      "order": 2
+    }
+  ]
+}

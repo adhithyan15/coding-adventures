@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C398-catanai",
+    "language": "tamil",
+    "chapter": 398,
+    "sequence": 22730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7502a38d0c88bc00"
+  },
+  "findings": []
+}

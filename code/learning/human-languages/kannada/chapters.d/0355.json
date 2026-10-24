@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Digging Up the Past",
+  "label": "ch:ka-digging-up-the-past",
+  "canDo": "I can say an excavation, archaeology, ruins, an inscription and a manuscript.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C355-hastaprati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can say an excavation, archaeology, ruins, an inscription and a manuscript.",
+    "assesses": [
+      "KA-LEX-C355-UTKHANANA355-03",
+      "KA-LEX-C355-UTKHANANA355-04",
+      "KA-LEX-C355-UTKHANANA355-05"
+    ]
+  }
+}

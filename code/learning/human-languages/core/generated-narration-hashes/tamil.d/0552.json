@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 552,
+  "sourceHash": "fnv1a64:fff9cf5b459efb1b",
+  "lessonIds": [
+    "TA-C552-tiyanaippan",
+    "TA-C552-cilintar",
+    "TA-C552-mitavai",
+    "TA-C552-turitappatuttu",
+    "TA-C552-avakacam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch552.txt",
+  "json": "tamil/narration/ch552.json",
+  "textHash": "fnv1a64:bbf2d7960b15fd65",
+  "jsonHash": "fnv1a64:e87c0e452f1982ff",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 357,
+  "title": "On the Other Hand",
+  "label": "ch:ta-on-the-other-hand",
+  "canDo": "I can contrast two ideas and say how they differ.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C357-verupatu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can contrast two ideas and say how they differ.",
+    "assesses": [
+      "TA-LEX-C357-ENINUM357-03",
+      "TA-LEX-C357-ENINUM357-04",
+      "TA-LEX-C357-ENINUM357-05"
+    ]
+  }
+}

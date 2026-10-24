@@ -1,0 +1,11 @@
+{
+  "id": "KA-C410-higagi",
+  "pathSegment": "KA-PATH-410-HIGAGI410",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-410-HIGAGI410",
+      "order": 0
+    }
+  ]
+}

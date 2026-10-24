@@ -1,0 +1,11 @@
+{
+  "id": "KA-C485-tunturu",
+  "pathSegment": "KA-PATH-485-MUNGARU485",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-485-MUNGARU485",
+      "order": 2
+    }
+  ]
+}

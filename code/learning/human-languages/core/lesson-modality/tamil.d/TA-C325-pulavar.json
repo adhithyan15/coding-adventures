@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C325-pulavar",
+    "language": "tamil",
+    "chapter": 325,
+    "sequence": 18700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3a1652e0027266d"
+  },
+  "findings": []
+}

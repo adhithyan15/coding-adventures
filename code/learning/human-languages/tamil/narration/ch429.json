@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 429,
+  "title": "Storm Warnings",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:83eee3530a00a375",
+  "lessons": [
+    {
+      "id": "TA-C429-munnarivippu",
+      "sequence": 24580,
+      "title": "முன்னறிவிப்பு (muṉṉaṟivippu) — a forecast; advance notice",
+      "headword": "முன்னறிவிப்பு",
+      "romanization": "muṉṉaṟivippu",
+      "gloss": "a forecast; advance notice",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02ba0855ad8f83a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to stagnate, then the Tamil for to drain away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முன்னறிவிப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்னறிவிப்பு — muṉṉaṟivippu — \"a forecast; advance notice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வானிலை முன்னறிவிப்பில் புயல் வரும் என்று சொன்னார்கள். vāṉilai muṉṉaṟivippil puyal varum eṉṟu coṉṉārkaḷ. In the weather forecast they said a storm would come."
+            },
+            {
+              "kind": "speech",
+              "text": "முன், before, + அறிவிப்பு, an announcement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்னறிவிப்பு (muṉṉaṟivippu) is built from முன், \"before\" (DEDR 5020), and அறிவிப்பு, \"an announcement\", from அறிவி, \"to make known\" (DEDR 314)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉṉaṟivippu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉṉaṟivippu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉṉaṟivippu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉṉaṟivippu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāṉilai muṉṉaṟivippil puyal varum eṉṟu coṉṉārkaḷ. — In the weather forecast they said a storm would come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāṉilai muṉṉaṟivippil puyal varum eṉṟu coṉṉārkaḷ.* — In the weather forecast they said a storm would come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to stagnate, then the Tamil for to drain away, then say muṉṉaṟivippu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to stagnate, then the Tamil for to drain away, then say *muṉṉaṟivippu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முன்னறிவிப்பு (muṉṉaṟivippu) mean? (\"A forecast; advance notice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C429-curavali",
+      "sequence": 24590,
+      "title": "சூறாவளி (cūṟāvaḷi) — a cyclone; a whirlwind",
+      "headword": "சூறாவளி",
+      "romanization": "cūṟāvaḷi",
+      "gloss": "a cyclone; a whirlwind",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5534b57d4d66a864",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to drain away, then the Tamil for a forecast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சூறாவளி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சூறாவளி — cūṟāvaḷi — \"a cyclone; a whirlwind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சூறாவளியில் பல மரங்கள் விழுந்தன. cūṟāvaḷiyil pala maraṅkaḷ viḻuntaṉa. Many trees fell in the cyclone."
+            },
+            {
+              "kind": "speech",
+              "text": "சூறை alone also names a whirlwind."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சூறாவளி (cūṟāvaḷi) is native Dravidian (DEDR 2743), \"a whirlwind\", beside சூறை, which means the same; whether its end is வளி, \"wind\", is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūṟāvaḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūṟāvaḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūṟāvaḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūṟāvaḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūṟāvaḷiyil pala maraṅkaḷ viḻuntaṉa. — Many trees fell in the cyclone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūṟāvaḷiyil pala maraṅkaḷ viḻuntaṉa.* — Many trees fell in the cyclone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to drain away, then the Tamil for a forecast, then say cūṟāvaḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to drain away, then the Tamil for a forecast, then say *cūṟāvaḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சூறாவளி (cūṟāvaḷi) mean? (\"A cyclone; a whirlwind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C429-alankatti",
+      "sequence": 24600,
+      "title": "ஆலங்கட்டி (ālaṅkaṭṭi) — hailstones; hail",
+      "headword": "ஆலங்கட்டி",
+      "romanization": "ālaṅkaṭṭi",
+      "gloss": "hailstones; hail",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9aff14db77a04ada",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a forecast, then the Tamil for a cyclone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆலங்கட்டி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆலங்கட்டி — ālaṅkaṭṭi — \"hailstones; hail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நேற்று மாலை ஆலங்கட்டி மழை பெய்தது. nēṟṟu mālai ālaṅkaṭṭi maḻai peytatu. Yesterday evening there was a hailstorm."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆலங்கட்டி (ālaṅkaṭṭi) மழை is a hailstorm."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆலங்கட்டி (ālaṅkaṭṭi) is native Dravidian: DEDR 384 lists it, \"hail\", with ஆலம், \"water, rain\", and கட்டி, \"a lump\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālaṅkaṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālaṅkaṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālaṅkaṭṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālaṅkaṭṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēṟṟu mālai ālaṅkaṭṭi maḻai peytatu. — Yesterday evening there was a hailstorm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēṟṟu mālai ālaṅkaṭṭi maḻai peytatu.* — Yesterday evening there was a hailstorm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a forecast, then the Tamil for a cyclone, then say ālaṅkaṭṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a forecast, then the Tamil for a cyclone, then say *ālaṅkaṭṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆலங்கட்டி (ālaṅkaṭṭi) mean? (\"Hailstones; hail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C429-ataimalai",
+      "sequence": 24610,
+      "title": "அடைமழை (aṭaimaḻai) — a downpour; continuous rain",
+      "headword": "அடைமழை",
+      "romanization": "aṭaimaḻai",
+      "gloss": "a downpour; continuous rain",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:818b1848a0a61c99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a cyclone, then the Tamil for hailstones."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அடைமழை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அடைமழை — aṭaimaḻai — \"a downpour; continuous rain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மூன்று நாட்களாக அடைமழை பெய்கிறது. mūṉṟu nāṭkaḷāka aṭaimaḻai peykiṟatu. It has been pouring for three days."
+            },
+            {
+              "kind": "speech",
+              "text": "அடைமழை (aṭaimaḻai) is heavy rain that does not stop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அடைமழை (aṭaimaḻai) is built from அடை and மழை, \"rain\" (DEDR 4753); how the first part should be read is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭaimaḻai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭaimaḻai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭaimaḻai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭaimaḻai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūṉṟu nāṭkaḷāka aṭaimaḻai peykiṟatu. — It has been pouring for three days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūṉṟu nāṭkaḷāka aṭaimaḻai peykiṟatu.* — It has been pouring for three days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a cyclone, then the Tamil for hailstones, then say aṭaimaḻai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a cyclone, then the Tamil for hailstones, then say *aṭaimaḻai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அடைமழை (aṭaimaḻai) mean? (\"A downpour; continuous rain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C429-mekamuttam",
+      "sequence": 24620,
+      "title": "மேகமூட்டம் (mēkamūṭṭam) — cloud cover; an overcast sky",
+      "headword": "மேகமூட்டம்",
+      "romanization": "mēkamūṭṭam",
+      "gloss": "cloud cover; an overcast sky",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e93a97de4d4547b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for hailstones, then the Tamil for a downpour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மேகமூட்டம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மேகமூட்டம் — mēkamūṭṭam — \"cloud cover; an overcast sky\"."
+            },
+            {
+              "kind": "speech",
+              "text": "காலையிலிருந்து வானம் மேகமூட்டமாக இருக்கிறது. kālaiyiliruntu vāṉam mēkamūṭṭamāka irukkiṟatu. The sky has been overcast since morning."
+            },
+            {
+              "kind": "speech",
+              "text": "With -ஆக it describes the sky: மேகமூட்டமாக, overcast."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மேகமூட்டம் (mēkamūṭṭam) is built from மேகம், \"a cloud\", borrowed from Sanskrit megha (CDIAL 10302), and மூட்டம், \"a sky overcast with clouds\" (DEDR 5033)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēkamūṭṭam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēkamūṭṭam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēkamūṭṭam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēkamūṭṭam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālaiyiliruntu vāṉam mēkamūṭṭamāka irukkiṟatu. — The sky has been overcast since morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālaiyiliruntu vāṉam mēkamūṭṭamāka irukkiṟatu.* — The sky has been overcast since morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for hailstones, then the Tamil for a downpour, then say mēkamūṭṭam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for hailstones, then the Tamil for a downpour, then say *mēkamūṭṭam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மேகமூட்டம் (mēkamūṭṭam) mean? (\"Cloud cover; an overcast sky\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

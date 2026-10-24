@@ -340,7 +340,7 @@ Implemented bare Text scalar/fill lowering with ordered scalar states. Painted
 Text retains existing outer-wrapper scalar geometry. Both authored themes
 measure 78 style drops and zero width drops; all unrelated allowances remain.
 
-### Next release checkpoint — #17950: TaskApp v0.5.9
+### Completed release checkpoint — #17950: TaskApp v0.5.9
 
 Prepare the compatible Qt Text width fix merged in #17915, Web Component
 per-keystroke input/focus acceptance, and stylesheet-derived web host theme
@@ -351,6 +351,13 @@ native payload CI before publication from main after preparation merges.
 Audit the immutable tag, source manifest, assets, and checksums before closing
 #17950. Keep HTML, Web Components, and Paint CI-only and all unsigned native
 artifact/signing boundaries unchanged; #13977 remains the live signing tracker.
+
+Published and independently audited in run 39904677952 from
+`fa203bccd486279cbd651ccd492987c1b2b1004e`. The immutable tag and manifest
+source match; thirteen assets and twelve checksum entries match GitHub asset
+digests, and downloaded metadata hashes match. All six payload jobs and the
+publisher passed. #17999 reconciles these receipts in the README and backlog;
+it does not expand artifact coverage or prepare another release.
 
 ### Tier C — reach, stated honestly
 

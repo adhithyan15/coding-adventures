@@ -1,0 +1,11 @@
+{
+  "id": "KA-C443-dattane",
+  "pathSegment": "KA-PATH-443-SANCHARA443",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-443-SANCHARA443",
+      "order": 3
+    }
+  ]
+}

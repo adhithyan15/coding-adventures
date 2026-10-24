@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C354-valiyuruttu",
+    "language": "tamil",
+    "chapter": 354,
+    "sequence": 20490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b1f237f50e8624b"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-508-OOTHIYAM508",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-508-OOTHIYAM508"
+  ],
+  "after": []
+}

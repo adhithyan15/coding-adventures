@@ -1,0 +1,11 @@
+{
+  "id": "TA-C556-carikai",
+  "pathSegment": "TA-PATH-556-POTTI556",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-556-POTTI556",
+      "order": 4
+    }
+  ]
+}

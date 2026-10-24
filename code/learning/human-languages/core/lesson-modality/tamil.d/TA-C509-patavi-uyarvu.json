@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C509-patavi-uyarvu",
+    "language": "tamil",
+    "chapter": 509,
+    "sequence": 29250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33caf1760be338de"
+  },
+  "findings": []
+}

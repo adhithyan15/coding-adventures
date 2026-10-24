@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C287-vantatal",
+    "language": "tamil",
+    "chapter": 287,
+    "sequence": 16240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab0d0c688c98ce35"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C506-horalu",
+    "language": "kannada",
+    "chapter": 506,
+    "sequence": 25840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0f60dc02472b52f"
+  },
+  "findings": []
+}

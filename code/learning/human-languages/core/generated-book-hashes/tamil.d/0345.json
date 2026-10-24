@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:b7b22ff56bbadc9f",
+  "lessonIds": [
+    "TA-C345-kataicolli",
+    "TA-C345-nitikkatai",
+    "TA-C345-villuppattu",
+    "TA-C345-kataikkalam",
+    "TA-C345-arankeru"
+  ],
+  "tex": "tamil/book/chapters/ch345-telling-a-tale.tex"
+}

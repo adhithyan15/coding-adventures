@@ -1,0 +1,10 @@
+{
+  "id": "TA-EXT-285-STORY-ORDER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can tell a short story in order with mutalil, ataṉ piṟaku and kaṭaiciyil, join actions with vantu and pōy, read a connected story of about eighty words, and read the letter ஈ in īram.",
+  "prerequisites": [
+    "TA-EXT-284-PAST-SCENE"
+  ]
+}

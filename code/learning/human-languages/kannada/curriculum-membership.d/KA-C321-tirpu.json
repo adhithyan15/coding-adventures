@@ -1,0 +1,11 @@
+{
+  "id": "KA-C321-tirpu",
+  "pathSegment": "KA-PATH-321-NYAYA321",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-321-NYAYA321",
+      "order": 3
+    }
+  ]
+}

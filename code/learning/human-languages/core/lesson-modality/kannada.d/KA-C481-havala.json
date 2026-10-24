@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C481-havala",
+    "language": "kannada",
+    "chapter": 481,
+    "sequence": 24480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ddab85552c44f6e"
+  },
+  "findings": []
+}

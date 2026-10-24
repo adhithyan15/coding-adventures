@@ -1,0 +1,19 @@
+{
+  "chapter": 311,
+  "title": "Raising Voices",
+  "label": "ch:ta-raising-voices",
+  "canDo": "I can talk about protests and uprisings.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C311-pirakatanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can talk about protests and uprisings.",
+    "assesses": [
+      "TA-LEX-C311-MUZHAKKAM311-03",
+      "TA-LEX-C311-MUZHAKKAM311-04",
+      "TA-LEX-C311-MUZHAKKAM311-05"
+    ]
+  }
+}

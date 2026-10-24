@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C484-potuku",
+    "language": "tamil",
+    "chapter": 484,
+    "sequence": 27680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2021b28611bf3bf1"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:a96bb35a4ac4c5a4",
+  "lessonIds": [
+    "TA-C408-valaivu",
+    "TA-C408-carivu",
+    "TA-C408-erram",
+    "TA-C408-kavil",
+    "TA-C408-culal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch408.txt",
+  "json": "tamil/narration/ch408.json",
+  "textHash": "fnv1a64:b2945193f4fac3a2",
+  "jsonHash": "fnv1a64:a99d52c398473678",
+  "findings": []
+}

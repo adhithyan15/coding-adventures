@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Advice and Proposals",
+  "label": "ch:ta-advice-and-proposals",
+  "canDo": "I can recommend, advise and propose.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C355-munmoli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can recommend, advise and propose.",
+    "assesses": [
+      "TA-LEX-C355-PARINTURAI355-03",
+      "TA-LEX-C355-PARINTURAI355-04",
+      "TA-LEX-C355-PARINTURAI355-05"
+    ]
+  }
+}

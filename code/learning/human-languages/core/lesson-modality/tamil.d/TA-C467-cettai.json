@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C467-cettai",
+    "language": "tamil",
+    "chapter": 467,
+    "sequence": 26820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:529ef9d76618a66c"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C401-hanakasu",
+  "pathSegment": "KA-PATH-401-ABHIVRIDDHI401",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-401-ABHIVRIDDHI401",
+      "order": 2
+    }
+  ]
+}

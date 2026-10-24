@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C460-vasati",
+    "language": "kannada",
+    "chapter": 460,
+    "sequence": 23380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6748e00c2ab72581"
+  },
+  "findings": []
+}

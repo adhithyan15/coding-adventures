@@ -1,0 +1,11 @@
+{
+  "id": "TA-C315-eppotavatu",
+  "pathSegment": "TA-PATH-315-NADAIPERU315",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-315-NADAIPERU315",
+      "order": 4
+    }
+  ]
+}

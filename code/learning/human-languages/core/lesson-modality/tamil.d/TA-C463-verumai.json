@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C463-verumai",
+    "language": "tamil",
+    "chapter": 463,
+    "sequence": 26640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65f00e28001783f7"
+  },
+  "findings": []
+}

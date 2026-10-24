@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C436-cura",
+    "language": "tamil",
+    "chapter": 436,
+    "sequence": 24950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ec55ef4eb39bab4"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C526-turuvu",
+  "pathSegment": "TA-PATH-526-THALIPPU526",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-526-THALIPPU526",
+      "order": 3
+    }
+  ]
+}

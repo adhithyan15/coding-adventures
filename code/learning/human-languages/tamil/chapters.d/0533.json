@@ -1,0 +1,19 @@
+{
+  "chapter": 533,
+  "title": "The Race",
+  "label": "ch:ta-the-race",
+  "canDo": "I can talk about racing, chasing and diving.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C533-mukkuli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can talk about racing, chasing and diving.",
+    "assesses": [
+      "TA-LEX-C533-OTTAM533-03",
+      "TA-LEX-C533-OTTAM533-04",
+      "TA-LEX-C533-OTTAM533-05"
+    ]
+  }
+}

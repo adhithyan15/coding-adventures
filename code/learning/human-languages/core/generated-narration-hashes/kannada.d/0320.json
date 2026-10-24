@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:8c7d4574bdfea67c",
+  "lessonIds": [
+    "KA-C320-varadigara",
+    "KA-C320-sambhavisu",
+    "KA-C320-prasara",
+    "KA-C320-bittarisu",
+    "KA-C320-sirsike"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch320.txt",
+  "json": "kannada/narration/ch320.json",
+  "textHash": "fnv1a64:2ce5f499028d613a",
+  "jsonHash": "fnv1a64:349fe8bcf1d20dad",
+  "findings": []
+}

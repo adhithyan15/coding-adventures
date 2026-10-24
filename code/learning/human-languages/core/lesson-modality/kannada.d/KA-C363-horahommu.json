@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C363-horahommu",
+    "language": "kannada",
+    "chapter": 363,
+    "sequence": 18290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e452bde660c7120"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C317-male-bandare",
+  "pathSegment": "KA-PATH-317-IF-REAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-317-IF-REAL",
+      "order": 1
+    }
+  ]
+}

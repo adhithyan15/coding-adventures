@@ -1,0 +1,11 @@
+{
+  "id": "TA-C373-piratamar",
+  "pathSegment": "TA-PATH-373-ARACIYAL373",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-373-ARACIYAL373",
+      "order": 2
+    }
+  ]
+}

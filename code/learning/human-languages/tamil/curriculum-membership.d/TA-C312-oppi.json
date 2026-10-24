@@ -1,0 +1,11 @@
+{
+  "id": "TA-C312-oppi",
+  "pathSegment": "TA-PATH-312-VIRIVAKA312",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-312-VIRIVAKA312",
+      "order": 3
+    }
+  ]
+}

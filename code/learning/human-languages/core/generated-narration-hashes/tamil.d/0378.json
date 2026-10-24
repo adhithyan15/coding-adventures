@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:08b1e55d1160fd50",
+  "lessonIds": [
+    "TA-C378-amaippu",
+    "TA-C378-cankam",
+    "TA-C378-uruppinar",
+    "TA-C378-talaivar",
+    "TA-C378-porulalar",
+    "TA-R378-review-371-378"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch378.txt",
+  "json": "tamil/narration/ch378.json",
+  "textHash": "fnv1a64:dcf1341e396a4cd4",
+  "jsonHash": "fnv1a64:e6fd1e08c998240a",
+  "findings": []
+}

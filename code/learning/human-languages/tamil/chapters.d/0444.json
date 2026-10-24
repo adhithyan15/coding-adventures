@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "Spills and Stains",
+  "label": "ch:ta-spills-and-stains",
+  "canDo": "I can talk about spilling, scattering and splashing, stains, and a leaking roof.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C444-oluku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can talk about spilling, scattering and splashing, stains, and a leaking roof.",
+    "assesses": [
+      "TA-LEX-C444-KARAI444-03",
+      "TA-LEX-C444-KARAI444-04",
+      "TA-LEX-C444-KARAI444-05"
+    ]
+  }
+}

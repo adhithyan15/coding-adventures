@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:e116be913b2b232e",
+  "lessonIds": [
+    "KA-C343-nirupisu",
+    "KA-C343-varnisu",
+    "KA-C343-sannivesa",
+    "KA-C343-prasanga",
+    "KA-C343-hinnele"
+  ],
+  "tex": "kannada/book/chapters/ch343-how-to-tell-a-story.tex"
+}

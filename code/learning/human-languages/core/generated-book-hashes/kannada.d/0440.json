@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:7bb9ca6e7633ca92",
+  "lessonIds": [
+    "KA-C440-paravanagi",
+    "KA-C440-navikarisu",
+    "KA-C440-drdhapadisu",
+    "KA-C440-rayabhara-kaceri",
+    "KA-C440-antararastriya",
+    "KA-R440-review-433-440"
+  ],
+  "tex": "kannada/book/chapters/ch440-permits-and-papers.tex"
+}

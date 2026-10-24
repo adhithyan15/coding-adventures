@@ -1,0 +1,11 @@
+{
+  "id": "KA-C475-kadi-fell",
+  "pathSegment": "KA-PATH-475-ARANYA475",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-475-ARANYA475",
+      "order": 3
+    }
+  ]
+}

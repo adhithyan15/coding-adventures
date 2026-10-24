@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:9c6bce4bc8c285a3",
+  "lessonIds": [
+    "KA-C342-muttige-haku",
+    "KA-C342-kandaka",
+    "KA-C342-suttuvari",
+    "KA-C342-saranagu",
+    "KA-C342-phirangi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch342.txt",
+  "json": "kannada/narration/ch342.json",
+  "textHash": "fnv1a64:4463a6788eaaa988",
+  "jsonHash": "fnv1a64:78f3f5ca04db0fa0",
+  "findings": []
+}

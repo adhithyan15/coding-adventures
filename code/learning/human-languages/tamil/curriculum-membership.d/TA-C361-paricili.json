@@ -1,0 +1,11 @@
+{
+  "id": "TA-C361-paricili",
+  "pathSegment": "TA-PATH-361-TIRMANI361",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-361-TIRMANI361",
+      "order": 1
+    }
+  ]
+}

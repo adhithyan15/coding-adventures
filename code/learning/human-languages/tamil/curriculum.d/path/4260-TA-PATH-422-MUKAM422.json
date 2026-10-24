@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-422-MUKAM422",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TA-EXT-422-MUKAM422"
+  ],
+  "after": []
+}

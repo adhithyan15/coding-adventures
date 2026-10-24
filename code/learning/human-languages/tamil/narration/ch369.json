@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 369,
+  "title": "Society and Its People",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:710fec9de5d20b9b",
+  "lessons": [
+    {
+      "id": "TA-C369-camukam",
+      "sequence": 21220,
+      "title": "சமூகம் (camūkam) — society; a community",
+      "headword": "சமூகம்",
+      "romanization": "camūkam",
+      "gloss": "society; a community",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66d5c6ab3a4c7039",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a seminar, then the Tamil for a question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சமூகம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சமூகம் — camūkam — \"society; a community\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒவ்வொருவரும் சமூகத்துக்கு உதவ வேண்டும். ovvoruvarum camūkattukku utava vēṇṭum. Everyone should help society."
+            },
+            {
+              "kind": "speech",
+              "text": "சமூகத்துக்கு, to society, with the oblique -அத்து-. Before another noun, சமூக means social."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சமூகம் (camūkam) is borrowed from Sanskrit samūha, \"heap, collection\" (CDIAL 13241), whose Pali and Prakrit forms mean \"multitude\": people taken together."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "camūkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *camūkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "camūkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *camūkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ovvoruvarum camūkattukku utava vēṇṭum. — Everyone should help society.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ovvoruvarum camūkattukku utava vēṇṭum.* — Everyone should help society.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a seminar, then the Tamil for a question, then say camūkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a seminar, then the Tamil for a question, then say *camūkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சமூகம் (camūkam) mean? (\"Society; a community\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C369-potumakkal",
+      "sequence": 21230,
+      "title": "பொதுமக்கள் (potumakkaḷ) — the public",
+      "headword": "பொதுமக்கள்",
+      "romanization": "potumakkaḷ",
+      "gloss": "the public",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6d2c08866865a76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a question, then the Tamil for society."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பொதுமக்கள்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பொதுமக்கள் — potumakkaḷ — \"the public\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தப் பூங்கா பொதுமக்களுக்குத் திறந்திருக்கிறது. intap pūṅkā potumakkaḷukkut tiṟantirukkiṟatu. This park is open to the public."
+            },
+            {
+              "kind": "speech",
+              "text": "பொது, common + மக்கள், people."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பொதுமக்கள் (potumakkaḷ) is native: potu, \"common, general, public\" (DEDR 4507), and makkaḷ, \"human beings, people\" (DEDR 4616)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "potumakkaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *potumakkaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "potumakkaḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *potumakkaḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intap pūṅkā potumakkaḷukkut tiṟantirukkiṟatu. — This park is open to the public.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intap pūṅkā potumakkaḷukkut tiṟantirukkiṟatu.* — This park is open to the public.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a question, then the Tamil for society, then say potumakkaḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a question, then the Tamil for society, then say *potumakkaḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பொதுமக்கள் (potumakkaḷ) mean? (\"The public\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C369-makkaltokai",
+      "sequence": 21240,
+      "title": "மக்கள்தொகை (makkaḷtokai) — population",
+      "headword": "மக்கள்தொகை",
+      "romanization": "makkaḷtokai",
+      "gloss": "population",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:799ad9f6dfa1e29a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for society, then the Tamil for the public."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மக்கள்தொகை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மக்கள்தொகை — makkaḷtokai — \"population\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த நகரத்தின் மக்கள்தொகை வேகமாக வளர்கிறது. inta nakarattiṉ makkaḷtokai vēkamāka vaḷarkiṟatu. The population of this city is growing fast."
+            },
+            {
+              "kind": "speech",
+              "text": "மக்கள், people, + a word for a total: the head count."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மக்கள்தொகை (makkaḷtokai) is native: makkaḷ, \"people\" (DEDR 4616), and tokai, \"sum, total\" (DEDR 3476): the count of the people."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makkaḷtokai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makkaḷtokai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makkaḷtokai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makkaḷtokai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta nakarattiṉ makkaḷtokai vēkamāka vaḷarkiṟatu. — The population of this city is growing fast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta nakarattiṉ makkaḷtokai vēkamāka vaḷarkiṟatu.* — The population of this city is growing fast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for society, then the Tamil for the public, then say makkaḷtokai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for society, then the Tamil for the public, then say *makkaḷtokai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மக்கள்தொகை (makkaḷtokai) mean? (\"Population\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C369-kutimakan",
+      "sequence": 21250,
+      "title": "குடிமகன் (kuṭimakaṉ) — a citizen",
+      "headword": "குடிமகன்",
+      "romanization": "kuṭimakaṉ",
+      "gloss": "a citizen",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74246b3dd58aba9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for the public, then the Tamil for population."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குடிமகன்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குடிமகன் — kuṭimakaṉ — \"a citizen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒவ்வொரு குடிமகனுக்கும் சில கடமைகள் இருக்கின்றன. ovvoru kuṭimakaṉukkum cila kaṭamaikaḷ irukkiṉṟaṉa. Every citizen has some duties."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: குடிமக்கள், kuṭimakkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural குடிமக்கள்; a woman citizen is குடிமகள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குடிமகன் (kuṭimakaṉ) is native: kuṭi, \"house, family, town\" (DEDR 1655), and makaṉ, \"son, person\" (DEDR 4616): a son of the town."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭimakaṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭimakaṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭimakaṉ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭimakaṉ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ovvoru kuṭimakaṉukkum cila kaṭamaikaḷ irukkiṉṟaṉa. — Every citizen has some duties.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ovvoru kuṭimakaṉukkum cila kaṭamaikaḷ irukkiṉṟaṉa.* — Every citizen has some duties.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for the public, then the Tamil for population, then say kuṭimakaṉ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for the public, then the Tamil for population, then say *kuṭimakaṉ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குடிமகன் (kuṭimakaṉ) mean? (\"A citizen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C369-vakaippatuttu",
+      "sequence": 21260,
+      "title": "வகைப்படுத்து (vakaippaṭuttu) — to classify; to sort",
+      "headword": "வகைப்படுத்து",
+      "romanization": "vakaippaṭuttu",
+      "gloss": "to classify; to sort",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:828fa7f0ae61642b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for population, then the Tamil for a citizen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வகைப்படுத்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வகைப்படுத்து — vakaippaṭuttu — \"to classify; to sort\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவள் புத்தகங்களைப் பாடம் வாரியாக வகைப்படுத்தினாள். avaḷ puttakaṅkaḷaip pāṭam vāriyāka vakaippaṭuttiṉāḷ. She sorted the books by subject."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): வகைப்படுத்தினேன், vakaippaṭuttiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is sorted takes -ஐ; வாரியாக, by: பாடம் வாரியாக, subject by subject."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வகைப்படுத்து (vakaippaṭuttu) is native: vakai, \"division, branch, kind\" (DEDR 5202), with paṭuttu, the causative of paṭu: to put into kinds."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vakaippaṭuttu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vakaippaṭuttu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vakaippaṭuttu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vakaippaṭuttu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ puttakaṅkaḷaip pāṭam vāriyāka vakaippaṭuttiṉāḷ. — She sorted the books by subject.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ puttakaṅkaḷaip pāṭam vāriyāka vakaippaṭuttiṉāḷ.* — She sorted the books by subject.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for population, then the Tamil for a citizen, then say vakaippaṭuttu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for population, then the Tamil for a citizen, then say *vakaippaṭuttu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வகைப்படுத்து (vakaippaṭuttu) mean? (\"To classify; to sort\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C518-kappuppirati",
+    "language": "tamil",
+    "chapter": 518,
+    "sequence": 29730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f421e1581297636"
+  },
+  "findings": []
+}

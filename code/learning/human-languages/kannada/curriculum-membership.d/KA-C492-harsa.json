@@ -1,0 +1,11 @@
+{
+  "id": "KA-C492-harsa",
+  "pathSegment": "KA-PATH-492-HARSHA492",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-492-HARSHA492",
+      "order": 3
+    }
+  ]
+}

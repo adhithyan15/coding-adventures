@@ -1,0 +1,11 @@
+{
+  "id": "TA-C523-mattu",
+  "pathSegment": "TA-PATH-523-PAZHUDHU523",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-523-PAZHUDHU523",
+      "order": 1
+    }
+  ]
+}

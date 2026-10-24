@@ -1,0 +1,11 @@
+{
+  "id": "KA-C400-viniyogisu",
+  "pathSegment": "KA-PATH-400-BAJET400",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-400-BAJET400",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C453-navika",
+    "language": "kannada",
+    "chapter": 453,
+    "sequence": 23030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61de64f5d59fb2c8"
+  },
+  "findings": []
+}

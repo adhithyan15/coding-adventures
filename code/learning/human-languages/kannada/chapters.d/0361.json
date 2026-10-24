@@ -1,0 +1,21 @@
+{
+  "chapter": 361,
+  "title": "Remembering the Fallen",
+  "label": "ch:ka-remembering-the-fallen",
+  "canDo": "I can say a memorial, a tomb, to commemorate, a bastion and to bury.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-R361-review-355-361",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can say a memorial, a tomb, to commemorate, a bastion and to bury.",
+    "assesses": [
+      "KA-LEX-C361-SMARAKA361-01",
+      "KA-LEX-C361-SMARAKA361-02",
+      "KA-LEX-C361-SMARAKA361-03",
+      "KA-LEX-C361-SMARAKA361-04",
+      "KA-LEX-C361-SMARAKA361-05"
+    ]
+  }
+}

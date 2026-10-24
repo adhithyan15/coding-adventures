@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:a4a3de14e838fc87",
+  "lessonIds": [
+    "TA-C479-tacai",
+    "TA-C479-narampu",
+    "TA-C479-nencu",
+    "TA-C479-vila",
+    "TA-C479-tuti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch479.txt",
+  "json": "tamil/narration/ch479.json",
+  "textHash": "fnv1a64:afd87e0182639cd3",
+  "jsonHash": "fnv1a64:95f18d732148dae4",
+  "findings": []
+}

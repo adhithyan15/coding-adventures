@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:d617281ea8d9bba0",
+  "lessonIds": [
+    "KA-C367-khalanayaka",
+    "KA-C367-vira",
+    "KA-C367-satru",
+    "KA-C367-nasamadu",
+    "KA-C367-kanmareyagu"
+  ],
+  "tex": "kannada/book/chapters/ch367-heroes-and-villains.tex"
+}

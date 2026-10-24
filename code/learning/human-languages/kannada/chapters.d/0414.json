@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "Limits",
+  "label": "ch:ka-limits",
+  "canDo": "I can say strictness, maximum, minimum, to fix and to restrict.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C414-nirbandhisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can say strictness, maximum, minimum, to fix and to restrict.",
+    "assesses": [
+      "KA-LEX-C414-GARISHTHA414-03",
+      "KA-LEX-C414-GARISHTHA414-04",
+      "KA-LEX-C414-GARISHTHA414-05"
+    ]
+  }
+}

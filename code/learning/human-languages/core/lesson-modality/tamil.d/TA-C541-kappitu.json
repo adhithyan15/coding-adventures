@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C541-kappitu",
+    "language": "tamil",
+    "chapter": 541,
+    "sequence": 30890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bca1ddfaa8ae58a6"
+  },
+  "findings": []
+}

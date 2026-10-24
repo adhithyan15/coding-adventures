@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-334-THER334",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-334-THER334"
+  ],
+  "after": []
+}

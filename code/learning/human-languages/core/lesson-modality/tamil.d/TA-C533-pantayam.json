@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C533-pantayam",
+    "language": "tamil",
+    "chapter": 533,
+    "sequence": 30480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73a3cd8bd5c3e09b"
+  },
+  "findings": []
+}

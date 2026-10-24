@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C495-kalaji",
+    "language": "kannada",
+    "chapter": 495,
+    "sequence": 25290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d3e5e3ede0aea2e"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:613c53446239bb1e",
+  "lessonIds": [
+    "KA-C507-tegu",
+    "KA-C507-mitukisu",
+    "KA-C507-edusiru-bidu",
+    "KA-C507-bikkalike",
+    "KA-C507-ubbasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch507.txt",
+  "json": "kannada/narration/ch507.json",
+  "textHash": "fnv1a64:7c31637b6782c3bd",
+  "jsonHash": "fnv1a64:2d5bcbab6b06f9a0",
+  "findings": []
+}

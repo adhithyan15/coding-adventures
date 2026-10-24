@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C539-pullankulal",
+    "language": "tamil",
+    "chapter": 539,
+    "sequence": 30790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4acd4a26c184218b"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "Settling Disputes",
+  "label": "ch:ka-settling-disputes",
+  "canDo": "I can say an alliance, a negotiation, mediation, a compromise and to incite.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C405-pracodisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can say an alliance, a negotiation, mediation, a compromise and to incite.",
+    "assesses": [
+      "KA-LEX-C405-SANDHANA405-03",
+      "KA-LEX-C405-SANDHANA405-04",
+      "KA-LEX-C405-SANDHANA405-05"
+    ]
+  }
+}

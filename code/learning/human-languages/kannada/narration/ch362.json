@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 362,
+  "title": "Builders of Old",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:85424151d16b1739",
+  "lessons": [
+    {
+      "id": "KA-C362-nagarikate",
+      "sequence": 18210,
+      "title": "ನಾಗರಿಕತೆ (nāgarikate) — a civilization",
+      "headword": "ನಾಗರಿಕತೆ",
+      "romanization": "nāgarikate",
+      "gloss": "a civilization",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:656926ee2254bd6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a bastion, then the Kannada for to bury."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಾಗರಿಕತೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾಗರಿಕತೆ — nāgarikate — \"a civilization\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನದಿಯ ದಡದಲ್ಲಿ ಒಂದು ಪ್ರಾಚೀನ ನಾಗರಿಕತೆ ಬೆಳೆಯಿತು. nadiya daḍadalli ondu prācīna nāgarikate beḷeyitu. An ancient civilization grew up on the river bank."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ನಾಗರಿಕತೆಗಳು, nāgarikategaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "-ತೆ makes an abstract noun of an adjective: town-bred ways become civilization."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾಗರಿಕತೆ (nāgarikate) is built on Sanskrit nāgarika, \"born or living in a town, civic, polite\" (Monier-Williams), with the Kannada abstract ending -te."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāgarikate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāgarikate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāgarikate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāgarikate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nadiya daḍadalli ondu prācīna nāgarikate beḷeyitu. — An ancient civilization grew up on the river bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nadiya daḍadalli ondu prācīna nāgarikate beḷeyitu.* — An ancient civilization grew up on the river bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a bastion, then the Kannada for to bury, then say nāgarikate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a bastion, then the Kannada for to bury, then say *nāgarikate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಾಗರಿಕತೆ (nāgarikate) mean? (\"A civilization\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C362-sthapisu",
+      "sequence": 18220,
+      "title": "ಸ್ಥಾಪಿಸು (sthāpisu) — to found; to establish",
+      "headword": "ಸ್ಥಾಪಿಸು",
+      "romanization": "sthāpisu",
+      "gloss": "to found; to establish",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ee9f703d7d953e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to bury, then the Kannada for a civilization."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸ್ಥಾಪಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ಥಾಪಿಸು — sthāpisu — \"to found; to establish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ರಾಜ ಈ ನಗರವನ್ನು ಐನೂರು ವರ್ಷದ ಹಿಂದೆ ಸ್ಥಾಪಿಸಿದನು. ā rāja ī nagaravannu ainūru varṣada hinde sthāpisidanu. That king founded this city five hundred years ago."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಸ್ಥಾಪಿಸಿದೆ, sthāpiside."
+            },
+            {
+              "kind": "speech",
+              "text": "Cities, schools and companies are founded: ಶಾಲೆಯನ್ನು ಸ್ಥಾಪಿಸು (sthāpisu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ಥಾಪಿಸು (sthāpisu) is built on Sanskrit sthāpana, \"causing to stand, fixing\" (CDIAL 13755), from sthāpayati, \"makes stand\", with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthāpisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthāpisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthāpisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthāpisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā rāja ī nagaravannu ainūru varṣada hinde sthāpisidanu. — That king founded this city five hundred years ago.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā rāja ī nagaravannu ainūru varṣada hinde sthāpisidanu.* — That king founded this city five hundred years ago.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to bury, then the Kannada for a civilization, then say sthāpisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to bury, then the Kannada for a civilization, then say *sthāpisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸ್ಥಾಪಿಸು (sthāpisu) mean? (\"To found; to establish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C362-nirmisu",
+      "sequence": 18230,
+      "title": "ನಿರ್ಮಿಸು (nirmisu) — to construct; to build",
+      "headword": "ನಿರ್ಮಿಸು",
+      "romanization": "nirmisu",
+      "gloss": "to construct; to build",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d994a16a0b91f333",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a civilization, then the Kannada for to found."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಿರ್ಮಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿರ್ಮಿಸು — nirmisu — \"to construct; to build\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕೆಲಸಗಾರರು ನದಿಗೆ ಹೊಸ ಸೇತುವೆ ನಿರ್ಮಿಸಿದರು. kelasagāraru nadige hosa sētuve nirmisidaru. The workers built a new bridge over the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ನಿರ್ಮಿಸಿದೆ, nirmiside."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal partner of ಕಟ್ಟು. Films are \"made\" with it too: ಸಿನಿಮಾ ನಿರ್ಮಿಸು (nirmisu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿರ್ಮಿಸು (nirmisu) is built on Sanskrit nirmāṇa, \"measuring, making, creating\" (CDIAL 7368), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirmisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirmisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirmisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirmisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kelasagāraru nadige hosa sētuve nirmisidaru. — The workers built a new bridge over the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kelasagāraru nadige hosa sētuve nirmisidaru.* — The workers built a new bridge over the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a civilization, then the Kannada for to found, then say nirmisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a civilization, then the Kannada for to found, then say *nirmisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಿರ್ಮಿಸು (nirmisu) mean? (\"To construct; to build\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C362-kedavu",
+      "sequence": 18240,
+      "title": "ಕೆಡವು (keḍavu) — to demolish; to knock down",
+      "headword": "ಕೆಡವು",
+      "romanization": "keḍavu",
+      "gloss": "to demolish; to knock down",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db5b1f4f4659888e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to found, then the Kannada for to construct."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೆಡವು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೆಡವು — keḍavu — \"to demolish; to knock down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವರು ಹಳೆಯ ಕಟ್ಟಡವನ್ನು ಕೆಡವಿದರು. avaru haḷeya kaṭṭaḍavannu keḍavidaru. They demolished the old building."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಕೆಡವಿದೆ, keḍavide."
+            },
+            {
+              "kind": "speech",
+              "text": "What is knocked down takes -ಅನ್ನು. A wrestler can ಕೆಡವು (keḍavu) his rival too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೆಡವು (keḍavu) is native Dravidian: DEDR 1524 lists Kannada keḍavu, \"to throw down, to fell\", under words for lying down."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keḍavu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keḍavu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keḍavu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keḍavu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaru haḷeya kaṭṭaḍavannu keḍavidaru. — They demolished the old building.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaru haḷeya kaṭṭaḍavannu keḍavidaru.* — They demolished the old building.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to found, then the Kannada for to construct, then say keḍavu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to found, then the Kannada for to construct, then say *keḍavu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೆಡವು (keḍavu) mean? (\"To demolish; to knock down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C362-pratime",
+      "sequence": 18250,
+      "title": "ಪ್ರತಿಮೆ (pratime) — a statue",
+      "headword": "ಪ್ರತಿಮೆ",
+      "romanization": "pratime",
+      "gloss": "a statue",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c58b339c0be30cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to construct, then the Kannada for to demolish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರತಿಮೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿಮೆ — pratime — \"a statue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ವೃತ್ತದಲ್ಲಿ ಆ ರಾಜನ ದೊಡ್ಡ ಪ್ರತಿಮೆ ಇದೆ. vṛttadalli ā rājana doḍḍa pratime ide. There is a large statue of that king at the circle."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಪ್ರತಿಮೆಗಳು, pratimegaḷu."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರತಿಮೆ (pratime) is borrowed from Sanskrit pratimā, \"an image, a likeness, a statue\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratime",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratime*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratime, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratime*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛttadalli ā rājana doḍḍa pratime ide. — There is a large statue of that king at the circle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛttadalli ā rājana doḍḍa pratime ide.* — There is a large statue of that king at the circle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to construct, then the Kannada for to demolish, then say pratime again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to construct, then the Kannada for to demolish, then say *pratime* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರತಿಮೆ (pratime) mean? (\"A statue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

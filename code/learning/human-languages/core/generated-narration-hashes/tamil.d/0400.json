@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:7180e253064881f3",
+  "lessonIds": [
+    "TA-C400-nataimetai",
+    "TA-C400-tantavalam",
+    "TA-C400-varukai",
+    "TA-C400-ottivai",
+    "TA-C400-maru-change"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch400.txt",
+  "json": "tamil/narration/ch400.json",
+  "textHash": "fnv1a64:90e855af6a281070",
+  "jsonHash": "fnv1a64:b804b78d314d028d",
+  "findings": []
+}

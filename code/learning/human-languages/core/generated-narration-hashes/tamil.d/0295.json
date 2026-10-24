@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:9daf268afb7b4987",
+  "lessonIds": [
+    "TA-C295-tuppu",
+    "TA-C295-tatayam",
+    "TA-C295-canteki",
+    "TA-C295-kurram",
+    "TA-C295-kurravali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch295.txt",
+  "json": "tamil/narration/ch295.json",
+  "textHash": "fnv1a64:9e03e8f858ba840f",
+  "jsonHash": "fnv1a64:f43bf78c2b4b6b99",
+  "findings": []
+}

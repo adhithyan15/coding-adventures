@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C458-pulampu",
+    "language": "tamil",
+    "chapter": 458,
+    "sequence": 26380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09501eefc06b548c"
+  },
+  "findings": []
+}

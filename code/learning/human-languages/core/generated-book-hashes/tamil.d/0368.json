@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:de7cb9e2a7b28c68",
+  "lessonIds": [
+    "TA-C368-kalviyarivu",
+    "TA-C368-vilippunarvu",
+    "TA-C368-utavittokai",
+    "TA-C368-karuttaranku",
+    "TA-C368-vina"
+  ],
+  "tex": "tamil/book/chapters/ch368-learning-for-everyone.tex"
+}

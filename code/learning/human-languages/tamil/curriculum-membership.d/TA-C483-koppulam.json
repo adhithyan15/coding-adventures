@@ -1,0 +1,11 @@
+{
+  "id": "TA-C483-koppulam",
+  "pathSegment": "TA-PATH-483-TOL483",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-483-TOL483",
+      "order": 1
+    }
+  ]
+}

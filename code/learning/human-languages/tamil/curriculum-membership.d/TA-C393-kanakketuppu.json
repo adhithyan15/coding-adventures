@@ -1,0 +1,11 @@
+{
+  "id": "TA-C393-kanakketuppu",
+  "pathSegment": "TA-PATH-393-ARIKKAI393",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-393-ARIKKAI393",
+      "order": 1
+    }
+  ]
+}

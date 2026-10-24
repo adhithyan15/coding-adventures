@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "Digging Up the Past",
+  "label": "ch:ta-digging-up-the-past",
+  "canDo": "I can talk about digs and the things found in them.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C341-kantetu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can talk about digs and the things found in them.",
+    "assesses": [
+      "TA-LEX-C341-AGAZHVU341-03",
+      "TA-LEX-C341-AGAZHVU341-04",
+      "TA-LEX-C341-AGAZHVU341-05"
+    ]
+  }
+}

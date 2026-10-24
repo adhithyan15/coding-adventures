@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 428,
+  "title": "A Spray of Rain",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3c18d2941dcdb53a",
+  "lessons": [
+    {
+      "id": "TA-C428-caral",
+      "sequence": 24530,
+      "title": "சாரல் (cāral) — a spray of rain; drizzle",
+      "headword": "சாரல்",
+      "romanization": "cāral",
+      "gloss": "a spray of rain; drizzle",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:858e76611e940ec9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to scorch, then the Tamil for to be sultry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சாரல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சாரல் — cāral — \"a spray of rain; drizzle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மலையில் காலை முழுவதும் சாரல் அடித்தது. malaiyil kālai muḻuvatum cāral aṭittatu. On the hill a fine rain blew all morning."
+            },
+            {
+              "kind": "speech",
+              "text": "சாரல் (cāral) அடி is said of fine rain blown by the wind."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சாரல் (cāral) is native Dravidian (DEDR 2482), \"drizzling rain\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāral",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāral*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāral, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāral*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malaiyil kālai muḻuvatum cāral aṭittatu. — On the hill a fine rain blew all morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malaiyil kālai muḻuvatum cāral aṭittatu.* — On the hill a fine rain blew all morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to scorch, then the Tamil for to be sultry, then say cāral again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to scorch, then the Tamil for to be sultry, then say *cāral* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சாரல் (cāral) mean? (\"A spray of rain; drizzle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C428-turu",
+      "sequence": 24540,
+      "title": "தூறு (tūṟu) — to drizzle",
+      "headword": "தூறு",
+      "romanization": "tūṟu",
+      "gloss": "to drizzle",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55fc37d41a55d658",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to be sultry, then the Tamil for a spray of rain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தூறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தூறு — tūṟu — \"to drizzle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வெளியே மழை தூறிக்கொண்டிருந்தது. veḷiyē maḻai tūṟikkoṇṭiruntatu. It was drizzling outside."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): தூறியது, tūṟiyatu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is தூறல், a drizzle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தூறு (tūṟu) is native Dravidian (DEDR 3398), \"to drizzle\"; the same article gives தூறல், \"drizzling\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷiyē maḻai tūṟikkoṇṭiruntatu. — It was drizzling outside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷiyē maḻai tūṟikkoṇṭiruntatu.* — It was drizzling outside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to be sultry, then the Tamil for a spray of rain, then say tūṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to be sultry, then the Tamil for a spray of rain, then say *tūṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தூறு (tūṟu) mean? (\"To drizzle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C428-poli",
+      "sequence": 24550,
+      "title": "பொழி (poḻi) — to pour down; to shower",
+      "headword": "பொழி",
+      "romanization": "poḻi",
+      "gloss": "to pour down; to shower",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b14b778fef11156b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a spray of rain, then the Tamil for to drizzle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பொழி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பொழி — poḻi — \"to pour down; to shower\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இரவு முழுவதும் மழை பொழிந்தது. iravu muḻuvatum maḻai poḻintatu. It poured all night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): பொழிந்தது, poḻintatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Written and poetic; in speech, மழை கொட்டியது."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பொழி (poḻi) is native Dravidian (DEDR 4556), \"to pour forth, to shower, as rain\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poḻi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poḻi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poḻi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poḻi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iravu muḻuvatum maḻai poḻintatu. — It poured all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iravu muḻuvatum maḻai poḻintatu.* — It poured all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a spray of rain, then the Tamil for to drizzle, then say poḻi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a spray of rain, then the Tamil for to drizzle, then say *poḻi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பொழி (poḻi) mean? (\"To pour down; to shower\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C428-tenku",
+      "sequence": 24560,
+      "title": "தேங்கு (tēṅku) — to stagnate; to collect (of water)",
+      "headword": "தேங்கு",
+      "romanization": "tēṅku",
+      "gloss": "to stagnate; to collect (of water)",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9dbaab0a6e11dbc8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to drizzle, then the Tamil for to pour down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தேங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தேங்கு — tēṅku — \"to stagnate; to collect (of water)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தெருவில் மழைநீர் தேங்கியது. teruvil maḻainīr tēṅkiyatu. Rainwater collected in the street."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): தேங்கியது, tēṅkiyatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of work too: வேலை தேங்கியது, the work piled up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தேங்கு (tēṅku) is native Dravidian (DEDR 3453), \"to fill, to rise to the brim, to collect\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teruvil maḻainīr tēṅkiyatu. — Rainwater collected in the street.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teruvil maḻainīr tēṅkiyatu.* — Rainwater collected in the street.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to drizzle, then the Tamil for to pour down, then say tēṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to drizzle, then the Tamil for to pour down, then say *tēṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தேங்கு (tēṅku) mean? (\"To stagnate; to collect (of water)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C428-vati",
+      "sequence": 24570,
+      "title": "வடி (vaṭi) — to drain away; to ebb",
+      "headword": "வடி",
+      "romanization": "vaṭi",
+      "gloss": "to drain away; to ebb",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a35aa208d1d139f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to pour down, then the Tamil for to stagnate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வடி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வடி — vaṭi — \"to drain away; to ebb\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மழை நின்றதும் தண்ணீர் வடிந்தது. maḻai niṉṟatum taṇṇīr vaṭintatu. As soon as the rain stopped, the water drained away."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): வடிந்தது, vaṭintatu."
+            },
+            {
+              "kind": "speech",
+              "text": "With an object, to strain: சாதம் வடி (vaṭi), to drain rice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வடி (vaṭi) is native Dravidian (DEDR 5221), \"to drip, to trickle, to ebb\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻai niṉṟatum taṇṇīr vaṭintatu. — As soon as the rain stopped, the water drained away.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻai niṉṟatum taṇṇīr vaṭintatu.* — As soon as the rain stopped, the water drained away.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to pour down, then the Tamil for to stagnate, then say vaṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to pour down, then the Tamil for to stagnate, then say *vaṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வடி (vaṭi) mean? (\"To drain away; to ebb\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

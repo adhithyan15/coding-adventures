@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:77a80a0cf6093bfd",
+  "lessonIds": [
+    "TA-C508-utiyam",
+    "TA-C508-vituppu",
+    "TA-C508-kututal-neram",
+    "TA-C508-kanakkalar",
+    "TA-C508-eluttar"
+  ],
+  "tex": "tamil/book/chapters/ch508-pay-and-leave.tex"
+}

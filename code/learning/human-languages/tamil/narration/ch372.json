@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 372,
+  "title": "Laws and Rules",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:266dfb8e2f543ead",
+  "lessons": [
+    {
+      "id": "TA-C372-cattam",
+      "sequence": 21380,
+      "title": "சட்டம் (caṭṭam) — a law",
+      "headword": "சட்டம்",
+      "romanization": "caṭṭam",
+      "gloss": "a law",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef6442020ab9c1ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a majority, then the Tamil for to oppress."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சட்டம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சட்டம் — caṭṭam — \"a law\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அரசு ஒரு புதிய சட்டம் கொண்டுவந்தது. aracu oru putiya caṭṭam koṇṭuvantatu. The government brought in a new law."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: சட்டங்கள், caṭṭaṅkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "சட்டப்படி, by law. A -அம் noun makes its plural in -ங்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சட்டம் (caṭṭam) is native Dravidian: DEDR 2304 lists Tamil caṭṭam, \"wooden frame; plan, model, rule, order, regulation\": a frame that holds things in place."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caṭṭam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caṭṭam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caṭṭam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caṭṭam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aracu oru putiya caṭṭam koṇṭuvantatu. — The government brought in a new law.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aracu oru putiya caṭṭam koṇṭuvantatu.* — The government brought in a new law.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a majority, then the Tamil for to oppress, then say caṭṭam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a majority, then the Tamil for to oppress, then say *caṭṭam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சட்டம் (caṭṭam) mean? (\"A law\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C372-miru",
+      "sequence": 21390,
+      "title": "மீறு (mīṟu) — to violate; to break (a rule)",
+      "headword": "மீறு",
+      "romanization": "mīṟu",
+      "gloss": "to violate; to break (a rule)",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e8340c527ae422d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to oppress, then the Tamil for a law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மீறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மீறு — mīṟu — \"to violate; to break (a rule)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவன் சாலை விதிகளை மீறினான். avaṉ cālai vitikaḷai mīṟiṉāṉ. He broke the traffic rules."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): மீறினேன், mīṟiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is broken takes -ஐ: விதியை மீறு (mīṟu). The noun is மீறல், a violation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மீறு (mīṟu) is native Dravidian: DEDR 4884 lists Tamil mīṟu, \"to go beyond, exceed, transgress, violate\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaṉ cālai vitikaḷai mīṟiṉāṉ. — He broke the traffic rules.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaṉ cālai vitikaḷai mīṟiṉāṉ.* — He broke the traffic rules.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to oppress, then the Tamil for a law, then say mīṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to oppress, then the Tamil for a law, then say *mīṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மீறு (mīṟu) mean? (\"To violate; to break (a rule)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C372-kataippiti",
+      "sequence": 21400,
+      "title": "கடைப்பிடி (kaṭaippiṭi) — to observe; to abide by",
+      "headword": "கடைப்பிடி",
+      "romanization": "kaṭaippiṭi",
+      "gloss": "to observe; to abide by",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5221b4297c603431",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a law, then the Tamil for to violate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கடைப்பிடி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கடைப்பிடி — kaṭaippiṭi — \"to observe; to abide by\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நாங்கள் பள்ளி விதிகளைக் கடைப்பிடிக்கிறோம். nāṅkaḷ paḷḷi vitikaḷaik kaṭaippiṭikkiṟōm. We abide by the school rules."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): கடைப்பிடித்தேன், kaṭaippiṭittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is kept takes -ஐ; customs too: பழக்கத்தைக் கடைப்பிடி (kaṭaippiṭi)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கடைப்பிடி (kaṭaippiṭi) is built from native kaṭai, \"end, limit\" (DEDR 1109), and piṭi, \"to catch, hold\" (DEDR 4148): to hold on to the end."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭaippiṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭaippiṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭaippiṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭaippiṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṅkaḷ paḷḷi vitikaḷaik kaṭaippiṭikkiṟōm. — We abide by the school rules.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṅkaḷ paḷḷi vitikaḷaik kaṭaippiṭikkiṟōm.* — We abide by the school rules.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a law, then the Tamil for to violate, then say kaṭaippiṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a law, then the Tamil for to violate, then say *kaṭaippiṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கடைப்பிடி (kaṭaippiṭi) mean? (\"To observe; to abide by\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C372-tanti",
+      "sequence": 21410,
+      "title": "தண்டி (taṇṭi) — to punish",
+      "headword": "தண்டி",
+      "romanization": "taṇṭi",
+      "gloss": "to punish",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06729fdec4031ab7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to violate, then the Tamil for to observe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தண்டி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தண்டி — taṇṭi — \"to punish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தவறு செய்தவர்களை அரசு தண்டிக்க வேண்டும். tavaṟu ceytavarkaḷai aracu taṇṭikka vēṇṭum. The government must punish those who did wrong."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): தண்டித்தேன், taṇṭittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Who is punished takes -ஐ. The noun is தண்டனை, a punishment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தண்டி (taṇṭi) is a verb built on Sanskrit daṇḍa, \"stick, club; control, punishment\" (CDIAL 6128). Tamil writes the d as த."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṇṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṇṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṇṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṇṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tavaṟu ceytavarkaḷai aracu taṇṭikka vēṇṭum. — The government must punish those who did wrong.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tavaṟu ceytavarkaḷai aracu taṇṭikka vēṇṭum.* — The government must punish those who did wrong.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to violate, then the Tamil for to observe, then say taṇṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to violate, then the Tamil for to observe, then say *taṇṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தண்டி (taṇṭi) mean? (\"To punish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C372-inanku",
+      "sequence": 21420,
+      "title": "இணங்கு (iṇaṅku) — to comply; to give in",
+      "headword": "இணங்கு",
+      "romanization": "iṇaṅku",
+      "gloss": "to comply; to give in",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6610767a270c7a7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to observe, then the Tamil for to punish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இணங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இணங்கு — iṇaṅku — \"to comply; to give in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கடைசியில் அவன் எங்கள் கோரிக்கைக்கு இணங்கினான். kaṭaiciyil avaṉ eṅkaḷ kōrikkaikku iṇaṅkiṉāṉ. In the end he gave in to our request."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): இணங்கினேன், iṇaṅkiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "With -க்கு: கோரிக்கைக்கு இணங்கு (iṇaṅku), to agree to a request."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இணங்கு (iṇaṅku) is native Dravidian: DEDR 457 lists Tamil iṇai, \"to join, unite, agree\", and iṇaṅku, \"to agree, be friendly\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṇaṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṇaṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṇaṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṇaṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭaiciyil avaṉ eṅkaḷ kōrikkaikku iṇaṅkiṉāṉ. — In the end he gave in to our request.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭaiciyil avaṉ eṅkaḷ kōrikkaikku iṇaṅkiṉāṉ.* — In the end he gave in to our request.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to observe, then the Tamil for to punish, then say iṇaṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to observe, then the Tamil for to punish, then say *iṇaṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இணங்கு (iṇaṅku) mean? (\"To comply; to give in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C467-kurukuru",
+  "pathSegment": "TA-PATH-467-KINTAL467",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-467-KINTAL467",
+      "order": 4
+    }
+  ]
+}

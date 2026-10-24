@@ -1,0 +1,11 @@
+{
+  "id": "TA-C429-alankatti",
+  "pathSegment": "TA-PATH-429-PUYAL429",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-429-PUYAL429",
+      "order": 2
+    }
+  ]
+}

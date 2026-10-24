@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "Snags and Setbacks",
+  "label": "ch:ka-snags-and-setbacks",
+  "canDo": "I can say to get rid of, to disregard, careful, a snag and adverse.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C426-pratikula",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can say to get rid of, to disregard, careful, a snag and adverse.",
+    "assesses": [
+      "KA-LEX-C426-HIMMETTU426-03",
+      "KA-LEX-C426-HIMMETTU426-04",
+      "KA-LEX-C426-HIMMETTU426-05"
+    ]
+  }
+}

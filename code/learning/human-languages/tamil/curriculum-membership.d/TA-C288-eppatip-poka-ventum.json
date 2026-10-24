@@ -1,0 +1,11 @@
+{
+  "id": "TA-C288-eppatip-poka-ventum",
+  "pathSegment": "TA-PATH-288-ASK-THE-WAY",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-288-ASK-THE-WAY",
+      "order": 0
+    }
+  ]
+}

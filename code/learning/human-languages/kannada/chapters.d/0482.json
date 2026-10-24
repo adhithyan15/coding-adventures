@@ -1,0 +1,21 @@
+{
+  "chapter": 482,
+  "title": "Streams and Waterfalls",
+  "label": "ch:ka-streams-and-waterfalls",
+  "canDo": "I can say a brook, to plunge, to rumble, to spurt and to trickle.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-R482-review-476-482",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can say a brook, to plunge, to rumble, to spurt and to trickle.",
+    "assesses": [
+      "KA-LEX-C482-TORE482-01",
+      "KA-LEX-C482-TORE482-02",
+      "KA-LEX-C482-TORE482-03",
+      "KA-LEX-C482-TORE482-04",
+      "KA-LEX-C482-TORE482-05"
+    ]
+  }
+}

@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 357,
+  "title": "A Hidden Fraud",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:843b3cbb42d570b6",
+  "lessons": [
+    {
+      "id": "KA-C357-vancisu",
+      "sequence": 17950,
+      "title": "ವಂಚಿಸು (vañcisu) — to swindle; to cheat",
+      "headword": "ವಂಚಿಸು",
+      "romanization": "vañcisu",
+      "gloss": "to swindle; to cheat",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:488742087999ad81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a ballad, then the Kannada for a moral."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಂಚಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಂಚಿಸು — vañcisu — \"to swindle; to cheat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಮನುಷ್ಯ ಊರಿನ ಜನರನ್ನು ವಂಚಿಸಿ ಓಡಿಹೋದನು. ā manuṣya ūrina janarannu vañcisi ōḍihōdanu. That man cheated the people of the town and ran away."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ವಂಚಿಸಿದೆ, vañciside."
+            },
+            {
+              "kind": "speech",
+              "text": "The person cheated takes -ಅನ್ನು. ಮೋಸ ಮಾಡು says the same in everyday talk."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಂಚಿಸು (vañcisu) is built on Sanskrit vañcana, \"cheating, deception, fraud\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vañcisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vañcisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vañcisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vañcisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā manuṣya ūrina janarannu vañcisi ōḍihōdanu. — That man cheated the people of the town and ran away.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā manuṣya ūrina janarannu vañcisi ōḍihōdanu.* — That man cheated the people of the town and ran away.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a ballad, then the Kannada for a moral, then say vañcisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a ballad, then the Kannada for a moral, then say *vañcisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಂಚಿಸು (vañcisu) mean? (\"To swindle; to cheat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C357-gaupya",
+      "sequence": 17960,
+      "title": "ಗೌಪ್ಯ (gaupya) — confidential; secret",
+      "headword": "ಗೌಪ್ಯ",
+      "romanization": "gaupya",
+      "gloss": "confidential; secret",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49fd0facf1d6c491",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a moral, then the Kannada for to swindle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗೌಪ್ಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗೌಪ್ಯ — gaupya — \"confidential; secret\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಪತ್ರ ಗೌಪ್ಯ, ಅದನ್ನು ಬೇರೆ ಯಾರೂ ಓದಬಾರದು. ī patra gaupya, adannu bēre yārū ōdabāradu. This letter is confidential; nobody else may read it."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗೌಪ್ಯವಾಗಿ ಇಡು, to keep confidential. ಗೌಪ್ಯತೆ is privacy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗೌಪ್ಯ (gaupya) is usually traced to Sanskrit gopya, \"to be kept secret or hidden\" (Monier-Williams), from the root gup, \"to guard, to hide\"; the dictionary has no form with au."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaupya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaupya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaupya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaupya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī patra gaupya, adannu bēre yārū ōdabāradu. — This letter is confidential; nobody else may read it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī patra gaupya, adannu bēre yārū ōdabāradu.* — This letter is confidential; nobody else may read it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a moral, then the Kannada for to swindle, then say gaupya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a moral, then the Kannada for to swindle, then say *gaupya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗೌಪ್ಯ (gaupya) mean? (\"Confidential; secret\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C357-muccidu",
+      "sequence": 17970,
+      "title": "ಮುಚ್ಚಿಡು (mucciḍu) — to cover up; to hide",
+      "headword": "ಮುಚ್ಚಿಡು",
+      "romanization": "mucciḍu",
+      "gloss": "to cover up; to hide",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36ca94e105c35d46",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to swindle, then the Kannada for confidential."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮುಚ್ಚಿಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುಚ್ಚಿಡು — mucciḍu — \"to cover up; to hide\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಧಿಕಾರಿ ತನ್ನ ತಪ್ಪನ್ನು ಮುಚ್ಚಿಟ್ಟನು. adhikāri tanna tappannu mucciṭṭanu. The officer covered up his mistake."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಮುಚ್ಚಿಟ್ಟೆ, mucciṭṭe."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮುಚ್ಚಿ, having closed, and ಇಡು, to keep: to keep closed. The past is ಮುಚ್ಚಿಟ್ಟೆ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುಚ್ಚಿಡು (mucciḍu) is a native Dravidian compound: muccu, \"to close, to cover, to conceal\" (DEDR 4915), and iḍu, \"to put, to keep\" (DEDR 442)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mucciḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mucciḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mucciḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mucciḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhikāri tanna tappannu mucciṭṭanu. — The officer covered up his mistake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhikāri tanna tappannu mucciṭṭanu.* — The officer covered up his mistake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to swindle, then the Kannada for confidential, then say mucciḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to swindle, then the Kannada for confidential, then say *mucciḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮುಚ್ಚಿಡು (mucciḍu) mean? (\"To cover up; to hide\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C357-bahirangapadisu",
+      "sequence": 17980,
+      "title": "ಬಹಿರಂಗಪಡಿಸು (bahiraṅgapaḍisu) — to reveal; to expose",
+      "headword": "ಬಹಿರಂಗಪಡಿಸು",
+      "romanization": "bahiraṅgapaḍisu",
+      "gloss": "to reveal; to expose",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61edfc160a446b5f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for confidential, then the Kannada for to cover up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಹಿರಂಗಪಡಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಹಿರಂಗಪಡಿಸು — bahiraṅgapaḍisu — \"to reveal; to expose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಒಬ್ಬ ಪತ್ರಕರ್ತ ಆ ಮೋಸವನ್ನು ಬಹಿರಂಗಪಡಿಸಿದನು. obba patrakarta ā mōsavannu bahiraṅgapaḍisidanu. A journalist exposed that fraud."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಬಹಿರಂಗಪಡಿಸಿದೆ, bahiraṅgapaḍiside."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಹಿರಂಗ, open, public, with -ಪಡಿಸು, to make: to make public."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಹಿರಂಗಪಡಿಸು (bahiraṅgapaḍisu) is built from Sanskrit bahiraṅga, \"relating to the exterior, external\" (Monier-Williams), and the Kannada verb-maker -paḍisu, from native paḍu (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahiraṅgapaḍisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahiraṅgapaḍisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahiraṅgapaḍisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahiraṅgapaḍisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obba patrakarta ā mōsavannu bahiraṅgapaḍisidanu. — A journalist exposed that fraud.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obba patrakarta ā mōsavannu bahiraṅgapaḍisidanu.* — A journalist exposed that fraud.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for confidential, then the Kannada for to cover up, then say bahiraṅgapaḍisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for confidential, then the Kannada for to cover up, then say *bahiraṅgapaḍisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಹಿರಂಗಪಡಿಸು (bahiraṅgapaḍisu) mean? (\"To reveal; to expose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C357-sancu",
+      "sequence": 17990,
+      "title": "ಸಂಚು (sañcu) — a plot; a conspiracy",
+      "headword": "ಸಂಚು",
+      "romanization": "sañcu",
+      "gloss": "a plot; a conspiracy",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:720245ba06a6a002",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to cover up, then the Kannada for to reveal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಂಚು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಚು — sañcu — \"a plot; a conspiracy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅರಮನೆಯಲ್ಲಿ ಕೆಲವರು ರಾಜನ ವಿರುದ್ಧ ಸಂಚು ಮಾಡಿದರು. aramaneyalli kelavaru rājana viruddha sañcu māḍidaru. In the palace some people plotted against the king."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಸಂಚುಗಳು, sañcugaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "A plot is \"made\": ಸಂಚು (sañcu) ಮಾಡು, to plot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಚು (sañcu) is native Dravidian: DEDR 2293 lists Kannada sañcu, \"an expedient, an artifice, a stratagem, an intrigue\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sañcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sañcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sañcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sañcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aramaneyalli kelavaru rājana viruddha sañcu māḍidaru. — In the palace some people plotted against the king.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aramaneyalli kelavaru rājana viruddha sañcu māḍidaru.* — In the palace some people plotted against the king.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to cover up, then the Kannada for to reveal, then say sañcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to cover up, then the Kannada for to reveal, then say *sañcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಂಚು (sañcu) mean? (\"A plot; a conspiracy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

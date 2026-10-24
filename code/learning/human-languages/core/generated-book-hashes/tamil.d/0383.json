@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:3ba36a951f33f594",
+  "lessonIds": [
+    "TA-C383-cattiyam",
+    "TA-C383-nikaltakavu",
+    "TA-C383-anekamaka",
+    "TA-C383-cantarppam",
+    "TA-C383-illaiyel"
+  ],
+  "tex": "tamil/book/chapters/ch383-what-might-happen.tex"
+}

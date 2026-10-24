@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-540-KUSTI540",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-540-KUSTI540"
+  ],
+  "after": []
+}

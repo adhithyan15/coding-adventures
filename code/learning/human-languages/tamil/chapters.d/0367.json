@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Wisdom and Ignorance",
+  "label": "ch:ta-wisdom-and-ignorance",
+  "canDo": "I can talk about wisdom, ignorance and learned people.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C367-poti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can talk about wisdom, ignorance and learned people.",
+    "assesses": [
+      "TA-LEX-C367-NANAM367-03",
+      "TA-LEX-C367-NANAM367-04",
+      "TA-LEX-C367-NANAM367-05"
+    ]
+  }
+}

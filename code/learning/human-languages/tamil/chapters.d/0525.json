@@ -1,0 +1,19 @@
+{
+  "chapter": 525,
+  "title": "Fire and Fuel",
+  "label": "ch:ta-fire-and-fuel",
+  "canDo": "I can talk about cooking fuel and steaming.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C525-veku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can talk about cooking fuel and steaming.",
+    "assesses": [
+      "TA-LEX-C525-ADUPPU525-03",
+      "TA-LEX-C525-ADUPPU525-04",
+      "TA-LEX-C525-ADUPPU525-05"
+    ]
+  }
+}

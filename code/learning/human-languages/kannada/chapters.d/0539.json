@@ -1,0 +1,21 @@
+{
+  "chapter": 539,
+  "title": "Rivals",
+  "label": "ch:ka-rivals",
+  "canDo": "I can say an opponent, a captain, a draw, a lead and to contend.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-R539-review-533-539",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 539: I can say an opponent, a captain, a draw, a lead and to contend.",
+    "assesses": [
+      "KA-LEX-C539-SPARDHE539-01",
+      "KA-LEX-C539-SPARDHE539-02",
+      "KA-LEX-C539-SPARDHE539-03",
+      "KA-LEX-C539-SPARDHE539-04",
+      "KA-LEX-C539-SPARDHE539-05"
+    ]
+  }
+}

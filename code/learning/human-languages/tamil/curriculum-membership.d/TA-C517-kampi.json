@@ -1,0 +1,11 @@
+{
+  "id": "TA-C517-kampi",
+  "pathSegment": "TA-PATH-517-MIN517",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-517-MIN517",
+      "order": 2
+    }
+  ]
+}

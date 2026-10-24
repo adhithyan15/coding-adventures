@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "Kitchen Work",
+  "label": "ch:ta-kitchen-work",
+  "canDo": "I can talk about old kitchen tools and kitchen jobs.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C524-cuttikari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can talk about old kitchen tools and kitchen jobs.",
+    "assesses": [
+      "TA-LEX-C524-SAMAIYAL524-03",
+      "TA-LEX-C524-SAMAIYAL524-04",
+      "TA-LEX-C524-SAMAIYAL524-05"
+    ]
+  }
+}

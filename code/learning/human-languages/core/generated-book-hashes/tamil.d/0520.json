@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:6956492d494d76a0",
+  "lessonIds": [
+    "TA-C520-ceyarkaikkol",
+    "TA-C520-taniyanki",
+    "TA-C520-calavai-iyantiram",
+    "TA-C520-mincatanam",
+    "TA-C520-istiri-potu"
+  ],
+  "tex": "tamil/book/chapters/ch520-machines-in-the-home.tex"
+}

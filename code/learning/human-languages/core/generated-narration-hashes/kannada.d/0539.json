@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:ed845d2cc6ca35e9",
+  "lessonIds": [
+    "KA-C539-edurali",
+    "KA-C539-nayaka",
+    "KA-C539-samabala",
+    "KA-C539-munnade",
+    "KA-C539-senasu",
+    "KA-R539-review-533-539"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch539.txt",
+  "json": "kannada/narration/ch539.json",
+  "textHash": "fnv1a64:48bb23e91f9c4605",
+  "jsonHash": "fnv1a64:29d5a082ed10cf74",
+  "findings": []
+}

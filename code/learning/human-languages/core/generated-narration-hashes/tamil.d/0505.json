@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:e1bfadc6306e8767",
+  "lessonIds": [
+    "TA-C505-ayul",
+    "TA-C505-maranam",
+    "TA-C505-uyil",
+    "TA-C505-vitavai",
+    "TA-C505-anatai",
+    "TA-R505-review-499-505",
+    "TA-R505-review-final-505"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch505.txt",
+  "json": "tamil/narration/ch505.json",
+  "textHash": "fnv1a64:530fe42e9937bbf4",
+  "jsonHash": "fnv1a64:46503b34a47690bb",
+  "findings": []
+}

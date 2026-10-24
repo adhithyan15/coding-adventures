@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:8d7969983972417a",
+  "lessonIds": [
+    "TA-C330-peraracu",
+    "TA-C330-cakkaravartti",
+    "TA-C330-karuvulam",
+    "TA-C330-kappam",
+    "TA-C330-onku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch330.txt",
+  "json": "tamil/narration/ch330.json",
+  "textHash": "fnv1a64:c0727aeabd80219d",
+  "jsonHash": "fnv1a64:c97b3472e2540697",
+  "findings": []
+}

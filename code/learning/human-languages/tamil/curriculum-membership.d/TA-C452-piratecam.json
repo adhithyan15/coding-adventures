@@ -1,0 +1,11 @@
+{
+  "id": "TA-C452-piratecam",
+  "pathSegment": "TA-PATH-452-VEEDU452",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-452-VEEDU452",
+      "order": 2
+    }
+  ]
+}

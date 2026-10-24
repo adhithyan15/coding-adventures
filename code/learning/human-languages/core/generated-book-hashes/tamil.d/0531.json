@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:a3719e892163e835",
+  "lessonIds": [
+    "TA-C531-kutaippantu",
+    "TA-C531-irakuppantu",
+    "TA-C531-kaippantu",
+    "TA-C531-tennis",
+    "TA-C531-kapati"
+  ],
+  "tex": "tamil/book/chapters/ch531-ball-games.tex"
+}

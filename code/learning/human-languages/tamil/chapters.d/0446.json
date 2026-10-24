@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "At the Bank",
+  "label": "ch:ta-at-the-bank",
+  "canDo": "I can talk about a bank account and its balance, interest, cheques and cash.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C446-rokkam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can talk about a bank account and its balance, interest, cheques and cash.",
+    "assesses": [
+      "TA-LEX-C446-VANKI446-03",
+      "TA-LEX-C446-VANKI446-04",
+      "TA-LEX-C446-VANKI446-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C351-cuttikkattu",
+    "language": "tamil",
+    "chapter": 351,
+    "sequence": 20310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e29f6e66a391bd1f"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:b58792ca355a6837",
+  "lessonIds": [
+    "KA-C483-jalasaya",
+    "KA-C483-anekattu",
+    "KA-C483-hinniru",
+    "KA-C483-antarjala",
+    "KA-C483-aviyagu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch483.txt",
+  "json": "kannada/narration/ch483.json",
+  "textHash": "fnv1a64:b36833dbd8a3a308",
+  "jsonHash": "fnv1a64:dbb528a3da005a86",
+  "findings": []
+}

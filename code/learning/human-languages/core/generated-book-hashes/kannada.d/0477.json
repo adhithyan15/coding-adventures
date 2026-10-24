@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:b065b31386d0106a",
+  "lessonIds": [
+    "KA-C477-tola",
+    "KA-C477-kaduhandi",
+    "KA-C477-gharjisu",
+    "KA-C477-meyu",
+    "KA-C477-geddalu"
+  ],
+  "tex": "kannada/book/chapters/ch477-creatures-of-forest-and-field.tex"
+}

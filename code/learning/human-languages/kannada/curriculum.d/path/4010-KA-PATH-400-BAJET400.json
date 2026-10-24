@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-400-BAJET400",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "KA-EXT-400-BAJET400"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-516-VRITTI516",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-516-VRITTI516"
+  ],
+  "after": []
+}

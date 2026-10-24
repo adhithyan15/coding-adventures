@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 526,
+  "title": "Cooking Steps",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:839007c63959e6d7",
+  "lessons": [
+    {
+      "id": "TA-C526-tali",
+      "sequence": 30120,
+      "title": "தாளி (tāḷi) — to temper spices",
+      "headword": "தாளி",
+      "romanization": "tāḷi",
+      "gloss": "to temper spices",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:591f5c690621c620",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to steam, then the Tamil for to be cooked."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தாளி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தாளி — tāḷi — \"to temper spices\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அம்மா கடுகையும் கறிவேப்பிலையையும் எண்ணெயில் தாளித்தாள். ammā kaṭukaiyum kaṟivēppilaiyaiyum eṇṇeyil tāḷittāḷ. Mother tempered mustard seeds and curry leaves in oil."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): தாளித்தேன், tāḷittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Spices fried in hot oil and poured over a dish. The noun is தாளிப்பு."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தாளி (tāḷi) is native Dravidian: DEDR 3186 gives தாளி (tāḷi), \"to season and flavour a curry with spices fried in ghee or oil\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ammā kaṭukaiyum kaṟivēppilaiyaiyum eṇṇeyil tāḷittāḷ. — Mother tempered mustard seeds and curry leaves in oil.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ammā kaṭukaiyum kaṟivēppilaiyaiyum eṇṇeyil tāḷittāḷ.* — Mother tempered mustard seeds and curry leaves in oil.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to steam, then the Tamil for to be cooked, then say tāḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to steam, then the Tamil for to be cooked, then say *tāḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தாளி (tāḷi) mean? (\"To temper spices\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C526-vatakku-saute",
+      "sequence": 30130,
+      "title": "வதக்கு (vatakku) — to sauté; to fry lightly",
+      "headword": "வதக்கு",
+      "romanization": "vatakku",
+      "gloss": "to sauté; to fry lightly",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0c913b08e159d81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to be cooked, then the Tamil for to temper spices."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வதக்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வதக்கு — vatakku — \"to sauté; to fry lightly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவள் வெங்காயத்தைப் பொன்னிறமாக வதக்கினாள். avaḷ veṅkāyattaip poṉṉiṟamāka vatakkiṉāḷ. She sautéed the onions until golden."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): வதக்கினேன், vatakkiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Lighter than வறு (vaṟu), to roast, and பொரி (pori), to deep-fry."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வதக்கு (vatakku) is native Dravidian: DEDR 5242 gives வதக்கு (vatakku), \"to roast, to dry\", beside வதங்கு, \"to wither\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vatakku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vatakku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vatakku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vatakku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ veṅkāyattaip poṉṉiṟamāka vatakkiṉāḷ. — She sautéed the onions until golden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ veṅkāyattaip poṉṉiṟamāka vatakkiṉāḷ.* — She sautéed the onions until golden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to be cooked, then the Tamil for to temper spices, then say vatakku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to be cooked, then the Tamil for to temper spices, then say *vatakku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வதக்கு (vatakku) mean? (\"To sauté; to fry lightly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C526-kilaru",
+      "sequence": 30140,
+      "title": "கிளறு (kiḷaṟu) — to stir a pot; to stir up",
+      "headword": "கிளறு",
+      "romanization": "kiḷaṟu",
+      "gloss": "to stir a pot; to stir up",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b2cc6ff7a34be66",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to temper spices, then the Tamil for to sauté."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கிளறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கிளறு — kiḷaṟu — \"to stir a pot; to stir up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பாயசம் அடிப்பிடிக்காமல் இருக்க அம்மா அதைக் கிளறிக்கொண்டே இருந்தாள். pāyacam aṭippiṭikkāmal irukka ammā ataik kiḷaṟikkoṇṭē iruntāḷ. Mother kept stirring the payasam so that it would not stick."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): கிளறினேன், kiḷaṟiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Close to கலக்கு (kalakku), to mix; கிளறு (kiḷaṟu) is the stirring of something thick with a ladle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கிளறு (kiḷaṟu) is native Dravidian: DEDR 1588 gives கிளறு (kiḷaṟu), \"to poke, to dig up, to stir with a ladle\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiḷaṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiḷaṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiḷaṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiḷaṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāyacam aṭippiṭikkāmal irukka ammā ataik kiḷaṟikkoṇṭē iruntāḷ. — Mother kept stirring the payasam so that it would not stick.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāyacam aṭippiṭikkāmal irukka ammā ataik kiḷaṟikkoṇṭē iruntāḷ.* — Mother kept stirring the payasam so that it would not stick.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to temper spices, then the Tamil for to sauté, then say kiḷaṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to temper spices, then the Tamil for to sauté, then say *kiḷaṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கிளறு (kiḷaṟu) mean? (\"To stir a pot; to stir up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C526-turuvu",
+      "sequence": 30150,
+      "title": "துருவு (turuvu) — to grate; to scrape",
+      "headword": "துருவு",
+      "romanization": "turuvu",
+      "gloss": "to grate; to scrape",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d847642eb5e8a23e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to sauté, then the Tamil for to stir a pot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: துருவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துருவு — turuvu — \"to grate; to scrape\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பாட்டி தேங்காயைத் துருவினாள். pāṭṭi tēṅkāyait turuviṉāḷ. Grandmother grated the coconut."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): துருவினேன், turuviṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Grated coconut is தேங்காய்த் துருவல்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துருவு (turuvu) is native Dravidian: DEDR 3339 gives துருவு (turuvu), \"to bore, to scrape out the pulp of a coconut\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "turuvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *turuvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "turuvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *turuvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭṭi tēṅkāyait turuviṉāḷ. — Grandmother grated the coconut.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭṭi tēṅkāyait turuviṉāḷ.* — Grandmother grated the coconut.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to sauté, then the Tamil for to stir a pot, then say turuvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to sauté, then the Tamil for to stir a pot, then say *turuvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does துருவு (turuvu) mean? (\"To grate; to scrape\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C526-tuvu",
+      "sequence": 30160,
+      "title": "தூவு (tūvu) — to sprinkle; to scatter",
+      "headword": "தூவு",
+      "romanization": "tūvu",
+      "gloss": "to sprinkle; to scatter",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:268ccd70330de24f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to stir a pot, then the Tamil for to grate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தூவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தூவு — tūvu — \"to sprinkle; to scatter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சமையல்காரர் கொத்தமல்லியை மேலே தூவினார். camaiyalkārar kottamalliyai mēlē tūviṉār. The cook sprinkled coriander on top."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): தூவினேன், tūviṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is sprinkled takes -ஐ: உப்பைத் தூவு (tūvu), to sprinkle salt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தூவு (tūvu) is native Dravidian: DEDR 3394 gives தூவு (tūvu), \"to sprinkle, to strew, to scatter\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "camaiyalkārar kottamalliyai mēlē tūviṉār. — The cook sprinkled coriander on top.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *camaiyalkārar kottamalliyai mēlē tūviṉār.* — The cook sprinkled coriander on top.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to stir a pot, then the Tamil for to grate, then say tūvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to stir a pot, then the Tamil for to grate, then say *tūvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தூவு (tūvu) mean? (\"To sprinkle; to scatter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

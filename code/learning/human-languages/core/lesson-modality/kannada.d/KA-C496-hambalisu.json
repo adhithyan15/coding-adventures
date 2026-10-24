@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C496-hambalisu",
+    "language": "kannada",
+    "chapter": 496,
+    "sequence": 25300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e8c9a0f60a0f32b"
+  },
+  "findings": []
+}

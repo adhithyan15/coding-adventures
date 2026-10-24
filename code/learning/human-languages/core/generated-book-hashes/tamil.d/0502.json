@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:0ebba9bc82ad4e33",
+  "lessonIds": [
+    "TA-C502-anucari",
+    "TA-C502-nerunku",
+    "TA-C502-taluvu",
+    "TA-C502-varutu",
+    "TA-C502-pantam"
+  ],
+  "tex": "tamil/book/chapters/ch502-drawing-close.tex"
+}

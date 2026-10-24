@@ -1,0 +1,11 @@
+{
+  "id": "TA-C369-kutimakan",
+  "pathSegment": "TA-PATH-369-CAMUKAM369",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-369-CAMUKAM369",
+      "order": 3
+    }
+  ]
+}

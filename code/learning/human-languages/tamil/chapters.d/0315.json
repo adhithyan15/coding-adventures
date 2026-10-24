@@ -1,0 +1,19 @@
+{
+  "chapter": 315,
+  "title": "Events Take Place",
+  "label": "ch:ta-events-take-place",
+  "canDo": "I can say when and how events took place.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C315-eppotavatu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can say when and how events took place.",
+    "assesses": [
+      "TA-LEX-C315-NADAIPERU315-03",
+      "TA-LEX-C315-NADAIPERU315-04",
+      "TA-LEX-C315-NADAIPERU315-05"
+    ]
+  }
+}

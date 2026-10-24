@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "Builders of Old",
+  "label": "ch:ka-builders-of-old",
+  "canDo": "I can say a civilization, to found, to construct, to demolish and a statue.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C362-pratime",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can say a civilization, to found, to construct, to demolish and a statue.",
+    "assesses": [
+      "KA-LEX-C362-NIRMANA362-03",
+      "KA-LEX-C362-NIRMANA362-04",
+      "KA-LEX-C362-NIRMANA362-05"
+    ]
+  }
+}

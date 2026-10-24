@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:722356b7d42fd2fb",
+  "lessonIds": [
+    "KA-C465-pattana",
+    "KA-C465-rajadhani",
+    "KA-C465-pradesa",
+    "KA-C465-sthala",
+    "KA-C465-kendra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch465.txt",
+  "json": "kannada/narration/ch465.json",
+  "textHash": "fnv1a64:95589576d9235758",
+  "jsonHash": "fnv1a64:61e3f8844e40b207",
+  "findings": []
+}

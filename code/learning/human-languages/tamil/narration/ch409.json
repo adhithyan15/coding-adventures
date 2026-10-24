@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 409,
+  "title": "Potholes and Shortcuts",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:956d94d9696f84f3",
+  "lessons": [
+    {
+      "id": "TA-C409-kuli",
+      "sequence": 23560,
+      "title": "குழி (kuḻi) — a pit; a hole in the ground",
+      "headword": "குழி",
+      "romanization": "kuḻi",
+      "gloss": "a pit; a hole in the ground",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c991d1bde25f8eb6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to overturn, then the Tamil for to spin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குழி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குழி — kuḻi — \"a pit; a hole in the ground\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சாலையில் ஒரு பெரிய குழி இருந்தது. cālaiyil oru periya kuḻi iruntatu. There was a big pit in the road."
+            },
+            {
+              "kind": "speech",
+              "text": "The plural is குழிகள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குழி (kuḻi) is native Dravidian (DEDR 1818), \"a pit, a hole, a hollow\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālaiyil oru periya kuḻi iruntatu. — There was a big pit in the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālaiyil oru periya kuḻi iruntatu.* — There was a big pit in the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to overturn, then the Tamil for to spin, then say kuḻi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to overturn, then the Tamil for to spin, then say *kuḻi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குழி (kuḻi) mean? (\"A pit; a hole in the ground\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C409-pallam",
+      "sequence": 23570,
+      "title": "பள்ளம் (paḷḷam) — a pothole; a hollow",
+      "headword": "பள்ளம்",
+      "romanization": "paḷḷam",
+      "gloss": "a pothole; a hollow",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69743c4449c5a611",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to spin, then the Tamil for a pit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பள்ளம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பள்ளம் — paḷḷam — \"a pothole; a hollow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மழைக்குப் பிறகு பள்ளங்களில் தண்ணீர் இருந்தது. maḻaikkup piṟaku paḷḷaṅkaḷil taṇṇīr iruntatu. After the rain there was water in the potholes."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: பள்ளங்கள், paḷḷaṅkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "A -ம் noun: plural பள்ளங்கள். பள்ளத்தாக்கு, a valley, is built on it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பள்ளம் (paḷḷam) is native Dravidian (DEDR 4016), \"lowness, low land, a hollow, a ditch\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḷḷam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḷḷam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḷḷam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḷḷam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻaikkup piṟaku paḷḷaṅkaḷil taṇṇīr iruntatu. — After the rain there was water in the potholes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻaikkup piṟaku paḷḷaṅkaḷil taṇṇīr iruntatu.* — After the rain there was water in the potholes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to spin, then the Tamil for a pit, then say paḷḷam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to spin, then the Tamil for a pit, then say *paḷḷam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பள்ளம் (paḷḷam) mean? (\"A pothole; a hollow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C409-katavai",
+      "sequence": 23580,
+      "title": "கடவை (kaṭavai) — a level crossing; a crossing place",
+      "headword": "கடவை",
+      "romanization": "kaṭavai",
+      "gloss": "a level crossing; a crossing place",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d1410f32d90a3ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a pit, then the Tamil for a pothole."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கடவை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கடவை — kaṭavai — \"a level crossing; a crossing place\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ரயில் போகும்வரை நாங்கள் கடவையில் காத்திருந்தோம். rayil pōkumvarai nāṅkaḷ kaṭavaiyil kāttiruntōm. We waited at the level crossing until the train went by."
+            },
+            {
+              "kind": "speech",
+              "text": "From கட, to cross, + -வை: a place for crossing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கடவை (kaṭavai) is built from கட, \"to cross, to pass through\" (DEDR 1109), with a noun ending: a place to cross."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭavai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭavai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭavai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭavai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rayil pōkumvarai nāṅkaḷ kaṭavaiyil kāttiruntōm. — We waited at the level crossing until the train went by.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rayil pōkumvarai nāṅkaḷ kaṭavaiyil kāttiruntōm.* — We waited at the level crossing until the train went by.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a pit, then the Tamil for a pothole, then say kaṭavai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a pit, then the Tamil for a pothole, then say *kaṭavai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கடவை (kaṭavai) mean? (\"A level crossing; a crossing place\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C409-kurukkuvali",
+      "sequence": 23590,
+      "title": "குறுக்குவழி (kuṟukkuvaḻi) — a shortcut",
+      "headword": "குறுக்குவழி",
+      "romanization": "kuṟukkuvaḻi",
+      "gloss": "a shortcut",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18cbd5e0000994a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a pothole, then the Tamil for a level crossing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குறுக்குவழி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குறுக்குவழி — kuṟukkuvaḻi — \"a shortcut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குறுக்குவழியில் போனதால் சீக்கிரம் வந்தோம். kuṟukkuvaḻiyil pōṉatāl cīkkiram vantōm. We arrived early because we took a shortcut."
+            },
+            {
+              "kind": "speech",
+              "text": "குறுக்கு, across, + வழி, way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குறுக்குவழி (kuṟukkuvaḻi) is built from குறுக்கு, \"to shorten; a short distance, across\" (DEDR 1851), and வழி, \"a way\" (DEDR 5297)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟukkuvaḻi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟukkuvaḻi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟukkuvaḻi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟukkuvaḻi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟukkuvaḻiyil pōṉatāl cīkkiram vantōm. — We arrived early because we took a shortcut.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟukkuvaḻiyil pōṉatāl cīkkiram vantōm.* — We arrived early because we took a shortcut.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a pothole, then the Tamil for a level crossing, then say kuṟukkuvaḻi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a pothole, then the Tamil for a level crossing, then say *kuṟukkuvaḻi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குறுக்குவழி (kuṟukkuvaḻi) mean? (\"A shortcut\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C409-cikku",
+      "sequence": 23600,
+      "title": "சிக்கு (cikku) — to get stuck; to be caught",
+      "headword": "சிக்கு",
+      "romanization": "cikku",
+      "gloss": "to get stuck; to be caught",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:381d6827bb8ed8ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a level crossing, then the Tamil for a shortcut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சிக்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிக்கு — cikku — \"to get stuck; to be caught\"."
+            },
+            {
+              "kind": "speech",
+              "text": "எங்கள் கார் சேற்றில் சிக்கியது. eṅkaḷ kār cēṟṟil cikkiyatu. Our car got stuck in the mud."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): சிக்கினேன், cikkiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Where one is stuck takes -இல்: சேற்றில் சிக்கு (cikku); often with கொள்: சிக்கிக்கொண்டேன், I got caught."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிக்கு (cikku) is native Dravidian (DEDR 2498), \"to become entangled, to be caught\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cikku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cikku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cikku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cikku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṅkaḷ kār cēṟṟil cikkiyatu. — Our car got stuck in the mud.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṅkaḷ kār cēṟṟil cikkiyatu.* — Our car got stuck in the mud.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a level crossing, then the Tamil for a shortcut, then say cikku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a level crossing, then the Tamil for a shortcut, then say *cikku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சிக்கு (cikku) mean? (\"To get stuck; to be caught\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

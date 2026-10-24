@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C540-kacceri",
+    "language": "tamil",
+    "chapter": 540,
+    "sequence": 30840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f047e1f030d8c26e"
+  },
+  "findings": []
+}

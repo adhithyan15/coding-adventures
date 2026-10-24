@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-307-SEYTHI307",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-307-SEYTHI307"
+  ],
+  "after": []
+}

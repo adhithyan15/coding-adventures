@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-399-EPPATIYUM399",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TA-EXT-399-EPPATIYUM399"
+  ],
+  "after": []
+}

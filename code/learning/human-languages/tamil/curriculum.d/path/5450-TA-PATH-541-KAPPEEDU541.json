@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-541-KAPPEEDU541",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TA-EXT-541-KAPPEEDU541"
+  ],
+  "after": []
+}

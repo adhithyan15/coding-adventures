@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:9ba01ad9e3af60dc",
+  "lessonIds": [
+    "KA-C530-virama",
+    "KA-C530-manaranjane",
+    "KA-C530-harate",
+    "KA-C530-asvadisu",
+    "KA-C530-maimare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch530.txt",
+  "json": "kannada/narration/ch530.json",
+  "textHash": "fnv1a64:0cf07f37ae3a027f",
+  "jsonHash": "fnv1a64:6a368b396e271eee",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C496-katara",
+  "pathSegment": "KA-PATH-496-ASHE496",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-496-ASHE496",
+      "order": 3
+    }
+  ]
+}

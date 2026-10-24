@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:7580090717df3c7e",
+  "lessonIds": [
+    "TA-C326-varalaru",
+    "TA-C326-katanta-kalam",
+    "TA-C326-palankalam",
+    "TA-C326-kalakattam",
+    "TA-C326-tacaptam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch326.txt",
+  "json": "tamil/narration/ch326.json",
+  "textHash": "fnv1a64:180e9574256e885c",
+  "jsonHash": "fnv1a64:037d4951587e7237",
+  "findings": []
+}

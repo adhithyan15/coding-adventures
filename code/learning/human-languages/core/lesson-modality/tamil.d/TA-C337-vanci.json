@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C337-vanci",
+    "language": "tamil",
+    "chapter": 337,
+    "sequence": 19330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:568f9ca9cfa37275"
+  },
+  "findings": []
+}

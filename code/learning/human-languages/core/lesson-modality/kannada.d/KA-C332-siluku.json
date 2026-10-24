@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C332-siluku",
+    "language": "kannada",
+    "chapter": 332,
+    "sequence": 16670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89031ec3cc397cc8"
+  },
+  "findings": []
+}

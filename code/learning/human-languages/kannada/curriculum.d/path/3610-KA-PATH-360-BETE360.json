@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-360-BETE360",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "KA-EXT-360-BETE360"
+  ],
+  "after": []
+}

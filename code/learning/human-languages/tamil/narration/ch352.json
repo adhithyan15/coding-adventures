@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 352,
+  "title": "Causes and Effects",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f9524c6781196b4c",
+  "lessons": [
+    {
+      "id": "TA-C352-erpatuttu",
+      "sequence": 20350,
+      "title": "ஏற்படுத்து (ēṟpaṭuttu) — to cause; to bring about",
+      "headword": "ஏற்படுத்து",
+      "romanization": "ēṟpaṭuttu",
+      "gloss": "to cause; to bring about",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a61927f12d7ba9d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for that is to say, then the Tamil for an example."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஏற்படுத்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏற்படுத்து — ēṟpaṭuttu — \"to cause; to bring about\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தச் செய்தி மக்களிடையே குழப்பத்தை ஏற்படுத்தியது. antac ceyti makkaḷiṭaiyē kuḻappattai ēṟpaṭuttiyatu. That news caused confusion among the people."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ஏற்படுத்தினேன், ēṟpaṭuttiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The result takes -ஐ: குழப்பத்தை ஏற்படுத்து (ēṟpaṭuttu). Its intransitive partner is ஏற்படு, to come about."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏற்படுத்து (ēṟpaṭuttu) is native Dravidian: DEDR 905 lists Tamil ēṟpaṭuttu, \"to create, establish\", beside ēṟpaṭu, \"to come into existence\", both from ēl, \"to happen, to receive\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēṟpaṭuttu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēṟpaṭuttu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēṟpaṭuttu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēṟpaṭuttu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antac ceyti makkaḷiṭaiyē kuḻappattai ēṟpaṭuttiyatu. — That news caused confusion among the people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antac ceyti makkaḷiṭaiyē kuḻappattai ēṟpaṭuttiyatu.* — That news caused confusion among the people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for that is to say, then the Tamil for an example, then say ēṟpaṭuttu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for that is to say, then the Tamil for an example, then say *ēṟpaṭuttu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஏற்படுத்து (ēṟpaṭuttu) mean? (\"To cause; to bring about\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C352-takkam",
+      "sequence": 20360,
+      "title": "தாக்கம் (tākkam) — an impact; an influence",
+      "headword": "தாக்கம்",
+      "romanization": "tākkam",
+      "gloss": "an impact; an influence",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ef3d0c911d6df55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an example, then the Tamil for to cause."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தாக்கம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தாக்கம் — tākkam — \"an impact; an influence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தப் புத்தகம் என் மீது பெரிய தாக்கத்தை ஏற்படுத்தியது. intap puttakam eṉ mītu periya tākkattai ēṟpaṭuttiyatu. This book had a big impact on me."
+            },
+            {
+              "kind": "speech",
+              "text": "X மீது தாக்கம் (tākkam), an impact on X."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தாக்கம் (tākkam) is native Dravidian: DEDR 3150 lists Tamil tākku, \"to collide, strike against\", and tākkam, \"a striking\", the noun that now means \"impact\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tākkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tākkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tākkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tākkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intap puttakam eṉ mītu periya tākkattai ēṟpaṭuttiyatu. — This book had a big impact on me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intap puttakam eṉ mītu periya tākkattai ēṟpaṭuttiyatu.* — This book had a big impact on me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an example, then the Tamil for to cause, then say tākkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an example, then the Tamil for to cause, then say *tākkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தாக்கம் (tākkam) mean? (\"An impact; an influence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C352-karani",
+      "sequence": 20370,
+      "title": "காரணி (kāraṇi) — a factor",
+      "headword": "காரணி",
+      "romanization": "kāraṇi",
+      "gloss": "a factor",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25b1b91a229d9d45",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to cause, then the Tamil for an impact."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: காரணி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காரணி — kāraṇi — \"a factor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "விலை உயர்வுக்குப் பல காரணிகள் இருக்கின்றன. vilai uyarvukkup pala kāraṇikaḷ irukkiṉṟaṉa. There are many factors behind the rise in prices."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: காரணிகள், kāraṇikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "X-க்குக் காரணி (kāraṇi), a factor in X. The plural is காரணிகள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காரணி (kāraṇi) is built on Sanskrit kāraṇa, \"cause\" (CDIAL 3057), the source of காரணம், with the ending -இ: \"that which acts as a cause\", the word for a factor."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāraṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāraṇi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāraṇi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāraṇi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilai uyarvukkup pala kāraṇikaḷ irukkiṉṟaṉa. — There are many factors behind the rise in prices.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilai uyarvukkup pala kāraṇikaḷ irukkiṉṟaṉa.* — There are many factors behind the rise in prices.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to cause, then the Tamil for an impact, then say kāraṇi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to cause, then the Tamil for an impact, then say *kāraṇi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does காரணி (kāraṇi) mean? (\"A factor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C352-valivaku",
+      "sequence": 20380,
+      "title": "வழிவகு (vaḻivaku) — to lead to; to pave the way for",
+      "headword": "வழிவகு",
+      "romanization": "vaḻivaku",
+      "gloss": "to lead to; to pave the way for",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b60e58b6c7b56298",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an impact, then the Tamil for a factor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வழிவகு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வழிவகு — vaḻivaku — \"to lead to; to pave the way for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த முடிவு பல பிரச்சினைகளுக்கு வழிவகுத்தது. inta muṭivu pala piracciṉaikaḷukku vaḻivakuttatu. This decision led to many problems."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): வழிவகுத்தது, vaḻivakuttatu."
+            },
+            {
+              "kind": "speech",
+              "text": "The result takes -க்கு: பிரச்சினைக்கு வழிவகு (vaḻivaku)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வழிவகு (vaḻivaku) is native: vaḻi, \"way, path\" (DEDR 5297), and vaku, \"to separate, apportion, lay out\" (DEDR 5202): to lay out the way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḻivaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḻivaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḻivaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḻivaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta muṭivu pala piracciṉaikaḷukku vaḻivakuttatu. — This decision led to many problems.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta muṭivu pala piracciṉaikaḷukku vaḻivakuttatu.* — This decision led to many problems.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an impact, then the Tamil for a factor, then say vaḻivaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an impact, then the Tamil for a factor, then say *vaḻivaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வழிவகு (vaḻivaku) mean? (\"To lead to; to pave the way for\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C352-pati",
+      "sequence": 20390,
+      "title": "பாதி (pāti) — to affect; to harm",
+      "headword": "பாதி",
+      "romanization": "pāti",
+      "gloss": "to affect; to harm",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17d597885f805c61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a factor, then the Tamil for to lead to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பாதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பாதி — pāti — \"to affect; to harm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வெள்ளம் பல விவசாயிகளைப் பாதித்தது. veḷḷam pala vivacāyikaḷaip pātittatu. The flood affected many farmers."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): பாதித்தது, pātittatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Who is affected takes -ஐ. Not the noun பாதி (pāti), a half: that is another word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பாதி (pāti), \"to affect\", is a verb built on the Sanskrit root bādh-, \"to press, oppress, harass\" (Monier-Williams). Tamil writes the Sanskrit b as ப."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷam pala vivacāyikaḷaip pātittatu. — The flood affected many farmers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷam pala vivacāyikaḷaip pātittatu.* — The flood affected many farmers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a factor, then the Tamil for to lead to, then say pāti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a factor, then the Tamil for to lead to, then say *pāti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பாதி (pāti) mean? (\"To affect; to harm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C498-valipan",
+  "pathSegment": "TA-PATH-498-ILAMAI498",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-498-ILAMAI498",
+      "order": 1
+    }
+  ]
+}

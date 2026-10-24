@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C426-todaku",
+    "language": "kannada",
+    "chapter": 426,
+    "sequence": 21600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0fa5e8daeaab848"
+  },
+  "findings": []
+}

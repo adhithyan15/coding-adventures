@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:f0770122688399f0",
+  "lessonIds": [
+    "KA-C445-park-madu",
+    "KA-C445-tirugu",
+    "KA-C445-alugadu",
+    "KA-C445-calisu",
+    "KA-C445-samipisu"
+  ],
+  "tex": "kannada/book/chapters/ch445-parking-and-turning.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C521-ottayisu",
+  "pathSegment": "KA-PATH-521-DUDIME521",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-521-DUDIME521",
+      "order": 2
+    }
+  ]
+}

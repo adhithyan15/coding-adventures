@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:42ec7c1d800233f3",
+  "lessonIds": [
+    "KA-C486-hingaru",
+    "KA-C486-alikallu",
+    "KA-C486-mabbu",
+    "KA-C486-musuku",
+    "KA-C486-himapata"
+  ],
+  "tex": "kannada/book/chapters/ch486-late-rains-and-hail.tex"
+}

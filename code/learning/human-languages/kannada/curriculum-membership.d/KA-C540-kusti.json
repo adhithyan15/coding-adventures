@@ -1,0 +1,11 @@
+{
+  "id": "KA-C540-kusti",
+  "pathSegment": "KA-PATH-540-KUSTI540",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-540-KUSTI540",
+      "order": 1
+    }
+  ]
+}

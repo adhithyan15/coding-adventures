@@ -41,7 +41,7 @@ reviews_of: [TA-C99-dontworry]
 
 **குழந்தைகள்** (*kuḻantaikaḷ*) — "children".
 
-**-கள்** is the plural. **உங்களுக்குக் குழந்தைகள் இருக்கிறார்களா?** — "do you have children?".
+**உங்களுக்குக் குழந்தைகள் இருக்கிறார்களா?** — "do you have children?". **-கள்** is the plural.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

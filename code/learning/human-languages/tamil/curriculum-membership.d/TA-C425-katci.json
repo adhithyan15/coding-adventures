@@ -1,0 +1,11 @@
+{
+  "id": "TA-C425-katci",
+  "pathSegment": "TA-PATH-425-KATCHI425",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-425-KATCHI425",
+      "order": 3
+    }
+  ]
+}

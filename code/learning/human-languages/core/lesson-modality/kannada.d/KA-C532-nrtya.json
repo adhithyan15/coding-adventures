@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C532-nrtya",
+    "language": "kannada",
+    "chapter": 532,
+    "sequence": 27160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e75b062154358a50"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:a987124b85a5017e",
+  "lessonIds": [
+    "KA-C434-vilamba",
+    "KA-C434-agamisu",
+    "KA-C434-nirgamisu",
+    "KA-C434-nilugade",
+    "KA-C434-vicarisu"
+  ],
+  "tex": "kannada/book/chapters/ch434-a-late-train.tex"
+}

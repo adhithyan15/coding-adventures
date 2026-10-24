@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "A Funeral",
+  "label": "ch:ta-a-funeral",
+  "canDo": "I can talk about a funeral with respect.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C323-kallarai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can talk about a funeral with respect.",
+    "assesses": [
+      "TA-LEX-C323-IRUTHI323-03",
+      "TA-LEX-C323-IRUTHI323-04",
+      "TA-LEX-C323-IRUTHI323-05"
+    ]
+  }
+}

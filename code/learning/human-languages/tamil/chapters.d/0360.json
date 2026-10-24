@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "Right and Wrong",
+  "label": "ch:ta-right-and-wrong",
+  "canDo": "I can talk about fairness, justice, blame and excuses.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C360-cakku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can talk about fairness, justice, blame and excuses.",
+    "assesses": [
+      "TA-LEX-C360-NIYAYAM360-03",
+      "TA-LEX-C360-NIYAYAM360-04",
+      "TA-LEX-C360-NIYAYAM360-05"
+    ]
+  }
+}

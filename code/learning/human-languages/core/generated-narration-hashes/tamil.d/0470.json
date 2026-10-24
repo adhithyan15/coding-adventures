@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:4fc4f4062aaeefc0",
+  "lessonIds": [
+    "TA-C470-vicuvacam",
+    "TA-C470-turokam",
+    "TA-C470-tiyakam",
+    "TA-C470-mannippu",
+    "TA-C470-paramukam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch470.txt",
+  "json": "tamil/narration/ch470.json",
+  "textHash": "fnv1a64:bde2e11cfe30e26c",
+  "jsonHash": "fnv1a64:4d3b6fbf38311dc1",
+  "findings": []
+}

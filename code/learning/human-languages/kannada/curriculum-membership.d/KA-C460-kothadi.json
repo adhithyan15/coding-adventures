@@ -1,0 +1,11 @@
+{
+  "id": "KA-C460-kothadi",
+  "pathSegment": "KA-PATH-460-VASATI460",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-460-VASATI460",
+      "order": 2
+    }
+  ]
+}

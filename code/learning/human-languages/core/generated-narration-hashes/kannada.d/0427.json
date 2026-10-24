@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:2a92564341d76d0d",
+  "lessonIds": [
+    "KA-C427-anupata",
+    "KA-C427-sekada",
+    "KA-C427-vargikarisu",
+    "KA-C427-parivartisu",
+    "KA-C427-samarpaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch427.txt",
+  "json": "kannada/narration/ch427.json",
+  "textHash": "fnv1a64:20dd89a6eaf047da",
+  "jsonHash": "fnv1a64:b3f39b18f50c3af8",
+  "findings": []
+}

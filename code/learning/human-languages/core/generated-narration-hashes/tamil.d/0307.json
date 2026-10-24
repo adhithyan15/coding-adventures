@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:24e5a471c14bd510",
+  "lessonIds": [
+    "TA-C307-ceytikkurippu",
+    "TA-C307-ceytit-totarpalar",
+    "TA-C307-pattirikai",
+    "TA-C307-tunukku",
+    "TA-C307-arivi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch307.txt",
+  "json": "tamil/narration/ch307.json",
+  "textHash": "fnv1a64:c4c2056c18bc4dec",
+  "jsonHash": "fnv1a64:4b4ad1476a0af3a6",
+  "findings": []
+}

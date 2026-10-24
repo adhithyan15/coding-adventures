@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-350-SANMANA350",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "KA-EXT-350-SANMANA350"
+  ],
+  "after": []
+}

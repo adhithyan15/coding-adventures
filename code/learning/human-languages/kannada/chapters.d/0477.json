@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "Creatures of Forest and Field",
+  "label": "ch:ka-creatures-of-forest-and-field",
+  "canDo": "I can say a wolf, a wild boar, to roar, to graze and a termite.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C477-geddalu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can say a wolf, a wild boar, to roar, to graze and a termite.",
+    "assesses": [
+      "KA-LEX-C477-PRANI477-03",
+      "KA-LEX-C477-PRANI477-04",
+      "KA-LEX-C477-PRANI477-05"
+    ]
+  }
+}

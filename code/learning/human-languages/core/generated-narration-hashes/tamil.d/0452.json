@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:272fc5f99b65f372",
+  "lessonIds": [
+    "TA-C452-miti-pedal",
+    "TA-C452-carakku",
+    "TA-C452-piratecam",
+    "TA-C452-pakuti",
+    "TA-C452-urul",
+    "TA-R452-review-446-452",
+    "TA-R452-review-final-452"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch452.txt",
+  "json": "tamil/narration/ch452.json",
+  "textHash": "fnv1a64:0cdf9689726a037f",
+  "jsonHash": "fnv1a64:59e2ad03064e2deb",
+  "findings": []
+}

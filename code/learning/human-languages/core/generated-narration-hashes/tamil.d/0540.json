@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:3fbce565760a4b58",
+  "lessonIds": [
+    "TA-C540-kacceri",
+    "TA-C540-natakam",
+    "TA-C540-metai",
+    "TA-C540-ottikai",
+    "TA-C540-oppanai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch540.txt",
+  "json": "tamil/narration/ch540.json",
+  "textHash": "fnv1a64:d471c5551f68996b",
+  "jsonHash": "fnv1a64:9dfa40576f48fda5",
+  "findings": []
+}

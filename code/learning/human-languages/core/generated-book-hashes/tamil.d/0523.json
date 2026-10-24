@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:b8ed6cdd3a62b138",
+  "lessonIds": [
+    "TA-C523-tiruku",
+    "TA-C523-mattu",
+    "TA-C523-ataippu",
+    "TA-C523-vatikal",
+    "TA-C523-vatikattu"
+  ],
+  "tex": "tamil/book/chapters/ch523-small-repairs.tex"
+}

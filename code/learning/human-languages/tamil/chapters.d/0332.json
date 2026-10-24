@@ -1,0 +1,21 @@
+{
+  "chapter": 332,
+  "title": "War",
+  "label": "ch:ta-war",
+  "canDo": "I can talk about wars and armies.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-R332-review-326-332",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can talk about wars and armies.",
+    "assesses": [
+      "TA-LEX-C332-POR332-01",
+      "TA-LEX-C332-POR332-02",
+      "TA-LEX-C332-POR332-03",
+      "TA-LEX-C332-POR332-04",
+      "TA-LEX-C332-POR332-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C457-karunai",
+    "language": "tamil",
+    "chapter": 457,
+    "sequence": 26300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a31a46fb03fd2b24"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C398-caval",
+  "pathSegment": "TA-PATH-398-POKKU398",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-398-POKKU398",
+      "order": 1
+    }
+  ]
+}

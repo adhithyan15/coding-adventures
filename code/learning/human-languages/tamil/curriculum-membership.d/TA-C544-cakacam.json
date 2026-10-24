@@ -1,0 +1,11 @@
+{
+  "id": "TA-C544-cakacam",
+  "pathSegment": "TA-PATH-544-SOOTHU544",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-544-SOOTHU544",
+      "order": 2
+    }
+  ]
+}

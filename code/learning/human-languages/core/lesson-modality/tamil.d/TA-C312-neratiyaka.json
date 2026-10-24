@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C312-neratiyaka",
+    "language": "tamil",
+    "chapter": 312,
+    "sequence": 18030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b1b195a990c199e"
+  },
+  "findings": []
+}

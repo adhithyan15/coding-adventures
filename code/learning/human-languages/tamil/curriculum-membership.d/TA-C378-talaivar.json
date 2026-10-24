@@ -1,0 +1,11 @@
+{
+  "id": "TA-C378-talaivar",
+  "pathSegment": "TA-PATH-378-AMAIPPU378",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-378-AMAIPPU378",
+      "order": 3
+    }
+  ]
+}

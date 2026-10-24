@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:ced5740917866f39",
+  "lessonIds": [
+    "TA-C337-cati",
+    "TA-C337-culcci",
+    "TA-C337-kattikkotu",
+    "TA-C337-vanci",
+    "TA-C337-maruvetam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch337.txt",
+  "json": "tamil/narration/ch337.json",
+  "textHash": "fnv1a64:ecde2e184b08a56b",
+  "jsonHash": "fnv1a64:2290bb7d72ff233c",
+  "findings": []
+}

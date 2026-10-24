@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Lorries and Scooters",
+  "label": "ch:ta-lorries-and-scooters",
+  "canDo": "I can talk about vehicles, lorries and scooters, and overtaking and crashing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C404-motu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can talk about vehicles, lorries and scooters, and overtaking and crashing.",
+    "assesses": [
+      "TA-LEX-C404-VAKANAM404-03",
+      "TA-LEX-C404-VAKANAM404-04",
+      "TA-LEX-C404-VAKANAM404-05"
+    ]
+  }
+}

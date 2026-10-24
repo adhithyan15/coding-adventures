@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C475-malekadu",
+    "language": "kannada",
+    "chapter": 475,
+    "sequence": 24160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:204f60d1336ae116"
+  },
+  "findings": []
+}

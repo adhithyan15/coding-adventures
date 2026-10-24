@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 443,
+  "title": "Cracks and Holes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:488903417834301d",
+  "lessons": [
+    {
+      "id": "TA-C443-oti",
+      "sequence": 25300,
+      "title": "ஒடி (oṭi) — to break off",
+      "headword": "ஒடி",
+      "romanization": "oṭi",
+      "gloss": "to break off",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:113c241711839182",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to surround, then the Tamil for to swing about."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஒடி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒடி — oṭi — \"to break off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புயலில் மரக்கிளை ஒடிந்தது. puyalil marakkiḷai oṭintatu. A branch broke off in the storm."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ஒடிந்தது, oṭintatu."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒடிந்தது is it broke off; ஒடித்தேன், I broke it off."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒடி (oṭi) is native Dravidian (DEDR 946), \"to break, to break off, to snap\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puyalil marakkiḷai oṭintatu. — A branch broke off in the storm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puyalil marakkiḷai oṭintatu.* — A branch broke off in the storm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to surround, then the Tamil for to swing about, then say oṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to surround, then the Tamil for to swing about, then say *oṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஒடி (oṭi) mean? (\"To break off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C443-norunku",
+      "sequence": 25310,
+      "title": "நொறுங்கு (noṟuṅku) — to shatter; to be smashed",
+      "headword": "நொறுங்கு",
+      "romanization": "noṟuṅku",
+      "gloss": "to shatter; to be smashed",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bee389c546ef2e0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to swing about, then the Tamil for to break off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நொறுங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நொறுங்கு — noṟuṅku — \"to shatter; to be smashed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கண்ணாடி கீழே விழுந்து நொறுங்கியது. kaṇṇāṭi kīḻē viḻuntu noṟuṅkiyatu. The glass fell down and shattered."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): நொறுங்கியது, noṟuṅkiyatu."
+            },
+            {
+              "kind": "speech",
+              "text": "நொறுக்கு is to smash something."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நொறுங்கு (noṟuṅku) is native Dravidian (DEDR 3728), \"to be broken, crushed, smashed\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noṟuṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noṟuṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noṟuṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noṟuṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṇāṭi kīḻē viḻuntu noṟuṅkiyatu. — The glass fell down and shattered.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṇāṭi kīḻē viḻuntu noṟuṅkiyatu.* — The glass fell down and shattered.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to swing about, then the Tamil for to break off, then say noṟuṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to swing about, then the Tamil for to break off, then say *noṟuṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நொறுங்கு (noṟuṅku) mean? (\"To shatter; to be smashed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C443-virical",
+      "sequence": 25320,
+      "title": "விரிசல் (virical) — a crack",
+      "headword": "விரிசல்",
+      "romanization": "virical",
+      "gloss": "a crack",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bcb65270b941c1b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to break off, then the Tamil for to shatter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விரிசல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விரிசல் — virical — \"a crack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சுவரில் ஒரு விரிசல் தெரிகிறது. cuvaril oru virical terikiṟatu. A crack can be seen in the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on விரி, to split open; உறவில் விரிசல் (virical) is a rift between people."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விரிசல் (virical) is native Dravidian (DEDR 5411), \"a split, a crack\", the noun of விரி, \"to open, to split\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virical",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virical*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virical, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virical*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuvaril oru virical terikiṟatu. — A crack can be seen in the wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuvaril oru virical terikiṟatu.* — A crack can be seen in the wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to break off, then the Tamil for to shatter, then say virical again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to break off, then the Tamil for to shatter, then say *virical* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விரிசல் (virical) mean? (\"A crack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C443-ottai",
+      "sequence": 25330,
+      "title": "ஓட்டை (ōṭṭai) — a hole; a leak",
+      "headword": "ஓட்டை",
+      "romanization": "ōṭṭai",
+      "gloss": "a hole; a leak",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:804ede643b4705ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to shatter, then the Tamil for a crack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஓட்டை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஓட்டை — ōṭṭai — \"a hole; a leak\"."
+            },
+            {
+              "kind": "speech",
+              "text": "படகில் ஓட்டை இருந்ததால் தண்ணீர் உள்ளே வந்தது. paṭakil ōṭṭai iruntatāl taṇṇīr uḷḷē vantatu. Water came in because there was a hole in the boat."
+            },
+            {
+              "kind": "speech",
+              "text": "ஓட்டை (ōṭṭai) விழு is to get a hole."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஓட்டை (ōṭṭai) is native Dravidian (DEDR 946), \"a hole, a crack in a vessel, a leak\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōṭṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōṭṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōṭṭai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōṭṭai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭakil ōṭṭai iruntatāl taṇṇīr uḷḷē vantatu. — Water came in because there was a hole in the boat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭakil ōṭṭai iruntatāl taṇṇīr uḷḷē vantatu.* — Water came in because there was a hole in the boat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to shatter, then the Tamil for a crack, then say ōṭṭai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to shatter, then the Tamil for a crack, then say *ōṭṭai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஓட்டை (ōṭṭai) mean? (\"A hole; a leak\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C443-kiru",
+      "sequence": 25340,
+      "title": "கீறு (kīṟu) — to scratch",
+      "headword": "கீறு",
+      "romanization": "kīṟu",
+      "gloss": "to scratch",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e77b8f53f87c0f7a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a crack, then the Tamil for a hole."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கீறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கீறு — kīṟu — \"to scratch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பூனை என் கையைக் கீறியது. pūṉai eṉ kaiyaik kīṟiyatu. The cat scratched my hand."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): கீறினேன், kīṟiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to cut a line: கோடு கீறு (kīṟu), to scratch a line."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கீறு (kīṟu) is native Dravidian (DEDR 1623), \"to scratch, to draw lines\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kīṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kīṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kīṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kīṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūṉai eṉ kaiyaik kīṟiyatu. — The cat scratched my hand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūṉai eṉ kaiyaik kīṟiyatu.* — The cat scratched my hand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a crack, then the Tamil for a hole, then say kīṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a crack, then the Tamil for a hole, then say *kīṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கீறு (kīṟu) mean? (\"To scratch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

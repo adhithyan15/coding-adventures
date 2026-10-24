@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C555-virutu",
+    "language": "tamil",
+    "chapter": 555,
+    "sequence": 31630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc593ed9b4a084a2"
+  },
+  "findings": []
+}

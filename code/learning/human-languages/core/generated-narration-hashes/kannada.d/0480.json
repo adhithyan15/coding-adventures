@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:4113b6970aec15e8",
+  "lessonIds": [
+    "KA-C480-bande",
+    "KA-C480-marubhumi",
+    "KA-C480-bayalu",
+    "KA-C480-prasthabhumi",
+    "KA-C480-save"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch480.txt",
+  "json": "kannada/narration/ch480.json",
+  "textHash": "fnv1a64:1f2d300c81fe25e4",
+  "jsonHash": "fnv1a64:36faac10b8357b43",
+  "findings": []
+}

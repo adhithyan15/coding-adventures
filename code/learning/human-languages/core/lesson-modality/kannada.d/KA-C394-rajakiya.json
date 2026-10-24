@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C394-rajakiya",
+    "language": "kannada",
+    "chapter": 394,
+    "sequence": 19920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7996a990ee4004f6"
+  },
+  "findings": []
+}

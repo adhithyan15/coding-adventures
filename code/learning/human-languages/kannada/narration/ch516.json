@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 516,
+  "title": "Careers",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fd46eb95b394fdef",
+  "lessons": [
+    {
+      "id": "KA-C516-vrtti",
+      "sequence": 26330,
+      "title": "ವೃತ್ತಿ (vṛtti) — a profession; a career",
+      "headword": "ವೃತ್ತಿ",
+      "romanization": "vṛtti",
+      "gloss": "a profession; a career",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed03bbd4d309c48f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to groan, then the Kannada for to droop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವೃತ್ತಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವೃತ್ತಿ — vṛtti — \"a profession; a career\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವನು ಶಿಕ್ಷಕ ವೃತ್ತಿಯನ್ನು ಆರಿಸಿದನು. avanu śikṣaka vṛttiyannu ārisidanu. He chose the teaching profession."
+            },
+            {
+              "kind": "speech",
+              "text": "ವೃತ್ತಿಪರ, professional."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವೃತ್ತಿ (vṛtti) is borrowed from Sanskrit vṛtti, \"rolling, course; mode of life, livelihood\" (Monier-Williams), from the root vṛt, \"to turn\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛtti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛtti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛtti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛtti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avanu śikṣaka vṛttiyannu ārisidanu. — He chose the teaching profession.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avanu śikṣaka vṛttiyannu ārisidanu.* — He chose the teaching profession.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to groan, then the Kannada for to droop, then say vṛtti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to groan, then the Kannada for to droop, then say *vṛtti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವೃತ್ತಿ (vṛtti) mean? (\"A profession; a career\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C516-hudde",
+      "sequence": 26340,
+      "title": "ಹುದ್ದೆ (hudde) — a post; a position",
+      "headword": "ಹುದ್ದೆ",
+      "romanization": "hudde",
+      "gloss": "a post; a position",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:602320e63acfc90a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to droop, then the Kannada for a profession."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹುದ್ದೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹುದ್ದೆ — hudde — \"a post; a position\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವಳಿಗೆ ಬ್ಯಾಂಕಿನಲ್ಲಿ ಒಳ್ಳೆಯ ಹುದ್ದೆ ಸಿಕ್ಕಿತು. avaḷige byāṅkinalli oḷḷeya hudde sikkitu. She got a good post at the bank."
+            },
+            {
+              "kind": "speech",
+              "text": "A rank or seat in an office."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹುದ್ದೆ (hudde) is usually traced to Hindustani ohdā, \"an office, a rank\", itself from Arabic; it came in with the language of offices."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hudde",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hudde*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hudde, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hudde*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷige byāṅkinalli oḷḷeya hudde sikkitu. — She got a good post at the bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷige byāṅkinalli oḷḷeya hudde sikkitu.* — She got a good post at the bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to droop, then the Kannada for a profession, then say hudde again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to droop, then the Kannada for a profession, then say *hudde* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹುದ್ದೆ (hudde) mean? (\"A post; a position\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C516-arhate",
+      "sequence": 26350,
+      "title": "ಅರ್ಹತೆ (arhate) — a qualification; eligibility",
+      "headword": "ಅರ್ಹತೆ",
+      "romanization": "arhate",
+      "gloss": "a qualification; eligibility",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7678b444ab254f38",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a profession, then the Kannada for a post."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅರ್ಹತೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅರ್ಹತೆ — arhate — \"a qualification; eligibility\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಕೆಲಸಕ್ಕೆ ಬೇಕಾದ ಅರ್ಹತೆ ಅವನಿಗೆ ಇದೆ. ī kelasakke bēkāda arhate avanige ide. He has the qualification this job needs."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅರ್ಹ, worthy, eligible + -ತೆ, -ness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅರ್ಹತೆ (arhate) is built from Sanskrit arha, \"meriting, deserving, worthy\" (Monier-Williams), with the noun ending -tā, Kannada -ತೆ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arhate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arhate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arhate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arhate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī kelasakke bēkāda arhate avanige ide. — He has the qualification this job needs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī kelasakke bēkāda arhate avanige ide.* — He has the qualification this job needs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a profession, then the Kannada for a post, then say arhate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a profession, then the Kannada for a post, then say *arhate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅರ್ಹತೆ (arhate) mean? (\"A qualification; eligibility\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C516-tajna",
+      "sequence": 26360,
+      "title": "ತಜ್ಞ (tajña) — an expert; a specialist",
+      "headword": "ತಜ್ಞ",
+      "romanization": "tajña",
+      "gloss": "an expert; a specialist",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff990c198ae6cc2f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a post, then the Kannada for a qualification."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತಜ್ಞ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಜ್ಞ — tajña — \"an expert; a specialist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಪ್ಪನನ್ನು ಹೃದಯ ತಜ್ಞರ ಬಳಿ ಕರೆದುಕೊಂಡು ಹೋದೆವು. appanannu hṛdaya tajñara baḷi karedukoṇḍu hōdevu. We took father to a heart specialist."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ತಜ್ಞರು, tajñaru."
+            },
+            {
+              "kind": "speech",
+              "text": "Often after a field: ಹೃದಯ ತಜ್ಞ (tajña), a heart specialist."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಜ್ಞ (tajña) is borrowed from Sanskrit tajjña, \"knowing that; a man who knows\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tajña",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tajña*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tajña, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tajña*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appanannu hṛdaya tajñara baḷi karedukoṇḍu hōdevu. — We took father to a heart specialist.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appanannu hṛdaya tajñara baḷi karedukoṇḍu hōdevu.* — We took father to a heart specialist.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a post, then the Kannada for a qualification, then say tajña again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a post, then the Kannada for a qualification, then say *tajña* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತಜ್ಞ (tajña) mean? (\"An expert; a specialist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C516-parinati",
+      "sequence": 26370,
+      "title": "ಪರಿಣತಿ (pariṇati) — expertise; mastery",
+      "headword": "ಪರಿಣತಿ",
+      "romanization": "pariṇati",
+      "gloss": "expertise; mastery",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd97a393be5d0603",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a qualification, then the Kannada for an expert."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪರಿಣತಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರಿಣತಿ — pariṇati — \"expertise; mastery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವರಿಗೆ ಕಂಪ್ಯೂಟರ್ ಕೆಲಸದಲ್ಲಿ ಪರಿಣತಿ ಇದೆ. avarige kampyūṭar kelasadalli pariṇati ide. She has expertise in computer work."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪರಿಣತ, an expert."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರಿಣತಿ (pariṇati) is borrowed from Sanskrit pariṇati, from pari-ṇam, \"to change, ripen\" (Monier-Williams): skill that has ripened."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pariṇati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pariṇati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pariṇati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pariṇati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avarige kampyūṭar kelasadalli pariṇati ide. — She has expertise in computer work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avarige kampyūṭar kelasadalli pariṇati ide.* — She has expertise in computer work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a qualification, then the Kannada for an expert, then say pariṇati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a qualification, then the Kannada for an expert, then say *pariṇati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪರಿಣತಿ (pariṇati) mean? (\"Expertise; mastery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

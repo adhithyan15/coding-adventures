@@ -1,0 +1,11 @@
+{
+  "id": "TA-C344-capi",
+  "pathSegment": "TA-PATH-344-MAYAM344",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-344-MAYAM344",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C508-karulu",
+  "pathSegment": "KA-PATH-508-DEHA508",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-508-DEHA508",
+      "order": 3
+    }
+  ]
+}

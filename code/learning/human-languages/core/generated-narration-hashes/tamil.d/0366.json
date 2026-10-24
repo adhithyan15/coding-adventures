@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:e7193f448ba11404",
+  "lessonIds": [
+    "TA-C366-turai",
+    "TA-C366-ulaviyal",
+    "TA-C366-puviyiyal",
+    "TA-C366-cuttiram",
+    "TA-C366-varaiyaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch366.txt",
+  "json": "tamil/narration/ch366.json",
+  "textHash": "fnv1a64:14d4db286c1cf38c",
+  "jsonHash": "fnv1a64:ee91aade3b6ac4b9",
+  "findings": []
+}

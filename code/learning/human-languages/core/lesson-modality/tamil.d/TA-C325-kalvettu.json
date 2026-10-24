@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C325-kalvettu",
+    "language": "tamil",
+    "chapter": 325,
+    "sequence": 18690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec435f12f71aaa41"
+  },
+  "findings": []
+}

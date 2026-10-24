@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 406,
+  "title": "At the University",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7eb739deed65c795",
+  "lessons": [
+    {
+      "id": "KA-C406-visvavidyalaya",
+      "sequence": 20540,
+      "title": "ವಿಶ್ವವಿದ್ಯಾಲಯ (viśvavidyālaya) — a university",
+      "headword": "ವಿಶ್ವವಿದ್ಯಾಲಯ",
+      "romanization": "viśvavidyālaya",
+      "gloss": "a university",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7a97100f2ca8c1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a compromise, then the Kannada for to incite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಿಶ್ವವಿದ್ಯಾಲಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಶ್ವವಿದ್ಯಾಲಯ — viśvavidyālaya — \"a university\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಅಕ್ಕ ವಿಶ್ವವಿದ್ಯಾಲಯದಲ್ಲಿ ಓದುತ್ತಾಳೆ. nanna akka viśvavidyālayadalli ōduttāḷe. My elder sister studies at the university."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ವಿಶ್ವವಿದ್ಯಾಲಯಗಳು, viśvavidyālayagaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಿಶ್ವ (world) + ವಿದ್ಯಾ (learning) + ಆಲಯ (house)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಶ್ವವಿದ್ಯಾಲಯ (viśvavidyālaya) is a modern word built from Sanskrit viśva, \"all, the world\" (CDIAL 11962), vidyā, \"learning\" (CDIAL 11741), and ālaya, \"a house\" (CDIAL 1366)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśvavidyālaya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśvavidyālaya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśvavidyālaya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśvavidyālaya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanna akka viśvavidyālayadalli ōduttāḷe. — My elder sister studies at the university.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanna akka viśvavidyālayadalli ōduttāḷe.* — My elder sister studies at the university.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a compromise, then the Kannada for to incite, then say viśvavidyālaya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a compromise, then the Kannada for to incite, then say *viśvavidyālaya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಿಶ್ವವಿದ್ಯಾಲಯ (viśvavidyālaya) mean? (\"A university\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C406-padavi",
+      "sequence": 20550,
+      "title": "ಪದವಿ (padavi) — a degree; a rank",
+      "headword": "ಪದವಿ",
+      "romanization": "padavi",
+      "gloss": "a degree; a rank",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e07c4207f921506d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to incite, then the Kannada for a university."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪದವಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪದವಿ — padavi — \"a degree; a rank\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವನು ಕಳೆದ ವರ್ಷ ಪದವಿ ಮುಗಿಸಿದನು. avanu kaḷeda varṣa padavi mugisidanu. He finished his degree last year."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a post or rank: ಉನ್ನತ ಪದವಿ (padavi), a high post."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪದವಿ (padavi) is borrowed from Sanskrit padavī, \"a path; a station, a position\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padavi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padavi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padavi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padavi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avanu kaḷeda varṣa padavi mugisidanu. — He finished his degree last year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avanu kaḷeda varṣa padavi mugisidanu.* — He finished his degree last year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to incite, then the Kannada for a university, then say padavi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to incite, then the Kannada for a university, then say *padavi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪದವಿ (padavi) mean? (\"A degree; a rank\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C406-upanyasa",
+      "sequence": 20560,
+      "title": "ಉಪನ್ಯಾಸ (upanyāsa) — a lecture",
+      "headword": "ಉಪನ್ಯಾಸ",
+      "romanization": "upanyāsa",
+      "gloss": "a lecture",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:277ae1077b2757cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a university, then the Kannada for a degree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉಪನ್ಯಾಸ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಪನ್ಯಾಸ — upanyāsa — \"a lecture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇಂದಿನ ಉಪನ್ಯಾಸ ಒಂದು ಗಂಟೆ ನಡೆಯಿತು. indina upanyāsa ondu gaṇṭe naḍeyitu. Today's lecture went on for an hour."
+            },
+            {
+              "kind": "speech",
+              "text": "ಉಪನ್ಯಾಸಕ, a lecturer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಪನ್ಯಾಸ (upanyāsa) is borrowed from Sanskrit upanyāsa, \"putting down near; a statement\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upanyāsa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upanyāsa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upanyāsa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upanyāsa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indina upanyāsa ondu gaṇṭe naḍeyitu. — Today's lecture went on for an hour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indina upanyāsa ondu gaṇṭe naḍeyitu.* — Today's lecture went on for an hour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a university, then the Kannada for a degree, then say upanyāsa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a university, then the Kannada for a degree, then say *upanyāsa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಉಪನ್ಯಾಸ (upanyāsa) mean? (\"A lecture\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C406-pradhyapaka",
+      "sequence": 20570,
+      "title": "ಪ್ರಾಧ್ಯಾಪಕ (prādhyāpaka) — a professor",
+      "headword": "ಪ್ರಾಧ್ಯಾಪಕ",
+      "romanization": "prādhyāpaka",
+      "gloss": "a professor",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84826cee96449b72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a degree, then the Kannada for a lecture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಾಧ್ಯಾಪಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಾಧ್ಯಾಪಕ — prādhyāpaka — \"a professor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಪ್ರಾಧ್ಯಾಪಕರು ಗಣಿತ ಕಲಿಸುತ್ತಾರೆ. ā prādhyāpakaru gaṇita kalisuttāre. That professor teaches mathematics."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಪ್ರಾಧ್ಯಾಪಕರು, prādhyāpakaru."
+            },
+            {
+              "kind": "speech",
+              "text": "Respectful plural verb: ಪ್ರಾಧ್ಯಾಪಕರು ಬಂದರು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಾಧ್ಯಾಪಕ (prādhyāpaka) is a modern word built on Sanskrit adhyāpaka, \"a teacher\" (CDIAL 278), with pra-, \"forward, chief\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prādhyāpaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prādhyāpaka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prādhyāpaka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prādhyāpaka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā prādhyāpakaru gaṇita kalisuttāre. — That professor teaches mathematics.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā prādhyāpakaru gaṇita kalisuttāre.* — That professor teaches mathematics.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a degree, then the Kannada for a lecture, then say prādhyāpaka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a degree, then the Kannada for a lecture, then say *prādhyāpaka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಾಧ್ಯಾಪಕ (prādhyāpaka) mean? (\"A professor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C406-bodhisu",
+      "sequence": 20580,
+      "title": "ಬೋಧಿಸು (bōdhisu) — to instruct; to preach",
+      "headword": "ಬೋಧಿಸು",
+      "romanization": "bōdhisu",
+      "gloss": "to instruct; to preach",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a27a3c43fc68aff2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a lecture, then the Kannada for a professor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬೋಧಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೋಧಿಸು — bōdhisu — \"to instruct; to preach\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವರು ಮೂವತ್ತು ವರ್ಷ ವಿಜ್ಞಾನ ಬೋಧಿಸಿದರು. avaru mūvattu varṣa vijñāna bōdhisidaru. They taught science for thirty years."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಬೋಧಿಸಿದೆ, bōdhiside."
+            },
+            {
+              "kind": "speech",
+              "text": "More formal than ಕಲಿಸು. ಬೋಧಕ, a teacher."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೋಧಿಸು (bōdhisu) is built on Sanskrit bodhana, \"arousing, awakening\" (Monier-Williams), from budh, \"to wake, to know\", with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bōdhisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bōdhisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bōdhisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bōdhisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaru mūvattu varṣa vijñāna bōdhisidaru. — They taught science for thirty years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaru mūvattu varṣa vijñāna bōdhisidaru.* — They taught science for thirty years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a lecture, then the Kannada for a professor, then say bōdhisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a lecture, then the Kannada for a professor, then say *bōdhisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬೋಧಿಸು (bōdhisu) mean? (\"To instruct; to preach\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

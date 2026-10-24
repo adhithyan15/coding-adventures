@@ -1,0 +1,173 @@
+Tamil, chapter 518: Code and Robots.
+5 lessons. All 5 can be done entirely by ear.
+
+
+Lesson 1 of 5.
+நிரல் (niral) — a computer program.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say the Tamil for to disconnect, then the Tamil for to glow.
+
+You'll want to know: நிரல்.
+நிரல் — niral — "a computer program".
+என் தம்பி கணினியில் ஒரு சிறிய நிரல் எழுதினான். eṉ tampi kaṇiṉiyil oru ciṟiya niral eḻutiṉāṉ. My younger brother wrote a small program on the computer.
+The one who writes them is a நிரலாளர், a programmer.
+
+The word, taken apart.
+நிரல் (niral) is native Dravidian: DEDR 3673 gives நிரல் (niral), "to be placed in a row, in order"; a program is a row of steps in order.
+
+What you've built.
+One more word for describing what you lived and felt.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: niral]
+[pause 8 seconds for the answer]
+[your turn — say: niral, once more]
+[pause 8 seconds for the answer]
+[your turn — say: eṉ tampi kaṇiṉiyil oru ciṟiya niral eḻutiṉāṉ. — My younger brother wrote a small program on the computer.]
+[pause 8 seconds for the answer]
+[your turn — recall: say the Tamil for to disconnect, then the Tamil for to glow, then say niral again]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does நிரல் (niral) mean? ("A computer program".) Say it once more.
+
+
+Lesson 2 of 5.
+குறியீடு (kuṟiyīṭu) — a code; a symbol.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say the Tamil for to glow, then the Tamil for a computer program.
+
+You'll want to know: குறியீடு.
+குறியீடு — kuṟiyīṭu — "a code; a symbol".
+இந்தக் கதவைத் திறக்க ஒரு ரகசியக் குறியீடு வேண்டும். intak katavait tiṟakka oru rakaciyak kuṟiyīṭu vēṇṭum. To open this door you need a secret code.
+குறி "a mark" with the noun ending -īṭu: a mark that stands for something.
+
+The word, taken apart.
+குறியீடு (kuṟiyīṭu) is native Dravidian: DEDR 1847 gives குறி (kuṟi), "a mark, a sign, a symbol"; the ending -īṭu makes a noun of the act of marking.
+
+What you've built.
+One more word for describing what you lived and felt.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: kuṟiyīṭu]
+[pause 8 seconds for the answer]
+[your turn — say: kuṟiyīṭu, once more]
+[pause 8 seconds for the answer]
+[your turn — say: intak katavait tiṟakka oru rakaciyak kuṟiyīṭu vēṇṭum. — To open this door you need a secret code.]
+[pause 8 seconds for the answer]
+[your turn — recall: say the Tamil for to glow, then the Tamil for a computer program, then say kuṟiyīṭu again]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does குறியீடு (kuṟiyīṭu) mean? ("A code; a symbol".) Say it once more.
+
+
+Lesson 3 of 5.
+காப்புப்பிரதி (kāppuppirati) — a backup copy.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say the Tamil for a computer program, then the Tamil for a code.
+
+You'll want to know: காப்புப்பிரதி.
+காப்புப்பிரதி — kāppuppirati — "a backup copy".
+அவள் எல்லாப் படங்களுக்கும் காப்புப்பிரதி எடுத்தாள். avaḷ ellāp paṭaṅkaḷukkum kāppuppirati eṭuttāḷ. She made a backup of all the photos.
+One makes one with எடு: காப்புப்பிரதி (kāppuppirati) எடு.
+
+The word, taken apart.
+காப்புப்பிரதி (kāppuppirati) is a modern compound: the native காப்பு (kāppu), "protection", from கா (kā), "to guard" (DEDR 1416), and பிரதி (pirati), "a copy", from Sanskrit prati, "against, in return" (Monier-Williams).
+
+What you've built.
+One more word for describing what you lived and felt.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: kāppuppirati]
+[pause 8 seconds for the answer]
+[your turn — say: kāppuppirati, once more]
+[pause 8 seconds for the answer]
+[your turn — say: avaḷ ellāp paṭaṅkaḷukkum kāppuppirati eṭuttāḷ. — She made a backup of all the photos.]
+[pause 8 seconds for the answer]
+[your turn — recall: say the Tamil for a computer program, then the Tamil for a code, then say kāppuppirati again]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does காப்புப்பிரதி (kāppuppirati) mean? ("A backup copy".) Say it once more.
+
+
+Lesson 4 of 5.
+ரோபோ (rōpō) — a robot.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say the Tamil for a code, then the Tamil for a backup copy.
+
+You'll want to know: ரோபோ.
+ரோபோ — rōpō — "a robot".
+அந்தத் தொழிற்சாலையில் ரோபோக்கள் கார்களைச் செய்கின்றன. antat toḻiṟcālaiyil rōpōkkaḷ kārkaḷaic ceykiṉṟaṉa. In that factory robots make cars.
+Plural: ரோபோக்கள், rōpōkkaḷ.
+Its plural doubles the stop: ரோபோக்கள்.
+
+The word, taken apart.
+ரோபோ (rōpō) is a loan from English robot; Tamil drops the final t.
+
+What you've built.
+One more word for describing what you lived and felt.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: rōpō]
+[pause 8 seconds for the answer]
+[your turn — say: rōpō, once more]
+[pause 8 seconds for the answer]
+[your turn — say: antat toḻiṟcālaiyil rōpōkkaḷ kārkaḷaic ceykiṉṟaṉa. — In that factory robots make cars.]
+[pause 8 seconds for the answer]
+[your turn — recall: say the Tamil for a code, then the Tamil for a backup copy, then say rōpō again]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does ரோபோ (rōpō) mean? ("A robot".) Say it once more.
+
+
+Lesson 5 of 5.
+செயற்கை (ceyaṟkai) — artificial; man-made.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say the Tamil for a backup copy, then the Tamil for a robot.
+
+You'll want to know: செயற்கை.
+செயற்கை — ceyaṟkai — "artificial; man-made".
+இந்தப் பூக்கள் செயற்கை, உண்மையானவை அல்ல. intap pūkkaḷ ceyaṟkai, uṇmaiyāṉavai alla. These flowers are artificial, not real.
+It stands before a noun: செயற்கை (ceyaṟkai) ஏரி, an artificial lake. Its opposite is இயற்கை (iyaṟkai), nature.
+
+The word, taken apart.
+செயற்கை (ceyaṟkai) is native Dravidian: DEDR 1957 lists செயற்கை (ceyaṟkai), "action", under செய் (cey), "to do, to make". Today it means "man-made", the pair of இயற்கை, nature.
+
+What you've built.
+One more word for describing what you lived and felt.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ceyaṟkai]
+[pause 8 seconds for the answer]
+[your turn — say: ceyaṟkai, once more]
+[pause 8 seconds for the answer]
+[your turn — say: intap pūkkaḷ ceyaṟkai, uṇmaiyāṉavai alla. — These flowers are artificial, not real.]
+[pause 8 seconds for the answer]
+[your turn — recall: say the Tamil for a backup copy, then the Tamil for a robot, then say ceyaṟkai again]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does செயற்கை (ceyaṟkai) mean? ("Artificial; man-made".) Say it once more.

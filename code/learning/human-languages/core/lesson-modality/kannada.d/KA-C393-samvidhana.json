@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C393-samvidhana",
+    "language": "kannada",
+    "chapter": 393,
+    "sequence": 19890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19344bfa9380e225"
+  },
+  "findings": []
+}

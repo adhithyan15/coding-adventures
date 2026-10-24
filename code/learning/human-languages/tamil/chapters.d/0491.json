@@ -1,0 +1,21 @@
+{
+  "chapter": 491,
+  "title": "Habits and Healing",
+  "label": "ch:ta-habits-and-healing",
+  "canDo": "I can talk about addiction, smoking, meditation, groaning and surgery.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-R491-review-485-491",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can talk about addiction, smoking, meditation, groaning and surgery.",
+    "assesses": [
+      "TA-LEX-C491-PAZHAKKAM491-01",
+      "TA-LEX-C491-PAZHAKKAM491-02",
+      "TA-LEX-C491-PAZHAKKAM491-03",
+      "TA-LEX-C491-PAZHAKKAM491-04",
+      "TA-LEX-C491-PAZHAKKAM491-05"
+    ]
+  }
+}

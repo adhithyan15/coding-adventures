@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C472-halagu",
+    "language": "kannada",
+    "chapter": 472,
+    "sequence": 24000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d301a69fd2fd10c"
+  },
+  "findings": []
+}

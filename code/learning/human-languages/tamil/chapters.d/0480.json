@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Head and Face",
+  "label": "ch:ta-head-and-face",
+  "canDo": "I can talk about the skull, the jaw, eyebrows, eyelids and blinking.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C480-cimittu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can talk about the skull, the jaw, eyebrows, eyelids and blinking.",
+    "assesses": [
+      "TA-LEX-C480-MUKAM480-03",
+      "TA-LEX-C480-MUKAM480-04",
+      "TA-LEX-C480-MUKAM480-05"
+    ]
+  }
+}

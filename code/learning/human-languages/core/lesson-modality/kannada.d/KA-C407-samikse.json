@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C407-samikse",
+    "language": "kannada",
+    "chapter": 407,
+    "sequence": 20630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2796aaedfb076d54"
+  },
+  "findings": []
+}

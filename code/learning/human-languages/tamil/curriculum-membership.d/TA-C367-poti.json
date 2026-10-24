@@ -1,0 +1,11 @@
+{
+  "id": "TA-C367-poti",
+  "pathSegment": "TA-PATH-367-NANAM367",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-367-NANAM367",
+      "order": 4
+    }
+  ]
+}

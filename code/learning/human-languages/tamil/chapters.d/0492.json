@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Mother and Father",
+  "label": "ch:ta-mother-and-father",
+  "canDo": "I can use the written words for mother, father, brother and sister.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C492-kataikkutti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can use the written words for mother, father, brother and sister.",
+    "assesses": [
+      "TA-LEX-C492-KUTUMPAM492-03",
+      "TA-LEX-C492-KUTUMPAM492-04",
+      "TA-LEX-C492-KUTUMPAM492-05"
+    ]
+  }
+}

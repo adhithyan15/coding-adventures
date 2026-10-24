@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:8f2191c24fb72ac5",
+  "lessonIds": [
+    "TA-C488-paruman",
+    "TA-C488-toppai",
+    "TA-C488-meli",
+    "TA-C488-kun",
+    "TA-C488-pattini"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch488.txt",
+  "json": "tamil/narration/ch488.json",
+  "textHash": "fnv1a64:aff1723a9b7e3b6b",
+  "jsonHash": "fnv1a64:f4a7ef6137caa782",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C477-astuma",
+  "pathSegment": "TA-PATH-477-NOYKAL477",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-477-NOYKAL477",
+      "order": 3
+    }
+  ]
+}

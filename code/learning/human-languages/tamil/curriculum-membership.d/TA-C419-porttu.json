@@ -1,0 +1,11 @@
+{
+  "id": "TA-C419-porttu",
+  "pathSegment": "TA-PATH-419-ARAI419",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-419-ARAI419",
+      "order": 2
+    }
+  ]
+}

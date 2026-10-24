@@ -1,0 +1,11 @@
+{
+  "id": "TA-C306-mutal-pakkam",
+  "pathSegment": "TA-PATH-306-THALAIPPU306",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-306-THALAIPPU306",
+      "order": 1
+    }
+  ]
+}

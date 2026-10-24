@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C297-pulanayvu",
+    "language": "tamil",
+    "chapter": 297,
+    "sequence": 17280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdfcb02fa695c26d"
+  },
+  "findings": []
+}

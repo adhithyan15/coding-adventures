@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:48dfecaeb359e47d",
+  "lessonIds": [
+    "TA-C335-murrukaiyitu",
+    "TA-C335-akali",
+    "TA-C335-curankam",
+    "TA-C335-aran",
+    "TA-C335-orran"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch335.txt",
+  "json": "tamil/narration/ch335.json",
+  "textHash": "fnv1a64:e582fb78954a6937",
+  "jsonHash": "fnv1a64:819451acef96fc9f",
+  "findings": []
+}

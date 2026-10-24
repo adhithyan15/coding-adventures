@@ -1,0 +1,11 @@
+{
+  "id": "KA-C531-kannamuccale",
+  "pathSegment": "KA-PATH-531-ATIKE531",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-531-ATIKE531",
+      "order": 2
+    }
+  ]
+}

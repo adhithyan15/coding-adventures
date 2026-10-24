@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:4974ed5341bdc64d",
+  "lessonIds": [
+    "TA-C536-kalai-art",
+    "TA-C536-oviyam",
+    "TA-C536-turikai",
+    "TA-C536-tittu-paint",
+    "TA-C536-kankatci"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch536.txt",
+  "json": "tamil/narration/ch536.json",
+  "textHash": "fnv1a64:4dcac875e750e1b1",
+  "jsonHash": "fnv1a64:b0d45bf6d88ff9df",
+  "findings": []
+}

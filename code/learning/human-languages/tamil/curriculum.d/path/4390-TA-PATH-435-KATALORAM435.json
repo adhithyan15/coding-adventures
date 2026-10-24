@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-435-KATALORAM435",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TA-EXT-435-KATALORAM435"
+  ],
+  "after": []
+}

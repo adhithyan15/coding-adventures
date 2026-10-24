@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R347-review-341-347",
+    "language": "kannada",
+    "chapter": 347,
+    "sequence": 17480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f697758948946787"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C482-culukku",
+    "language": "tamil",
+    "chapter": 482,
+    "sequence": 27580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:296f9142eff65206"
+  },
+  "findings": []
+}

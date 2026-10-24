@@ -1,0 +1,21 @@
+{
+  "chapter": 484,
+  "title": "Hair and Scalp",
+  "label": "ch:ta-hair-and-scalp",
+  "canDo": "I can talk about dandruff, lice, baldness and hair going grey.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-R484-review-477-484",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can talk about dandruff, lice, baldness and hair going grey.",
+    "assesses": [
+      "TA-LEX-C484-MUTI484-01",
+      "TA-LEX-C484-MUTI484-02",
+      "TA-LEX-C484-MUTI484-03",
+      "TA-LEX-C484-MUTI484-04",
+      "TA-LEX-C484-MUTI484-05"
+    ]
+  }
+}

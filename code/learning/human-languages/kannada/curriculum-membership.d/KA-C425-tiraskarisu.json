@@ -1,0 +1,11 @@
+{
+  "id": "KA-C425-tiraskarisu",
+  "pathSegment": "KA-PATH-425-SVIKARISU425",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-425-SVIKARISU425",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:fc183045f5ca76a5",
+  "lessonIds": [
+    "TA-C309-vacakar",
+    "TA-C309-neyar",
+    "TA-C309-talaiyankam",
+    "TA-C309-kuru",
+    "TA-C309-kelvippatu",
+    "TA-R309-review-302-309"
+  ],
+  "tex": "tamil/book/chapters/ch309-readers-and-listeners.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C534-natuvar",
+  "pathSegment": "TA-PATH-534-VETRI534",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-534-VETRI534",
+      "order": 2
+    }
+  ]
+}

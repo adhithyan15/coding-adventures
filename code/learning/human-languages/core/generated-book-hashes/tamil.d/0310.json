@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:1c69fc4047f3f73a",
+  "lessonIds": [
+    "TA-C310-keliccittiram",
+    "TA-C310-cuvarotti",
+    "TA-C310-avanappatam",
+    "TA-C310-cittari",
+    "TA-C310-utakam"
+  ],
+  "tex": "tamil/book/chapters/ch310-pictures-and-posters.tex"
+}

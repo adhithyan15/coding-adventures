@@ -1,0 +1,11 @@
+{
+  "id": "KA-C395-sacivalaya",
+  "pathSegment": "KA-PATH-395-ADALITA395",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-395-ADALITA395",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C485-toyyu",
+  "pathSegment": "KA-PATH-485-MUNGARU485",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-485-MUNGARU485",
+      "order": 4
+    }
+  ]
+}

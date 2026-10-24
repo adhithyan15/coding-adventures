@@ -1,0 +1,11 @@
+{
+  "id": "KA-C458-giridhama",
+  "pathSegment": "KA-PATH-458-YATRE458",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-458-YATRE458",
+      "order": 1
+    }
+  ]
+}

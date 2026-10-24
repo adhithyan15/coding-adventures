@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:9b6f716e04099c9c",
+  "lessonIds": [
+    "TA-C536-kalai-art",
+    "TA-C536-oviyam",
+    "TA-C536-turikai",
+    "TA-C536-tittu-paint",
+    "TA-C536-kankatci"
+  ],
+  "tex": "tamil/book/chapters/ch536-painting.tex"
+}

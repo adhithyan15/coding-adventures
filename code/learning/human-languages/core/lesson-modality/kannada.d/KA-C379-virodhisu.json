@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C379-virodhisu",
+    "language": "kannada",
+    "chapter": 379,
+    "sequence": 19180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a130debfbfba9e46"
+  },
+  "findings": []
+}

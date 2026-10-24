@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:9d43f3731791edc8",
+  "lessonIds": [
+    "TA-C500-tunai",
+    "TA-C500-illattaraci",
+    "TA-C500-pukunta-vitu",
+    "TA-C500-tanikkutittanam",
+    "TA-C500-ottuppo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch500.txt",
+  "json": "tamil/narration/ch500.json",
+  "textHash": "fnv1a64:97bb1157c15687e6",
+  "jsonHash": "fnv1a64:be8d78fef860c0f0",
+  "findings": []
+}

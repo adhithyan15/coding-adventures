@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C402-cutkes",
+    "language": "tamil",
+    "chapter": 402,
+    "sequence": 23210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad2b133a3e567ec0"
+  },
+  "findings": []
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 471,
+  "title": "Character and Nature",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0f02e4af94e9518b",
+  "lessons": [
+    {
+      "id": "TA-C471-panpu",
+      "sequence": 27020,
+      "title": "பண்பு (paṇpu) — a virtue; good character",
+      "headword": "பண்பு",
+      "romanization": "paṇpu",
+      "gloss": "a virtue; good character",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:386d41b8dc66efc3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for forgiveness, then the Tamil for the cold shoulder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பண்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பண்பு — paṇpu — \"a virtue; good character\"."
+            },
+            {
+              "kind": "speech",
+              "text": "உண்மை பேசுவது ஒரு நல்ல பண்பு. uṇmai pēcuvatu oru nalla paṇpu. Speaking the truth is a good quality."
+            },
+            {
+              "kind": "speech",
+              "text": "பண்பான, well-mannered."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பண்பு (paṇpu) is native Dravidian (DEDR 3904), a word for quality, nature and good character."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇpu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇpu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇpu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇpu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṇmai pēcuvatu oru nalla paṇpu. — Speaking the truth is a good quality.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṇmai pēcuvatu oru nalla paṇpu.* — Speaking the truth is a good quality.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for forgiveness, then the Tamil for the cold shoulder, then say paṇpu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for forgiveness, then the Tamil for the cold shoulder, then say *paṇpu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பண்பு (paṇpu) mean? (\"A virtue; good character\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C471-cupavam",
+      "sequence": 27030,
+      "title": "சுபாவம் (cupāvam) — temperament; disposition",
+      "headword": "சுபாவம்",
+      "romanization": "cupāvam",
+      "gloss": "temperament; disposition",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:caff73e125987d20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for the cold shoulder, then the Tamil for a virtue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சுபாவம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுபாவம் — cupāvam — \"temperament; disposition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் அண்ணனுக்கு அமைதியான சுபாவம். eṉ aṇṇaṉukku amaitiyāṉa cupāvam. My elder brother has a calm temperament."
+            },
+            {
+              "kind": "speech",
+              "text": "Dative: அவனுக்கு அமைதியான சுபாவம் (cupāvam), he is calm by nature."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுபாவம் (cupāvam) is borrowed from Sanskrit svabhāva, \"one's own nature\" (Monier-Williams); Tamil drops the v of sv."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cupāvam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cupāvam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cupāvam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cupāvam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ aṇṇaṉukku amaitiyāṉa cupāvam. — My elder brother has a calm temperament.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ aṇṇaṉukku amaitiyāṉa cupāvam.* — My elder brother has a calm temperament.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for the cold shoulder, then the Tamil for a virtue, then say cupāvam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for the cold shoulder, then the Tamil for a virtue, then say *cupāvam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சுபாவம் (cupāvam) mean? (\"Temperament; disposition\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C471-iyalpu",
+      "sequence": 27040,
+      "title": "இயல்பு (iyalpu) — one’s nature; normality",
+      "headword": "இயல்பு",
+      "romanization": "iyalpu",
+      "gloss": "one’s nature; normality",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6930fc710db84405",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a virtue, then the Tamil for temperament."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இயல்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இயல்பு — iyalpu — \"one’s nature; normality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புதியவர்களிடம் வெட்கப்படுவது அவளுடைய இயல்பு. putiyavarkaḷiṭam veṭkappaṭuvatu avaḷuṭaiya iyalpu. Being shy with strangers is her nature."
+            },
+            {
+              "kind": "speech",
+              "text": "இயல்பாக, naturally; இயல்பு (iyalpu) நிலை, normal conditions."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இயல்பு (iyalpu) is native Dravidian, a noun from இயல் iyal (DEDR 471), \"to be possible, to befall\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iyalpu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iyalpu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iyalpu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iyalpu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putiyavarkaḷiṭam veṭkappaṭuvatu avaḷuṭaiya iyalpu. — Being shy with strangers is her nature.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putiyavarkaḷiṭam veṭkappaṭuvatu avaḷuṭaiya iyalpu.* — Being shy with strangers is her nature.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a virtue, then the Tamil for temperament, then say iyalpu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a virtue, then the Tamil for temperament, then say *iyalpu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இயல்பு (iyalpu) mean? (\"One’s nature; normality\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C471-pakkuvam",
+      "sequence": 27050,
+      "title": "பக்குவம் (pakkuvam) — maturity; the right stage",
+      "headword": "பக்குவம்",
+      "romanization": "pakkuvam",
+      "gloss": "maturity; the right stage",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91516e65cab31b2b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for temperament, then the Tamil for one’s nature."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பக்குவம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பக்குவம் — pakkuvam — \"maturity; the right stage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவளுக்கு வயது குறைவு, ஆனால் நல்ல பக்குவம் இருக்கிறது. avaḷukku vayatu kuṟaivu, āṉāl nalla pakkuvam irukkiṟatu. She is young, but very mature."
+            },
+            {
+              "kind": "speech",
+              "text": "Of food, the right degree of cooking: சமையல் பக்குவம் (pakkuvam)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பக்குவம் (pakkuvam) is borrowed from Sanskrit pakva, \"cooked, ripe\" (CDIAL 7621): a ripened mind."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakkuvam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakkuvam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakkuvam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakkuvam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷukku vayatu kuṟaivu, āṉāl nalla pakkuvam irukkiṟatu. — She is young, but very mature.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷukku vayatu kuṟaivu, āṉāl nalla pakkuvam irukkiṟatu.* — She is young, but very mature.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for temperament, then the Tamil for one’s nature, then say pakkuvam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for temperament, then the Tamil for one’s nature, then say *pakkuvam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பக்குவம் (pakkuvam) mean? (\"Maturity; the right stage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C471-alatciyam",
+      "sequence": 27060,
+      "title": "அலட்சியம் (alaṭciyam) — negligence; indifference",
+      "headword": "அலட்சியம்",
+      "romanization": "alaṭciyam",
+      "gloss": "negligence; indifference",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab08d11a3c9f52e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for one’s nature, then the Tamil for maturity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அலட்சியம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அலட்சியம் — alaṭciyam — \"negligence; indifference\"."
+            },
+            {
+              "kind": "speech",
+              "text": "உடல்நலத்தில் அலட்சியம் கூடாது. uṭalnalattil alaṭciyam kūṭātu. One must not be careless about one’s health."
+            },
+            {
+              "kind": "speech",
+              "text": "அலட்சியமாக, carelessly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அலட்சியம் (alaṭciyam) is borrowed from Sanskrit alakṣya, \"invisible, unnoticed\" (CDIAL 698); Tamil writes kṣ as ட்ச."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alaṭciyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alaṭciyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alaṭciyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alaṭciyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭalnalattil alaṭciyam kūṭātu. — One must not be careless about one’s health.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭalnalattil alaṭciyam kūṭātu.* — One must not be careless about one’s health.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for one’s nature, then the Tamil for maturity, then say alaṭciyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for one’s nature, then the Tamil for maturity, then say *alaṭciyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அலட்சியம் (alaṭciyam) mean? (\"Negligence; indifference\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

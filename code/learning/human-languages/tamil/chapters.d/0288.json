@@ -1,0 +1,20 @@
+{
+  "chapter": 288,
+  "title": "Asking the Way",
+  "label": "ch:ta-asking-the-way",
+  "canDo": "I can ask the way with … eppaṭip pōka vēṇṭum? and eṅkē irukkiṟatu?, ask how far it is, and give directions with nērākap pōṅkaḷ, tirumpuṅkaḷ and landmarks such as kōyilukku etirē.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-R288-asking-the-way",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: ask the way and how far it is, and give the way back with polite requests and landmarks.",
+    "assesses": [
+      "TA-GRAMMAR-C288-ASK-WAY-01",
+      "TA-GRAMMAR-C288-HOW-FAR-01",
+      "TA-GRAMMAR-C288-GIVE-WAY-01",
+      "TA-GRAMMAR-C288-LANDMARK-01"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:f9524c6781196b4c",
+  "lessonIds": [
+    "TA-C352-erpatuttu",
+    "TA-C352-takkam",
+    "TA-C352-karani",
+    "TA-C352-valivaku",
+    "TA-C352-pati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch352.txt",
+  "json": "tamil/narration/ch352.json",
+  "textHash": "fnv1a64:262dce6df784a912",
+  "jsonHash": "fnv1a64:ff29303194b27248",
+  "findings": []
+}

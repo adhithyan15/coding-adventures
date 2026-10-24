@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C391-nirnayi",
+    "language": "tamil",
+    "chapter": 391,
+    "sequence": 22390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1bd422c3a4f74c0c"
+  },
+  "findings": []
+}

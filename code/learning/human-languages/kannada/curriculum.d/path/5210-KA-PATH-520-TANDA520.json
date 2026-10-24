@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-520-TANDA520",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-520-TANDA520"
+  ],
+  "after": []
+}

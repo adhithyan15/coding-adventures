@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:579219293ebd04a8",
+  "lessonIds": [
+    "KA-C475-aranya",
+    "KA-C475-malekadu",
+    "KA-C475-kadgiccu",
+    "KA-C475-kadi-fell",
+    "KA-C475-samraksisu",
+    "KA-R475-review-469-475"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch475.txt",
+  "json": "kannada/narration/ch475.json",
+  "textHash": "fnv1a64:db596905cf3302ac",
+  "jsonHash": "fnv1a64:6c7b5134eeba0a45",
+  "findings": []
+}

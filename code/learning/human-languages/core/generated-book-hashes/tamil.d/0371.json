@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:d7760404cbf6ee47",
+  "lessonIds": [
+    "TA-C371-camattuvam",
+    "TA-C371-pakupatu",
+    "TA-C371-cirupanmai",
+    "TA-C371-perumpanmai",
+    "TA-C371-otukku"
+  ],
+  "tex": "tamil/book/chapters/ch371-equal-rights.tex"
+}

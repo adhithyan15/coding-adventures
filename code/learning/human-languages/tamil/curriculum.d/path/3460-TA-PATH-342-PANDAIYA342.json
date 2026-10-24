@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-342-PANDAIYA342",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-342-PANDAIYA342"
+  ],
+  "after": []
+}

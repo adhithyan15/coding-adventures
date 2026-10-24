@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C536-kalai-art",
+    "language": "tamil",
+    "chapter": 536,
+    "sequence": 30630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:786685f69d374947"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C419-bikkattu",
+    "language": "kannada",
+    "chapter": 419,
+    "sequence": 21240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:419b2489950eb4c8"
+  },
+  "findings": []
+}

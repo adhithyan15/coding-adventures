@@ -1,0 +1,11 @@
+{
+  "id": "KA-C403-rupisu",
+  "pathSegment": "KA-PATH-403-SAMAJA403",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-403-SAMAJA403",
+      "order": 4
+    }
+  ]
+}

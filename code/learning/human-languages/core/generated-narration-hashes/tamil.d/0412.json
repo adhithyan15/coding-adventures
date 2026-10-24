@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:197ef7bf9b2a114e",
+  "lessonIds": [
+    "TA-C412-ataiyalam",
+    "TA-C412-valitavaru",
+    "TA-C412-pintanku",
+    "TA-C412-munneru",
+    "TA-C412-vilaku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch412.txt",
+  "json": "tamil/narration/ch412.json",
+  "textHash": "fnv1a64:0b96709d86c6fca2",
+  "jsonHash": "fnv1a64:d86eed8dad9abf4c",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 460,
+  "title": "Wonder and Awe",
+  "label": "ch:ta-wonder-and-awe",
+  "canDo": "I can talk about amazement, awe and being thrilled.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-R460-review-453-460",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can talk about amazement, awe and being thrilled.",
+    "assesses": [
+      "TA-LEX-C460-VIYAPPU460-01",
+      "TA-LEX-C460-VIYAPPU460-02",
+      "TA-LEX-C460-VIYAPPU460-03",
+      "TA-LEX-C460-VIYAPPU460-04",
+      "TA-LEX-C460-VIYAPPU460-05"
+    ]
+  }
+}

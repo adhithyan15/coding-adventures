@@ -1,0 +1,11 @@
+{
+  "id": "TA-C387-utanpatikkai",
+  "pathSegment": "TA-PATH-387-OPPANTAM387",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-387-OPPANTAM387",
+      "order": 1
+    }
+  ]
+}

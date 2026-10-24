@@ -1,0 +1,21 @@
+{
+  "chapter": 404,
+  "title": "Helping Out",
+  "label": "ch:ka-helping-out",
+  "canDo": "I can say a member, to donate, to encourage, to coordinate and goodwill.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-R404-review-398-404",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can say a member, to donate, to encourage, to coordinate and goodwill.",
+    "assesses": [
+      "KA-LEX-C404-SADASYA404-01",
+      "KA-LEX-C404-SADASYA404-02",
+      "KA-LEX-C404-SADASYA404-03",
+      "KA-LEX-C404-SADASYA404-04",
+      "KA-LEX-C404-SADASYA404-05"
+    ]
+  }
+}

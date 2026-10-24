@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:bc95fec7d51645dd",
+  "lessonIds": [
+    "KA-C412-apaya",
+    "KA-C412-munneccarike",
+    "KA-C412-sambhavaniya",
+    "KA-C412-sankasta",
+    "KA-C412-nivarisu"
+  ],
+  "tex": "kannada/book/chapters/ch412-when-danger-comes.tex"
+}

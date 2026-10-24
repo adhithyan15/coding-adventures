@@ -1,0 +1,11 @@
+{
+  "id": "KA-C456-gopura",
+  "pathSegment": "KA-PATH-456-SMARAKA456",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-456-SMARAKA456",
+      "order": 1
+    }
+  ]
+}

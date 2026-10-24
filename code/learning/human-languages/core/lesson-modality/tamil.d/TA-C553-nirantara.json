@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C553-nirantara",
+    "language": "tamil",
+    "chapter": 553,
+    "sequence": 31520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de09ce569e2d1399"
+  },
+  "findings": []
+}

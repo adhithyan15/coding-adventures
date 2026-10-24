@@ -1,0 +1,11 @@
+{
+  "id": "TA-C350-konam",
+  "pathSegment": "TA-PATH-350-KANNOTTAM350",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-350-KANNOTTAM350",
+      "order": 3
+    }
+  ]
+}

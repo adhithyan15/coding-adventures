@@ -1,0 +1,19 @@
+{
+  "chapter": 537,
+  "title": "Poetry and Art",
+  "label": "ch:ka-poetry-and-art",
+  "canDo": "I can say a poet, a poem, literature, a work of art and to compose.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C537-racisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 537: I can say a poet, a poem, literature, a work of art and to compose.",
+    "assesses": [
+      "KA-LEX-C537-KAVYA537-03",
+      "KA-LEX-C537-KAVYA537-04",
+      "KA-LEX-C537-KAVYA537-05"
+    ]
+  }
+}

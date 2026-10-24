@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Grasping an Idea",
+  "label": "ch:ka-grasping-an-idea",
+  "canDo": "I can say to grasp, an interpretation, a notion, an aspect and a feature.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C384-laksana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can say to grasp, an interpretation, a notion, an aspect and a feature.",
+    "assesses": [
+      "KA-LEX-C384-GRAHISU384-03",
+      "KA-LEX-C384-GRAHISU384-04",
+      "KA-LEX-C384-GRAHISU384-05"
+    ]
+  }
+}

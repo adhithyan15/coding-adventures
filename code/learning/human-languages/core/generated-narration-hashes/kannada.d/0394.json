@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:ade68f485a92bfa6",
+  "lessonIds": [
+    "KA-C394-rajakiya",
+    "KA-C394-rajakarani",
+    "KA-C394-paksa",
+    "KA-C394-bahiskarisu",
+    "KA-C394-nayakatva"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch394.txt",
+  "json": "kannada/narration/ch394.json",
+  "textHash": "fnv1a64:780f91c3b6ce0b67",
+  "jsonHash": "fnv1a64:e7c8ff09e80f8de7",
+  "findings": []
+}

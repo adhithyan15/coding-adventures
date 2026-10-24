@@ -1,0 +1,21 @@
+{
+  "chapter": 423,
+  "title": "Parts of a City",
+  "label": "ch:ta-parts-of-a-city",
+  "canDo": "I can talk about a municipality, suburbs, housing colonies, localities and the centre of a town.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-R423-review-416-423",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can talk about a municipality, suburbs, housing colonies, localities and the centre of a town.",
+    "assesses": [
+      "TA-LEX-C423-NAKAR423-01",
+      "TA-LEX-C423-NAKAR423-02",
+      "TA-LEX-C423-NAKAR423-03",
+      "TA-LEX-C423-NAKAR423-04",
+      "TA-LEX-C423-NAKAR423-05"
+    ]
+  }
+}

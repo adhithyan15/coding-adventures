@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "Small Body Sounds",
+  "label": "ch:ka-small-body-sounds",
+  "canDo": "I can say to belch, to blink, to pant, hiccups and asthma.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C507-ubbasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can say to belch, to blink, to pant, hiccups and asthma.",
+    "assesses": [
+      "KA-LEX-C507-SADDU507-03",
+      "KA-LEX-C507-SADDU507-04",
+      "KA-LEX-C507-SADDU507-05"
+    ]
+  }
+}

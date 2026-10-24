@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C531-tennis",
+    "language": "tamil",
+    "chapter": 531,
+    "sequence": 30410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77239c94400b2643"
+  },
+  "findings": []
+}

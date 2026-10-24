@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:e469a22e8de33b6d",
+  "lessonIds": [
+    "TA-C367-nanam",
+    "TA-C367-ariyamai",
+    "TA-C367-arinar",
+    "TA-C367-metai",
+    "TA-C367-poti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch367.txt",
+  "json": "tamil/narration/ch367.json",
+  "textHash": "fnv1a64:1201429a7c6b0daa",
+  "jsonHash": "fnv1a64:cec446465e824df0",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C518-nivrtti",
+  "pathSegment": "KA-PATH-518-NEMAKA518",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-518-NEMAKA518",
+      "order": 3
+    }
+  ]
+}

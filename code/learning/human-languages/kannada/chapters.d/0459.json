@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "Mountains and Camps",
+  "label": "ch:ka-mountains-and-camps",
+  "canDo": "I can say a mountain, a peak, to stumble, a tent and an encampment.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C459-bidara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can say a mountain, a peak, to stumble, a tent and an encampment.",
+    "assesses": [
+      "KA-LEX-C459-CARANA459-03",
+      "KA-LEX-C459-CARANA459-04",
+      "KA-LEX-C459-CARANA459-05"
+    ]
+  }
+}

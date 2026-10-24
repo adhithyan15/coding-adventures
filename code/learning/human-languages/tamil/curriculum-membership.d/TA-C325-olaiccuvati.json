@@ -1,0 +1,11 @@
+{
+  "id": "TA-C325-olaiccuvati",
+  "pathSegment": "TA-PATH-325-OLAI325",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-325-OLAI325",
+      "order": 0
+    }
+  ]
+}

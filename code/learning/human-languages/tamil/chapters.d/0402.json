@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "Bags and Bundles",
+  "label": "ch:ta-bags-and-bundles",
+  "canDo": "I can talk about luggage, a suitcase and a sack, and carrying and unloading them.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C402-irakku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can talk about luggage, a suitcase and a sack, and carrying and unloading them.",
+    "assesses": [
+      "TA-LEX-C402-SUMAI402-03",
+      "TA-LEX-C402-SUMAI402-04",
+      "TA-LEX-C402-SUMAI402-05"
+    ]
+  }
+}

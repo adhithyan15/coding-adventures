@@ -1,0 +1,11 @@
+{
+  "id": "TA-C553-nirantara",
+  "pathSegment": "TA-PATH-553-THARKALIKAM553",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-553-THARKALIKAM553",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C549-ayattam",
+  "pathSegment": "TA-PATH-549-VIZHA549",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-549-VIZHA549",
+      "order": 3
+    }
+  ]
+}

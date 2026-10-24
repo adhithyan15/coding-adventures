@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Signs of Illness",
+  "label": "ch:ta-signs-of-illness",
+  "canDo": "I can describe symptoms such as nausea, palpitations and hiccups.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C474-uruttu-chafe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can describe symptoms such as nausea, palpitations and hiccups.",
+    "assesses": [
+      "TA-LEX-C474-NOY474-03",
+      "TA-LEX-C474-NOY474-04",
+      "TA-LEX-C474-NOY474-05"
+    ]
+  }
+}

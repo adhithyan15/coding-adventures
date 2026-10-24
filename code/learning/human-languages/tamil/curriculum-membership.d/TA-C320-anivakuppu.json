@@ -1,0 +1,11 @@
+{
+  "id": "TA-C320-anivakuppu",
+  "pathSegment": "TA-PATH-320-KODI320",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-320-KODI320",
+      "order": 1
+    }
+  ]
+}

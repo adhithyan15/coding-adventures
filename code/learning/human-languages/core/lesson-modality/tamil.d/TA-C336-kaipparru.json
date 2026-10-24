@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C336-kaipparru",
+    "language": "tamil",
+    "chapter": 336,
+    "sequence": 19260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d39055871435670b"
+  },
+  "findings": []
+}

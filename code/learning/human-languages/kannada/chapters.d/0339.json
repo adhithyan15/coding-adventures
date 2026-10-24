@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "A Riot in the Market",
+  "label": "ch:ka-a-riot-in-the-market",
+  "canDo": "I can say a riot, an uproar, a crowd, to scatter and a stampede.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C339-kaltulita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can say a riot, an uproar, a crowd, to scatter and a stampede.",
+    "assesses": [
+      "KA-LEX-C339-GALABHE339-03",
+      "KA-LEX-C339-GALABHE339-04",
+      "KA-LEX-C339-GALABHE339-05"
+    ]
+  }
+}

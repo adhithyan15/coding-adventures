@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C425-katci",
+    "language": "tamil",
+    "chapter": 425,
+    "sequence": 24410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c98e4ba338956d0d"
+  },
+  "findings": []
+}

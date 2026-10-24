@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 549,
+  "title": "Planning a Function",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3c0bc1448fa2cd03",
+  "lessons": [
+    {
+      "id": "TA-C549-mantapam",
+      "sequence": 31300,
+      "title": "மண்டபம் (maṇṭapam) — a function hall",
+      "headword": "மண்டபம்",
+      "romanization": "maṇṭapam",
+      "gloss": "a function hall",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f188e969b6b44f9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a fraud, then the Tamil for to break into."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மண்டபம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மண்டபம் — maṇṭapam — \"a function hall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மண்டபம் கிடைத்தால் திருமணம் அடுத்த மாதம் நடக்கும். maṇṭapam kiṭaittāl tirumaṇam aṭutta mātam naṭakkum. If we get the hall, the wedding will be next month."
+            },
+            {
+              "kind": "speech",
+              "text": "Weddings in South India are often held in a திருமண மண்டபம் (maṇṭapam)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மண்டபம் (maṇṭapam) is borrowed from Sanskrit maṇḍapa, \"an open temporary shed, a pavilion\" (CDIAL 9740)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṇṭapam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṇṭapam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṇṭapam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṇṭapam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṇṭapam kiṭaittāl tirumaṇam aṭutta mātam naṭakkum. — If we get the hall, the wedding will be next month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṇṭapam kiṭaittāl tirumaṇam aṭutta mātam naṭakkum.* — If we get the hall, the wedding will be next month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a fraud, then the Tamil for to break into, then say maṇṭapam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a fraud, then the Tamil for to break into, then say *maṇṭapam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மண்டபம் (maṇṭapam) mean? (\"A function hall\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C549-nikalcciniral",
+      "sequence": 31310,
+      "title": "நிகழ்ச்சிநிரல் (nikaḻcciniral) — an agenda; a programme of events",
+      "headword": "நிகழ்ச்சிநிரல்",
+      "romanization": "nikaḻcciniral",
+      "gloss": "an agenda; a programme of events",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2c274d516230ab0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to break into, then the Tamil for a function hall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நிகழ்ச்சிநிரல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிகழ்ச்சிநிரல் — nikaḻcciniral — \"an agenda; a programme of events\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கூட்டத்தின் நிகழ்ச்சிநிரலை எல்லோருக்கும் அனுப்பினேன். kūṭṭattiṉ nikaḻcciniralai ellōrukkum aṉuppiṉēṉ. I sent the agenda of the meeting to everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"a row of events\": நிகழ்ச்சி (nikaḻcci) + நிரல் \"a row\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிகழ்ச்சிநிரல் (nikaḻcciniral) is a native compound: நிகழ்ச்சி (nikaḻcci), \"an event\", and நிரல் (niral), \"an order, a row\" (DEDR 3673)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikaḻcciniral",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikaḻcciniral*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikaḻcciniral, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikaḻcciniral*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭṭattiṉ nikaḻcciniralai ellōrukkum aṉuppiṉēṉ. — I sent the agenda of the meeting to everyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭṭattiṉ nikaḻcciniralai ellōrukkum aṉuppiṉēṉ.* — I sent the agenda of the meeting to everyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to break into, then the Tamil for a function hall, then say nikaḻcciniral again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to break into, then the Tamil for a function hall, then say *nikaḻcciniral* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நிகழ்ச்சிநிரல் (nikaḻcciniral) mean? (\"An agenda; a programme of events\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C549-munnottam",
+      "sequence": 31320,
+      "title": "முன்னோட்டம் (muṉṉōṭṭam) — a preview; a trial run",
+      "headword": "முன்னோட்டம்",
+      "romanization": "muṉṉōṭṭam",
+      "gloss": "a preview; a trial run",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c009aae822bc03cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a function hall, then the Tamil for an agenda."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முன்னோட்டம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்னோட்டம் — muṉṉōṭṭam — \"a preview; a trial run\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புதிய படத்தின் முன்னோட்டம் நேற்று வெளியானது. putiya paṭattiṉ muṉṉōṭṭam nēṟṟu veḷiyāṉatu. The trailer of the new film came out yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"a running ahead\": முன் + ஓட்டம்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்னோட்டம் (muṉṉōṭṭam) is a native compound: முன் (muṉ), \"in front, before\" (DEDR 5020), and ஓட்டம் (ōṭṭam), \"a run\", from ஓடு, \"to run\" (DEDR 1041)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉṉōṭṭam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉṉōṭṭam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉṉōṭṭam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉṉōṭṭam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putiya paṭattiṉ muṉṉōṭṭam nēṟṟu veḷiyāṉatu. — The trailer of the new film came out yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putiya paṭattiṉ muṉṉōṭṭam nēṟṟu veḷiyāṉatu.* — The trailer of the new film came out yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a function hall, then the Tamil for an agenda, then say muṉṉōṭṭam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a function hall, then the Tamil for an agenda, then say *muṉṉōṭṭam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முன்னோட்டம் (muṉṉōṭṭam) mean? (\"A preview; a trial run\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C549-ayattam",
+      "sequence": 31330,
+      "title": "ஆயத்தம் (āyattam) — readiness; preparation",
+      "headword": "ஆயத்தம்",
+      "romanization": "āyattam",
+      "gloss": "readiness; preparation",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4cbaf824b3895ffb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an agenda, then the Tamil for a preview."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆயத்தம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆயத்தம் — āyattam — \"readiness; preparation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "விருந்தினர் வந்தால் எல்லாம் ஆயத்தமாக இருக்க வேண்டும். viruntiṉar vantāl ellām āyattamāka irukka vēṇṭum. If the guests come, everything must be ready."
+            },
+            {
+              "kind": "speech",
+              "text": "With -ஆக: ஆயத்தமாக இரு, to be ready."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of ஆயத்தம் (āyattam) is not settled; one suggestion is Sanskrit āyatta, \"being at someone's disposal\" (Monier-Williams), with the Tamil ending -அம்."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyattam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyattam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyattam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyattam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viruntiṉar vantāl ellām āyattamāka irukka vēṇṭum. — If the guests come, everything must be ready.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viruntiṉar vantāl ellām āyattamāka irukka vēṇṭum.* — If the guests come, everything must be ready.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an agenda, then the Tamil for a preview, then say āyattam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an agenda, then the Tamil for a preview, then say *āyattam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆயத்தம் (āyattam) mean? (\"Readiness; preparation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C549-naluvu",
+      "sequence": 31340,
+      "title": "நழுவு (naḻuvu) — to slip away; to evade",
+      "headword": "நழுவு",
+      "romanization": "naḻuvu",
+      "gloss": "to slip away; to evade",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34ba80f22d30e0f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a preview, then the Tamil for readiness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நழுவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நழுவு — naḻuvu — \"to slip away; to evade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வேலை வந்தபோது அவன் மெதுவாக நழுவினான். vēlai vantapōtu avaṉ metuvāka naḻuviṉāṉ. When work came along, he quietly slipped away."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): நழுவினேன், naḻuviṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of a chance: வாய்ப்பு நழுவியது, the chance slipped away."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நழுவு (naḻuvu) is native Dravidian: DEDR 3620 gives நழுவு (naḻuvu), \"to skulk away, to evade, to slip\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naḻuvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naḻuvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naḻuvu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naḻuvu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēlai vantapōtu avaṉ metuvāka naḻuviṉāṉ. — When work came along, he quietly slipped away.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēlai vantapōtu avaṉ metuvāka naḻuviṉāṉ.* — When work came along, he quietly slipped away.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a preview, then the Tamil for readiness, then say naḻuvu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a preview, then the Tamil for readiness, then say *naḻuvu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நழுவு (naḻuvu) mean? (\"To slip away; to evade\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:4f3e62f28da8a0ad",
+  "lessonIds": [
+    "TA-C384-avaciyam",
+    "TA-C384-kattayam",
+    "TA-C384-varampu",
+    "TA-C384-kuraintapatcam",
+    "TA-C384-anaiyitu"
+  ],
+  "tex": "tamil/book/chapters/ch384-musts-and-limits.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C508-kututal-neram",
+    "language": "tamil",
+    "chapter": 508,
+    "sequence": 29220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2548278d636e4f38"
+  },
+  "findings": []
+}

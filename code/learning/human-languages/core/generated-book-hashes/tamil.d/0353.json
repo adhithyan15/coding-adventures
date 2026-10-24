@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:a4a9e6aaa78398b9",
+  "lessonIds": [
+    "TA-C353-catakam",
+    "TA-C353-patakam",
+    "TA-C353-nanmai",
+    "TA-C353-timai",
+    "TA-C353-palan"
+  ],
+  "tex": "tamil/book/chapters/ch353-advantages-and-drawbacks.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:fc80af8c3b7211c1",
+  "lessonIds": [
+    "TA-C404-vakanam",
+    "TA-C404-lari",
+    "TA-C404-skuttar",
+    "TA-C404-muntu",
+    "TA-C404-motu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch404.txt",
+  "json": "tamil/narration/ch404.json",
+  "textHash": "fnv1a64:e802240af94f7690",
+  "jsonHash": "fnv1a64:40fd614e1f94e350",
+  "findings": []
+}

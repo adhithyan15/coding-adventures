@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R438-review-432-438",
+    "language": "tamil",
+    "chapter": 438,
+    "sequence": 25090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc8ef9042d6168b8"
+  },
+  "findings": []
+}

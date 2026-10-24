@@ -1,0 +1,11 @@
+{
+  "id": "TA-C520-mincatanam",
+  "pathSegment": "TA-PATH-520-KARUVI520",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-520-KARUVI520",
+      "order": 3
+    }
+  ]
+}

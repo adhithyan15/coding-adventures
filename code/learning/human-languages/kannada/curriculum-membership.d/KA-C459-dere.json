@@ -1,0 +1,11 @@
+{
+  "id": "KA-C459-dere",
+  "pathSegment": "KA-PATH-459-CARANA459",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-459-CARANA459",
+      "order": 3
+    }
+  ]
+}

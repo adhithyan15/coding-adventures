@@ -1,0 +1,11 @@
+{
+  "id": "TA-R505-review-499-505",
+  "pathSegment": "TA-PATH-505-MARANAM505",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TA-EXT-505-MARANAM505",
+      "order": 5
+    }
+  ]
+}

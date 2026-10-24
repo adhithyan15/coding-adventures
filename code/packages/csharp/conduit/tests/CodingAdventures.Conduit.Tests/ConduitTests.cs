@@ -162,6 +162,38 @@ public sealed class ApplicationUnitTests
         Assert.Same(app, result);
     }
 
+    // Disposing an Application must release each registered GCHandle exactly
+    // once (Rust's CtxFree does it). The old Dispose freed them a second time,
+    // which .NET does not detect: the slot went back to the handle table twice,
+    // so the next two GCHandle.Alloc calls returned the *same* handle and a
+    // trampoline could dispatch to the wrong delegate (the intermittent wrong
+    // statuses and "Test host process crashed" this suite used to show).
+    [Fact]
+    public void Dispose_ReleasesEachHandlerHandleExactlyOnce()
+    {
+        for (var i = 0; i < 8; i++)
+        {
+            using (var app = new Application())
+            {
+                app.Get("/", req => Response.Text("ok"));
+            }
+
+            var a = System.Runtime.InteropServices.GCHandle.Alloc(new object());
+            var b = System.Runtime.InteropServices.GCHandle.Alloc(new object());
+            try
+            {
+                Assert.NotEqual(
+                    System.Runtime.InteropServices.GCHandle.ToIntPtr(a),
+                    System.Runtime.InteropServices.GCHandle.ToIntPtr(b));
+            }
+            finally
+            {
+                a.Free();
+                b.Free();
+            }
+        }
+    }
+
     [Fact]
     public void MultipleSet_LastValueWins()
     {
@@ -319,24 +351,21 @@ public sealed class ServerFixture : IDisposable
         BaseUrl = $"http://127.0.0.1:{_server.LocalPort}";
         Http    = new HttpClient { BaseAddress = new Uri(BaseUrl) };
 
-        // Wait for conduit-capi's Tokio accept-loop to be live.
+        // Wait for conduit-capi's background accept loop to be live.
         //
-        // conduit-capi uses a Tokio async runtime (Rust) with an OS-level thread
-        // pool. `IsRunning` is set by the .NET side as soon as
-        // conduit_server_serve_background returns, but the Tokio accept-loop and
-        // worker threads initialise in parallel. Polling until IsRunning ensures
-        // test requests are not sent before the accept-loop is up.
+        // `IsRunning` is set by the .NET side as soon as
+        // conduit_server_serve_background returns, but the accept loop starts
+        // on its own thread. Polling until IsRunning ensures test requests are
+        // not sent before it is up.
         //
-        // KNOWN RACE: the first managed-code call from each fresh Tokio worker
-        // thread incurs a one-time .NET thread-context setup cost. If a test is
-        // the very first caller on a given thread it can receive a wrong HTTP
-        // status before that setup completes. This manifests as intermittent
-        // failures (≈ 40% of cold back-to-back runs) in BeforeFilter,
-        // Post_EchoReflectsBody, and similar tests. The root cause is inside
-        // conduit-capi; no .NET-side warmup probe reliably eliminates it without
-        // introducing worse races (Rust panics, partial test runs). In CI the
-        // test suite runs once with a cold-start Tokio, which has a lower failure
-        // rate than hot-loop re-runs on the same binary.
+        // These suites used to fail intermittently (wrong HTTP statuses in
+        // BeforeFilter, Post_EchoReflectsBody and similar, and occasionally a
+        // crashed test host). That was not a cold-start cost: Application.
+        // Dispose freed every GCHandle a second time after Rust's CtxFree had
+        // freed it, so later registrations could share a handle slot and a
+        // trampoline dispatched to another test's delegate (fixed; see
+        // Dispose_ReleasesEachHandlerHandleExactlyOnce). The readiness wait
+        // below only ensures the background server is accepting.
         var rdy = DateTime.UtcNow.AddSeconds(5);
         while (!_server.IsRunning && DateTime.UtcNow < rdy)
             System.Threading.Thread.Sleep(2);

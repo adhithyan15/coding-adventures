@@ -1,0 +1,11 @@
+{
+  "id": "TA-C462-cankatam",
+  "pathSegment": "TA-PATH-462-VETKAM462",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-462-VETKAM462",
+      "order": 1
+    }
+  ]
+}

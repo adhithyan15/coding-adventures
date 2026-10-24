@@ -1,0 +1,870 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 354,
+  "title": "What Matters Most",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:8aa1c68cba174e62",
+  "lessons": [
+    {
+      "id": "TA-C354-mukkiyattuvam",
+      "sequence": 20450,
+      "title": "முக்கியத்துவம் (mukkiyattuvam) — importance",
+      "headword": "முக்கியத்துவம்",
+      "romanization": "mukkiyattuvam",
+      "gloss": "importance",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da2a5073c249f6ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an evil, then the Tamil for a benefit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முக்கியத்துவம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முக்கியத்துவம் — mukkiyattuvam — \"importance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கல்விக்கு அதிக முக்கியத்துவம் கொடுக்க வேண்டும். kalvikku atika mukkiyattuvam koṭukka vēṇṭum. We must give more importance to education."
+            },
+            {
+              "kind": "speech",
+              "text": "X-க்கு முக்கியத்துவம் (mukkiyattuvam) கொடு, to give importance to X. The adjective is முக்கியமான."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முக்கியத்துவம் (mukkiyattuvam) is built on Sanskrit mukhya, \"chief, principal\" (CDIAL 10174), the source of முக்கியமான, with the Sanskrit abstract suffix -tva, \"-ness\", which Tamil writes -த்துவம்."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukkiyattuvam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukkiyattuvam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukkiyattuvam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukkiyattuvam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalvikku atika mukkiyattuvam koṭukka vēṇṭum. — We must give more importance to education.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalvikku atika mukkiyattuvam koṭukka vēṇṭum.* — We must give more importance to education.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an evil, then the Tamil for a benefit, then say mukkiyattuvam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an evil, then the Tamil for a benefit, then say *mukkiyattuvam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முக்கியத்துவம் (mukkiyattuvam) mean? (\"Importance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C354-munnurimai",
+      "sequence": 20460,
+      "title": "முன்னுரிமை (muṉṉurimai) — a priority",
+      "headword": "முன்னுரிமை",
+      "romanization": "muṉṉurimai",
+      "gloss": "a priority",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77aff402c6bb4433",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a benefit, then the Tamil for importance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முன்னுரிமை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்னுரிமை — muṉṉurimai — \"a priority\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நோயாளிகளுக்கு முன்னுரிமை கொடுக்கப்படும். nōyāḷikaḷukku muṉṉurimai koṭukkappaṭum. Patients will be given priority."
+            },
+            {
+              "kind": "speech",
+              "text": "X-க்கு முன்னுரிமை (muṉṉurimai) கொடு, to give X priority."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்னுரிமை (muṉṉurimai) is native: muṉ, \"in front, before\" (DEDR 5020), and urimai, \"a right, a claim\" (DEDR 654): the right to go first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉṉurimai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉṉurimai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉṉurimai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉṉurimai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nōyāḷikaḷukku muṉṉurimai koṭukkappaṭum. — Patients will be given priority.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nōyāḷikaḷukku muṉṉurimai koṭukkappaṭum.* — Patients will be given priority.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a benefit, then the Tamil for importance, then say muṉṉurimai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a benefit, then the Tamil for importance, then say *muṉṉurimai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முன்னுரிமை (muṉṉurimai) mean? (\"A priority\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C354-amcam",
+      "sequence": 20470,
+      "title": "அம்சம் (amcam) — an aspect; a feature",
+      "headword": "அம்சம்",
+      "romanization": "amcam",
+      "gloss": "an aspect; a feature",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd60b15cbd2c641e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for importance, then the Tamil for a priority."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அம்சம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அம்சம் — amcam — \"an aspect; a feature\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தத் திட்டத்தின் முக்கியமான அம்சம் இதுதான். intat tiṭṭattiṉ mukkiyamāṉa amcam itutāṉ. This is the main feature of the plan."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: அம்சங்கள், amcaṅkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural அம்சங்கள்: பல அம்சங்கள், many aspects."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அம்சம் (amcam) is borrowed from Sanskrit aṃśa, \"share, part\" (CDIAL 2): one part of a whole, so one aspect of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amcam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amcam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amcam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amcam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intat tiṭṭattiṉ mukkiyamāṉa amcam itutāṉ. — This is the main feature of the plan.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intat tiṭṭattiṉ mukkiyamāṉa amcam itutāṉ.* — This is the main feature of the plan.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for importance, then the Tamil for a priority, then say amcam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for importance, then the Tamil for a priority, then say *amcam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அம்சம் (amcam) mean? (\"An aspect; a feature\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C354-tevai",
+      "sequence": 20480,
+      "title": "தேவை (tēvai) — a need; a requirement",
+      "headword": "தேவை",
+      "romanization": "tēvai",
+      "gloss": "a need; a requirement",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8d40c94c3caf69e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a priority, then the Tamil for an aspect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தேவை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தேவை — tēvai — \"a need; a requirement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மக்களின் தேவைகளை அரசு கவனிக்க வேண்டும். makkaḷiṉ tēvaikaḷai aracu kavaṉikka vēṇṭum. The government must attend to the needs of the people."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: தேவைகள், tēvaikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "எனக்கு ஒரு புத்தகம் தேவை (tēvai), I need a book: the person in the dative. தேவையில்லை, there is no need."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தேவை (tēvai) is native Dravidian: DEDR 3469 lists Tamil tēvai, \"affairs; compelling need, necessity\", with Malayalam tēva, \"need\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēvai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēvai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēvai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēvai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makkaḷiṉ tēvaikaḷai aracu kavaṉikka vēṇṭum. — The government must attend to the needs of the people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makkaḷiṉ tēvaikaḷai aracu kavaṉikka vēṇṭum.* — The government must attend to the needs of the people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a priority, then the Tamil for an aspect, then say tēvai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a priority, then the Tamil for an aspect, then say *tēvai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தேவை (tēvai) mean? (\"A need; a requirement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C354-valiyuruttu",
+      "sequence": 20490,
+      "title": "வலியுறுத்து (valiyuṟuttu) — to stress; to insist on",
+      "headword": "வலியுறுத்து",
+      "romanization": "valiyuṟuttu",
+      "gloss": "to stress; to insist on",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b1f237f50e8624b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an aspect, then the Tamil for a need."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வலியுறுத்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வலியுறுத்து — valiyuṟuttu — \"to stress; to insist on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மருத்துவர் ஓய்வின் முக்கியத்துவத்தை வலியுறுத்தினார். maruttuvar ōyviṉ mukkiyattuvattai valiyuṟuttiṉār. The doctor stressed the importance of rest."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): வலியுறுத்தினேன், valiyuṟuttiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is stressed takes -ஐ: X-ஐ வலியுறுத்து (valiyuṟuttu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வலியுறுத்து (valiyuṟuttu) is native: vali, \"strength, force\" (DEDR 5276), and uṟuttu, \"to impress strongly upon the mind\" (DEDR 712): to press a point with force."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valiyuṟuttu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valiyuṟuttu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valiyuṟuttu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valiyuṟuttu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maruttuvar ōyviṉ mukkiyattuvattai valiyuṟuttiṉār. — The doctor stressed the importance of rest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maruttuvar ōyviṉ mukkiyattuvattai valiyuṟuttiṉār.* — The doctor stressed the importance of rest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an aspect, then the Tamil for a need, then say valiyuṟuttu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an aspect, then the Tamil for a need, then say *valiyuṟuttu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வலியுறுத்து (valiyuṟuttu) mean? (\"To stress; to insist on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R354-review-347-354",
+      "sequence": 20500,
+      "title": "Looking back: reasons and arguments",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Evidence and Logic to What Matters Most",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1684eab73b520ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Tamil for evidence and to prove."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "evidence, to prove, logic, a basis, an explanation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: evidence, to prove, logic, a basis, an explanation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to oppose, to object, to argue, a consensus, some people",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to oppose, to object, to argue, a consensus, some people]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to think deeply, to guess, to assume, a hypothesis, many people",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to think deeply, to guess, to assume, a hypothesis, many people]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a point of view, a stand, an attitude, an angle, to express",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a point of view, a stand, an attitude, an angle, to express]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to mention, to indicate, to expound, that is to say, an example",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to mention, to indicate, to expound, that is to say, an example]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cause, an impact, a factor, to lead to, to affect",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cause, an impact, a factor, to lead to, to affect]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an advantage, a drawback, goodness, an evil, a benefit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an advantage, a drawback, goodness, an evil, a benefit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "importance, a priority, an aspect, a need, to stress",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: importance, a priority, an aspect, a need, to stress]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Evidence? (ஆதாரம், ātāram.) To prove? (நிரூபி, nirūpi.) Logic? (தர்க்கம், tarkkam.) A basis? (அடிப்படை, aṭippaṭai.) An explanation? (விளக்கம், viḷakkam.) To oppose? (எதிர், etir.) To object? (ஆட்சேபி, āṭcēpi.) To argue? (வாதிடு, vātiṭu.) A consensus? (உடன்பாடு, uṭaṉpāṭu.) Some people? (சிலர், cilar.) To think deeply? (சிந்தி, cinti.) To guess? (ஊகி, ūki.) To assume? (அனுமானி, aṉumāṉi.) A hypothesis? (கருதுகோள், karutukōḷ.) Many people? (பலர், palar.) A point of view? (கண்ணோட்டம், kaṇṇōṭṭam.) A stand? (நிலைப்பாடு, nilaippāṭu.) An attitude? (மனப்பான்மை, maṉappāṉmai.) An angle? (கோணம், kōṇam.) To express? (வெளிப்படுத்து, veḷippaṭuttu.) To mention? (குறிப்பிடு, kuṟippiṭu.) To indicate? (சுட்டிக்காட்டு, cuṭṭikkāṭṭu.) To expound? (எடுத்துரை, eṭutturai.) That is to say? (அதாவது, atāvatu.) An example? (எடுத்துக்காட்டு, eṭuttukkāṭṭu.) To cause? (ஏற்படுத்து, ēṟpaṭuttu.) An impact? (தாக்கம், tākkam.) A factor? (காரணி, kāraṇi.) To lead to? (வழிவகு, vaḻivaku.) To affect? (பாதி, pāti.) An advantage? (சாதகம், cātakam.) A drawback? (பாதகம், pātakam.) Goodness? (நன்மை, naṉmai.) An evil? (தீமை, tīmai.) A benefit? (பலன், palaṉ.) Importance? (முக்கியத்துவம், mukkiyattuvam.) A priority? (முன்னுரிமை, muṉṉurimai.) An aspect? (அம்சம், amcam.) A need? (தேவை, tēvai.) To stress? (வலியுறுத்து, valiyuṟuttu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

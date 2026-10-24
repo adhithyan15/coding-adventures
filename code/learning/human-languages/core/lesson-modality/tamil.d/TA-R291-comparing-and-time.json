@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R291-comparing-and-time",
+    "language": "tamil",
+    "chapter": 291,
+    "sequence": 16400,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:21be8ca1c18b8170"
+  },
+  "findings": []
+}

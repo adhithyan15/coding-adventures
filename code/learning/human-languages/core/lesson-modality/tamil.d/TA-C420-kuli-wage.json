@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C420-kuli-wage",
+    "language": "tamil",
+    "chapter": 420,
+    "sequence": 24150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f928a9dc9b484a9e"
+  },
+  "findings": []
+}

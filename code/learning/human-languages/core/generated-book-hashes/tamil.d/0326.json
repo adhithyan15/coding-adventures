@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:382072260c6f65df",
+  "lessonIds": [
+    "TA-C326-varalaru",
+    "TA-C326-katanta-kalam",
+    "TA-C326-palankalam",
+    "TA-C326-kalakattam",
+    "TA-C326-tacaptam"
+  ],
+  "tex": "tamil/book/chapters/ch326-the-past.tex"
+}

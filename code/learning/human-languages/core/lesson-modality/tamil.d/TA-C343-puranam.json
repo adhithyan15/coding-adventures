@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C343-puranam",
+    "language": "tamil",
+    "chapter": 343,
+    "sequence": 19620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27237fb40d63ccbb"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:387a8e484a636b2e",
+  "lessonIds": [
+    "TA-C382-nipantanai",
+    "TA-C382-utpatu",
+    "TA-C382-takuti",
+    "TA-C382-vitivilakku",
+    "TA-C382-ventumanal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch382.txt",
+  "json": "tamil/narration/ch382.json",
+  "textHash": "fnv1a64:7f5be34f7de53cf5",
+  "jsonHash": "fnv1a64:d00de6065098bfc5",
+  "findings": []
+}

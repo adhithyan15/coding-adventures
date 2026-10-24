@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "Diet and Strength",
+  "label": "ch:ka-diet-and-strength",
+  "canDo": "I can say a diet, a vitamin, to waste away, to get tired and lifespan.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C514-ayusya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can say a diet, a vitamin, to waste away, to get tired and lifespan.",
+    "assesses": [
+      "KA-LEX-C514-PATHYA514-03",
+      "KA-LEX-C514-PATHYA514-04",
+      "KA-LEX-C514-PATHYA514-05"
+    ]
+  }
+}

@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 445,
+  "title": "Parking and Turning",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ae6737422f1b043b",
+  "lessons": [
+    {
+      "id": "KA-C445-park-madu",
+      "sequence": 22610,
+      "title": "ಪಾರ್ಕ್ ಮಾಡು (pārk māḍu) — to park a vehicle; to park",
+      "headword": "ಪಾರ್ಕ್ ಮಾಡು",
+      "romanization": "pārk māḍu",
+      "gloss": "to park a vehicle; to park",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:356d30462c191dd9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to ban, then the Kannada for one-way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪಾರ್ಕ್ ಮಾಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಾರ್ಕ್ ಮಾಡು — pārk māḍu — \"to park a vehicle; to park\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಕಾರನ್ನು ಅಂಗಡಿಯ ಎದುರು ಪಾರ್ಕ್ ಮಾಡಿದೆ. nānu kārannu aṅgaḍiya eduru pārk māḍide. I parked the car opposite the shop."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಪಾರ್ಕ್ ಮಾಡಿದೆ, pārk māḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "The vehicle takes -ಅನ್ನು; ಪಾರ್ಕಿಂಗ್ is a parking place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಾರ್ಕ್ ಮಾಡು (pārk māḍu) joins a loan from English park and the native verb ಮಾಡು, to do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pārk māḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pārk māḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pārk māḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pārk māḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānu kārannu aṅgaḍiya eduru pārk māḍide. — I parked the car opposite the shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānu kārannu aṅgaḍiya eduru pārk māḍide.* — I parked the car opposite the shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to ban, then the Kannada for one-way, then say pārk māḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to ban, then the Kannada for one-way, then say *pārk māḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪಾರ್ಕ್ ಮಾಡು (pārk māḍu) mean? (\"To park a vehicle; to park\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C445-tirugu",
+      "sequence": 22620,
+      "title": "ತಿರುಗು (tirugu) — to turn round; to go round",
+      "headword": "ತಿರುಗು",
+      "romanization": "tirugu",
+      "gloss": "to turn round; to go round",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b29ea7df2eb2a7e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for one-way, then the Kannada for to park a vehicle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತಿರುಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಿರುಗು — tirugu — \"to turn round; to go round\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮುಂದಿನ ವೃತ್ತದಲ್ಲಿ ಬಸ್ ಎಡಕ್ಕೆ ತಿರುಗುತ್ತದೆ. mundina vṛttadalli bas eḍakke tiruguttade. At the next circle the bus turns left."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ತಿರುಗಿದೆ, tirugide."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಿಂತಿರುಗು, to come back, is ಹಿಂ-, back, plus this verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಿರುಗು (tirugu) is native Dravidian: DEDR 3246 lists Kannada tirigu, tirugu, \"to go round, to turn, to roll, to go back\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tirugu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tirugu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tirugu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tirugu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mundina vṛttadalli bas eḍakke tiruguttade. — At the next circle the bus turns left.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mundina vṛttadalli bas eḍakke tiruguttade.* — At the next circle the bus turns left.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for one-way, then the Kannada for to park a vehicle, then say tirugu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for one-way, then the Kannada for to park a vehicle, then say *tirugu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತಿರುಗು (tirugu) mean? (\"To turn round; to go round\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C445-alugadu",
+      "sequence": 22630,
+      "title": "ಅಲುಗಾಡು (alugāḍu) — to wobble; to shake",
+      "headword": "ಅಲುಗಾಡು",
+      "romanization": "alugāḍu",
+      "gloss": "to wobble; to shake",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38b078ef6687696c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to park a vehicle, then the Kannada for to turn round."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಲುಗಾಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಲುಗಾಡು — alugāḍu — \"to wobble; to shake\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಳೆಯ ಬಸ್ ಕಲ್ಲಿನ ರಸ್ತೆಯಲ್ಲಿ ಅಲುಗಾಡುತ್ತಿತ್ತು. haḷeya bas kallina rasteyalli alugāḍuttittu. The old bus was rattling along the stony road."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಅಲುಗಾಡಿತು, alugāḍitu."
+            },
+            {
+              "kind": "speech",
+              "text": "It shakes by itself; ಅಲ್ಲಾಡಿಸು is to shake something."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಲುಗಾಡು (alugāḍu) is native Dravidian: DEDR 240 lists Kannada alaku, alugu, \"to move about, to shake, to tremble\", here with ಆಡು."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alugāḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alugāḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alugāḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alugāḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haḷeya bas kallina rasteyalli alugāḍuttittu. — The old bus was rattling along the stony road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haḷeya bas kallina rasteyalli alugāḍuttittu.* — The old bus was rattling along the stony road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to park a vehicle, then the Kannada for to turn round, then say alugāḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to park a vehicle, then the Kannada for to turn round, then say *alugāḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಲುಗಾಡು (alugāḍu) mean? (\"To wobble; to shake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C445-calisu",
+      "sequence": 22640,
+      "title": "ಚಲಿಸು (calisu) — to move; to be in motion",
+      "headword": "ಚಲಿಸು",
+      "romanization": "calisu",
+      "gloss": "to move; to be in motion",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84b5782bca77abd5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to turn round, then the Kannada for to wobble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಚಲಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚಲಿಸು — calisu — \"to move; to be in motion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ರೈಲು ನಿಧಾನವಾಗಿ ಚಲಿಸಲು ಶುರು ಮಾಡಿತು. railu nidhānavāgi calisalu śuru māḍitu. The train slowly began to move."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಚಲಿಸಿತು, calisitu."
+            },
+            {
+              "kind": "speech",
+              "text": "ಚಲಿಸುವ ಮೆಟ್ಟಿಲು, moving stairs, is an escalator."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚಲಿಸು (calisu) is built from the Sanskrit root cal, \"to move, to stir\" (CDIAL 4715, calati), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "calisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *calisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "calisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *calisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "railu nidhānavāgi calisalu śuru māḍitu. — The train slowly began to move.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *railu nidhānavāgi calisalu śuru māḍitu.* — The train slowly began to move.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to turn round, then the Kannada for to wobble, then say calisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to turn round, then the Kannada for to wobble, then say *calisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಚಲಿಸು (calisu) mean? (\"To move; to be in motion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C445-samipisu",
+      "sequence": 22650,
+      "title": "ಸಮೀಪಿಸು (samīpisu) — to approach; to draw near",
+      "headword": "ಸಮೀಪಿಸು",
+      "romanization": "samīpisu",
+      "gloss": "to approach; to draw near",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7ac0b0600cffd0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to wobble, then the Kannada for to move."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಮೀಪಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮೀಪಿಸು — samīpisu — \"to approach; to draw near\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಿಮಾನ ನಗರವನ್ನು ಸಮೀಪಿಸಿತು. vimāna nagaravannu samīpisitu. The plane drew near the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಸಮೀಪಿಸಿದೆ, samīpiside."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಮೀಪ means near: ಸಮೀಪದಲ್ಲಿ, nearby."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮೀಪಿಸು (samīpisu) is built from Sanskrit samīpa, \"near\" (CDIAL 13226), with the verb ending -isu: to come near."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samīpisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samīpisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samīpisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samīpisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vimāna nagaravannu samīpisitu. — The plane drew near the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vimāna nagaravannu samīpisitu.* — The plane drew near the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to wobble, then the Kannada for to move, then say samīpisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to wobble, then the Kannada for to move, then say *samīpisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಮೀಪಿಸು (samīpisu) mean? (\"To approach; to draw near\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

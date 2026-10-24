@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C541-huridumbisu",
+    "language": "kannada",
+    "chapter": 541,
+    "sequence": 27660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b673583bdad094c"
+  },
+  "findings": []
+}

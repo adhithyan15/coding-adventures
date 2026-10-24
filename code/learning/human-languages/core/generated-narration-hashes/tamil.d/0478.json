@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:51a2e905d16026b9",
+  "lessonIds": [
+    "TA-C478-uruppu",
+    "TA-C478-nuraiyiral",
+    "TA-C478-kalliral",
+    "TA-C478-cirunirakam",
+    "TA-C478-kutal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch478.txt",
+  "json": "tamil/narration/ch478.json",
+  "textHash": "fnv1a64:9a86d0ec488506b3",
+  "jsonHash": "fnv1a64:8cbf21741ab2d23f",
+  "findings": []
+}

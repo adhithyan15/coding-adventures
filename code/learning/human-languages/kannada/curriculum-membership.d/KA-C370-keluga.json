@@ -1,0 +1,11 @@
+{
+  "id": "KA-C370-keluga",
+  "pathSegment": "KA-PATH-370-PATRIKODYAMA370",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-370-PATRIKODYAMA370",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 541,
+  "title": "Insurance and Risk",
+  "label": "ch:ta-insurance-and-risk",
+  "canDo": "I can talk about insurance and what happens if things go wrong.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C541-pinai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 541: I can talk about insurance and what happens if things go wrong.",
+    "assesses": [
+      "TA-LEX-C541-KAPPEEDU541-03",
+      "TA-LEX-C541-KAPPEEDU541-04",
+      "TA-LEX-C541-KAPPEEDU541-05"
+    ]
+  }
+}

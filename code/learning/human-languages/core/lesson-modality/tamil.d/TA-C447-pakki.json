@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C447-pakki",
+    "language": "tamil",
+    "chapter": 447,
+    "sequence": 25530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1dc88b0cda70473b"
+  },
+  "findings": []
+}

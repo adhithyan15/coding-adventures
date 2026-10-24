@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:7df9f0e059bd87aa",
+  "lessonIds": [
+    "TA-C374-tertal",
+    "TA-C374-vetpalar",
+    "TA-C374-vakkali",
+    "TA-C374-tokuti",
+    "TA-C374-piraccaram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch374.txt",
+  "json": "tamil/narration/ch374.json",
+  "textHash": "fnv1a64:d608e2776cf383d3",
+  "jsonHash": "fnv1a64:96886168f8c2b849",
+  "findings": []
+}

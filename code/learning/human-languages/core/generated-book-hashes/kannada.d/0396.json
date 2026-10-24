@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:7829237a27ec603f",
+  "lessonIds": [
+    "KA-C396-masude",
+    "KA-C396-angikarisu",
+    "KA-C396-tiddupadi",
+    "KA-C396-sasaka",
+    "KA-C396-anumodisu"
+  ],
+  "tex": "kannada/book/chapters/ch396-making-laws.tex"
+}

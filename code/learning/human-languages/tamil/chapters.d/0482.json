@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "Sprains and Breaks",
+  "label": "ch:ta-sprains-and-breaks",
+  "canDo": "I can talk about sprains, dislocations, getting hurt and broken bones.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C482-kaci",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can talk about sprains, dislocations, getting hurt and broken bones.",
+    "assesses": [
+      "TA-LEX-C482-KAYAM482-03",
+      "TA-LEX-C482-KAYAM482-04",
+      "TA-LEX-C482-KAYAM482-05"
+    ]
+  }
+}

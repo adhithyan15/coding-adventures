@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C521-ottatai",
+    "language": "tamil",
+    "chapter": 521,
+    "sequence": 29880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef36e19a62865557"
+  },
+  "findings": []
+}

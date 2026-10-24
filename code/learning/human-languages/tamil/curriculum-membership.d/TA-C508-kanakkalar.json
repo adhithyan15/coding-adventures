@@ -1,0 +1,11 @@
+{
+  "id": "TA-C508-kanakkalar",
+  "pathSegment": "TA-PATH-508-OOTHIYAM508",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-508-OOTHIYAM508",
+      "order": 3
+    }
+  ]
+}

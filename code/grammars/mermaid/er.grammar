@@ -13,8 +13,9 @@ class_suffix = STYLE_SEPARATOR id_list ;
 attribute_block = LBRACE { NEWLINE } { attribute { NEWLINE } } RBRACE ;
 attribute = attribute_type attribute_name [ key_list ] [ STRING ] ;
 attribute_type = attribute_atom [ LBRACKET RBRACKET ] [ QUESTION ] ;
-attribute_name = attribute_atom ;
-attribute_atom = entity_name | ESCAPED_ATTRIBUTE ;
+attribute_name = attribute_atom { LBRACKET attribute_atom RBRACKET } [ ATTRIBUTE_SUFFIX ] ;
+attribute_atom = entity_name | attribute_keyword | ESCAPED_ATTRIBUTE | COMMA_ATTRIBUTE_TYPE ;
+attribute_keyword = TITLE_KW | DIRECTION_KW | CLASSDEF_KW | CLASS_KW | STYLE_KW ;
 key_list = ATTRIBUTE_KEY { COMMA ATTRIBUTE_KEY } ;
 
 cardinality = ZERO_OR_ONE | ZERO_OR_MORE | ONE_OR_MORE | ONLY_ONE | MD_PARENT ;

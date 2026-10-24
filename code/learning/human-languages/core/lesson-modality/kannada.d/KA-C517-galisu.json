@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C517-galisu",
+    "language": "kannada",
+    "chapter": 517,
+    "sequence": 26420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf742d95f3825b55"
+  },
+  "findings": []
+}

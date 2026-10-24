@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "Trends and Challenges",
+  "label": "ch:ta-trends-and-challenges",
+  "canDo": "I can talk about trends, challenges and achievements.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C398-vivakaram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can talk about trends, challenges and achievements.",
+    "assesses": [
+      "TA-LEX-C398-POKKU398-03",
+      "TA-LEX-C398-POKKU398-04",
+      "TA-LEX-C398-POKKU398-05"
+    ]
+  }
+}

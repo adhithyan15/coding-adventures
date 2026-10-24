@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-433-RAIL433",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a passenger, a railway platform, a railway coach, a rail track and to reach.",
+  "prerequisites": []
+}

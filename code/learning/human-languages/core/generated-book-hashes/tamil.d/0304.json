@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:1c233dae889a5b02",
+  "lessonIds": [
+    "TA-C304-pataru",
+    "TA-C304-pitunku",
+    "TA-C304-takar",
+    "TA-C304-ulukku",
+    "TA-C304-citai"
+  ],
+  "tex": "tamil/book/chapters/ch304-shaken-and-shattered.tex"
+}

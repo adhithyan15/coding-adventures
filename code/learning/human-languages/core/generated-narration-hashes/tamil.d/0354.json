@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:8aa1c68cba174e62",
+  "lessonIds": [
+    "TA-C354-mukkiyattuvam",
+    "TA-C354-munnurimai",
+    "TA-C354-amcam",
+    "TA-C354-tevai",
+    "TA-C354-valiyuruttu",
+    "TA-R354-review-347-354"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch354.txt",
+  "json": "tamil/narration/ch354.json",
+  "textHash": "fnv1a64:88e8dcb3044b5150",
+  "jsonHash": "fnv1a64:0402e215ad7a0943",
+  "findings": []
+}

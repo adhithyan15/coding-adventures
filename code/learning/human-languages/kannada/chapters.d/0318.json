@@ -1,0 +1,20 @@
+{
+  "chapter": 318,
+  "title": "It Depends, and What Would Have Been",
+  "label": "ch:ka-it-depends-and-what-would-have-been",
+  "canDo": "I can say what something depends on with … mēle avalambiside, say what would have happened with -iddare … -uttidde, and write six connected lines about a trip.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-R318-depends-and-would",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: say what something depends on and what would have been, after writing six connected lines about a trip.",
+    "assesses": [
+      "KA-LEX-C318-AVALAMBISU-01",
+      "KA-GRAMMAR-C318-DEPENDS-01",
+      "KA-GRAMMAR-C318-UNREAL-IF-01",
+      "KA-GRAMMAR-C318-WOULD-01"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C318-iddiddare",
+    "language": "kannada",
+    "chapter": 318,
+    "sequence": 15380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1545268c4577008b"
+  },
+  "findings": []
+}

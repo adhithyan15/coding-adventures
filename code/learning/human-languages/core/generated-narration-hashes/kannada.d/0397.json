@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:d28c24e19ce1583f",
+  "lessonIds": [
+    "KA-C397-nagarika",
+    "KA-C397-pauratva",
+    "KA-C397-sarvajanika",
+    "KA-C397-samudaya",
+    "KA-C397-oggudu",
+    "KA-R397-review-391-397"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch397.txt",
+  "json": "kannada/narration/ch397.json",
+  "textHash": "fnv1a64:b0d16876d4eb5812",
+  "jsonHash": "fnv1a64:10bae47439c3baf9",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C493-hiyalisu",
+  "pathSegment": "KA-PATH-493-KOPA493",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-493-KOPA493",
+      "order": 2
+    }
+  ]
+}

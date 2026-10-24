@@ -1,0 +1,11 @@
+{
+  "id": "TA-C510-poruttu",
+  "pathSegment": "TA-PATH-510-THOZHIRSALAI510",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-510-THOZHIRSALAI510",
+      "order": 1
+    }
+  ]
+}

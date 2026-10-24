@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:fece5642046aa1a6",
+  "lessonIds": [
+    "KA-C363-mussanje",
+    "KA-C363-mudu",
+    "KA-C363-molagu",
+    "KA-C363-horahommu",
+    "KA-C363-gocarisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch363.txt",
+  "json": "kannada/narration/ch363.json",
+  "textHash": "fnv1a64:df6568ad35bd7b47",
+  "jsonHash": "fnv1a64:0898e3023892d2d4",
+  "findings": []
+}

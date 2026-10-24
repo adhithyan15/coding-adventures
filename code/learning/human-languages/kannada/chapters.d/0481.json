@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Along the Coast",
+  "label": "ch:ka-along-the-coast",
+  "canDo": "I can say a coastline, a bay, coral, a shell and an estuary.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C481-nadimukha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can say a coastline, a bay, coral, a shell and an estuary.",
+    "assesses": [
+      "KA-LEX-C481-KARAVALI481-03",
+      "KA-LEX-C481-KARAVALI481-04",
+      "KA-LEX-C481-KARAVALI481-05"
+    ]
+  }
+}

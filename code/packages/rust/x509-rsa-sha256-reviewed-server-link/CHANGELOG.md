@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.7.0 - 2026-10-23
+
+### Added
+
+- Applied supported critical excluded dNSName constraints from the exact
+  retained intermediate, with exclusion taking precedence over permission and
+  broader target wildcards rejected when any expansion overlaps an exclusion.
+- Migrated direct, two-link anchor, and intermediate consumers to generalized
+  DNS-constraint evidence so decoded exclusions cannot be silently ignored.
+- Added exact-consumer coverage for combined permitted and excluded subtrees;
+  reviewed-root snapshot constraints remain permitted-only reviewed input.
+
+## 0.6.0 - 2026-10-23
+
+### Added
+
+- Applied an exact retained intermediate's critical NameConstraints extension
+  to every dNSName in the exact target retained by the reviewed two-link path.
+- Added distinct non-copyable evidence retaining the complete root anchor-policy
+  proof plus optional payload-free intermediate DNS count evidence.
+- Added fail-closed criticality, full-DER framing, unsupported-form, caller-limit,
+  violation, redaction, and real unconstrained-intermediate coverage.
+
 ## 0.5.0 - 2026-10-23
 
 ### Added

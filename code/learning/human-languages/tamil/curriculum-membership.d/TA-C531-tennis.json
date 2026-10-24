@@ -1,0 +1,11 @@
+{
+  "id": "TA-C531-tennis",
+  "pathSegment": "TA-PATH-531-PANTHU531",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-531-PANTHU531",
+      "order": 3
+    }
+  ]
+}

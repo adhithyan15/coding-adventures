@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 434,
+  "title": "Meadows and Groves",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f17edab91c5ad2ba",
+  "lessons": [
+    {
+      "id": "TA-C434-pulveli",
+      "sequence": 24840,
+      "title": "புல்வெளி (pulveḷi) — a meadow; grassland",
+      "headword": "புல்வெளி",
+      "romanization": "pulveḷi",
+      "gloss": "a meadow; grassland",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c21638b9b41db4e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a glacier, then the Tamil for a plain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புல்வெளி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புல்வெளி — pulveḷi — \"a meadow; grassland\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புல்வெளியில் குழந்தைகள் ஓடி விளையாடினார்கள். pulveḷiyil kuḻantaikaḷ ōṭi viḷaiyāṭiṉārkaḷ. The children ran and played in the meadow."
+            },
+            {
+              "kind": "speech",
+              "text": "புல், grass, + வெளி, an open space."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புல்வெளி (pulveḷi) is built from புல், \"grass\" (DEDR 4300), and வெளி, \"an open space\" (DEDR 5498)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulveḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulveḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulveḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulveḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulveḷiyil kuḻantaikaḷ ōṭi viḷaiyāṭiṉārkaḷ. — The children ran and played in the meadow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulveḷiyil kuḻantaikaḷ ōṭi viḷaiyāṭiṉārkaḷ.* — The children ran and played in the meadow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a glacier, then the Tamil for a plain, then say pulveḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a glacier, then the Tamil for a plain, then say *pulveḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புல்வெளி (pulveḷi) mean? (\"A meadow; grassland\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C434-mey",
+      "sequence": 24850,
+      "title": "மேய் (mēy) — to graze",
+      "headword": "மேய்",
+      "romanization": "mēy",
+      "gloss": "to graze",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0135355b18803ae4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a plain, then the Tamil for a meadow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மேய்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மேய் — mēy — \"to graze\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புல்வெளியில் பசுக்கள் மேய்ந்தன. pulveḷiyil pacukkaḷ mēyntaṉa. Cows grazed in the meadow."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): மேய்ந்தது, mēyntatu."
+            },
+            {
+              "kind": "speech",
+              "text": "To take animals out to graze is மேய் (mēy) too: ஆடு மேய் (mēy), to herd goats."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மேய் (mēy) is native Dravidian (DEDR 5093), \"to graze, to feed\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulveḷiyil pacukkaḷ mēyntaṉa. — Cows grazed in the meadow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulveḷiyil pacukkaḷ mēyntaṉa.* — Cows grazed in the meadow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a plain, then the Tamil for a meadow, then say mēy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a plain, then the Tamil for a meadow, then say *mēy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மேய் (mēy) mean? (\"To graze\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C434-toppu",
+      "sequence": 24860,
+      "title": "தோப்பு (tōppu) — a grove; an orchard",
+      "headword": "தோப்பு",
+      "romanization": "tōppu",
+      "gloss": "a grove; an orchard",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2dd10f6d1dd93365",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a meadow, then the Tamil for to graze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தோப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தோப்பு — tōppu — \"a grove; an orchard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தோப்பில் நிறைய மாமரங்கள் இருக்கின்றன. tōppil niṟaiya māmaraṅkaḷ irukkiṉṟaṉa. There are many mango trees in the grove."
+            },
+            {
+              "kind": "speech",
+              "text": "தென்னந்தோப்பு is a coconut grove."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தோப்பு (tōppu) is native Dravidian (DEDR 3551), \"a clump of trees, a grove\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōppu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōppu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōppil niṟaiya māmaraṅkaḷ irukkiṉṟaṉa. — There are many mango trees in the grove.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōppil niṟaiya māmaraṅkaḷ irukkiṉṟaṉa.* — There are many mango trees in the grove.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a meadow, then the Tamil for to graze, then say tōppu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a meadow, then the Tamil for to graze, then say *tōppu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தோப்பு (tōppu) mean? (\"A grove; an orchard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C434-panai",
+      "sequence": 24870,
+      "title": "பனை (paṉai) — a palmyra palm",
+      "headword": "பனை",
+      "romanization": "paṉai",
+      "gloss": "a palmyra palm",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9b6ddfb4da585d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to graze, then the Tamil for a grove."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பனை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பனை — paṉai — \"a palmyra palm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கடற்கரையோரம் உயரமான பனைமரங்கள் நிற்கின்றன. kaṭaṟkaraiyōram uyaramāṉa paṉaimaraṅkaḷ niṟkiṉṟaṉa. Tall palmyra palms stand along the shore."
+            },
+            {
+              "kind": "speech",
+              "text": "பனைமரம் is the whole tree; பனையோலை, its leaf."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பனை (paṉai) is native Dravidian (DEDR 4037), \"the palmyra palm\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṉai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṉai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṉai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṉai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭaṟkaraiyōram uyaramāṉa paṉaimaraṅkaḷ niṟkiṉṟaṉa. — Tall palmyra palms stand along the shore.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭaṟkaraiyōram uyaramāṉa paṉaimaraṅkaḷ niṟkiṉṟaṉa.* — Tall palmyra palms stand along the shore.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to graze, then the Tamil for a grove, then say paṉai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to graze, then the Tamil for a grove, then say *paṉai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பனை (paṉai) mean? (\"A palmyra palm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C434-putar",
+      "sequence": 24880,
+      "title": "புதர் (putar) — a bush; a thicket",
+      "headword": "புதர்",
+      "romanization": "putar",
+      "gloss": "a bush; a thicket",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3bb7c46ae2f5b5ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a grove, then the Tamil for a palmyra palm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புதர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புதர் — putar — \"a bush; a thicket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புதரில் ஒரு பாம்பு மறைந்திருந்தது. putaril oru pāmpu maṟaintiruntatu. A snake was hiding in the bush."
+            },
+            {
+              "kind": "speech",
+              "text": "The plural is புதர்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புதர் (putar) is native Dravidian (DEDR 4509), \"a bush, low jungle\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putaril oru pāmpu maṟaintiruntatu. — A snake was hiding in the bush.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putaril oru pāmpu maṟaintiruntatu.* — A snake was hiding in the bush.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a grove, then the Tamil for a palmyra palm, then say putar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a grove, then the Tamil for a palmyra palm, then say *putar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புதர் (putar) mean? (\"A bush; a thicket\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

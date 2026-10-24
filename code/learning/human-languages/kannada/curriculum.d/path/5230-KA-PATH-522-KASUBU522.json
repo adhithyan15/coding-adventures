@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-522-KASUBU522",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-522-KASUBU522"
+  ],
+  "after": []
+}

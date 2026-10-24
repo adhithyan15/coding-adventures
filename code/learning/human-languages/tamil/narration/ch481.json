@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 481,
+  "title": "Legs and Stumbling",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ec17b1bd0afecd0a",
+  "lessons": [
+    {
+      "id": "TA-C481-totai",
+      "sequence": 27530,
+      "title": "தொடை (toṭai) — a thigh",
+      "headword": "தொடை",
+      "romanization": "toṭai",
+      "gloss": "a thigh",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de39768c432f3e11",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an eyelid, then the Tamil for to blink."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தொடை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொடை — toṭai — \"a thigh\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஓடும்போது என் தொடையில் வலி வந்தது. ōṭumpōtu eṉ toṭaiyil vali vantatu. While running I got a pain in my thigh."
+            },
+            {
+              "kind": "speech",
+              "text": "தொடை (toṭai) and தொடு \"to touch\" are different words."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொடை (toṭai) is native Dravidian (DEDR 3302); the entry also gives the form துடை tuṭai."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toṭai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toṭai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōṭumpōtu eṉ toṭaiyil vali vantatu. — While running I got a pain in my thigh.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōṭumpōtu eṉ toṭaiyil vali vantatu.* — While running I got a pain in my thigh.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an eyelid, then the Tamil for to blink, then say toṭai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an eyelid, then the Tamil for to blink, then say *toṭai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தொடை (toṭai) mean? (\"A thigh\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C481-kutikal",
+      "sequence": 27540,
+      "title": "குதிகால் (kutikāl) — the heel",
+      "headword": "குதிகால்",
+      "romanization": "kutikāl",
+      "gloss": "the heel",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0cc39ccad4d2db06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to blink, then the Tamil for a thigh."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குதிகால்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குதிகால் — kutikāl — \"the heel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புதிய செருப்பு என் குதிகாலைக் கடித்தது. putiya ceruppu eṉ kutikālaik kaṭittatu. My new sandals rubbed my heel."
+            },
+            {
+              "kind": "speech",
+              "text": "குதி + கால் \"foot\": in Tamil, new shoes bite (கடி)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குதிகால் (kutikāl) is native Dravidian (DEDR 1707); Telugu has gudi-kālu for the same."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kutikāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kutikāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kutikāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kutikāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putiya ceruppu eṉ kutikālaik kaṭittatu. — My new sandals rubbed my heel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putiya ceruppu eṉ kutikālaik kaṭittatu.* — My new sandals rubbed my heel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to blink, then the Tamil for a thigh, then say kutikāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to blink, then the Tamil for a thigh, then say *kutikāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குதிகால் (kutikāl) mean? (\"The heel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C481-nontu",
+      "sequence": 27550,
+      "title": "நொண்டு (noṇṭu) — to limp",
+      "headword": "நொண்டு",
+      "romanization": "noṇṭu",
+      "gloss": "to limp",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc6c5bee6d9cafa4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a thigh, then the Tamil for the heel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நொண்டு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நொண்டு — noṇṭu — \"to limp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கால் வலியால் அவன் நொண்டி நொண்டி நடந்தான். kāl valiyāl avaṉ noṇṭi noṇṭi naṭantāṉ. Because of a pain in his leg he limped along."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): நொண்டினேன், noṇṭiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Doubled participle for a repeated action: நொண்டி நொண்டி நடந்தான்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நொண்டு (noṇṭu) is native Dravidian (DEDR 3786), from lameness or tiredness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noṇṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noṇṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noṇṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noṇṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāl valiyāl avaṉ noṇṭi noṇṭi naṭantāṉ. — Because of a pain in his leg he limped along.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāl valiyāl avaṉ noṇṭi noṇṭi naṭantāṉ.* — Because of a pain in his leg he limped along.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a thigh, then the Tamil for the heel, then say noṇṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a thigh, then the Tamil for the heel, then say *noṇṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நொண்டு (noṇṭu) mean? (\"To limp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C481-itaru",
+      "sequence": 27560,
+      "title": "இடறு (iṭaṟu) — to trip; to stumble",
+      "headword": "இடறு",
+      "romanization": "iṭaṟu",
+      "gloss": "to trip; to stumble",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5f130900f0ff960",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for the heel, then the Tamil for to limp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இடறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இடறு — iṭaṟu — \"to trip; to stumble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இருட்டில் கல்லில் இடறி விழுந்தேன். iruṭṭil kallil iṭaṟi viḻuntēṉ. I tripped over a stone in the dark and fell."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): இடறினேன், iṭaṟiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What you trip over takes -இல்: கல்லில் இடறு (iṭaṟu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இடறு (iṭaṟu) is native Dravidian (DEDR 437); as a noun it means an obstacle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭaṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭaṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭaṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭaṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iruṭṭil kallil iṭaṟi viḻuntēṉ. — I tripped over a stone in the dark and fell.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iruṭṭil kallil iṭaṟi viḻuntēṉ.* — I tripped over a stone in the dark and fell.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for the heel, then the Tamil for to limp, then say iṭaṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for the heel, then the Tamil for to limp, then say *iṭaṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இடறு (iṭaṟu) mean? (\"To trip; to stumble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C481-tatumaru",
+      "sequence": 27570,
+      "title": "தடுமாறு (taṭumāṟu) — to falter; to fumble",
+      "headword": "தடுமாறு",
+      "romanization": "taṭumāṟu",
+      "gloss": "to falter; to fumble",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06eeac27b25b1352",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to limp, then the Tamil for to trip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தடுமாறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தடுமாறு — taṭumāṟu — \"to falter; to fumble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மேடையில் பேசும்போது அவள் தடுமாறினாள். mēṭaiyil pēcumpōtu avaḷ taṭumāṟiṉāḷ. She faltered while speaking on the stage."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): தடுமாறினேன், taṭumāṟiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Of feet, of words and of memory alike."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தடுமாறு (taṭumāṟu) is native Dravidian (DEDR 3033), in an entry of words for halting and swaying."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭumāṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭumāṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭumāṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭumāṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēṭaiyil pēcumpōtu avaḷ taṭumāṟiṉāḷ. — She faltered while speaking on the stage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēṭaiyil pēcumpōtu avaḷ taṭumāṟiṉāḷ.* — She faltered while speaking on the stage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to limp, then the Tamil for to trip, then say taṭumāṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to limp, then the Tamil for to trip, then say *taṭumāṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தடுமாறு (taṭumāṟu) mean? (\"To falter; to fumble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

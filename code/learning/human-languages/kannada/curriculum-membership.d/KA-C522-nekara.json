@@ -1,0 +1,11 @@
+{
+  "id": "KA-C522-nekara",
+  "pathSegment": "KA-PATH-522-KASUBU522",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-522-KASUBU522",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 400,
+  "title": "Platforms and Tracks",
+  "label": "ch:ta-platforms-and-tracks",
+  "canDo": "I can talk about a platform, a railway track, an arrival and a trip put off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C400-maru-change",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can talk about a platform, a railway track, an arrival and a trip put off.",
+    "assesses": [
+      "TA-LEX-C400-RAYIL400-03",
+      "TA-LEX-C400-RAYIL400-04",
+      "TA-LEX-C400-RAYIL400-05"
+    ]
+  }
+}

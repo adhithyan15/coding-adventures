@@ -1,0 +1,11 @@
+{
+  "id": "KA-C333-amantrana",
+  "pathSegment": "KA-PATH-333-NERAVERU333",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-333-NERAVERU333",
+      "order": 4
+    }
+  ]
+}

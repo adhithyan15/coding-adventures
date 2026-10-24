@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C324-ninaivunal",
+    "language": "tamil",
+    "chapter": 324,
+    "sequence": 18650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4c072923a47ee05"
+  },
+  "findings": []
+}

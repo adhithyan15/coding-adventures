@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:b45d6a5fcc2e2763",
+  "lessonIds": [
+    "TA-C339-maviran",
+    "TA-C339-viram",
+    "TA-C339-tiyaki",
+    "TA-C339-munnoti",
+    "TA-C339-natukal",
+    "TA-R339-review-333-339"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch339.txt",
+  "json": "tamil/narration/ch339.json",
+  "textHash": "fnv1a64:f5b95a408d7c8d3b",
+  "jsonHash": "fnv1a64:1af9dd925eb86491",
+  "findings": []
+}

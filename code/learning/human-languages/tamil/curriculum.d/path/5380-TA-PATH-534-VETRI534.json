@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-534-VETRI534",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-534-VETRI534"
+  ],
+  "after": []
+}

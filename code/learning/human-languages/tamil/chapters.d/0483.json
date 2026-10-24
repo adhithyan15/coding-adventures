@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Skin Troubles",
+  "label": "ch:ta-skin-troubles",
+  "canDo": "I can talk about sores, blisters, pimples, itching and moles.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C483-maccam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can talk about sores, blisters, pimples, itching and moles.",
+    "assesses": [
+      "TA-LEX-C483-TOL483-03",
+      "TA-LEX-C483-TOL483-04",
+      "TA-LEX-C483-TOL483-05"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 551,
+  "sourceHash": "fnv1a64:7ff0ed0e3ff040eb",
+  "lessonIds": [
+    "TA-C551-vativamai",
+    "TA-C551-kankirit",
+    "TA-C551-veli",
+    "TA-C551-cottu",
+    "TA-C551-yatarttam",
+    "TA-R551-review-545-551"
+  ],
+  "tex": "tamil/book/chapters/ch551-designs-and-property.tex"
+}

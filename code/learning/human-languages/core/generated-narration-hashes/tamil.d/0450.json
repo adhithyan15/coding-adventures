@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:3932bf04711b3865",
+  "lessonIds": [
+    "TA-C450-acal",
+    "TA-C450-poli-fake",
+    "TA-C450-atamparam",
+    "TA-C450-vilaivaci",
+    "TA-C450-nottu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch450.txt",
+  "json": "tamil/narration/ch450.json",
+  "textHash": "fnv1a64:d59797823b861d17",
+  "jsonHash": "fnv1a64:93c5655668a9ba4d",
+  "findings": []
+}

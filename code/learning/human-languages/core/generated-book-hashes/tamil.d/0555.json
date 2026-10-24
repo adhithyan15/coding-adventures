@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 555,
+  "sourceHash": "fnv1a64:bfe6ed848497d6c2",
+  "lessonIds": [
+    "TA-C555-kaittattal",
+    "TA-C555-arankam",
+    "TA-C555-virutu",
+    "TA-C555-vimarcanam",
+    "TA-C555-katapattiram"
+  ],
+  "tex": "tamil/book/chapters/ch555-prizes-and-reviews.tex"
+}

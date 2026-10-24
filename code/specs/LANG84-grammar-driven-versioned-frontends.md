@@ -845,6 +845,18 @@ for_header       = "for" LPAREN [ init ] SEMICOLON [ test ] SEMICOLON [ update ]
 command_arg      = @space_before !@space_after_next MINUS primary ;
 ```
 
+**Status.** The predicates are specified in
+[F11](F11-grammar-token-adjacency-predicates.md) and implemented in the Rust
+`grammar-tools`, `lexer` and `parser` crates. F11 keeps the syntax above and
+completes it so that every fact has both polarities: `@space_before`,
+`@no_space_before`, `@newline_before`, `@no_newline_before`,
+`@space_after_next` and `@no_space_after_next` (`!@p` is equivalent to the
+`no_` form). `@asi(...)` is still to come; until it lands it is rejected with
+a "not implemented yet" error. No shipped `.grammar` uses the predicates yet:
+JavaScript (phase 6b) and Ruby (R6) adopt them in their own PRs. The non-Rust
+ports already reject `@` with an "unexpected character" error; F11 lists the
+parity follow-ups.
+
 **Semantics.** These elements read token flags (`TOKEN_PRECEDED_BY_NEWLINE`
 already exists). A new `TOKEN_PRECEDED_BY_SPACE` flag is added. The lexer MUST
 set the newline flag when skipped trivia contains a line terminator, including

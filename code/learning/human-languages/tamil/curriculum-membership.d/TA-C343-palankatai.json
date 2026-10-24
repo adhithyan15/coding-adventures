@@ -1,0 +1,11 @@
+{
+  "id": "TA-C343-palankatai",
+  "pathSegment": "TA-PATH-343-PAZHANKATHAI343",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-343-PAZHANKATHAI343",
+      "order": 0
+    }
+  ]
+}

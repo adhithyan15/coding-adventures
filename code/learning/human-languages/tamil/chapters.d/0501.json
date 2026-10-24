@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "Family Quarrels",
+  "label": "ch:ta-family-quarrels",
+  "canDo": "I can talk about squabbles, disputes, ill feeling, sulking and divorce.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C501-vivakarattu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can talk about squabbles, disputes, ill feeling, sulking and divorce.",
+    "assesses": [
+      "TA-LEX-C501-CANTAI501-03",
+      "TA-LEX-C501-CANTAI501-04",
+      "TA-LEX-C501-CANTAI501-05"
+    ]
+  }
+}

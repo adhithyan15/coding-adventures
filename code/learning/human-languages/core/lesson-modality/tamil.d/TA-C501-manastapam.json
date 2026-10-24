@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C501-manastapam",
+    "language": "tamil",
+    "chapter": 501,
+    "sequence": 28580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26e660ff63337417"
+  },
+  "findings": []
+}

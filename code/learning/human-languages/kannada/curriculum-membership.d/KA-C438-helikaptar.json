@@ -1,0 +1,11 @@
+{
+  "id": "KA-C438-helikaptar",
+  "pathSegment": "KA-PATH-438-TUKA438",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-438-TUKA438",
+      "order": 4
+    }
+  ]
+}

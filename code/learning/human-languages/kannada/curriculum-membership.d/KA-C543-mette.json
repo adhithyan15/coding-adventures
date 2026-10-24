@@ -1,0 +1,11 @@
+{
+  "id": "KA-C543-mette",
+  "pathSegment": "KA-PATH-543-GRHA543",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-543-GRHA543",
+      "order": 2
+    }
+  ]
+}

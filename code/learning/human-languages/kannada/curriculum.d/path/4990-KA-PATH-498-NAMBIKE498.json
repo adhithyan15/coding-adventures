@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-498-NAMBIKE498",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-498-NAMBIKE498"
+  ],
+  "after": []
+}

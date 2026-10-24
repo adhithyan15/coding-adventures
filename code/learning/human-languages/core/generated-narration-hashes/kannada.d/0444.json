@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:63a0dab81c4adf3f",
+  "lessonIds": [
+    "KA-C444-anusarisu",
+    "KA-C444-ullanghisu",
+    "KA-C444-palisu",
+    "KA-C444-nisedhisu",
+    "KA-C444-ekamukha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch444.txt",
+  "json": "kannada/narration/ch444.json",
+  "textHash": "fnv1a64:7035e16a393bbef9",
+  "jsonHash": "fnv1a64:89efd7e777b25644",
+  "findings": []
+}

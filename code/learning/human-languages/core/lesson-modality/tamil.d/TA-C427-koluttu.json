@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C427-koluttu",
+    "language": "tamil",
+    "chapter": 427,
+    "sequence": 24510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fb2b88e2f16a9083"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:160aa802a76f8b9e",
+  "lessonIds": [
+    "TA-C497-koncu",
+    "TA-C497-cirattu",
+    "TA-C497-kilppati",
+    "TA-C497-paramari",
+    "TA-C497-alocanai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch497.txt",
+  "json": "tamil/narration/ch497.json",
+  "textHash": "fnv1a64:d3507ce26a46b565",
+  "jsonHash": "fnv1a64:4a917f2e273ac88a",
+  "findings": []
+}

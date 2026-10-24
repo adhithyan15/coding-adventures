@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C378-uruppinar",
+    "language": "tamil",
+    "chapter": 378,
+    "sequence": 21700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bcf7efbee321881e"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-512-VILAKAL512",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-512-VILAKAL512"
+  ],
+  "after": []
+}

@@ -35,7 +35,11 @@ fn referenced_tokens(element: &GrammarElement, out: &mut BTreeSet<String>) {
             referenced_tokens(element, out);
             referenced_tokens(separator, out);
         }
-        GrammarElement::RuleReference { .. } | GrammarElement::Literal { .. } => {}
+        // An adjacency predicate (`@no_space_before` …) tests the trivia
+        // between tokens and names no token.
+        GrammarElement::RuleReference { .. }
+        | GrammarElement::Literal { .. }
+        | GrammarElement::AdjacencyPredicate { .. } => {}
     }
 }
 

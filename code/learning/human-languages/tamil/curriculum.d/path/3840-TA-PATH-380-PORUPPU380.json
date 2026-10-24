@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-380-PORUPPU380",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TA-EXT-380-PORUPPU380"
+  ],
+  "after": []
+}

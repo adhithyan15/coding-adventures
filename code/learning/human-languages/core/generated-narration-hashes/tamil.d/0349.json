@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:bc93b7aa9ef94add",
+  "lessonIds": [
+    "TA-C349-cinti",
+    "TA-C349-uki",
+    "TA-C349-anumani",
+    "TA-C349-karutukol",
+    "TA-C349-palar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch349.txt",
+  "json": "tamil/narration/ch349.json",
+  "textHash": "fnv1a64:1b43c5ed33a1d25c",
+  "jsonHash": "fnv1a64:ab0960cf1520675a",
+  "findings": []
+}

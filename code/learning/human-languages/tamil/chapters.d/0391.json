@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "Public Money",
+  "label": "ch:ta-public-money",
+  "canDo": "I can talk about the economy, subsidies and shortages.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C391-nirnayi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can talk about the economy, subsidies and shortages.",
+    "assesses": [
+      "TA-LEX-C391-PORULATARAM391-03",
+      "TA-LEX-C391-PORULATARAM391-04",
+      "TA-LEX-C391-PORULATARAM391-05"
+    ]
+  }
+}

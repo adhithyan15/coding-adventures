@@ -1,0 +1,11 @@
+{
+  "id": "TA-C505-uyil",
+  "pathSegment": "TA-PATH-505-MARANAM505",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-505-MARANAM505",
+      "order": 2
+    }
+  ]
+}

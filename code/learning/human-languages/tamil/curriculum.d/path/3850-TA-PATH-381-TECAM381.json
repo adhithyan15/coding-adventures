@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-381-TECAM381",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TA-EXT-381-TECAM381"
+  ],
+  "after": []
+}

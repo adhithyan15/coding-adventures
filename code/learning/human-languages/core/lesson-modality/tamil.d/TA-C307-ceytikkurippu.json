@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C307-ceytikkurippu",
+    "language": "tamil",
+    "chapter": 307,
+    "sequence": 17760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e0d7f7a5fe8ad50"
+  },
+  "findings": []
+}

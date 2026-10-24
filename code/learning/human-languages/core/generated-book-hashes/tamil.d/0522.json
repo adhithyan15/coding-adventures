@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:162f5ed321daf31b",
+  "lessonIds": [
+    "TA-C522-murram",
+    "TA-C522-tinnai",
+    "TA-C522-talvaram",
+    "TA-C522-tun",
+    "TA-C522-cakkatai"
+  ],
+  "tex": "tamil/book/chapters/ch522-an-old-village-house.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:f5386612d82a7dff",
+  "lessonIds": [
+    "TA-C540-kacceri",
+    "TA-C540-natakam",
+    "TA-C540-metai",
+    "TA-C540-ottikai",
+    "TA-C540-oppanai"
+  ],
+  "tex": "tamil/book/chapters/ch540-on-stage.tex"
+}

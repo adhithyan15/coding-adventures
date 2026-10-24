@@ -69,6 +69,38 @@ const ER_BACKTICK_ATTRIBUTES_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-backtick-attributes-11.16.1-visual-corpus.json"
 ));
+const ER_COMMA_ATTRIBUTE_TYPES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-comma-attribute-types-11.16.1-corpus.json"
+));
+const ER_COMMA_ATTRIBUTE_TYPES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-comma-attribute-types-11.16.1-visual-corpus.json"
+));
+const ER_SPLIT_ATTRIBUTE_BLOCKS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-split-attribute-blocks-11.16.1-corpus.json"
+));
+const ER_SPLIT_ATTRIBUTE_BLOCKS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-split-attribute-blocks-11.16.1-visual-corpus.json"
+));
+const ER_KEYWORD_ATTRIBUTES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-keyword-attributes-11.16.1-corpus.json"
+));
+const ER_KEYWORD_ATTRIBUTES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-keyword-attributes-11.16.1-visual-corpus.json"
+));
+const ER_BRACKETED_ATTRIBUTE_NAMES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-bracketed-attribute-names-11.16.1-corpus.json"
+));
+const ER_BRACKETED_ATTRIBUTE_NAMES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-bracketed-attribute-names-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2060,6 +2092,103 @@ fn pinned_er_backtick_attributes_reach_semantic_ir() {
     assert_eq!(
         hotel.compartments[0].entries,
         ["address: my.type", "geo.accuracy: string [PK] - Precision source"]
+    );
+}
+
+#[test]
+fn pinned_er_comma_attribute_types_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_COMMA_ATTRIBUTE_TYPES_CORPUS)
+        .expect("ER comma attribute type corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_COMMA_ATTRIBUTE_TYPES_VISUAL_CORPUS)
+        .expect("ER comma attribute type visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"].as_str().expect("ER comma attribute source"),
+    )
+    .expect("ER comma attribute type fixture must parse");
+    let building = diagram
+        .nodes
+        .iter()
+        .find(|node| node.id == "BUILDING")
+        .expect("BUILDING");
+
+    assert_eq!(
+        building.compartments[0].entries,
+        ["location: public.geometry(point,4326)"]
+    );
+}
+
+#[test]
+fn pinned_er_split_attribute_blocks_merge_in_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_SPLIT_ATTRIBUTE_BLOCKS_CORPUS)
+        .expect("ER split attribute block corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_SPLIT_ATTRIBUTE_BLOCKS_VISUAL_CORPUS)
+        .expect("ER split attribute block visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"].as_str().expect("ER split block source"),
+    )
+    .expect("ER split attribute block fixture must parse");
+    let book = diagram.nodes.iter().find(|node| node.id == "BOOK").expect("BOOK");
+
+    assert_eq!(book.compartments.len(), 1);
+    assert_eq!(
+        book.compartments[0].entries,
+        ["title: string", "author: string", "price: float"]
+    );
+}
+
+#[test]
+fn pinned_er_keyword_attributes_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_KEYWORD_ATTRIBUTES_CORPUS)
+        .expect("ER keyword attribute corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_KEYWORD_ATTRIBUTES_VISUAL_CORPUS)
+        .expect("ER keyword attribute visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"].as_str().expect("ER keyword attribute source"),
+    )
+    .expect("ER keyword attribute fixture must parse");
+    let settings = diagram
+        .nodes
+        .iter()
+        .find(|node| node.id == "SETTINGS")
+        .expect("SETTINGS");
+
+    assert_eq!(
+        settings.compartments[0].entries,
+        [
+            "title: string",
+            "direction: string",
+            "classDef: string",
+            "class: string",
+            "style: string"
+        ]
+    );
+}
+
+#[test]
+fn pinned_er_bracketed_attribute_names_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_BRACKETED_ATTRIBUTE_NAMES_CORPUS)
+        .expect("ER bracketed attribute name corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_BRACKETED_ATTRIBUTE_NAMES_VISUAL_CORPUS)
+        .expect("ER bracketed attribute name visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER bracketed attribute name source"),
+    )
+    .expect("ER bracketed attribute name fixture must parse");
+    let book = diagram.nodes.iter().find(|node| node.id == "BOOK").expect("BOOK");
+
+    assert_eq!(
+        book.compartments[0].entries,
+        ["author-ref[name](1): string"]
     );
 }
 

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C333-arpisu",
+  "pathSegment": "KA-PATH-333-NERAVERU333",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-333-NERAVERU333",
+      "order": 2
+    }
+  ]
+}

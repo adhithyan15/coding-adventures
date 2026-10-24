@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:b65dbbbd2dd68e7d",
+  "lessonIds": [
+    "TA-C301-mitpu",
+    "TA-C301-itipatu",
+    "TA-C301-vituvi",
+    "TA-C301-uyir-pilai",
+    "TA-C301-mittetu",
+    "TA-R301-review-294-301"
+  ],
+  "tex": "tamil/book/chapters/ch301-a-rescue.tex"
+}

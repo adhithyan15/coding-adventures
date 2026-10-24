@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-365-KATTURAI365",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TA-EXT-365-KATTURAI365"
+  ],
+  "after": []
+}

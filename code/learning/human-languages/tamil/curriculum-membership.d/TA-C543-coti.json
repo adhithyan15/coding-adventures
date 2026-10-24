@@ -1,0 +1,11 @@
+{
+  "id": "TA-C543-coti",
+  "pathSegment": "TA-PATH-543-KATTALAI543",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-543-KATTALAI543",
+      "order": 4
+    }
+  ]
+}

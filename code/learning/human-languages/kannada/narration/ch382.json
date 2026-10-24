@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 382,
+  "title": "Facts and Illusions",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b2ad94d1298b1690",
+  "lessons": [
+    {
+      "id": "KA-C382-sangati",
+      "sequence": 19300,
+      "title": "ಸಂಗತಿ (saṅgati) — a fact; a matter",
+      "headword": "ಸಂಗತಿ",
+      "romanization": "saṅgati",
+      "gloss": "a fact; a matter",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ced24d3e77a22da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to reflect on, then the Kannada for intellect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಂಗತಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಗತಿ — saṅgati — \"a fact; a matter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಸಂಗತಿ ಯಾರಿಗೂ ಗೊತ್ತಿರಲಿಲ್ಲ. ī saṅgati yārigū gottiralilla. Nobody knew this fact."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಿಷಯ is a topic; ಸಂಗತಿ (saṅgati) is something that is so."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಗತಿ (saṅgati) is borrowed from Sanskrit saṃgati, \"a coming together, a meeting\" (Monier-Williams); Kannada uses it for a matter or a fact."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅgati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅgati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅgati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅgati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī saṅgati yārigū gottiralilla. — Nobody knew this fact.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī saṅgati yārigū gottiralilla.* — Nobody knew this fact.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to reflect on, then the Kannada for intellect, then say saṅgati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to reflect on, then the Kannada for intellect, then say *saṅgati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಂಗತಿ (saṅgati) mean? (\"A fact; a matter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C382-vastava",
+      "sequence": 19310,
+      "title": "ವಾಸ್ತವ (vāstava) — reality",
+      "headword": "ವಾಸ್ತವ",
+      "romanization": "vāstava",
+      "gloss": "reality",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:643db5081f2d3829",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for intellect, then the Kannada for a fact."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಾಸ್ತವ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಾಸ್ತವ — vāstava — \"reality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕನಸು ಬೇರೆ, ವಾಸ್ತವ ಬೇರೆ. kanasu bēre, vāstava bēre. Dreams are one thing, reality another."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಾಸ್ತವವಾಗಿ, in fact."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಾಸ್ತವ (vāstava) is borrowed from Sanskrit vāstava, \"substantial, real, true\" (Monier-Williams), from vastu, \"a thing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāstava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāstava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāstava, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāstava*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanasu bēre, vāstava bēre. — Dreams are one thing, reality another.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanasu bēre, vāstava bēre.* — Dreams are one thing, reality another.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for intellect, then the Kannada for a fact, then say vāstava again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for intellect, then the Kannada for a fact, then say *vāstava* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಾಸ್ತವ (vāstava) mean? (\"Reality\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C382-bhrame",
+      "sequence": 19320,
+      "title": "ಭ್ರಮೆ (bhrame) — an illusion",
+      "headword": "ಭ್ರಮೆ",
+      "romanization": "bhrame",
+      "gloss": "an illusion",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b80c06fb940f4ed0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a fact, then the Kannada for reality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಭ್ರಮೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಭ್ರಮೆ — bhrame — \"an illusion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನೀರು ಇದೆ ಅನ್ನುವುದು ಬರೀ ಭ್ರಮೆ ಆಗಿತ್ತು. nīru ide annuvudu barī bhrame āgittu. That there was water was only an illusion."
+            },
+            {
+              "kind": "speech",
+              "text": "ಭ್ರಮೆಯಲ್ಲಿ ಇರು, to be under an illusion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಭ್ರಮೆ (bhrame) is borrowed from Sanskrit bhrama, \"wandering about\", and so \"confusion, error\" (CDIAL 9646)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhrame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhrame*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhrame, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhrame*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīru ide annuvudu barī bhrame āgittu. — That there was water was only an illusion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīru ide annuvudu barī bhrame āgittu.* — That there was water was only an illusion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a fact, then the Kannada for reality, then say bhrame again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a fact, then the Kannada for reality, then say *bhrame* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಭ್ರಮೆ (bhrame) mean? (\"An illusion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C382-astitva",
+      "sequence": 19330,
+      "title": "ಅಸ್ತಿತ್ವ (astitva) — existence",
+      "headword": "ಅಸ್ತಿತ್ವ",
+      "romanization": "astitva",
+      "gloss": "existence",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:961e2d0c72fe9ead",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for reality, then the Kannada for an illusion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಸ್ತಿತ್ವ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಸ್ತಿತ್ವ — astitva — \"existence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಹಳೆಯ ಕೆರೆ ಈಗ ಅಸ್ತಿತ್ವದಲ್ಲಿ ಇಲ್ಲ. ā haḷeya kere īga astitvadalli illa. That old lake no longer exists."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಸ್ತಿತ್ವದಲ್ಲಿ ಇರು, to exist; ಅಸ್ತಿತ್ವಕ್ಕೆ ಬರು, to come into being."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಸ್ತಿತ್ವ (astitva) is borrowed from Sanskrit astitva, \"existence\" (CDIAL 978), from asti, \"it is\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "astitva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *astitva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "astitva, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *astitva*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā haḷeya kere īga astitvadalli illa. — That old lake no longer exists.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā haḷeya kere īga astitvadalli illa.* — That old lake no longer exists.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for reality, then the Kannada for an illusion, then say astitva again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for reality, then the Kannada for an illusion, then say *astitva* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಸ್ತಿತ್ವ (astitva) mean? (\"Existence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C382-managanu",
+      "sequence": 19340,
+      "title": "ಮನಗಾಣು (managāṇu) — to realise",
+      "headword": "ಮನಗಾಣು",
+      "romanization": "managāṇu",
+      "gloss": "to realise",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55873421f25d1265",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an illusion, then the Kannada for existence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮನಗಾಣು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮನಗಾಣು — managāṇu — \"to realise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ತಪ್ಪನ್ನು ನಾನು ತಡವಾಗಿ ಮನಗಂಡೆ. nanna tappannu nānu taḍavāgi managaṇḍe. I realised my mistake late."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಮನಗಂಡೆ, managaṇḍe."
+            },
+            {
+              "kind": "speech",
+              "text": "Its past is built on ಕಂಡ: ಮನಗಂಡನು, he realised."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮನಗಾಣು (managāṇu) is built from two parts: mana, \"mind\" (Sanskrit manas, CDIAL 9822), and native kāṇ, \"to see\" (DEDR 1443): to see with the mind."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "managāṇu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *managāṇu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "managāṇu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *managāṇu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanna tappannu nānu taḍavāgi managaṇḍe. — I realised my mistake late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanna tappannu nānu taḍavāgi managaṇḍe.* — I realised my mistake late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an illusion, then the Kannada for existence, then say managāṇu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an illusion, then the Kannada for existence, then say *managāṇu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮನಗಾಣು (managāṇu) mean? (\"To realise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

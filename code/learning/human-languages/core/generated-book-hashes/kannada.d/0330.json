@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:64e0add18d791967",
+  "lessonIds": [
+    "KA-C330-dikki-hode",
+    "KA-C330-pratyaksadarsi",
+    "KA-C330-hani",
+    "KA-C330-mrta",
+    "KA-C330-avaghada"
+  ],
+  "tex": "kannada/book/chapters/ch330-a-crash-on-the-highway.tex"
+}

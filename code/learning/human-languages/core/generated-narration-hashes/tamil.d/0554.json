@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 554,
+  "sourceHash": "fnv1a64:24496a3bed7d9790",
+  "lessonIds": [
+    "TA-C554-atikapatcam",
+    "TA-C554-mutintavarai",
+    "TA-C554-malaiyerram",
+    "TA-C554-minpiti",
+    "TA-C554-pommalattam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch554.txt",
+  "json": "tamil/narration/ch554.json",
+  "textHash": "fnv1a64:74fe28f8f7612720",
+  "jsonHash": "fnv1a64:e9c3af8fbb485109",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C514-dani",
+  "pathSegment": "KA-PATH-514-PATHYA514",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-514-PATHYA514",
+      "order": 3
+    }
+  ]
+}

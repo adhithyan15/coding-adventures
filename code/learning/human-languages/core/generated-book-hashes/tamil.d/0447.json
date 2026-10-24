@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:edb8dc58c311b5c6",
+  "lessonIds": [
+    "TA-C447-munpanam",
+    "TA-C447-tavanai",
+    "TA-C447-pakki",
+    "TA-C447-miti",
+    "TA-C447-tokai"
+  ],
+  "tex": "tamil/book/chapters/ch447-paying-in-parts.tex"
+}

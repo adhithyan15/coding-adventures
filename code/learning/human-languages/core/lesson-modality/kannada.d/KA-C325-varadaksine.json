@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C325-varadaksine",
+    "language": "kannada",
+    "chapter": 325,
+    "sequence": 16320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e305a82f578c788"
+  },
+  "findings": []
+}

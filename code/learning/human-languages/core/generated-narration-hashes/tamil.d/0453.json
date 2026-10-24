@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:cfe0fd3a93850560",
+  "lessonIds": [
+    "TA-C453-attiram",
+    "TA-C453-ericcal",
+    "TA-C453-ciru",
+    "TA-C453-kontali",
+    "TA-C453-munumunu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch453.txt",
+  "json": "tamil/narration/ch453.json",
+  "textHash": "fnv1a64:3b36bebe6b279cfa",
+  "jsonHash": "fnv1a64:a84f75b0c1c4b258",
+  "findings": []
+}

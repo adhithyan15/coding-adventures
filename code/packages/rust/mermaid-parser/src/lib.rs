@@ -13676,7 +13676,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     if cursor.consume_if("QUESTION").is_some() {
                         attribute_type.push('?');
                     }
-                    let attribute_name = parse_er_name(&mut cursor)?;
+                    let attribute_name = parse_er_attribute_name(&mut cursor)?;
                     let mut keys = Vec::new();
                     while token_name(cursor.current()) == "ATTRIBUTE_KEY" {
                         keys.push(cursor.advance().value.clone());
@@ -13706,10 +13706,18 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 class_assignments.push((vec![entity_id], entity_classes));
             }
             if !fields.is_empty() {
-                nodes[index].compartments.push(Compartment {
-                    kind: CompartmentKind::Fields,
-                    entries: fields,
-                });
+                if let Some(compartment) = nodes[index]
+                    .compartments
+                    .iter_mut()
+                    .find(|compartment| compartment.kind == CompartmentKind::Fields)
+                {
+                    compartment.entries.extend(fields);
+                } else {
+                    nodes[index].compartments.push(Compartment {
+                        kind: CompartmentKind::Fields,
+                        entries: fields,
+                    });
+                }
             }
         }
         cursor.skip_terminators();
@@ -13745,7 +13753,13 @@ fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
             | "ATTRIBUTE_KEY"
             | "MD_PARENT"
             | "STRING"
+            | "TITLE_KW"
+            | "DIRECTION_KW"
+            | "CLASSDEF_KW"
+            | "CLASS_KW"
+            | "STYLE_KW"
             | "ESCAPED_ATTRIBUTE"
+            | "COMMA_ATTRIBUTE_TYPE"
     ) {
         return Err(token_error(&token, "expected ER name"));
     }
@@ -13755,6 +13769,22 @@ fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
     } else {
         value
     })
+}
+
+fn parse_er_attribute_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    let mut name = parse_er_name(cursor)?;
+    while cursor.consume_if("LBRACKET").is_some() {
+        name.push('[');
+        name.push_str(&parse_er_name(cursor)?);
+        cursor
+            .consume_if("RBRACKET")
+            .ok_or_else(|| token_error(cursor.current(), "expected ']' in ER attribute name"))?;
+        name.push(']');
+    }
+    if let Some(suffix) = cursor.consume_if("ATTRIBUTE_SUFFIX") {
+        name.push_str(&suffix.value);
+    }
+    Ok(name)
 }
 
 fn consume_er_class_suffix(cursor: &mut TokenCursor) -> Result<Vec<String>, ParseError> {

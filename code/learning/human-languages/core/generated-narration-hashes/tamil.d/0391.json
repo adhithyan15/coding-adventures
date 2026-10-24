@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:90dabfc3942923d0",
+  "lessonIds": [
+    "TA-C391-porulataram",
+    "TA-C391-maniyam",
+    "TA-C391-parrakkurai",
+    "TA-C391-viniyoki",
+    "TA-C391-nirnayi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch391.txt",
+  "json": "tamil/narration/ch391.json",
+  "textHash": "fnv1a64:0146cbd98cdfd5cb",
+  "jsonHash": "fnv1a64:e46a229f29778510",
+  "findings": []
+}

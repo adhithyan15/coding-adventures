@@ -1,0 +1,11 @@
+{
+  "id": "TA-C371-cirupanmai",
+  "pathSegment": "TA-PATH-371-CAMATTUVAM371",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-371-CAMATTUVAM371",
+      "order": 2
+    }
+  ]
+}

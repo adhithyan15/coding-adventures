@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C407-orankattu",
+    "language": "tamil",
+    "chapter": 407,
+    "sequence": 23490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b2d04e0f940a4e5"
+  },
+  "findings": []
+}

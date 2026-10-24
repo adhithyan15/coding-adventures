@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:5316af29c9b954dd",
+  "lessonIds": [
+    "KA-C402-bhrastacara",
+    "KA-C402-lanca",
+    "KA-C402-paradarsaka",
+    "KA-C402-maremacu",
+    "KA-C402-sipharasu-madu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch402.txt",
+  "json": "kannada/narration/ch402.json",
+  "textHash": "fnv1a64:d2a4843fc59a89dd",
+  "jsonHash": "fnv1a64:be9842844081e380",
+  "findings": []
+}

@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 345,
+  "title": "The Spy in the Palace",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1bfe3ddba1d2aba1",
+  "lessons": [
+    {
+      "id": "KA-C345-adagu",
+      "sequence": 17330,
+      "title": "ಅಡಗು (aḍagu) — to hide oneself",
+      "headword": "ಅಡಗು",
+      "romanization": "aḍagu",
+      "gloss": "to hide oneself",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2bc7a8ee36fddf14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a chariot, then the Kannada for to do battle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಡಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಡಗು — aḍagu — \"to hide oneself\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಳ್ಳ ಬಾವಿಯ ಹಿಂದೆ ಅಡಗಿದನು. kaḷḷa bāviya hinde aḍagidanu. The thief hid behind the well."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಅಡಗಿದೆ, aḍagide."
+            },
+            {
+              "kind": "speech",
+              "text": "To hide oneself is ಅಡಗು (aḍagu); to hide something is ಅಡಗಿಸು or ಬಚ್ಚಿಡು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಡಗು (aḍagu) is native Dravidian: DEDR 63 lists Kannada aḍagu beside Tamil aṭaṅku, \"to be compressed, to cease, to disappear\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḍagu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḍagu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḍagu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḍagu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷḷa bāviya hinde aḍagidanu. — The thief hid behind the well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷḷa bāviya hinde aḍagidanu.* — The thief hid behind the well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a chariot, then the Kannada for to do battle, then say aḍagu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a chariot, then the Kannada for to do battle, then say *aḍagu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಡಗು (aḍagu) mean? (\"To hide oneself\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C345-talemaresiko",
+      "sequence": 17340,
+      "title": "ತಲೆಮರೆಸಿಕೊ (talemaresiko) — to go into hiding",
+      "headword": "ತಲೆಮರೆಸಿಕೊ",
+      "romanization": "talemaresiko",
+      "gloss": "to go into hiding",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f1c3332de978281",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to do battle, then the Kannada for to hide oneself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತಲೆಮರೆಸಿಕೊ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಲೆಮರೆಸಿಕೊ — talemaresiko — \"to go into hiding\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆರೋಪಿ ಆರು ತಿಂಗಳು ತಲೆಮರೆಸಿಕೊಂಡಿದ್ದನು. ārōpi āru tiṅgaḷu talemaresikoṇḍiddanu. The accused had been in hiding for six months."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ತಲೆಮರೆಸಿಕೊಂಡೆ, talemaresikoṇḍe."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally \"to hide one's head\": a news phrase for someone wanted by the police."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಲೆಮರೆಸಿಕೊ (talemaresiko) is a native Dravidian compound: tale, \"head\" (DEDR 3103), and maresu, \"to hide\", from mare (DEDR 4760), with -ko, from koḷ, \"to take\" (DEDR 2151)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talemaresiko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talemaresiko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talemaresiko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talemaresiko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārōpi āru tiṅgaḷu talemaresikoṇḍiddanu. — The accused had been in hiding for six months.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārōpi āru tiṅgaḷu talemaresikoṇḍiddanu.* — The accused had been in hiding for six months.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to do battle, then the Kannada for to hide oneself, then say talemaresiko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to do battle, then the Kannada for to hide oneself, then say *talemaresiko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತಲೆಮರೆಸಿಕೊ (talemaresiko) mean? (\"To go into hiding\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C345-bennattu",
+      "sequence": 17350,
+      "title": "ಬೆನ್ನಟ್ಟು (bennaṭṭu) — to chase",
+      "headword": "ಬೆನ್ನಟ್ಟು",
+      "romanization": "bennaṭṭu",
+      "gloss": "to chase",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40c9746acbd6813a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to hide oneself, then the Kannada for to go into hiding."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬೆನ್ನಟ್ಟು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೆನ್ನಟ್ಟು — bennaṭṭu — \"to chase\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪೊಲೀಸರು ಕಳ್ಳನ ಕಾರನ್ನು ಬೆನ್ನಟ್ಟಿದರು. polīsaru kaḷḷana kārannu bennaṭṭidaru. The police chased the thief's car."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಬೆನ್ನಟ್ಟಿದೆ, bennaṭṭide."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೆನ್ನು, back, and ಅಟ್ಟು, to run after: to run at someone's back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೆನ್ನಟ್ಟು (bennaṭṭu) is a native Dravidian compound: bennu, \"the back\" (DEDR 5488), and aṭṭu, \"to follow, to run after, to pursue\", which DEDR 79 lists for Kannada."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bennaṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bennaṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bennaṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bennaṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polīsaru kaḷḷana kārannu bennaṭṭidaru. — The police chased the thief's car.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polīsaru kaḷḷana kārannu bennaṭṭidaru.* — The police chased the thief's car.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to hide oneself, then the Kannada for to go into hiding, then say bennaṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to hide oneself, then the Kannada for to go into hiding, then say *bennaṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬೆನ್ನಟ್ಟು (bennaṭṭu) mean? (\"To chase\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C345-gudhacara",
+      "sequence": 17360,
+      "title": "ಗೂಢಚಾರ (gūḍhacāra) — a spy",
+      "headword": "ಗೂಢಚಾರ",
+      "romanization": "gūḍhacāra",
+      "gloss": "a spy",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b8ba536e0293f0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to go into hiding, then the Kannada for to chase."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗೂಢಚಾರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗೂಢಚಾರ — gūḍhacāra — \"a spy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ರಾಜನ ಗೂಢಚಾರ ಪಕ್ಕದ ರಾಜ್ಯಕ್ಕೆ ಹೋದನು. rājana gūḍhacāra pakkada rājyakke hōdanu. The king's spy went to the neighbouring kingdom."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಗೂಢಚಾರರು, gūḍhacāraru."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗೂಢ, hidden, and ಚಾರ, a goer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗೂಢಚಾರ (gūḍhacāra) is borrowed from Sanskrit gūḍhacāra, \"a spy\" (Monier-Williams), from gūḍha, \"hidden\", and cāra, \"going, a goer\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gūḍhacāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gūḍhacāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gūḍhacāra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gūḍhacāra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājana gūḍhacāra pakkada rājyakke hōdanu. — The king's spy went to the neighbouring kingdom.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājana gūḍhacāra pakkada rājyakke hōdanu.* — The king's spy went to the neighbouring kingdom.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to go into hiding, then the Kannada for to chase, then say gūḍhacāra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to go into hiding, then the Kannada for to chase, then say *gūḍhacāra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗೂಢಚಾರ (gūḍhacāra) mean? (\"A spy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C345-nusulu",
+      "sequence": 17370,
+      "title": "ನುಸುಳು (nusuḷu) — to sneak in; to slip through",
+      "headword": "ನುಸುಳು",
+      "romanization": "nusuḷu",
+      "gloss": "to sneak in; to slip through",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3745e42a16408c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to chase, then the Kannada for a spy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನುಸುಳು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನುಸುಳು — nusuḷu — \"to sneak in; to slip through\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗೂಢಚಾರ ರಾತ್ರಿ ಅರಮನೆಯೊಳಗೆ ನುಸುಳಿದನು. gūḍhacāra rātri aramaneyoḷage nusuḷidanu. The spy slipped into the palace at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ನುಸುಳಿದೆ, nusuḷide."
+            },
+            {
+              "kind": "speech",
+              "text": "Also used of crossing a border secretly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನುಸುಳು (nusuḷu) is native Dravidian: DEDR 3714 lists Kannada nusuḷ beside Tamil words meaning \"to creep through a narrow passage, to penetrate\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nusuḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nusuḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nusuḷu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nusuḷu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gūḍhacāra rātri aramaneyoḷage nusuḷidanu. — The spy slipped into the palace at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gūḍhacāra rātri aramaneyoḷage nusuḷidanu.* — The spy slipped into the palace at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to chase, then the Kannada for a spy, then say nusuḷu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to chase, then the Kannada for a spy, then say *nusuḷu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನುಸುಳು (nusuḷu) mean? (\"To sneak in; to slip through\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

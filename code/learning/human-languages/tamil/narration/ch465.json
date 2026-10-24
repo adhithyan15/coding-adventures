@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 465,
+  "title": "Longing and Fondness",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2ae507e7564bc9b9",
+  "lessons": [
+    {
+      "id": "TA-C465-enku",
+      "sequence": 26710,
+      "title": "ஏங்கு (ēṅku) — to long for; to pine",
+      "headword": "ஏங்கு",
+      "romanization": "ēṅku",
+      "gloss": "to long for; to pine",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11ac9721afb04d40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to plead, then the Tamil for to be fed up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஏங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏங்கு — ēṅku — \"to long for; to pine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வெளிநாட்டில் இருந்தபோது நான் அம்மாவின் சமையலுக்கு ஏங்கினேன். veḷināṭṭil iruntapōtu nāṉ ammāviṉ camaiyalukku ēṅkiṉēṉ. When I was abroad I longed for my mother’s cooking."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ஏங்கினேன், ēṅkiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What one longs for takes -க்கு: அன்புக்கு ஏங்கு (ēṅku), to crave love."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏங்கு (ēṅku) is native Dravidian (DEDR 878); DEDR keeps a second ஏங்கு, \"to cry out\", as its own entry (879)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷināṭṭil iruntapōtu nāṉ ammāviṉ camaiyalukku ēṅkiṉēṉ. — When I was abroad I longed for my mother’s cooking.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷināṭṭil iruntapōtu nāṉ ammāviṉ camaiyalukku ēṅkiṉēṉ.* — When I was abroad I longed for my mother’s cooking.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to plead, then the Tamil for to be fed up, then say ēṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to plead, then the Tamil for to be fed up, then say *ēṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஏங்கு (ēṅku) mean? (\"To long for; to pine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C465-pacam",
+      "sequence": 26720,
+      "title": "பாசம் (pācam) — family affection; attachment",
+      "headword": "பாசம்",
+      "romanization": "pācam",
+      "gloss": "family affection; attachment",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee929e76f2d00127",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to be fed up, then the Tamil for to long for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பாசம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பாசம் — pācam — \"family affection; attachment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தாத்தாவுக்குப் பேரன் மேல் நிறைய பாசம். tāttāvukkup pēraṉ mēl niṟaiya pācam. Grandfather is very attached to his grandson."
+            },
+            {
+              "kind": "speech",
+              "text": "மேல் \"on\" marks the one loved: அவன் மேல் பாசம் (pācam)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பாசம் (pācam) is borrowed from Sanskrit pāśa, \"a noose, a cord\" (CDIAL 8133): in Tamil, the tie of love that binds a family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pācam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pācam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pācam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pācam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāttāvukkup pēraṉ mēl niṟaiya pācam. — Grandfather is very attached to his grandson.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāttāvukkup pēraṉ mēl niṟaiya pācam.* — Grandfather is very attached to his grandson.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to be fed up, then the Tamil for to long for, then say pācam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to be fed up, then the Tamil for to long for, then say *pācam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பாசம் (pācam) mean? (\"Family affection; attachment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C465-piriyam",
+      "sequence": 26730,
+      "title": "பிரியம் (piriyam) — fondness; liking",
+      "headword": "பிரியம்",
+      "romanization": "piriyam",
+      "gloss": "fondness; liking",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:881dd4c5017db1e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to long for, then the Tamil for family affection."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பிரியம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பிரியம் — piriyam — \"fondness; liking\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் தங்கைக்கு மல்லிகைப் பூ என்றால் பிரியம். eṉ taṅkaikku mallikaip pū eṉṟāl piriyam. My younger sister is fond of jasmine."
+            },
+            {
+              "kind": "speech",
+              "text": "X என்றால் பிரியம் (piriyam), to be fond of X."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பிரியம் (piriyam) is borrowed from Sanskrit priya, \"dear, beloved\" (CDIAL 8974); Tamil breaks the pr with a vowel: பிரி-."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piriyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piriyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piriyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piriyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ taṅkaikku mallikaip pū eṉṟāl piriyam. — My younger sister is fond of jasmine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ taṅkaikku mallikaip pū eṉṟāl piriyam.* — My younger sister is fond of jasmine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to long for, then the Tamil for family affection, then say piriyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to long for, then the Tamil for family affection, then say *piriyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பிரியம் (piriyam) mean? (\"Fondness; liking\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C465-mokam",
+      "sequence": 26740,
+      "title": "மோகம் (mōkam) — infatuation; craze",
+      "headword": "மோகம்",
+      "romanization": "mōkam",
+      "gloss": "infatuation; craze",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1836df2c388142cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for family affection, then the Tamil for fondness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மோகம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மோகம் — mōkam — \"infatuation; craze\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் மகனுக்குக் கிரிக்கெட் மேல் மோகம். eṉ makaṉukkuk kirikkeṭ mēl mōkam. My son is crazy about cricket."
+            },
+            {
+              "kind": "speech",
+              "text": "A passion that clouds judgment: பண மோகம் (mōkam), a craving for money."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மோகம் (mōkam) is borrowed from Sanskrit mōha, \"bewilderment; a swoon\" (CDIAL 10360)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mōkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mōkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mōkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mōkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ makaṉukkuk kirikkeṭ mēl mōkam. — My son is crazy about cricket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ makaṉukkuk kirikkeṭ mēl mōkam.* — My son is crazy about cricket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for family affection, then the Tamil for fondness, then say mōkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for family affection, then the Tamil for fondness, then say *mōkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மோகம் (mōkam) mean? (\"Infatuation; craze\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C465-nekil",
+      "sequence": 26750,
+      "title": "நெகிழ் (nekiḻ) — to be moved; to be touched",
+      "headword": "நெகிழ்",
+      "romanization": "nekiḻ",
+      "gloss": "to be moved; to be touched",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1339be48dec07fe5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for fondness, then the Tamil for infatuation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நெகிழ்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நெகிழ் — nekiḻ — \"to be moved; to be touched\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர்களுடைய அன்பைப் பார்த்து நான் நெகிழ்ந்தேன். avarkaḷuṭaiya aṉpaip pārttu nāṉ nekiḻntēṉ. I was moved by their affection."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): நெகிழ்ந்தேன், nekiḻntēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "மனம் நெகிழ்ந்தது, my heart was touched."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நெகிழ் (nekiḻ) is native Dravidian (DEDR 2923); the entry runs from loosening, as bangles slip, to a softened heart."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nekiḻ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nekiḻ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nekiḻ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nekiḻ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avarkaḷuṭaiya aṉpaip pārttu nāṉ nekiḻntēṉ. — I was moved by their affection.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avarkaḷuṭaiya aṉpaip pārttu nāṉ nekiḻntēṉ.* — I was moved by their affection.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for fondness, then the Tamil for infatuation, then say nekiḻ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for fondness, then the Tamil for infatuation, then say *nekiḻ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நெகிழ் (nekiḻ) mean? (\"To be moved; to be touched\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

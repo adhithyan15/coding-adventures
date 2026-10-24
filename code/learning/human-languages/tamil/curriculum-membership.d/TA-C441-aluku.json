@@ -1,0 +1,11 @@
+{
+  "id": "TA-C441-aluku",
+  "pathSegment": "TA-PATH-441-KUPPAI441",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-441-KUPPAI441",
+      "order": 0
+    }
+  ]
+}

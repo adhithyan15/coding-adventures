@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 455,
+  "title": "Worry and Unease",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c906533547194521",
+  "lessons": [
+    {
+      "id": "TA-C455-cancalam",
+      "sequence": 26200,
+      "title": "சஞ்சலம் (cañcalam) — unease; wavering",
+      "headword": "சஞ்சலம்",
+      "romanization": "cañcalam",
+      "gloss": "unease; wavering",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a3a9bc9323e5eef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to be startled, then the Tamil for to tremble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சஞ்சலம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சஞ்சலம் — cañcalam — \"unease; wavering\"."
+            },
+            {
+              "kind": "speech",
+              "text": "முடிவு செய்ய முடியாமல் அவர் சஞ்சலத்தில் இருந்தார். muṭivu ceyya muṭiyāmal avar cañcalattil iruntār. Unable to decide, he was uneasy."
+            },
+            {
+              "kind": "speech",
+              "text": "The oblique -அத்து-: சஞ்சலத்தில், in a state of unease."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சஞ்சலம் (cañcalam) is borrowed from Sanskrit cañcala, \"quivering, unsteady\" (CDIAL 4568), with the Tamil noun ending -அம்."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cañcalam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cañcalam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cañcalam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cañcalam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṭivu ceyya muṭiyāmal avar cañcalattil iruntār. — Unable to decide, he was uneasy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṭivu ceyya muṭiyāmal avar cañcalattil iruntār.* — Unable to decide, he was uneasy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to be startled, then the Tamil for to tremble, then say cañcalam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to be startled, then the Tamil for to tremble, then say *cañcalam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சஞ்சலம் (cañcalam) mean? (\"Unease; wavering\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C455-ulaiccal",
+      "sequence": 26210,
+      "title": "உளைச்சல் (uḷaiccal) — anguish; mental strain",
+      "headword": "உளைச்சல்",
+      "romanization": "uḷaiccal",
+      "gloss": "anguish; mental strain",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c55434bf5c729dc1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to tremble, then the Tamil for unease."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உளைச்சல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உளைச்சல் — uḷaiccal — \"anguish; mental strain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வேலையை இழந்த பிறகு அவருக்கு மன உளைச்சல் ஏற்பட்டது. vēlaiyai iḻanta piṟaku avarukku maṉa uḷaiccal ēṟpaṭṭatu. After losing his job he suffered mental anguish."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly in மன உளைச்சல் (uḷaiccal), mental anguish, with மனம் \"mind\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உளைச்சல் (uḷaiccal) is native Dravidian, built on உளை uḷai, \"to ache, to suffer pain\", which DEDR 2702 lists with a query."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uḷaiccal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uḷaiccal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uḷaiccal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uḷaiccal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēlaiyai iḻanta piṟaku avarukku maṉa uḷaiccal ēṟpaṭṭatu. — After losing his job he suffered mental anguish.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēlaiyai iḻanta piṟaku avarukku maṉa uḷaiccal ēṟpaṭṭatu.* — After losing his job he suffered mental anguish.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to tremble, then the Tamil for unease, then say uḷaiccal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to tremble, then the Tamil for unease, then say *uḷaiccal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உளைச்சல் (uḷaiccal) mean? (\"Anguish; mental strain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C455-atankam",
+      "sequence": 26220,
+      "title": "ஆதங்கம் (ātaṅkam) — frustration; anguished regret",
+      "headword": "ஆதங்கம்",
+      "romanization": "ātaṅkam",
+      "gloss": "frustration; anguished regret",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7699b72e2e5f470",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for unease, then the Tamil for anguish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆதங்கம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆதங்கம் — ātaṅkam — \"frustration; anguished regret\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மகன் படிக்கவில்லை என்று அப்பாவுக்கு ஆதங்கம். makaṉ paṭikkavillai eṉṟu appāvukku ātaṅkam. The father is anguished that his son did not study."
+            },
+            {
+              "kind": "speech",
+              "text": "A frustrated wish for someone else: … என்று ஆதங்கம் (ātaṅkam), anguish that …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆதங்கம் (ātaṅkam) is borrowed from Sanskrit ātaṅka, \"disease; affliction, anxiety\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātaṅkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātaṅkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātaṅkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātaṅkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makaṉ paṭikkavillai eṉṟu appāvukku ātaṅkam. — The father is anguished that his son did not study.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makaṉ paṭikkavillai eṉṟu appāvukku ātaṅkam.* — The father is anguished that his son did not study.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for unease, then the Tamil for anguish, then say ātaṅkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for unease, then the Tamil for anguish, then say *ātaṅkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆதங்கம் (ātaṅkam) mean? (\"Frustration; anguished regret\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C455-ankalay",
+      "sequence": 26230,
+      "title": "அங்கலாய் (aṅkalāy) — to bemoan; to fret",
+      "headword": "அங்கலாய்",
+      "romanization": "aṅkalāy",
+      "gloss": "to bemoan; to fret",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34ebbf9540522b82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for anguish, then the Tamil for frustration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அங்கலாய்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அங்கலாய் — aṅkalāy — \"to bemoan; to fret\"."
+            },
+            {
+              "kind": "speech",
+              "text": "விலை ஏறியதைப் பற்றிப் பாட்டி அங்கலாய்த்தாள். vilai ēṟiyataip paṟṟip pāṭṭi aṅkalāyttāḷ. Grandmother fretted about prices going up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): அங்கலாய்த்தேன், aṅkalāyttēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What one frets about takes பற்றி \"about\", as in அதைப் பற்றி அங்கலாய்த்தாள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அங்கலாய் (aṅkalāy) is native Dravidian (DEDR 31); the entry also gives அங்கலாய்ப்பு aṅkalāyppu, \"disquiet\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅkalāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅkalāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅkalāy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅkalāy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilai ēṟiyataip paṟṟip pāṭṭi aṅkalāyttāḷ. — Grandmother fretted about prices going up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilai ēṟiyataip paṟṟip pāṭṭi aṅkalāyttāḷ.* — Grandmother fretted about prices going up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for anguish, then the Tamil for frustration, then say aṅkalāy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for anguish, then the Tamil for frustration, then say *aṅkalāy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அங்கலாய் (aṅkalāy) mean? (\"To bemoan; to fret\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C455-tavi",
+      "sequence": 26240,
+      "title": "தவி (tavi) — to suffer; to struggle",
+      "headword": "தவி",
+      "romanization": "tavi",
+      "gloss": "to suffer; to struggle",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f20453ebc96de90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for frustration, then the Tamil for to bemoan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தவி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தவி — tavi — \"to suffer; to struggle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தண்ணீர் இல்லாமல் மக்கள் தவித்தார்கள். taṇṇīr illāmal makkaḷ tavittārkaḷ. People suffered without water."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): தவித்தேன், tavittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Often with -ஆமல் \"without\": பணம் இல்லாமல் தவித்தேன், I struggled without money."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தவி (tavi) is a native Tamil verb, but the origin is not settled: DEDR gives it no entry of its own that we can point to."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tavi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tavi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tavi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tavi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṇṇīr illāmal makkaḷ tavittārkaḷ. — People suffered without water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṇṇīr illāmal makkaḷ tavittārkaḷ.* — People suffered without water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for frustration, then the Tamil for to bemoan, then say tavi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for frustration, then the Tamil for to bemoan, then say *tavi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தவி (tavi) mean? (\"To suffer; to struggle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

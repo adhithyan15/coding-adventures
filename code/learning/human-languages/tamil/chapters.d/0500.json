@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "Running a Home",
+  "label": "ch:ta-running-a-home",
+  "canDo": "I can talk about companions, homemakers, the marital home and setting up house.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C500-ottuppo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can talk about companions, homemakers, the marital home and setting up house.",
+    "assesses": [
+      "TA-LEX-C500-VITU500-03",
+      "TA-LEX-C500-VITU500-04",
+      "TA-LEX-C500-VITU500-05"
+    ]
+  }
+}

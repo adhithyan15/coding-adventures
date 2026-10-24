@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:2fe3b130f2c9c40a",
+  "lessonIds": [
+    "TA-C305-nirupar",
+    "TA-C305-neralai",
+    "TA-C305-oliparappu",
+    "TA-C305-tokuppalar",
+    "TA-C305-olippativalar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch305.txt",
+  "json": "tamil/narration/ch305.json",
+  "textHash": "fnv1a64:da78980ebfda2e5d",
+  "jsonHash": "fnv1a64:1b33a8e165d70f27",
+  "findings": []
+}

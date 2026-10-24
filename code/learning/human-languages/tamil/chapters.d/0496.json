@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "Birth and Adoption",
+  "label": "ch:ta-birth-and-adoption",
+  "canDo": "I can talk about pregnancy, childbirth, being born, children and adoption.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C496-tattetu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can talk about pregnancy, childbirth, being born, children and adoption.",
+    "assesses": [
+      "TA-LEX-C496-PIRAPPU496-03",
+      "TA-LEX-C496-PIRAPPU496-04",
+      "TA-LEX-C496-PIRAPPU496-05"
+    ]
+  }
+}

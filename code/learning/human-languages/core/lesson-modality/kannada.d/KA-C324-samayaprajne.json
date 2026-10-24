@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C324-samayaprajne",
+    "language": "kannada",
+    "chapter": 324,
+    "sequence": 16270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9002d1efb505c85"
+  },
+  "findings": []
+}

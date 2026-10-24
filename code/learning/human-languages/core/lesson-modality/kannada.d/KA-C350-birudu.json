@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C350-birudu",
+    "language": "kannada",
+    "chapter": 350,
+    "sequence": 17610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f592ce1d8f5337a2"
+  },
+  "findings": []
+}

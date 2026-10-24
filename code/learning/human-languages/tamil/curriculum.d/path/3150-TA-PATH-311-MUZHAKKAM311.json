@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-311-MUZHAKKAM311",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-311-MUZHAKKAM311"
+  ],
+  "after": []
+}

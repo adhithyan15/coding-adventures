@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:494cc1985c1cb47e",
+  "lessonIds": [
+    "TA-C386-utti",
+    "TA-C386-munneccarikkai",
+    "TA-C386-varaivu",
+    "TA-C386-munnetu",
+    "TA-C386-kurikkol"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch386.txt",
+  "json": "tamil/narration/ch386.json",
+  "textHash": "fnv1a64:91dd5afe57fa378b",
+  "jsonHash": "fnv1a64:1b8b0147496f188e",
+  "findings": []
+}

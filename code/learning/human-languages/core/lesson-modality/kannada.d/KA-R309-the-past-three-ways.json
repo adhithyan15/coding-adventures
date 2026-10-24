@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R309-the-past-three-ways",
+    "language": "kannada",
+    "chapter": 309,
+    "sequence": 15030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:888b33635d2b9082"
+  },
+  "findings": []
+}

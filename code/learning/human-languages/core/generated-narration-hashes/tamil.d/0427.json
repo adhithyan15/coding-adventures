@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:1dcbb94ba5e5ea8a",
+  "lessonIds": [
+    "TA-C427-kalanilai",
+    "TA-C427-veppam",
+    "TA-C427-veppanilai",
+    "TA-C427-koluttu",
+    "TA-C427-pulunku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch427.txt",
+  "json": "tamil/narration/ch427.json",
+  "textHash": "fnv1a64:406edb65b8485f9f",
+  "jsonHash": "fnv1a64:0f089dbee2044e9e",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "For and Against",
+  "label": "ch:ta-for-and-against",
+  "canDo": "I can say that someone opposes or objects to an idea.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C348-cilar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can say that someone opposes or objects to an idea.",
+    "assesses": [
+      "TA-LEX-C348-ETIR348-03",
+      "TA-LEX-C348-ETIR348-04",
+      "TA-LEX-C348-ETIR348-05"
+    ]
+  }
+}

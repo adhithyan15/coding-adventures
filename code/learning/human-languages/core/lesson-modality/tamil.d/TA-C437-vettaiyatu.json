@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C437-vettaiyatu",
+    "language": "tamil",
+    "chapter": 437,
+    "sequence": 25020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6150e2c403a5aa9b"
+  },
+  "findings": []
+}

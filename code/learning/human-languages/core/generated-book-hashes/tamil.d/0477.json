@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:321ed3811527b338",
+  "lessonIds": [
+    "TA-C477-marataippu",
+    "TA-C477-purrunoy",
+    "TA-C477-pakkavatam",
+    "TA-C477-astuma",
+    "TA-C477-kamalai"
+  ],
+  "tex": "tamil/book/chapters/ch477-serious-illness.tex"
+}

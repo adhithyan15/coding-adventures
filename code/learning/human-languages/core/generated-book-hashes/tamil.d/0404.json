@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:ab65f203d9845426",
+  "lessonIds": [
+    "TA-C404-vakanam",
+    "TA-C404-lari",
+    "TA-C404-skuttar",
+    "TA-C404-muntu",
+    "TA-C404-motu"
+  ],
+  "tex": "tamil/book/chapters/ch404-lorries-and-scooters.tex"
+}

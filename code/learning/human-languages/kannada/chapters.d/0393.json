@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Running a Country",
+  "label": "ch:ka-running-a-country",
+  "canDo": "I can say a parliament, a minister, a constitution, democracy and to represent.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C393-pratinidhisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can say a parliament, a minister, a constitution, democracy and to represent.",
+    "assesses": [
+      "KA-LEX-C393-SAMSATTU393-03",
+      "KA-LEX-C393-SAMSATTU393-04",
+      "KA-LEX-C393-SAMSATTU393-05"
+    ]
+  }
+}

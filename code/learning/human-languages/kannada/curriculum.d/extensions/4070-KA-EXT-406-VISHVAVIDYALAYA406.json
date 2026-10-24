@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-406-VISHVAVIDYALAYA406",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a university, a degree, a lecture, a professor and to instruct.",
+  "prerequisites": []
+}

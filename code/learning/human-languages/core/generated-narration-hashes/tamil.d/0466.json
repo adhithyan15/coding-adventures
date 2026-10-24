@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:c96dd83fa3857d9b",
+  "lessonIds": [
+    "TA-C466-tuniccal",
+    "TA-C466-kolai",
+    "TA-C466-ancu",
+    "TA-C466-patunku",
+    "TA-C466-mirattu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch466.txt",
+  "json": "tamil/narration/ch466.json",
+  "textHash": "fnv1a64:5f21c99e0921b30b",
+  "jsonHash": "fnv1a64:8703dc1f6351a734",
+  "findings": []
+}
