@@ -275,14 +275,18 @@ pub fn whitespace_only_minify(
     // rule, `}`/end of input, and restricted productions such as
     // `return⏎x`. We splice `synth_asi_semi` in at each of those points.
     // The token vector itself is left alone, because the CV map below is keyed
-    // on pointers into it. A program the grammar can't parse at all keeps the
-    // old behaviour: no insertions, and the same output as before.
+    // on pointers into it. A program the grammar can't parse still gets the
+    // restricted-production `;`s, which need no parse: without them
+    // `return⏎42` would come out as `return 42`, a different program, since
+    // every newline is dropped (F12 phase 0 security review).
     let asi_points: Vec<usize> = match synth_asi_semi.as_ref() {
         Some(_) => coding_adventures_javascript_parser::asi::asi_insertion_points(
             tokens.clone(),
             version,
         )
-        .unwrap_or_default(),
+        .unwrap_or_else(|_| {
+            coding_adventures_javascript_parser::asi::restricted_insertion_points(tokens.clone())
+        }),
         None => Vec::new(),
     };
     let mut kept: Vec<&lexer::token::Token> = Vec::with_capacity(tokens.len() + asi_points.len());

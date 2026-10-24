@@ -21,6 +21,15 @@ All notable changes to the `coding-adventures-javascript-parser` crate will be d
   is refused instead of reading the declaration as an expression.
 - Tests: `tests/expression_statement_lookahead.rs`.
 
+### Added
+
+- `asi::restricted_insertion_points(tokens)`: the restricted-production `;`s
+  (`return⏎`, `break⏎`, `continue⏎`, `throw⏎`, `yield⏎`, newline-led
+  `++`/`--`), computed without parsing. These are the ASI points that change
+  what a program means. closurec's WHITESPACE_ONLY uses them when
+  `asi_insertion_points` fails, so a program the grammar can't parse no longer
+  loses them.
+
 ## 0.64.0 - Unreleased - quote-only string literals no longer panic the bridge
 
 ### Fixed

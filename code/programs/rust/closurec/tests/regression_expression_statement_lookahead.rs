@@ -21,6 +21,10 @@
 //! the second, and so does closurec. Blocks, object literals in parentheses
 //! and ordinary statements still compile, and when `node` is on `PATH` they
 //! print what the source prints.
+//!
+//! WHITESPACE_ONLY still emits a program the grammar can't parse. Such a
+//! program must keep the restricted-production `;`s (`return⏎42`), which the
+//! lookahead's new refusals would otherwise have dropped (security review).
 
 use std::process::Command;
 
@@ -89,6 +93,30 @@ fn run_node(program: &str) -> Option<(bool, String, String)> {
         String::from_utf8_lossy(&run.stdout).into_owned(),
         String::from_utf8_lossy(&run.stderr).into_owned(),
     ))
+}
+
+/// WHITESPACE_ONLY input that does not parse (the trailing Annex B form is
+/// refused) but must keep its restricted-production `;`s.
+const UNPARSEABLE_WHITESPACE_ONLY: &[&str] = &[
+    "function f(){ return\n42 }\nconsole.log(f()); if (1) function g(){}",
+    "var n=0; o: for(var i=0;i<3;i++){ for(;;){ n++; break\no } }\nconsole.log(n); if (1) function g(){}",
+    "function* g(){ yield\n7 }\nconsole.log(g().next().value); if (1) function h(){}",
+    "function f(){ return\n42 }\nconsole.log(f()); l: function g(){}",
+];
+
+#[test]
+fn whitespace_only_keeps_restricted_semicolons_when_the_parse_fails() {
+    for source in UNPARSEABLE_WHITESPACE_ONLY {
+        let out = compile(source, "WHITESPACE_ONLY");
+        let Some((ok, expected, err)) = run_node(source) else {
+            eprintln!("node not on PATH; skipping the runtime check");
+            return;
+        };
+        assert!(ok, "source {source:?} must run: {err}");
+        let (ok, got, err) = run_node(&out).expect("node ran once already");
+        assert!(ok, "WHITESPACE_ONLY {source:?} -> {out:?} throws: {err}");
+        assert_eq!(got, expected, "WHITESPACE_ONLY {source:?} -> {out:?}");
+    }
 }
 
 #[test]

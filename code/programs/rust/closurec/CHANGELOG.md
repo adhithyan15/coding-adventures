@@ -14,6 +14,14 @@ grammars and `javascript-parser`. `tests/regression_expression_statement_lookahe
 checks 4 refusals and 7 programs that must still compile and, under `node`,
 print what the source prints.
 
+WHITESPACE_ONLY drops every newline. When the parser can't read a program,
+it used to get no ASI points at all, so `function f(){ return⏎42 }` came out
+as `return 42`, a different program. The new refusals sent more programs down
+that path: any file containing `if (x) function f(){}`, for example. It now
+falls back to `asi::restricted_insertion_points`, which needs no parse.
+`whitespace_only_keeps_restricted_semicolons_when_the_parse_fails` covers
+`return`, `break` and `yield`.
+
 ### Changed - WHITESPACE_ONLY unwraps a single-statement labeled block (CCR-087, #15924)
 
 `lbl:{a()}` now prints as `lbl:a();`, matching upstream. The rule:
