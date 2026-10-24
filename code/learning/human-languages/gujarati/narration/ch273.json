@@ -1,0 +1,450 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 273,
+  "title": "Who did it, and what has happened",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:569f5cee1c30332d",
+  "lessons": [
+    {
+      "id": "GU-C273-arune-pidhi",
+      "sequence": 14800,
+      "title": "અરુણે ચા પીધી (Aruṇe cā pīdhī) — a name as the doer",
+      "headword": "અરુણે ચા પીધી",
+      "romanization": "Aruṇe cā pīdhī",
+      "gloss": "Arun drank tea — a name or a noun as the doer takes -e, and the verb still follows the thing",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22fc377adde5df20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I drank tea\" and \"he drank water\". (mẽ cā pīdhī, teṇe pāṇī pīdhũ.) Both times the doer was a pronoun. This lesson puts a name in its place."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the doer takes -એ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અરુણે ચા પીધી. Aruṇe cā pīdhī. — \"Arun drank tea.\""
+            },
+            {
+              "kind": "speech",
+              "text": "With a verb that has an object, a name or a noun that does it takes -એ (-e), the way હું becomes મેં:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the doer",
+                "with -એ"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "the doer: અરુણ. with -એ: અરુણે (Aruṇe).",
+                "the doer: મીરા. with -એ: મીરાએ (Mīrāe).",
+                "the doer: બહેન. with -એ: બહેને (bahene).",
+                "the doer: પોલીસ. with -એ: પોલીસે (polīse).",
+                "the doer: છોકરો. with -એ: છોકરાએ (chokrāe)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "After a consonant it is the sign ે; after a vowel, the letter એ. છોકરો first turns its -ો into -ા, as it does before -ને. A plural keeps its -ઓ and adds એ: છોકરાઓએ (chokrāoe), \"the boys\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the verb follows the thing",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મીરાએ પત્ર લખ્યો. Mīrāe patra lakhyo. — \"Mira wrote a letter.\""
+            },
+            {
+              "kind": "speech",
+              "text": "પત્ર is masculine, so લખ્યો. The doer leaves the ending alone; the thing sets it: મીરાએ વાર્તા લખી (Mīrāe vārtā lakhī), for a feminine story, and અરુણે પુસ્તક વાંચ્યું (Aruṇe pustak vā̃cyũ), for a neuter book."
+            },
+            {
+              "kind": "speech",
+              "text": "When the thing is a person, it takes -ને, and in Gujarati the verb follows that person too:"
+            },
+            {
+              "kind": "speech",
+              "text": "અરુણે મીરાને જોઈ. Aruṇe Mīrāne joī. — \"Arun saw Mira.\""
+            },
+            {
+              "kind": "speech",
+              "text": "જોઈ is feminine, for Mira. Turn it round, મીરાએ અરુણને જોયો (Mīrāe Aruṇne joyo): masculine, for Arun. Some speakers say જોયું in both; this book follows the person."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The boy ate rice\" — chokrāe bhāt khādho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The boy ate rice\" — *chokrāe bhāt khādho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My sister wrote a story\" — mārī bahene vārtā lakhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My sister wrote a story\" — *mārī bahene vārtā lakhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Mira saw Arun\" — Mīrāe Aruṇne joyo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Mira saw Arun\" — *Mīrāe Aruṇne joyo*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C273-arune-pidhi-r1",
+              "prompt": "Say that Mira drank tea, then that Arun read a book.",
+              "assesses": [
+                "GU-GRAMMAR-C273-NOUN-AGENT-01",
+                "GU-GRAMMAR-C273-NE-OBJECT-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "mīrāe cā pīdhī; aruṇe pustak vā̃cyũ",
+                "મીરાએ ચા પીધી. અરુણે પુસ્તક વાંચ્યું.",
+                "mīrāe cā pīdhī, aruṇe pustak vā̃cyũ"
+              ],
+              "feedback": {
+                "correct": "-e on each name, and each verb follows its thing: cā pīdhī, pustak vā̃cyũ.",
+                "incorrect": "Add -e to the name, then let the thing choose the ending: cā is feminine, pustak neuter."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Arun drank tea\"? (અરુણે ચા પીધી (Aruṇe cā pīdhī).) Why પીધી? (ચા is feminine.) \"Mira wrote a letter\"? (મીરાએ પત્ર લખ્યો.) Who sets the ending, Mira or the letter? (The letter.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C273-gayo-che",
+      "sequence": 14810,
+      "title": "ગયો છે, ગયો હતો (gayo che, gayo hato) — has gone, had gone",
+      "headword": "ગયો છે · ગયો હતો",
+      "romanization": "gayo che · gayo hato",
+      "gloss": "has gone, had gone — the perfect and the pluperfect, the past with છે or હતો after it",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e76fbdd88336757",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"he went\" and \"she came\". (te gayo, te āvī.) Then \"he was\". (te hato.) Put a past and a copula side by side, and a new past appears."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: has gone",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અરુણ બજાર ગયો છે. Aruṇ bajār gayo che. — \"Arun has gone to the market.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ગયો says he went. ગયો છે says he went and is still away: the going matters now. The છે follows the person, as in the present: હું હમણાં આવ્યો છું (hũ hamṇā̃ āvyo chũ), \"I have come this moment\"; અમે આવ્યા છીએ (ame āvyā chīe), \"we have come\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A verb with an object keeps its doer form and follows the thing: મેં કામ કર્યું છે (mẽ kām karyũ che), \"I have done the work\". There the copula is છે, whoever the doer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: had gone",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હું સ્ટેશન પહોંચ્યો, પણ ટ્રેન ઊપડી ગઈ હતી. hũ sṭeśan pahõcyo, paṇ ṭren ūpaḍī gaī hatī. — \"I reached the station, but the train had left.\""
+            },
+            {
+              "kind": "speech",
+              "text": "હતી puts the leaving further back, before another past. It follows the way હતો, હતી, હતું, હતા do:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "has (now)",
+                "had (before)"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "he went. has (now): તે ગયો છે. had (before): તે ગયો હતો.",
+                "she went. has (now): તે ગઈ છે. had (before): તે ગઈ હતી.",
+                "I did the work. has (now): મેં કામ કર્યું છે. had (before): મેં કામ કર્યું હતું.",
+                "Mira drank tea. has (now): મીરાએ ચા પીધી છે. had (before): મીરાએ ચા પીધી હતી."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We have come\" — ame āvyā chīe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We have come\" — *ame āvyā chīe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Arun had drunk the tea\" — Aruṇe cā pīdhī hatī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Arun had drunk the tea\" — *Aruṇe cā pīdhī hatī*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C273-gayo-che-r1",
+              "prompt": "Say that Mira has gone home, then that you had done the work.",
+              "assesses": [
+                "GU-GRAMMAR-C273-PERFECT-01",
+                "GU-GRAMMAR-C273-PLUPERFECT-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "mīrā ghare gaī che; mẽ kām karyũ hatũ",
+                "મીરા ઘરે ગઈ છે. મેં કામ કર્યું હતું.",
+                "mīrā ghare gaī che, mẽ kām karyũ hatũ"
+              ],
+              "feedback": {
+                "correct": "gaī che for Mira, now; karyũ hatũ for the work, further back.",
+                "incorrect": "Mira went: gaī, then che. The work was done before: mẽ kām karyũ, then hatũ."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"He has gone\"? (તે ગયો છે.) \"She had gone\"? (તે ગઈ હતી.) \"I have done the work\"? (મેં કામ કર્યું છે.) In મીરાએ ચા પીધી હતી, why હતી? (It follows ચા.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R273-who-did-it",
+      "sequence": 14820,
+      "title": "Review — who did it, and what has happened",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "who did it, and what has and had happened",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b314d9f47b715b7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I drank tea\" and \"she went home\". (mẽ cā pīdhī, te ghare gaī.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Arun ate rice. Mira drank water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Arun ate rice. Mira drank water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My sister wrote a letter, and Arun read it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My sister wrote a letter, and Arun read it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mira saw Arun at the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Mira saw Arun at the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Arun has gone home. I have done the work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Arun has gone home. I have done the work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I reached the station, but the train had left.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I reached the station, but the train had left.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In મીરાએ પત્ર લખ્યો, which word sets લખ્યો? (પત્ર.) Now the other way round: put Arun in Mira's place. Does the verb change? (No: અરુણે પત્ર લખ્યો.) Put વાર્તા in place of પત્ર? (Yes: લખી.) And \"had gone\", for a woman? (ગઈ હતી.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

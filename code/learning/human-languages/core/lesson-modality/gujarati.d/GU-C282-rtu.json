@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C282-rtu",
+    "language": "gujarati",
+    "chapter": 282,
+    "sequence": 15250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51c97c1b11f1b6e0"
+  },
+  "findings": []
+}

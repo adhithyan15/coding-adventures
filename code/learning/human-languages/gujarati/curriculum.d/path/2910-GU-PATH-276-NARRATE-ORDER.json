@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-276-NARRATE-ORDER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GU-EXT-276-NARRATE-ORDER"
+  ],
+  "after": []
+}
