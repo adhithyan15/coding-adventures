@@ -39,6 +39,17 @@ from that retained construction and rejects server policy produced for a
 byte-equal independently decoded certificate. Its distinct non-copyable result
 retains both complete inputs for later constraint policy.
 
+`validate_x509_rsa_sha256_constructed_reviewed_intermediate_server_anchor_policy`
+then applies the selected reviewed terminal's supported DNS policy without
+detaching either endpoint from that construction. It takes the target only from
+the retained complete server policy and the constraint bytes only from the
+reviewed root retained by the same authenticated constructed path. Entries
+without out-of-band constraints retain the entire proof without DNS evidence;
+constrained entries re-decode the exact target's Subject Alternative Name under
+separate caller-owned limits and retain optional payload-free count evidence.
+This result deliberately stops before the exact retained intermediate's
+NameConstraints extension is applied.
+
 `validate_x509_rsa_sha256_reviewed_server_anchor_policy` then consumes that
 complete direct-link evidence and checks the selected snapshot entry itself.
 Entries without out-of-band name constraints produce a stronger non-copyable
@@ -73,8 +84,8 @@ the complete prior proof plus optional payload-free intermediate DNS evidence.
 
 This is exact-object evidence composition plus deliberately narrow selected-
 anchor and intermediate DNS policy for direct and exactly one-intermediate RSA
-SHA-256 paths, including the fixed construction-bound proof, not complete
-certificate-path or TLS validation. The reviewed
+SHA-256 paths, plus selected-anchor DNS policy for the fixed construction-bound
+proof, not complete certificate-path or TLS validation. The reviewed
 snapshot input remains permitted-dNSName-only; exact critical intermediate
 extensions support bounded permitted and excluded dNSName subtrees. The crate
 does not apply directory-name, IP, or other constraint forms; other anchor
@@ -86,8 +97,9 @@ X.509, or cryptographic implementation is linked here.
 The focused unit and integration tests cover the security-sensitive
 exact-object predicate, the public two-link target binding with a static public
 Let's Encrypt precertificate, R13 intermediate, and reviewed ISRG Root X1, the
-construction-bound target and two-link anchor-policy and intermediate-policy
-retention, byte-equal separately decoded target rejection, complete-input
+construction-bound target and selected-anchor-policy retention, ordinary
+two-link anchor-policy and intermediate-policy retention, byte-equal separately
+decoded target rejection, complete-input
 getters, unconstrained and constrained policy branches, exact reviewed `.tr`
 bytes, all-target-DNS matching, DNS-absent SANs, criticality, exclusion
 precedence, unsupported non-DNS forms, malformed inputs, independent decoder
