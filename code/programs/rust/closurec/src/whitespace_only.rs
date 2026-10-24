@@ -6190,7 +6190,8 @@ fn bracket_partners(kept: &[&lexer::token::Token]) -> Vec<usize> {
 ///
 /// 1. The `(` partnering `outer_close` is a *grouping* paren. Its
 ///    predecessor must not make it a call or a head: it is absent, or an
-///    operator/punctuator other than `)`, `]`, `}` and `?.`, or one of the
+///    operator/punctuator other than `)`, `]`, `}`, `?.` and `@` (a
+///    decorator's `@(expr)` may not be followed by a call), or one of the
 ///    reserved words `return typeof void delete throw case in instanceof
 ///    else do`, which can't be called (and not after `.`/`?.`, where they
 ///    are member names). `new`, `yield`, `await` and every identifier
@@ -6219,7 +6220,7 @@ fn wraps_only_this_function(
     if let Some(p) = open.checked_sub(1) {
         let pred = kept[p];
         let grouping = if is_punct(pred) {
-            !matches!(pred.value.as_str(), ")" | "]" | "}" | "?.")
+            !matches!(pred.value.as_str(), ")" | "]" | "}" | "?." | "@")
         } else {
             !is_string_literal(pred)
                 && matches!(
@@ -10359,6 +10360,15 @@ mod tests {
         assert_eq!(minify("x=(async function(){}());"), "x=async function(){}();");
         assert_eq!(minify("x=(function*(){}());"), "x=function*(){}();");
         assert_eq!(minify("x=(function f(){return 1}());"), "x=function f(){return 1}();");
+    }
+
+    #[test]
+    fn issue18114_a_decorator_paren_is_left_alone() {
+        // `@(f())` is a valid decorator; `@(f)()` is not.
+        assert_eq!(
+            minify("@(function(){return function(){}}()) class A{}"),
+            "@(function(){return function(){}}())class A{};"
+        );
     }
 
     #[test]
