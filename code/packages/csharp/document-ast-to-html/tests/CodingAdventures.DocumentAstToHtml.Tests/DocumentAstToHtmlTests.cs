@@ -16,6 +16,21 @@ public sealed class DocumentAstToHtmlTests
 
     private static TextNode Text(string value) => new(value);
 
+    private sealed class UnknownBlockNode : IBlockNode
+    {
+        public string Type => "unknown_block";
+    }
+
+    private sealed class UnknownListChildNode : IListChildNode
+    {
+        public string Type => "unknown_list_child";
+    }
+
+    private sealed class UnknownInlineNode : IInlineNode
+    {
+        public string Type => "unknown_inline";
+    }
+
     [Fact]
     public void ToHtml_RendersCoreBlockNodesInOrder()
     {
@@ -53,6 +68,32 @@ public sealed class DocumentAstToHtmlTests
             "<ul>\n<li>one</li>\n<li></li>\n</ul>\n" +
             "<ol start=\"42\">\n<li>\n<p>forty-two</p>\n</li>\n</ol>\n",
             Renderer.ToHtml(document));
+    }
+
+    [Fact]
+    public void ToHtml_RendersMultiBlockTightAndDirectListItems()
+    {
+        var tight = new ListNode(false, null, true,
+        [
+            new ListItemNode([
+                Paragraph(Text("first")),
+                new BlockquoteNode([Paragraph(Text("second"))]),
+            ]),
+            new ListItemNode([
+                new BlockquoteNode([Paragraph(Text("third"))]),
+                Paragraph(Text("fourth")),
+            ]),
+        ]);
+
+        Assert.Equal(
+            "<ul>\n<li>first\n<blockquote>\n<p>second</p>\n</blockquote>\n</li>\n" +
+            "<li>\n<blockquote>\n<p>third</p>\n</blockquote>\nfourth</li>\n</ul>\n" +
+            "<li>\n<p>direct</p>\n</li>\n" +
+            "<li><input type=\"checkbox\" disabled=\"\" checked=\"\" /> \n<p>task</p>\n</li>\n",
+            Renderer.ToHtml(Document(
+                tight,
+                new ListItemNode([Paragraph(Text("direct"))]),
+                new TaskItemNode(true, [Paragraph(Text("task"))]))));
     }
 
     [Fact]
@@ -112,6 +153,18 @@ public sealed class DocumentAstToHtmlTests
     }
 
     [Fact]
+    public void ToHtml_RendersRightAlignedAndEmptyTables()
+    {
+        var table = new TableNode(
+            [TableAlignment.Right],
+            [new TableRowNode(false, [new TableCellNode([Text("value")])])]);
+
+        Assert.Equal(
+            "<table>\n<tbody>\n<tr>\n<td align=\"right\">value</td>\n</tr>\n</tbody>\n</table>\n<table>\n</table>\n",
+            Renderer.ToHtml(Document(table, new TableNode([], []))));
+    }
+
+    [Fact]
     public void ToHtml_RoutesRawNodesByFormatAndOption()
     {
         var document = Document(
@@ -134,6 +187,7 @@ public sealed class DocumentAstToHtmlTests
     [InlineData("JAVASCRIPT:alert(1)")]
     [InlineData("java\rscript:alert(1)")]
     [InlineData("java\u200Bscript:alert(1)")]
+    [InlineData(" javascript:alert(1)")]
     [InlineData("vbscript:msgbox(1)")]
     [InlineData("data:text/html,<script>1</script>")]
     [InlineData("blob:https://example.test/id")]
@@ -154,6 +208,38 @@ public sealed class DocumentAstToHtmlTests
     }
 
     [Fact]
+    public void EscapeHtml_EscapesEveryHtmlMetacharacterAndEnforcesItsOutputLimit()
+    {
+        Assert.Equal("&amp;&lt;&gt;&quot;'", Renderer.EscapeHtml("&<>\"'"));
+        Assert.Throws<ArgumentNullException>(() => Renderer.EscapeHtml(null!));
+        Assert.Throws<InvalidOperationException>(() => Renderer.EscapeHtml(new string('x', 1_000_001)));
+        Assert.Throws<InvalidOperationException>(() => Renderer.EscapeHtml(new string('&', 200_001)));
+    }
+
+    [Fact]
+    public void ToHtml_RejectsOversizedAndExpansionHeavyUrls()
+    {
+        Assert.Throws<InvalidOperationException>(() => Renderer.ToHtml(Document(
+            Paragraph(new LinkNode(new string('x', 1_000_001), null, [Text("large")])))));
+        Assert.Throws<InvalidOperationException>(() => Renderer.ToHtml(Document(
+            Paragraph(new AutolinkNode(new string(' ', 400_000), false)))));
+    }
+
+    [Fact]
+    public void ToHtml_RejectsUnknownAstVariants()
+    {
+        Assert.Throws<InvalidOperationException>(() => Renderer.ToHtml(Document(new UnknownBlockNode())));
+        Assert.Throws<InvalidOperationException>(() => Renderer.ToHtml(Document(
+            new ListNode(false, null, true, [new UnknownListChildNode()]))));
+        Assert.Throws<InvalidOperationException>(() => Renderer.ToHtml(Document(
+            Paragraph(new UnknownInlineNode()))));
+        Assert.Throws<InvalidOperationException>(() => Renderer.ToHtml(Document(
+            new TableNode([(TableAlignment)99], [
+                new TableRowNode(false, [new TableCellNode([Text("value")])]),
+            ]))));
+    }
+
+    [Fact]
     public void ToHtml_RejectsTreesPastTheDepthLimit()
     {
         IBlockNode current = Paragraph(Text("bottom"));
@@ -170,5 +256,23 @@ public sealed class DocumentAstToHtmlTests
     {
         var document = Document(Paragraph(Text(new string('x', 1_100_000))));
         Assert.Throws<InvalidOperationException>(() => Renderer.ToHtml(document));
+    }
+
+    [Fact]
+    public void ToHtml_RejectsTreesPastTheNodeLimit()
+    {
+        var children = Enumerable.Range(0, 100_001)
+            .Select(index => (IInlineNode)new TextNode(index.ToString()))
+            .ToArray();
+
+        Assert.Throws<InvalidOperationException>(() => Renderer.ToHtml(Document(new ParagraphNode(children))));
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(7)]
+    public void ToHtml_RejectsHeadingLevelsOutsideTe00(int level)
+    {
+        Assert.Throws<InvalidOperationException>(() => Renderer.ToHtml(Document(new HeadingNode(level, [Text("bad")]))));
     }
 }

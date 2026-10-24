@@ -40,17 +40,28 @@ public static class DocumentAstToHtml
     public static string EscapeHtml(string value)
     {
         ArgumentNullException.ThrowIfNull(value);
+        if (value.Length > MaxOutputCharacters)
+        {
+            throw new InvalidOperationException($"Escaped HTML exceeds the supported limit of {MaxOutputCharacters} characters.");
+        }
+
         var builder = new StringBuilder(value.Length);
         foreach (var character in value)
         {
-            builder.Append(character switch
+            var encoded = character switch
             {
                 '&' => "&amp;",
                 '<' => "&lt;",
                 '>' => "&gt;",
                 '"' => "&quot;",
                 _ => character.ToString(),
-            });
+            };
+            if (encoded.Length > MaxOutputCharacters - builder.Length)
+            {
+                throw new InvalidOperationException($"Escaped HTML exceeds the supported limit of {MaxOutputCharacters} characters.");
+            }
+
+            builder.Append(encoded);
         }
 
         return builder.ToString();
@@ -82,10 +93,15 @@ public static class DocumentAstToHtml
             switch (block)
             {
                 case HeadingNode heading:
+                    if (heading.Level is < 1 or > 6)
+                    {
+                        throw new InvalidOperationException("Heading levels must be between 1 and 6.");
+                    }
+
                     Append("<h");
                     Append(heading.Level.ToString(CultureInfo.InvariantCulture));
                     Append(">");
-                    RenderInlines(heading.Children, depth + 1);
+                    RenderInlines(heading.Children, depth);
                     Append("</h");
                     Append(heading.Level.ToString(CultureInfo.InvariantCulture));
                     Append(">\n");
@@ -97,7 +113,7 @@ public static class DocumentAstToHtml
                         Append("<p>");
                     }
 
-                    RenderInlines(paragraph.Children, depth + 1);
+                    RenderInlines(paragraph.Children, depth);
                     Append(tight ? "\n" : "</p>\n");
                     break;
 
@@ -107,20 +123,20 @@ public static class DocumentAstToHtml
 
                 case BlockquoteNode quote:
                     Append("<blockquote>\n");
-                    RenderBlocks(quote.Children, tight: false, depth + 1);
+                    RenderBlocks(quote.Children, tight: false, depth);
                     Append("</blockquote>\n");
                     break;
 
                 case ListNode list:
-                    RenderList(list, depth + 1);
+                    RenderList(list, depth);
                     break;
 
                 case ListItemNode item:
-                    RenderListItem(item.Children, tight, depth + 1, checkbox: null);
+                    RenderListItem(item.Children, tight, depth, checkbox: null);
                     break;
 
                 case TaskItemNode task:
-                    RenderListItem(task.Children, tight, depth + 1, task.Checked);
+                    RenderListItem(task.Children, tight, depth, task.Checked);
                     break;
 
                 case ThematicBreakNode:
@@ -136,8 +152,11 @@ public static class DocumentAstToHtml
                     break;
 
                 case TableNode table:
-                    RenderTable(table, depth + 1);
+                    RenderTable(table, depth);
                     break;
+
+                default:
+                    throw new InvalidOperationException($"Unsupported block node type: {block.GetType().FullName}.");
             }
         }
 
@@ -175,11 +194,13 @@ public static class DocumentAstToHtml
                 switch (item)
                 {
                     case TaskItemNode task:
-                        RenderListItem(task.Children, list.Tight, depth + 1, task.Checked);
+                        RenderListItem(task.Children, list.Tight, depth, task.Checked);
                         break;
                     case ListItemNode ordinary:
-                        RenderListItem(ordinary.Children, list.Tight, depth + 1, checkbox: null);
+                        RenderListItem(ordinary.Children, list.Tight, depth, checkbox: null);
                         break;
+                    default:
+                        throw new InvalidOperationException($"Unsupported list child node type: {item.GetType().FullName}.");
                 }
             }
 
@@ -210,6 +231,7 @@ public static class DocumentAstToHtml
 
             if (tight && children[0] is ParagraphNode first)
             {
+                CountNode(depth + 1);
                 RenderInlines(first.Children, depth + 1);
                 if (children.Count == 1)
                 {
@@ -228,7 +250,7 @@ public static class DocumentAstToHtml
             }
 
             Append("\n");
-            RenderBlocks(children, tight, depth + 1);
+            RenderBlocks(children, tight, depth);
             if (tight && children[^1] is ParagraphNode && _output.Length > 0 && _output[^1] == '\n')
             {
                 _output.Length--;
@@ -289,12 +311,18 @@ public static class DocumentAstToHtml
             if (alignment is not null)
             {
                 Append(" align=\"");
-                Append(alignment.Value.ToString().ToLowerInvariant());
+                Append(alignment.Value switch
+                {
+                    TableAlignment.Left => "left",
+                    TableAlignment.Right => "right",
+                    TableAlignment.Center => "center",
+                    _ => throw new InvalidOperationException($"Unsupported table alignment value: {alignment.Value}."),
+                });
                 Append("\"");
             }
 
             Append(">");
-            RenderInlines(cell.Children, depth + 1);
+            RenderInlines(cell.Children, depth);
             Append("</");
             Append(tag);
             Append(">\n");
@@ -319,17 +347,17 @@ public static class DocumentAstToHtml
                     break;
                 case EmphasisNode emphasis:
                     Append("<em>");
-                    RenderInlines(emphasis.Children, depth + 1);
+                    RenderInlines(emphasis.Children, depth);
                     Append("</em>");
                     break;
                 case StrongNode strong:
                     Append("<strong>");
-                    RenderInlines(strong.Children, depth + 1);
+                    RenderInlines(strong.Children, depth);
                     Append("</strong>");
                     break;
                 case StrikethroughNode strike:
                     Append("<del>");
-                    RenderInlines(strike.Children, depth + 1);
+                    RenderInlines(strike.Children, depth);
                     Append("</del>");
                     break;
                 case CodeSpanNode code:
@@ -343,7 +371,7 @@ public static class DocumentAstToHtml
                     Append("\"");
                     AppendTitle(link.Title);
                     Append(">");
-                    RenderInlines(link.Children, depth + 1);
+                    RenderInlines(link.Children, depth);
                     Append("</a>");
                     break;
                 case ImageNode image:
@@ -376,6 +404,9 @@ public static class DocumentAstToHtml
                 case SoftBreakNode:
                     Append("\n");
                     break;
+
+                default:
+                    throw new InvalidOperationException($"Unsupported inline node type: {node.GetType().FullName}.");
             }
         }
 
@@ -391,7 +422,20 @@ public static class DocumentAstToHtml
             Append("\"");
         }
 
-        private void AppendEscaped(string value) => Append(EscapeHtml(value));
+        private void AppendEscaped(string value)
+        {
+            foreach (var character in value)
+            {
+                Append(character switch
+                {
+                    '&' => "&amp;",
+                    '<' => "&lt;",
+                    '>' => "&gt;",
+                    '"' => "&quot;",
+                    _ => character.ToString(),
+                });
+            }
+        }
 
         private void Append(string value)
         {
@@ -423,6 +467,11 @@ public static class DocumentAstToHtml
 
     private static string SanitizeUrl(string value)
     {
+        if (value.Length > MaxOutputCharacters)
+        {
+            throw new InvalidOperationException($"URL exceeds the supported limit of {MaxOutputCharacters} characters.");
+        }
+
         var stripped = new StringBuilder(value.Length);
         foreach (var rune in value.EnumerateRunes())
         {
@@ -435,10 +484,14 @@ public static class DocumentAstToHtml
         }
 
         var result = stripped.ToString();
-        return result.StartsWith("javascript:", StringComparison.OrdinalIgnoreCase) ||
-               result.StartsWith("vbscript:", StringComparison.OrdinalIgnoreCase) ||
-               result.StartsWith("data:", StringComparison.OrdinalIgnoreCase) ||
-               result.StartsWith("blob:", StringComparison.OrdinalIgnoreCase)
+        // Browsers ignore leading ASCII spaces before scheme parsing.  Keep
+        // safe relative URLs byte-for-byte, but inspect the browser-visible
+        // candidate so " javascript:" cannot bypass the blocklist.
+        var schemeCandidate = result.TrimStart(' ');
+        return schemeCandidate.StartsWith("javascript:", StringComparison.OrdinalIgnoreCase) ||
+               schemeCandidate.StartsWith("vbscript:", StringComparison.OrdinalIgnoreCase) ||
+               schemeCandidate.StartsWith("data:", StringComparison.OrdinalIgnoreCase) ||
+               schemeCandidate.StartsWith("blob:", StringComparison.OrdinalIgnoreCase)
             ? string.Empty
             : result;
     }
@@ -462,6 +515,11 @@ public static class DocumentAstToHtml
             var length = rune.EncodeToUtf8(bytes);
             for (var index = 0; index < length; index++)
             {
+                if (output.Length > MaxOutputCharacters - 3)
+                {
+                    throw new InvalidOperationException($"Normalized URL exceeds the supported limit of {MaxOutputCharacters} characters.");
+                }
+
                 output.Append('%');
                 output.Append(bytes[index].ToString("X2", CultureInfo.InvariantCulture));
             }
