@@ -101,6 +101,14 @@ const ER_BRACKETED_ATTRIBUTE_NAMES_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-bracketed-attribute-names-11.16.1-visual-corpus.json"
 ));
+const ER_CASE_INSENSITIVE_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-case-insensitive-11.16.1-corpus.json"
+));
+const ER_CASE_INSENSITIVE_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-case-insensitive-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2190,6 +2198,34 @@ fn pinned_er_bracketed_attribute_names_reach_semantic_ir() {
         book.compartments[0].entries,
         ["author-ref[name](1): string"]
     );
+}
+
+#[test]
+fn pinned_er_case_insensitive_source_dispatches_to_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_CASE_INSENSITIVE_CORPUS)
+        .expect("ER case-insensitive corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_CASE_INSENSITIVE_VISUAL_CORPUS)
+        .expect("ER case-insensitive visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let source = syntax["fixtures"][0]["source"]
+        .as_str()
+        .expect("ER case-insensitive source");
+    assert_eq!(
+        detect_mermaid_type(source).expect("mixed-case ER family detection"),
+        mermaid_parser::MermaidDiagramType::Er
+    );
+    let diagram = match parse_any_mermaid(source).expect("mixed-case ER source must dispatch") {
+        mermaid_parser::MermaidDiagram::Structural(diagram) => diagram,
+        _ => panic!("expected structural ER diagram"),
+    };
+
+    assert_eq!(diagram.title.as_deref(), Some("Library model"));
+    assert_eq!(diagram.direction, Some(DiagramDirection::Lr));
+    assert_eq!(diagram.relationships.len(), 1);
+    assert_eq!(diagram.relationships[0].label.as_deref(), Some("written by"));
+    assert!(diagram.nodes.iter().any(|node| node.id == "BOOK"));
+    assert!(diagram.nodes.iter().any(|node| node.id == "AUTHOR"));
 }
 
 #[test]

@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER case-insensitive lexer vertical slice",
+  "fixtures": [
+    {
+      "name": "mixed-case-header-statements-and-word-relationship",
+      "source": "ErDiAgRaM\nTiTlE Library model\nDiReCtIoN lR\nBOOK OnE oR mOrE To OnLy OnE AUTHOR : written by"
+    }
+  ]
+}
