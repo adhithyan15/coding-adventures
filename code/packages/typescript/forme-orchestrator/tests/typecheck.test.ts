@@ -4,7 +4,26 @@
 
 import { describe, it, expect } from "vitest";
 import { Kinds, streamOf } from "@coding-adventures/forme-types";
+import type {
+  KindDescriptor,
+  KindName,
+  KindRegistry,
+  RegisteredKind,
+} from "@coding-adventures/forme-types";
 import { areKindsCompatible } from "../src/index.js";
+
+const blogPost = { name: "ext:blog-post", version: "1.1" } as const;
+const featuredPost = { name: "ext:featured-post", version: "1.2" } as const;
+
+function extensionRegistry(
+  featured: KindDescriptor = featuredPost,
+): KindRegistry {
+  const registrations = new Map<KindName, RegisteredKind>([
+    ["ext:blog-post", { descriptor: blogPost, parent: Kinds.ContentNode }],
+    ["ext:featured-post", { descriptor: featured, parent: blogPost }],
+  ]);
+  return { lookup: name => registrations.get(name) };
+}
 
 describe("areKindsCompatible — basic", () => {
   it("identical descriptors match", () => {
@@ -111,6 +130,54 @@ describe("areKindsCompatible — discriminants", () => {
     expect(areKindsCompatible(
       { name: "Feed", version: "1.0" },
       { name: "Feed", version: "1.0", discriminant: "atom" },
+    )).toBe(false);
+  });
+});
+
+describe("areKindsCompatible — registered extension subtypes", () => {
+  it("allows direct and transitive producer widening", () => {
+    const registry = extensionRegistry();
+    expect(areKindsCompatible(blogPost, Kinds.ContentNode, registry)).toBe(true);
+    expect(areKindsCompatible(featuredPost, Kinds.ContentNode, registry)).toBe(true);
+    expect(areKindsCompatible(featuredPost, blogPost, registry)).toBe(true);
+  });
+
+  it("never narrows a generic producer into a specialized consumer", () => {
+    const registry = extensionRegistry();
+    expect(areKindsCompatible(Kinds.ContentNode, blogPost, registry)).toBe(false);
+    expect(areKindsCompatible(blogPost, featuredPost, registry)).toBe(false);
+  });
+
+  it("preserves stream covariance and stream shape", () => {
+    const registry = extensionRegistry();
+    expect(areKindsCompatible(streamOf(featuredPost), streamOf(Kinds.ContentNode), registry))
+      .toBe(true);
+    expect(areKindsCompatible(streamOf(Kinds.ContentNode), streamOf(featuredPost), registry))
+      .toBe(false);
+    expect(areKindsCompatible(featuredPost, streamOf(Kinds.ContentNode), registry))
+      .toBe(false);
+  });
+
+  it("rejects unregistered extensions and descriptor-version drift", () => {
+    const registry = extensionRegistry();
+    expect(areKindsCompatible(
+      { name: "ext:unknown", version: "1.0" },
+      Kinds.ContentNode,
+      registry,
+    )).toBe(false);
+    expect(areKindsCompatible(
+      { name: "ext:blog-post", version: "1.2" },
+      Kinds.ContentNode,
+      registry,
+    )).toBe(false);
+  });
+
+  it("checks version compatibility across every ancestry edge", () => {
+    const incompatibleFeatured = { name: "ext:featured-post", version: "2.0" } as const;
+    expect(areKindsCompatible(
+      incompatibleFeatured,
+      Kinds.ContentNode,
+      extensionRegistry(incompatibleFeatured),
     )).toBe(false);
   });
 });

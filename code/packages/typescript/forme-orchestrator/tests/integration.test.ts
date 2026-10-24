@@ -12,6 +12,7 @@ import {
   Kinds,
   streamOf,
 } from "@coding-adventures/forme-types";
+import type { KindRegistry } from "@coding-adventures/forme-types";
 import { defineStage } from "@coding-adventures/forme-stage";
 import { StageError } from "@coding-adventures/forme-errors";
 import {
@@ -632,6 +633,54 @@ describe("buildDag — direct API", () => {
       ],
     };
     expect(() => buildDag(validateConfig(config))).toThrow(/join.*assets.*incompatible/);
+  });
+
+  it("widens a registered extension stream across a named input port", () => {
+    const extensionKind = { name: "ext:blog-post", version: "1.0" } as const;
+    const pages = tinySource(["page"]);
+    const extensions = defineStage({
+      name: "@test/extensions",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "extension stream source",
+      consumes: Kinds.Void,
+      produces: streamOf(extensionKind),
+      capabilities: [],
+      configSchema: null,
+      async *run() { yield {}; },
+    });
+    const join = defineStage({
+      name: "@test/extension-join",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "accepts generic content on a named port",
+      consumes: streamOf(Kinds.ContentSource),
+      inputPorts: { posts: streamOf(Kinds.ContentNode) },
+      produces: Kinds.DeployArtifact,
+      capabilities: [],
+      configSchema: null,
+      async run() { return null as never; },
+    });
+    const config: PipelineConfig = {
+      ...makeConfig([
+        { stage: pages, id: "pages" },
+        { stage: extensions, id: "extensions" },
+        { stage: join, id: "join" },
+      ]),
+      wires: [
+        { from: { id: "pages" }, to: { id: "join" } },
+        { from: { id: "extensions" }, to: { id: "join", port: "posts" } },
+      ],
+    };
+    const registry: KindRegistry = {
+      lookup(name) {
+        return name === "ext:blog-post"
+          ? { descriptor: extensionKind, parent: Kinds.ContentNode }
+          : undefined;
+      },
+    };
+    const dag = buildDag(validateConfig(config), registry);
+    expect(dag.instances.get("join")?.inputProducers.get("posts")).toBe("extensions");
   });
 
   it("rejects explicit wire cycles", () => {
