@@ -1880,6 +1880,110 @@ section above.
 7c is the rest of the 7b/7c row in the phase table: Python 2, more
 releases, and the float subset.
 
+**Phase 7c, slice 1 (Python 2: `py2-int-print`).** This slice brings the
+first Python 2 releases onto the release path. It adds a new subset,
+`py2-int-print`: py-int-print's integer arithmetic, spoken in Python 2's
+syntax and meaning. It is a separate subset rather than a profile of
+`py-int-print`, because the two disagree on what the same text means.
+`print(1, 2)` is a call with two arguments in Python 3 and a tuple in
+Python 2, `print()` writes `()` in Python 2, and `/` is a different
+operator. A shared corpus would need an override on almost every case.
+
+```python
+print 1 + 2 * 3           # 7
+print -7 / 2              # -4   (classic division on ints floors)
+print -7 // 2; print      # -4, then an empty line
+print (1 + 2) * 3         # 9    (a parenthesised atom, not a call)
+```
+
+- **Statements.** `print <expr>` or a bare `print`, separated by NEWLINE or
+  `;`, with an optional trailing `;`. The trivia are py-int-print's: blank
+  lines, `#` comments, `\`-newline, and newlines inside parentheses.
+- **Expressions.** py-int-print's, plus `/`: decimal integer literals,
+  parentheses, unary `+ -`, and binary `+ - * / // %` at Python's
+  precedence, all left-associative.
+- **Refused.** The grammar admits Python 2's print item list, so these
+  compile errors are typed `Unsupported`:
+  - `print a, b`, which writes `a b`;
+  - `print a,`, which writes no newline.
+  - **Why refuse them?** Both set the stream's *softspace* flag, and CPython 2
+    flushes a pending softspace as `\n` before it reports an uncaught
+    exception (`Py_FlushLine` in `PyErr_Display`, `Python/pythonrun.c`). So
+    `print 1, 1/0` writes `1\n`, not `1`.
+  - **What it needs.** Lowering that faithfully needs a trap handler, which
+    LANG83 does not have yet.
+  - **Parse errors** (the release grammar does not admit them): `print >>f, x`,
+    `print()` (an empty tuple), a parenthesised tuple, and everything else
+    py-int-print's grammar refuses.
+  - **Lexer errors:** an octal literal (`010`), a `long` suffix (`1L`), a
+    `_` separator, and `00`.
+- **Semantics.**
+  - **`/` is classic division.** On two ints it is floor division. At both
+    tags, `Objects/intobject.c` `int_classic_div` (`nb_divide`) and
+    `int_div` (`nb_floor_divide`) go through `i_divmod`, which adjusts a
+    truncated quotient down when the signs differ. The profile records this
+    as `Slash::Classic`, and the compiler lowers `/` exactly like `//`,
+    including the `-1` divisor fold.
+  - **A zero divisor** raises `ZeroDivisionError` ("integer division or
+    modulo by zero"), giving `Trap.DivZero` after the output so far.
+  - **Integers outside `i64`.** A result outside `i64` is promoted to `long`
+    in CPython: `int_add` and friends call `PyLong_Type`'s slot, and
+    `i_divmod` returns `DIVMOD_OVERFLOW` for `LONG_MIN / -1`. Here it gives
+    `Trap.Overflow`, the same stated divergence as py-int-print.
+  - **`print <expr>`** evaluates the expression, then writes `str()` of it and
+    `\n` (PRINT_ITEM, PRINT_NEWLINE), so a trap in the expression writes
+    nothing for that statement. A bare `print` writes `\n`. This lowers to
+    py-int-print's `print_i64` and `putchar 10`. There are no new IIR ops.
+- **Releases.** Two tags get a pair. The file stems `python2.2.*` and
+  `python2.7.18.*` do not collide with the legacy minor-line pair
+  `python2.7.*`. Both are `partial`, stage `P`, and claim `py2-int-print`
+  under profile `py2`. Their evidence rows go in `pair-evidence.csv`.
+
+  | Release | Why | Oracle |
+  | --- | --- | --- |
+  | 2.2 | the first final release with `//` (PEP 238: `DOUBLESLASH` in `Parser/tokenizer.c`, `'//'` in `Grammar/Grammar` `term`) | pinned historical source |
+  | 2.7.18 | the last Python 2 release | pinned historical source |
+
+  There is no host `python2`, so both rest on the tags' own `Grammar/Grammar`,
+  `Parser/tokenizer.c`, `Lib/keyword.py`, `Objects/intobject.c`,
+  `Python/ceval.c` (PRINT_ITEM, PRINT_NEWLINE) and `Python/pythonrun.c`.
+  Their blob IDs are in `pair-evidence.csv` and the profile's doc comment.
+  Each `.cite` names its oracle as `pinned historical source`.
+- **Tokens.** Each tag's operator table comes from `PyToken_OneChar`,
+  `TwoChars` and `ThreeChars`: 44 operators in 2.2 (including `<>` and the
+  backquote) and 45 in 2.7.18, which adds `@`. The keywords come from
+  `kwlist`: 29 in 2.2 and 31 in 2.7.18, which adds `as` and `with`. `print`
+  is a keyword in both. Integers are decimal only: `[1-9][0-9]*` or a single
+  `0`, closed by `\b`, so octal, `L` suffixes and `_` are lexer errors (a
+  narrowing; none is read differently).
+- **Grammar.** The rule names stay python3.12.grammar's (C8). The one new rule
+  is `print_stmt = "print" [ expression { COMMA expression } [ COMMA ] ]`, and
+  `small_stmt = print_stmt | expression`. Rules a profile adds are listed in
+  `python-iir-compiler`'s `PROFILE_RULES`, so `cst_contract` checks them for
+  the releases of that profile only.
+- **Crates.**
+  - `python-iir-compiler` gains:
+    - `PY2` (`Slash::Classic`);
+    - `subset_for(profile)`, which maps py3 to `py-int-print` and py2 to
+      `py2-int-print`;
+    - the `print_stmt` walk, chosen by tree shape;
+    - classic `/`.
+  - The corpus tests run every subset declared in `subsets.csv` for its
+    claiming releases.
+  - `release_sweep.rs` writes the py2 releases' classes into
+    `release_classes.csv`.
+  - `lang-aot` needs no new code, because `--lang python@2.2` and
+    `python@2.7.18` resolve through the shared release API.
+  - `lang_matrix` gets `py2-int-print` rows on each py2 class representative,
+    on every executable column. `backend_status` claims the subset for the
+    releases whose class those rows cover.
+- **Not in this slice:**
+  - multi-item and trailing-comma `print`, and `print >>`, which need
+    catchable traps or a stream model;
+  - octal and `long` literals;
+  - Python 2 releases other than these two;
+  - the float subset.
+
 ### Wire every IIR frontend into lang-aot
 
 Add `Language` variants with release support for Python, JavaScript, Ruby and
