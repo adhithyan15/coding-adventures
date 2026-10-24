@@ -40,7 +40,9 @@ through built-in `entier`; fractional, oversized, dynamic, captured, array-backe
 and by-name real values fail closed.
 Exact perfect-square roots of those checked reductions may also pass through
 built-in `sqrt`; non-square, negative, dynamic, and overridden roots fail
-closed.
+closed. Their radicands may contain checked integer `div`/`mod`, bounded powers,
+and supported exact built-in normalizers while the complete reduction remains
+within `2^53`.
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
 boolean array through a rank-aware value formal with two non-unit lower bounds.
