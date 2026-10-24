@@ -281,7 +281,9 @@ Exact integral local real snapshots may supply the same leaves through built-in
 and by-name real values remain conservative.
 Built-in `sqrt` may normalize a nonnegative checked reduction when its value is
 an exact perfect square. Non-square, negative, dynamic, and user-overridden
-roots remain conservative.
+roots remain conservative. The radicand may itself contain checked integer
+`div`/`mod`, powers, and supported exact built-in normalizers, so long as the
+complete reduction remains bounded by `2^53` before the exact-root check.
 Positive variable-free whole-number powers may raise the exact sign-rooted
 integer transform within the existing exponent-unroll cap while checked
 exponentiation remains within `2^53`; zero, negative, dynamic, deeper, and

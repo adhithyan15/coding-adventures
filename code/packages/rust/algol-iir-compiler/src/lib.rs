@@ -4754,10 +4754,22 @@ impl Compiler {
             .clone();
         let target_name = self.resolve_procedure_identity(&name);
         if target_name == "sqrt" && !self.proc_sigs.contains_key(&target_name) {
-            let value = self.static_tracked_standard_real_value(node)?;
-            return (value.fract() == 0.0
-                && value.abs() <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE as f64)
-                .then_some(value as i64);
+            if let Some(value) = self.static_tracked_standard_real_value(node) {
+                return (value.fract() == 0.0
+                    && value.abs() <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE as f64)
+                    .then_some(value as i64);
+            }
+            let actuals = self.standard_fn_actuals(node);
+            if actuals.len() != 1 {
+                return None;
+            }
+            let radicand = exact_static_integer_reduction_value_with(
+                actuals[0],
+                &|candidate| self.exact_static_integer_reduction_leaf_value(candidate),
+            )?;
+            let radicand = u64::try_from(radicand).ok()?;
+            let root = (radicand as f64).sqrt() as u64;
+            return (root.checked_mul(root) == Some(radicand)).then_some(root as i64);
         }
         if self.proc_sigs.contains_key(&target_name)
             || !matches!(target_name.as_str(), "abs" | "sign" | "entier")
@@ -15928,6 +15940,8 @@ mod tests {
         for source in [
             "begin real procedure pick; pick := 3.5; real factor, result; factor := 81.0; result := entier((entier(sqrt(factor)) div 3) * ((2 * sign(pick())) + 2)); output(result) end",
             "begin real procedure pick; pick := -2.25; real factor, result; factor := 144.0; result := entier(abs(entier(sqrt(factor)) mod 5) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; integer factor; real result; factor := 243; result := entier((entier(sqrt(factor div 3)) div 3) * ((2 * sign(pick())) + 2)); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((entier(sqrt(abs(((10 div 3) + (7 mod 4)) ^ 2))) div 2) * sign(pick())); output(result) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
@@ -15950,6 +15964,10 @@ mod tests {
             "begin real procedure pick; pick := 3.5; real factor, result; factor := 6.25; result := entier((entier(sqrt(factor)) div 2) * sign(pick())); output(result) end",
             "begin real procedure pick; pick := 81.0; real factor, result; factor := pick(); result := entier((entier(sqrt(factor)) div 3) * sign(pick())); output(result) end",
             "begin real procedure sqrt(x); value x; real x; sqrt := 9.0; real factor, result; factor := 81.0; result := entier((entier(sqrt(factor)) div 3) * sign(factor)); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(entier(sqrt(10 div 3)) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(entier(sqrt(4 - (10 div 2))) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; integer factor; real result; factor := entier(pick()); result := entier(entier(sqrt(factor div 3)) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(entier(sqrt(81 div 0)) * sign(pick())); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
                 "inexact, fractional, dynamic, and overridden square roots must remain outside the checked static integer reduction proof",
