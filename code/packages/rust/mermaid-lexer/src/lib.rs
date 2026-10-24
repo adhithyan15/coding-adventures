@@ -1525,6 +1525,33 @@ mod tests {
     }
 
     #[test]
+    fn distinguishes_er_entity_strings_from_general_quoted_text() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\n\"Customer Account\" ||--|| ORDER : \"100% complete\"\n",
+        );
+        let quoted: Vec<(&str, &str)> = tokens
+            .iter()
+            .filter_map(|token| {
+                if token.type_name.as_deref() == Some("ENTITY_STRING") {
+                    Some(("ENTITY_STRING", token.value.as_str()))
+                } else if token.type_ == TokenType::String {
+                    Some(("STRING", token.value.as_str()))
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        assert_eq!(
+            quoted,
+            [
+                ("ENTITY_STRING", "Customer Account"),
+                ("STRING", "100% complete")
+            ]
+        );
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",

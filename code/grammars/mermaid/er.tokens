@@ -26,6 +26,7 @@ RBRACKET            = "]"
 COMMA               = ","
 COLON               = ":"
 QUESTION            = "?"
+ENTITY_STRING       = /"[^"%\r\n\x0B\x08\\]+"/
 STRING              = /"([^"\\]|\\.)*"/
 ESCAPED_ATTRIBUTE   = /`[^`\r\n]+`/
 COMMA_ATTRIBUTE_TYPE = /[\p{L}_*][\p{L}\p{N}_.~*-]*\([^()\r\n]*,[^()\r\n]*\)/

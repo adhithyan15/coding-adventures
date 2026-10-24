@@ -132,7 +132,9 @@ IR, layout, and paint. ER headers, statements, directions, and word-form
 relationships and attribute key markers match case-insensitively from family
 detection through paint, while authored entity and attribute text retains its
 original case. Numeric `1` cardinalities are disambiguated from numeric entity
-identifiers, including compact relationship operators. ER remains partial while the
+identifiers, including compact relationship operators. Quoted entity names follow
+the pinned non-empty character constraints without narrowing quoted relationship
+roles or attribute comments. ER remains partial while the
 rest of the pinned upstream syntax and visual corpus is incomplete.
 
 ## Required New Semantic Families
