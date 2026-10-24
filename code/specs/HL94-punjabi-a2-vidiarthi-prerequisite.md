@@ -19,9 +19,12 @@ authored, generated-book, or narration copy before its owner.
 The frame uses only prior Punjabi. **ਉਹ** remains gender-neutral in Punjabi;
 an English gloss may say “he or she,” but the lesson must not invent a Punjabi
 gender distinction. The chapter must not introduce a school noun, plural or
-oblique **ਵਿਦਿਆਰਥੀਆਂ**, an etymology, or an invented morphological split for
-the long word. Its pronunciation guidance follows contemporary Punjabi
-*vidiārthī* and must not impose Sanskrit *vidyārthī*.
+oblique **ਵਿਦਿਆਰਥੀਆਂ**, or an invented morphological split for the long word.
+It may include one bounded, cited borrowing note because the root-ledger
+contract requires visible source history: that note must name the Sanskrit
+source only as history, keep the Punjabi word whole, and must not turn the
+borrowing into a productive derivation rule. Pronunciation guidance follows
+contemporary Punjabi *vidiārthī* and must not impose Sanskrit *vidyārthī*.
 
 This is the seventeenth prerequisite tranche exposed by Punjabi A2 mock
 drafting. It is not mock-readiness, attainment, external-equivalence, or human

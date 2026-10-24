@@ -81,6 +81,11 @@ it("adds a slow Punjabi A2 student-noun prerequisite without mock credit", () =>
   expect(learnerCopy).toMatch(/gender-neutral|does not mark.*gender/is);
   expect(learnerCopy).toMatch(/vidiārthī/is);
   expect(learnerCopy).toMatch(/source history separate.*Punjabi pronunciation.*vidiārthī/is);
+  expect(learnerCopy).toMatch(/borrowing from Sanskrit.*Keep the source history separate/is);
+  expect(learnerCopy).toContain("https://en.wiktionary.org/wiki/");
+  expect(learnerCopy).toContain("https://dic.learnpunjabi.org/default.aspx");
+  expect(learnerCopy).toMatch(/learn the Punjabi form as one whole/is);
+  expect(learnerCopy).not.toMatch(/root means|suffix means|combine these parts/is);
   expect(learnerCopy).not.toMatch(/YOU HEAR:\s*\*vidyārthī\*/is);
   expect(learnerCopy).toMatch(/seventeenth prerequisite tranche|does not unblock.*mock 1/is);
   expect(learnerCopy).toMatch(/not.*A2 mock|not A2 readiness/is);
