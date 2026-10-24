@@ -213,6 +213,21 @@ jobs:
             emit_plan
           fi
 
+          # A pull request that rebuilds most of the repo (a change to a crate
+          # nearly everything depends on, such as `parser`, rebuilds ~740
+          # packages) cannot finish on one Linux runner inside the build step's
+          # 150 minutes; #16054 was cut off there. Plan such a pull request in
+          # shards, the way main always is. Below the threshold nothing
+          # changes: one Linux runner, no per-shard setup cost.
+          if [ "${{ steps.detect-main.outputs.is_main }}" != "true" ] && [ "${#shard_flags[@]}" -eq 0 ]; then
+            affected="$(python3 -c 'import json; p = json.load(open("build-plan.json")); a = p.get("affected_packages"); print(len(a) if a is not None else len(p.get("packages") or []))')"
+            if [ "$affected" -gt 300 ]; then
+              echo "::notice::$affected affected packages; planning this pull request in shards"
+              shard_flags=(-shard-count 15 -emit-shard-matrix)
+              emit_plan
+            fi
+          fi
+
       # Guard against the one failure mode gating introduces: if the build tool
       # emitted no verdicts (registry disabled, flag typo, plan written by an
       # older binary), every `if:` would compare against an empty string, every
@@ -457,9 +472,9 @@ jobs:
               # full matrix rather than silently narrowing coverage.
               return None
 
-          if os.environ["IS_MAIN"] == "true":
+          def shard_entries():
             shards = json.loads(os.environ.get("BUILD_SHARDS") or "[]")
-            entries = [
+            return [
               {
                 "os": "ubuntu-latest",
                 "label": shard["label"],
@@ -470,15 +485,22 @@ jobs:
               }
               for shard in shards
             ]
+
+          if os.environ["IS_MAIN"] == "true":
+            entries = shard_entries()
             shard_count = len(entries)
           elif os.environ["EVENT_NAME"] == "pull_request":
             plan = load_plan()
-            entries = [LINUX]
+            # A large pull request was planned in shards (see the detect
+            # step): its Linux leg becomes the shards; macOS and Windows keep
+            # their single legs.
+            linux = shard_entries()
+            entries = linux if linux else [LINUX]
             if needs_macos(plan):
               entries.append(MACOS)
             if needs_windows():
               entries.append(WINDOWS)
-            shard_count = 0
+            shard_count = len(linux)
           else:
             entries = [LINUX]
             shard_count = 0
@@ -3571,10 +3593,16 @@ jobs:
             PLAN_FLAG="-plan-file build-plan.json"
             echo "Using pre-computed build plan"
           fi
+          # A large pull request's Linux leg is one of several shards.
+          SHARD_FLAG=""
+          if [ "${{ matrix.sharded }}" = "true" ]; then
+            SHARD_FLAG="-shard-index ${{ matrix.shard_index }}"
+          fi
           $BT \
             "${job_flags[@]}" \
             -root . \
             $PLAN_FLAG \
+            $SHARD_FLAG \
             -validate-build-files \
             -clippy \
             -language all
