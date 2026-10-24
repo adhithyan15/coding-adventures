@@ -34,7 +34,7 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 
 | Priority | Target | Functional | Gate | Dependency / next action |
 |---:|---|---|---|---|
-| P0 | DEC PDP-8 / PDP-8/E | merged | PR #18120 | Babysit only; auto-merge armed. |
+| P0 | DEC PDP-8 / PDP-8/E | merged | merged | Complete; PR #18120 landed. |
 | P0 | EDSAC | merged | PR #18166 | Babysit only; auto-merge armed. |
 | P0 | IAS machine | PR #18142 | missing | Gate starts only after functional merges. |
 | P0 | IBM System/360 | merged | ready | Next unclaimed gate cell. |
