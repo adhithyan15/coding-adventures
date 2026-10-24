@@ -276,9 +276,10 @@ dynamic inputs, zero divisors, and results beyond `2^53` remain conservative.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.
-Exact integral local real snapshots may supply the same leaves through built-in
-`entier`. Fractional, non-finite, oversized, dynamic, captured, array-backed,
-and by-name real values remain conservative.
+Finite local real snapshots may supply the same leaves through built-in
+`entier` when the normalized result remains in the exact binary64 integer
+range. Non-finite, oversized, dynamic, captured, array-backed, and by-name real
+values remain conservative.
 Built-in `sqrt` may normalize a nonnegative checked reduction when its value is
 an exact perfect square. Non-square, negative, dynamic, and user-overridden
 roots remain conservative. The radicand may itself contain checked integer
@@ -292,6 +293,10 @@ Built-in exact normalizers may consume a pure runtime conditional when every
 branch independently maps to the same checked integer result. Unequal mapped
 results, procedure-calling selectors, and dynamic branches remain
 conservative.
+Those normalizers may also consume finite fractional static-real inputs when
+their result is an exact integer, including nested call-free conditionals whose
+normalized branches agree. Nonintegral, path-dependent, dynamic, and oversized
+results remain conservative.
 Positive variable-free whole-number powers may raise the exact sign-rooted
 integer transform within the existing exponent-unroll cap while checked
 exponentiation remains within `2^53`; zero, negative, dynamic, deeper, and

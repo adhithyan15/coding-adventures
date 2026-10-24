@@ -57,6 +57,10 @@ conservative.
 Exact built-in normalizers may also consume a pure runtime conditional when
 all branches map to the same checked integer. Unequal mapped results,
 procedure-calling selectors, and dynamic branches remain conservative.
+Finite fractional static-real inputs may feed the same normalizers when the
+result is an exact integer, including nested call-free conditionals whose
+normalized branches agree. Nonintegral, dynamic, and oversized results remain
+conservative.
 Positive variable-free whole-number powers may raise the exact sign-rooted integer
 transform within the existing exponent-unroll cap while checked exponentiation
 remains within `2^53`; zero, negative, dynamic, deeper, and oversized powers
