@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added exact universal ENUMERATED decoding with canonical signed
+  two's-complement validation, borrowed bytes, checked `u64` conversion, and
+  stable redacted signed-value failures.
 - Added canonical schema-selected implicit BIT STRING validation for composed
   ASN.1 schemas such as RFC 5280 unique identifiers.
 - Added bounded schema-selected context-specific IMPLICIT constructed cursors
