@@ -813,6 +813,7 @@ members = [
     "intel8008-simulator",
     "intel8008-gatelevel",
     "intel8080-simulator",
+    "intel8085-simulator",
     "upc-a",
     "x25519",
     "type-checker-protocol",
