@@ -81,8 +81,10 @@ RR and RX variants share arithmetic semantics.
 - `MR/M`, `MH`, `DR/D`; and
 - `SLA`, `SRA`, `SLDA`, `SRDA`, `SLL`, `SRL`, `SLDL`, `SRDL`.
 
-Signed add, subtract, sign-control, and algebraic-left-shift overflow stores the
-truncated result, sets condition code 3, and returns a typed overflow fault.
+Signed add, subtract, sign-control, and algebraic-left-shift overflow returns a
+typed atomic fault; the repository's checked lifecycle therefore restores the
+pre-instruction result register and condition code rather than exposing the
+interrupted hardware's transient result.
 Divide-by-zero, an odd register-pair selector, or an unrepresentable quotient
 is a typed atomic fault.
 
