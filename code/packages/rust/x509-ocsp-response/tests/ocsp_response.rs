@@ -1,10 +1,12 @@
 use der_asn1::{Asn1Decoder, Asn1ErrorKind, Asn1Limits};
 use der_tlv::DerErrorKind;
 use x509_ocsp_response::{
-    decode_x509_ocsp_response, X509OcspResponseErrorKind, X509OcspResponseStatus,
+    decode_x509_ocsp_basic_response_bytes, decode_x509_ocsp_response,
+    X509OcspBasicResponseDispatchErrorKind, X509OcspResponseErrorKind, X509OcspResponseStatus,
 };
 
 const BASIC_RESPONSE_OID: &[u8] = &[0x2b, 0x06, 0x01, 0x05, 0x05, 0x07, 0x30, 0x01, 0x01];
+const SIGNATURE_OID: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b];
 
 fn der_length(length: usize) -> Vec<u8> {
     if length < 128 {
@@ -51,6 +53,40 @@ fn response(status_value: u8, body: Option<Vec<u8>>) -> Vec<u8> {
 
 fn successful(response_body: &[u8]) -> Vec<u8> {
     response(0, Some(response_bytes(BASIC_RESPONSE_OID, response_body)))
+}
+
+fn algorithm(oid: &[u8]) -> Vec<u8> {
+    sequence(&[element(0x06, oid), element(0x05, &[])])
+}
+
+fn time(value: &[u8]) -> Vec<u8> {
+    element(0x18, value)
+}
+
+fn cert_id(serial: u8) -> Vec<u8> {
+    sequence(&[
+        algorithm(&[0x2b, 0x0e, 0x03, 0x02, 0x1a]),
+        element(0x04, &[0x11; 20]),
+        element(0x04, &[0x22; 20]),
+        element(0x02, &[serial]),
+    ])
+}
+
+fn single_response(serial: u8) -> Vec<u8> {
+    sequence(&[cert_id(serial), vec![0x80, 0x00], time(b"20261024123456Z")])
+}
+
+fn basic_response(serial: u8) -> Vec<u8> {
+    let response_data = sequence(&[
+        element(0xa2, &element(0x04, &[0x44; 20])),
+        time(b"20261024120000Z"),
+        sequence(&[single_response(serial)]),
+    ]);
+    sequence(&[
+        response_data,
+        algorithm(SIGNATURE_OID),
+        element(0x03, &[0x00, 0xde, 0xad, 0xbe, 0xef]),
+    ])
 }
 
 fn decode(
@@ -114,6 +150,117 @@ fn response_type_is_data_not_an_enabled_registry_entry() {
 
     assert!(bytes.response_type().equals(&[1, 2, 3, 4]));
     assert!(bytes.response().is_empty());
+}
+
+#[test]
+fn explicitly_dispatches_only_id_pkix_ocsp_basic() {
+    let body = basic_response(7);
+    let encoded = successful(&body);
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(&encoded).unwrap();
+    let outer = decode_x509_ocsp_response(&mut decoder, root).unwrap();
+    let decoded = decode_x509_ocsp_basic_response_bytes(
+        &mut decoder,
+        outer.response_bytes().unwrap(),
+    )
+    .unwrap();
+
+    assert_eq!(decoded.encoded(), body);
+    assert_eq!(decoded.response_data().len(), 1);
+    assert_eq!(decoded.signature().bytes(), &[0xde, 0xad, 0xbe, 0xef]);
+}
+
+#[test]
+fn unknown_response_types_are_rejected_before_body_parsing() {
+    let malformed_secret = [0xde, 0xad, 0xbe, 0xef];
+    let encoded = response(
+        0,
+        Some(response_bytes(&[0x2b, 0x06, 0x01, 0x05, 0x05, 0x07, 0x30, 0x01, 0x02], &malformed_secret)),
+    );
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(&encoded).unwrap();
+    let outer = decode_x509_ocsp_response(&mut decoder, root).unwrap();
+    let before_dispatch = decoder.elements_read();
+    let error = decode_x509_ocsp_basic_response_bytes(
+        &mut decoder,
+        outer.response_bytes().unwrap(),
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509OcspBasicResponseDispatchErrorKind::UnsupportedResponseType
+    );
+    assert_eq!(error.offset(), 0);
+    assert_eq!(decoder.elements_read(), before_dispatch);
+    assert!(!format!("{error:?}").contains("deadbeef"));
+    assert!(!error.to_string().contains("deadbeef"));
+}
+
+#[test]
+fn basic_dispatch_requires_one_exact_der_document() {
+    let body = [sequence(&[]), element(0x05, &[])].concat();
+    let encoded = successful(&body);
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(&encoded).unwrap();
+    let outer = decode_x509_ocsp_response(&mut decoder, root).unwrap();
+    let error = decode_x509_ocsp_basic_response_bytes(
+        &mut decoder,
+        outer.response_bytes().unwrap(),
+    )
+    .unwrap_err();
+
+    assert!(matches!(
+        error.kind(),
+        X509OcspBasicResponseDispatchErrorKind::InvalidResponseFraming(_)
+    ));
+    assert!(error.offset() <= body.len());
+}
+
+#[test]
+fn basic_dispatch_preserves_inner_error_categories_and_redaction() {
+    let body = sequence(&[]);
+    let encoded = successful(&body);
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(&encoded).unwrap();
+    let outer = decode_x509_ocsp_response(&mut decoder, root).unwrap();
+    let error = decode_x509_ocsp_basic_response_bytes(
+        &mut decoder,
+        outer.response_bytes().unwrap(),
+    )
+    .unwrap_err();
+
+    assert!(matches!(
+        error.kind(),
+        X509OcspBasicResponseDispatchErrorKind::InvalidBasicResponse(_)
+    ));
+    assert_eq!(error.offset(), body.len());
+}
+
+#[test]
+fn basic_dispatch_keeps_the_outer_decoder_element_budget() {
+    let body = basic_response(1);
+    let encoded = successful(&body);
+    let mut decoder = Asn1Decoder::new(Asn1Limits {
+        max_total_elements: 6,
+        ..Asn1Limits::default()
+    });
+    let root = decoder.decode_exact(&encoded).unwrap();
+    let outer = decode_x509_ocsp_response(&mut decoder, root).unwrap();
+    assert_eq!(decoder.elements_read(), 6);
+    let error = decode_x509_ocsp_basic_response_bytes(
+        &mut decoder,
+        outer.response_bytes().unwrap(),
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509OcspBasicResponseDispatchErrorKind::InvalidResponseFraming(
+            Asn1ErrorKind::ElementLimitExceeded
+        )
+    );
+    assert_eq!(decoder.elements_read(), 6);
 }
 
 #[test]
