@@ -15,7 +15,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.29.0";
+pub const VERSION: &str = "0.30.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -29,6 +29,8 @@ const GROUP_HEADER_H: f64 = 32.0;
 const TITLE_H: f64 = 44.0;
 const ROUTE_CLEARANCE: f64 = 12.0;
 const ROUTE_BEND_COST: f64 = 8.0;
+const SELF_RELATIONSHIP_GAP: f64 = 48.0;
+const RELATIONSHIP_LABEL_HALF_WIDTH: f64 = 44.0;
 const DEFAULT_EDGE_ELASTICITY: f64 = 0.45;
 
 fn horizontal_gap(config: Option<&ArchitectureConfig>) -> f64 {
@@ -160,9 +162,17 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
         }
     }
     let groups = layout_groups(diagram, &nodes);
-    let canvas_w = canvas_width(&nodes, &groups, diagram.architecture_config.as_ref());
-    let canvas_h = canvas_height(&nodes, &groups, diagram.architecture_config.as_ref());
+    let mut canvas_w = canvas_width(&nodes, &groups, diagram.architecture_config.as_ref());
+    let mut canvas_h = canvas_height(&nodes, &groups, diagram.architecture_config.as_ref());
     let rels = layout_relationships(diagram, &nodes, &groups);
+    for point in rels.iter().flat_map(|relationship| &relationship.points) {
+        canvas_w = canvas_w.max(point.x + COMP_PAD);
+        canvas_h = canvas_h.max(point.y + COMP_PAD);
+    }
+    for (position, _) in rels.iter().filter_map(|relationship| relationship.label.as_ref()) {
+        canvas_w = canvas_w.max(position.x + RELATIONSHIP_LABEL_HALF_WIDTH + COMP_PAD);
+        canvas_h = canvas_h.max(position.y + ROW_H + COMP_PAD);
+    }
     LayoutedStructuralDiagram {
         width: canvas_w,
         height: canvas_h,
@@ -923,6 +933,29 @@ fn relationship_path(
     }
 }
 
+fn self_relationship_path(bounds: StructuralBounds) -> Vec<Point> {
+    let right = bounds.x + bounds.width;
+    let bottom = bounds.y + bounds.height;
+    let start_y = bounds.y + bounds.height * 0.35;
+    let end_x = bounds.x + bounds.width * 0.65;
+    vec![
+        Point { x: right, y: start_y },
+        Point {
+            x: right + SELF_RELATIONSHIP_GAP,
+            y: start_y,
+        },
+        Point {
+            x: right + SELF_RELATIONSHIP_GAP,
+            y: bottom + SELF_RELATIONSHIP_GAP,
+        },
+        Point {
+            x: end_x,
+            y: bottom + SELF_RELATIONSHIP_GAP,
+        },
+        Point { x: end_x, y: bottom },
+    ]
+}
+
 fn path_midpoint(points: &[Point]) -> Point {
     let total_length: f64 = points
         .windows(2)
@@ -1024,14 +1057,18 @@ fn layout_relationships(
             let p1 = rel.to_port.map_or(default_p1, |port| point_on_port(b_bounds, port));
             let obstacles =
                 relationship_obstacles(diagram, &rel.from, &rel.to, nodes, groups);
-            let points = relationship_path(
-                p0,
-                p1,
-                rel.routing,
-                rel.from_port,
-                rel.to_port,
-                &obstacles,
-            );
+            let points = if rel.from == rel.to && !rel.from_group && !rel.to_group {
+                self_relationship_path(a_bounds)
+            } else {
+                relationship_path(
+                    p0,
+                    p1,
+                    rel.routing,
+                    rel.from_port,
+                    rel.to_port,
+                    &obstacles,
+                )
+            };
             let label = rel.label.as_ref().map(|label| {
                 (path_midpoint(&points), label.clone())
             });
@@ -1144,7 +1181,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.29.0");
+        assert_eq!(crate::VERSION, "0.30.0");
     }
 
     #[test]
@@ -1178,6 +1215,29 @@ mod tests {
     fn relationship_has_two_points() {
         let r = layout_structural_diagram(&two_class_diagram());
         assert_eq!(r.relationships[0].points.len(), 2);
+    }
+
+    #[test]
+    fn recursive_relationship_routes_outside_the_node_and_expands_the_canvas() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.relationships[0].from = "Animal".into();
+        diagram.relationships[0].to = "Animal".into();
+        diagram.relationships[0].label = Some("loops".into());
+        let layout = layout_structural_diagram(&diagram);
+        let node = &layout.nodes[0];
+        let points = &layout.relationships[0].points;
+        let right = node.x + node.width;
+        let bottom = node.y + node.height;
+
+        assert_eq!(points.len(), 5);
+        assert!(points.iter().any(|point| point.x > right));
+        assert!(points.iter().any(|point| point.y > bottom));
+        assert!(layout.width > points.iter().map(|point| point.x).fold(0.0, f64::max));
+        assert!(layout.height > points.iter().map(|point| point.y).fold(0.0, f64::max));
+        let label_position = &layout.relationships[0].label.as_ref().expect("loop label").0;
+        assert!(layout.width > label_position.x + RELATIONSHIP_LABEL_HALF_WIDTH);
     }
 
     #[test]

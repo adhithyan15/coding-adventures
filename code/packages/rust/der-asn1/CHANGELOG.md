@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added exact schema-selected context-specific primitive NULL validation with
+  the same canonical empty-content rule as universal NULL.
 - Added exact universal ENUMERATED decoding with canonical signed
   two's-complement validation, borrowed bytes, checked `u64` conversion, and
   stable redacted signed-value failures.

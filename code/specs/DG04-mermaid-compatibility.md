@@ -150,8 +150,10 @@ and paint. Explicit empty quoted relationship roles remain distinguishable in
 semantic IR and layout while lowering without empty label geometry. ER remains
 compatible with integer and decimal entity identifiers as standalone entities,
 attribute owners, and relationship endpoints through semantic IR, layout, and
-paint. ER remains partial while the rest of the pinned upstream syntax and
-visual corpus is incomplete.
+paint. Recursive ER relationships preserve a single semantic entity and route
+as an exterior loop with canvas-aware backend-neutral geometry. ER remains
+partial while the rest of the pinned upstream syntax and visual corpus is
+incomplete.
 
 ## Required New Semantic Families
 
