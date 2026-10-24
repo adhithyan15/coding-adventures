@@ -808,6 +808,18 @@ anchor, or validate a path. Complete RFC 4518 and schema-specific Name
 comparison, algorithm routing and link authentication, full path construction
 and validation, trust-anchor and name constraints, revocation, TLS, HTTP, and
 network effects remain blockers.
+A bounded `x509-certificate-path-construction` follow-up now repeats that unique
+issuer selection into one caller-bounded target-to-terminal chain. Candidate
+pool size and requested path depth are rejected before policy callbacks;
+caller-owned terminal policy runs exactly once per accepted path certificate;
+and exact certificate-encoding cycles or exhaustion before a terminal match
+fail closed. Non-copyable success evidence retains the exact target, candidate
+pool, and ordered selected indices, so a later validator can consume the one
+constructed chain without caller substitution. This deterministic primitive
+does not search alternate ambiguous branches, define Name equality, decide
+trust, authenticate any link, apply certificate roles, algorithms, validity,
+path length, name constraints, hostname or revocation policy, or provide TLS,
+HTTP, OAuth transport, or network authority.
 The RSA SHA-256 issuer-link composition can now consume that non-copyable
 selection evidence directly. It derives the exact child and selected candidate
 from the evidence, then performs issuing-CA role, caller-owned RSA key-policy,
