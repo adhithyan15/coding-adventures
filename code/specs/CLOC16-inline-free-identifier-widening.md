@@ -210,15 +210,17 @@ Both candidate gates build their name set with `collect_binding_idents_expr`
 - recorded an arrow's parameters but not its body, although an arrow reads
   its enclosing function's `this`, `arguments` and free names;
 - skipped template substitutions (`` `${x}` ``) and tagged-template
-  operands entirely.
+  operands entirely;
+- skipped class methods' computed keys (`class{[this.k](){}}`), which run
+  in the enclosing scope.
 
 So ADVANCED spliced `function t(){return this}` into
 `var o={m:function(){return t()}}`, and `o.m()===o` turned from false to
 true.
 
 The walk now records `this`, `super` and `new.target` under their keyword
-spellings, walks arrow bodies, and walks template and tagged-template
-operands. A reserved word can never be a parameter, local or declaration
+spellings, walks arrow bodies, template and tagged-template operands, and
+class methods' computed keys. A reserved word can never be a parameter, local or declaration
 name, so the expression gate rejects any body that reads one. The statement
 gate rejects `this`, `arguments`, `super` and `new.target` by name.
 

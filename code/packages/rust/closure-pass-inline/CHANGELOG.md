@@ -23,14 +23,15 @@ both inline paths are built from `collect_binding_idents_expr`, which:
 - skipped template substitutions and tagged-template operands.
 
 It now records the three keywords under their spellings, walks arrow
-bodies, and walks template operands. The expression inliner's
+bodies, template operands, and class methods' computed keys (which run in
+the enclosing scope). The expression inliner's
 "every name is a parameter" gate rejects a reserved word automatically. The
 statement inliner now rejects `super` and `new.target` alongside `this` and
 `arguments`. A helper that returns a `function` expression is still
 inlined, because that function has its own `this`.
 
-Four unit tests: the `this` shapes (direct, through an arrow, and in void
-helpers), `new.target`, the nested-function non-regression, and arrow-body
+Five unit tests: the `this` shapes (direct, through an arrow, and in void
+helpers), a computed class method key, `new.target`, the nested-function non-regression, and arrow-body
 names. closurec gains `tests/regression_inline_this.rs`.
 
 ## [0.30.1] - 2026-07-19

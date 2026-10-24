@@ -29,6 +29,9 @@ const PROGRAMS: &[&str] = &[
     "function t(){console.log(this===globalThis)}var o={m:function(){t()}};o.m()",
     // `new.target` is bound by the call too.
     "function t(){return new.target===undefined}function F(){console.log(t())}new F",
+    // A class method's computed key is evaluated in `t`'s scope.
+    "function t(){return class{[this===globalThis?\"a\":\"b\"](){return 1}}}var o={m:function(){return t()}};console.log(Object.getOwnPropertyNames(o.m().prototype).join())",
+    "function t(){return (()=>class{[this===globalThis?\"a\":\"b\"](){}})()}var o={m:function(){return t()}};console.log(Object.getOwnPropertyNames(o.m().prototype).join())",
     // A helper that only returns a function is still inlined; that
     // function keeps its own `this`.
     "function t(){return function(){return this}}console.log(typeof t())",

@@ -1009,6 +1009,13 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
             for member in &ce.body {
                 match member {
                     ClassMember::Method(m) => {
+                        // #18115: a computed method key `[expr](){}` is
+                        // evaluated in the ENCLOSING scope, when the class
+                        // is, so it reads the enclosing `this`
+                        // (`class{[this.k](){}}`) and free names.
+                        if let PropertyKey::Expression(e) = &m.key {
+                            collect_binding_idents_expr(e, out);
+                        }
                         if let Some(id) = &m.value.id {
                             out.insert(id.name.clone());
                         }
@@ -4450,6 +4457,10 @@ fn collect_used_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
             for member in &cd.body {
                 match member {
                     ClassMember::Method(m) => {
+                        // A computed key is evaluated in the enclosing scope.
+                        if let PropertyKey::Expression(e) = &m.key {
+                            collect_binding_idents_expr(e, out);
+                        }
                         for s in &m.value.body.body {
                             collect_used_idents_stmt(s, out);
                         }
@@ -6054,6 +6065,14 @@ mod tests {
         ] {
             assert_eq!(inline_source(src), expected, "{src:?}");
         }
+    }
+
+    /// A class method's computed key runs in the helper's scope.
+    #[test]
+    fn issue18115_this_in_a_computed_method_key_is_not_inlined() {
+        let src = "function t(){return class{[this.k](){return 1}}}var o={m:function(){return t()}};";
+        let out = inline_source(src);
+        assert!(!out.contains("m:function(){return class"), "inlined: {out}");
     }
 
     #[test]

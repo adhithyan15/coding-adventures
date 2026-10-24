@@ -12,7 +12,7 @@ prints `false`. ADVANCED spliced `t` into `m`, and the output printed
 see `this`, `super` and `new.target`, the bodies of arrows (which inherit
 `this`), and template substitutions.
 
-`tests/regression_inline_this.rs` checks with `node` that five programs
+`tests/regression_inline_this.rs` checks with `node` that seven programs
 print the same after SIMPLE and ADVANCED as before.
 
 ### Changed - WHITESPACE_ONLY unwraps a single-statement labeled block (CCR-087, #15924)
