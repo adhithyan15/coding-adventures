@@ -23,6 +23,7 @@
  */
 
 import { parseCapability, isFirstPartyOnly } from "@coding-adventures/forme-capability";
+import { KINDS } from "@coding-adventures/forme-types";
 import { ManifestError, type ManifestErrorEntry } from "./errors.js";
 import {
   RUNTIME_KINDS,
@@ -51,11 +52,7 @@ export const SEMVER_REGEX =
 export const EXT_KIND_NAME_REGEX = /^ext:[a-z0-9][a-z0-9-]*$/;
 
 /** Kernel kind names that plugins are NOT allowed to redefine. */
-export const RESERVED_KIND_NAMES = Object.freeze(new Set([
-  "ContentSource", "ContentNode", "Collection", "Asset", "Document",
-  "RenderedPage", "PrintForme", "RequestHandler", "SearchIndex",
-  "Feed", "DeployArtifact", "Stream", "Void",
-]));
+export const RESERVED_KIND_NAMES = Object.freeze(new Set<string>(KINDS));
 
 /** Hard ceiling for `[resources]` values.  Host MAY narrow these
  *  further in policy; these are absolute upper bounds. */
