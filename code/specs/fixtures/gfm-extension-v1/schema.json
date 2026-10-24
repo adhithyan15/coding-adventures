@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:coding-adventures:gfm-extension-v1",
+  "title": "Portable GFM extension v1 corpus",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile", "limits", "cases"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "profile": { "const": "gfm-extension-v1" },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_source_bytes",
+        "max_source_lines",
+        "max_source_line_bytes",
+        "max_ast_nodes",
+        "max_ast_depth",
+        "max_ast_text_bytes",
+        "max_html_bytes"
+      ],
+      "properties": {
+        "max_source_bytes": { "const": 8192 },
+        "max_source_lines": { "const": 128 },
+        "max_source_line_bytes": { "const": 1024 },
+        "max_ast_nodes": { "const": 256 },
+        "max_ast_depth": { "const": 16 },
+        "max_ast_text_bytes": { "const": 8192 },
+        "max_html_bytes": { "const": 32768 }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 16,
+      "maxItems": 16,
+      "items": { "$ref": "#/$defs/case" }
+    }
+  },
+  "$defs": {
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source", "expected_ast", "expected_html"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "source": { "type": "string", "maxLength": 8192 },
+        "expected_ast": { "$ref": "#/$defs/document" },
+        "expected_html": { "type": "string", "maxLength": 32768 }
+      }
+    },
+    "document": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "children"],
+      "properties": {
+        "type": { "const": "document" },
+        "children": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/block" }
+        }
+      }
+    },
+    "block": {
+      "oneOf": [
+        { "$ref": "#/$defs/paragraph" },
+        { "$ref": "#/$defs/list" },
+        { "$ref": "#/$defs/table" },
+        { "$ref": "#/$defs/fenced_block" }
+      ]
+    },
+    "paragraph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "children"],
+      "properties": {
+        "type": { "const": "paragraph" },
+        "children": {
+          "type": "array",
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/inline" }
+        }
+      }
+    },
+    "inline": {
+      "oneOf": [
+        { "$ref": "#/$defs/text" },
+        { "$ref": "#/$defs/strikethrough" },
+        { "$ref": "#/$defs/strong" },
+        { "$ref": "#/$defs/soft_break" }
+      ]
+    },
+    "text": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "value"],
+      "properties": {
+        "type": { "const": "text" },
+        "value": { "type": "string", "maxLength": 8192 }
+      }
+    },
+    "strikethrough": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "children"],
+      "properties": {
+        "type": { "const": "strikethrough" },
+        "children": {
+          "type": "array",
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/inline" }
+        }
+      }
+    },
+    "strong": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "children"],
+      "properties": {
+        "type": { "const": "strong" },
+        "children": {
+          "type": "array",
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/inline" }
+        }
+      }
+    },
+    "soft_break": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": { "type": { "const": "soft_break" } }
+    },
+    "list": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "ordered", "start", "tight", "children"],
+      "properties": {
+        "type": { "const": "list" },
+        "ordered": { "const": false },
+        "start": { "type": "null" },
+        "tight": { "type": "boolean" },
+        "children": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/task_item" }
+        }
+      }
+    },
+    "task_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "checked", "children"],
+      "properties": {
+        "type": { "const": "task_item" },
+        "checked": { "type": "boolean" },
+        "children": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": { "$ref": "#/$defs/paragraph" }
+        }
+      }
+    },
+    "table": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "align", "children"],
+      "properties": {
+        "type": { "const": "table" },
+        "align": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": { "enum": [null, "left", "center", "right"] }
+        },
+        "children": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/table_row" }
+        }
+      }
+    },
+    "table_row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "isHeader", "children"],
+      "properties": {
+        "type": { "const": "table_row" },
+        "isHeader": { "type": "boolean" },
+        "children": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": { "$ref": "#/$defs/table_cell" }
+        }
+      }
+    },
+    "table_cell": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "children"],
+      "properties": {
+        "type": { "const": "table_cell" },
+        "children": {
+          "type": "array",
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/inline" }
+        }
+      }
+    },
+    "fenced_block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "name", "info", "value"],
+      "properties": {
+        "type": { "const": "fenced_block" },
+        "name": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "minLength": 1, "maxLength": 128 }
+          ]
+        },
+        "info": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "minLength": 1, "maxLength": 1024 }
+          ]
+        },
+        "value": { "type": "string", "maxLength": 8192 }
+      }
+    }
+  }
+}

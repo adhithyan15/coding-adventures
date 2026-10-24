@@ -3,8 +3,8 @@
   "automation_id": "package-parity-pr-loop",
   "started": "2026-07-29",
   "policy": {
-    "maximum_active_parity_prs": 1,
-    "merge_authority": "external-review-and-merge-only",
+    "maximum_active_parity_prs": 3,
+    "merge_authority": "auto-merge-after-required-checks",
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass",
     "delivery_scope": "portable-packages-and-build-tools-only",
@@ -16,23 +16,23 @@
       "external-approval"
     ]
   },
-  "active_pr": 18105,
+  "active_pr": 18118,
   "last_ci_action": {
-    "observed_at": "2026-10-24T15:28:47.815420+00:00",
-    "pr_number": 18105,
-    "action": "Opened ready-for-review PR18105 at534aa354945bd47f83595dbde743e896c7fe47ef after final-main classification and validation review. GitHub reports MERGEABLE; initial CI jobs in progress. No auto-merge enrollment while checks are pending. Exactly one active parity PR."
+    "observed_at": "2026-10-24T18:02:51+00:00",
+    "pr_number": 18118,
+    "action": "Opened the neutral GFM conformance foundation at 93c1d6c08edd86de9c7d1c2f50df7a8fadec71bc after local validation and final security review. GitHub reports MERGEABLE; CI, CodeQL, and book detectors remain queued without a runner or failure. The operator authorized up to three dependency-safe parity PRs in flight and guarded auto-merge only after required checks pass and conflicts are absent."
   },
   "last_inventory": {
-    "revision": "2a0365e356839e22652717fb213499c4454cb972",
+    "revision": "2949f52059ed81e2a202f171c53d2b57069be002",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1533,
-    "implementation_package_slots": 4815,
-    "all_reported_identities": 1575,
+    "implementation_identities": 1535,
+    "implementation_package_slots": 4817,
+    "all_reported_identities": 1577,
     "completion_bands": {
       "1": {
-        "missing_slots": 14714,
-        "packages": 1051
+        "missing_slots": 14742,
+        "packages": 1053
       },
       "10-15": {
         "missing_slots": 250,
@@ -51,7 +51,7 @@
     "unknown_language_buckets": 0,
     "ocaml_packages": 5,
     "evidence": "code/specs/package-parity-audits/20261024-gfm-resume-classification.json",
-    "audit_notes": "Final main ec0d8fbe refresh: ten newly merged Rust roots assigned to pending documentary classifiers. Four pending follow-ups registered including Node source-export declaration ownership; no new implementation selection, native qualification or exception."
+    "audit_notes": "Post-#18105 collision-checked refresh: 1,535 established identities and 4,817 occupied slots across fifteen lanes, zero canonical collisions and zero unknown buckets. Rust has 1,293 identities, Python 507, TypeScript 474, and every other lane fewer than 302. Select the neutral GFM fixture first, then its explicit TypeScript adopter; run the independent C# CommonMark/HTML prerequisite in parallel under the operator-authorized three-PR ceiling."
   },
   "items": [
     {
@@ -17183,10 +17183,11 @@
     {
       "id": "gfm-fenced-block-ast-and-consumer-contract-repair",
       "title": "Repair the TE04 fenced-block AST and consumer contract",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-gfm-fenced-ast-20261022",
       "pr_number": 18105,
+      "merge_revision": "8908cd9ef8113340b9ce6ec5dc9ea87b77dcc738",
       "notes": "TE04 requires source-preserving fenced_block nodes, but inspected ASTs do not define FencedBlockNode and the TypeScript reference lowers fences to code_block. Reconcile the AST, parser, and downstream rendering contract before using it as a four-lane GFM oracle.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/gfm-fenced-block-ast-and-consumer-contract-repair"
@@ -17238,17 +17239,28 @@
     {
       "id": "gfm-language-neutral-conformance-fixture",
       "title": "Define the language-neutral GFM parser conformance fixture",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "gfm-fenced-block-ast-and-consumer-contract-repair"
       ],
-      "branch": null,
-      "pr_number": null,
-      "notes": "The existing 652-example corpus covers CommonMark, while GFM strike, task, and table behavior is only separately tested. Freeze those extensions, fenced source retention, stable errors, and AST/rendering vectors for native lane consumers.",
+      "branch": "codex/parity-gfm-neutral-20261024",
+      "pr_number": 18118,
+      "notes": "PR #18118 freezes sixteen source/AST/HTML vectors for strikethrough, task items, tables, and source-preserving fences behind a strict schema and bounded validator. The neutral foundation itself grants no native-lane credit. Local validation and final security review pass; GitHub checks are runner-queued with no failures.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/gfm-language-neutral-conformance-fixture"
       ],
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+    },
+    {
+      "id": "gfm-typescript-neutral-conformance-adoption",
+      "title": "Adopt the neutral GFM extension corpus in TypeScript",
+      "status": "pending",
+      "depends_on": [
+        "gfm-language-neutral-conformance-fixture"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Run all sixteen committed vectors through the real public TypeScript gfm-parser and document-ast-to-html APIs, compare exact AST and HTML, retain a dynamic fixture reader plus corruption witnesses and package coverage, and prove cases.json changes select the native package in the build-tool plan. This is the first post-fixture adoption item and must not be credited by the neutral validator alone."
     },
     {
       "id": "gfm-swift-lane-parity",

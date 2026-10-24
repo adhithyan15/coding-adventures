@@ -4,6 +4,17 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - ADVANCED no longer inlines a function that reads `this` (#18115)
+
+`function t(){return this}var o={m:function(){return t()}};console.log(o.m()===o)`
+prints `false`. ADVANCED spliced `t` into `m`, and the output printed
+`true`. The fix is in `closure-pass-inline` 0.31.0: its capture guards now
+see `this`, `super` and `new.target`, the bodies of arrows (which inherit
+`this`), and template substitutions.
+
+`tests/regression_inline_this.rs` checks with `node` that seven programs
+print the same after SIMPLE and ADVANCED as before.
+
 ### Changed - WHITESPACE_ONLY unwraps a single-statement labeled block (CCR-087, #15924)
 
 `lbl:{a()}` now prints as `lbl:a();`, matching upstream. The rule:
@@ -25,6 +36,28 @@ An empty body (`l:{}`) still keeps its braces, although upstream prints
 `tests/regression_ws_label_block.rs` pins 32 shapes to the jar's bytes. It
 checks with `node` that those shapes, and 32 shapes deliberately left
 braced, parse, and it times the nested case. Six unit tests cover the rule.
+
+### Fixed - WHITESPACE_ONLY keeps the `;` body of `with(...)` and of a label (#17883)
+
+`function f(){with(a);}` printed as `function f(){with(a)}` and `{l2:;}` as
+`{l2:}`, and neither parses. The `;` before `}` is dropped by gap-030 Rule A
+unless it is a body slot, and only `if`/`while`/`for` headers marked one.
+
+- A `;` right after the `)` of a `with(...)` head is kept. `with` is not
+  marked as a body slot the way `while` is, because that would also catch
+  a method named `with` (`class C{with(){}}` would lose its body). So
+  `with(o){}` still keeps its braces, where upstream prints `with(o);`.
+- A label's `:` before `;` marks a body slot (`l:;`). `case 1:;` and
+  `default:;` still print as `case 1:` and `default:`, as upstream does.
+- A keyword used as a property name no longer marks the next `(` as a
+  control-flow head. `x={if:1};function g(){}` used to print as the
+  invalid `x={if:1};function g();`.
+
+`tests/regression_ws_empty_body_semi.rs` pins 25 shapes to the jar's bytes.
+It checks with `node` that those shapes, and 11 shapes left different on
+purpose, all parse. Eight unit tests cover the rules. Issues filed from the
+review: #18123 (methods named `if`/`while`/`for`/`with`), #18124 (a lone
+`let`/`const` flattened into a body slot) and #18125.
 
 ### Fixed - a `function`/`class` declaration in a block no longer becomes an expression (#17877)
 
