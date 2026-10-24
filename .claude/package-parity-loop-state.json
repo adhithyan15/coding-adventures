@@ -16,11 +16,11 @@
       "external-approval"
     ]
   },
-  "active_pr": 18105,
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-24T15:28:47.815420+00:00",
+    "observed_at": "2026-10-24T16:50:14Z",
     "pr_number": 18105,
-    "action": "Opened ready-for-review PR18105 at534aa354945bd47f83595dbde743e896c7fe47ef after final-main classification and validation review. GitHub reports MERGEABLE; initial CI jobs in progress. No auto-merge enrollment while checks are pending. Exactly one active parity PR."
+    "action": "Verified PR #18105 merged after all required checks reached terminal success. GitHub records squash merge 8908cd9ef8113340b9ce6ec5dc9ea87b77dcc738 at 2026-10-24T16:50:14Z; no parity PR remains active before the C# renderer publication step."
   },
   "last_inventory": {
     "revision": "2a0365e356839e22652717fb213499c4454cb972",
@@ -17183,7 +17183,7 @@
     {
       "id": "gfm-fenced-block-ast-and-consumer-contract-repair",
       "title": "Repair the TE04 fenced-block AST and consumer contract",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-gfm-fenced-ast-20261022",
       "pr_number": 18105,
@@ -17233,7 +17233,10 @@
         "coverage_target_review": "Fullsource globs retained;14runtimepackages83.17%-100% statements,95%library target not universally reached;ASTtypeonly no executable credit",
         "validation_completed_at": "2026-10-24T15:21:55.943416+00:00"
       },
-      "pr_opened_at": "2026-10-24T15:28:47.815420+00:00"
+      "pr_opened_at": "2026-10-24T15:28:47.815420+00:00",
+      "merged_at": "2026-10-24T16:50:14Z",
+      "merge_revision": "8908cd9ef8113340b9ce6ec5dc9ea87b77dcc738",
+      "merge_notes": "GitHub merged PR #18105 after every reported required check reached terminal success. The exact merge receipt is 8908cd9ef8113340b9ce6ec5dc9ea87b77dcc738; this state reconciliation clears the stale active-PR pointer before publishing the next independent parity tranche."
     },
     {
       "id": "gfm-language-neutral-conformance-fixture",
