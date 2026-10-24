@@ -17777,3 +17777,15 @@ The same audit records three future decompositions without selecting them:
   `d431b29d97b6f73e69d547109cf5081578fac931e72afe95639ebe766c1b2a20`.
 
 Those future records do not block or broaden the selected F# renderer.
+
+### F# renderer publication
+
+Draft PR #18154 opened from reviewed head
+`d6c1de44ada1343b1612be0c80546f09d9160755` over current main
+`e9ea4be4fbdf1379918f401f6e9498f1563d04aa`.  Two independent clean-archive
+first runs passed all 20 tests with 100% line, 99.16% branch and 100% method
+coverage.  The package, dependency-audit, exact build-selection, collision and
+1,531-owner state-graph checks also pass.  This renderer-only PR is the third
+active independent parity PR under the three-PR ceiling; it remains separate
+from the C# renderer and TypeScript GFM adopter and introduces no parser,
+facade or GFM claim.

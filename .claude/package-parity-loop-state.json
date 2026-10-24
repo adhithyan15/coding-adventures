@@ -16,7 +16,12 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 18154,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/18154",
+    "branch": "codex/parity-fsharp-document-html-20261024",
+    "item_id": "document-ast-to-html-fsharp-lane-parity"
+  },
   "last_ci_action": {
     "observed_at": "2026-10-24T18:59:25+00:00",
     "pr_number": 18118,
@@ -25770,10 +25775,14 @@
     {
       "id": "document-ast-to-html-fsharp-lane-parity",
       "title": "Add the document AST HTML renderer to F#",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/parity-fsharp-document-html-20261024",
-      "pr_number": null,
+      "pr_number": 18154,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18154",
+      "opened_at": "2026-10-24T20:01:05Z",
+      "opened_revision": "d6c1de44ada1343b1612be0c80546f09d9160755",
+      "final_review_revision": "d6c1de44ada1343b1612be0c80546f09d9160755",
       "delivery_class": "portable-lane-adoption",
       "selection_blocked": false,
       "registered_at": "2026-10-24T19:17:58Z",
@@ -25782,6 +25791,8 @@
       "package_paths": [
         "code/packages/fsharp/document-ast-to-html"
       ],
+      "validation_notes": "Exact-head independent review passed after merging current origin/main. Two separate clean archive first runs passed 20/20 tests with 100% line, 99.16% branch and 100% method coverage. The Unix and Windows build fronts instrument the initial build before the no-build Coverlet pass. NuGet pack contents, installed dependency shape and production/test vulnerability audits are clean. The build-tool dry-run selects exactly F# document-ast plus document-ast-to-html; package parity reports zero collisions and zero unknown buckets; the 1,531-owner state graph is unique, dependency-complete, acyclic and has no merged-to-unmerged edges.",
+      "publication_notes": "Opened draft PR #18154 from exact reviewed head d6c1de44ada1343b1612be0c80546f09d9160755 over current main e9ea4be4fbdf1379918f401f6e9498f1563d04aa. GitHub reports the branch mergeable. This is the third active independent parity PR under the operator-authorized maximum of three; it has no production-file overlap with the C# renderer or TypeScript GFM adoption PRs. The PR remains draft only while this lifecycle receipt is committed and pushed; guarded auto-merge stays disabled until every required check is terminal and acceptable.",
       "notes": "Selected as the smallest independent post-#18118 tranche. Deliver one pure native F# renderer over every existing F# document-ast case with raw routing, URL hardening, immutable ownership, explicit depth/node/output bounds, native coverage, package metadata and Unix/Windows build fronts. Do not edit the parser or add CommonMark/GFM facades."
     },
     {
